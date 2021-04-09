@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Tabs/pages/tabs_page.dart';
+import 'ui/Tabs/pages_taps/tabs_page.dart';
 
 class MyApp extends StatelessWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../vistas/lista_invitados.dart';
-import '../../vistas/agregar_invitado.dart';
-import '../../vistas/cargar_excel_invitados.dart';
+import '../../lista_invitados.dart';
+import '../../agregar_invitado.dart';
+import '../../cargar_excel_invitados.dart';
 class TabNavigationItem {
   final Widget page;
   final Widget title;

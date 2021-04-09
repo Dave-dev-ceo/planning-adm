@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/tab_navigation_item.dart';
+import '../models_taps/tab_navigation_item.dart';
 
 class TabsPage extends StatefulWidget {
   @override
