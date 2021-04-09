@@ -3,10 +3,7 @@ import 'dart:js';
 import 'package:flutter/material.dart';
 import '../models/item_model_invitados.dart';
 import '../blocs/invitados_bloc.dart';
-//import 'package:weddingplanner/src/objects/invitados/invitadosList.dart';
-//import 'package:weddingplanner/src/res/invitadosRest/invitadosRest.dart';
 
-//import '../res/res.dart' as res;
 class ListaInvitados extends StatefulWidget {
   
   static Route<dynamic> route() => MaterialPageRoute(
@@ -19,7 +16,6 @@ class ListaInvitados extends StatefulWidget {
 }
 
 class _ListaInvitadosState extends State<ListaInvitados> {
-  //InvitadosList invitados;
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   @override
   Widget build(BuildContext context) {
@@ -41,23 +37,6 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           return Center(child: CircularProgressIndicator());
         },
       ),
-      /*ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          PaginatedDataTable(
-            header: Text('Invitados'),
-            rowsPerPage: 8,
-            showCheckboxColumn: false,
-            columns: [
-              DataColumn(label: Text('Nombre', style:estiloTxt)),
-              DataColumn(label: Text('Telefono', style:estiloTxt)),
-              DataColumn(label: Text('Email', style:estiloTxt)),
-              DataColumn(label: Text('Asistencia', style:estiloTxt)),
-            ],
-            source: _DataSource(context),
-          ),
-        ],
-      ),*/
     );
   }
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
@@ -79,16 +58,6 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           ),
         ],
       );
-    /*return GridView.builder(
-        itemCount: snapshot.data.results.length,
-        gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          return Image.network(
-            'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.es%2Fvector-premium%2Fperfil-empresario-dibujos-animados_5321646.htm&psig=AOvVaw05NtJHYCDjhtYVRh0SXVkP&ust=1618070148625000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKjI25fD8e8CFQAAAAAdAAAAABAD',
-            fit: BoxFit.cover,
-          );
-        });*/
   }
 }
 class _Row {
@@ -109,7 +78,6 @@ class _Row {
 
 class _DataSource extends DataTableSource {
   _DataSource(context) {
-    //print(context[0].nombre+" "+context[0].telefono+" "+context[0].email+" "+context[0].asistencia);
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
       _rows.add(_Row(context[i].nombre, context[i].telefono, context[i].email, context[i].asistencia));  
@@ -117,15 +85,12 @@ class _DataSource extends DataTableSource {
     
   }
   
-
-  //final BuildContext context;
   List<_Row> _rows;
 
   int _selectedCount = 0;
 
   @override
   DataRow getRow(int index) {
-    //return null;
     assert(index >= 0);
     if (index >= _rows.length) return null;
     final row = _rows[index];
