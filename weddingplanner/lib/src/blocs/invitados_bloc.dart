@@ -16,5 +16,10 @@ class InvitadosBloc{
   dispose() {
     _invitadosFetcher.close();
   }
+
+  createInvitados(Map<String,String> json) async {
+    Map response = await _repository.createInvitados(json);
+    return response;
+  }
 }
 final bloc = InvitadosBloc();
