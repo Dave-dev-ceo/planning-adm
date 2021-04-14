@@ -7,5 +7,4 @@ class Repository {
 
   Future<ItemModelInvitados> fetchAllInvitados() => invitadosApiProvider.fetchInvitadosList();
 
-  Future<Map<String,String>> createInvitados(Map<String,String> json) => invitadosApiProvider.createInvitados(json);
 }

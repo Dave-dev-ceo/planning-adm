@@ -1,5 +1,9 @@
+//import 'dart:js';
+
 import 'package:flutter/material.dart';
-import 'ui/Tabs/pages_taps/tabs_page.dart';
+//import 'package:weddingplanner/src/ui/home.dart';
+import 'package:weddingplanner/src/ui/lista_invitados.dart';
+//import 'ui/Tabs/pages_taps/tabs_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -10,7 +14,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: TabsPage(),
+      initialRoute: '/',
+      routes: {
+        '/':(context) => ListaInvitados(),
+        //'/':(context) => TabsPage(), 
+      },
+      //home: TabsPage(),
       debugShowCheckedModeBanner: false,
     );
   }

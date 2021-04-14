@@ -1,11 +1,9 @@
-
-import 'dart:io';
-
 import 'package:http/http.dart';
 import 'dart:async';
 import 'package:http/http.dart' show Client;
 import 'dart:convert';
 import '../models/item_model_invitados.dart';
+//import '../models/item_model_response.dart';
 
 class InvitadosApiProvider {
   Client client = Client();
@@ -22,19 +20,17 @@ class InvitadosApiProvider {
       throw Exception('Failed to load get');
     }
   }
-  Future<Map<String,String>> createInvitados(Map<String,String> invitados) async{
-    //print(jsonEncode(post));
-    final response = await client.post(Uri.http(baseUrl, 'INVITADOS/registrarInvitado'),
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json'
-        },
-        body: jsonEncode(invitados)
+  Future<bool> createInvitados(Map<String,String> invitados) async{
+    print(json.encode(invitados));
+    final response = await client.post(Uri.http(baseUrl, 'INVITADOS/createInvitados'),
+        
+        body: invitados
     );
     if (response.statusCode == 201) {
-      //return true;  
+      return true;  
     } else {
-      throw Exception('Failed post');
-      //return false;
+      //throw Exception('Failed post');
+      return false;
     }
   }
 }

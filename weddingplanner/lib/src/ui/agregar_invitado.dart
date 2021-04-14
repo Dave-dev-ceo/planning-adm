@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:weddingplanner/src/blocs/invitados_bloc.dart';
+import 'package:weddingplanner/src/resources/invitados_api_provider.dart';
+
+import 'home.dart';
 
 class AgregarInvitados extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -22,25 +24,28 @@ GlobalKey<FormState> keyForm = new GlobalKey();
 
  TextEditingController  telefonoCtrl = new TextEditingController();
 
+ InvitadosApiProvider api = new InvitadosApiProvider();
+
 Color hexToColor(String code) {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
     }
 
-_borderTextForm(){
+/*_borderTextForm(){
   return OutlineInputBorder(
     borderRadius: new BorderRadius.circular(25.0),
     borderSide: new BorderSide(
     ),
   );
-}
+}*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("WeddingPlannet"),
-        backgroundColor: Colors.blue[300],
-      ),
+        title: Text("Wedding Planner"),
+        backgroundColor: Colors.pink[900],
+        ),
+      drawer: MenuLateral(),
       body:
         SingleChildScrollView(
           child: new Container(
@@ -261,7 +266,7 @@ _borderTextForm(){
    );
  }
   String validateApellidos(String value) {
-   String pattern = r'(^[a-zA-Z ]*$)';
+   String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
    RegExp regExp = new RegExp(pattern);
    if (value.length == 0) {
      return "El apellido es necesario";
@@ -272,7 +277,7 @@ _borderTextForm(){
  }
 
  String validateNombre(String value) {
-   String pattern = r'(^[a-zA-Z ]*$)';
+   String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
    RegExp regExp = new RegExp(pattern);
    if (value.length == 0) {
      return "El nombre es necesario";
@@ -308,13 +313,9 @@ _borderTextForm(){
    }
  }
 
- save() {
+ save() async{
    if (keyForm.currentState.validate()) {
-     print("Nombre ${nombreCtrl.text}");
-     print("Apellidos ${apellidosCtrl.text}");
-     print("Telefono ${telefonoCtrl.text}");
-     print("Correo ${emailCtrl.text}");
-     print("genero ${gender}");
+     
      Map <String,String> json = {
        "nombre":nombreCtrl.text,
        "apellidos":apellidosCtrl.text,
@@ -324,8 +325,10 @@ _borderTextForm(){
       "id_evento":"1"
       };
      //json.
-     final response = bloc.createInvitados(json);
-      print(response);
+     bool response = await api.createInvitados(json);
+
+     //bloc.insertInvitados;
+      //print(response);
       if (response) {
         keyForm.currentState.reset();
         print("Intitado registrado");  

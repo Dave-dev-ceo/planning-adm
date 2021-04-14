@@ -1,8 +1,7 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import '../models/item_model_invitados.dart';
 import '../blocs/invitados_bloc.dart';
+import 'home.dart';
 
 class ListaInvitados extends StatefulWidget {
   
@@ -10,34 +9,55 @@ class ListaInvitados extends StatefulWidget {
         builder: (context) => ListaInvitados(),
       );
   @override
-
-  @override
   _ListaInvitadosState createState() => _ListaInvitadosState();
 }
 
 class _ListaInvitadosState extends State<ListaInvitados> {
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
+  _listaInvitados(){
+    ///bloc.dispose();
+    bloc.fetchAllInvitados();
+    return StreamBuilder(
+            stream: bloc.allInvitados,
+            builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
+              if (snapshot.hasData) {
+                return buildList(snapshot);
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          );
+  }
   @override
   Widget build(BuildContext context) {
-    bloc.fetchAllInvitados();
-    return Scaffold(
+    return DefaultTabController(
+      length: 3, 
+      child: Scaffold(
       appBar: AppBar(
-        title: Text("WeddingPlannet"),
-        backgroundColor: Colors.blue[300],
+        bottom: TabBar(
+          tabs: [
+            Tab(text: 'Lista',icon: Icon(Icons.list),),
+            Tab(text: 'Agregar' ,icon: Icon(Icons.add),),
+            Tab(text: 'Cargar excel ó contactos' ,icon: Icon(Icons.tab_outlined),),
+          ],),
+        title: Text("Wedding Planner"),
+        backgroundColor: Colors.pink[900],
+        ),
+      drawer: MenuLateral(),
+      body:TabBarView(
+        children: [
+          _listaInvitados(),
+          Center(
+            child: Text('Registro'),
+          ),
+          Center(
+            child: Text('Excel'),
+          ),
+        ],
       ),
-      body:
-      StreamBuilder(
-        stream: bloc.allInvitados,
-        builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
-          if (snapshot.hasData) {
-            return buildList(snapshot);
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
+    ))
+    ;
   }
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
     return ListView(
