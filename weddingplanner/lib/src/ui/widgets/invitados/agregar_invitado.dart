@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:weddingplanner/src/resources/invitados_api_provider.dart';
 
-import 'home.dart';
 
 class AgregarInvitados extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -45,7 +44,6 @@ Color hexToColor(String code) {
         title: Text("Wedding Planner"),
         backgroundColor: Colors.pink[900],
         ),
-      drawer: MenuLateral(),
       body:
         SingleChildScrollView(
           child: new Container(

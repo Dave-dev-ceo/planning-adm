@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/item_model_invitados.dart';
-import '../blocs/invitados_bloc.dart';
-import 'home.dart';
+import '../../../models/item_model_invitados.dart';
+import '../../../blocs/invitados_bloc.dart';
+//import 'home.dart';
 
 class ListaInvitados extends StatefulWidget {
   
@@ -31,7 +31,20 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   }
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return Container(
+      width: double.infinity,
+      //color: Colors.pink,
+      child: Center(
+        
+        //alignment: Alignment.center,
+        //crossAxisAlignment: CrossAxisAlignment.start,
+        //mainAxisAlignment: MainAxisAlignment.center,
+        child:
+          _listaInvitados(),
+        
+      ),
+    );
+    /*return DefaultTabController(
       length: 3, 
       child: Scaffold(
       appBar: AppBar(
@@ -39,12 +52,9 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           tabs: [
             Tab(text: 'Lista',icon: Icon(Icons.list),),
             Tab(text: 'Agregar' ,icon: Icon(Icons.add),),
-            Tab(text: 'Cargar excel ó contactos' ,icon: Icon(Icons.tab_outlined),),
-          ],),
-        title: Text("Wedding Planner"),
+            Tab(text: 'Cargar excel ó contact_listaInvitados()
         backgroundColor: Colors.pink[900],
         ),
-      drawer: MenuLateral(),
       body:TabBarView(
         children: [
           _listaInvitados(),
@@ -57,7 +67,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         ],
       ),
     ))
-    ;
+    ;*/
   }
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
     return ListView(
@@ -65,7 +75,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         children: [
           PaginatedDataTable(
             header: Text('Invitados'),
-            rowsPerPage: 8,
+            rowsPerPage: 5,
             showCheckboxColumn: false,
             columns: [
               DataColumn(label: Text('Nombre', style:estiloTxt)),
@@ -116,9 +126,10 @@ class _DataSource extends DataTableSource {
     final row = _rows[index];
     return DataRow.byIndex(
       index: index,
-      //selected: row.selected,
+      selected: row.selected,
       onSelectChanged: (value) {
         if (row.selected != value) {
+          print(value);
           _selectedCount += value ? 1 : -1;
           assert(_selectedCount >= 0);
           row.selected = value;

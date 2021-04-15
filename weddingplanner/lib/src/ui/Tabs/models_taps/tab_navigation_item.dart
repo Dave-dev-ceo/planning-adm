@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../lista_invitados.dart';
-import '../../agregar_invitado.dart';
-import '../../cargar_excel_invitados.dart';
+import 'package:weddingplanner/src/ui/home/home.dart';
+import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
+import 'package:weddingplanner/src/ui/widgets/invitados/cargar_excel_invitados.dart';
+//import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
+
 class TabNavigationItem {
   final Widget page;
   final Widget title;
@@ -15,7 +17,7 @@ class TabNavigationItem {
 
   static List<TabNavigationItem> get items => [
         TabNavigationItem(
-          page: ListaInvitados(),
+          page: HomeView(),
           icon: Icon(Icons.list),
           title: Text("Invitados"),
         ),

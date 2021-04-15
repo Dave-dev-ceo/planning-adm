@@ -1,9 +1,8 @@
 //import 'dart:js';
 
 import 'package:flutter/material.dart';
-//import 'package:weddingplanner/src/ui/home.dart';
-import 'package:weddingplanner/src/ui/lista_invitados.dart';
-//import 'ui/Tabs/pages_taps/tabs_page.dart';
+import 'package:weddingplanner/src/ui/Tabs/pages_taps/tabs_page.dart';
+//import 'package:weddingplanner/src/ui/home/home.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -12,12 +11,13 @@ class MyApp extends StatelessWidget {
       title: 'App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        //visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: '/',
       routes: {
-        '/':(context) => ListaInvitados(),
-        //'/':(context) => TabsPage(), 
+        //'/':(context) => HomeView(),
+        //'/':(context) => HomeView(),
+        '/':(context) => TabsPage(), 
       },
       //home: TabsPage(),
       debugShowCheckedModeBanner: false,
