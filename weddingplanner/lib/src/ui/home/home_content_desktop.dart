@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:weddingplanner/src/ui/Tabs/pages_taps/tabs_page.dart';
-import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
+//import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
+import 'package:weddingplanner/src/ui/Tabs/pages_taps/tabs_page.dart';
+//import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 
 class HomeContentDesktop extends StatelessWidget {
   const HomeContentDesktop({Key key}) : super(key: key);
@@ -8,9 +9,9 @@ class HomeContentDesktop extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
                 child: 
-                 // TabsPage(),
-                  ListaInvitados(),
-                
+                 TabsPage(),
+                  //ListaInvitados(),
+                //Invitados()
               );
   }
 }

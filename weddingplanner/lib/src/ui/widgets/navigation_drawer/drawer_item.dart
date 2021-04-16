@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/widgets/navigation_bar/navbar_item.dart';
+import 'package:weddingplanner/src/ui/widgets/navigation_bar/navbar_item_mobile.dart';
 
 class DrawerItem extends StatelessWidget {
   final String title;
@@ -15,7 +15,7 @@ class DrawerItem extends StatelessWidget {
           SizedBox(
             width: 30,
           ),
-          NavBarItem(title),
+          NavBarItemMobile(title),
         ],
       ),
     );

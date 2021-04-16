@@ -17,7 +17,6 @@ class HomeView extends StatelessWidget {
         drawer: sizingInformation.deviceScreenType == DeviceScreenType.mobile 
         ? NavigationDrawer() 
         : null,
-        backgroundColor: Colors.white,
         body: CenteredView(
           child: Column(
             children: <Widget>[

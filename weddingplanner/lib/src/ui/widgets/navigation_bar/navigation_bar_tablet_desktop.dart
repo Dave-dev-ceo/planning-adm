@@ -7,7 +7,7 @@ class NavigationBarTableDesktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.purple[900],
+      color: Colors.purple[700],
       height: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -7,7 +7,7 @@ class NavBarLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return 
     SizedBox(
-      width: 80, 
+      width: 120, 
       height: 150,
       child: Image.asset('assets/logo.png'),
     );

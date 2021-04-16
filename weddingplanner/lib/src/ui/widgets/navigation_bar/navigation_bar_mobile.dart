@@ -7,14 +7,15 @@ class NavigationBarMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120,
-      color: Colors.purple[900],
+      color: Colors.purple[700],
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           IconButton(
             icon: Icon(Icons.menu), 
-            onPressed: (){}),
+            onPressed: (){},
+            color: Colors.white,),
             NavBarLogo(),
         ],
       ),

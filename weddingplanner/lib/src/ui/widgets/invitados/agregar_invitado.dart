@@ -39,12 +39,7 @@ Color hexToColor(String code) {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Wedding Planner"),
-        backgroundColor: Colors.pink[900],
-        ),
-      body:
+    return 
         SingleChildScrollView(
           child: new Container(
             margin: new EdgeInsets.all(60.0),
@@ -53,7 +48,7 @@ Color hexToColor(String code) {
               child: formUI(),
             ),
           ),
-        ),
+        );
       /*SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -161,7 +156,6 @@ Color hexToColor(String code) {
           ],
         ),
       )*/ 
-    );
   }
 
   formItemsDesign(icon, item) {
@@ -329,9 +323,29 @@ Color hexToColor(String code) {
       //print(response);
       if (response) {
         keyForm.currentState.reset();
-        print("Intitado registrado");  
+        final snackBar = SnackBar(
+            content: Container(
+              height: 30,
+              child: Center(
+              child: Text('Invitado registrado'),
+            ),
+              //color: Colors.red,
+            ),
+            backgroundColor: Colors.green,  
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);  
       } else {
-        print("error");
+        final snackBar = SnackBar(
+          content: Container(
+            height: 30,
+            child: Center(
+            child: Text('Error: No se pudo realizar el registro'),
+          ),
+            //color: Colors.red,
+          ),
+          backgroundColor: Colors.red,  
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       
    }
