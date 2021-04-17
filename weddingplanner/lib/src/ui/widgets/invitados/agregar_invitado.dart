@@ -42,7 +42,7 @@ Color hexToColor(String code) {
     return 
         SingleChildScrollView(
           child: new Container(
-            margin: new EdgeInsets.all(60.0),
+            margin: new EdgeInsets.all(10.0),
             child: new Form(
               key: keyForm,
               child: formUI(),

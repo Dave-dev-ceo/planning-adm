@@ -1,12 +1,16 @@
 //import 'dart:js';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:excel/excel.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:weddingplanner/src/resources/invitados_api_provider.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:weddingplanner/src/ui/widgets/invitados/cargar_contactos_invitados.dart';
 //import 'package:path/path.dart';
 class CargarExcel extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -104,6 +108,38 @@ class _CargarExcelState extends State<CargarExcel> {
       }
     }
   }
+  Future<PermissionStatus> _getPermission() async {
+    PermissionStatus permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.permanentlyDenied) {
+      PermissionStatus permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } else {
+      return permission;
+    }
+  }
+  _viewContact() async{
+    final PermissionStatus permissionStatus = await _getPermission();
+    if (permissionStatus == PermissionStatus.granted) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CargarContactosInvitados()));
+    } else {
+      //If permissions have been denied show standard cupertino alert dialog
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Permissions error'),
+                content: Text('Please enable contacts access '
+                    'permission in system settings'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                ],
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +163,15 @@ class _CargarExcelState extends State<CargarExcel> {
                   child: Center(
                     child:GestureDetector(
                       onTap: (){
-                        print('Contactos');
+                        _viewContact();
+                        /////////////
+                        /*Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => FullScreenDialog(),
+                            fullscreenDialog: true,
+                          ),
+                        );*/
                       },
                       child: CallToAction('Importar Contactos'),
                     ), 
