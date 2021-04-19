@@ -30,7 +30,7 @@ class TabNavigationItem {
         TabNavigationItem(
           page: CargarExcel(),
           icon: Icon(Icons.table_chart_outlined),
-          title: Text("Caragar Excel"),
+          title: Text("Cargar Excel"),
         ),
       ];
 }

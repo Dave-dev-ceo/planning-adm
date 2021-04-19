@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:excel/excel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
-import 'package:weddingplanner/src/resources/invitados_api_provider.dart';
+import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
@@ -22,7 +22,7 @@ class CargarExcel extends StatefulWidget {
 }
 
 class _CargarExcelState extends State<CargarExcel> {
-  InvitadosApiProvider api = new InvitadosApiProvider();
+  ApiProvider api = new ApiProvider();
 
   _readExcel() async{
     /// Use FilePicker to pick files in Flutter Web
@@ -147,7 +147,7 @@ class _CargarExcelState extends State<CargarExcel> {
     return Container(
       width: double.infinity,
         child: Center(
-          child: Row(
+          child: Column(
             children: <Widget>[
                 Expanded(
                   child: Center(
@@ -155,7 +155,7 @@ class _CargarExcelState extends State<CargarExcel> {
                       onTap: (){
                         _readExcel();
                       },
-                      child: CallToAction('Importar Exel'),
+                      child: CallToAction('Importar Excel'),
                     ), 
                   ),
                 ),
@@ -163,56 +163,20 @@ class _CargarExcelState extends State<CargarExcel> {
                   child: Center(
                     child:GestureDetector(
                       onTap: (){
-                        _viewContact();
+                        //_viewContact();
                         /////////////
-                        /*Navigator.push(
+                        Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) => FullScreenDialog(),
                             fullscreenDialog: true,
                           ),
-                        );*/
+                        );
                       },
                       child: CallToAction('Importar Contactos'),
                     ), 
                   ),
                 ),
-                /*Container(
-                  width: 600,
-                  //color: Colors.green,
-                  child: Center(
-                    child: Container(
-                      width: 300,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        label: Text('Importar Excel'),
-                        icon: Icon(Icons.web),
-                        onPressed: () {
-                          print('Pressed');
-                        },
-                      ),
-                    ),
-                  ) 
-                ),
-                Container(
-                  width: 600,
-                  //color: Colors.grey,
-                  child: Center(
-                    child: Container(
-                      width: 300,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        label: Text('Importar Contactos'),
-                        icon: Icon(Icons.web),
-                        onPressed: () {
-                          print('Pressed');
-                        },
-                      ),
-                    ),
-                  ) 
-                ),*/
-
-              
             ],
           ),  
         )

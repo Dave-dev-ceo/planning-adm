@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:multi_select_item/multi_select_item.dart';
 
 class CargarContactosInvitados extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
 
   @override
   void initState() {
+    controller = new MultiSelectController();
     getContacts();
     super.initState();
   }
@@ -22,7 +24,7 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
     final Iterable<Contact> contacts = await ContactsService.getContacts();
     setState(() {
       _contacts = contacts;
-      print('listaC');
+      controller.set(_contacts?.length ?? 0);
     });
   }
 
@@ -58,11 +60,25 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
       'Sin número';
     }
   }
+  MultiSelectController controller;
+  void selectAll() {
+    setState(() {
+      controller.toggleAll();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (Text('Contactos')),
+        title: (Text(controller.selectedIndexes.length>0?'Seleccionados ${controller.selectedIndexes.length}':'Contactos')),
+        actions: (controller.isSelecting)
+        ?<Widget>[
+                  IconButton(
+                    icon: Icon(Icons.select_all),
+                    onPressed: selectAll,
+                  )
+                ]
+              : <Widget>[],
       ),
       body: _contacts != null
           //Build a list view of all contacts, displaying their avatar and
@@ -71,8 +87,50 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
               itemCount: _contacts?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
                 Contact contact = _contacts?.elementAt(index);
-                
-                return Row(
+                return MultiSelectItem(
+                  isSelecting: controller.isSelecting, 
+                  onSelected: (){
+                    setState(() {
+                      controller.toggle(index);
+                      //print(controller.selectedIndexes.toString());
+                    });
+                  },
+                  child: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                          child: _avatarContact(contact),
+                        ),
+                        //SizedBox(height: 10,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _nameContact(contact),
+                              style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            SizedBox(height: 5,),
+                            Text(
+                              _phoneContact(contact),
+                              style: TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    decoration: controller.isSelected(index)
+                    ? new BoxDecoration(color: Colors.grey[300])
+                    : new BoxDecoration(),
+                  ),
+                  
+                );
+                  ////////////////////////
+                /*return Row(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
@@ -98,7 +156,8 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
                       ],
                     ),
                   ],
-                );
+                );*/
+                //////////////////////////////////////////////////
                 /*ListTile(
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 2, horizontal: 18),

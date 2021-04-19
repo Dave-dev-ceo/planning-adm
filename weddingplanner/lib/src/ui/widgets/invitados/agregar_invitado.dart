@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:weddingplanner/src/resources/invitados_api_provider.dart';
+import 'package:weddingplanner/src/resources/api_provider.dart';
 
 
 class AgregarInvitados extends StatefulWidget {
@@ -23,7 +23,7 @@ GlobalKey<FormState> keyForm = new GlobalKey();
 
  TextEditingController  telefonoCtrl = new TextEditingController();
 
- InvitadosApiProvider api = new InvitadosApiProvider();
+ ApiProvider api = new ApiProvider();
 
 Color hexToColor(String code) {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
@@ -163,7 +163,7 @@ Color hexToColor(String code) {
      padding: EdgeInsets.symmetric(vertical: 7),
      child: Card(child: ListTile(leading: Icon(icon), title: item)),
    );
- }
+  }
 
  String gender = 'H';
 
@@ -348,6 +348,6 @@ Color hexToColor(String code) {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       
-   }
+  }
  }
 }

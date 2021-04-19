@@ -1,11 +1,12 @@
 import 'package:http/http.dart';
 import 'dart:async';
 import 'package:http/http.dart' show Client;
+import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'dart:convert';
 import '../models/item_model_invitados.dart';
 //import '../models/item_model_response.dart';
 
-class InvitadosApiProvider {
+class ApiProvider {
   Client client = Client();
   String baseUrl = 'localhost:3010';
   
@@ -20,6 +21,7 @@ class InvitadosApiProvider {
       throw Exception('Failed to load get');
     }
   }
+
   Future<bool> createInvitados(Map<String,String> invitados) async{
     print(json.encode(invitados));
     final response = await client.post(Uri.http(baseUrl, 'INVITADOS/createInvitados'),
@@ -31,6 +33,18 @@ class InvitadosApiProvider {
     } else {
       //throw Exception('Failed post');
       return false;
+    }
+  }
+
+  Future<ItemModelGrupos> fetchGruposList() async {
+    final response = await client.get(Uri.http(baseUrl, 'GRUPOS/obtenerGrupos'));
+    
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelGrupos.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load get');
     }
   }
 }

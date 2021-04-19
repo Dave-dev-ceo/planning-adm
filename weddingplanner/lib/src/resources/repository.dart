@@ -1,10 +1,14 @@
 import 'dart:async';
-import 'invitados_api_provider.dart';
+import 'package:weddingplanner/src/models/item_model_grupos.dart';
+
+import 'api_provider.dart';
 import '../models/item_model_invitados.dart';
 
 class Repository {
-  final invitadosApiProvider = InvitadosApiProvider();
+  final apiProvider = ApiProvider();
 
-  Future<ItemModelInvitados> fetchAllInvitados() => invitadosApiProvider.fetchInvitadosList();
+  Future<ItemModelInvitados> fetchAllInvitados() => apiProvider.fetchInvitadosList();
+
+  Future<ItemModelGrupos> fetchAllGrupos() => apiProvider.fetchGruposList();
 
 }
