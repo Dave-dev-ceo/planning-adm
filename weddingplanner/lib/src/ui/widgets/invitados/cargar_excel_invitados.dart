@@ -10,7 +10,6 @@ import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
-import 'package:weddingplanner/src/ui/widgets/invitados/cargar_contactos_invitados.dart';
 //import 'package:path/path.dart';
 class CargarExcel extends StatefulWidget {
   static Route<dynamic> route() => MaterialPageRoute(
@@ -50,13 +49,12 @@ class _CargarExcelState extends State<CargarExcel> {
         //print(excel.tables[table].maxCols);
         //print(excel.tables[table].maxRows);
         var xx = excel.tables[table].rows;
-        if(xx[0][0]=="NOMBRE" && xx[0][1]=="APELLIDOS" && xx[0][2]=="EMAIL" && xx[0][3]=="TELÉFONO"){
+        if(xx[0][0]=="NOMBRE" && xx[0][1]=="EMAIL" && xx[0][2]=="TELÉFONO"){
           for( var i = 1 ; i < xx.length; i++ ) { 
             Map <String,String> json = {
               "nombre":xx[i][0],
-              "apellidos":xx[i][1],
-              "telefono":xx[i][3].toString(),
-              "email":xx[i][2],
+              "telefono":xx[i][2].toString(),
+              "email":xx[i][1],
               "id_evento":"1"
             };
             bool response = await api.createInvitados(json);
@@ -122,15 +120,14 @@ class _CargarExcelState extends State<CargarExcel> {
     final PermissionStatus permissionStatus = await _getPermission();
     if (permissionStatus == PermissionStatus.granted) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => CargarContactosInvitados()));
+          context, MaterialPageRoute(builder: (context) => FullScreenDialog()));
     } else {
       //If permissions have been denied show standard cupertino alert dialog
       showDialog(
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
-                title: Text('Permissions error'),
-                content: Text('Please enable contacts access '
-                    'permission in system settings'),
+                title: Text('Permisos denegados'),
+                content: Text('Por favor habilitar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: Text('OK'),
@@ -163,15 +160,15 @@ class _CargarExcelState extends State<CargarExcel> {
                   child: Center(
                     child:GestureDetector(
                       onTap: (){
-                        //_viewContact();
+                        _viewContact();
                         /////////////
-                        Navigator.push(
+                        /*Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) => FullScreenDialog(),
                             fullscreenDialog: true,
                           ),
-                        );
+                        );*/
                       },
                       child: CallToAction('Importar Contactos'),
                     ), 

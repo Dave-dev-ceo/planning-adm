@@ -75,7 +75,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         children: [
           PaginatedDataTable(
             header: Text('Invitados'),
-            rowsPerPage: 5,
+            rowsPerPage: 8,
             showCheckboxColumn: false,
             columns: [
               DataColumn(label: Text('Nombre', style:estiloTxt)),
@@ -110,7 +110,7 @@ class _DataSource extends DataTableSource {
   _DataSource(context) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(context[i].nombre, context[i].telefono, context[i].email, context[i].asistencia));  
+      _rows.add(_Row(context[i].nombre, context[i].telefono, (context[i].email==null?'Sin correo electrónico':context[i].email), context[i].asistencia));  
     }
     
   }

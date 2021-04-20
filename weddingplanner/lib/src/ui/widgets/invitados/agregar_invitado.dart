@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
+import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
 
 
 class AgregarInvitados extends StatefulWidget {
@@ -19,11 +20,13 @@ GlobalKey<FormState> keyForm = new GlobalKey();
 
  TextEditingController  emailCtrl = new TextEditingController();
 
- TextEditingController  apellidosCtrl = new TextEditingController();
+ //TextEditingController  apellidosCtrl = new TextEditingController();
 
  TextEditingController  telefonoCtrl = new TextEditingController();
 
  ApiProvider api = new ApiProvider();
+
+ String dropdownValue = 'Hombre';
 
 Color hexToColor(String code) {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
@@ -48,114 +51,7 @@ Color hexToColor(String code) {
               child: formUI(),
             ),
           ),
-        );
-      /*SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SafeArea(
-              child: Center(
-                  //padding: EdgeInsets.symmetric(horizontal: 150.0),
-                  child: FocusTraversalGroup(
-                    child: Form(
-                    key: _formKey,
-                    child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.center,
-                      //crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(padding: EdgeInsets.only(top: 140.0)),
-                        Text('Registro de invitado',style: new TextStyle(color: hexToColor("#8FCACB"), fontSize: 25.0),),
-                        Padding(padding: EdgeInsets.only(top: 50.0)),
-                        Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints.tight(const Size(500,100)),
-                                child: Wrap(
-                                  children: <Widget>[
-                                    TextFormField(
-                                      decoration: new InputDecoration(
-                                        labelText: "Ingresa el nombre",
-                                        fillColor: Colors.white,
-                                        border: _borderTextForm(),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Falta nombre';
-                                        }
-                                      },
-                                    ),
-                                    //Padding(padding: EdgeInsets.only(top: 20.0)),
-                                    TextFormField(
-                                      decoration: new InputDecoration(
-                                        labelText: "ingrese los apellidos",
-                                        fillColor: Colors.white,
-                                        border: _borderTextForm(),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Faltan los apellidos';
-                                        }
-                                      },
-                                    ),
-                                    //Padding(padding: EdgeInsets.only(top: 20.0)),
-                                    TextFormField(
-                                      decoration: new InputDecoration(
-                                        labelText: "ingrese el email",
-                                        fillColor: Colors.white,
-                                        border: _borderTextForm(),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Falta email';
-                                        }
-                                      },
-                                    ),
-                                    //Padding(padding: EdgeInsets.only(top: 20.0)),
-                                    TextFormField(
-                                      decoration: new InputDecoration(
-                                        labelText: "ingrese número telefónico",
-                                        fillColor: Colors.white,
-                                        border: _borderTextForm(),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Falta número telefónico';
-                                        }
-                                      },
-                                    ),
-                                    Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: 
-                          RaisedButton.icon(
-                            
-                            onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                Scaffold.of(context)
-                                    .showSnackBar(SnackBar(content: Text('Processing Data')));
-                              }
-                            },
-                            icon: Icon(Icons.send),
-                            label: Text("Registrar invitado", style: new TextStyle(fontSize: 25.0),),
-                            
-                          ),
-                        ),
-                                  ],
-                                ),
-                              ),
-                            ),    
-                          ],
-                        ),
-                        
-                      ],
-                    ),
-                  ),
-                )
-              )
-            )
-          ],
-        ),
-      )*/ 
+        ); 
   }
 
   formItemsDesign(icon, item) {
@@ -164,7 +60,30 @@ Color hexToColor(String code) {
      child: Card(child: ListTile(leading: Icon(icon), title: item)),
    );
   }
-
+_dropDown2(){
+    return DropdownButton(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_drop_down_outlined),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.pink),
+      underline: Container(
+        height: 2,
+        color: Colors.pink,
+      ),
+      onChanged: (newValue) {
+        setState(() {
+            dropdownValue = newValue;
+        });
+      },
+      items: <String>['Hombre', 'Mujer'].map((item) {
+        return DropdownMenuItem(
+          value: item,
+          child: Text(item, style: TextStyle(fontSize: 18),),
+        );
+      }).toList(),
+    );
+  }
  String gender = 'H';
 
  Widget formUI() {
@@ -175,21 +94,44 @@ Color hexToColor(String code) {
            TextFormField(
              controller: nombreCtrl,
              decoration: new InputDecoration(
-               labelText: 'Nombre',
+               labelText: 'Nombre completo',
              ),
              validator: validateNombre,
            )),
-       formItemsDesign(
+       /*formItemsDesign(
            Icons.rowing,
            TextFormField(
              controller: apellidosCtrl,
                decoration: new InputDecoration(
                  labelText: 'Apellidos',
                ),
-               validator: validateApellidos,)),
+               validator: validateApellidos,)),*/
        formItemsDesign(
-           null,
-           Column(children: <Widget>[
+           Icons.group_rounded,
+           Row(
+             children: <Widget>[
+               Text('Genero'),
+               SizedBox(width: 50,),
+                      _dropDown2(),
+             ],)
+           /*Row(
+             children: <Widget>[
+               Column(
+                  children: <Widget>[
+                      Text('genero'),
+                      _dropDown2(),
+                  ],
+                ),
+                Column(
+             children: <Widget>[
+                Text('genero'),
+                _dropDown2(),
+             ],
+           )
+             ],)*/
+           
+           
+           /*Column(children: <Widget>[
              Text("Genero"),
              RadioListTile<String>(
                title: const Text('Hombre'),
@@ -211,13 +153,14 @@ Color hexToColor(String code) {
                  });
                },
              )
-           ])),
+           ])*/
+           ),
        formItemsDesign(
            Icons.email,
            TextFormField(
              controller: emailCtrl,
                decoration: new InputDecoration(
-                 labelText: 'Email',
+                 labelText: 'Correo',
                ),
                keyboardType: TextInputType.emailAddress,
                maxLength: 32,
@@ -227,7 +170,7 @@ Color hexToColor(String code) {
            TextFormField(
              controller: telefonoCtrl,
                decoration: new InputDecoration(
-                 labelText: 'Numero de telefono',
+                 labelText: 'Teléfono',
                ),
                keyboardType: TextInputType.phone,
                maxLength: 10,
@@ -235,37 +178,10 @@ Color hexToColor(String code) {
    GestureDetector(
    onTap: (){
      save();
-   },child: Container(
-         margin: new EdgeInsets.all(30.0),
-         alignment: Alignment.center,
-         decoration: ShapeDecoration(
-           shape: RoundedRectangleBorder(
-               borderRadius: BorderRadius.circular(30.0)),
-           gradient: LinearGradient(colors: [
-             Color(0xFF0EDED2),
-             Color(0xFF03A0FE),
-           ],
-               begin: Alignment.topLeft, end: Alignment.bottomRight),
-         ),
-         child: Text("Guardar",
-             style: TextStyle(
-                 color: Colors.white,
-                 fontSize: 18,
-                 fontWeight: FontWeight.w500)),
-         padding: EdgeInsets.only(top: 16, bottom: 16),
-       ))
+   },child: CallToAction('Guardar')
+       )
      ],
    );
- }
-  String validateApellidos(String value) {
-   String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-   RegExp regExp = new RegExp(pattern);
-   if (value.length == 0) {
-     return "El apellido es necesario";
-   } else if (!regExp.hasMatch(value)) {
-     return "El apellido debe de ser a-z y A-Z";
-   }
-   return null;
  }
 
  String validateNombre(String value) {
@@ -307,10 +223,13 @@ Color hexToColor(String code) {
 
  save() async{
    if (keyForm.currentState.validate()) {
-     
+     if(dropdownValue == "Hombre"){
+       gender = "H";
+     }else if(dropdownValue == "Mujer"){
+       gender = "M";
+     }
      Map <String,String> json = {
        "nombre":nombreCtrl.text,
-       "apellidos":apellidosCtrl.text,
        "telefono":telefonoCtrl.text,
        "email":emailCtrl.text,
        "genero":gender,
@@ -323,6 +242,10 @@ Color hexToColor(String code) {
       //print(response);
       if (response) {
         keyForm.currentState.reset();
+        nombreCtrl.clear();
+        telefonoCtrl.clear();
+        emailCtrl.clear();
+        dropdownValue = "Hombre";
         final snackBar = SnackBar(
             content: Container(
               height: 30,

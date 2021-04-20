@@ -8,10 +8,11 @@ import '../models/item_model_invitados.dart';
 
 class ApiProvider {
   Client client = Client();
-  String baseUrl = 'localhost:3010';
+  String baseUrl = 'server01.grupotum.com:3004';
+  String baseUrlPruebas = 'localhost:3010';
   
   Future<ItemModelInvitados> fetchInvitadosList() async {
-    final response = await client.get(Uri.http(baseUrl, 'INVITADOS/obtenerInvitados'));
+    final response = await client.get(Uri.http(baseUrl, '/INVITADOS/obtenerInvitados'));
     
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -45,6 +46,20 @@ class ApiProvider {
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load get');
+    }
+  }
+
+    Future<bool> createGrupo(Map<String,String> grupo) async{
+    print(json.encode(grupo));
+    final response = await client.post(Uri.http(baseUrl, 'GRUPOS/createGrupo'),
+        
+        body: grupo
+    );
+    if (response.statusCode == 201) {
+      return true;  
+    } else {
+      //throw Exception('Failed post');
+      return false;
     }
   }
 }

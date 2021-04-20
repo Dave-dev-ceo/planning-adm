@@ -3,6 +3,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:multi_select_item/multi_select_item.dart';
 import 'package:weddingplanner/src/blocs/grupos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
+import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
 
 class FullScreenDialog extends StatefulWidget {
@@ -13,10 +14,11 @@ class FullScreenDialog extends StatefulWidget {
 class _FullScreenDialogState extends State<FullScreenDialog> {
   String dropdownValue = 'Seleccione un grupo';
   String _mySelection = "0";
+  bool bandera = true;
   Iterable<Contact> _contacts;
   TextEditingController  grupo = new TextEditingController();
   GlobalKey<FormState> keyForm = new GlobalKey();
-
+  ApiProvider api = new ApiProvider();
   _listaGrupos(){
     ///bloc.dispose();
     bloc.fetchAllGrupos();
@@ -35,30 +37,38 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
             },
           );
   }
-  /*Widget buildList(AsyncSnapshot<ItemModelGrupos> snapshot) {
-    return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          PaginatedDataTable(
-            header: Text('Invitados'),
-            rowsPerPage: 5,
-            showCheckboxColumn: false,
-            columns: [
-              DataColumn(label: Text('Nombre', style:estiloTxt)),
-              DataColumn(label: Text('Telefono', style:estiloTxt)),
-              DataColumn(label: Text('Email', style:estiloTxt)),
-              DataColumn(label: Text('Asistencia', style:estiloTxt)),
-            ],
-            
-            source: _DataSource(snapshot.data.results),
-          ),
-        ],
-      );
-  }*/
-  /*_seleccion(grupos){
-    _mySelection = ((grupos.results.length - 1).toString());
-    return ((grupos.results.length - 1).toString());
-  } */
+
+  _dropDown2(){
+    return DropdownButton(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_drop_down_outlined),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.pink),
+      underline: Container(
+        height: 2,
+        color: Colors.pink,
+      ),
+      onChanged: (newValue) {
+        setState(() {
+          if(newValue == "Nuevo grupo"){
+            //print(newValue);
+            _showMyDialog();
+          }else{
+            print(newValue);
+            dropdownValue = newValue;
+          }
+          
+        });
+      },
+      items: <String>['Seleccione un grupo', 'General', 'Familiares' ,'Nuevo grupo'].map((item) {
+        return DropdownMenuItem(
+          value: item,
+          child: Text(item, style: TextStyle(fontSize: 18),),
+        );
+      }).toList(),
+    );
+  }
   _dropDown(ItemModelGrupos grupos){
     return DropdownButton(
       value: _mySelection,
@@ -72,7 +82,12 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       ),
       onChanged: (newValue) {
         setState(() {
-          _mySelection = newValue;
+          if(newValue == grupos.results.elementAt(grupos.results.length-1).idGrupo.toString()){
+            _showMyDialog();
+          }else{
+            _mySelection = newValue;
+          }
+          
         });
       },
       items: grupos.results.map((item) {
@@ -107,16 +122,28 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
      child: Card(child: ListTile(leading: Icon(icon), title: item)),
    );
   }
-  _save(){
+  _save(BuildContext context) async{
     if (keyForm.currentState.validate()) {
-      print('grupo');
+      Map <String,String> json = {
+       "nombre_grupo":grupo.text
+      };
+      //json.
+      bool response = await api.createGrupo(json);
+      if (response) {
+        //_mySelection = "0";
+        Navigator.of(context).pop();
+        _msgSnackBar('Grupo agregado',Colors.green);
+        _listaGrupos();
+      } else {
+        print('error');
+      }
     }
   }
 
   Future<void> _showMyDialog() async {
   return showDialog<void>(
     context: context,
-    barrierDismissible: false, // user must tap button!
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Registar nuevo grupo', textAlign: TextAlign.center),
@@ -140,10 +167,10 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
 
                 GestureDetector(
                         onTap: (){
-                          _save();
+                          _save(context);
                           //print('guardado');
                         },
-                        child: CallToAction('Guardar grupo'),
+                        child: CallToAction('Agregar'),
                       ),
               ],
             ),
@@ -151,7 +178,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('Approve'),
+            child: Text('Cerrar'),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -202,6 +229,47 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
     }else{
       return
       'Sin número';
+    }
+  }
+  _msgSnackBar(String error, Color color){
+    final snackBar = SnackBar(
+              content: Container(
+                height: 30,
+                child: Center(
+                child: Text(error),
+              ),
+                //color: Colors.red,
+              ),
+              backgroundColor: color,  
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+  _saveContact() async{
+    if(controller.selectedIndexes.length <=  0){
+      _msgSnackBar('Seleccione un contacto',Colors.red);
+    }else if(_mySelection == "0"){
+      _msgSnackBar('Seleccione un grupo',Colors.red);
+    }else{
+      ///////////Validar que no este vacio
+      for (var i = 0; i < controller.selectedIndexes.length; i++) {
+        Map <String,String> json = {
+          "nombre":_contacts.elementAt(controller.selectedIndexes[i]).displayName,
+          "telefono":_contacts.elementAt(controller.selectedIndexes[i]).phones.elementAt(0).value,
+          "id_evento":"1"
+        };
+        bool response = await api.createInvitados(json);
+            if(response){
+
+            }else{
+              bandera = false;
+            }   
+      }
+      if(bandera){
+        controller.deselectAll();
+        _msgSnackBar('Se importaron los contactos con éxito',Colors.green);
+      }else{
+        _msgSnackBar('Error: No se pudo realizar la importación',Colors.red);
+      }
     }
   }
   MultiSelectController controller;
@@ -291,7 +359,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showMyDialog();
+          _saveContact();
         },
         child: const Icon(Icons.cloud_upload_outlined),
         //backgroundColor: Colors.green,
