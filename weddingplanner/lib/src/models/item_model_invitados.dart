@@ -17,18 +17,20 @@ class ItemModelInvitados {
 }
 
 class _Result {
+  int _idInvitado;
   String _nombre;
   String _telefono;
   String _email;
   String _asistencia;
 
   _Result(result){
+    _idInvitado = result['id_invitado'];
     _nombre = result['nombre'];
     _telefono = result['telefono'];
     _email = result['email'];
     _asistencia = result['descripcion'];
   }
-
+  int get idInvitado=>_idInvitado;
   String get nombre=>_nombre;
   String get telefono=>_telefono;
   String get email=>_email;

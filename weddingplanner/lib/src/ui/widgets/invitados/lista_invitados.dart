@@ -1,6 +1,11 @@
+//import 'dart:js';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weddingplanner/src/resources/api_provider.dart';
 import '../../../models/item_model_invitados.dart';
 import '../../../blocs/invitados_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 //import 'home.dart';
 
 class ListaInvitados extends StatefulWidget {
@@ -14,7 +19,22 @@ class ListaInvitados extends StatefulWidget {
 
 class _ListaInvitadosState extends State<ListaInvitados> {
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
-  _listaInvitados(){
+  
+  alertaLlamada(){
+    showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Permisos denegados'),
+                content: Text('Por favor habilitar el acceso a contactos'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                ],
+              )); 
+  }
+  listaInvitados(){
     ///bloc.dispose();
     bloc.fetchAllInvitados();
     return StreamBuilder(
@@ -40,34 +60,10 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         //crossAxisAlignment: CrossAxisAlignment.start,
         //mainAxisAlignment: MainAxisAlignment.center,
         child:
-          _listaInvitados(),
+          listaInvitados(),
         
       ),
     );
-    /*return DefaultTabController(
-      length: 3, 
-      child: Scaffold(
-      appBar: AppBar(
-        bottom: TabBar(
-          tabs: [
-            Tab(text: 'Lista',icon: Icon(Icons.list),),
-            Tab(text: 'Agregar' ,icon: Icon(Icons.add),),
-            Tab(text: 'Cargar excel ó contact_listaInvitados()
-        backgroundColor: Colors.pink[900],
-        ),
-      body:TabBarView(
-        children: [
-          _listaInvitados(),
-          Center(
-            child: Text('Registro'),
-          ),
-          Center(
-            child: Text('Excel'),
-          ),
-        ],
-      ),
-    ))
-    ;*/
   }
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
     return ListView(
@@ -82,22 +78,26 @@ class _ListaInvitadosState extends State<ListaInvitados> {
               DataColumn(label: Text('Telefono', style:estiloTxt)),
               DataColumn(label: Text('Email', style:estiloTxt)),
               DataColumn(label: Text('Asistencia', style:estiloTxt)),
+              DataColumn(label: Text('', style:estiloTxt),),
+              DataColumn(label: Text('', style:estiloTxt)),
             ],
             
-            source: _DataSource(snapshot.data.results),
+            source: _DataSource(snapshot.data.results,context),
           ),
         ],
       );
   }
+  
 }
 class _Row {
   _Row(
+    this.valueId,
     this.valueA,
     this.valueB,
     this.valueC,
     this.valueD,
   );
-
+  final int valueId;
   final String valueA;
   final String valueB;
   final String valueC;
@@ -107,18 +107,103 @@ class _Row {
 }
 
 class _DataSource extends DataTableSource {
-  _DataSource(context) {
+  BuildContext _cont;
+  ApiProvider api = new ApiProvider();
+  _DataSource(context,BuildContext cont) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(context[i].nombre, context[i].telefono, (context[i].email==null?'Sin correo electrónico':context[i].email), context[i].asistencia));  
+      _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].email==null?'Sin correo electrónico':context[i].email), context[i].asistencia));  
     }
-    
+    _cont=cont;
   }
-  
+  /*void _reset() {
+    Navigator.pushReplacement(
+      _cont,
+      PageRouteBuilder(
+        transitionDuration: Duration.zero,
+        pageBuilder: (_, __, ___) => ListaInvitados(),
+      ),
+    );
+  }*/
+
+  _viewShowDialog(String numero){
+      showDialog(
+          context: _cont,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Llamada'),
+                content: Text('Se llamara al numero $numero'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('Cancelar',style: TextStyle(color: Colors.red),),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Confirmar'),
+                    onPressed: () {
+                      launch('tel://$numero');
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ));
+  }
+  _updateEstatus(int idInvitado, int idEstatusInvitado) async{
+    Map<String,String> json = 
+    {
+      "id_invitado" : idInvitado.toString(),
+      "id_estatus_invitado" : idEstatusInvitado.toString()
+    };
+    
+    bool response = await api.updateEstatusInvitado(json);
+    if (response) {
+      //_reset();
+      _ListaInvitadosState().listaInvitados();
+      print("actualizado");
+    } else {
+      print("error update");
+    }
+  }
+  _viewShowDialogEstatus(int idInvitado){
+      showDialog(
+          context: _cont,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                //title: Text('Llamada'),
+                //content: Text('Se llamara al numero $numero'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('Confirmado'),
+                    onPressed: () {
+                      _updateEstatus(idInvitado, 1);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Pendiente'),
+                    onPressed: () {
+                      _updateEstatus(idInvitado, 2);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Cancelado'),
+                    onPressed: () {
+                      _updateEstatus(idInvitado, 3);
+                      
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Cerrar',style: TextStyle(color: Colors.red),),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ));
+  }
+
   List<_Row> _rows;
 
   int _selectedCount = 0;
-
+  
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
@@ -137,10 +222,13 @@ class _DataSource extends DataTableSource {
         }
       },
       cells: [
+        //DataCell(Text(row.valueId.toString())),
         DataCell(Text(row.valueA)),
-        DataCell(Text(row.valueB)),
+        DataCell(Text(row.valueB),onTap: (){_viewShowDialog(row.valueB);}),
         DataCell(Text(row.valueC)),
-        DataCell(Text(row.valueD)),
+        DataCell(Text(row.valueD),onTap: (){_viewShowDialogEstatus(row.valueId);},),
+        DataCell(Icon(Icons.edit)),
+        DataCell(Icon(Icons.delete)),
       ],
     );
   }

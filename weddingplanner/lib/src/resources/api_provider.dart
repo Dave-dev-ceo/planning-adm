@@ -37,6 +37,20 @@ class ApiProvider {
     }
   }
 
+  Future<bool> updateEstatusInvitado(Map<String,String> data) async{
+    print(json.encode(data));
+    final response = await client.post(Uri.http(baseUrl, 'INVITADOS/updateEstatusInvitados'),
+        
+        body: data
+    );
+    if (response.statusCode == 201) {
+      return true;  
+    } else {
+      //throw Exception('Failed post');
+      return false;
+    }
+  }
+
   Future<ItemModelGrupos> fetchGruposList() async {
     final response = await client.get(Uri.http(baseUrl, 'GRUPOS/obtenerGrupos'));
     
