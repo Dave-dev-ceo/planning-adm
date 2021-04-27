@@ -12,17 +12,22 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
 //import 'package:path/path.dart';
 class CargarExcel extends StatefulWidget {
+  final int id;
+
+  const CargarExcel({Key key, this.id}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => CargarExcel(),
       );
 
   @override
-  _CargarExcelState createState() => _CargarExcelState();
+  _CargarExcelState createState() => _CargarExcelState(id);
 }
 
 class _CargarExcelState extends State<CargarExcel> {
   ApiProvider api = new ApiProvider();
+  final int id;
 
+  _CargarExcelState(this.id);
   _readExcel() async{
     /// Use FilePicker to pick files in Flutter Web
   
@@ -55,7 +60,7 @@ class _CargarExcelState extends State<CargarExcel> {
               "nombre":xx[i][0],
               "telefono":xx[i][2].toString(),
               "email":xx[i][1],
-              "id_evento":"1"
+              "id_evento":id.toString()
             };
             bool response = await api.createInvitados(json);
             if(response){

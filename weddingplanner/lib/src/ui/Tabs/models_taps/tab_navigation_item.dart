@@ -9,7 +9,7 @@ class TabNavigationItem {
   final Widget page;
   final Widget title;
   final Icon icon;
-
+  int id = 0;
   TabNavigationItem({
     @required this.page,
     @required this.title,

@@ -5,15 +5,19 @@ import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart
 
 
 class AgregarInvitados extends StatefulWidget {
+  final int id;
+
+  const AgregarInvitados({Key key, this.id}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => AgregarInvitados(),
       );
 
   @override
-  _AgregarInvitadosState createState() => _AgregarInvitadosState();
+  _AgregarInvitadosState createState() => _AgregarInvitadosState(id);
 }
 
 class _AgregarInvitadosState extends State<AgregarInvitados> {
+  final int id;
 GlobalKey<FormState> keyForm = new GlobalKey();
 
  TextEditingController  nombreCtrl = new TextEditingController();
@@ -27,6 +31,8 @@ GlobalKey<FormState> keyForm = new GlobalKey();
  ApiProvider api = new ApiProvider();
 
  String dropdownValue = 'Hombre';
+
+  _AgregarInvitadosState(this.id);
 
 Color hexToColor(String code) {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
@@ -233,7 +239,7 @@ _dropDown2(){
        "telefono":telefonoCtrl.text,
        "email":emailCtrl.text,
        "genero":gender,
-      "id_evento":"1"
+      "id_evento":id.toString()
       };
      //json.
      bool response = await api.createInvitados(json);

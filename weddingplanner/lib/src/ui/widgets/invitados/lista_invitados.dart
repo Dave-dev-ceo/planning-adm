@@ -9,17 +9,21 @@ import 'package:url_launcher/url_launcher.dart';
 //import 'home.dart';
 
 class ListaInvitados extends StatefulWidget {
-  
+  final int id;
+
+  const ListaInvitados({Key key, this.id}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => ListaInvitados(),
       );
   @override
-  _ListaInvitadosState createState() => _ListaInvitadosState();
+  _ListaInvitadosState createState() => _ListaInvitadosState(id);
 }
 
 class _ListaInvitadosState extends State<ListaInvitados> {
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
-  
+  final int id;
+
+  _ListaInvitadosState(this.id);  
   alertaLlamada(){
     showDialog(
           context: context,
@@ -36,7 +40,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   }
   listaInvitados(){
     ///bloc.dispose();
-    bloc.fetchAllInvitados();
+    bloc.fetchAllInvitados(id);
     return StreamBuilder(
             stream: bloc.allInvitados,
             builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
@@ -82,7 +86,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
               DataColumn(label: Text('', style:estiloTxt)),
             ],
             
-            source: _DataSource(snapshot.data.results,context),
+            source: _DataSource(snapshot.data.results,context,id),
           ),
         ],
       );
@@ -108,8 +112,9 @@ class _Row {
 
 class _DataSource extends DataTableSource {
   BuildContext _cont;
+  final int id;
   ApiProvider api = new ApiProvider();
-  _DataSource(context,BuildContext cont) {
+  _DataSource(context,BuildContext cont, this.id) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
       _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].email==null?'Sin correo electrónico':context[i].email), context[i].asistencia));  
@@ -157,7 +162,7 @@ class _DataSource extends DataTableSource {
     bool response = await api.updateEstatusInvitado(json);
     if (response) {
       //_reset();
-      _ListaInvitadosState().listaInvitados();
+      _ListaInvitadosState(id).listaInvitados();
       print("actualizado");
     } else {
       print("error update");

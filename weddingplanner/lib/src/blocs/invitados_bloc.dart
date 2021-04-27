@@ -8,8 +8,8 @@ class InvitadosBloc{
 
   Stream<ItemModelInvitados> get allInvitados=>_invitadosFetcher.stream;
 
-  fetchAllInvitados() async {
-    ItemModelInvitados itemModel = await _repository.fetchAllInvitados();
+  fetchAllInvitados(int id) async {
+    ItemModelInvitados itemModel = await _repository.fetchAllInvitados(id);
     _invitadosFetcher.sink.add(itemModel);
   }
 

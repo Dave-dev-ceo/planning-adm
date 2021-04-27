@@ -1,6 +1,7 @@
 import 'package:http/http.dart';
 import 'dart:async';
 import 'package:http/http.dart' show Client;
+import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'dart:convert';
 import '../models/item_model_invitados.dart';
@@ -11,8 +12,8 @@ class ApiProvider {
   String baseUrl = 'server01.grupotum.com:3004';
   String baseUrlPruebas = 'localhost:3010';
   
-  Future<ItemModelInvitados> fetchInvitadosList() async {
-    final response = await client.get(Uri.http(baseUrl, '/INVITADOS/obtenerInvitados'));
+  Future<ItemModelInvitados> fetchInvitadosList(int id) async {
+    final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerInvitados/$id'));
     
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -23,9 +24,21 @@ class ApiProvider {
     }
   }
 
+  Future<ItemModelEventos> fetchEventosList() async {
+    final response = await client.get(Uri.http(baseUrlPruebas, '/wedding/EVENTOS/obtenerEventos/1'));
+    
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelEventos.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load get');
+    }
+  }
+
   Future<bool> createInvitados(Map<String,String> invitados) async{
     print(json.encode(invitados));
-    final response = await client.post(Uri.http(baseUrl, 'INVITADOS/createInvitados'),
+    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/createInvitados'),
         
         body: invitados
     );
@@ -39,7 +52,7 @@ class ApiProvider {
 
   Future<bool> updateEstatusInvitado(Map<String,String> data) async{
     print(json.encode(data));
-    final response = await client.post(Uri.http(baseUrl, 'INVITADOS/updateEstatusInvitados'),
+    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/updateEstatusInvitados'),
         
         body: data
     );
@@ -52,7 +65,7 @@ class ApiProvider {
   }
 
   Future<ItemModelGrupos> fetchGruposList() async {
-    final response = await client.get(Uri.http(baseUrl, 'GRUPOS/obtenerGrupos'));
+    final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/obtenerGrupos'));
     
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -65,7 +78,7 @@ class ApiProvider {
 
     Future<bool> createGrupo(Map<String,String> grupo) async{
     print(json.encode(grupo));
-    final response = await client.post(Uri.http(baseUrl, 'GRUPOS/createGrupo'),
+    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/createGrupo'),
         
         body: grupo
     );
