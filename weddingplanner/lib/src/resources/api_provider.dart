@@ -3,15 +3,41 @@ import 'dart:async';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 import 'dart:convert';
 import '../models/item_model_invitados.dart';
 //import '../models/item_model_response.dart';
 
 class ApiProvider {
   Client client = Client();
-  String baseUrl = 'server01.grupotum.com:3004';
+  //String baseUrlPruebas = 'server01.grupotum.com:3004';
   String baseUrlPruebas = 'localhost:3010';
   
+  Future<ItemModelReporteInvitadosGenero> fetchReporteInvitadosGenero(int id) async {
+    final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitadosGenero/$id'));
+    
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelReporteInvitadosGenero.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load get');
+    }
+  }
+
+  Future<ItemModelReporteInvitados> fetchReporteInvitados(int id) async {
+    final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitados/$id'));
+    
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelReporteInvitados.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load get');
+    }
+  }
+
   Future<ItemModelInvitados> fetchInvitadosList(int id) async {
     final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerInvitados/$id'));
     

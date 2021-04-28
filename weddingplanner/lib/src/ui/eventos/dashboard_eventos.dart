@@ -103,28 +103,11 @@ class _DashboardEventosState extends State<DashboardEventos> {
     return 
     Scaffold(
           appBar: AppBar(backgroundColor: Colors.blue,),
-          body: 
-          //SingleChildScrollView(
-            //child: 
+          body:  
             Container(
-              //color: Colors.pink,
-          //margin: EdgeInsets.all(5.0),
-              //child: 
-              //Center(
-                //child: 
-                //Wrap(
-                //children: <Widget>[
- child:               
-                    listaEventos(),
-                    //buildList2()
-                  
-                                 
-                //],
-              
-            //),
-          ),
-        //),
-      //),
+              child:               
+                listaEventos(),
+           ),
     );
   }
 }
