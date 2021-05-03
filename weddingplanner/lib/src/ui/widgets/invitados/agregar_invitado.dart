@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
-
+import '../../../resources/my_flutter_app_icons.dart';
 
 class AgregarInvitados extends StatefulWidget {
   final int id;
@@ -50,13 +50,21 @@ Color hexToColor(String code) {
   Widget build(BuildContext context) {
     return 
         SingleChildScrollView(
-          child: new Container(
-            margin: new EdgeInsets.all(10.0),
-            child: new Form(
-              key: keyForm,
-              child: formUI(),
+          child: Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+                      //child: Expanded(
+                                              child: 
+                                              new Container(
+              width: 800,
+              margin: new EdgeInsets.all(10.0),
+              child: new Form(
+                key: keyForm,
+                child: formUI(),
+              ),
             ),
-          ),
+                      ),
+          //),
         ); 
   }
 
@@ -104,16 +112,8 @@ _dropDown2(){
              ),
              validator: validateNombre,
            )),
-       /*formItemsDesign(
-           Icons.rowing,
-           TextFormField(
-             controller: apellidosCtrl,
-               decoration: new InputDecoration(
-                 labelText: 'Apellidos',
-               ),
-               validator: validateApellidos,)),*/
        formItemsDesign(
-           Icons.group_rounded,
+           MyFlutterApp.transgender,
            Row(
              children: <Widget>[
                Text('Genero'),

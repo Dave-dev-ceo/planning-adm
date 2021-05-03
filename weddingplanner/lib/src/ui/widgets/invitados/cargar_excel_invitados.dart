@@ -28,6 +28,27 @@ class _CargarExcelState extends State<CargarExcel> {
   final int id;
 
   _CargarExcelState(this.id);
+  _viewShowDialogExcel(){
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Importación de excel'),
+                content: Text('Procedera a abrir su explorador de archivos para seleccionar un archivo excel,¿Desea continuar?'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('No',style: TextStyle(color: Colors.red),),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Sí'),
+                    onPressed: () {
+                      _readExcel();
+                      //Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ));
+  }
   _readExcel() async{
     /// Use FilePicker to pick files in Flutter Web
   
@@ -111,6 +132,7 @@ class _CargarExcelState extends State<CargarExcel> {
       }
     }
   }
+
   Future<PermissionStatus> _getPermission() async {
     PermissionStatus permission = await Permission.contacts.status;
     if (permission != PermissionStatus.granted &&
@@ -125,7 +147,7 @@ class _CargarExcelState extends State<CargarExcel> {
     final PermissionStatus permissionStatus = await _getPermission();
     if (permissionStatus == PermissionStatus.granted) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => FullScreenDialog()));
+          context, MaterialPageRoute(builder: (context) => FullScreenDialog(id: id,)));
     } else {
       //If permissions have been denied show standard cupertino alert dialog
       showDialog(
@@ -146,42 +168,60 @@ class _CargarExcelState extends State<CargarExcel> {
   @override
   Widget build(BuildContext context) {
     //_ReadExcel();
-    return Container(
-      width: double.infinity,
-        child: Center(
-          child: Column(
-            children: <Widget>[
-                Expanded(
-                  child: Center(
-                    child:GestureDetector(
-                      onTap: (){
-                        _readExcel();
-                      },
-                      child: CallToAction('Importar Excel'),
-                    ), 
-                  ),
+    return SingleChildScrollView(
+          child: Container(
+        width: double.infinity,
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 50,
                 ),
-                Expanded(
-                  child: Center(
-                    child:GestureDetector(
-                      onTap: (){
-                        _viewContact();
-                        /////////////
-                        /*Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) => FullScreenDialog(),
-                            fullscreenDialog: true,
-                          ),
-                        );*/
-                      },
-                      child: CallToAction('Importar Contactos'),
-                    ), 
+                  Text('Estructura del excel',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
+                  SizedBox(
+                      width: 370, 
+                      height: 220,
+                      child: Image.asset('assets/AreaExcelLista.png'),  
                   ),
+                   TextButton(
+                      child: Text('Descargar plantilla'),
+                      style: TextButton.styleFrom(
+                        primary: Colors.teal,
+                      ),
+                      onPressed: () {
+                        print('Pressed');
+                      },
+                    ),
+                    SizedBox(
+                  height: 20,
                 ),
-            ],
-          ),  
-        )
-      );
+                  GestureDetector(
+                        onTap: (){
+                          _viewShowDialogExcel();
+                        },
+                        child: CallToAction('Importar Excel'),
+                      ),
+                      SizedBox(
+                  height: 20,
+                ),
+                  GestureDetector(
+                        onTap: (){
+                          _viewContact();
+                          /////////////
+                          /*Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) => FullScreenDialog(),
+                              fullscreenDialog: true,
+                            ),
+                          );*/
+                        },
+                        child: CallToAction('Importar Contactos'),
+                      ), 
+              ],
+            ),  
+          )
+        ),
+    );
   }
 }

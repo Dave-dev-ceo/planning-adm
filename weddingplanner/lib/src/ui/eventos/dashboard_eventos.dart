@@ -102,7 +102,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget build(BuildContext context) {
     return 
     Scaffold(
-          appBar: AppBar(backgroundColor: Colors.blue,),
+          appBar: AppBar(backgroundColor: Colors.purple,),
           body:  
             Container(
               child:               

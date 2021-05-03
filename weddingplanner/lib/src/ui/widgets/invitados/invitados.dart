@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:weddingplanner/src/models/item_model_parametros.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
-import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
+//import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 
 class Invitados extends StatefulWidget {
+  static const routeName = '/eventos';
   const Invitados({Key key}) : super(key: key);
 
   @override
@@ -15,12 +17,11 @@ class _InvitadosState extends State<Invitados> {
       
   @override
   Widget build(BuildContext context) {
+    final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
         length: 7,
         child: Scaffold(
       appBar: AppBar(
-            //title: Text('Scrollable Tabs'),
-            
             automaticallyImplyLeading: false,
             backgroundColor: Color(0xff5808e5),
             bottom: TabBar(
@@ -75,8 +76,8 @@ class _InvitadosState extends State<Invitados> {
         child: IndexedStack(
           index: _pageIndex,
           children: <Widget>[
-            ResumenEvento(id: 1,),
-            ListaInvitados(id: 1,),
+            ResumenEvento(id: param.id,),
+            ListaInvitados(id: param.id,),
             //AgregarInvitados(),
             //ListaInvitados(),
             //ListaInvitados(),

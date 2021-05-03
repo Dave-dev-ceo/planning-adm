@@ -8,7 +8,7 @@ import 'package:weddingplanner/src/ui/widgets/navigation_bar/navigation_bar.dart
 import 'package:weddingplanner/src/ui/widgets/navigation_drawer/navigation_drawer.dart';
 
 class HomeView extends StatelessWidget {
-  static const routeName = '/eventos';
+  //static const routeName = '/eventos';
   const HomeView({Key key}) : super(key: key);
   
   @override

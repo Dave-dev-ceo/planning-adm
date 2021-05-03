@@ -7,11 +7,15 @@ import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
 
 class FullScreenDialog extends StatefulWidget {
+  final int id;
+
+  const FullScreenDialog({Key key, this.id}) : super(key: key);
   @override
-  _FullScreenDialogState createState() => _FullScreenDialogState();
+  _FullScreenDialogState createState() => _FullScreenDialogState(id);
 }
 
 class _FullScreenDialogState extends State<FullScreenDialog> {
+  final int id;
   String dropdownValue = 'Seleccione un grupo';
   String _mySelection = "0";
   bool bandera = true;
@@ -19,6 +23,8 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
   TextEditingController  grupo = new TextEditingController();
   GlobalKey<FormState> keyForm = new GlobalKey();
   ApiProvider api = new ApiProvider();
+
+  _FullScreenDialogState(this.id);
   _listaGrupos(){
     ///bloc.dispose();
     bloc.fetchAllGrupos();
@@ -255,7 +261,8 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
         Map <String,String> json = {
           "nombre":_contacts.elementAt(controller.selectedIndexes[i]).displayName,
           "telefono":_contacts.elementAt(controller.selectedIndexes[i]).phones.elementAt(0).value,
-          "id_evento":"1"
+          "id_evento":id.toString(),
+          "id_grupo":_mySelection
         };
         bool response = await api.createInvitados(json);
             if(response){

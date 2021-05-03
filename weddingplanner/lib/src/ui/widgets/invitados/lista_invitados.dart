@@ -3,6 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import '../../../models/item_model_invitados.dart';
 import '../../../blocs/invitados_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,18 +57,24 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      //color: Colors.pink,
-      child: Center(
-        
-        //alignment: Alignment.center,
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        //mainAxisAlignment: MainAxisAlignment.center,
-        child:
-          listaInvitados(),
-        
+    return Scaffold(
+          body: Container(
+        width: double.infinity,
+        child: Center(
+          child:
+            listaInvitados(),
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+          context, MaterialPageRoute(builder: (context) => FullScreenDialogAdd(id: id,)));
+        },
+        child: const Icon(Icons.person_add),
+        
+        //backgroundColor: Colors.green,
+      ),
+      
     );
   }
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
@@ -80,10 +88,10 @@ class _ListaInvitadosState extends State<ListaInvitados> {
             columns: [
               DataColumn(label: Text('Nombre', style:estiloTxt)),
               DataColumn(label: Text('Telefono', style:estiloTxt)),
-              DataColumn(label: Text('Email', style:estiloTxt)),
+              DataColumn(label: Text('Grupo', style:estiloTxt)),
               DataColumn(label: Text('Asistencia', style:estiloTxt)),
-              DataColumn(label: Text('', style:estiloTxt),),
-              DataColumn(label: Text('', style:estiloTxt)),
+              //DataColumn(label: Text('', style:estiloTxt),),
+              //DataColumn(label: Text('', style:estiloTxt)),
             ],
             
             source: _DataSource(snapshot.data.results,context,id),
@@ -117,7 +125,7 @@ class _DataSource extends DataTableSource {
   _DataSource(context,BuildContext cont, this.id) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].email==null?'Sin correo electrónico':context[i].email), context[i].asistencia));  
+      _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].grupo==null?'Sin grupo':context[i].grupo), context[i].asistencia));  
     }
     _cont=cont;
   }
@@ -130,6 +138,11 @@ class _DataSource extends DataTableSource {
       ),
     );
   }*/
+
+  _viewShowDialogEditar(int id){
+    Navigator.push(
+          _cont, MaterialPageRoute(builder: (context) => FullScreenDialogEdit()));
+  }
 
   _viewShowDialog(String numero){
       showDialog(
@@ -228,12 +241,12 @@ class _DataSource extends DataTableSource {
       },
       cells: [
         //DataCell(Text(row.valueId.toString())),
-        DataCell(Text(row.valueA)),
+        DataCell(Text(row.valueA), onTap: (){_viewShowDialogEditar(row.valueId);}),
         DataCell(Text(row.valueB),onTap: (){_viewShowDialog(row.valueB);}),
         DataCell(Text(row.valueC)),
         DataCell(Text(row.valueD),onTap: (){_viewShowDialogEstatus(row.valueId);},),
-        DataCell(Icon(Icons.edit)),
-        DataCell(Icon(Icons.delete)),
+        //DataCell(Icon(Icons.edit)),
+        //DataCell(Icon(Icons.delete)),
       ],
     );
   }
