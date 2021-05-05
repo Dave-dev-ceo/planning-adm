@@ -5,6 +5,7 @@ import 'package:weddingplanner/src/blocs/blocs.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
+import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/resources/my_flutter_app_icons.dart';
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
@@ -23,6 +24,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   int contActualiza = 0;
   int contActualizaEdad = 0;
   int contActualizaGenero = 0;
+  int contActualizaGrupo = 0;
+  int contActualizaData = 0;
+  int contActualizaMesa = 0;
   GlobalKey<FormState> keyForm = new GlobalKey();
   GlobalKey<FormState> keyFormG = new GlobalKey();
   TextEditingController  nombreCtrl = new TextEditingController();
@@ -40,6 +44,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   int _currentSelectionGenero;
   String _mySelection;
   String _mySelectionG = "1";
+  String _mySelectionM = "0";
   bool _lights = false;
   _FullScreenDialogEditState(this.id);
   Map<int, Widget> _children = {
@@ -90,6 +95,53 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
             },
           );
   }
+
+  _listaMesas(){
+    ///bloc.dispose();
+    blocMesas.fetchAllMesas();
+    return StreamBuilder(
+            stream: blocMesas.allMesas,
+            builder: (context, AsyncSnapshot<ItemModelMesas> snapshot) {
+              if (snapshot.hasData) {
+                //_mySelection = ((snapshot.data.results.length - 1).toString());
+                //print(_mySelection);
+                return _dropDownMesas(snapshot.data);
+                //print(snapshot.data);
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          );
+  }
+
+  _dropDownMesas(ItemModelMesas mesas){
+    return DropdownButton(
+      value: _mySelectionM,
+      icon: const Icon(Icons.arrow_drop_down_outlined),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.pink),
+      underline: Container(
+        height: 2,
+        color: Colors.pink,
+      ),
+      onChanged: (newValue) {
+        setState(() {
+            _mySelectionM = newValue;
+          
+          
+        });
+      },
+      items: mesas.results.map((item) {
+        return DropdownMenuItem(
+          value: item.idMesa.toString(),
+          child: Text(item.mesa, style: TextStyle(fontSize: 18),),
+        );
+      }).toList(),
+    );
+  }
+
   _dropDownGrupos(ItemModelGrupos grupos){
     return DropdownButton(
       value: _mySelectionG,
@@ -119,6 +171,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       }).toList(),
     );
   }
+
   Future<void> _showMyDialog() async {
   return showDialog<void>(
     context: context,
@@ -268,7 +321,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       }).toList(),
     );
   }
- String gender = 'H';
+ String gender;
+ String edad;
 formItemsDesign(icon, item, large,ancho) {
    return Padding(
      padding: EdgeInsets.symmetric(vertical: 3),
@@ -304,15 +358,37 @@ formItemsDesign(icon, item, large,ancho) {
     }
 
     if(contActualizaGenero <= 0){
-      if(invitado.edad == "H"){
-        _currentSelection = 0;
-        contActualizaEdad++;
+      if(invitado.genero == "H"){
+        _currentSelectionGenero = 0;
+        contActualizaGenero++;
         print('entro en H');
-      }else if(invitado.edad == "M"){
-        _currentSelection = 1;
-        contActualizaEdad++;
+      }else if(invitado.genero == "M"){
+        _currentSelectionGenero = 1;
+        contActualizaGenero++;
         print('entro en M');
       }
+    }
+    if(contActualizaGrupo <= 0){
+      if(invitado.grupo == null){
+        _mySelectionG = "0";
+      }else{
+        _mySelectionG = invitado.grupo.toString();
+      }
+      contActualizaGrupo++;
+    }
+    if(contActualizaMesa <= 0){
+      if(invitado.idMesa == null){
+        _mySelectionM = "0";
+      }else{
+        _mySelectionM = invitado.idMesa.toString();
+      }
+      contActualizaMesa++;
+    }
+    if(contActualizaData <= 0){
+      nombreCtrl.text = invitado.nombre;
+      emailCtrl.text = invitado.email;
+      telefonoCtrl.text = invitado.telefono;
+      contActualizaData++;
     }
     
     //int _sliding = 0;
@@ -326,11 +402,11 @@ formItemsDesign(icon, item, large,ancho) {
             formItemsDesign(
            Icons.person,
            TextFormField(
-             //controller: nombreCtrl,
+             controller: nombreCtrl,
              decoration: new InputDecoration(
                labelText: 'Nombre completo',
              ),
-             initialValue: invitado.nombre,
+             //initialValue: invitado.nombre,
              validator: validateNombre,
            ),500.0,50.0),
        formItemsDesign(
@@ -359,8 +435,8 @@ formItemsDesign(icon, item, large,ancho) {
                               child: MaterialSegmentedControl(
                 children: _children,
                 selectionIndex: _currentSelection,
-                borderColor: Colors.grey,
-                selectedColor: Colors.redAccent,
+                borderColor: Colors.pink[300],
+                selectedColor: Colors.pink[300],
                 unselectedColor: Colors.white,
                 borderRadius: 32.0,
                 horizontalPadding: EdgeInsets.all(8),
@@ -380,8 +456,8 @@ formItemsDesign(icon, item, large,ancho) {
                               child: MaterialSegmentedControl(
                 children: _childrenGenero,
                 selectionIndex: _currentSelectionGenero,
-                borderColor: Colors.grey,
-                selectedColor: Colors.redAccent,
+                borderColor: Colors.pink[300],
+                selectedColor: Colors.pink[300],
                 unselectedColor: Colors.white,
                 borderRadius: 32.0,
                 horizontalPadding: EdgeInsets.all(8),
@@ -399,8 +475,8 @@ formItemsDesign(icon, item, large,ancho) {
        Wrap(
          children: <Widget>[
            formItemsDesign(Icons.email, TextFormField(
-             //controller: emailCtrl,
-             initialValue: invitado.email,
+             controller: emailCtrl,
+             //initialValue: invitado.email,
              decoration: new InputDecoration(
                labelText: 'Correo',
              ),
@@ -409,7 +485,7 @@ formItemsDesign(icon, item, large,ancho) {
 
            formItemsDesign(Icons.check, MergeSemantics(
             child: ListTile(
-              title: Text('Estatus invitación'),
+              title: Text(!invitado.estatusInvitacion?'Invitacion pendiente':'Invitacion enviada'),
               trailing: CupertinoSwitch(
                 value: invitado.estatusInvitacion,
                 onChanged: (bool value) { setState(() { _lights = invitado.estatusInvitacion; }); },
@@ -422,8 +498,8 @@ formItemsDesign(icon, item, large,ancho) {
        Wrap(
          children: <Widget>[
            formItemsDesign(Icons.phone, TextFormField(
-             //controller: telefonoCtrl,
-             initialValue: invitado.telefono,
+             controller: telefonoCtrl,
+             //initialValue: invitado.telefono,
              decoration: new InputDecoration(
                labelText: 'Número de teléfono',
              ),
@@ -440,8 +516,19 @@ formItemsDesign(icon, item, large,ancho) {
 
          ],
        ),
+       Wrap(
+         children: <Widget>[
+           formItemsDesign(Icons.tablet_rounded, Row(children: <Widget>[
+             Text('Tipo de mesa'),
+              SizedBox(width: 15,),
+             _listaMesas(),
+           ],), 500.0, 50.0)
+         ],
+       ),
        SizedBox(width: 25,),
+      
       GestureDetector(
+        
         onTap: (){
           save();
         },
@@ -502,34 +589,43 @@ formItemsDesign(icon, item, large,ancho) {
 
  save() async{
    if (keyForm.currentState.validate()) {
-     if(dropdownValue == "Hombre"){
+     if(_currentSelectionGenero == 0){
        gender = "H";
-     }else if(dropdownValue == "Mujer"){
+     }else if(_currentSelectionGenero == 1){
        gender = "M";
      }
+     if(_currentSelection == 0){
+       edad = "A";
+     }else if(_currentSelection == 1){
+       edad = "N";
+     }
+     //id_invitado, id_estatus_invitado, nombre, edad, genero, email, telefono, id_grupo
      Map <String,String> json = {
+       "id_invitado":id.toString(),
+       "id_estatus_invitado":_mySelection,
        "nombre":nombreCtrl.text,
+       "edad":edad,
        "telefono":telefonoCtrl.text,
        "email":emailCtrl.text,
        "genero":gender,
-      //"id_evento":id.toString()
+       "id_grupo":_mySelectionG
       };
      //json.
-     bool response = await api.createInvitados(json);
+     bool response = await api.updateInvitado(json);
 
      //bloc.insertInvitados;
       //print(response);
       if (response) {
-        keyForm.currentState.reset();
+        /*keyForm.currentState.reset();
         nombreCtrl.clear();
         telefonoCtrl.clear();
         emailCtrl.clear();
-        dropdownValue = "Hombre";
+        dropdownValue = "Hombre";*/
         final snackBar = SnackBar(
             content: Container(
               height: 30,
               child: Center(
-              child: Text('Invitado registrado'),
+              child: Text('Invitado actualizado'),
             ),
               //color: Colors.red,
             ),
@@ -541,7 +637,7 @@ formItemsDesign(icon, item, large,ancho) {
           content: Container(
             height: 30,
             child: Center(
-            child: Text('Error: No se pudo realizar el registro'),
+            child: Text('Error: No se pudo realizar la actualización'),
           ),
             //color: Colors.red,
           ),
@@ -556,7 +652,11 @@ formItemsDesign(icon, item, large,ancho) {
   void initState() {
     super.initState();
   }
-  
+            
+  Color hexToColor(String code) {
+      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -564,6 +664,7 @@ formItemsDesign(icon, item, large,ancho) {
         appBar: AppBar(
           title: Text('Editar Invitado'),
           automaticallyImplyLeading: true,
+          backgroundColor: hexToColor('#7030a0'),
         ),
         body: SingleChildScrollView(
           child: Container(

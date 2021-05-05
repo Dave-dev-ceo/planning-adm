@@ -2,7 +2,7 @@ class ItemModelInvitado {
   int _idInvitado;
   String _nombre;
   String _telefono;
-  String _grupo;
+  int _grupo;
   String _asistencia;
   String _email;
   String _genero;
@@ -28,7 +28,7 @@ class ItemModelInvitado {
   int get idInvitado=>_idInvitado;
   String get nombre=>_nombre;
   String get telefono=>_telefono;
-  String get grupo=>_grupo;
+  int get grupo=>_grupo;
   String get asistencia=>_asistencia;
   String get email=>_email;
   String get genero=>_genero;

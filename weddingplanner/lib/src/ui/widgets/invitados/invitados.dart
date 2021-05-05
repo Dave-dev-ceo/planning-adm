@@ -14,7 +14,9 @@ class Invitados extends StatefulWidget {
 
 class _InvitadosState extends State<Invitados> {
     int _pageIndex = 0;
-      
+    Color hexToColor(String code) {
+      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    }  
   @override
   Widget build(BuildContext context) {
     final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
@@ -23,7 +25,9 @@ class _InvitadosState extends State<Invitados> {
         child: Scaffold(
       appBar: AppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Color(0xff5808e5),
+            title: Center(child: FittedBox(child: Image.asset('assets/logo.png',height: 70.0,width: 120.0,)),),
+            toolbarHeight: 150.0,
+            backgroundColor: hexToColor('#7030a0'),
             bottom: TabBar(
               onTap: (int index){
                 setState(

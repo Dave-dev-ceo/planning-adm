@@ -3,6 +3,7 @@ import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
+import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 
@@ -25,5 +26,7 @@ class Repository {
   Future<ItemModelEventos> fetchAllEventos() => apiProvider.fetchEventosList();
 
   Future<ItemModelInvitado> fetchAllInvitado(int id) => apiProvider.fetchInvitadoList(id);
+
+  Future<ItemModelMesas> fetchAllMesas() => apiProvider.fetchMesasList();
 
 }

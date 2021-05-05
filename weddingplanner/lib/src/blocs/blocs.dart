@@ -2,6 +2,7 @@ import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
+import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 
@@ -14,6 +15,7 @@ final blocGrupos = GruposBloc();
 final blocEventos = EventosBloc();
 final blocEstatus = EstatusBloc();
 final blocInvitado = InvitadoBloc();
+final blocMesas = MesasBloc();
 class InvitadosBloc{
   final _repository = Repository();
   final _invitadosFetcher = PublishSubject<ItemModelInvitados>();
@@ -103,5 +105,20 @@ class InvitadoBloc{
 
   dispose() {
     _invitadoFetcher.close();
+  }
+}
+class MesasBloc{
+  final _repository = Repository();
+  final _mesasFetcher = PublishSubject<ItemModelMesas>();
+
+  Stream<ItemModelMesas> get allMesas=>_mesasFetcher.stream;
+
+  fetchAllMesas() async {
+    ItemModelMesas itemModel = await _repository.fetchAllMesas();
+    _mesasFetcher.sink.add(itemModel);
+  }
+
+  dispose() {
+    _mesasFetcher.close();
   }
 }

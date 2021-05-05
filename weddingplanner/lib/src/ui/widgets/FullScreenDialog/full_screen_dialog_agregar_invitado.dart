@@ -21,7 +21,9 @@ class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
   void initState() {
     super.initState();
   }
-  
+  Color hexToColor(String code) {
+      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -29,7 +31,7 @@ class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
           child: Scaffold(
         appBar: AppBar(
           title: Text('Agregar Invitado'),
-          backgroundColor: Color(0xff5808e5),
+          backgroundColor: hexToColor('#7030a0'),
           actions: [],
           automaticallyImplyLeading: true,
           bottom: TabBar(

@@ -5,6 +5,7 @@ import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
+import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 import 'dart:convert';
@@ -101,6 +102,32 @@ class ApiProvider {
     } else {
       //throw Exception('Failed post');
       return false;
+    }
+  }
+
+  Future<bool> updateInvitado(Map<String,String> data) async{
+    print(json.encode(data));
+    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/updateInvitado'),
+        
+        body: data
+    );
+    if (response.statusCode == 201) {
+      return true;  
+    } else {
+      //throw Exception('Failed post');
+      return false;
+    }
+  }
+
+  Future<ItemModelMesas> fetchMesasList() async {
+    final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/MESAS/obtenerMesas'));
+    
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelMesas.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load get');
     }
   }
 

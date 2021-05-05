@@ -26,6 +26,9 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   final int id;
 
   _ListaInvitadosState(this.id);  
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
   alertaLlamada(){
     showDialog(
           context: context,
@@ -72,7 +75,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         },
         child: const Icon(Icons.person_add),
         
-        //backgroundColor: Colors.green,
+        backgroundColor: Colors.pink[300],
       ),
       
     );
@@ -139,10 +142,10 @@ class _DataSource extends DataTableSource {
     );
   }*/
 
-  _viewShowDialogEditar(int id){
+  /*_viewShowDialogEditar(int id){
     Navigator.push(
           _cont, MaterialPageRoute(builder: (context) => FullScreenDialogEdit(id: id,)));
-  }
+  }*/
 
   _viewShowDialog(String numero){
       showDialog(
@@ -179,6 +182,13 @@ class _DataSource extends DataTableSource {
       print("actualizado");
     } else {
       print("error update");
+    }
+  }
+  _viewShowDialogEditar(int idInvitado) async{
+    final result = await Navigator.push(
+          _cont, MaterialPageRoute(builder: (context) => FullScreenDialogEdit(id: idInvitado,))); 
+    if(result==null){
+      _ListaInvitadosState(id).listaInvitados();
     }
   }
   _viewShowDialogEstatus(int idInvitado){
