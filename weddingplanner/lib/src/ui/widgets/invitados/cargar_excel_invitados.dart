@@ -43,7 +43,7 @@ class _CargarExcelState extends State<CargarExcel> {
                     child: Text('Sí'),
                     onPressed: () {
                       _readExcel();
-                      //Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                     },
                   ),
                 ],

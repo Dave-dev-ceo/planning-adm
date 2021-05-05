@@ -141,7 +141,7 @@ class _DataSource extends DataTableSource {
 
   _viewShowDialogEditar(int id){
     Navigator.push(
-          _cont, MaterialPageRoute(builder: (context) => FullScreenDialogEdit()));
+          _cont, MaterialPageRoute(builder: (context) => FullScreenDialogEdit(id: id,)));
   }
 
   _viewShowDialog(String numero){

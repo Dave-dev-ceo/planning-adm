@@ -1,8 +1,10 @@
 import 'package:http/http.dart';
 import 'dart:async';
 import 'package:http/http.dart' show Client;
+import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
+import 'package:weddingplanner/src/models/item_model_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 import 'dart:convert';
@@ -61,6 +63,18 @@ class ApiProvider {
       throw Exception('Failed to load get');
     }
   }
+  
+  Future<ItemModelInvitado> fetchInvitadoList(int id) async {
+    final response = await client.get(Uri.http(baseUrlPruebas, '/wedding/INVITADOS/obtenerInvitado/$id'));
+    
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelInvitado.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load get');
+    }
+  }
 
   Future<bool> createInvitados(Map<String,String> invitados) async{
     print(json.encode(invitados));
@@ -102,7 +116,19 @@ class ApiProvider {
     }
   }
 
-    Future<bool> createGrupo(Map<String,String> grupo) async{
+  Future<ItemModelEstatusInvitado> fetchEstatusList() async {
+    final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/ESTATUS/obtenerEstatus'));
+    
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelEstatusInvitado.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load get');
+    }
+  }
+
+  Future<bool> createGrupo(Map<String,String> grupo) async{
     print(json.encode(grupo));
     final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/createGrupo'),
         
