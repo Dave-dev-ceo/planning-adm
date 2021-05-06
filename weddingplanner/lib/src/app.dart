@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'App',
       theme: ThemeData(
         primarySwatch: Colors.pink,
+        fontFamily: 'Comfortaa'
         //visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: '/',

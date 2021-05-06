@@ -483,13 +483,14 @@ formItemsDesign(icon, item, large,ancho) {
              validator: validateEmail,
            ), 500.0, 50.0),
 
-           formItemsDesign(Icons.check, MergeSemantics(
+           formItemsDesign(!invitado.estatusInvitacion?Icons.cancel:Icons.check_box, MergeSemantics(
             child: ListTile(
-              title: Text(!invitado.estatusInvitacion?'Invitacion pendiente':'Invitacion enviada'),
-              trailing: CupertinoSwitch(
+              title: Text(!invitado.estatusInvitacion?'Invitación pendiente':'Invitación enviada'),
+              
+              /*trailing: CupertinoSwitch(
                 value: invitado.estatusInvitacion,
                 onChanged: (bool value) { setState(() { _lights = invitado.estatusInvitacion; }); },
-              ),
+              ),*/
               //onTap: () { setState(() { _lights = !_lights; }); },
             ),
           ), 500.0, 50.0)
@@ -519,7 +520,7 @@ formItemsDesign(icon, item, large,ancho) {
        Wrap(
          children: <Widget>[
            formItemsDesign(Icons.tablet_rounded, Row(children: <Widget>[
-             Text('Tipo de mesa'),
+             Text('Número de mesa'),
               SizedBox(width: 15,),
              _listaMesas(),
            ],), 500.0, 50.0)
@@ -531,6 +532,7 @@ formItemsDesign(icon, item, large,ancho) {
         
         onTap: (){
           save();
+          Navigator.of(context).pop();
         },
         child: 
         CallToAction('Guardar')
@@ -608,7 +610,8 @@ formItemsDesign(icon, item, large,ancho) {
        "telefono":telefonoCtrl.text,
        "email":emailCtrl.text,
        "genero":gender,
-       "id_grupo":_mySelectionG
+       "id_grupo":_mySelectionG,
+       "id_mesa":_mySelectionM
       };
      //json.
      bool response = await api.updateInvitado(json);

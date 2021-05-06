@@ -77,7 +77,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         
         backgroundColor: Colors.pink[300],
       ),
-      
+      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {

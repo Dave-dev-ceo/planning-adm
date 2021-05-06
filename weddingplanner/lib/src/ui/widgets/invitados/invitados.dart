@@ -24,7 +24,7 @@ class _InvitadosState extends State<Invitados> {
         length: 7,
         child: Scaffold(
       appBar: AppBar(
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading: true,
             title: Center(child: FittedBox(child: Image.asset('assets/logo.png',height: 70.0,width: 120.0,)),),
             toolbarHeight: 150.0,
             backgroundColor: hexToColor('#7030a0'),

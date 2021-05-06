@@ -1,3 +1,4 @@
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/blocs/eventos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
@@ -11,6 +12,9 @@ class DashboardEventos extends StatefulWidget {
 }
 
 class _DashboardEventosState extends State<DashboardEventos> {
+  Color hexToColor(String code) {
+      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    }
   listaEventos(){
     bloc.fetchAllEventos();
     return StreamBuilder(
@@ -102,12 +106,24 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget build(BuildContext context) {
     return 
     Scaffold(
-          appBar: AppBar(backgroundColor: Colors.purple,),
+          appBar: AppBar(backgroundColor: hexToColor('#7030a0'),
+          title: Center(child: Column(
+            children: [
+              FittedBox(child: Image.asset('assets/logo.png',height: 70.0,width: 120.0,)),
+              Text('Eventos', style: TextStyle(fontSize: 60,fontFamily: 'Dancing'),),
+            ],
+          ),),
+            toolbarHeight: 150.0,),
           body:  
             Container(
               child:               
                 listaEventos(),
            ),
+           floatingActionButton: FloatingActionButton(
+             child: Icon(Icons.event_available),
+             backgroundColor: Colors.pink[300],
+             onPressed: (){}),
+             floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
 }
