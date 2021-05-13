@@ -10,7 +10,7 @@ class HomeContentMobile extends StatelessWidget {
     return Center(
                 child:
                   //TabsPage(id: id),
-                  ListaInvitados(id: id),
+                  ListaInvitados(idEvento: id),
                 );
   }
 }

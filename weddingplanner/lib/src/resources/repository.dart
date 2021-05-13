@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
@@ -13,20 +14,20 @@ import '../models/item_model_invitados.dart';
 class Repository {
   final apiProvider = ApiProvider();
 
-  Future<ItemModelInvitados> fetchAllInvitados(int id) => apiProvider.fetchInvitadosList(id);
+  Future<ItemModelInvitados> fetchAllInvitados(BuildContext context) => apiProvider.fetchInvitadosList(context);
 
-  Future<ItemModelReporteInvitados> fetchReporteInvitados(int id) => apiProvider.fetchReporteInvitados(id);
+  Future<ItemModelReporteInvitados> fetchReporteInvitados(BuildContext context) => apiProvider.fetchReporteInvitados(context);
 
-  Future<ItemModelReporteInvitadosGenero> fetchReporteInvitadosGenero(int id) => apiProvider.fetchReporteInvitadosGenero(id);
+  Future<ItemModelReporteInvitadosGenero> fetchReporteInvitadosGenero(BuildContext context) => apiProvider.fetchReporteInvitadosGenero(context);
 
-  Future<ItemModelGrupos> fetchAllGrupos() => apiProvider.fetchGruposList();
+  Future<ItemModelGrupos> fetchAllGrupos(BuildContext context) => apiProvider.fetchGruposList(context);
 
-  Future<ItemModelEstatusInvitado> fetchAllEstatus() => apiProvider.fetchEstatusList();
+  Future<ItemModelEstatusInvitado> fetchAllEstatus(BuildContext context) => apiProvider.fetchEstatusList(context);
 
-  Future<ItemModelEventos> fetchAllEventos() => apiProvider.fetchEventosList();
+  Future<ItemModelEventos> fetchAllEventos(BuildContext context) => apiProvider.fetchEventosList(context);
 
-  Future<ItemModelInvitado> fetchAllInvitado(int id) => apiProvider.fetchInvitadoList(id);
+  Future<ItemModelInvitado> fetchAllInvitado(int idInvitado, BuildContext context) => apiProvider.fetchInvitadoList(idInvitado,context);
 
-  Future<ItemModelMesas> fetchAllMesas() => apiProvider.fetchMesasList();
+  Future<ItemModelMesas> fetchAllMesas(BuildContext context) => apiProvider.fetchMesasList(context);
 
 }

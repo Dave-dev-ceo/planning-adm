@@ -11,16 +11,16 @@ import 'package:weddingplanner/src/resources/my_flutter_app_icons.dart';
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 class FullScreenDialogEdit extends StatefulWidget {
-  final int id;
+  final int idInvitado;
 
-  const FullScreenDialogEdit({Key key, this.id}) : super(key: key);
+  const FullScreenDialogEdit({Key key, this.idInvitado}) : super(key: key);
   @override
-  _FullScreenDialogEditState createState() => _FullScreenDialogEditState(id);
+  _FullScreenDialogEditState createState() => _FullScreenDialogEditState(idInvitado);
 }
 
 class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   ApiProvider api = new ApiProvider();
-  final int id;
+  final int idInvitado;
   int contActualiza = 0;
   int contActualizaEdad = 0;
   int contActualizaGenero = 0;
@@ -46,7 +46,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   String _mySelectionG = "1";
   String _mySelectionM = "0";
   bool _lights = false;
-  _FullScreenDialogEditState(this.id);
+  _FullScreenDialogEditState(this.idInvitado);
   Map<int, Widget> _children = {
     0: Text('Adulto',style: TextStyle(fontSize: 12),),
     1: Text('Niño',style: TextStyle(fontSize: 12),),
@@ -60,7 +60,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   _datosInvitado(){
     ///bloc.dispose();
-    blocInvitado.fetchAllInvitado(id);
+    blocInvitado.fetchAllInvitado(idInvitado, context);
     return StreamBuilder(
             stream: blocInvitado.allInvitado,
             builder: (context, AsyncSnapshot<ItemModelInvitado> snapshot) {
@@ -79,7 +79,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   _listaGrupos(){
     ///bloc.dispose();
-    blocGrupos.fetchAllGrupos();
+    blocGrupos.fetchAllGrupos(context);
     return StreamBuilder(
             stream: blocGrupos.allGrupos,
             builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
@@ -98,7 +98,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   _listaMesas(){
     ///bloc.dispose();
-    blocMesas.fetchAllMesas();
+    blocMesas.fetchAllMesas(context);
     return StreamBuilder(
             stream: blocMesas.allMesas,
             builder: (context, AsyncSnapshot<ItemModelMesas> snapshot) {
@@ -239,7 +239,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
        "nombre_grupo":grupo.text
       };
       //json.
-      bool response = await api.createGrupo(json);
+      bool response = await api.createGrupo(json,context);
       if (response) {
         //_mySelection = "0";
         Navigator.of(context).pop();
@@ -252,7 +252,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   }
   _listaEstatus(){
     ///bloc.dispose();
-    blocEstatus.fetchAllEstatus();
+    blocEstatus.fetchAllEstatus(context);
     return StreamBuilder(
             stream: blocEstatus.allEstatus,
             builder: (context, AsyncSnapshot<ItemModelEstatusInvitado> snapshot) {
@@ -603,7 +603,7 @@ formItemsDesign(icon, item, large,ancho) {
      }
      //id_invitado, id_estatus_invitado, nombre, edad, genero, email, telefono, id_grupo
      Map <String,String> json = {
-       "id_invitado":id.toString(),
+       "id_invitado":idInvitado.toString(),
        "id_estatus_invitado":_mySelection,
        "nombre":nombreCtrl.text,
        "edad":edad,
@@ -614,7 +614,7 @@ formItemsDesign(icon, item, large,ancho) {
        "id_mesa":_mySelectionM
       };
      //json.
-     bool response = await api.updateInvitado(json);
+     bool response = await api.updateInvitado(json,context);
 
      //bloc.insertInvitados;
       //print(response);

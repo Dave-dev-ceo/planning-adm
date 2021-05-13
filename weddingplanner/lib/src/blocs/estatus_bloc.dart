@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 
 import '../resources/repository.dart';
@@ -9,8 +10,8 @@ class EstatusBloc{
 
   Stream<ItemModelEstatusInvitado> get allEstatus=>_estatusFetcher.stream;
 
-  fetchAllEstatus() async {
-    ItemModelEstatusInvitado itemModel = await _repository.fetchAllEstatus();
+  fetchAllEstatus(BuildContext context) async {
+    ItemModelEstatusInvitado itemModel = await _repository.fetchAllEstatus(context);
     _estatusFetcher.sink.add(itemModel);
   }
 

@@ -1,23 +1,23 @@
-import 'package:excel/excel.dart';
+//import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/blocs/invitados_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 
 class ResumenEvento extends StatefulWidget {
-  final int id;
+  final int idEvento;
 
-  const ResumenEvento({Key key, this.id}) : super(key: key);
+  const ResumenEvento({Key key, this.idEvento}) : super(key: key);
   @override
-  _ResumenEventoState createState() => _ResumenEventoState(id);
+  _ResumenEventoState createState() => _ResumenEventoState(idEvento);
 }
 
 class _ResumenEventoState extends State<ResumenEvento> {
-  final int id;
+  final int idEvento;
 
-  _ResumenEventoState(this.id);
+  _ResumenEventoState(this.idEvento);
   reporteInvitados(){
-    bloc.fetchAllReporteInvitados(id);
+    bloc.fetchAllReporteInvitados(context);
     return StreamBuilder(
             stream: bloc.reporteInvitados,
             builder: (context, AsyncSnapshot<ItemModelReporteInvitados> snapshot) {
@@ -68,7 +68,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
     );
   }
   reporteInvitadosGenero(){
-  bloc.fetchAllReporteInvitadosGenero(id);
+  bloc.fetchAllReporteInvitadosGenero(context);
   return StreamBuilder(
           stream: bloc.reporteInvitadosGenero,
           builder: (context, AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {

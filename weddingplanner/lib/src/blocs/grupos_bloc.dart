@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/item_model_grupos.dart';
@@ -8,8 +10,8 @@ class GruposBloc{
 
   Stream<ItemModelGrupos> get allGrupos=>_gruposFetcher.stream;
 
-  fetchAllGrupos() async {
-    ItemModelGrupos itemModel = await _repository.fetchAllGrupos();
+  fetchAllGrupos(BuildContext context) async {
+    ItemModelGrupos itemModel = await _repository.fetchAllGrupos(context);
     _gruposFetcher.sink.add(itemModel);
   }
 

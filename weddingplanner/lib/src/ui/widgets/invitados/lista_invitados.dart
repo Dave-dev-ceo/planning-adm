@@ -3,7 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
+//import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import '../../../models/item_model_invitados.dart';
 import '../../../blocs/invitados_bloc.dart';
@@ -11,21 +11,21 @@ import 'package:url_launcher/url_launcher.dart';
 //import 'home.dart';
 
 class ListaInvitados extends StatefulWidget {
-  final int id;
+  final int idEvento;
 
-  const ListaInvitados({Key key, this.id}) : super(key: key);
+  const ListaInvitados({Key key, this.idEvento}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => ListaInvitados(),
       );
   @override
-  _ListaInvitadosState createState() => _ListaInvitadosState(id);
+  _ListaInvitadosState createState() => _ListaInvitadosState(idEvento);
 }
 
 class _ListaInvitadosState extends State<ListaInvitados> {
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
-  final int id;
+  final int idEvento;
 
-  _ListaInvitadosState(this.id);  
+  _ListaInvitadosState(this.idEvento);  
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -43,9 +43,9 @@ class _ListaInvitadosState extends State<ListaInvitados> {
                 ],
               )); 
   }
-  listaInvitados(){
+  listaInvitados(BuildContext cont){
     ///bloc.dispose();
-    bloc.fetchAllInvitados(id);
+    bloc.fetchAllInvitados(cont);
     return StreamBuilder(
             stream: bloc.allInvitados,
             builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
@@ -65,13 +65,12 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         width: double.infinity,
         child: Center(
           child:
-            listaInvitados(),
+            listaInvitados(context),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-          context, MaterialPageRoute(builder: (context) => FullScreenDialogAdd(id: id,)));
+          Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
         },
         child: const Icon(Icons.person_add),
         
@@ -97,7 +96,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
               //DataColumn(label: Text('', style:estiloTxt)),
             ],
             
-            source: _DataSource(snapshot.data.results,context,id),
+            source: _DataSource(snapshot.data.results,context,idEvento),
           ),
         ],
       );
@@ -123,9 +122,9 @@ class _Row {
 
 class _DataSource extends DataTableSource {
   BuildContext _cont;
-  final int id;
+  final int idEvento;
   ApiProvider api = new ApiProvider();
-  _DataSource(context,BuildContext cont, this.id) {
+  _DataSource(context,BuildContext cont, this.idEvento) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
       _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].grupo==null?'Sin grupo':context[i].grupo), context[i].asistencia));  
@@ -175,20 +174,19 @@ class _DataSource extends DataTableSource {
       "id_estatus_invitado" : idEstatusInvitado.toString()
     };
     
-    bool response = await api.updateEstatusInvitado(json);
+    bool response = await api.updateEstatusInvitado(json, _cont);
     if (response) {
       //_reset();
-      _ListaInvitadosState(id).listaInvitados();
+      _ListaInvitadosState(idEvento).listaInvitados(_cont);
       print("actualizado");
     } else {
       print("error update");
     }
   }
   _viewShowDialogEditar(int idInvitado) async{
-    final result = await Navigator.push(
-          _cont, MaterialPageRoute(builder: (context) => FullScreenDialogEdit(id: idInvitado,))); 
+    final result = await Navigator.of(_cont).pushNamed('/editInvitado',arguments: idInvitado); 
     if(result==null){
-      _ListaInvitadosState(id).listaInvitados();
+      _ListaInvitadosState(idEvento).listaInvitados(_cont);
     }
   }
   _viewShowDialogEstatus(int idInvitado){
@@ -206,14 +204,14 @@ class _DataSource extends DataTableSource {
                     },
                   ),
                   CupertinoDialogAction(
-                    child: Text('Pendiente'),
+                    child: Text('Sin Confirmar'),
                     onPressed: () {
                       _updateEstatus(idInvitado, 2);
                       Navigator.of(context).pop();
                     },
                   ),
                   CupertinoDialogAction(
-                    child: Text('Cancelado'),
+                    child: Text('No Asiste'),
                     onPressed: () {
                       _updateEstatus(idInvitado, 3);
                       

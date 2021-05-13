@@ -27,7 +27,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
   _FullScreenDialogState(this.id);
   _listaGrupos(){
     ///bloc.dispose();
-    bloc.fetchAllGrupos();
+    bloc.fetchAllGrupos(context);
     return StreamBuilder(
             stream: bloc.allGrupos,
             builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
@@ -134,7 +134,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
        "nombre_grupo":grupo.text
       };
       //json.
-      bool response = await api.createGrupo(json);
+      bool response = await api.createGrupo(json,context);
       if (response) {
         //_mySelection = "0";
         Navigator.of(context).pop();
@@ -264,7 +264,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
           "id_evento":id.toString(),
           "id_grupo":_mySelection
         };
-        bool response = await api.createInvitados(json);
+        bool response = await api.createInvitados(json,context);
             if(response){
 
             }else{

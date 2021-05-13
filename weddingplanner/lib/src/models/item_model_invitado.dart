@@ -11,18 +11,18 @@ class ItemModelInvitado {
   int _idMesa;
   bool _estatusInvitacion;
 
-  ItemModelInvitado.fromJson(List<dynamic> parsedJson){
-    _idInvitado = parsedJson[0]['id_invitado'];
-    _nombre = parsedJson[0]['nombre'];
-    _telefono = parsedJson[0]['telefono'];
-    _grupo = parsedJson[0]['grupo'];
-    _asistencia = parsedJson[0]['descripcion'];
-    _email = parsedJson[0]['email'];
-    _genero = parsedJson[0]['genero'];
-    _edad = parsedJson[0]['edad'];
-    _menu = parsedJson[0]['menu'];
-    _idMesa = parsedJson[0]['id_mesa'];
-    _estatusInvitacion = parsedJson[0]['estatus_invitacion'];
+  ItemModelInvitado.fromJson(Map<dynamic,dynamic> parsedJson){
+    _idInvitado = parsedJson['id_invitado'];
+    _nombre = parsedJson['nombre'];
+    _telefono = parsedJson['telefono'];
+    _grupo = parsedJson['grupo'];
+    _asistencia = parsedJson['descripcion'];
+    _email = parsedJson['email'];
+    _genero = parsedJson['genero'];
+    _edad = parsedJson['edad'];
+    _menu = parsedJson['menu'];
+    _idMesa = parsedJson['id_mesa'];
+    _estatusInvitacion = parsedJson['estatus_invitacion'];
 
   }
   int get idInvitado=>_idInvitado;

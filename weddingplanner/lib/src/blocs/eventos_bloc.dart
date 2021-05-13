@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 
 import '../resources/repository.dart';
@@ -8,8 +9,8 @@ class EventosBloc{
 
   Stream<ItemModelEventos> get allEventos=>_eventosFetcher.stream;
 
-  fetchAllEventos() async {
-    ItemModelEventos itemModel = await _repository.fetchAllEventos();
+  fetchAllEventos(BuildContext context) async {
+    ItemModelEventos itemModel = await _repository.fetchAllEventos(context);
     _eventosFetcher.sink.add(itemModel);
   }
 

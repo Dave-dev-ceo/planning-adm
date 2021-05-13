@@ -1,22 +1,28 @@
-import 'package:excel/excel.dart';
+//import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/blocs/eventos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
-import 'package:weddingplanner/src/models/item_model_parametros.dart';
+//import 'package:weddingplanner/src/models/item_model_parametros.dart';
+import 'package:weddingplanner/src/resources/api_provider.dart';
+import 'package:weddingplanner/src/models/item_model_preferences.dart';
 
 
 class DashboardEventos extends StatefulWidget {
-  static const routeName = '/';
+  //static const routeName = '/';
   @override
   _DashboardEventosState createState() => _DashboardEventosState();
 }
 
 class _DashboardEventosState extends State<DashboardEventos> {
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  //int idPlanner = await _sharedPreferences.getIdPlanner();
+  ApiProvider api = new ApiProvider();
   Color hexToColor(String code) {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-    }
+  }
+  
   listaEventos(){
-    bloc.fetchAllEventos();
+    bloc.fetchAllEventos(context);
     return StreamBuilder(
             stream: bloc.allEventos,
             builder: (context, AsyncSnapshot<ItemModelEventos> snapshot) {
@@ -99,7 +105,9 @@ class _DashboardEventosState extends State<DashboardEventos> {
           ],
         ),
       ),
-      onTap: (){Navigator.pushNamed(context, '/eventos',arguments: ScreenArguments(idEvento));},
+      onTap: () async{
+        await _sharedPreferences.setIdEvento(idEvento);
+        Navigator.pushNamed(context, '/eventos',arguments: idEvento);},
     );
   }
   @override
@@ -107,6 +115,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
     return 
     Scaffold(
           appBar: AppBar(backgroundColor: hexToColor('#7030a0'),
+          automaticallyImplyLeading: false,
           title: Center(child: Column(
             children: [
               FittedBox(child: Image.asset('assets/logo.png',height: 70.0,width: 120.0,)),

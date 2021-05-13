@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 
@@ -15,16 +16,16 @@ class InvitadosBloc{
   Stream<ItemModelReporteInvitados> get reporteInvitados=>_reporteInvitadosFetcher.stream;
   Stream<ItemModelReporteInvitadosGenero> get reporteInvitadosGenero=>_reporteInvitadosGeneroFetcher.stream;
 
-  fetchAllInvitados(int id) async {
-    ItemModelInvitados itemModel = await _repository.fetchAllInvitados(id);
+  fetchAllInvitados(BuildContext context) async {
+    ItemModelInvitados itemModel = await _repository.fetchAllInvitados(context);
     _invitadosFetcher.sink.add(itemModel);
   }
-  fetchAllReporteInvitados(int id) async {
-    ItemModelReporteInvitados itemModel = await _repository.fetchReporteInvitados(id);
+  fetchAllReporteInvitados(BuildContext context) async {
+    ItemModelReporteInvitados itemModel = await _repository.fetchReporteInvitados(context);
     _reporteInvitadosFetcher.sink.add(itemModel);
   }
-    fetchAllReporteInvitadosGenero(int id) async {
-    ItemModelReporteInvitadosGenero itemModel = await _repository.fetchReporteInvitadosGenero(id);
+    fetchAllReporteInvitadosGenero(BuildContext context) async {
+    ItemModelReporteInvitadosGenero itemModel = await _repository.fetchReporteInvitadosGenero(context);
     _reporteInvitadosGeneroFetcher.sink.add(itemModel);
   }
   dispose() {

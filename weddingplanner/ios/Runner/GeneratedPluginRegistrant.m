@@ -28,6 +28,12 @@
 @import permission_handler;
 #endif
 
+#if __has_include(<shared_preferences/FLTSharedPreferencesPlugin.h>)
+#import <shared_preferences/FLTSharedPreferencesPlugin.h>
+#else
+@import shared_preferences;
+#endif
+
 #if __has_include(<url_launcher/FLTURLLauncherPlugin.h>)
 #import <url_launcher/FLTURLLauncherPlugin.h>
 #else
@@ -41,6 +47,7 @@
   [FilePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FilePickerPlugin"]];
   [MultiSelectItemPlugin registerWithRegistrar:[registry registrarForPlugin:@"MultiSelectItemPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
+  [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
   [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];
 }
 

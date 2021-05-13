@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
@@ -26,16 +27,16 @@ class InvitadosBloc{
   Stream<ItemModelReporteInvitados> get reporteInvitados=>_reporteInvitadosFetcher.stream;
   Stream<ItemModelReporteInvitadosGenero> get reporteInvitadosGenero=>_reporteInvitadosGeneroFetcher.stream;
 
-  fetchAllInvitados(int id) async {
-    ItemModelInvitados itemModel = await _repository.fetchAllInvitados(id);
+  fetchAllInvitados(BuildContext context) async {
+    ItemModelInvitados itemModel = await _repository.fetchAllInvitados(context);
     _invitadosFetcher.sink.add(itemModel);
   }
-  fetchAllReporteInvitados(int id) async {
-    ItemModelReporteInvitados itemModel = await _repository.fetchReporteInvitados(id);
+  fetchAllReporteInvitados(BuildContext context) async {
+    ItemModelReporteInvitados itemModel = await _repository.fetchReporteInvitados(context);
     _reporteInvitadosFetcher.sink.add(itemModel);
   }
-    fetchAllReporteInvitadosGenero(int id) async {
-    ItemModelReporteInvitadosGenero itemModel = await _repository.fetchReporteInvitadosGenero(id);
+    fetchAllReporteInvitadosGenero(BuildContext context) async {
+    ItemModelReporteInvitadosGenero itemModel = await _repository.fetchReporteInvitadosGenero(context);
     _reporteInvitadosGeneroFetcher.sink.add(itemModel);
   }
   dispose() {
@@ -50,8 +51,8 @@ class GruposBloc{
 
   Stream<ItemModelGrupos> get allGrupos=>_gruposFetcher.stream;
 
-  fetchAllGrupos() async {
-    ItemModelGrupos itemModel = await _repository.fetchAllGrupos();
+  fetchAllGrupos(BuildContext context) async {
+    ItemModelGrupos itemModel = await _repository.fetchAllGrupos(context);
     _gruposFetcher.sink.add(itemModel);
   }
 
@@ -66,8 +67,8 @@ class EventosBloc{
 
   Stream<ItemModelEventos> get allEventos=>_eventosFetcher.stream;
 
-  fetchAllEventos() async {
-    ItemModelEventos itemModel = await _repository.fetchAllEventos();
+  fetchAllEventos(BuildContext context) async {
+    ItemModelEventos itemModel = await _repository.fetchAllEventos(context);
     _eventosFetcher.sink.add(itemModel);
   }
 
@@ -82,8 +83,8 @@ class EstatusBloc{
 
   Stream<ItemModelEstatusInvitado> get allEstatus=>_estatusFetcher.stream;
 
-  fetchAllEstatus() async {
-    ItemModelEstatusInvitado itemModel = await _repository.fetchAllEstatus();
+  fetchAllEstatus(BuildContext context) async {
+    ItemModelEstatusInvitado itemModel = await _repository.fetchAllEstatus(context);
     _estatusFetcher.sink.add(itemModel);
   }
 
@@ -98,8 +99,8 @@ class InvitadoBloc{
 
   Stream<ItemModelInvitado> get allInvitado=>_invitadoFetcher.stream;
 
-  fetchAllInvitado(int id) async {
-    ItemModelInvitado itemModel = await _repository.fetchAllInvitado(id);
+  fetchAllInvitado(int idInvitado, BuildContext context) async {
+    ItemModelInvitado itemModel = await _repository.fetchAllInvitado(idInvitado, context);
     _invitadoFetcher.sink.add(itemModel);
   }
 
@@ -113,8 +114,8 @@ class MesasBloc{
 
   Stream<ItemModelMesas> get allMesas=>_mesasFetcher.stream;
 
-  fetchAllMesas() async {
-    ItemModelMesas itemModel = await _repository.fetchAllMesas();
+  fetchAllMesas(BuildContext context) async {
+    ItemModelMesas itemModel = await _repository.fetchAllMesas(context);
     _mesasFetcher.sink.add(itemModel);
   }
 

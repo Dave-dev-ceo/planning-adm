@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/models/item_model_parametros.dart';
+//import 'package:weddingplanner/src/models/item_model_parametros.dart';
+//import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
 //import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 
 class Invitados extends StatefulWidget {
-  static const routeName = '/eventos';
-  const Invitados({Key key}) : super(key: key);
+  //static const routeName = '/eventos';
+  final int idEvento;
+  const Invitados({Key key, this.idEvento}) : super(key: key);
 
   @override
-  _InvitadosState createState() => _InvitadosState();
+  _InvitadosState createState() => _InvitadosState(idEvento);
 }
 
 class _InvitadosState extends State<Invitados> {
+    //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+    final int idEvento;
     int _pageIndex = 0;
+
+  _InvitadosState(this.idEvento);
     Color hexToColor(String code) {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-    }  
+    }
+
+  /*@override
+  void initState() async{
+      super.initState();
+      idEvento = await _sharedPreferences.getIdEvento();
+  }*/
+
   @override
   Widget build(BuildContext context) {
-    final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
+    //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
         length: 7,
         child: Scaffold(
@@ -80,8 +93,8 @@ class _InvitadosState extends State<Invitados> {
         child: IndexedStack(
           index: _pageIndex,
           children: <Widget>[
-            ResumenEvento(id: param.id,),
-            ListaInvitados(id: param.id,),
+            ResumenEvento(idEvento: idEvento,),
+            ListaInvitados(idEvento: idEvento,),
             //AgregarInvitados(),
             //ListaInvitados(),
             //ListaInvitados(),

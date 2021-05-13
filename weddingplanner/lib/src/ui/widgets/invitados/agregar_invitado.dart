@@ -242,7 +242,7 @@ _dropDown2(){
       "id_evento":id.toString()
       };
      //json.
-     bool response = await api.createInvitados(json);
+     bool response = await api.createInvitados(json,context);
 
      //bloc.insertInvitados;
       //print(response);
