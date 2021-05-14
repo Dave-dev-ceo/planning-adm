@@ -439,6 +439,19 @@ class ApiProvider {
     }
   }
 
+  Future<int> registroPlanner(Map<String,String> auth) async{
+    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/PLANNER/registroPlanner'),     
+        body: auth
+    );
+    if (response.statusCode == 201) {
+      return 0;  
+    } else if(response.statusCode == 403){
+      return 1;
+    }else{
+      return 2;
+    }
+  }
+
   Future<int> loginPlanner(Map<String,String> auth) async{
     final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/ACCESO/loginPlanner'),     
         body: auth

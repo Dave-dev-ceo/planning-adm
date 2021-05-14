@@ -115,7 +115,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
     return 
     Scaffold(
           appBar: AppBar(backgroundColor: hexToColor('#7030a0'),
-          automaticallyImplyLeading: false,
+          //automaticallyImplyLeading: false,
           title: Center(child: Column(
             children: [
               FittedBox(child: Image.asset('assets/logo.png',height: 70.0,width: 120.0,)),

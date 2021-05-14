@@ -15,6 +15,9 @@ class _LoginState extends State<Login> {
   ApiProvider api = new ApiProvider();
   TextEditingController  emailCtrl = new TextEditingController();
   TextEditingController  passwordCtrl = new TextEditingController();
+  TextEditingController  emailRCtrl = new TextEditingController();
+  TextEditingController  passwordRCtrl = new TextEditingController();
+  TextEditingController  nombreRCtrl = new TextEditingController();
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   BuildContext _ingresando;
   bool _visible = true;
@@ -28,6 +31,145 @@ class _LoginState extends State<Login> {
     if(sesion){
       Navigator.pushNamed(context, '/dasboard');
     }
+  }
+  _registroPlanner() async{
+    if(emailRCtrl.text == "" || emailRCtrl.text == null 
+    || nombreRCtrl.text == "" || nombreRCtrl.text == null
+    || passwordRCtrl.text == "" || passwordRCtrl.text == null){
+      showDialog(
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+       //_ingresando = context;
+          return AlertDialog(
+            title: Text(
+              "Registro",
+              textAlign: TextAlign.center,
+            ),
+            content: Text('No puede dejar campos vacíos'),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            actions: <Widget>[TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                //_index = 0;
+                Navigator.of(context).pop();
+              },
+           ),
+          ],
+           
+          );
+        });
+    }else{
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+       _ingresando = context;
+          return AlertDialog(
+            title: Text(
+              "Registrando",
+              textAlign: TextAlign.center,
+            ),
+            content: AnimatedOpacity(
+              duration: Duration(milliseconds: 500),
+              opacity: _visible ? 1.0 : 0.0,
+              child: Image.asset('assets/logo.png',height: 100.0,width: 150.0,color: Colors.purple,)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+           
+          );
+        });
+        Map <String,String> json = {
+          "nombre_completo":nombreRCtrl.text,
+       "correo":emailRCtrl.text,
+       "contrasena":passwordRCtrl.text
+      };
+    int response = await api.registroPlanner(json);
+    if (response == 0) {
+      emailRCtrl.clear();
+      passwordRCtrl.clear();
+      nombreRCtrl.clear();
+      _index = 0;
+      Navigator.pop(_ingresando);
+      showDialog(
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+       //_ingresando = context;
+          return AlertDialog(
+            title: Text(
+              "Registro",
+              textAlign: TextAlign.center,
+            ),
+            content: Text('Planner Registrado con éxito'),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            actions: <Widget>[TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+           ),
+          ],
+           
+          );
+        });
+      
+      //Navigator.pushNamed(context, '/dasboard');  
+      } else if(response == 1){
+        Navigator.pop(_ingresando);
+        showDialog(
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+       //_ingresando = context;
+          return AlertDialog(
+            title: Text(
+              "Datos invalidos",
+              textAlign: TextAlign.center,
+            ),
+            content: Text('No se pudo realizar el registro'),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            actions: <Widget>[TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+           ),
+          ],
+           
+          );
+        });
+      }else if(response == 2){
+        Navigator.pop(_ingresando);
+        showDialog(
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+       //_ingresando = context;
+          return AlertDialog(
+            title: Text(
+              "Error",
+              textAlign: TextAlign.center,
+            ),
+            content: Text('Registro invalido'),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            actions: <Widget>[TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+           ),
+          ],
+           
+          );
+        });
+      }
+    }
+    
   }
   _login() async{
     showDialog(
@@ -57,22 +199,7 @@ class _LoginState extends State<Login> {
     int response = await api.loginPlanner(json);
     if (response == 0) {
       Navigator.pop(_ingresando);
-      Navigator.pushNamed(context, '/dasboard');
-      //int idPlanner = await _sharedPreferences.getIdPlanner();
-      //String token = await _sharedPreferences.getToken();
-      //print(idPlanner);
-      //print(token);
-        /*final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-              child: Text('Sesión iniciada'),
-            ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.green,  
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);*/  
+      Navigator.pushNamed(context, '/dasboard');  
       } else if(response == 1){
         Navigator.pop(_ingresando);
         showDialog(
@@ -130,10 +257,37 @@ class _LoginState extends State<Login> {
     return Column(
       children: <Widget>[
         SizedBox(height: 20.0,),
-        Image.asset('assets/user.png',height: 120.0,width: 170.0,color: Colors.purple[100],),
+        //Image.asset('assets/user.png',height: 120.0,width: 170.0,color: Colors.purple[100],),
         SizedBox(height: 20.0,),
         Padding(padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
                   child: TextFormField(
+                    controller: nombreRCtrl,
+            style: TextStyle(color: Colors.white),
+                  decoration: new InputDecoration(
+                    labelText: "Nombre",
+                    labelStyle: TextStyle(color: Colors.purple[100]),
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(
+                      color: Colors.purple[100],
+                      width: 2.0,
+                    ),
+                  ),
+                    ),
+                    cursorColor: Colors.purple[100],
+                    
+          ),
+        ),
+        Padding(padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
+                  child: TextFormField(
+                    controller: emailRCtrl,
             style: TextStyle(color: Colors.white),
                   decoration: new InputDecoration(
                     labelText: "Correo",
@@ -160,6 +314,7 @@ class _LoginState extends State<Login> {
         //SizedBox(height: 15.0,),
         Padding(padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
                   child: TextFormField(
+                    controller: passwordRCtrl,
                     obscureText: true,
                     enableSuggestions: false,
                     autocorrect: false,
@@ -202,7 +357,7 @@ class _LoginState extends State<Login> {
                 },
               ),
             ),
-            onPressed: () { print(_index);},
+            onPressed: () { _registroPlanner();},
             child: Text('Registrarse',style: TextStyle(fontSize: 17),)
           ),
         ),
