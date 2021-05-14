@@ -22,8 +22,8 @@ class ApiProvider {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
 
   Client client = Client();
-  //String baseUrlPruebas = 'server01.grupotum.com:3004';
-  String baseUrlPruebas = 'localhost:3010';
+  String baseUrlPruebas = 'server01.grupotum.com:3004';
+  //String baseUrlPruebas = 'localhost:3010';
   _loadLogin(BuildContext context) async{
     await _sharedPreferences.setSesion(false);
     await _sharedPreferences.setToken('');
