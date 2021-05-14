@@ -1,7 +1,9 @@
 //import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/blocs/invitados_bloc.dart';
+import 'package:weddingplanner/src/blocs/blocs.dart';
+//import 'package:weddingplanner/src/blocs/invitados_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 
 class ResumenEvento extends StatefulWidget {
@@ -16,10 +18,68 @@ class _ResumenEventoState extends State<ResumenEvento> {
   final int idEvento;
 
   _ResumenEventoState(this.idEvento);
-  reporteInvitados(){
-    bloc.fetchAllReporteInvitados(context);
+  reporteGrupos(){
+    blocInvitados.fetchAllReporteGrupos(context);
     return StreamBuilder(
-            stream: bloc.reporteInvitados,
+            stream: blocInvitados.reporteGrupos,
+            builder: (context, AsyncSnapshot<ItemModelReporteGrupos> snapshot) {
+              if (snapshot.hasData) {
+                return buildListGrupos(snapshot);
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          );
+  }
+
+  Widget buildListGrupos(AsyncSnapshot<ItemModelReporteGrupos> snapshot) {
+    double sizeHeight = 150;
+    return Container( 
+      width: 400,
+      //color: Colors.pink,
+      height: sizeHeight,
+      child:  miCardReportesGrupos(snapshot.data)
+    );
+  }
+
+  miCardReportesGrupos(ItemModelReporteGrupos dataGrupos) {
+    return GestureDetector(
+          child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: EdgeInsets.all(20),
+        elevation: 10,
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+              title: Text('Relación',style: TextStyle(fontSize: 20),),
+              subtitle: 
+                  Container(
+                    height: 55,
+                    //color: Colors.purple,
+                    child: ListView.builder(
+                      itemCount: dataGrupos.results.length,
+                      itemBuilder: (_,int index){
+                        return Text(dataGrupos.results.elementAt(index).grupo + ': '+ dataGrupos.results.elementAt(index).cantidad.toString());
+                      }
+                    ),
+                  ),
+
+              
+              leading: Icon(Icons.event),
+            ),
+          ],
+        ),
+      ),
+      onTap: (){},
+    );
+  }
+
+  reporteInvitados(){
+    blocInvitados.fetchAllReporteInvitados(context);
+    return StreamBuilder(
+            stream: blocInvitados.reporteInvitados,
             builder: (context, AsyncSnapshot<ItemModelReporteInvitados> snapshot) {
               if (snapshot.hasData) {
                 return buildList(snapshot);
@@ -48,7 +108,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text('Asistencia invitados',style: TextStyle(fontSize: 20),),
+              title: Text('Asistencia',style: TextStyle(fontSize: 20),),
               subtitle: Wrap(
                 spacing: 10,
                 runSpacing: 7,
@@ -68,9 +128,9 @@ class _ResumenEventoState extends State<ResumenEvento> {
     );
   }
   reporteInvitadosGenero(){
-  bloc.fetchAllReporteInvitadosGenero(context);
+  blocInvitados.fetchAllReporteInvitadosGenero(context);
   return StreamBuilder(
-          stream: bloc.reporteInvitadosGenero,
+          stream: blocInvitados.reporteInvitadosGenero,
           builder: (context, AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
             if (snapshot.hasData) {
               return buildListGenero(snapshot);
@@ -98,7 +158,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text('Reporte de genero',style: TextStyle(fontSize: 20),),
+              title: Text('Genero',style: TextStyle(fontSize: 20),),
               subtitle: Wrap(
                 spacing: 10,
                 runSpacing: 7,
@@ -132,7 +192,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                          //child: 
                          reporteInvitados(),
                          reporteInvitadosGenero(),
-                         reporteInvitados(),
+                         reporteGrupos()
                         //),
                      ],
                      ),

@@ -487,11 +487,11 @@ formItemsDesign(icon, item, large,ancho) {
             child: ListTile(
               title: Text(!invitado.estatusInvitacion?'Invitación pendiente':'Invitación enviada'),
               
-              /*trailing: CupertinoSwitch(
-                value: invitado.estatusInvitacion,
-                onChanged: (bool value) { setState(() { _lights = invitado.estatusInvitacion; }); },
-              ),*/
-              //onTap: () { setState(() { _lights = !_lights; }); },
+              trailing: CupertinoSwitch(
+                value: _lights,//invitado.estatusInvitacion,
+                onChanged: (bool value) { setState(() { _lights = value; }); },
+              ),
+              onTap: () { setState(() { _lights = !_lights; }); },
             ),
           ), 500.0, 50.0)
          ],
@@ -590,7 +590,7 @@ formItemsDesign(icon, item, large,ancho) {
  }
 
  save() async{
-   if (keyForm.currentState.validate()) {
+   //if (keyForm.currentState.validate()) {
      if(_currentSelectionGenero == 0){
        gender = "H";
      }else if(_currentSelectionGenero == 1){
@@ -649,7 +649,7 @@ formItemsDesign(icon, item, large,ancho) {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       
-  }
+  //}
  }
     @override
   void initState() {

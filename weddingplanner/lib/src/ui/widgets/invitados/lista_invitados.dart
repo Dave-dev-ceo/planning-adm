@@ -2,11 +2,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weddingplanner/src/blocs/blocs.dart';
+import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
 //import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
-import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
+//import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import '../../../models/item_model_invitados.dart';
-import '../../../blocs/invitados_bloc.dart';
+//import '../../../blocs/invitados_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 //import 'home.dart';
 
@@ -45,9 +47,9 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   }
   listaInvitados(BuildContext cont){
     ///bloc.dispose();
-    bloc.fetchAllInvitados(cont);
+    blocInvitados.fetchAllInvitados(cont);
     return StreamBuilder(
-            stream: bloc.allInvitados,
+            stream: blocInvitados.allInvitados,
             builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
               if (snapshot.hasData) {
                 return buildList(snapshot);
@@ -123,6 +125,7 @@ class _Row {
 class _DataSource extends DataTableSource {
   BuildContext _cont;
   final int idEvento;
+  List<dynamic> _grupos = [];
   ApiProvider api = new ApiProvider();
   _DataSource(context,BuildContext cont, this.idEvento) {
     _rows = <_Row>[];
@@ -131,20 +134,6 @@ class _DataSource extends DataTableSource {
     }
     _cont=cont;
   }
-  /*void _reset() {
-    Navigator.pushReplacement(
-      _cont,
-      PageRouteBuilder(
-        transitionDuration: Duration.zero,
-        pageBuilder: (_, __, ___) => ListaInvitados(),
-      ),
-    );
-  }*/
-
-  /*_viewShowDialogEditar(int id){
-    Navigator.push(
-          _cont, MaterialPageRoute(builder: (context) => FullScreenDialogEdit(id: id,)));
-  }*/
 
   _viewShowDialog(String numero){
       showDialog(
@@ -176,7 +165,6 @@ class _DataSource extends DataTableSource {
     
     bool response = await api.updateEstatusInvitado(json, _cont);
     if (response) {
-      //_reset();
       _ListaInvitadosState(idEvento).listaInvitados(_cont);
       print("actualizado");
     } else {
@@ -188,6 +176,94 @@ class _DataSource extends DataTableSource {
     if(result==null){
       _ListaInvitadosState(idEvento).listaInvitados(_cont);
     }
+  }
+  _listaGrupos(){
+    ///bloc.dispose();
+    blocGrupos.fetchAllGrupos(_cont);
+    return StreamBuilder(
+            stream: blocGrupos.allGrupos,
+            builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
+              if (snapshot.hasData) {
+                //_mySelection = ((snapshot.data.results.length - 1).toString());
+                //print(snapshot.data.results);
+                
+                
+                return _dataGrupo(snapshot.data);
+                //print(snapshot.data);
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          );
+  }
+  _dataGrupo(ItemModelGrupos grupos){
+    print(grupos.results.length);
+    /*List<Text> lT;
+    for(int i = 0; i < grupos.results.length; i++){
+      print(grupos.results.elementAt(i).nombreGrupo);
+      Text(grupos.results.elementAt(i).nombreGrupo);
+      lT.
+    }
+    
+    return lT;*/
+    return ListView.builder(
+        itemCount: grupos.results.length,
+        //padding: const EdgeInsets.only(top: 10),
+        itemBuilder: (BuildContext context,int index){
+          print(grupos.results.elementAt(index).nombreGrupo);
+          return Container(
+                      child: Center(
+                        child:Text(grupos.results.elementAt(index).nombreGrupo)));
+        }
+      );
+  }
+  _viewShowDialogGrupo(int idInvitado){
+     
+      print(_grupos.length);
+      showDialog(
+          context: _cont,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                //title: Text('Seleccionar Grupo'),
+                content: Container(
+                    height: 120,
+                    child: //Column(
+                      //children: [
+                        CupertinoPicker(
+                          itemExtent: 32.0, 
+                          onSelectedItemChanged: (value){
+                            print(value);
+
+                          }, 
+                          children: <Widget>[
+                            Text('Data 0'),
+                            Text('Data 1'),
+                            Text('Data 2'),
+                            Text('Data 3'),
+                            Text('Data 4'),
+                            Text('Data 5'),
+                            Text('Data 6'),
+                            Text('Data 7'),
+                             //_listaGrupos(),
+                            //for(String data in _grupos) Text(data),
+                            ]),
+                           // _listaGrupos(),
+                     // ],
+                    //),
+                  ),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('Cancelar',style: TextStyle(color: Colors.red),),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Confirmar'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ));
   }
   _viewShowDialogEstatus(int idInvitado){
       showDialog(
@@ -250,8 +326,8 @@ class _DataSource extends DataTableSource {
       cells: [
         //DataCell(Text(row.valueId.toString())),
         DataCell(Text(row.valueA), onTap: (){_viewShowDialogEditar(row.valueId);}),
-        DataCell(Text(row.valueB),onTap: (){_viewShowDialog(row.valueB);}),
-        DataCell(Text(row.valueC)),
+        DataCell(Text(row.valueB), onTap: (){_viewShowDialog(row.valueB);}),
+        DataCell(Text(row.valueC), ),//onTap: (){_viewShowDialogGrupo(row.valueId);}),
         DataCell(Text(row.valueD),onTap: (){_viewShowDialogEstatus(row.valueId);},),
         //DataCell(Icon(Icons.edit)),
         //DataCell(Icon(Icons.delete)),

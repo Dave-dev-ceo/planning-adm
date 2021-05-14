@@ -12,6 +12,7 @@ import 'package:weddingplanner/src/models/item_model_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 import 'dart:convert';
 import '../models/item_model_invitados.dart';
@@ -21,8 +22,8 @@ class ApiProvider {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
 
   Client client = Client();
-  String baseUrlPruebas = 'server01.grupotum.com:3004';
-  //String baseUrlPruebas = 'localhost:3010';
+  //String baseUrlPruebas = 'server01.grupotum.com:3004';
+  String baseUrlPruebas = 'localhost:3010';
   _loadLogin(BuildContext context) async{
     await _sharedPreferences.setSesion(false);
     await _sharedPreferences.setToken('');
@@ -61,6 +62,37 @@ class ApiProvider {
           );
         });
   }
+
+  Future<ItemModelReporteGrupos> fetchReporteGrupos(BuildContext context) async {
+    
+    
+    int res = await renovarToken();
+
+    if(res == 0){
+      int idEvento = await _sharedPreferences.getIdEvento();
+      String token = await _sharedPreferences.getToken();
+      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitadosGrupo/$idEvento'),
+      headers: {HttpHeaders.authorizationHeader: token});
+      
+      if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelReporteGrupos.fromJson(json.decode(response.body));
+    }else if(response.statusCode == 401){
+        _loadLogin(context);
+        return null;
+      }else{
+        
+        throw Exception('Failed to load get');
+      }
+    }else if(res == 1){
+        _loadLogin(context);
+        return null;
+    }else{
+      _loadLogin(context);
+        return null;
+    }
+  }
+
   Future<ItemModelReporteInvitadosGenero> fetchReporteInvitadosGenero(BuildContext context) async {
     
     int res = await renovarToken();
@@ -323,8 +355,9 @@ class ApiProvider {
     int res = await renovarToken();
 
     if(res == 0){
+      int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/obtenerGrupos'),
+      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/obtenerGrupos/$idEvento'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -381,6 +414,8 @@ class ApiProvider {
     int res = await renovarToken();
 
     if(res == 0){
+      int idEvento = await _sharedPreferences.getIdEvento();
+      grupo['id_evento'] = idEvento.toString();
       String token = await _sharedPreferences.getToken();
       final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/createGrupo'),
         

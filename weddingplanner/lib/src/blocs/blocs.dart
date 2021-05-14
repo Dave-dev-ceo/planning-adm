@@ -5,6 +5,7 @@ import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 
 import '../resources/repository.dart';
@@ -22,10 +23,12 @@ class InvitadosBloc{
   final _invitadosFetcher = PublishSubject<ItemModelInvitados>();
   final _reporteInvitadosFetcher = PublishSubject<ItemModelReporteInvitados>();
   final _reporteInvitadosGeneroFetcher = PublishSubject<ItemModelReporteInvitadosGenero>();
+  final _reporteGruposFetcher = PublishSubject<ItemModelReporteGrupos>();
 
   Stream<ItemModelInvitados> get allInvitados=>_invitadosFetcher.stream;
   Stream<ItemModelReporteInvitados> get reporteInvitados=>_reporteInvitadosFetcher.stream;
   Stream<ItemModelReporteInvitadosGenero> get reporteInvitadosGenero=>_reporteInvitadosGeneroFetcher.stream;
+  Stream<ItemModelReporteGrupos> get reporteGrupos=>_reporteGruposFetcher.stream;
 
   fetchAllInvitados(BuildContext context) async {
     ItemModelInvitados itemModel = await _repository.fetchAllInvitados(context);
@@ -39,10 +42,15 @@ class InvitadosBloc{
     ItemModelReporteInvitadosGenero itemModel = await _repository.fetchReporteInvitadosGenero(context);
     _reporteInvitadosGeneroFetcher.sink.add(itemModel);
   }
+  fetchAllReporteGrupos(BuildContext context) async {
+    ItemModelReporteGrupos itemModel = await _repository.fetchReporteGrupos(context);
+    _reporteGruposFetcher.sink.add(itemModel);
+  }
   dispose() {
     _invitadosFetcher.close();
     _reporteInvitadosFetcher.close();
     _reporteInvitadosGeneroFetcher.close();
+    _reporteGruposFetcher.close();
   }
 }
 class GruposBloc{
