@@ -38,9 +38,9 @@ class _InvitadosState extends State<Invitados> {
         child: Scaffold(
       appBar: AppBar(
             automaticallyImplyLeading: true,
-            title: Center(child: FittedBox(child: Image.asset('assets/logo.png',height: 70.0,width: 120.0,)),),
+            title: Center(child: FittedBox(child: Image.asset('assets/logo.png',height: 100.0,width: 250.0,)),),
             toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#7030a0'),
+            backgroundColor: hexToColor('#880B55'),
             bottom: TabBar(
               onTap: (int index){
                 setState(

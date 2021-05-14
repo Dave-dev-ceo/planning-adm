@@ -114,11 +114,11 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget build(BuildContext context) {
     return 
     Scaffold(
-          appBar: AppBar(backgroundColor: hexToColor('#7030a0'),
+          appBar: AppBar(backgroundColor: hexToColor('#880B55'),
           //automaticallyImplyLeading: false,
           title: Center(child: Column(
             children: [
-              FittedBox(child: Image.asset('assets/logo.png',height: 70.0,width: 120.0,)),
+              FittedBox(child: Image.asset('assets/logo.png',height: 100.0,width: 250.0,)),
               Text('Eventos', style: TextStyle(fontSize: 60,fontFamily: 'Dancing'),),
             ],
           ),),
@@ -130,7 +130,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
            ),
            floatingActionButton: FloatingActionButton(
              child: Icon(Icons.event_available),
-             backgroundColor: Colors.pink[300],
+             backgroundColor: hexToColor('#880B55'),
              onPressed: (){}),
              floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );

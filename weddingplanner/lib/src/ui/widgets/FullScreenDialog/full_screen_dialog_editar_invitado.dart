@@ -121,10 +121,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Colors.pink),
+      style: const TextStyle(color: Color(0xFF880B55)),
       underline: Container(
         height: 2,
-        color: Colors.pink,
+        color: Color(0xFF880B55),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -148,10 +148,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Colors.pink),
+      style: const TextStyle(color: Color(0xFF880B55)),
       underline: Container(
         height: 2,
-        color: Colors.pink,
+        color: Color(0xFF880B55),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -276,10 +276,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       iconSize: 24,
       elevation: 16,
       
-      style: const TextStyle(color: Colors.pink),
+      style: const TextStyle(color: Color(0xFF880B55)),
       underline: Container(
         height: 2,
-        color: Colors.pink,
+        color: Color(0xFF880B55),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -435,8 +435,8 @@ formItemsDesign(icon, item, large,ancho) {
                               child: MaterialSegmentedControl(
                 children: _children,
                 selectionIndex: _currentSelection,
-                borderColor: Colors.pink[300],
-                selectedColor: Colors.pink[300],
+                borderColor: Color(0xFF880B55),
+                selectedColor: Color(0xFF880B55),
                 unselectedColor: Colors.white,
                 borderRadius: 32.0,
                 horizontalPadding: EdgeInsets.all(8),
@@ -456,8 +456,8 @@ formItemsDesign(icon, item, large,ancho) {
                               child: MaterialSegmentedControl(
                 children: _childrenGenero,
                 selectionIndex: _currentSelectionGenero,
-                borderColor: Colors.pink[300],
-                selectedColor: Colors.pink[300],
+                borderColor: Color(0xFF880B55),
+                selectedColor: Color(0xFF880B55),
                 unselectedColor: Colors.white,
                 borderRadius: 32.0,
                 horizontalPadding: EdgeInsets.all(8),
@@ -520,7 +520,7 @@ formItemsDesign(icon, item, large,ancho) {
        Wrap(
          children: <Widget>[
            formItemsDesign(Icons.tablet_rounded, Row(children: <Widget>[
-             Text('Número de mesa'),
+             Text('Mesa'),
               SizedBox(width: 15,),
              _listaMesas(),
            ],), 500.0, 50.0)
@@ -532,7 +532,7 @@ formItemsDesign(icon, item, large,ancho) {
         
         onTap: (){
           save();
-          Navigator.of(context).pop();
+          
         },
         child: 
         CallToAction('Guardar')
@@ -619,6 +619,7 @@ formItemsDesign(icon, item, large,ancho) {
      //bloc.insertInvitados;
       //print(response);
       if (response) {
+        Navigator.of(context).pop();
         /*keyForm.currentState.reset();
         nombreCtrl.clear();
         telefonoCtrl.clear();
@@ -667,7 +668,7 @@ formItemsDesign(icon, item, large,ancho) {
         appBar: AppBar(
           title: Text('Editar Invitado'),
           automaticallyImplyLeading: true,
-          backgroundColor: hexToColor('#7030a0'),
+          backgroundColor: hexToColor('#880B55'),
         ),
         body: SingleChildScrollView(
           child: Container(

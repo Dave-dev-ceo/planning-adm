@@ -172,7 +172,33 @@ class _LoginState extends State<Login> {
     
   }
   _login() async{
-    showDialog(
+    if(emailCtrl.text == "" || emailCtrl.text == null 
+    || passwordCtrl.text == "" || passwordCtrl.text == null){
+      showDialog(
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+       //_ingresando = context;
+          return AlertDialog(
+            title: Text(
+              "Acceso",
+              textAlign: TextAlign.center,
+            ),
+            content: Text('Favor de ingresar correo y contraseña'),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            actions: <Widget>[TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+           ),
+          ],
+           
+          );
+        });
+    }else{
+      showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -251,14 +277,16 @@ class _LoginState extends State<Login> {
           );
         });
       }
+    }
+    
 
   }
   _registrarDataUser(){
     return Column(
       children: <Widget>[
-        SizedBox(height: 20.0,),
-        //Image.asset('assets/user.png',height: 120.0,width: 170.0,color: Colors.purple[100],),
-        SizedBox(height: 20.0,),
+        SizedBox(height: 10.0,),
+        Image.asset('assets/logo.png',height: 180.0,width: 450,),
+        SizedBox(height: 10.0,),
         Padding(padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
                   child: TextFormField(
                     controller: nombreRCtrl,
@@ -361,14 +389,15 @@ class _LoginState extends State<Login> {
             child: Text('Registrarse',style: TextStyle(fontSize: 17),)
           ),
         ),
-        SizedBox(height: 50,),
-        Row(
-          children: <Widget>[
+        SizedBox(height: 10,),
+        //Row(
+          //children: <Widget>[
             //Padding(
               //padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
                 //      child: 
-                      Expanded(
-                                              child: TextButton(
+                      //Expanded(
+                                              //child: 
+                                              TextButton(
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                   overlayColor: MaterialStateProperty.resolveWith<Color>(
@@ -385,14 +414,14 @@ class _LoginState extends State<Login> {
                 onPressed: () {setState(() {
                   _index = 0;
                 }); },
-                child: Text('Login',style: TextStyle(fontSize: 12),)
+                child: Text('Acceso',style: TextStyle(fontSize: 12),)
               ),
-                      ),
+                     // ),
             //),
             //Padding(
               //padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 4.0),
                       //child: 
-                      Expanded(
+                      /*Expanded(
                                               child: TextButton(
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -411,20 +440,20 @@ class _LoginState extends State<Login> {
                   _index = 1;
                 }); },
                 child: Text('Registro',style: TextStyle(fontSize: 12),)
-              ),
-                      ),
+              ),*/
+                  //    ),
             //),  
-          ],
-        )
+          //],
+       // )
       ],
     );
   }
   _authDataUser(){
     return Column(
       children: <Widget>[
-        SizedBox(height: 20.0,),
-        Image.asset('assets/user.png',height: 120.0,width: 170.0,color: Colors.purple[100],),
-        SizedBox(height: 20.0,),
+        SizedBox(height: 10.0,),
+        Image.asset('assets/logo.png',height: 180.0,width: 450,),
+        SizedBox(height: 10.0,),
         Padding(padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
                   child: TextFormField(
                     controller: emailCtrl,
@@ -501,14 +530,15 @@ class _LoginState extends State<Login> {
             child: Text('Iniciar Sesión',style: TextStyle(fontSize: 17),)
           ),
         ),
-        SizedBox(height: 50,),
-        Row(
-          children: <Widget>[
+        SizedBox(height: 10,),
+        //Row(
+          //children: <Widget>[
             //Padding(
               //padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
                 //      child: 
-                      Expanded(
-                                              child: TextButton(
+            /*          Expanded(
+                                              child: 
+                                              TextButton(
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                   overlayColor: MaterialStateProperty.resolveWith<Color>(
@@ -526,14 +556,15 @@ class _LoginState extends State<Login> {
                   _index = 0;
                 }); },
                 child: Text('Login',style: TextStyle(fontSize: 12),)
-              ),
-                      ),
+              ),*/
+                  //    ),
             //),
             //Padding(
               //padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 4.0),
                       //child: 
-                      Expanded(
-                                              child: TextButton(
+                  //    Expanded(
+                    //                          child: 
+                                              TextButton(
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                   overlayColor: MaterialStateProperty.resolveWith<Color>(
@@ -552,10 +583,10 @@ class _LoginState extends State<Login> {
                 }); },
                 child: Text('Registro',style: TextStyle(fontSize: 12),)
               ),
-                      ),
+                      //),
             //),  
-          ],
-        )
+          //],
+       // )
       ],
     );
   }
@@ -574,12 +605,12 @@ class _LoginState extends State<Login> {
                           child: Center(
                 child: Column(
                   children: [
-                    SizedBox(height: 15.0,),
-                    Image.asset('assets/logo.png',height: 120.0,width: 170.0,),
+                    SizedBox(height: 100.0,),
+                    //Image.asset('assets/logo.png',height: 120.0,width: 170.0,),
                     SizedBox(height: 15.0,),
                     Container(
                         width: 370,
-                        height: 520,
+                        height: 600,
                         /*decoration: BoxDecoration(
                         //boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 30, offset: Offset(2, 2))],
                         borderRadius: BorderRadius.circular(20.0),

@@ -22,8 +22,8 @@ class ApiProvider {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
 
   Client client = Client();
-  String baseUrlPruebas = 'server01.grupotum.com:3004';
-  //String baseUrlPruebas = 'localhost:3010';
+  //String baseUrlPruebas = 'server02.grupotum.com:3005';
+  String baseUrlPruebas = 'localhost:3005';
   _loadLogin(BuildContext context) async{
     await _sharedPreferences.setSesion(false);
     await _sharedPreferences.setToken('');
@@ -43,12 +43,8 @@ class ApiProvider {
               "Sesión",
               textAlign: TextAlign.center,
             ),
-            content: Column(
-              children: [
+            content: 
                 Text('Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-                Image.asset('assets/cancelado.png',height: 100.0,width: 150.0,),
-              ],
-            ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
             actions: <Widget>[TextButton(
@@ -270,6 +266,35 @@ class ApiProvider {
     if(res == 0){
       String token = await _sharedPreferences.getToken();
       final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/updateEstatusInvitados'),
+        
+        body: data,
+      headers: {HttpHeaders.authorizationHeader: token});
+      
+      if (response.statusCode == 201) {
+        return true;  
+      } else if(response.statusCode == 401){
+        _loadLogin(context);
+        return null;
+      }else{
+        return false;
+      }
+    }else if(res == 1){
+        _loadLogin(context);
+        return null;
+    }else{
+      _loadLogin(context);
+        return false;
+    }
+  }
+
+  Future<bool> updateGrupoInvitado(Map<String,String> data, BuildContext context) async{
+    
+    
+    int res = await renovarToken();
+
+    if(res == 0){
+      String token = await _sharedPreferences.getToken();
+      final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/updateGrupoInvitados'),
         
         body: data,
       headers: {HttpHeaders.authorizationHeader: token});

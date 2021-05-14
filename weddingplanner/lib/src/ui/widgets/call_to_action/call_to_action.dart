@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class CallToAction extends StatelessWidget {
   final String title;
   CallToAction(this.title);
-
+  Color hexToColor(String code) {
+      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,7 +20,7 @@ class CallToAction extends StatelessWidget {
           ),
         ),
       ),
-      decoration: BoxDecoration(color: Colors.pink[300],
+      decoration: BoxDecoration(color: hexToColor('#880B55'),
       borderRadius: BorderRadius.circular(5),),
     );
   }

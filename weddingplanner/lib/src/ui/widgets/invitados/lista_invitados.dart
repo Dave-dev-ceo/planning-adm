@@ -71,12 +71,17 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
+        onPressed: () async{
+          //Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
+          final result = await Navigator.of(context).pushNamed('/addInvitados',arguments: idEvento); 
+          if(result==null || result=="" || result == false || result == 0){
+            //print("add "+result.toString());
+            _ListaInvitadosState(idEvento).listaInvitados(context);
+          }
         },
         child: const Icon(Icons.person_add),
         
-        backgroundColor: Colors.pink[300],
+        backgroundColor: hexToColor('#880B55'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
@@ -125,7 +130,8 @@ class _Row {
 class _DataSource extends DataTableSource {
   BuildContext _cont;
   final int idEvento;
-  List<dynamic> _grupos = [];
+  ItemModelGrupos _grupos;
+  String _grupoSelect = "0";
   ApiProvider api = new ApiProvider();
   _DataSource(context,BuildContext cont, this.idEvento) {
     _rows = <_Row>[];
@@ -133,6 +139,19 @@ class _DataSource extends DataTableSource {
       _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].grupo==null?'Sin grupo':context[i].grupo), context[i].asistencia));  
     }
     _cont=cont;
+  }
+  _msgSnackBar(String error, Color color){
+    final snackBar = SnackBar(
+              content: Container(
+                height: 30,
+                child: Center(
+                child: Text(error),
+              ),
+                //color: Colors.red,
+              ),
+              backgroundColor: color,  
+    );
+    ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
   }
 
   _viewShowDialog(String numero){
@@ -166,18 +185,20 @@ class _DataSource extends DataTableSource {
     bool response = await api.updateEstatusInvitado(json, _cont);
     if (response) {
       _ListaInvitadosState(idEvento).listaInvitados(_cont);
-      print("actualizado");
+      //print("actualizado");
     } else {
-      print("error update");
+      _msgSnackBar("Error al actualizar el estatus", Colors.red);
     }
   }
   _viewShowDialogEditar(int idInvitado) async{
-    final result = await Navigator.of(_cont).pushNamed('/editInvitado',arguments: idInvitado); 
-    if(result==null){
+    
+    final resultE = await Navigator.of(_cont).pushNamed('/editInvitado',arguments: idInvitado); 
+    if(resultE==null || resultE=="" || resultE == false || resultE == 0){
+      //print("edit " + resultE.toString());
       _ListaInvitadosState(idEvento).listaInvitados(_cont);
     }
   }
-  _listaGrupos(){
+  _listaGrupos(int idInvitado){
     ///bloc.dispose();
     blocGrupos.fetchAllGrupos(_cont);
     return StreamBuilder(
@@ -185,10 +206,10 @@ class _DataSource extends DataTableSource {
             builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
               if (snapshot.hasData) {
                 //_mySelection = ((snapshot.data.results.length - 1).toString());
-                //print(snapshot.data.results);
-                
-                
-                return _dataGrupo(snapshot.data);
+                print('sacha');
+                return null;
+                //_viewShowDialogGrupo(idInvitado, snapshot.data);
+                //return _dataGrupo(snapshot.data);
                 //print(snapshot.data);
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
@@ -218,9 +239,16 @@ class _DataSource extends DataTableSource {
         }
       );
   }
+  _listaGruposEvento(int idInvitado) async{
+    _grupos = await api.fetchGruposList(_cont);
+    /*for (var data in _grupos.results) {
+      print(data.nombreGrupo);
+    }*/
+    _viewShowDialogGrupo(idInvitado);
+  }
   _viewShowDialogGrupo(int idInvitado){
      
-      print(_grupos.length);
+      //print('ola');
       showDialog(
           context: _cont,
           builder: (BuildContext context) => CupertinoAlertDialog(
@@ -231,21 +259,15 @@ class _DataSource extends DataTableSource {
                       //children: [
                         CupertinoPicker(
                           itemExtent: 32.0, 
+                          
                           onSelectedItemChanged: (value){
-                            print(value);
-
+                            
+                            _grupoSelect = _grupos.results.elementAt(value).idGrupo.toString();
+                            print(_grupoSelect);
                           }, 
                           children: <Widget>[
-                            Text('Data 0'),
-                            Text('Data 1'),
-                            Text('Data 2'),
-                            Text('Data 3'),
-                            Text('Data 4'),
-                            Text('Data 5'),
-                            Text('Data 6'),
-                            Text('Data 7'),
-                             //_listaGrupos(),
-                            //for(String data in _grupos) Text(data),
+                            //for (var i = 0; i < _grupos.results.length; i++) 
+                            for(var data in _grupos.results) if(data.nombreGrupo!="Nuevo grupo") Text(data.nombreGrupo),
                             ]),
                            // _listaGrupos(),
                      // ],
@@ -258,12 +280,28 @@ class _DataSource extends DataTableSource {
                   ),
                   CupertinoDialogAction(
                     child: Text('Confirmar'),
-                    onPressed: () {
+                    onPressed: () async{
+                      await _updateGrupo(idInvitado);
                       Navigator.of(context).pop();
                     },
                   ),
                 ],
               ));
+  }
+  _updateGrupo(int idInvitado) async{
+    bool response;
+    Map<String,String> json = 
+    {
+      "id_invitado":idInvitado.toString(),
+      "id_grupo":_grupoSelect
+    };
+      response = await api.updateGrupoInvitado(json, _cont);
+      if(response){
+        _ListaInvitadosState(idEvento).listaInvitados(_cont);
+      }else{
+        _msgSnackBar("Error al actualizar el grupo", Colors.red);
+      }
+    
   }
   _viewShowDialogEstatus(int idInvitado){
       showDialog(
@@ -327,7 +365,7 @@ class _DataSource extends DataTableSource {
         //DataCell(Text(row.valueId.toString())),
         DataCell(Text(row.valueA), onTap: (){_viewShowDialogEditar(row.valueId);}),
         DataCell(Text(row.valueB), onTap: (){_viewShowDialog(row.valueB);}),
-        DataCell(Text(row.valueC), ),//onTap: (){_viewShowDialogGrupo(row.valueId);}),
+        DataCell(Text(row.valueC),onTap: (){_listaGruposEvento(row.valueId);}),
         DataCell(Text(row.valueD),onTap: (){_viewShowDialogEstatus(row.valueId);},),
         //DataCell(Icon(Icons.edit)),
         //DataCell(Icon(Icons.delete)),
