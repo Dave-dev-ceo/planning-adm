@@ -9,6 +9,9 @@ class ItemModelInvitado {
   String _edad;
   String _menu;
   int _idMesa;
+  String _alimentacion;
+  String _alergias;
+  String _asistenciaEspecial;
   bool _estatusInvitacion;
 
   ItemModelInvitado.fromJson(Map<dynamic,dynamic> parsedJson){
@@ -23,17 +26,22 @@ class ItemModelInvitado {
     _menu = parsedJson['menu'];
     _idMesa = parsedJson['id_mesa'];
     _estatusInvitacion = parsedJson['estatus_invitacion'];
-
+    _alimentacion = parsedJson['alimentacion'];
+    _alergias = parsedJson['alergias'];
+    _asistenciaEspecial = parsedJson['asistencia_especial'];
   }
-  int get idInvitado=>_idInvitado;
-  String get nombre=>_nombre;
-  String get telefono=>_telefono;
-  int get grupo=>_grupo;
-  String get asistencia=>_asistencia;
-  String get email=>_email;
-  String get genero=>_genero;
-  String get edad=>_edad;
-  String get menu=>_menu;
-  int get idMesa=>_idMesa;
-  bool get estatusInvitacion=>_estatusInvitacion;
+  int get idInvitado => _idInvitado;
+  String get nombre => _nombre;
+  String get telefono => _telefono;
+  int get grupo => _grupo;
+  String get asistencia => _asistencia;
+  String get email => _email;
+  String get genero => _genero;
+  String get edad => _edad;
+  String get menu => _menu;
+  int get idMesa => _idMesa;
+  String get alimentacion => _alimentacion;
+  String get alergias => _alergias;
+  String get asistenciaEspecial => _asistenciaEspecial;
+  bool get estatusInvitacion => _estatusInvitacion;
 }

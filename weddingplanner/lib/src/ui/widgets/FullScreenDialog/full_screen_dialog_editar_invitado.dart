@@ -27,6 +27,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   int contActualizaGrupo = 0;
   int contActualizaData = 0;
   int contActualizaMesa = 0;
+  bool isExpaned = true;
+  bool isExpanedT = false;
   GlobalKey<FormState> keyForm = new GlobalKey();
   GlobalKey<FormState> keyFormG = new GlobalKey();
   TextEditingController  nombreCtrl = new TextEditingController();
@@ -38,6 +40,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   TextEditingController  telefonoCtrl = new TextEditingController();
 
+  TextEditingController  tipoAlimentacionCtrl = new TextEditingController();
+  TextEditingController  asistenciaEspecialCtrl = new TextEditingController();
+  TextEditingController  alergiasCtrl = new TextEditingController();
   //String dropdownValueEstatus = 'Confirmado';
   String dropdownValue = 'Hombre';
   int _currentSelection;
@@ -144,31 +149,31 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   _dropDownGrupos(ItemModelGrupos grupos){
     return DropdownButton(
-      value: _mySelectionG,
-      icon: const Icon(Icons.arrow_drop_down_outlined),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Color(0xFF880B55)),
-      underline: Container(
-        height: 2,
-        color: Color(0xFF880B55),
-      ),
-      onChanged: (newValue) {
-        setState(() {
-          if(newValue == grupos.results.elementAt(grupos.results.length-1).idGrupo.toString()){
-            _showMyDialog();
-          }else{
-            _mySelectionG = newValue;
-          }
-          
-        });
-      },
-      items: grupos.results.map((item) {
-        return DropdownMenuItem(
-          value: item.idGrupo.toString(),
-          child: Text(item.nombreGrupo, style: TextStyle(fontSize: 18),),
-        );
-      }).toList(),
+        value: _mySelectionG,
+        icon: const Icon(Icons.arrow_drop_down_outlined),
+        iconSize: 24,
+        elevation: 16,
+        style: const TextStyle(color: Color(0xFF880B55)),
+        underline: Container(
+          height: 2,
+          color: Color(0xFF880B55),
+        ),
+        onChanged: (newValue) {
+          setState(() {
+            if(newValue == grupos.results.elementAt(grupos.results.length-1).idGrupo.toString()){
+              _showMyDialog();
+            }else{
+              _mySelectionG = newValue;
+            }
+            
+          });
+        },
+        items: grupos.results.map((item) {
+          return DropdownMenuItem(
+            value: item.idGrupo.toString(),
+            child: Text(item.nombreGrupo, style: TextStyle(fontSize: 18),),
+          );
+        }).toList(),
     );
   }
 
@@ -326,7 +331,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 formItemsDesign(icon, item, large,ancho) {
    return Padding(
      padding: EdgeInsets.symmetric(vertical: 3),
-     child: Container(child: Card(child: ListTile(leading: Icon(icon), title: item)), width: large,height: 80,),
+     child: Container(child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),elevation: 10,child: ListTile(leading: Icon(icon), title: item)), width: large,height: ancho,),
    );
   }
   Widget formUI(ItemModelInvitado invitado) {
@@ -388,6 +393,9 @@ formItemsDesign(icon, item, large,ancho) {
       nombreCtrl.text = invitado.nombre;
       emailCtrl.text = invitado.email;
       telefonoCtrl.text = invitado.telefono;
+      alergiasCtrl.text = invitado.alergias;
+      tipoAlimentacionCtrl.text = invitado.alimentacion;
+      asistenciaEspecialCtrl.text = invitado.asistenciaEspecial;
       contActualizaData++;
     }
     
@@ -396,7 +404,7 @@ formItemsDesign(icon, item, large,ancho) {
    return  Column(
      children: <Widget>[
        SizedBox(width: 35,),
-       Wrap(
+       /*Wrap(
          children:<Widget>[
            
             formItemsDesign(
@@ -408,7 +416,7 @@ formItemsDesign(icon, item, large,ancho) {
              ),
              //initialValue: invitado.nombre,
              validator: validateNombre,
-           ),500.0,50.0),
+           ),500.0,80.0),
        formItemsDesign(
            //MyFlutterApp.transgender,
            Icons.assignment,
@@ -420,7 +428,7 @@ formItemsDesign(icon, item, large,ancho) {
                 _listaEstatus(),
                       //_dropDownEstatusInvitado(),
              ],),
-             500.0,50.0
+             500.0,80.0
              )
             //Container(width: 300,child: TextFormField(initialValue: nombre,decoration: InputDecoration(labelText: 'Nombre'))),
          ]
@@ -447,7 +455,7 @@ formItemsDesign(icon, item, large,ancho) {
                 },
            ),
               ),]
-         ), 500.0,50.0),
+         ), 500.0,80.0),
          formItemsDesign(MyFlutterApp.transgender, Row(
                     children:<Widget>[ 
               Text('Genero'),
@@ -468,7 +476,7 @@ formItemsDesign(icon, item, large,ancho) {
                 },
            ),
               ),]
-         ), 500.0,50.0),
+         ), 500.0,80.0),
          
          ],
        ),
@@ -481,7 +489,7 @@ formItemsDesign(icon, item, large,ancho) {
                labelText: 'Correo',
              ),
              validator: validateEmail,
-           ), 500.0, 50.0),
+           ), 500.0, 80.0),
 
            formItemsDesign(!invitado.estatusInvitacion?Icons.cancel:Icons.check_box, MergeSemantics(
             child: ListTile(
@@ -493,7 +501,7 @@ formItemsDesign(icon, item, large,ancho) {
               ),
               onTap: () { setState(() { _lights = !_lights; }); },
             ),
-          ), 500.0, 50.0)
+          ), 500.0, 80.0)
          ],
        ),
        Wrap(
@@ -505,7 +513,7 @@ formItemsDesign(icon, item, large,ancho) {
                labelText: 'Número de teléfono',
              ),
              validator: validateTelefono,
-           ), 500.0, 50.0),
+           ), 500.0, 80.0),
             formItemsDesign(Icons.group, 
             Row(children: <Widget>[
               Text('Grupo'),
@@ -513,11 +521,12 @@ formItemsDesign(icon, item, large,ancho) {
               _listaGrupos(), 
             ],),
              
-            500.0, 50.0)
+            500.0, 80.0)
 
          ],
-       ),
-       Wrap(
+       ),*/
+       
+       /*Wrap(
          children: <Widget>[
            formItemsDesign(Icons.tablet_rounded, Row(children: <Widget>[
              Text('Mesa'),
@@ -525,9 +534,217 @@ formItemsDesign(icon, item, large,ancho) {
              _listaMesas(),
            ],), 500.0, 50.0)
          ],
-       ),
+       ),*/
        SizedBox(width: 25,),
-      
+      ExpansionPanelList(
+        animationDuration: Duration(milliseconds:1000),
+
+        expansionCallback: (int index,bool expaned){setState(() {
+          
+          if(index == 0){
+            isExpaned = !isExpaned;  
+          }else{
+            isExpanedT = !isExpanedT;
+          }
+          //print(index);
+        });},
+        children: [
+          ExpansionPanel(headerBuilder: (BuildContext context, bool isExpaned){
+            return Center(child: Text('Información general',style: TextStyle(fontSize: 20.0),));
+          },
+          canTapOnHeader: true,
+          isExpanded: isExpaned,
+           body: Container(
+            child: Column(
+              children: <Widget>[
+                Wrap(
+                  children:<Widget>[
+                    
+                      formItemsDesign(
+                    Icons.person,
+                    TextFormField(
+                      controller: nombreCtrl,
+                      decoration: new InputDecoration(
+                        labelText: 'Nombre completo',
+                      ),
+                      //initialValue: invitado.nombre,
+                      validator: validateNombre,
+                    ),500.0,80.0),
+                formItemsDesign(
+                    //MyFlutterApp.transgender,
+                    Icons.assignment,
+                    Row(
+                      children: <Widget>[
+                        Text('Asistencia'),
+                        SizedBox(width: 15,),
+                        
+                          _listaEstatus(),
+                                //_dropDownEstatusInvitado(),
+                      ],),
+                      500.0,80.0
+                      )
+                      //Container(width: 300,child: TextFormField(initialValue: nombre,decoration: InputDecoration(labelText: 'Nombre'))),
+                  ]
+                ),
+                Wrap(
+                  children: <Widget>[
+                  formItemsDesign(Icons.av_timer_rounded, Row(
+                              children:<Widget>[ 
+                        Text('Edad'),
+                        //SizedBox(width: 15,),
+                        Expanded(
+                                        child: MaterialSegmentedControl(
+                          children: _children,
+                          selectionIndex: _currentSelection,
+                          borderColor: Color(0xFF880B55),
+                          selectedColor: Color(0xFF880B55),
+                          unselectedColor: Colors.white,
+                          borderRadius: 32.0,
+                          horizontalPadding: EdgeInsets.all(8),
+                          onSegmentChosen: (index) {
+                            setState(() {
+                              _currentSelection = index;
+                            });
+                          },
+                    ),
+                        ),]
+                  ), 500.0,80.0),
+                  formItemsDesign(MyFlutterApp.transgender, Row(
+                              children:<Widget>[ 
+                        Text('Genero'),
+                        //SizedBox(width: 15,),
+                        Expanded(
+                                        child: MaterialSegmentedControl(
+                          children: _childrenGenero,
+                          selectionIndex: _currentSelectionGenero,
+                          borderColor: Color(0xFF880B55),
+                          selectedColor: Color(0xFF880B55),
+                          unselectedColor: Colors.white,
+                          borderRadius: 32.0,
+                          horizontalPadding: EdgeInsets.all(8),
+                          onSegmentChosen: (index) {
+                            setState(() {
+                              _currentSelectionGenero = index;
+                            });
+                          },
+                    ),
+                        ),]
+                  ), 500.0,80.0),
+                  
+                  ],
+                ),
+                Wrap(
+                  children: <Widget>[
+                    formItemsDesign(Icons.email, TextFormField(
+                      controller: emailCtrl,
+                      //initialValue: invitado.email,
+                      decoration: new InputDecoration(
+                        labelText: 'Correo',
+                      ),
+                      validator: validateEmail,
+                    ), 500.0, 80.0),
+
+                    formItemsDesign(!invitado.estatusInvitacion?Icons.cancel:Icons.check_box, MergeSemantics(
+                      child: ListTile(
+                        title: Text(!invitado.estatusInvitacion?'Invitación pendiente':'Invitación enviada'),
+                        
+                        trailing: CupertinoSwitch(
+                          value: _lights,//invitado.estatusInvitacion,
+                          onChanged: (bool value) { setState(() { _lights = value; }); },
+                        ),
+                        onTap: () { setState(() { _lights = !_lights; }); },
+                      ),
+                    ), 500.0, 80.0)
+                  ],
+                ),
+                Wrap(
+                  children: <Widget>[
+                    formItemsDesign(Icons.phone, TextFormField(
+                      controller: telefonoCtrl,
+                      //initialValue: invitado.telefono,
+                      decoration: new InputDecoration(
+                        labelText: 'Número de teléfono',
+                      ),
+                      validator: validateTelefono,
+                    ), 500.0, 80.0),
+                      formItemsDesign(Icons.group, 
+                      Row(children: <Widget>[
+                        Text('Grupo'),
+                        SizedBox(width: 15,),
+                        _listaGrupos(), 
+                      ],),
+                      
+                      500.0, 80.0)
+
+                  ],
+                ),
+                SizedBox(height: 30.0,),
+              ],
+            )
+          )),
+          ExpansionPanel(headerBuilder: (BuildContext context, bool isExpaned){
+            return Center(child: Text('Comentarios',style: TextStyle(fontSize: 20.0),));
+          },
+          canTapOnHeader: true,
+          isExpanded: isExpanedT,
+           body: Container(
+            child: Column(
+              children: <Widget>[
+                Wrap(
+                  children: <Widget>[
+                    formItemsDesign(null, TextFormField(
+                      controller: tipoAlimentacionCtrl,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 2,
+                      //initialValue: invitado.email,
+                      decoration: new InputDecoration(
+                        labelText: 'Tipo de alimentación',
+                      ),
+                      //validator: validateEmail,
+                    ), 500.0, 100.0),
+
+                    formItemsDesign(null, TextFormField(
+                      controller: alergiasCtrl,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 2,
+                      //initialValue: invitado.email,
+                      decoration: new InputDecoration(
+                        labelText: 'Alergias',
+                      ),
+                      //validator: validateEmail,
+                    ), 500.0, 100.0),
+                    //SizedBox(height: 30.0,),
+                  ],
+                ),
+                Wrap(
+                  children: <Widget>[
+                    formItemsDesign(null, TextFormField(
+                      controller: asistenciaEspecialCtrl,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 2,
+                      //initialValue: invitado.email,
+                      decoration: new InputDecoration(
+                        labelText: 'Asistencia especial',
+                      ),
+                      //validator: validateEmail,
+                    ), 500.0, 100.0),
+
+                    formItemsDesign(Icons.tablet_rounded, Row(children: <Widget>[
+                      Text('Mesa'),
+                        SizedBox(width: 15,),
+                      _listaMesas(),
+                    ],), 500.0, 100.0),
+                    
+                  ],
+                ),
+                SizedBox(height: 30.0,),
+              ],
+            ),
+          )),
+          
+        ],
+      ),
+      SizedBox(height: 30.0,),
       GestureDetector(
         
         onTap: (){
@@ -611,7 +828,10 @@ formItemsDesign(icon, item, large,ancho) {
        "email":emailCtrl.text,
        "genero":gender,
        "id_grupo":_mySelectionG,
-       "id_mesa":_mySelectionM
+       "id_mesa":_mySelectionM,
+       "alimentacion":tipoAlimentacionCtrl.text,
+       "alergias":alergiasCtrl.text,
+       "asistencia_especial":asistenciaEspecialCtrl.text
       };
      //json.
      bool response = await api.updateInvitado(json,context);
