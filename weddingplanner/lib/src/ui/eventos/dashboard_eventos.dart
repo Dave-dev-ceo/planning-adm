@@ -114,15 +114,15 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget build(BuildContext context) {
     return 
     Scaffold(
-          appBar: AppBar(backgroundColor: hexToColor('#880B55'),
+          //appBar: AppBar(backgroundColor: hexToColor('#880B55'),
           //automaticallyImplyLeading: false,
-          title: Center(child: Column(
+          /*title: Center(child: Column(
             children: [
               FittedBox(child: Image.asset('assets/logo.png',height: 100.0,width: 250.0,)),
               Text('Eventos', style: TextStyle(fontSize: 60,fontFamily: 'Dancing'),),
             ],
           ),),
-            toolbarHeight: 150.0,),
+            toolbarHeight: 150.0,),*/
           body:  
             Container(
               child:               

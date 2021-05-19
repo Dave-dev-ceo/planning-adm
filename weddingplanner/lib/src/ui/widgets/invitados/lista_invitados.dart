@@ -1,10 +1,17 @@
 //import 'dart:js';
 
+import 'dart:io';
+
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 //import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 //import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import '../../../models/item_model_invitados.dart';
@@ -24,8 +31,224 @@ class ListaInvitados extends StatefulWidget {
 }
 
 class _ListaInvitadosState extends State<ListaInvitados> {
+  ApiProvider api = new ApiProvider();
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   final int idEvento;
+  bool dialVisible = true;
+  void setDialVisible(bool value) {
+    setState(() {
+      dialVisible = value;
+    });
+  }
+  _viewShowDialogExcel(){
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Importación de excel'),
+                content: Text('Procedera a abrir su explorador de archivos para seleccionar un archivo excel,¿Desea continuar?'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('No',style: TextStyle(color: Colors.red),),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Sí'),
+                    onPressed: () {
+                      _readExcel();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ));
+  }
+  _readExcel() async{
+    /// Use FilePicker to pick files in Flutter Web
+  
+    FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx'],
+      allowMultiple: false,
+    );
+  
+    /// file might be picked
+    
+    if (pickedFile != null) {
+      var bytes = pickedFile.files.single.bytes;
+      
+      if(bytes == null){
+        bytes = File(pickedFile.files[0].path).readAsBytesSync();
+      }
+      
+      
+      var excel = Excel.decodeBytes(bytes);
+      bool bandera = true;
+      for (var table in excel.tables.keys) {
+        //print(table); //sheet Name
+        //print(excel.tables[table].maxCols);
+        //print(excel.tables[table].maxRows);
+        var xx = excel.tables[table].rows;
+        if(xx[0][0]=="NOMBRE" && xx[0][1]=="EMAIL" && xx[0][2]=="TELÉFONO"){
+          for( var i = 1 ; i < xx.length; i++ ) { 
+            Map <String,String> json = {
+              "nombre":xx[i][0],
+              "telefono":xx[i][2].toString(),
+              "email":xx[i][1],
+              "id_evento":idEvento.toString()
+            };
+            bool response = await api.createInvitados(json,context);
+            if(response){
+
+            }else{
+              bandera = false;
+            }   
+          }
+          if(bandera){
+            final snackBar = SnackBar(
+                content: Container(
+                  height: 30,
+                  child: Center(
+                  child: Text('Se importo el archivo con éxito'),
+                ),
+                  //color: Colors.red,
+                ),
+                backgroundColor: Colors.green,  
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }else{
+            final snackBar = SnackBar(
+              content: Container(
+                height: 30,
+                child: Center(
+                child: Text('Error: No se pudo realizar el registro'),
+              ),
+                //color: Colors.red,
+              ),
+              backgroundColor: Colors.red,  
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          } 
+        }else{
+          final snackBar = SnackBar(
+          content: Container(
+            height: 30,
+            child: Center(
+            child: Text('Estructura incorrecta'),
+          ),
+            //color: Colors.red,
+          ),
+          backgroundColor: Colors.red,  
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          
+        }
+      }
+    }
+  }
+  
+  Future<PermissionStatus> _getPermission() async {
+    PermissionStatus permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.permanentlyDenied) {
+      PermissionStatus permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } else {
+      return permission;
+    }
+  }
+  _viewContact() async{
+    final PermissionStatus permissionStatus = await _getPermission();
+    if (permissionStatus == PermissionStatus.granted) {
+      //Navigator.push(
+        //  context, MaterialPageRoute(builder: (context) => FullScreenDialog(id: idEvento,)));
+          
+          final result = await Navigator.of(context).pushNamed('/addContactos',arguments: idEvento); 
+          if(result==null || result=="" || result == false || result == 0){
+            _ListaInvitadosState(idEvento).listaInvitados(context);
+          }
+    } else {
+      //If permissions have been denied show standard cupertino alert dialog
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text('Permisos denegados'),
+                content: Text('Por favor habilitar el acceso a contactos'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                ],
+              ));
+    }
+  }
+  SpeedDial buildSpeedDial(double pHz) {
+    return SpeedDial(
+      /// both default to 16
+      
+      marginEnd: pHz-100,
+      marginBottom: 20,
+      
+      icon: Icons.add,
+      activeIcon: Icons.close_rounded,
+      buttonSize: 56.0,
+      visible: true,
+
+      closeManually: false,
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+      //onOpen: () => print('OPENING DIAL'),
+      //onClose: () => print('DIAL CLOSED'),
+      tooltip: 'Opciones',
+      heroTag: 'Opciones',
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.white,
+      elevation: 8.0,
+      shape: CircleBorder(),
+
+      // orientation: SpeedDialOrientation.Up,
+      // childMarginBottom: 2,
+      // childMarginTop: 2,
+      gradientBoxShape: BoxShape.circle,
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [hexToColor("#880B55"),hexToColor("#880B55")],
+      ),
+      children: [
+        SpeedDialChild(
+          foregroundColor: Colors.white,
+          child: Tooltip(child: Icon(Icons.person_add), message: "Agregar invitado",),
+          backgroundColor: hexToColor("#880B55"),
+          onTap: () async{
+          final result = await Navigator.of(context).pushNamed('/addInvitados',arguments: idEvento); 
+          if(result==null || result=="" || result == false || result == 0){
+            _ListaInvitadosState(idEvento).listaInvitados(context);
+          }
+        },
+          onLongPress: () => print('FIRST CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          foregroundColor: Colors.white,
+          child: Tooltip(child: Icon(Icons.table_chart_outlined),message: "Importar excel",),
+          backgroundColor: hexToColor("#880B55"),
+          //label: 'Importar excel',
+          //labelStyle: TextStyle(fontSize: 14.0),
+          onTap: () => _viewShowDialogExcel(),
+          onLongPress: () => print('SECOND CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          foregroundColor: Colors.white,
+          child: Tooltip(child: Icon(Icons.import_contacts_rounded),message: "Importar contactos",),
+          backgroundColor: hexToColor("#880B55"),
+          //label: 'Importar contactos',
+          //labelStyle: TextStyle(fontSize: 14.0),
+          onTap: () => _viewContact(),
+          onLongPress: () => print('THIRD CHILD LONG PRESS'),
+        ),
+      ],
+    );
+  }
 
   _ListaInvitadosState(this.idEvento);  
   Color hexToColor(String code) {
@@ -62,6 +285,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   }
   @override
   Widget build(BuildContext context) {
+    double pHz = MediaQuery.of(context).size.width;
     return Scaffold(
           body: Container(
         width: double.infinity,
@@ -70,7 +294,8 @@ class _ListaInvitadosState extends State<ListaInvitados> {
             listaInvitados(context),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: buildSpeedDial(pHz),
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () async{
           //Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
           final result = await Navigator.of(context).pushNamed('/addInvitados',arguments: idEvento); 
@@ -82,8 +307,8 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         child: const Icon(Icons.person_add),
         
         backgroundColor: hexToColor('#880B55'),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      ),*/
+      //floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
@@ -93,6 +318,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           PaginatedDataTable(
             header: Text('Invitados'),
             rowsPerPage: 8,
+            
             showCheckboxColumn: false,
             columns: [
               DataColumn(label: Text('Nombre', style:estiloTxt)),

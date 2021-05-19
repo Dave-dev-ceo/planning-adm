@@ -28,8 +28,9 @@ class _LoginState extends State<Login> {
   }
   void _checkSession()async{
     bool sesion = await  _sharedPreferences.getSession();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
     if(sesion){
-      Navigator.pushNamed(context, '/dasboard');
+      Navigator.pushNamed(context, '/home',arguments: idPlanner);
     }
   }
   _registroPlanner() async{
@@ -224,8 +225,9 @@ class _LoginState extends State<Login> {
       };
     int response = await api.loginPlanner(json);
     if (response == 0) {
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       Navigator.pop(_ingresando);
-      Navigator.pushNamed(context, '/dasboard');  
+      Navigator.pushNamed(context, '/home',arguments: idPlanner);  
       } else if(response == 1){
         Navigator.pop(_ingresando);
         showDialog(

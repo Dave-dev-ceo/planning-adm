@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/resources/route_generator.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
-import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
@@ -39,6 +38,8 @@ class MyApp extends StatelessWidget {
       title: 'App',
       theme: ThemeData(
         primarySwatch: createMaterialColor(Color(0xFF880B55)),
+        //backgroundColor: createMaterialColor(Color(0xD34444)),
+        scaffoldBackgroundColor: hexToColor('#FFF9F9'),
         fontFamily: 'Comfortaa'
       ),
       initialRoute: '/',

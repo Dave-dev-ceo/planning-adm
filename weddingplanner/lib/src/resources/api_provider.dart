@@ -20,10 +20,11 @@ import '../models/item_model_invitados.dart';
 
 class ApiProvider {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-
+  
   Client client = Client();
-  //String baseUrlPruebas = 'server02.grupotum.com:3005';
-  String baseUrlPruebas = 'localhost:3005';
+  
+  String baseUrlPruebas = 'server02.grupotum.com:9005';
+  //String baseUrlPruebas = 'localhost:3005';
   _loadLogin(BuildContext context) async{
     await _sharedPreferences.setSesion(false);
     await _sharedPreferences.setToken('');
@@ -67,7 +68,7 @@ class ApiProvider {
     if(res == 0){
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitadosGrupo/$idEvento'),
+      final response = await client.get(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitadosGrupo/$idEvento'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -96,7 +97,7 @@ class ApiProvider {
     if(res == 0){
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitadosGenero/$idEvento'),
+      final response = await client.get(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitadosGenero/$idEvento'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -124,7 +125,7 @@ class ApiProvider {
     if(res == 0){
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitados/$idEvento'),
+      final response = await client.get(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporteInvitados/$idEvento'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -153,7 +154,7 @@ class ApiProvider {
     if(res == 0){
       int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerInvitados/$idEvento'),
+      final response = await client.get(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/obtenerInvitados/$idEvento'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -180,7 +181,7 @@ class ApiProvider {
     if(res == 0){
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, '/wedding/EVENTOS/obtenerEventos/$idPlanner'),
+      final response = await client.get(Uri.https(baseUrlPruebas, '/wedding/EVENTOS/obtenerEventos/$idPlanner'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -208,7 +209,7 @@ class ApiProvider {
     
     if(res == 0){
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, '/wedding/INVITADOS/obtenerInvitado/$idInvitado'),
+      final response = await client.get(Uri.https(baseUrlPruebas, '/wedding/INVITADOS/obtenerInvitado/$idInvitado'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -237,7 +238,7 @@ class ApiProvider {
     
     if(res == 0){
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/createInvitados'),
+      final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/createInvitados'),
         body: invitados,
       headers: {HttpHeaders.authorizationHeader: token});
       
@@ -265,7 +266,7 @@ class ApiProvider {
 
     if(res == 0){
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/updateEstatusInvitados'),
+      final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/updateEstatusInvitados'),
         
         body: data,
       headers: {HttpHeaders.authorizationHeader: token});
@@ -294,7 +295,7 @@ class ApiProvider {
 
     if(res == 0){
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/updateGrupoInvitados'),
+      final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/updateGrupoInvitados'),
         
         body: data,
       headers: {HttpHeaders.authorizationHeader: token});
@@ -323,7 +324,7 @@ class ApiProvider {
 
     if(res == 0){
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/updateInvitado'),
+      final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/INVITADOS/updateInvitado'),
         
         body: data,
       headers: {HttpHeaders.authorizationHeader: token});
@@ -352,7 +353,7 @@ class ApiProvider {
 
     if(res == 0){
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/MESAS/obtenerMesas'),
+      final response = await client.get(Uri.https(baseUrlPruebas, 'wedding/MESAS/obtenerMesas'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -382,7 +383,7 @@ class ApiProvider {
     if(res == 0){
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/obtenerGrupos/$idEvento'),
+      final response = await client.get(Uri.https(baseUrlPruebas, 'wedding/GRUPOS/obtenerGrupos/$idEvento'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -410,8 +411,9 @@ class ApiProvider {
     int res = await renovarToken();
 
     if(res == 0){
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/ESTATUS/obtenerEstatus'),
+      final response = await client.get(Uri.https(baseUrlPruebas, 'wedding/ESTATUS/obtenerEstatus/$idPlanner'),
       headers: {HttpHeaders.authorizationHeader: token});
       
       if (response.statusCode == 200) {
@@ -442,7 +444,7 @@ class ApiProvider {
       int idEvento = await _sharedPreferences.getIdEvento();
       grupo['id_evento'] = idEvento.toString();
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/GRUPOS/createGrupo'),
+      final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/GRUPOS/createGrupo'),
         
         body: grupo,
       headers: {HttpHeaders.authorizationHeader: token});
@@ -464,8 +466,39 @@ class ApiProvider {
     }
   }
 
+  Future<bool> createEstatus(Map<String,String> estatus, BuildContext context) async{
+    
+    
+    int res = await renovarToken();
+
+    if(res == 0){
+      int idPlanner = await _sharedPreferences.getIdPlanner();
+      estatus['id_planner'] = idPlanner.toString();
+      String token = await _sharedPreferences.getToken();
+      final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/ESTATUS/createEstatus'),
+        
+        body: estatus,
+      headers: {HttpHeaders.authorizationHeader: token});
+      
+      if (response.statusCode == 201) {
+        return true;  
+      } else if(response.statusCode == 401){
+        _loadLogin(context);
+        return null;
+      }else{
+        return false;
+      }
+    }else if(res == 1){
+        _loadLogin(context);
+        return null;
+    }else{
+      _loadLogin(context);
+        return false;
+    }
+  }
+
   Future<int> registroPlanner(Map<String,String> auth) async{
-    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/PLANNER/registroPlanner'),     
+    final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/PLANNER/registroPlanner'),     
         body: auth
     );
     if (response.statusCode == 201) {
@@ -478,7 +511,7 @@ class ApiProvider {
   }
 
   Future<int> loginPlanner(Map<String,String> auth) async{
-    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/ACCESO/loginPlanner'),     
+    final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/ACCESO/loginPlanner'),     
         body: auth
     );
     if (response.statusCode == 200) {
@@ -494,7 +527,7 @@ class ApiProvider {
     }
   }
   Future<int> renovarToken() async{
-    final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/ACCESO/renovarToken'),     
+    final response = await client.post(Uri.https(baseUrlPruebas, 'wedding/ACCESO/renovarToken'),     
         body: {"token": await _sharedPreferences.getToken()}
     );
     if (response.statusCode == 200) {

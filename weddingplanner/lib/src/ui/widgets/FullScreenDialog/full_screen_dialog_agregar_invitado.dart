@@ -26,15 +26,16 @@ class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
   }
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-          child: Scaffold(
+    //return DefaultTabController(
+      //length: 2,
+          //child: 
+          return Scaffold(
         appBar: AppBar(
           title: Text('Agregar Invitado'),
           backgroundColor: hexToColor('#880B55'),
           actions: [],
           automaticallyImplyLeading: true,
-          bottom: TabBar(
+          /*bottom: TabBar(
             onTap: (int index){
               setState(() {
                 _pageIndex = index;  
@@ -54,22 +55,23 @@ class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
                 child: Text('Importar lista invitados', style: TextStyle(fontSize: 15),),
               ),
             ],
-          ),
+          ),*/
         ),
         body:  SafeArea(
-        child: IndexedStack(
-          index: _pageIndex,
-          children: <Widget>[
+        child: 
+        //IndexedStack(
+          //index: _pageIndex,
+          //children: <Widget>[
             AgregarInvitados(id: id,),
-            CargarExcel(id: id,),
-          ],
+            //CargarExcel(id: id,),
+          //],
         ),
-      ),
+     // ),
         
         
         
           
-      ),
+      //),
     );
   }
 }

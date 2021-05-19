@@ -812,11 +812,15 @@ formItemsDesign(icon, item, large,ancho) {
        gender = "H";
      }else if(_currentSelectionGenero == 1){
        gender = "M";
+     }else{
+       gender="";
      }
      if(_currentSelection == 0){
        edad = "A";
      }else if(_currentSelection == 1){
        edad = "N";
+     }else{
+       edad="";
      }
      //id_invitado, id_estatus_invitado, nombre, edad, genero, email, telefono, id_grupo
      Map <String,String> json = {
