@@ -1,32 +1,28 @@
 class ItemModelReporteInvitados {
-  String _confirmados;
-  String _sinConfirmar;
-  String _noAsistira;  
-  //List<_Result> _results = [];
+  
+  List<_Estatus> _results = [];
 
   ItemModelReporteInvitados.fromJson(List<dynamic> parsedJson){
-    _confirmados = parsedJson[0]['confirmados'];
-    _sinConfirmar = parsedJson[1]['sinconfirmar'];
-    _noAsistira = parsedJson[2]['noasiste'];
+    List<_Estatus> temp = [];
+    for (int i = 0; i < parsedJson.length; i++) {
+      _Estatus result = _Estatus(parsedJson[i]);
+      //print(parsedJson[i]);
+      temp.add(result);
+    }
+    _results = temp;
   }
-  //List<_Result> get results => _results;
-  String get confirmados => _confirmados;
-  String get sinConfirmar => _sinConfirmar;
-  String get noAsistira => _noAsistira;
+  List<_Estatus> get results => _results;
 }
 
-/*class _Result {
-  int _confirmados;
-  int _sinConfirmar;
-  int _noAsistira;
+class _Estatus {
+ String _estatus;
+  String _cantidad;
 
-  _Result(result){
-    _confirmados = result['confirmados'];
-    _sinConfirmar = result['sinconfirmar'];
-    _noAsistira = result['noasistira'];
+  _Estatus(datos){
+    _estatus = datos['estatus']==null?'Sin estatus':datos['estatus'];
+    _cantidad = datos['cantidad'];
   }
 
-  int get confirmados => _confirmados;
-  int get sinConfirmar => _sinConfirmar;
-  int get noAsistira => _noAsistira;
-}*/
+  String get estatus =>_estatus;
+  String get cantidad =>_cantidad;
+}

@@ -259,6 +259,37 @@ class ApiProvider {
     }
   }
 
+  Future<bool> updateEstatus(Map<String,String> data, BuildContext context) async{
+    
+    
+    int res = await renovarToken();
+
+    if(res == 0){
+      int idPlanner = await _sharedPreferences.getIdPlanner();
+      String token = await _sharedPreferences.getToken();
+      data['id_planner'] = idPlanner.toString();
+       final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/ESTATUS/updateEstatus'),
+        
+        body: data,
+      headers: {HttpHeaders.authorizationHeader: token});
+      
+      if (response.statusCode == 201) {
+        return true;  
+      } else if(response.statusCode == 401){
+        _loadLogin(context);
+        return null;
+      }else{
+        return false;
+      }
+    }else if(res == 1){
+        _loadLogin(context);
+        return null;
+    }else{
+      _loadLogin(context);
+        return false;
+    }
+  }
+
   Future<bool> updateEstatusInvitado(Map<String,String> data, BuildContext context) async{
     
     

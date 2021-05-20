@@ -92,13 +92,15 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget buildList(AsyncSnapshot<ItemModelReporteInvitados> snapshot) {
+    double sizeHeight = 150;
     return Container( 
       width: 400,
-      height: 150,
-      child:  miCardReportesInvitados(snapshot.data.confirmados, snapshot.data.sinConfirmar, snapshot.data.noAsistira)
+      //color: Colors.pink,
+      height: sizeHeight,
+      child:  miCardReportesInvitados(snapshot.data)
     );
   }
-  miCardReportesInvitados(String confirmados, String sinConfirmar, String noAsistira) {
+  miCardReportesInvitados(ItemModelReporteInvitados reporte) {
     return GestureDetector(
           child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -109,16 +111,19 @@ class _ResumenEventoState extends State<ResumenEvento> {
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
               title: Text('Asistencia',style: TextStyle(fontSize: 20),),
-              subtitle: Wrap(
-                spacing: 10,
-                runSpacing: 7,
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Confirmados: ' + confirmados, style: TextStyle(fontSize: 15),),
-                  Text('Sin confirmar: ' + sinConfirmar, style: TextStyle(fontSize: 15),),
-                  Text('No asistiran: ' + noAsistira, style: TextStyle(fontSize: 15),),
-                ],
-              ),
+              subtitle: 
+                  Container(
+                    height: 55,
+                    //color: Colors.purple,
+                    child: ListView.builder(
+                      itemCount: reporte.results.length,
+                      itemBuilder: (_,int index){
+                        return Text(reporte.results.elementAt(index).estatus + ': '+ reporte.results.elementAt(index).cantidad.toString());
+                      }
+                    ),
+                  ),
+
+              
               leading: Icon(Icons.event),
             ),
           ],

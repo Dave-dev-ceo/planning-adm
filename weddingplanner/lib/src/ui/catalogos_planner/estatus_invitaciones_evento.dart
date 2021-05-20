@@ -73,10 +73,10 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
       bool response = await api.createEstatus(json,context);
       if (response) {
         //_mySelection = "0";
-        _msgSnackBar('Estatus agregado',Color(0x64E032));
+        _msgSnackBar('Estatus agregado',Colors.green[300]);
         //_listaGrupos();
       } else {
-        _msgSnackBar('Error no se pudo agregar el estatus',Color(0xFF4C4C));
+        _msgSnackBar('Error no se pudo agregar el estatus',Colors.red[300]);
         print('error');
       }
     }
@@ -181,6 +181,8 @@ class _Row {
 class _DataSource extends DataTableSource {
   BuildContext _cont;
   final int idPlanner;
+  GlobalKey<FormState> keyForm = new GlobalKey();
+  TextEditingController  estatusCtrl = new TextEditingController();
   ApiProvider api = new ApiProvider();
   _DataSource(context,BuildContext cont, this.idPlanner) {
     _rows = <_Row>[];
@@ -189,6 +191,100 @@ class _DataSource extends DataTableSource {
     }
     _cont=cont;
   }
+  Future<void> _showMyDialogEditar(int idEstatus, String estatus) async {
+  estatusCtrl.text = estatus;
+  return showDialog<void>(
+    context: _cont,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Editar estatus', textAlign: TextAlign.center),
+        content: //SingleChildScrollView(
+          //child: 
+          Form(
+            key: keyForm,
+            child: 
+            //ListBody(
+              //children: <Widget>[
+                  
+                TextFormField(
+                  controller: estatusCtrl,
+                  decoration: new InputDecoration(
+                    labelText: 'Estatus',
+                  ),
+                  validator: validateEstatus,
+                ),
+                
+                /*SizedBox(
+                  height: 30,
+                ),
+
+                GestureDetector(
+                        onTap: (){
+                          _saveEstatus(context, idEstatus);
+                          //print('guardado');
+                        },
+                        child: CallToAction('Agregar'),
+                      ),*/
+              //],
+            //),
+          ),
+        //),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Editar'),
+            onPressed: () async{
+              await _saveEstatus(context, idEstatus);
+              //Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Eliminar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+String validateEstatus(String value) {
+   String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
+   RegExp regExp = new RegExp(pattern);
+   if (value.length == 0) {
+     return "El estatus es necesario";
+   } else if (!regExp.hasMatch(value)) {
+     return "El estatus debe de ser a-z y A-Z";
+   }
+   return null;
+ }
+ _saveEstatus(BuildContext context, int idEstatus) async{
+    if (keyForm.currentState.validate()) {
+      Map <String,String> json = {
+       "descripcion":estatusCtrl.text,
+       "id_estatus_invitado":idEstatus.toString()
+      };
+      //json.
+      bool response = await api.updateEstatus(json,context);
+      if (response) {
+        //_mySelection = "0";
+        Navigator.of(context).pop();
+        _msgSnackBar('Estatus actualizado',Colors.green[300]);
+        //_listaGrupos();
+      } else {
+        _msgSnackBar('Estatus actualizado',Colors.red[300]);
+      }
+    }
+  }
+
+
   _msgSnackBar(String error, Color color){
     final snackBar = SnackBar(
               content: Container(
@@ -203,27 +299,7 @@ class _DataSource extends DataTableSource {
     ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
   }
 
-  _viewShowDialog(String numero){
-      showDialog(
-          context: _cont,
-          builder: (BuildContext context) => CupertinoAlertDialog(
-                title: Text('Llamada'),
-                content: Text('Se llamara al numero $numero'),
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    child: Text('Cancelar',style: TextStyle(color: Colors.red),),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  CupertinoDialogAction(
-                    child: Text('Confirmar'),
-                    onPressed: () {
-                      launch('tel://$numero');
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ));
-  }
+  
   
 
   List<_Row> _rows;
@@ -238,18 +314,20 @@ class _DataSource extends DataTableSource {
     return DataRow.byIndex(
       index: index,
       selected: row.selected,
+      
       onSelectChanged: (value) {
         if (row.selected != value) {
           print(value);
           _selectedCount += value ? 1 : -1;
           assert(_selectedCount >= 0);
           row.selected = value;
+          
           //notifyListeners();
         }
       },
       cells: [
         //DataCell(Text(row.valueId.toString())),
-        DataCell(Text(row.valueA), /*onTap: (){_viewShowDialogEditar(row.valueId);}*/),
+        DataCell(Text(row.valueA), onTap: ()async{await _showMyDialogEditar(row.valueId, row.valueA);}),
         //DataCell(Icon(Icons.edit)),
         //DataCell(Icon(Icons.delete)),
       ],

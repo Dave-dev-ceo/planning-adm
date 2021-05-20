@@ -19,7 +19,7 @@ class _Grupos {
   String _cantidad;
 
   _Grupos(datos){
-    _grupo = datos['grupo'];
+    _grupo = datos['grupo']==null?'Sin grupo':datos['grupo'];
     _cantidad = datos['cantidad'];
   }
 
