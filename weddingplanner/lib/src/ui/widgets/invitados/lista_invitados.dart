@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
+import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
@@ -357,12 +358,14 @@ class _DataSource extends DataTableSource {
   BuildContext _cont;
   final int idEvento;
   ItemModelGrupos _grupos;
+  ItemModelEstatusInvitado _estatus;
   String _grupoSelect = "0";
+  String _estatusSelect = "0";
   ApiProvider api = new ApiProvider();
   _DataSource(context,BuildContext cont, this.idEvento) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].grupo==null?'Sin grupo':context[i].grupo), context[i].asistencia));  
+      _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, (context[i].grupo==null?'Sin grupo':context[i].grupo), context[i].asistencia==null?'Sin estatus':context[i].asistencia));  
     }
     _cont=cont;
   }
@@ -380,7 +383,35 @@ class _DataSource extends DataTableSource {
     ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
   }
 
-  _viewShowDialog(String numero){
+  Future<void> _showMyDialogLlamada(String numero) async {
+  return showDialog<void>(
+    context: _cont,
+    //barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Llamada', textAlign: TextAlign.center),
+        content: Text('Se llamara al número $numero'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          SizedBox(width: 10.0,),
+          TextButton(
+            child: Text('Confirmar'),
+            onPressed: () async{
+                       launch('tel://$numero');
+                      Navigator.of(context).pop();
+                    },
+          ),
+        ],
+      );
+    },
+  );
+}
+  /*_viewShowDialog(String numero){
       showDialog(
           context: _cont,
           builder: (BuildContext context) => CupertinoAlertDialog(
@@ -400,12 +431,12 @@ class _DataSource extends DataTableSource {
                   ),
                 ],
               ));
-  }
-  _updateEstatus(int idInvitado, int idEstatusInvitado) async{
+  }*/
+  _updateEstatus(int idInvitado) async{
     Map<String,String> json = 
     {
       "id_invitado" : idInvitado.toString(),
-      "id_estatus_invitado" : idEstatusInvitado.toString()
+      "id_estatus_invitado" : _estatusSelect.toString()
     };
     
     bool response = await api.updateEstatusInvitado(json, _cont);
@@ -470,9 +501,65 @@ class _DataSource extends DataTableSource {
     /*for (var data in _grupos.results) {
       print(data.nombreGrupo);
     }*/
-    _viewShowDialogGrupo(idInvitado);
+    _showMyDialogGrupo(idInvitado);
   }
-  _viewShowDialogGrupo(int idInvitado){
+
+  _listaEstatusEvento(int idInvitado) async{
+    _estatus = await api.fetchEstatusList(_cont);
+    /*for (var data in _grupos.results) {
+      print(data.nombreGrupo);
+    }*/
+    await _showMyDialog(idInvitado);
+    //_viewShowDialogEstatus(idInvitado);
+  }
+
+  Future<void> _showMyDialogGrupo(int idInvitado) async {
+  return showDialog<void>(
+    context: _cont,
+    //barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Seleccionar estatus', textAlign: TextAlign.center),
+        content: Container(
+                    height: 120,
+                    child: //Column(
+                      //children: [
+                        CupertinoPicker(
+                          itemExtent: 32.0, 
+                          
+                          onSelectedItemChanged: (value){
+                            
+                            _grupoSelect = _grupos.results.elementAt(value).idGrupo.toString();
+                            print(_grupoSelect);
+                          }, 
+                          children: <Widget>[
+                            //for (var i = 0; i < _grupos.results.length; i++) 
+                            for(var data in _grupos.results) if(data.nombreGrupo!="Nuevo grupo") Text(data.nombreGrupo),
+                            ]),
+                           // _listaGrupos(),
+                     // ],
+                    //),
+                  ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancelar'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          SizedBox(width: 10.0,),
+          TextButton(
+            child: Text('Confirmar'),
+            onPressed: () async{
+                      await _updateGrupo(idInvitado);
+                      Navigator.of(context).pop();
+                    },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+  /*_viewShowDialogGrupo(int idInvitado){
      
       //print('ola');
       showDialog(
@@ -513,7 +600,7 @@ class _DataSource extends DataTableSource {
                   ),
                 ],
               ));
-  }
+  }*/
   _updateGrupo(int idInvitado) async{
     bool response;
     Map<String,String> json = 
@@ -529,8 +616,93 @@ class _DataSource extends DataTableSource {
       }
     
   }
+  Future<void> _showMyDialog(int idInvitado) async {
+  return showDialog<void>(
+    context: _cont,
+    //barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Seleccionar estatus', textAlign: TextAlign.center),
+        content: Container(
+                    height: 120,
+                    child: //Column(
+                      //children: [
+                        CupertinoPicker(
+                          itemExtent: 32.0, 
+                          
+                          onSelectedItemChanged: (value){
+                            
+                            _estatusSelect = _estatus.results.elementAt(value).idEstatusInvitado.toString();
+                            print(_grupoSelect);
+                          }, 
+                          children: <Widget>[
+                            //for (var i = 0; i < _grupos.results.length; i++) 
+                            if(_estatus.results != null) for(var data in _estatus.results) Text(data.descripcion) else (Text('Sin datos')),
+                            ]),
+                           // _listaGrupos(),
+                     // ],
+                    //),
+                  ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          SizedBox(width: 10.0,),
+          TextButton(
+            child: Text('Confirmar'),
+            onPressed: () async{
+                      await _updateEstatus(idInvitado);
+                      Navigator.of(context).pop();
+                    },
+          ),
+        ],
+      );
+    },
+  );
+}
   _viewShowDialogEstatus(int idInvitado){
       showDialog(
+          context: _cont,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                //title: Text('Seleccionar Grupo'),
+                content: Container(
+                    height: 120,
+                    child: //Column(
+                      //children: [
+                        CupertinoPicker(
+                          itemExtent: 32.0, 
+                          
+                          onSelectedItemChanged: (value){
+                            
+                            _estatusSelect = _estatus.results.elementAt(value).idEstatusInvitado.toString();
+                            print(_grupoSelect);
+                          }, 
+                          children: <Widget>[
+                            //for (var i = 0; i < _grupos.results.length; i++) 
+                            if(_estatus.results != null) for(var data in _estatus.results) Text(data.descripcion) else (Text('Sin datos')),
+                            ]),
+                           // _listaGrupos(),
+                     // ],
+                    //),
+                  ),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('Cancelar',style: TextStyle(color: Colors.red),),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    child: Text('Confirmar'),
+                    onPressed: () async{
+                      await _updateEstatus(idInvitado);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ));
+      /*showDialog(
           context: _cont,
           builder: (BuildContext context) => CupertinoAlertDialog(
                 //title: Text('Llamada'),
@@ -563,7 +735,7 @@ class _DataSource extends DataTableSource {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
-              ));
+              ));*/
   }
 
   List<_Row> _rows;
@@ -590,9 +762,9 @@ class _DataSource extends DataTableSource {
       cells: [
         //DataCell(Text(row.valueId.toString())),
         DataCell(Text(row.valueA), onTap: (){_viewShowDialogEditar(row.valueId);}),
-        DataCell(Text(row.valueB), onTap: (){_viewShowDialog(row.valueB);}),
+        DataCell(Text(row.valueB), onTap: ()async{await _showMyDialogLlamada(row.valueB);}),
         DataCell(Text(row.valueC),onTap: (){_listaGruposEvento(row.valueId);}),
-        DataCell(Text(row.valueD),onTap: (){_viewShowDialogEstatus(row.valueId);},),
+        DataCell(Text(row.valueD),onTap: (){_listaEstatusEvento(row.valueId);},),
         //DataCell(Icon(Icons.edit)),
         //DataCell(Icon(Icons.delete)),
       ],

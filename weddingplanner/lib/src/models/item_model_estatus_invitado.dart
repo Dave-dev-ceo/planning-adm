@@ -4,6 +4,8 @@ class ItemModelEstatusInvitado {
 
   ItemModelEstatusInvitado.fromJson(List<dynamic> parsedJson){
     List<_Estatus> temp = [];
+    _Estatus dat = _Estatus({"id_estatus_invitado":0, "descripcion":"Sin estatus"});
+    temp.add(dat);
     for (int i = 0; i < parsedJson.length; i++) {
       _Estatus result = _Estatus(parsedJson[i]);
       //print(parsedJson[i]);

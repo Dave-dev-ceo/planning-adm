@@ -336,7 +336,7 @@ formItemsDesign(icon, item, large,ancho) {
   }
   Widget formUI(ItemModelInvitado invitado) {
     if(contActualiza <= 0){
-      if(invitado.asistencia == "Confirmado"){
+      /*if(invitado.asistencia == "Confirmado"){
         _mySelection = "1";
         contActualiza++;
         print('entro en confirmado');
@@ -348,6 +348,17 @@ formItemsDesign(icon, item, large,ancho) {
         _mySelection = "3";
         contActualiza++;
         print('entro en no asiste');
+      }else{
+        _mySelection = "0";
+        contActualiza++;
+      }*/
+      if(invitado.asistencia != null){
+        _mySelection = invitado.asistencia.toString();
+        contActualiza++;
+        print('entro en confirmado');
+      }else{
+        _mySelection = "0";
+        contActualiza++;
       }
     }
     if(contActualizaEdad <= 0){

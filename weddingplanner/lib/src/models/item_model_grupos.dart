@@ -4,7 +4,7 @@ class ItemModelGrupos {
 
   ItemModelGrupos.fromJson(List<dynamic> parsedJson){
     List<_Grupos> temp = [];
-    _Grupos dat = _Grupos({"id_grupo":0, "nombre_grupo":"Seleccionar grupo"});
+    _Grupos dat = _Grupos({"id_grupo":0, "nombre_grupo":"Sin grupo"});
     temp.add(dat);
     for (int i = 0; i < parsedJson.length; i++) {
       _Grupos result = _Grupos(parsedJson[i]);
