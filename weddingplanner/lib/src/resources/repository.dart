@@ -5,6 +5,7 @@ import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_mesas.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_evento.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
@@ -33,4 +34,5 @@ class Repository {
 
   Future<ItemModelMesas> fetchAllMesas(BuildContext context) => apiProvider.fetchMesasList(context);
 
+  Future<ItemModelReporte> fetchReportes(BuildContext context, Map<String,String> data) => apiProvider.fetchReportesList(context, data);
 }

@@ -11,6 +11,7 @@ import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_evento.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
@@ -136,6 +137,38 @@ class ApiProvider {
         return null;
       }else{
 
+        throw Exception('Failed to load get');
+      }
+    }else if(res == 1){
+        _loadLogin(context);
+        return null;
+    }else{
+      _loadLogin(context);
+        return null;
+    }
+  }
+
+  Future<ItemModelReporte> fetchReportesList(BuildContext context, Map<String,String> reporte) async {
+    
+
+    int res = await renovarToken();
+    if(res == 0){
+      //reporte['reporte'] = "asistencia";
+      //reporte['id'] = "4";
+      int idEvento = await _sharedPreferences.getIdEvento();
+      reporte['id_evento'] = idEvento.toString();
+    String token = await _sharedPreferences.getToken();
+      final response = await client.post(Uri.http(baseUrlPruebas, 'wedding/INVITADOS/obtenerReporte'),
+      body: reporte,
+      headers: {HttpHeaders.authorizationHeader: token});
+      
+      if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return ItemModelReporte.fromJson(json.decode(response.body));
+    } else if(response.statusCode == 401){
+        _loadLogin(context);
+        return null;
+      }else{
         throw Exception('Failed to load get');
       }
     }else if(res == 1){

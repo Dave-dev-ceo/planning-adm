@@ -129,7 +129,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
           ],
         ),
       ),
-      onTap: (){},
+      onTap: (){
+        
+          Navigator.of(context).pushNamed(
+            '/reporteEvento',
+            arguments: "asistencia"); 
+          
+        },
     );
   }
   reporteInvitadosGenero(){

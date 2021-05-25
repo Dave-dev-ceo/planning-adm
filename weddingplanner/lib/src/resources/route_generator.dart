@@ -4,6 +4,7 @@ import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_reporte_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
 
@@ -26,6 +27,8 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (context) => FullScreenDialog(id: args,));  
       case '/editInvitado':
         return MaterialPageRoute(builder: (context) => FullScreenDialogEdit(idInvitado: args,));
+      case '/reporteEvento':
+        return MaterialPageRoute(builder: (context) => FullScreenDialogReporte(reporte: args,));  
       default:
         return _errorRoute();
     }

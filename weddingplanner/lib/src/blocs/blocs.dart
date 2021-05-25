@@ -4,6 +4,7 @@ import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_mesas.dart';
+import 'package:weddingplanner/src/models/item_model_reporte_evento.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
@@ -18,6 +19,7 @@ final blocEventos = EventosBloc();
 final blocEstatus = EstatusBloc();
 final blocInvitado = InvitadoBloc();
 final blocMesas = MesasBloc();
+final blocReporte = ReportesBloc();
 class InvitadosBloc{
   final _repository = Repository();
   final _invitadosFetcher = PublishSubject<ItemModelInvitados>();
@@ -129,5 +131,20 @@ class MesasBloc{
 
   dispose() {
     _mesasFetcher.close();
+  }
+}
+class ReportesBloc{
+  final _repository = Repository();
+  final _reportesFetcher = PublishSubject<ItemModelReporte>();
+
+  Stream<ItemModelReporte> get allReportes=>_reportesFetcher.stream;
+
+  fetchAllReportes(BuildContext context, Map<String, String> data) async {
+    ItemModelReporte itemModel = await _repository.fetchReportes(context, data);
+    _reportesFetcher.sink.add(itemModel);
+  }
+
+  dispose() {
+    _reportesFetcher.close();
   }
 }
