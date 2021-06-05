@@ -11,6 +11,7 @@ import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_mesas.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/models/item_model_prueba.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_evento.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
@@ -27,10 +28,7 @@ class ApiProvider {
   //String baseUrlPruebas = 'server02.grupotum.com:9005';
   String baseUrlPruebas = 'localhost:3005';
   _loadLogin(BuildContext context) async{
-    await _sharedPreferences.setSesion(false);
-    await _sharedPreferences.setToken('');
-    await _sharedPreferences.setIdPlanner(0);
-    await _sharedPreferences.setIdEvento(0);
+    await _sharedPreferences.clear();
     _showDialogMsg(context);
   }
   _showDialogMsg(BuildContext context){
@@ -59,6 +57,21 @@ class ApiProvider {
            
           );
         });
+  }
+
+  Future<ItemModelPrueba> fetchPrueba() async {
+    
+    
+    final response = await client.get(Uri.http(baseUrlPruebas, 'wedding/PRUEBA/obtenerDatos/'));
+      
+      if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+        return ItemModelPrueba.fromJson(json.decode(response.body));
+      }else if(response.statusCode == 401){
+        return null;
+      }else{
+        throw Exception('Failed to load get');
+      }
   }
 
   Future<ItemModelReporteGrupos> fetchReporteGrupos(BuildContext context) async {

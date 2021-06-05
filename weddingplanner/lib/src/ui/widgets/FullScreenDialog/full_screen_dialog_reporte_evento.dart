@@ -21,7 +21,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
   List <Widget> tabs;
   int lenghtTab; 
   int _pageIndex = 0;
-  var _rest;
+  //var _rest;
   _FullScreenDialogReporteState(this.reporte);
   
     @override

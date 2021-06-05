@@ -1,30 +1,32 @@
 class ItemModelEstatusInvitado {
   
-  List<_Estatus> _results = [];
+  List<Estatus> _results = [];
 
   ItemModelEstatusInvitado.fromJson(List<dynamic> parsedJson){
-    List<_Estatus> temp = [];
-    _Estatus dat = _Estatus({"id_estatus_invitado":0, "descripcion":"Sin estatus"});
+    List<Estatus> temp = [];
+    Estatus dat = Estatus({"id_estatus_invitado":0, "descripcion":"Sin estatus"});
     temp.add(dat);
     for (int i = 0; i < parsedJson.length; i++) {
-      _Estatus result = _Estatus(parsedJson[i]);
+      Estatus result = Estatus(parsedJson[i]);
       //print(parsedJson[i]);
       temp.add(result);
     }
     _results = temp;
   }
-  List<_Estatus> get results => _results;
+  List<Estatus> get results => _results;
 }
 
-class _Estatus {
+class Estatus {
   String _descripcion;
   int _idEstatusInvitado;
 
-  _Estatus(datos){
+  Estatus(datos){
     _descripcion = datos['descripcion'];
     _idEstatusInvitado = datos['id_estatus_invitado'];
   }
-
+  set addDescripcion(String data){
+    _descripcion = data;
+  }
   String get descripcion =>_descripcion;
   int get idEstatusInvitado =>_idEstatusInvitado;
 }

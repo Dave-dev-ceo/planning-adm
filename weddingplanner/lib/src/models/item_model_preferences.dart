@@ -41,4 +41,8 @@ class SharedPreferencesT{
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getBool('session') == null ? false:_sharedPreferences.getBool('session');
   }
+  clear() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.clear();
+  }
 }

@@ -35,6 +35,8 @@ dependencies:
   url_launcher:
   flutter_login:
   material_segmented_control:
+  flutter_bloc: ^7.0.0
+  equatable:
   shared_preferences: ^2.0.5
   #fab_circular_menu: ^1.0.2
   flutter_speed_dial: ^3.0.5

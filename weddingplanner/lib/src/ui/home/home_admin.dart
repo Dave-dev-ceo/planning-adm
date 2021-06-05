@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
-import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
+import 'package:weddingplanner/src/ui/administrador/planners.dart';
 
-class Home extends StatefulWidget {
+class HomeAdmin extends StatefulWidget {
   //static const routeName = '/eventos';
-  //final int idPlanner;
-  const Home({Key key}) : super(key: key);
+ // final int idPlanner;
+  const HomeAdmin({Key key,}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomeAdminState createState() => _HomeAdminState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeAdminState extends State<HomeAdmin> {
+  int _pageIndex = 0;
     //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-    //final int idPlanner;
-    int _pageIndex = 0;
 
-  //_HomeState(this.idPlanner);
+
+//  _HomeAdminState(this.idPlanner);
     Color hexToColor(String code) {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
     }
@@ -31,7 +30,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
-        length: 7,
+        length: 2,
         child: Scaffold(
       appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -51,38 +50,28 @@ class _HomeState extends State<Home> {
               Tab(
                 icon: Icon(Icons.calendar_today_outlined),
                 //text: 'Resumen',
-                child: Text('Eventos', style: TextStyle(fontSize: 17),),
+                child: Text('Planners', style: TextStyle(fontSize: 17),),
               ),
               Tab(
                 icon: Icon(Icons.card_membership_rounded),
-                //text: 'Home',
-                child: Text('Estatus de invitaciones', style: TextStyle(fontSize: 17),),
+                //text: 'HomeAdmin',
+                child: Text('Planes', style: TextStyle(fontSize: 17),),
               ),
-              Tab(
+              /*Tab(
                 icon: Icon(Icons.event_note_outlined),
                 //text: 'Timings',
-                child: Text('Tipos de eventos', style: TextStyle(fontSize: 17),),
+                child: Text('', style: TextStyle(fontSize: 17),),
               ),
                 Tab(
                 icon: Icon(Icons.support_agent_outlined),
                 //text: 'Proveedores',
-                child: Text('Proveedores', style: TextStyle(fontSize: 17),),
+                child: Text('Tipo de proveedores', style: TextStyle(fontSize: 17),),
               ),
               Tab(
                 icon: Icon(Icons.featured_play_list_outlined),
                 //text: 'Inventario',
-                child: Text('Inventario', style: TextStyle(fontSize: 17),),
-              ),
-              Tab(
-                icon: Icon(Icons.attach_money_sharp),
-                //text: 'Presupuesto',
-                child: Text('Presupuesto', style: TextStyle(fontSize: 17),),
-              ),
-              Tab(
-                icon: Icon(Icons.lock_open),
-                //text: 'Autorizaciones',
-                child: Text('Autorizaciones', style: TextStyle(fontSize: 17),),
-              ),
+                child: Text('Proveedores', style: TextStyle(fontSize: 17),),
+              ),*/
             ],
             ),
           ),
@@ -90,8 +79,9 @@ class _HomeState extends State<Home> {
         child: IndexedStack(
           index: _pageIndex,
           children: <Widget>[
-            DashboardEventos(),
-            ListaEstatusInvitaciones()
+            Planners(),
+            //DashboardEventos(),
+            //ListaEstatusInvitaciones(idPlanner: idPlanne,)
           ],
         ),
       ),
