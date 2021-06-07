@@ -20,9 +20,10 @@ class RouteGenerator{
         //return MaterialPageRoute(builder: (context) => LoginT());
         //return MaterialPageRoute(builder: (context) => HomeAdmin());
         return MaterialPageRoute(builder: (context) => Login());
-      case '/home':
+      case '/homeAdmin':
       return MaterialPageRoute(builder: (context) => HomeAdmin());
-        //return MaterialPageRoute(builder: (context) => Home());
+      case '/home':
+        return MaterialPageRoute(builder: (context) => Home());
       case '/dasboard':
         return MaterialPageRoute(builder: (context) => DashboardEventos());
       case '/eventos':

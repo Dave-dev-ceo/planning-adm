@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_paises.dart';
 abstract class ListaPaisesLogic {
-  Future<ItemModelPaises> fetchPrueba();
+  Future<ItemModelPaises> fetchPaises();
 }
 class ListaPaisesException implements Exception{}
 
@@ -12,7 +12,7 @@ class FetchListaPaisesLogic extends ListaPaisesLogic{
   Client client = Client();
   
   @override
-  Future<ItemModelPaises> fetchPrueba() async {
+  Future<ItemModelPaises> fetchPaises() async {
     final response = await client.get(Uri.http('localhost:3005', 'wedding/PAISES/obtenerPaises/'));
       
       if (response.statusCode == 200) {

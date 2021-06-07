@@ -30,7 +30,7 @@ class _HomeAdminState extends State<HomeAdmin> {
   Widget build(BuildContext context) {
     //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
       appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -57,12 +57,12 @@ class _HomeAdminState extends State<HomeAdmin> {
                 //text: 'HomeAdmin',
                 child: Text('Planes', style: TextStyle(fontSize: 17),),
               ),
-              /*Tab(
+              Tab(
                 icon: Icon(Icons.event_note_outlined),
                 //text: 'Timings',
-                child: Text('', style: TextStyle(fontSize: 17),),
+                child: Text('Proveedores', style: TextStyle(fontSize: 17),),
               ),
-                Tab(
+                /*Tab(
                 icon: Icon(Icons.support_agent_outlined),
                 //text: 'Proveedores',
                 child: Text('Tipo de proveedores', style: TextStyle(fontSize: 17),),

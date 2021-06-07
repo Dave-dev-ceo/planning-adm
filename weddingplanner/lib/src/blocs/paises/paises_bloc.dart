@@ -21,7 +21,7 @@ class PaisesBloc extends Bloc<PaisesEvent, PaisesState> {
 
       try {
         
-        ItemModelPaises paises = await logic.fetchPrueba();
+        ItemModelPaises paises = await logic.fetchPaises();
         yield MostrarPaisesState(paises);
 
       }on ListaPaisesException{

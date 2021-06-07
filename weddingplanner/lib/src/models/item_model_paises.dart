@@ -4,10 +4,10 @@ class ItemModelPaises {
 
   ItemModelPaises.fromJson(Map<String, dynamic> parsedJson){
     List<_Paises> temp = [];
-    _Paises dat = _Paises({"id_pais":0, "pais":"Sin país", "prefijo":"0"});
+    _Paises dat = _Paises({"id_pais":0, "pais":"Sin país", "prefijo":"+0"});
     temp.add(dat);
     for (int i = 0; i < parsedJson['data'].length; i++) {
-      _Paises result = _Paises(parsedJson[i]);
+      _Paises result = _Paises(parsedJson['data'][i]);
       //print(parsedJson[i]);
       temp.add(result);
     }
