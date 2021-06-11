@@ -8,30 +8,31 @@ import 'package:weddingplanner/src/models/item_model_etiquetas.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
 
 class AgregarContrato extends StatefulWidget {
-  const AgregarContrato({Key key}) : super(key: key);
+  final String descripcionMachote;
+  const AgregarContrato({Key key, this.descripcionMachote}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => AgregarContrato(),
       );
 
   @override
-  _AgregarContratoState createState() => _AgregarContratoState();
+  _AgregarContratoState createState() => _AgregarContratoState(descripcionMachote);
 }
 
 class _AgregarContratoState extends State<AgregarContrato> {
+  final String descripcionMachote;
   EtiquetasBloc etiquetasBloc;
   MachotesBloc machotesBloc;
   ItemModelEtiquetas itemModelET;
   ItemModelMachotes itemModelMC;
   HtmlEditorController controller;
-  TextEditingController  descripcionMachote;
-  GlobalKey<FormState> keyForm;
+
+  _AgregarContratoState(this.descripcionMachote);
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     etiquetasBloc = BlocProvider.of<EtiquetasBloc>(context);
     etiquetasBloc.add(FechtEtiquetasEvent());
-    keyForm = new GlobalKey();
-    descripcionMachote = new TextEditingController();
+    
     controller = new HtmlEditorController();
     super.initState();
   }
@@ -64,62 +65,9 @@ class _AgregarContratoState extends State<AgregarContrato> {
       ],
     );
   }
-  String validateDescripcion(String value) {
-    String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
-    if (value.length == 0) {
-      return "El grupo es necesario";
-    } else if (!regExp.hasMatch(value)) {
-      return "El grupo debe de ser a-z y A-Z";
-    }
-    return null;
-  }
-  _save()async{
-    if (keyForm.currentState.validate()) {
-      String txt = await controller.getText();
-      machotesBloc.add(CreateMachotesEvent({"descripcion":descripcionMachote.text, "machote":txt}, itemModelMC));
-    }
-  }
-  Future<void> _showMyDialogGuardar() async {
-    return showDialog<void>(
-      context: context,
-      //barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Ingrese una descripción', textAlign: TextAlign.center),
-          content: 
-          Form(
-            key: keyForm,
-            child: 
-                TextFormField(
-                  controller: descripcionMachote,
-                  decoration: new InputDecoration(
-                    labelText: 'Descripción',
-                  ),
-                  validator: validateDescripcion,
-                ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            SizedBox(width: 10.0,),
-            TextButton(
-              child: Text('Guardar'),
-              onPressed: () async{
-                        
-                        _save();
-                        Navigator.of(context).pop();
-                      },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,8 +133,9 @@ class _AgregarContratoState extends State<AgregarContrato> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
         onPressed: () async {
-          
-          await _showMyDialogGuardar();
+          String txt = await controller.getText();
+          machotesBloc.add(CreateMachotesEvent({"descripcion":descripcionMachote, "machote":txt}, itemModelMC));
+          //await _showMyDialogGuardar(context);
 
           //final txt = await controller.getText();
           /*int i = 0;

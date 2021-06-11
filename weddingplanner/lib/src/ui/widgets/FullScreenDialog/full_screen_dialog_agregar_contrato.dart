@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/contratos/agregar_contrato.dart';
 
 class FullScreenDialogAddContrato extends StatefulWidget {
-  final int id;
+  final String descripcionMachote;
 
-  const FullScreenDialogAddContrato({Key key, this.id}) : super(key: key);
+  const FullScreenDialogAddContrato({Key key, this.descripcionMachote}) : super(key: key);
   @override
-  _FullScreenDialogAddContratoState createState() => _FullScreenDialogAddContratoState(id);
+  _FullScreenDialogAddContratoState createState() => _FullScreenDialogAddContratoState(descripcionMachote);
 }
 
 class _FullScreenDialogAddContratoState extends State<FullScreenDialogAddContrato> {
-  final int id;
-  _FullScreenDialogAddContratoState(this.id);
+  final String descripcionMachote;
+  _FullScreenDialogAddContratoState(this.descripcionMachote);
   
     @override
   void initState() {
@@ -30,7 +30,7 @@ class _FullScreenDialogAddContratoState extends State<FullScreenDialogAddContrat
           automaticallyImplyLeading: true,
         ),
         body:  SafeArea(
-          child: AgregarContrato(),
+          child: AgregarContrato(descripcionMachote: descripcionMachote,),
         ),
     );
   }

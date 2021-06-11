@@ -34,7 +34,7 @@ class RouteGenerator{
       case '/addInvitados':
         return MaterialPageRoute(builder: (context) => FullScreenDialogAdd(id: args,));
       case '/addContrato':
-        return MaterialPageRoute(builder: (context) => FullScreenDialogAddContrato());
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddContrato(descripcionMachote: args,));
       case '/addPlanners':
         return MaterialPageRoute(builder: (context) => FullScreenDialogAddPlanners());
       case '/addContactos':
