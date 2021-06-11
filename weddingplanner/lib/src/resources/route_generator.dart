@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
 import 'package:weddingplanner/src/ui/login/login2.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_contrato.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_planners.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
@@ -17,6 +19,7 @@ class RouteGenerator{
 
     switch (settings.name) {
       case '/':
+        //return MaterialPageRoute(builder: (context) => Contratos());
         //return MaterialPageRoute(builder: (context) => LoginT());
         //return MaterialPageRoute(builder: (context) => HomeAdmin());
         return MaterialPageRoute(builder: (context) => Login());
@@ -30,6 +33,8 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (context) => Invitados(idEvento: args,));
       case '/addInvitados':
         return MaterialPageRoute(builder: (context) => FullScreenDialogAdd(id: args,));
+      case '/addContrato':
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddContrato());
       case '/addPlanners':
         return MaterialPageRoute(builder: (context) => FullScreenDialogAddPlanners());
       case '/addContactos':

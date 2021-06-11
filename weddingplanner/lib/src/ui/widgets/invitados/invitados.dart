@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:weddingplanner/src/models/item_model_parametros.dart';
 //import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
+import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 //import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 
@@ -34,7 +35,7 @@ class _InvitadosState extends State<Invitados> {
   Widget build(BuildContext context) {
     //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
-        length: 7,
+        length: 8,
         child: Scaffold(
       appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -86,6 +87,11 @@ class _InvitadosState extends State<Invitados> {
                 //text: 'Autorizaciones',
                 child: Text('Autorizaciones', style: TextStyle(fontSize: 17),),
               ),
+              Tab(
+                icon: Icon(Icons.description_outlined),
+                //text: 'Autorizaciones',
+                child: Text('Contratos', style: TextStyle(fontSize: 17),),
+              ),
             ],
             ),
           ),
@@ -95,10 +101,12 @@ class _InvitadosState extends State<Invitados> {
           children: <Widget>[
             ResumenEvento(idEvento: idEvento,),
             ListaInvitados(idEvento: idEvento,),
-            //AgregarInvitados(),
-            //ListaInvitados(),
-            //ListaInvitados(),
-            //ListaInvitados(),
+            ResumenEvento(idEvento: idEvento,),
+            ResumenEvento(idEvento: idEvento,),
+            ResumenEvento(idEvento: idEvento,),
+            ResumenEvento(idEvento: idEvento,),
+            ResumenEvento(idEvento: idEvento,),
+            Contratos(),
           ],
         ),
       ),

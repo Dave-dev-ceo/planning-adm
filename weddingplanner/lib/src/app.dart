@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/invitados/invitados_bloc.dart';
 import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
+import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/blocs/planners/planners_bloc.dart';
+import 'package:weddingplanner/src/logic/etiquetas_logic.dart';
 import 'package:weddingplanner/src/logic/lista_invitados_logic.dart';
 import 'package:weddingplanner/src/logic/login_logic.dart';
+import 'package:weddingplanner/src/logic/machotes_logic.dart';
 import 'package:weddingplanner/src/logic/planners_logic.dart';
 import 'package:weddingplanner/src/resources/route_generator.dart';
 import 'blocs/estatus/estatus_bloc.dart';
@@ -77,6 +81,12 @@ class AppState extends StatelessWidget {
         ),
         BlocProvider<PaisesBloc>(
           create: (_) => PaisesBloc(logic: FetchListaPaisesLogic())
+        ),
+        BlocProvider<EtiquetasBloc>(
+          create: (_) => EtiquetasBloc(logic: FetchListaEtiquetasLogic())
+        ),
+        BlocProvider<MachotesBloc>(
+          create: (_) => MachotesBloc(logic: FetchListaMachotesLogic())
         )
       ], 
       child: MyApp());
