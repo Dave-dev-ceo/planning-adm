@@ -14,11 +14,13 @@ import io.flutter.embedding.engine.FlutterEngine;
 public final class GeneratedPluginRegistrant {
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     flutterEngine.getPlugins().add(new flutter.plugins.contactsservice.contactsservice.ContactsServicePlugin());
+    flutterEngine.getPlugins().add(new io.flutter.plugins.deviceinfo.DeviceInfoPlugin());
     flutterEngine.getPlugins().add(new com.mr.flutter.plugin.filepicker.FilePickerPlugin());
     flutterEngine.getPlugins().add(new com.pichillilorenzo.flutter_inappwebview.InAppWebViewFlutterPlugin());
     flutterEngine.getPlugins().add(new com.jrai.flutter_keyboard_visibility.FlutterKeyboardVisibilityPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin());
     flutterEngine.getPlugins().add(new com.example.multi_select_item.MultiSelectItemPlugin());
+    flutterEngine.getPlugins().add(new io.scer.native_pdf_renderer.NativePdfRendererPlugin());
     flutterEngine.getPlugins().add(new com.baseflow.permissionhandler.PermissionHandlerPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.urllauncher.UrlLauncherPlugin());

@@ -1,39 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
 
-class AgregarContrato extends StatefulWidget {
-  const AgregarContrato({Key key}) : super(key: key);
-  static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => AgregarContrato(),
-      );
+class Machotes extends StatefulWidget {
+  const Machotes({Key key}) : super(key: key);
 
   @override
-  _AgregarContratoState createState() => _AgregarContratoState();
+  _MachotesState createState() => _MachotesState();
 }
 
-class _AgregarContratoState extends State<AgregarContrato> {
+class _MachotesState extends State<Machotes> {
   MachotesBloc machotesBloc;
   ItemModelMachotes itemModelMC;
+
+  TextEditingController descripcionMachote;
+  GlobalKey<FormState> keyForm;
 
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     machotesBloc.add(FechtMachotesEvent());
+    keyForm = new GlobalKey();
+    descripcionMachote = new TextEditingController();
     super.initState();
   }
 
-  Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  _goEdit(BuildContext contx) async {
+    if (keyForm.currentState.validate()) {
+      Navigator.of(contx).pop();
+      Navigator.of(context)
+          .pushNamed('/addMachote', arguments: descripcionMachote.text);
+    }
   }
 
   _contectCont(ItemModelMachotes itemMC, int element) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/addContratoPdf',
-            arguments: itemMC.results.elementAt(element).machote);
+        print(itemModelMC.results.elementAt(element).machote);
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -73,6 +77,57 @@ class _AgregarContratoState extends State<AgregarContrato> {
     );
   }
 
+  String validateDescripcion(String value) {
+    String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return "La descripción es necesaria";
+    } else if (!regExp.hasMatch(value)) {
+      return "La descripción debe de ser a-z y A-Z";
+    }
+    return null;
+  }
+
+  Future<void> _showMyDialogGuardar() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Ingrese una descripción', textAlign: TextAlign.center),
+          content: Form(
+            key: keyForm,
+            child: TextFormField(
+              controller: descripcionMachote,
+              decoration: new InputDecoration(
+                labelText: 'Descripción',
+              ),
+              validator: validateDescripcion,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            TextButton(
+              child: Text('Guardar'),
+              onPressed: () async {
+                await _goEdit(context);
+                //_save();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +149,13 @@ class _AgregarContratoState extends State<AgregarContrato> {
             }
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: null,
+        child: Icon(Icons.add),
+        onPressed: () async {
+          await _showMyDialogGuardar();
+        },
       ),
     );
   }

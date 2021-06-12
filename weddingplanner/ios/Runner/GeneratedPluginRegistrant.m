@@ -10,6 +10,12 @@
 @import contacts_service;
 #endif
 
+#if __has_include(<device_info/FLTDeviceInfoPlugin.h>)
+#import <device_info/FLTDeviceInfoPlugin.h>
+#else
+@import device_info;
+#endif
+
 #if __has_include(<file_picker/FilePickerPlugin.h>)
 #import <file_picker/FilePickerPlugin.h>
 #else
@@ -34,6 +40,12 @@
 @import multi_select_item;
 #endif
 
+#if __has_include(<native_pdf_renderer/NativePdfRendererPlugin.h>)
+#import <native_pdf_renderer/NativePdfRendererPlugin.h>
+#else
+@import native_pdf_renderer;
+#endif
+
 #if __has_include(<permission_handler/PermissionHandlerPlugin.h>)
 #import <permission_handler/PermissionHandlerPlugin.h>
 #else
@@ -56,10 +68,12 @@
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
   [ContactsServicePlugin registerWithRegistrar:[registry registrarForPlugin:@"ContactsServicePlugin"]];
+  [FLTDeviceInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTDeviceInfoPlugin"]];
   [FilePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FilePickerPlugin"]];
   [InAppWebViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"InAppWebViewFlutterPlugin"]];
   [FlutterKeyboardVisibilityPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterKeyboardVisibilityPlugin"]];
   [MultiSelectItemPlugin registerWithRegistrar:[registry registrarForPlugin:@"MultiSelectItemPlugin"]];
+  [NativePdfRendererPlugin registerWithRegistrar:[registry registrarForPlugin:@"NativePdfRendererPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
   [FLTURLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTURLLauncherPlugin"]];

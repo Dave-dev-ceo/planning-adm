@@ -26,7 +26,7 @@ dependencies:
   
   http: 
   rxdart: ^0.26.0
-  excel: ^1.1.5
+  excel: 
   file_picker: ^3.0.1
   responsive_builder: ^0.4.1
   contacts_service:
@@ -38,6 +38,8 @@ dependencies:
   flutter_bloc: ^7.0.0
   equatable:
   shared_preferences: ^2.0.5
+  native_pdf_view: ^4.0.1
+  syncfusion_flutter_pdf: ^19.1.67-beta
   #fab_circular_menu: ^1.0.2
   flutter_speed_dial: ^3.0.5
   #zefyrka: ^1.0.3+2

@@ -92,30 +92,32 @@ class _DashboardEventosState extends State<DashboardEventos> {
       },
     );
   }
-  _showDialogMsg(BuildContext context){
+
+  _showDialogMsg(BuildContext context) {
     showDialog(
-      barrierDismissible: false,
+        barrierDismissible: false,
         context: context,
         //barrierDismissible: false,
         builder: (BuildContext context) {
-       //_ingresando = context;
+          //_ingresando = context;
           return AlertDialog(
             title: Text(
-              "Sesión2",
+              "Sesión",
               textAlign: TextAlign.center,
             ),
-            content: 
-                Text('Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+            content: Text(
+                'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
-            actions: <Widget>[TextButton(
-              child: Text('Cerrar'),
-              onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-              },
-           ),
-          ],
-           
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (route) => false);
+                },
+              ),
+            ],
           );
         });
   }
@@ -125,7 +127,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
     return Scaffold(
       body: BlocListener<EventosBloc, EventosState>(
         listener: (context, state) {
-          if(state is ErrorTokenEventosState){
+          if (state is ErrorTokenEventosState) {
             return _showDialogMsg(context);
           }
         },
@@ -141,7 +143,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
               return Center(
                 child: Text(state.message),
               );
-            }else{
+            } else {
               return Center(child: CircularProgressIndicator());
             }
           },

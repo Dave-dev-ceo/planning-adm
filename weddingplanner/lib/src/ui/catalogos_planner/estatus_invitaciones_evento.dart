@@ -32,7 +32,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
   }
 
   @override
-  void initState(){
+  void initState() {
     estatusBloc = BlocProvider.of<EstatusBloc>(context);
     estatusBloc.add(FechtEstatusEvent());
     super.initState();
@@ -82,22 +82,22 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Future <Map<String,dynamic>> _saveEstatus(BuildContext context) async {
+  Future<Map<String, dynamic>> _saveEstatus(BuildContext context) async {
     /*if (estatusCtrl.text.trim() == "" || estatusCtrl.text.trim() == null) {
       _msgSnackBar('El campo esta vacío', Color(0x64E032));
     } else {*/
-      Map<String, dynamic> json = {"descripcion": estatusCtrl.text};
-      //json.
-      //bool response = await api.createEstatus(json, context);
-      /*if (response) {
+    Map<String, dynamic> json = {"descripcion": estatusCtrl.text};
+    //json.
+    //bool response = await api.createEstatus(json, context);
+    /*if (response) {
         //_mySelection = "0";
         _msgSnackBar('Estatus agregado', Colors.green[300]);
         //_listaGrupos();
       } else {
         _msgSnackBar('Error no se pudo agregar el estatus', Colors.red[300]);
       }*/
-      return json;
-   // }
+    return json;
+    // }
   }
 
   Future<int> _getId() async {
@@ -106,34 +106,36 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     return id;
   }
 
-  _showDialogMsg(BuildContext context){
+  _showDialogMsg(BuildContext context) {
     showDialog(
-      barrierDismissible: false,
+        barrierDismissible: false,
         context: context,
         //barrierDismissible: false,
         builder: (BuildContext context) {
-       //_ingresando = context;
+          //_ingresando = context;
           return AlertDialog(
             title: Text(
-              "Sesión2",
+              "Sesión",
               textAlign: TextAlign.center,
             ),
-            content: 
-                Text('Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+            content: Text(
+                'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
-            actions: <Widget>[TextButton(
-              child: Text('Cerrar'),
-              onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-              },
-           ),
-          ],
-           
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cerrar'),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (route) => false);
+                },
+              ),
+            ],
           );
         });
   }
-  _constructorTable(ItemModelEstatusInvitado model){
+
+  _constructorTable(ItemModelEstatusInvitado model) {
     return Container(
       width: double.infinity,
       child: Column(
@@ -173,13 +175,14 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                           ),
                           decoration: BoxDecoration(
                             color: hexToColor('#880B55'),
-                            borderRadius:
-                                BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5),
                           ),
                         ),
-                        onTap: () async{
-                          Map<String, dynamic> json =await _saveEstatus(context);
-                          estatusBloc.add(CreateEstatusEvent(json,itemModelEI));
+                        onTap: () async {
+                          Map<String, dynamic> json =
+                              await _saveEstatus(context);
+                          estatusBloc
+                              .add(CreateEstatusEvent(json, itemModelEI));
                         },
                       ),
                     ),
@@ -189,12 +192,10 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                 80.0),
           ),
           Center(
-            child: Container(
-              height: 400.0,
-              width: 600.0,
-              child: buildList(model) 
-              //listaEstatusInvitaciones(context),
-            ),
+            child:
+                Container(height: 400.0, width: 600.0, child: buildList(model)
+                    //listaEstatusInvitaciones(context),
+                    ),
           ),
         ],
       ),
@@ -211,11 +212,11 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
               body: SingleChildScrollView(
                 child: BlocListener<EstatusBloc, EstatusState>(
                   listener: (context, state) {
-                    if(state is ErrorTokenEstatusState){
+                    if (state is ErrorTokenEstatusState) {
                       return _showDialogMsg(context);
-                    }else if(state is ErrorCreateEstatusState){
+                    } else if (state is ErrorCreateEstatusState) {
                       print(state.message);
-                    }else if(state is ErrorUpdateEstatusState){
+                    } else if (state is ErrorUpdateEstatusState) {
                       print(state.message);
                     }
                   },
@@ -230,7 +231,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                         return Center(
                           child: Text(state.message),
                         );
-                      }else{
+                      } else {
                         return _constructorTable(itemModelEI);
                       }
                     },
@@ -297,10 +298,12 @@ class _DataSource extends DataTableSource {
   GlobalKey<FormState> keyForm = new GlobalKey();
   TextEditingController estatusCtrl = new TextEditingController();
   ApiProvider api = new ApiProvider();
-  _DataSource(context, BuildContext cont, this.idPlanner,EstatusBloc estatusBloc) {
+  _DataSource(
+      context, BuildContext cont, this.idPlanner, EstatusBloc estatusBloc) {
     _rows = <_Row>[];
     for (int i = 0; i < context.results.length; i++) {
-      _rows.add(_Row(context.results[i].idEstatusInvitado, context.results[i].descripcion));
+      _rows.add(_Row(context.results[i].idEstatusInvitado,
+          context.results[i].descripcion));
     }
     _cont = cont;
     _estatusBloc = estatusBloc;
