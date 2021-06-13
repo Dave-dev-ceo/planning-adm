@@ -176,7 +176,7 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
                 children: <Widget>[
                   TextButton(
                     child: Text(
-                      'Generate PDF',
+                      'Generar formato PDF',
                       style: TextStyle(color: Colors.white),
                     ),
                     style: ButtonStyle(

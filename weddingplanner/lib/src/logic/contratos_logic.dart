@@ -93,8 +93,10 @@ class FetchListaContratosLogic extends ListaContratosLogic {
   @override
   Future<String> fetchContratosPdf(Map<String, dynamic> data) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
     final response = await client.post(
         Uri.http('localhost:3005', 'wedding/PDF/createPDF'),
         body: data,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
+import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
 
 class AgregarContrato extends StatefulWidget {
@@ -17,11 +19,14 @@ class AgregarContrato extends StatefulWidget {
 class _AgregarContratoState extends State<AgregarContrato> {
   MachotesBloc machotesBloc;
   ItemModelMachotes itemModelMC;
-
+  EventosBloc eventosBloc;
+  ItemModelEventos itemModelEV;
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     machotesBloc.add(FechtMachotesEvent());
+    eventosBloc = BlocProvider.of<EventosBloc>(context);
+    eventosBloc.add(FechtEventosEvent());
     super.initState();
   }
 
@@ -29,11 +34,16 @@ class _AgregarContratoState extends State<AgregarContrato> {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
+  /*Future<String> _insertEtiquetas(String html){
+    eventosBloc.mapEventToState(event)
+  }*/
+
   _contectCont(ItemModelMachotes itemMC, int element) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/addContratoPdf',
-            arguments: itemMC.results.elementAt(element).machote);
+        String html = itemMC.results.elementAt(element).machote;
+
+        Navigator.of(context).pushNamed('/addContratoPdf', arguments: html);
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
