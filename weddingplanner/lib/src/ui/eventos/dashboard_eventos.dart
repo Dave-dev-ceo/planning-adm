@@ -152,7 +152,10 @@ class _DashboardEventosState extends State<DashboardEventos> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.event_available),
           backgroundColor: hexToColor('#880B55'),
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.of(context)
+                .pushNamed('/addEvento');
+          }),
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }

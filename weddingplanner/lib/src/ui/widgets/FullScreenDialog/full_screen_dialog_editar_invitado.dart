@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
-//import 'package:weddingplanner/src/blocs/estatus_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
@@ -35,7 +34,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   TextEditingController  emailCtrl = new TextEditingController();
 
-  //TextEditingController  apellidosCtrl = new TextEditingController();
   TextEditingController  grupo = new TextEditingController();
 
   TextEditingController  telefonoCtrl = new TextEditingController();
@@ -43,7 +41,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   TextEditingController  tipoAlimentacionCtrl = new TextEditingController();
   TextEditingController  asistenciaEspecialCtrl = new TextEditingController();
   TextEditingController  alergiasCtrl = new TextEditingController();
-  //String dropdownValueEstatus = 'Confirmado';
+  
   String dropdownValue = 'Hombre';
   int _currentSelection;
   int _currentSelectionGenero;
@@ -61,10 +59,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     1: Text('Mujer',style: TextStyle(fontSize: 12),),
   };
 
- //_FullScreenDialogEditState(this.id);
-
   _datosInvitado(){
-    ///bloc.dispose();
     blocInvitado.fetchAllInvitado(idInvitado, context);
     return StreamBuilder(
             stream: blocInvitado.allInvitado,
@@ -336,22 +331,6 @@ formItemsDesign(icon, item, large,ancho) {
   }
   Widget formUI(ItemModelInvitado invitado) {
     if(contActualiza <= 0){
-      /*if(invitado.asistencia == "Confirmado"){
-        _mySelection = "1";
-        contActualiza++;
-        print('entro en confirmado');
-      }else if(invitado.asistencia == "Sin Confirmar"){
-        _mySelection = "2";
-        contActualiza++;
-        print('entro en no confirmado');
-      }else if(invitado.asistencia == "No Asiste"){
-        _mySelection = "3";
-        contActualiza++;
-        print('entro en no asiste');
-      }else{
-        _mySelection = "0";
-        contActualiza++;
-      }*/
       if(invitado.asistencia != null){
         _mySelection = invitado.asistencia.toString();
         contActualiza++;
@@ -409,144 +388,9 @@ formItemsDesign(icon, item, large,ancho) {
       asistenciaEspecialCtrl.text = invitado.asistenciaEspecial;
       contActualizaData++;
     }
-    
-    //int _sliding = 0;
-    //String nombre = "Victor Maunel Sanchez Rodriguez";
    return  Column(
      children: <Widget>[
-       SizedBox(width: 35,),
-       /*Wrap(
-         children:<Widget>[
-           
-            formItemsDesign(
-           Icons.person,
-           TextFormField(
-             controller: nombreCtrl,
-             decoration: new InputDecoration(
-               labelText: 'Nombre completo',
-             ),
-             //initialValue: invitado.nombre,
-             validator: validateNombre,
-           ),500.0,80.0),
-       formItemsDesign(
-           //MyFlutterApp.transgender,
-           Icons.assignment,
-           Row(
-             children: <Widget>[
-               Text('Asistencia'),
-               SizedBox(width: 15,),
-               
-                _listaEstatus(),
-                      //_dropDownEstatusInvitado(),
-             ],),
-             500.0,80.0
-             )
-            //Container(width: 300,child: TextFormField(initialValue: nombre,decoration: InputDecoration(labelText: 'Nombre'))),
-         ]
-       ),
-       Wrap(
-         children: <Widget>[
-         formItemsDesign(Icons.av_timer_rounded, Row(
-                    children:<Widget>[ 
-              Text('Edad'),
-              //SizedBox(width: 15,),
-              Expanded(
-                              child: MaterialSegmentedControl(
-                children: _children,
-                selectionIndex: _currentSelection,
-                borderColor: Color(0xFF880B55),
-                selectedColor: Color(0xFF880B55),
-                unselectedColor: Colors.white,
-                borderRadius: 32.0,
-                horizontalPadding: EdgeInsets.all(8),
-                onSegmentChosen: (index) {
-                  setState(() {
-                    _currentSelection = index;
-                  });
-                },
-           ),
-              ),]
-         ), 500.0,80.0),
-         formItemsDesign(MyFlutterApp.transgender, Row(
-                    children:<Widget>[ 
-              Text('Genero'),
-              //SizedBox(width: 15,),
-              Expanded(
-                              child: MaterialSegmentedControl(
-                children: _childrenGenero,
-                selectionIndex: _currentSelectionGenero,
-                borderColor: Color(0xFF880B55),
-                selectedColor: Color(0xFF880B55),
-                unselectedColor: Colors.white,
-                borderRadius: 32.0,
-                horizontalPadding: EdgeInsets.all(8),
-                onSegmentChosen: (index) {
-                  setState(() {
-                    _currentSelectionGenero = index;
-                  });
-                },
-           ),
-              ),]
-         ), 500.0,80.0),
-         
-         ],
-       ),
-       Wrap(
-         children: <Widget>[
-           formItemsDesign(Icons.email, TextFormField(
-             controller: emailCtrl,
-             //initialValue: invitado.email,
-             decoration: new InputDecoration(
-               labelText: 'Correo',
-             ),
-             validator: validateEmail,
-           ), 500.0, 80.0),
-
-           formItemsDesign(!invitado.estatusInvitacion?Icons.cancel:Icons.check_box, MergeSemantics(
-            child: ListTile(
-              title: Text(!invitado.estatusInvitacion?'Invitación pendiente':'Invitación enviada'),
-              
-              trailing: CupertinoSwitch(
-                value: _lights,//invitado.estatusInvitacion,
-                onChanged: (bool value) { setState(() { _lights = value; }); },
-              ),
-              onTap: () { setState(() { _lights = !_lights; }); },
-            ),
-          ), 500.0, 80.0)
-         ],
-       ),
-       Wrap(
-         children: <Widget>[
-           formItemsDesign(Icons.phone, TextFormField(
-             controller: telefonoCtrl,
-             //initialValue: invitado.telefono,
-             decoration: new InputDecoration(
-               labelText: 'Número de teléfono',
-             ),
-             validator: validateTelefono,
-           ), 500.0, 80.0),
-            formItemsDesign(Icons.group, 
-            Row(children: <Widget>[
-              Text('Grupo'),
-              SizedBox(width: 15,),
-              _listaGrupos(), 
-            ],),
-             
-            500.0, 80.0)
-
-         ],
-       ),*/
-       
-       /*Wrap(
-         children: <Widget>[
-           formItemsDesign(Icons.tablet_rounded, Row(children: <Widget>[
-             Text('Mesa'),
-              SizedBox(width: 15,),
-             _listaMesas(),
-           ],), 500.0, 50.0)
-         ],
-       ),*/
-       SizedBox(width: 25,),
+       SizedBox(width: 60,),
       ExpansionPanelList(
         animationDuration: Duration(milliseconds:1000),
 
@@ -571,7 +415,7 @@ formItemsDesign(icon, item, large,ancho) {
                 Wrap(
                   children:<Widget>[
                     
-                      formItemsDesign(
+                formItemsDesign(
                     Icons.person,
                     TextFormField(
                       controller: nombreCtrl,
@@ -833,7 +677,7 @@ formItemsDesign(icon, item, large,ancho) {
      }else{
        edad="";
      }
-     //id_invitado, id_estatus_invitado, nombre, edad, genero, email, telefono, id_grupo
+     
      Map <String,String> json = {
        "id_invitado":idInvitado.toString(),
        "id_estatus_invitado":_mySelection,
@@ -851,15 +695,10 @@ formItemsDesign(icon, item, large,ancho) {
      //json.
      bool response = await api.updateInvitado(json,context);
 
-     //bloc.insertInvitados;
-      //print(response);
+     
       if (response) {
         Navigator.of(context).pop();
-        /*keyForm.currentState.reset();
-        nombreCtrl.clear();
-        telefonoCtrl.clear();
-        emailCtrl.clear();
-        dropdownValue = "Hombre";*/
+        
         final snackBar = SnackBar(
             content: Container(
               height: 30,

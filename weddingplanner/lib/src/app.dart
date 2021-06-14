@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/estatus/estatus_bloc.dart';
 import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
@@ -8,12 +9,14 @@ import 'package:weddingplanner/src/blocs/invitados/invitados_bloc.dart';
 import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/blocs/planners/planners_bloc.dart';
+import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
 import 'package:weddingplanner/src/logic/contratos_logic.dart';
 import 'package:weddingplanner/src/logic/etiquetas_logic.dart';
 import 'package:weddingplanner/src/logic/lista_invitados_logic.dart';
 import 'package:weddingplanner/src/logic/login_logic.dart';
 import 'package:weddingplanner/src/logic/machotes_logic.dart';
 import 'package:weddingplanner/src/logic/planners_logic.dart';
+import 'package:weddingplanner/src/logic/tipos_eventos_logic.dart';
 import 'package:weddingplanner/src/resources/route_generator.dart';
 import 'blocs/paises/paises_bloc.dart';
 import 'logic/estatus_logic.dart';
@@ -48,6 +51,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('en'),
+        const Locale('fr'),
+        const Locale('es')
+      ],
       title: 'App',
       theme: ThemeData(
           primarySwatch: createMaterialColor(Color(0xFF880B55)),
@@ -86,7 +97,9 @@ class AppState extends StatelessWidget {
       BlocProvider<MachotesBloc>(
           create: (_) => MachotesBloc(logic: FetchListaMachotesLogic())),
       BlocProvider<ContratosBloc>(
-          create: (_) => ContratosBloc(logic: FetchListaContratosLogic()))
+          create: (_) => ContratosBloc(logic: FetchListaContratosLogic())),
+      BlocProvider<TiposEventosBloc>(
+          create: (_) => TiposEventosBloc(logic: FetchListaTiposEventosLogic())),
     ], child: MyApp());
   }
 }

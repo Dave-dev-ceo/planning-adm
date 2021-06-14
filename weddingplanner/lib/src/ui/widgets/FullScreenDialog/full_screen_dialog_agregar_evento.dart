@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/eventos/agregar_evento.dart';
-import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
-import 'package:weddingplanner/src/ui/widgets/invitados/cargar_excel_invitados.dart';
 
-class FullScreenDialogAdd extends StatefulWidget {
-  final int id;
+class FullScreenDialogAddEvento extends StatefulWidget {
 
-  const FullScreenDialogAdd({Key key, this.id}) : super(key: key);
+  const FullScreenDialogAddEvento({Key key}) : super(key: key);
   @override
-  _FullScreenDialogAddState createState() => _FullScreenDialogAddState(id);
+  _FullScreenDialogAddEventoState createState() => _FullScreenDialogAddEventoState();
 }
 
-class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
-  ApiProvider api = new ApiProvider();
-  final int id;
-  int _pageIndex = 0;
-  _FullScreenDialogAddState(this.id);
+class _FullScreenDialogAddEventoState extends State<FullScreenDialogAddEvento> {
   
     @override
   void initState() {
@@ -29,14 +21,14 @@ class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Agregar Invitado'),
-          backgroundColor: hexToColor('#7030a0'),
+          title: Text('Agregar Evento'),
+          //backgroundColor: hexToColor('#7030a0'),
           actions: [],
           automaticallyImplyLeading: true,
         ),
         body:  SafeArea(
         child: 
-            AgregarEvento(idPlanner: id,)
+            AgregarEvento()
       ),
     );
   }

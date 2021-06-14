@@ -7,6 +7,7 @@ import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
 import 'package:weddingplanner/src/ui/login/login2.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_contrato.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_machote.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_planners.dart';
@@ -52,6 +53,9 @@ class RouteGenerator {
       case '/addPlanners':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddPlanners());
+      case '/addEvento':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddEvento());
       case '/addContactos':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialog(

@@ -1,50 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
+import 'package:weddingplanner/src/models/item_model_tipo_evento.dart';
 
 class AgregarEvento extends StatefulWidget {
-  final int idPlanner;
+  
 
-  const AgregarEvento({Key key, this.idPlanner}) : super(key: key);
+  const AgregarEvento({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => AgregarEvento(),
       );
 
   @override
-  _AgregarEventoState createState() => _AgregarEventoState(idPlanner);
+  _AgregarEventoState createState() => _AgregarEventoState();
 }
 
 class _AgregarEventoState extends State<AgregarEvento> {
-  final int idPlanner;
-GlobalKey<FormState> keyForm = new GlobalKey();
+  GlobalKey<FormState> keyForm = new GlobalKey();
+  TextEditingController  descripcionCtrl;
+  TextEditingController  nombreCtrl;
+  TextEditingController  apellidoCtrl;
+  TextEditingController  telefonoCtrl;
+  TextEditingController  emailCtrl;
+  TextEditingController  direccionCtrl;
+  TextEditingController  codigoPostalCtrl;
+  TextEditingController  coloniaCiudadCtrl;
+  TextEditingController  estadoCtrl;
+  TextEditingController  fechaInicioCtrl;
+  TextEditingController  fechaFinCtrl;
+  DateTime fechaInicio;
+  DateTime fechaFin;
+  bool isExpaned = true;
+  bool isExpanedT = false;
+  TiposEventosBloc tiposEventosBloc;
+  ItemModelTipoEvento itemModelTipoEvento;
+  String _mySelectionTE = "1";
 
- TextEditingController  nombreCtrl = new TextEditingController();
-
- TextEditingController  emailCtrl = new TextEditingController();
-
- //TextEditingController  apellidosCtrl = new TextEditingController();
-
- TextEditingController  telefonoCtrl = new TextEditingController();
-
- ApiProvider api = new ApiProvider();
-
- String dropdownValue = 'Hombre';
-
-  _AgregarEventoState(this.idPlanner);
-
-Color hexToColor(String code) {
-      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-    }
-
-/*_borderTextForm(){
-  return OutlineInputBorder(
-    borderRadius: new BorderRadius.circular(25.0),
-    borderSide: new BorderSide(
-    ),
-  );
-}*/
-
+  @override
+  void initState(){
+    tiposEventosBloc = BlocProvider.of<TiposEventosBloc>(context);
+    tiposEventosBloc.add(FechtTiposEventosEvent());
+    _setInitialController();
+    fechaInicio = DateTime.now();
+    fechaFin = DateTime.now();
+    _setDate();
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return 
@@ -66,216 +69,389 @@ Color hexToColor(String code) {
           //),
         ); 
   }
-
-  formItemsDesign(icon, item) {
-   return Padding(
-     padding: EdgeInsets.symmetric(vertical: 7),
-     child: Card(child: ListTile(leading: Icon(icon), title: item)),
-   );
+  
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
-_dropDown2(){
+
+  _dropDownTiposEventos(ItemModelTipoEvento tiposEventos) {
     return DropdownButton(
-      value: dropdownValue,
+      value: _mySelectionTE,
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Colors.pink),
+      style: const TextStyle(color: Color(0xFF880B55)),
       underline: Container(
         height: 2,
-        color: Colors.pink,
+        color: Color(0xFF880B55),
       ),
       onChanged: (newValue) {
         setState(() {
-            dropdownValue = newValue;
+          _mySelectionTE = newValue;
         });
       },
-      items: <String>['Hombre', 'Mujer'].map((item) {
+      items: tiposEventos.results.map((item) {
         return DropdownMenuItem(
-          value: item,
-          child: Text(item, style: TextStyle(fontSize: 18),),
+          value: item.idTipoEvento.toString(),
+          child: Text(
+            item.nombreEvento,
+            style: TextStyle(fontSize: 18),
+          ),
         );
       }).toList(),
     );
   }
- String gender = 'H';
 
- Widget formUI() {
-   return  Column(
-     children: <Widget>[
-       formItemsDesign(
-           Icons.person,
-           TextFormField(
-             controller: nombreCtrl,
-             decoration: new InputDecoration(
-               labelText: 'Nombre completo',
-             ),
-             validator: validateNombre,
-           )),
-       formItemsDesign(
-           null,
-           Row(
-             children: <Widget>[
-               Text('Genero'),
-               SizedBox(width: 50,),
-                      _dropDown2(),
-             ],)
-           /*Row(
-             children: <Widget>[
-               Column(
-                  children: <Widget>[
-                      Text('genero'),
-                      _dropDown2(),
-                  ],
-                ),
-                Column(
-             children: <Widget>[
-                Text('genero'),
-                _dropDown2(),
-             ],
-           )
-             ],)*/
-           
-           
-           /*Column(children: <Widget>[
-             Text("Genero"),
-             RadioListTile<String>(
-               title: const Text('Hombre'),
-               value: 'H',
-               groupValue: gender,
-               onChanged: (value) {
-                 setState(() {
-                   gender = value;
-                 });
-               },
-             ),
-             RadioListTile<String>(
-               title: const Text('Mujer'),
-               value: 'M',
-               groupValue: gender,
-               onChanged: (value) {
-                 setState(() {
-                   gender = value;
-                 });
-               },
-             )
-           ])*/
-           ),
-       formItemsDesign(
-           Icons.email,
-           TextFormField(
-             controller: emailCtrl,
-               decoration: new InputDecoration(
-                 labelText: 'Correo',
-               ),
-               keyboardType: TextInputType.emailAddress,
-               maxLength: 32,
-               validator: validateEmail,)),
-       formItemsDesign(
-          Icons.phone,
-           TextFormField(
-             controller: telefonoCtrl,
-               decoration: new InputDecoration(
-                 labelText: 'Teléfono',
-               ),
-               keyboardType: TextInputType.phone,
-               maxLength: 10,
-               validator: validateTelefono,)),
-   GestureDetector(
-   onTap: (){
-     save();
-   },child: CallToAction('Guardar')
-       )
-     ],
+  formItemsDesign(icon, item, large,ancho) {
+   return Padding(
+     padding: EdgeInsets.symmetric(vertical: 3),
+     child: Container(child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),elevation: 10,child: ListTile(leading: Icon(icon), title: item)), width: large,height: ancho,),
    );
- }
-
- String validateNombre(String value) {
-   String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-   RegExp regExp = new RegExp(pattern);
-   if (value.length == 0) {
-     return "El nombre es necesario";
-   } else if (!regExp.hasMatch(value)) {
-     return "El nombre debe de ser a-z y A-Z";
-   }
-   return null;
- }
-
- String validateTelefono(String value) {
-   String patttern = r'(^[0-9]*$)';
-   RegExp regExp = new RegExp(patttern);
-   if (value.length == 0) {
-     return "El telefono es necesario";
-   } else if (value.length != 10) {
-     return "El numero debe tener 10 digitos";
-   }else if (!regExp.hasMatch(value)) {
-     return "El numero debe ser de 0-9";
-   }
-   return null;
- }
-
- String validateEmail(String value) {
-   String pattern =
-       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-   RegExp regExp = new RegExp(pattern);
-   if (value.length == 0) {
-     return "El correo es necesario";
-   } else if (!regExp.hasMatch(value)) {
-     return "Correo invalido";
-   } else {
-     return null;
-   }
- }
-
- save() async{
-   if (keyForm.currentState.validate()) {
-     if(dropdownValue == "Hombre"){
-       gender = "H";
-     }else if(dropdownValue == "Mujer"){
-       gender = "M";
-     }
-     Map <String,String> json = {
-       "nombre":nombreCtrl.text,
-       "telefono":telefonoCtrl.text,
-       "email":emailCtrl.text,
-       "genero":gender,
-      "id_evento":idPlanner.toString()
-      };
-     //json.
-     bool response = await api.createInvitados(json,context);
-
-     //bloc.insertInvitados;
-      //print(response);
-      if (response) {
-        keyForm.currentState.reset();
-        nombreCtrl.clear();
-        telefonoCtrl.clear();
-        emailCtrl.clear();
-        dropdownValue = "Hombre";
-        final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-              child: Text('Invitado registrado'),
-            ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.green,  
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);  
-      } else {
-        final snackBar = SnackBar(
-          content: Container(
-            height: 30,
-            child: Center(
-            child: Text('Error: No se pudo realizar el registro'),
-          ),
-            //color: Colors.red,
-          ),
-          backgroundColor: Colors.red,  
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-      
   }
- }
+
+  String validateDescripcion(String value) {
+    if (value.length == 0) {
+      return "La descripción es necesaria";
+    }
+    return null;
+  }
+
+  String validateFechaInicio(String value) {
+    if (value.length == 0) {
+      return "La fecha de inicio es necesaria";
+    }
+    return null;
+  }
+  
+  String validateFechaFin(String value) {
+    if (value.length == 0) {
+      return "La fecha final es necesaria";
+    }
+    return null;
+  }
+
+  String validateNombre(String value) {
+    if (value.length == 0) {
+      return "El nombre es necesario";
+    }
+    return null;
+  }
+
+  String validateApellido(String value) {
+    if (value.length == 0) {
+      return "El apellido es necesario";
+    }
+    return null;
+  }
+
+  String validateTelefono(String value) {
+    if (value.length == 0) {
+      return "El télefono es necesario";
+    }
+    return null;
+  }
+
+  String validateEmail(String value) {
+    if (value.length == 0) {
+      return "El correo es necesario";
+    }
+    return null;
+  }
+  
+  String validateDireccion(String value) {
+    if (value.length == 0) {
+      return "La dirección es necesaria";
+    }
+    return null;
+  }
+
+  String validateCodigoPostal(String value) {
+    if (value.length == 0) {
+      return "El código postal es necesario";
+    }
+    return null;
+  }
+
+  String validateColoniaCiudad(String value) {
+    if (value.length == 0) {
+      return "La colonia y la cuidad son necesarias";
+    }
+    return null;
+  }
+
+  String validateEstado(String value) {
+    if (value.length == 0) {
+      return "El estado es necesario";
+    }
+    return null;
+  }
+
+  _setInitialController(){
+    descripcionCtrl = new TextEditingController();
+    fechaInicioCtrl = new TextEditingController();
+    fechaFinCtrl = new TextEditingController();
+    nombreCtrl = new TextEditingController();
+    apellidoCtrl = new TextEditingController();
+    telefonoCtrl = new TextEditingController();
+    emailCtrl = new TextEditingController();
+    direccionCtrl = new TextEditingController();
+    codigoPostalCtrl = new TextEditingController();
+    coloniaCiudadCtrl = new TextEditingController();
+    estadoCtrl = new TextEditingController();
+  }
+
+  _setDate(){
+    fechaInicioCtrl.text = fechaInicio.toLocal().toString().split(' ')[0];
+    fechaFinCtrl.text = fechaFin.toLocal().toString().split(' ')[0];
+  }
+  _selectDateInicio(BuildContext context) async {
+  final DateTime picked = await showDatePicker(
+    context: context,
+    locale: const Locale("es","ES"),
+    initialDate: fechaInicio, // Refer step 1
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2025),
+  );
+    if (picked != null && picked != fechaInicio)
+      setState(() {
+      fechaInicio = picked;
+      fechaInicioCtrl.text = fechaInicio.toLocal().toString().split(' ')[0];
+    });
+  }
+
+  _selectDateFin(BuildContext context) async {
+  final DateTime picked = await showDatePicker(
+    context: context,
+    locale: const Locale("es","ES"),
+    initialDate: fechaFin, // Refer step 1
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2025),
+  );
+    if (picked != null && picked != fechaFin)
+      setState(() {
+      fechaFin = picked;
+      fechaFinCtrl.text = fechaFin.toLocal().toString().split(' ')[0];
+    });
+  }
+
+  formUI(){
+    return Column(
+      children: <Widget>[
+        SizedBox(width: 60,),
+        ExpansionPanelList(
+          animationDuration: Duration(milliseconds: 1000),
+          expansionCallback: (int index,bool expaned){setState(() {
+          
+          if(index == 0){
+            isExpaned = !isExpaned;  
+          }else{
+            isExpanedT = !isExpanedT;
+          }
+          //print(index);
+        });},
+          children: [
+            ExpansionPanel(
+              headerBuilder: (BuildContext context, bool isExpaned){
+                return Center(child: Text('Información general',style: TextStyle(fontSize: 20.0),));
+              },
+              canTapOnHeader: true,
+              isExpanded: isExpaned,
+              body: Container(
+                child: Column(
+                  children: <Widget>[
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Descripción del evento',
+                            ),
+                            validator: validateDescripcion,
+                          ),1000.0,80.0
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        GestureDetector(
+                          child: formItemsDesign(
+                            Icons.date_range_outlined,
+                            TextFormField(
+                              controller: fechaInicioCtrl,
+                              decoration: new InputDecoration(
+                                labelText: 'Fecha Inicio',
+                              ),
+                              validator: validateFechaInicio,
+                            ),
+                            300.0, 80.0
+                          ),
+                          onTap: () => _selectDateInicio(context),
+                        ),
+                        GestureDetector(
+                          child:formItemsDesign(
+                            Icons.date_range_outlined,
+                            TextFormField(
+                              controller: fechaFinCtrl,
+                              decoration: new InputDecoration(
+                                labelText: 'Fecha Fin',
+                              ),
+                              validator: validateFechaFin,
+                            ),
+                            300.0, 80.0
+                          ),
+                          onTap: () => _selectDateFin(context),
+                        )
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        Container(
+                          child: BlocBuilder<TiposEventosBloc, TiposEventosState>(
+                            builder: (context, state) {
+                              if(state is TiposEventosInitial){
+                                    return Center(child: CircularProgressIndicator());
+                                  }else if(state is LoadingTiposEventosState) {
+                                    return Center(child: CircularProgressIndicator());
+                                  }else if (state is MostrarTiposEventosState){
+                                    itemModelTipoEvento = state.tiposEventos;
+                                    return formItemsDesign(
+                                      Icons.event,
+                                      Row(
+                                        children: <Widget>[
+                                          Text('Tipo Evento'),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          _dropDownTiposEventos(state.tiposEventos),
+                                        ],
+                                      ),1000.0, 80.0);
+                                  }else if (state is ErrorListaTiposEventosState){
+                                    return Center(child: Text(state.message),);
+                                    //_showError(context, state.message);
+                                  }else{
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+                            },
+                          )
+                        ),
+                      ],
+                    )
+                  ],),
+              ),
+            ),
+            ExpansionPanel(
+              headerBuilder: (BuildContext context, bool isExpaned){
+                return Center(child: Text('Datos contrato',style: TextStyle(fontSize: 20.0),));
+              },
+              canTapOnHeader: true,
+              isExpanded: isExpanedT,
+              body: Container(
+                child: Column(
+                  children: <Widget>[
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Nombre',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Apellidos',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Teléfono',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Correo',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Dirección',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Código postal',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Colonia y ciudad',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                        formItemsDesign(
+                          Icons.notes,
+                          TextFormField(
+                            controller: descripcionCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Estado',
+                            ),
+                            validator: validateDescripcion,
+                          ),500.0,80.0
+                        ),
+                      ],
+                    ),
+                  ],),
+              )
+            )
+          ],
+        ),
+      ],
+    );
+  }
 }

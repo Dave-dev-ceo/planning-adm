@@ -1,13 +1,13 @@
 class ItemModelTipoEvento {
   
-  List<_Evento> _results = [];
+  List<Evento> _results = [];
 
   ItemModelTipoEvento.fromJson(List<dynamic> parsedJson){
-    List<_Evento> temp = [];
+    List<Evento> temp = [];
     //_Evento dat = _Evento({"id_grupo":0, "nombre_grupo":"Seleccionar grupo"});
     //temp.add(dat);
     for (int i = 0; i < parsedJson.length; i++) {
-      _Evento result = _Evento(parsedJson[i]);
+      Evento result = Evento(parsedJson[i]);
       //print(parsedJson[i]);
       temp.add(result);
     }
@@ -15,16 +15,16 @@ class ItemModelTipoEvento {
     //temp.add(dat);
     _results = temp;
   }
-  List<_Evento> get results => _results;
+  List<Evento> get results => _results;
 }
 
-class _Evento {
+class Evento {
   String _nombreEvento;
   int _idTipoEvento;
 
-  _Evento(datos){
-    _nombreEvento = datos['nombre_grupo'];
-    _idTipoEvento = datos['id_grupo'];
+  Evento(datos){
+    _nombreEvento = datos['tipo'];
+    _idTipoEvento = datos['id_tipo_evento'];
   }
 
   String get nombreEvento =>_nombreEvento;
