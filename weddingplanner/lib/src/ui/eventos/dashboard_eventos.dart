@@ -22,6 +22,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
     eventosBloc.add(FechtEventosEvent());
     super.initState();
   }
+  
 
   listaEventos(ItemModelEventos eventos) {
     /*bloc.fetchAllEventos(context);

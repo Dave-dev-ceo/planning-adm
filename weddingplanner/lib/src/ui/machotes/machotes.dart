@@ -47,8 +47,7 @@ class _MachotesState extends State<Machotes> {
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text(
-                'Machote',
+              title: Text(itemMC.results.elementAt(element).descripcion,
                 style: TextStyle(fontSize: 20),
               ),
               subtitle: Container(

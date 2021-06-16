@@ -41,7 +41,7 @@ class ApiProvider {
           //_ingresando = context;
           return AlertDialog(
             title: Text(
-              "Sesión",
+              "Sesión 2",
               textAlign: TextAlign.center,
             ),
             content: Text(

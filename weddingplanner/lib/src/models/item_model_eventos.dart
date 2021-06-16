@@ -1,32 +1,32 @@
 class ItemModelEventos{
-  List<_Evento> _results = []; 
+  List<Evento> _results = []; 
 
   ItemModelEventos.fromJson(Map<dynamic,dynamic> parsedJson){
-    List<_Evento> temp = [];
+    List<Evento> temp = [];
     for (int i = 0; i < parsedJson['evento'].length; i++) {
-        _Evento result = _Evento(parsedJson['evento'][i]);
+        Evento result = Evento(parsedJson['evento'][i]);
         temp.add(result);
     }
     _results = temp;
   }
-  List<_Evento> get results => _results;
+  List<Evento> get results => _results;
 }
 
-class _Evento{
+class Evento{
   int _idEvento;
   String _fechaInicio;
   String _fechaFin;
   String _tipoEvento;
-  List <_Involucrados> _involucrados = [];
-  _Evento(datos){
+  List <Involucrados> _involucrados = [];
+  Evento(datos){
     _idEvento = datos['id_evento'];
     _fechaInicio = datos['fecha_inicio'];
     _fechaFin = datos['fecha_fin'];
     _tipoEvento = datos['tipo_evento'];
     
-    List<_Involucrados> tempI =[];
+    List<Involucrados> tempI =[];
     for (var i = 0; i < datos['involucrados'].length; i++) {
-      _Involucrados invo = _Involucrados(datos['involucrados'][i]);
+      Involucrados invo = Involucrados(datos['involucrados'][i]);
       tempI.add(invo);  
     }
     _involucrados = tempI;
@@ -37,14 +37,14 @@ class _Evento{
   String get fechaInicio => _fechaInicio;
   String get fechaFin => _fechaFin;
   String get tipoEvento => _tipoEvento;
-  List<_Involucrados> get involucrados => _involucrados;   
+  List<Involucrados> get involucrados => _involucrados;   
 }
 
-class _Involucrados {
+class Involucrados {
   String _nombre;
   String _tipoInvolucrado;
 
-  _Involucrados(datos){
+  Involucrados(datos){
     _nombre = datos['nombre'];
     _tipoInvolucrado = datos['tipo_involucrado'];
   }

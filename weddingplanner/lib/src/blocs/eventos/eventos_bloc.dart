@@ -31,6 +31,29 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
       }on TokenException{
         yield ErrorTokenEventosState("Sesión caducada");
       }
+    }else if(event is CreateEventosEvent){
+      try {
+        yield CreateEventosState();
+        Map<String,dynamic> jsonMap = await logic.createEventos(event.data);
+        /*ItemModelEventos model = event.eventos;
+        //String dato = event.data['descripcion'];
+        Map<String,dynamic> lista = {
+          'id_evento':jsonMap['id_evento'],
+          'fecha_inicio':event.data['fecha_inicio'],
+          'fecha_fin':event.data['fecha_fin'],
+          'tipo_evento':'Boda',
+          'involucrados':{"nombre":"Sin nombre", "tipo_involucrado":"Sin involucrado"}
+          };
+        Evento est = new Evento(lista);
+        model.results.add(est);
+        //yield CreateEstatusState(estatus);
+        yield MostrarEventosState(model);*/
+        
+        add(FechtEventosEvent());
+        yield CreateEventosOkState();
+      }on CreateEventoException{
+        yield ErrorCreateEventosState("No se pudo insertar");
+      }
     }
   }
 }

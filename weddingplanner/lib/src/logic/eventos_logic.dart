@@ -6,9 +6,11 @@ import 'package:weddingplanner/src/models/item_model_preferences.dart';
 
 abstract class ListaEventosLogic {
   Future<ItemModelEventos> fetchEventos();
+  Future<Map<String,dynamic>> createEventos(Map<String,dynamic> dataEvento);
 }
 
 class ListaEventosException implements Exception {}
+class CreateEventoException implements Exception {}
 
 class TokenException implements Exception {}
 
@@ -34,6 +36,28 @@ class FetchListaEventosLogic extends ListaEventosLogic {
       throw TokenException();
     } else {
       throw ListaEventosException();
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> createEventos(Map<String,dynamic> dataEvento) async{
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+    dataEvento['id_planner'] = idPlanner.toString();
+    dataEvento['id_usuario'] = idUsuario.toString();
+    final response = await client.post(
+        Uri.http('localhost:3005', 'wedding/EVENTOS/createEventos'),
+        body: dataEvento,
+        headers: {HttpHeaders.authorizationHeader: token});
+
+    if (response.statusCode == 201) {
+      Map<String, dynamic> responseEvento = json.decode(response.body);
+      return responseEvento;
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw CreateEventoException();
     }
   }
 }

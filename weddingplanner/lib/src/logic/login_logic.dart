@@ -20,8 +20,12 @@ class BackendLoginLogic implements LoginLogic {
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setIdPlanner(data['usuario']['id_planner']);
+      await _sharedPreferences.setIdUsuario(data['usuario']['id_usuario']);
+      await _sharedPreferences.setLogic(data['usuario']['admin']);
       await _sharedPreferences.setToken(data['token']);
       await _sharedPreferences.setSesion(true);
+      List<String> dataJsonWPlanner = [data['usuario']['id_planner'].toString(),data['usuario']['id_usuario'].toString(),data['usuario']['admin'].toString(),data['token']];
+      await _sharedPreferences.setJsonData(dataJsonWPlanner);
       return 0;
     } else if (response.statusCode == 403) {
       throw LoginException();

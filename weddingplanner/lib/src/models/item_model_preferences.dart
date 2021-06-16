@@ -12,6 +12,16 @@ class SharedPreferencesT{
     return _sharedPreferences.getInt('idPlanner');
   }
 
+  setIdUsuario(int idUsuario) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.setInt('idUsuario', idUsuario);
+  }
+
+  getIdUsuario() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getInt('idUsuario');
+  }
+
   setIdEvento(int idEvento) async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.setInt('idEvento', idEvento);
@@ -41,6 +51,27 @@ class SharedPreferencesT{
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getBool('session') == null ? false:_sharedPreferences.getBool('session');
   }
+
+  setLogic(bool logic) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setBool('logic', logic);
+  }
+
+  getLogic() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getBool('logic') == null ? false:_sharedPreferences.getBool('logic');
+  }
+
+  setJsonData(List<String> json) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setStringList('dataWPlanner', json);
+  }
+
+  getJsonData() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getStringList('dataWPlanner');
+  }
+
   clear() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.clear();
