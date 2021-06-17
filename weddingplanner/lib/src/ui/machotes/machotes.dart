@@ -13,10 +13,11 @@ class Machotes extends StatefulWidget {
 class _MachotesState extends State<Machotes> {
   MachotesBloc machotesBloc;
   ItemModelMachotes itemModelMC;
-
+  List<Map<String,String>> radioB = [{"nombre":"Contratos","clave":"CT"},{"nombre":"Recibos","clave":"RC"},{"nombre":"Pagos","clave":"PG"}];
   TextEditingController descripcionMachote;
   GlobalKey<FormState> keyForm;
-
+  int _grupoRadio = 0;
+  String _clave = "CT";
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
@@ -30,14 +31,16 @@ class _MachotesState extends State<Machotes> {
     if (keyForm.currentState.validate()) {
       Navigator.of(contx).pop();
       Navigator.of(context)
-          .pushNamed('/addMachote', arguments: descripcionMachote.text);
+          .pushNamed('/addMachote', arguments: [descripcionMachote.text, _clave]);
     }
   }
 
   _contectCont(ItemModelMachotes itemMC, int element) {
     return GestureDetector(
       onTap: () {
-        print(itemModelMC.results.elementAt(element).machote);
+        Navigator.of(context)
+          .pushNamed('/editPlantilla', arguments: [descripcionMachote.text, _clave,itemMC.results.elementAt(element).machote]);
+        //print(itemModelMC.results.elementAt(element).machote);
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -93,16 +96,51 @@ class _MachotesState extends State<Machotes> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Ingrese una descripción', textAlign: TextAlign.center),
-          content: Form(
-            key: keyForm,
-            child: TextFormField(
-              controller: descripcionMachote,
-              decoration: new InputDecoration(
-                labelText: 'Descripción',
-              ),
-              validator: validateDescripcion,
-            ),
+          title: Text('Crear plantilla', textAlign: TextAlign.center),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState){
+              return Form(
+                key: keyForm,
+                child: SingleChildScrollView(
+                  child: ListBody(
+                    children: [
+                      Column(
+                        children: <Widget>[  
+                          for(int i = 0;i < radioB.length; i++)
+                          ListTile(
+                            title: Text(
+                              radioB.elementAt(i)['nombre'],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(color: Colors.black),
+                            ),
+                            leading: Radio(
+                              value: i,
+                              groupValue: _grupoRadio,
+                              activeColor: Color(0xFF6200EE),
+                              onChanged: (int value) {
+                                      setState(() {
+                                        _grupoRadio = value;
+                                        _clave = radioB.elementAt(i)['clave'];
+                                      });
+                                    },
+                            ),
+                          ),  
+                        ],
+                      ),
+                      TextFormField(
+                        controller: descripcionMachote,
+                        decoration: new InputDecoration(
+                          labelText: 'Descripción',
+                        ),
+                        validator: validateDescripcion,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
           actions: <Widget>[
             TextButton(

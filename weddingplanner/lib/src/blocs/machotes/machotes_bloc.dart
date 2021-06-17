@@ -34,14 +34,16 @@ class MachotesBloc extends Bloc<MachotesEvent, MachotesState> {
     }else if(event is CreateMachotesEvent){
       try {
         int idMachotes = await logic.createMachotes(event.data);
-        ItemModelMachotes model = event.machotes;
+        /*ItemModelMachotes model = event.machotes;
         String dato = event.data['descripcion'];
         String tipo = event.data['machote'];
         Map<String,dynamic> lista = {'id_machote':idMachotes,'descripcion':dato, 'machote':tipo};
         Machotes est = new Machotes(lista);
-        model.results.add(est);
+        model.results.add(est);*/
         //yield CreateMachotesState(machotes);
-        yield MostrarMachotesState(model);
+        //yield MostrarMachotesState(model);
+        add(FechtMachotesEvent());
+        
       }on CreateMachotesException{
         yield ErrorCreateMachotesState("No se pudo insertar");
       }

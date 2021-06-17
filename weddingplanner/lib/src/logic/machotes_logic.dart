@@ -68,8 +68,10 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
   @override
   Future<int> createMachotes(Map<String, dynamic> data) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
+    data['id_usuario'] = idUsuario.toString();
     final response = await client.post(
         Uri.http('localhost:3005', 'wedding/MACHOTES/createMachotes'),
         body: data,

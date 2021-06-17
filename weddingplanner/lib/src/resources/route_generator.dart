@@ -12,6 +12,7 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_machote.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_planners.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_plantilla.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_reporte_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
@@ -48,7 +49,12 @@ class RouteGenerator {
       case '/addMachote':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddMachote(
-                  descripcionMachote: args,
+                  dataMachote: args,
+                ));
+      case '/editPlantilla':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogEditPlantilla(
+                  dataPlantilla: args,
                 ));
       case '/addPlanners':
         return MaterialPageRoute(

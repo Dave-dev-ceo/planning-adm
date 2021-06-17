@@ -30,6 +30,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
   ContratosBloc contratosBloc;
   ItemModelContratos itemModelCT;
   BuildContext _ingresando;
+  String nombreDocumento = "output";
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
@@ -58,7 +59,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
     AnchorElement(
         href:
             "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
-      ..setAttribute("download", "output.pdf")
+      ..setAttribute("download", nombreDocumento+".pdf")
       ..click();
   }
   _dialogMSG(String title){
@@ -113,6 +114,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton.icon(
                               onPressed: () {
+                                nombreDocumento = itemMC.results.elementAt(element).descripcion;
                                 contratosBloc.add(FechtContratosPdfEvent({"machote": itemMC.results.elementAt(element).machote}));
                               },
                               icon: Icon(Icons.cloud_download_outlined),

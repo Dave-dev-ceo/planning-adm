@@ -7,34 +7,38 @@ import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_etiquetas.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
 
-class AgregarMachote extends StatefulWidget {
-  final String descripcionMachote;
-  final String claveMachote;
-  const AgregarMachote({Key key, this.descripcionMachote,this.claveMachote}) : super(key: key);
+class EditarPlantillas extends StatefulWidget {
+  final String descripcionPlantilla;
+  final String clavePlantilla;
+  final String plantilla;
+  const EditarPlantillas({Key key, this.descripcionPlantilla,this.clavePlantilla, this.plantilla}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => AgregarMachote(),
+        builder: (context) => EditarPlantillas(),
       );
 
   @override
-  _AgregarMachoteState createState() =>
-      _AgregarMachoteState(descripcionMachote, claveMachote);
+  _EditarPlantillasState createState() =>
+      _EditarPlantillasState(descripcionPlantilla, clavePlantilla,plantilla);
 }
 
-class _AgregarMachoteState extends State<AgregarMachote> {
-  final String descripcionMachote;
-  final String claveMachote;
+class _EditarPlantillasState extends State<EditarPlantillas> {
+  final String descripcionPlantilla;
+  final String clavePlantilla;
+  final String plantilla;
   EtiquetasBloc etiquetasBloc;
   MachotesBloc machotesBloc;
   ItemModelEtiquetas itemModelET;
   ItemModelMachotes itemModelMC;
-  HtmlEditorController controller = new HtmlEditorController();
+  HtmlEditorController controller;
 
-  _AgregarMachoteState(this.descripcionMachote, this.claveMachote);
+  _EditarPlantillasState(this.descripcionPlantilla, this.clavePlantilla, this.plantilla);
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     etiquetasBloc = BlocProvider.of<EtiquetasBloc>(context);
     etiquetasBloc.add(FechtEtiquetasEvent());
+    controller = new HtmlEditorController();
+    
     super.initState();
   }
 
@@ -120,6 +124,7 @@ class _AgregarMachoteState extends State<AgregarMachote> {
                   controller: controller, //required
                   htmlEditorOptions: HtmlEditorOptions(
                     hint: "Ingrese el texto...",
+                    initialText: plantilla,
                   ),
                   otherOptions: OtherOptions(
                     height: 580,
@@ -136,9 +141,9 @@ class _AgregarMachoteState extends State<AgregarMachote> {
         child: Icon(Icons.save),
         onPressed: () async {
           String txt = await controller.getText();
-          machotesBloc.add(CreateMachotesEvent(
-              {"descripcion": descripcionMachote, "machote": txt, "clave": claveMachote},
-              itemModelMC));
+          /*machotesBloc.add(CreateMachotesEvent(
+              {"descripcion": descripcionPlantilla, "machote": txt},
+              itemModelMC));*/
           Navigator.of(context).pop();
           //await _showMyDialogGuardar(context);
 

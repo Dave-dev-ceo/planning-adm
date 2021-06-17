@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/machotes/agregar_machotes.dart';
 
 class FullScreenDialogAddMachote extends StatefulWidget {
-  final String descripcionMachote;
-
-  const FullScreenDialogAddMachote({Key key, this.descripcionMachote})
+  final List<String> dataMachote;
+  //final String claveMachote;
+  const FullScreenDialogAddMachote({Key key, this.dataMachote})
       : super(key: key);
   @override
   _FullScreenDialogAddMachoteState createState() =>
-      _FullScreenDialogAddMachoteState(descripcionMachote);
+      _FullScreenDialogAddMachoteState(dataMachote);
 }
 
 class _FullScreenDialogAddMachoteState
     extends State<FullScreenDialogAddMachote> {
-  final String descripcionMachote;
-  _FullScreenDialogAddMachoteState(this.descripcionMachote);
+  final List<String> dataMachote;
+
+  //var claveMachote;
+  //final String claveMachote;
+  _FullScreenDialogAddMachoteState(this.dataMachote);
 
   @override
   void initState() {
@@ -36,7 +39,8 @@ class _FullScreenDialogAddMachoteState
       ),
       body: SafeArea(
         child: AgregarMachote(
-          descripcionMachote: descripcionMachote,
+          descripcionMachote: dataMachote[0],
+          claveMachote: dataMachote[1]
         ),
       ),
     );

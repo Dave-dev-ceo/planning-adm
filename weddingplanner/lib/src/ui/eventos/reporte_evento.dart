@@ -53,14 +53,14 @@ class _ReporteEventoState extends State<ReporteEvento> {
             listaReporte(context),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () async{
         },
         child: const Icon(Icons.person_add),
         
         backgroundColor: hexToColor('#880B55'),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,*/
     );
   }
   Widget buildList(AsyncSnapshot<ItemModelReporte> snapshot) {

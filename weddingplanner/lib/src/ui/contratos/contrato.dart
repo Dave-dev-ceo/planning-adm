@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_contratos.dart';
+import 'package:weddingplanner/src/ui/contratos/agregar_contrato.dart';
 
 class Contratos extends StatefulWidget {
   const Contratos({Key key}) : super(key: key);
@@ -77,7 +78,8 @@ class _ContratosState extends State<Contratos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: AgregarContrato(),
+      /*Container(
         child: BlocBuilder<ContratosBloc, ContratosState>(
           builder: (context, state) {
             if (state is LoadingContratosState) {
@@ -95,15 +97,15 @@ class _ContratosState extends State<Contratos> {
             }
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
+      ),*/
+      /*floatingActionButton: FloatingActionButton(
         heroTag: null,
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.of(context)
               .pushNamed('/addContrato', arguments: descripcionMachote.text);
         },
-      ),
+      ),*/
     );
   }
 }
