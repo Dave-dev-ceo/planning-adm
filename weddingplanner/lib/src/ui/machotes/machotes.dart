@@ -39,7 +39,7 @@ class _MachotesState extends State<Machotes> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
-          .pushNamed('/editPlantilla', arguments: [descripcionMachote.text, _clave,itemMC.results.elementAt(element).machote]);
+          .pushNamed('/editPlantilla', arguments: [itemMC.results.elementAt(element).descripcion, _clave,itemMC.results.elementAt(element).machote, itemMC.results.elementAt(element).idMachote.toString()]);
         //print(itemModelMC.results.elementAt(element).machote);
       },
       child: Card(

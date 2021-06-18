@@ -16,6 +16,8 @@ class TokenException implements Exception {}
 
 class CreateMachotesException implements Exception {}
 
+class UpdateMachotesException implements Exception {}
+
 class FetchListaMachotesLogic extends ListaMachotesLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   Client client = Client();
@@ -42,27 +44,25 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
 
   @override
   Future<bool> updateMachotes(Map<String, dynamic> data) async {
-    if (data['descripcion'] != null && data['descripcion'] != "") {
-      return true; //int.parse(data['id_estatus_invitado']);
-    } else {
-      throw CreateMachotesException();
-    }
-    /*int idPlanner = await _sharedPreferences.getIdPlanner();
-      String token = await _sharedPreferences.getToken();
-      data['id_planner'] = idPlanner.toString();
-       final response = await client.post(Uri.http('localhost:3005', 'wedding/ESTATUS/updateMachotes'),
-        
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+    String token = await _sharedPreferences.getToken();
+    data['id_planner'] = idPlanner.toString();
+    data['id_usuario'] = idUsuario.toString();
+    final response = await client.post(
+        Uri.http('localhost:3005', 'wedding/MACHOTES/updateMachotes'),
         body: data,
-      headers: {HttpHeaders.authorizationHeader: token});
-      
-      if (response.statusCode == 201) {
-        return true;  
-      } else if(response.statusCode == 401){
-        
-        return null;
-      }else{
-        return false;
-      }*/
+        headers: {HttpHeaders.authorizationHeader: token});
+
+    if (response.statusCode == 201) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return true;
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw UpdateMachotesException();
+    }
   }
 
   @override
@@ -78,6 +78,8 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 201) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
       return 0;
     } else if (response.statusCode == 401) {
       throw TokenException();

@@ -15,8 +15,7 @@ class CreateMachotesEvent extends MachotesEvent {
 class UpdateMachotesEvent extends MachotesEvent {
   final Map<String, dynamic> data;
   final ItemModelMachotes machotes;
-  final int id;
 
-  UpdateMachotesEvent(this.data, this.machotes, this.id);
-  List <Object> get props => [data,machotes,id];
+  UpdateMachotesEvent(this.data, this.machotes);
+  List <Object> get props => [data,machotes];
 }

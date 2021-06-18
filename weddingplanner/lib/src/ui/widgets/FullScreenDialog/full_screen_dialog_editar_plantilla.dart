@@ -42,7 +42,7 @@ class _FullScreenDialogEditPlantillaState
           descripcionPlantilla: dataPlantilla[0],
           clavePlantilla: dataPlantilla[1],
           plantilla: dataPlantilla[2],
-
+          idMachote: dataPlantilla[3].toString(),
         ),
       ),
     );

@@ -48,17 +48,15 @@ class MachotesBloc extends Bloc<MachotesEvent, MachotesState> {
         yield ErrorCreateMachotesState("No se pudo insertar");
       }
     }else if(event is UpdateMachotesEvent){
-      bool response = await logic.updateMachotes(event.data);
-      ItemModelMachotes model = event.machotes;
-      if(response){
-        //model.results[event.id].addDescripcion = event.data['descripcion'];
-        for(int i = 0; i < model.results.length; i++){
-          if(model.results.elementAt(i).idMachote == event.id){
-            model.results.elementAt(i).addDescripcion = event.data['descripcion'];
-          }
+      try{
+        bool response = await logic.updateMachotes(event.data);
+
+        if(response){
+          add(FechtMachotesEvent());  
         }
+      }on UpdateMachotesException{
+        yield ErrorUpdateMachotesState("No de actualizo");
       }
-      yield MostrarMachotesState(model);
     }
   }
 }

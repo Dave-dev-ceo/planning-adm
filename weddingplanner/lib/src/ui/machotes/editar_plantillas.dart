@@ -11,27 +11,29 @@ class EditarPlantillas extends StatefulWidget {
   final String descripcionPlantilla;
   final String clavePlantilla;
   final String plantilla;
-  const EditarPlantillas({Key key, this.descripcionPlantilla,this.clavePlantilla, this.plantilla}) : super(key: key);
+  final String idMachote;
+  const EditarPlantillas({Key key, this.descripcionPlantilla,this.clavePlantilla, this.plantilla, this.idMachote}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => EditarPlantillas(),
       );
 
   @override
   _EditarPlantillasState createState() =>
-      _EditarPlantillasState(descripcionPlantilla, clavePlantilla,plantilla);
+      _EditarPlantillasState(descripcionPlantilla, clavePlantilla, plantilla, idMachote);
 }
 
 class _EditarPlantillasState extends State<EditarPlantillas> {
   final String descripcionPlantilla;
   final String clavePlantilla;
   final String plantilla;
+  final String idMachote;
   EtiquetasBloc etiquetasBloc;
   MachotesBloc machotesBloc;
   ItemModelEtiquetas itemModelET;
   ItemModelMachotes itemModelMC;
   HtmlEditorController controller;
 
-  _EditarPlantillasState(this.descripcionPlantilla, this.clavePlantilla, this.plantilla);
+  _EditarPlantillasState(this.descripcionPlantilla, this.clavePlantilla, this.plantilla, this.idMachote);
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
@@ -141,9 +143,9 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
         child: Icon(Icons.save),
         onPressed: () async {
           String txt = await controller.getText();
-          /*machotesBloc.add(CreateMachotesEvent(
-              {"descripcion": descripcionPlantilla, "machote": txt},
-              itemModelMC));*/
+          machotesBloc.add(UpdateMachotesEvent(
+              {"descripcion": descripcionPlantilla, "machote": txt, "id_machote" : idMachote},
+              itemModelMC));
           Navigator.of(context).pop();
           //await _showMyDialogGuardar(context);
 
