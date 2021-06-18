@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_etiquetas.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaEtiquetasLogic {
   Future<ItemModelEtiquetas> fetchEtiquetas();
@@ -18,6 +19,7 @@ class CreateEtiquetasException implements Exception {}
 
 class FetchListaEtiquetasLogic extends ListaEtiquetasLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  ConfigConection confiC = new ConfigConection();
   Client client = Client();
 
   @override
@@ -25,8 +27,7 @@ class FetchListaEtiquetasLogic extends ListaEtiquetasLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-        Uri.http(
-            'localhost:3005', 'wedding/ETIQUETAS/obtenerEtiquetas/$idPlanner'),
+       Uri.parse(confiC.url+confiC.puerto+'/wedding/ETIQUETAS/obtenerEtiquetas/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:weddingplanner/src/models/item_model_prueba.dart';
 import 'package:http/http.dart' show Client;
+import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaInvitadosLogic {
   Future<ItemModelPrueba> fetchPrueba();
@@ -10,12 +11,13 @@ abstract class ListaInvitadosLogic {
 class ListaInvitadosException implements Exception {}
 
 class FetchListaInvitadosLogic extends ListaInvitadosLogic {
+  ConfigConection confiC = new ConfigConection();
   Client client = Client();
 
   @override
   Future<ItemModelPrueba> fetchPrueba() async {
     final response = await client
-        .get(Uri.http('localhost:3005', 'wedding/PRUEBA/obtenerDatos/'));
+        .get(Uri.parse(confiC.url+confiC.puerto+'/wedding/PRUEBA/obtenerDatos/'));
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

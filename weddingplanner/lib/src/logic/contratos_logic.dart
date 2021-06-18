@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_contratos.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaContratosLogic {
   Future<ItemModelContratos> fetchContratos();
@@ -21,6 +22,7 @@ class CreateContratosException implements Exception {}
 
 class FetchListaContratosLogic extends ListaContratosLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  ConfigConection confiC = new ConfigConection();
   Client client = Client();
 
   @override
@@ -29,8 +31,7 @@ class FetchListaContratosLogic extends ListaContratosLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-        Uri.http('localhost:3005',
-            'wedding/Contratos/obtenerContratos/$idPlanner/$idEvento'),
+        Uri.parse(confiC.url+confiC.puerto+'/wedding/Contratos/obtenerContratos/$idPlanner/$idEvento'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
@@ -77,7 +78,7 @@ class FetchListaContratosLogic extends ListaContratosLogic {
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
-        Uri.http('localhost:3005', 'wedding/MACHOTES/createContratos'),
+        Uri.parse(confiC.url+confiC.puerto+'/wedding/MACHOTES/createContratos'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -98,7 +99,7 @@ class FetchListaContratosLogic extends ListaContratosLogic {
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
-        Uri.http('localhost:3005', 'wedding/PDF/createPDF'),
+        Uri.parse(confiC.url+confiC.puerto+'/wedding/PDF/createPDF'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 

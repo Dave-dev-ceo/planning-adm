@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaEventosLogic {
   Future<ItemModelEventos> fetchEventos();
@@ -16,6 +17,7 @@ class TokenException implements Exception {}
 
 class FetchListaEventosLogic extends ListaEventosLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  ConfigConection confiC = new ConfigConection();
   Client client = Client();
 
   @override
@@ -23,8 +25,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-        Uri.http(
-            'localhost:3005', '/wedding/EVENTOS/obtenerEventos/$idPlanner'),
+       Uri.parse(confiC.url+confiC.puerto+'/wedding/EVENTOS/obtenerEventos/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
@@ -47,7 +48,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     dataEvento['id_planner'] = idPlanner.toString();
     dataEvento['id_usuario'] = idUsuario.toString();
     final response = await client.post(
-        Uri.http('localhost:3005', 'wedding/EVENTOS/createEventos'),
+        Uri.parse(confiC.url+confiC.puerto+'/wedding/EVENTOS/createEventos'),
         body: dataEvento,
         headers: {HttpHeaders.authorizationHeader: token});
 

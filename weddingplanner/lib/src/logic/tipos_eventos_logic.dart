@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_tipo_evento.dart';
+import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaTiposEventosLogic {
   Future<ItemModelTipoEvento> fetchTiposEventos();
@@ -10,12 +11,13 @@ abstract class ListaTiposEventosLogic {
 class ListaTiposEventosException implements Exception {}
 
 class FetchListaTiposEventosLogic extends ListaTiposEventosLogic {
+  ConfigConection confiC = new ConfigConection();
   Client client = Client();
 
   @override
   Future<ItemModelTipoEvento> fetchTiposEventos() async {
     final response = await client
-        .get(Uri.http('localhost:3005', 'wedding/TIPOSEVENTOS/obtenerTiposEventos'));
+        .get(Uri.parse(confiC.url+confiC.puerto+'/wedding/TIPOSEVENTOS/obtenerTiposEventos'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);

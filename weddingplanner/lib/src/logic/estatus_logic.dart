@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaEstatusLogic {
   Future<ItemModelEstatusInvitado> fetchEstatus();
@@ -18,6 +19,7 @@ class CreateEstatusException implements Exception {}
 
 class FetchListaEstatusLogic extends ListaEstatusLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  ConfigConection confiC = new ConfigConection();
   Client client = Client();
 
   @override
@@ -25,7 +27,7 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-        Uri.http('localhost:3005', 'wedding/ESTATUS/obtenerEstatus/$idPlanner'),
+        Uri.parse(confiC.url+confiC.puerto+'/wedding/ESTATUS/obtenerEstatus/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
