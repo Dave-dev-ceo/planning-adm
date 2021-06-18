@@ -23,7 +23,7 @@ class Machotes {
   int _idMachote;
 
   Machotes(datos){
-    _clave = datos['tipo_machote'];
+    _clave = datos['clave_plantilla'];
     _descripcion = datos['descripcion'];
     _idMachote = datos['id_machote'];
     _machote = datos['machote'];

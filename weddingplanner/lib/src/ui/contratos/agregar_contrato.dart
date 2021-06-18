@@ -98,11 +98,14 @@ class _AgregarContratoState extends State<AgregarContrato> {
         children: <Widget>[
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-            title: Expanded(
-                child: Text(
+            title: Container(alignment: Alignment.topLeft,
+                height: 25,
+                width: double.infinity,
+                child: FittedBox(
+                  child: Text(
               itemModelMC.results.elementAt(element).descripcion,
               style: TextStyle(fontSize: 20),
-            )),
+            ))),
             subtitle: Container(
                 height: 80,
                 //color: Colors.purple,
@@ -192,7 +195,10 @@ class _AgregarContratoState extends State<AgregarContrato> {
             Navigator.pop(_ingresando);
             _createPDF(state.contratos);  
           } else {
-            Navigator.pop(_ingresando);
+            if(_ingresando != null){
+              Navigator.pop(_ingresando);
+            }
+            
           }
           },
           child: BlocBuilder<MachotesBloc, MachotesState>(
