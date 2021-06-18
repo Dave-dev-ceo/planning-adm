@@ -17,11 +17,13 @@ class ItemModelMachotes {
 }
 
 class Machotes {
+  String _clave;
   String _descripcion;
   String _machote;
   int _idMachote;
 
   Machotes(datos){
+    _clave = datos['tipo_machote'];
     _descripcion = datos['descripcion'];
     _idMachote = datos['id_machote'];
     _machote = datos['machote'];
@@ -32,6 +34,7 @@ class Machotes {
   set addMachote(String data){
     _machote = data;
   }
+  String get clave => _clave;
   String get descripcion =>_descripcion;
   String get machote =>_machote;
   int get idMachote =>_idMachote;

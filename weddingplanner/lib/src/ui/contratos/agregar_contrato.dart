@@ -140,15 +140,43 @@ class _AgregarContratoState extends State<AgregarContrato> {
   }
 
   _constructorLista(ItemModelMachotes modelMC) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-      child: ListView(
-        scrollDirection: Axis.vertical,
-        children: <Widget>[
-          for (var i = 0; i < modelMC.results.length; i++)
-            _contectCont(modelMC, i)
-        ],
-      ),
+    return IndexedStack(
+          index: _selectedIndex,
+          children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'CT')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'RC')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'PG')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+          ]
     );
   }
 
@@ -186,6 +214,31 @@ class _AgregarContratoState extends State<AgregarContrato> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.gavel),
+            label: 'Contratos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt),
+            label: 'Recibos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.request_page),
+            label: 'Pagos',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  int _selectedIndex = 0;
 }

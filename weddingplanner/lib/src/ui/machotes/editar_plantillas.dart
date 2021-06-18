@@ -144,7 +144,7 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
         onPressed: () async {
           String txt = await controller.getText();
           machotesBloc.add(UpdateMachotesEvent(
-              {"descripcion": descripcionPlantilla, "machote": txt, "id_machote" : idMachote},
+              {"descripcion": descripcionPlantilla, "machote": txt, "clave":clavePlantilla,"id_machote" : idMachote},
               itemModelMC));
           Navigator.of(context).pop();
           //await _showMyDialogGuardar(context);

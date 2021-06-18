@@ -39,7 +39,7 @@ class _MachotesState extends State<Machotes> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
-          .pushNamed('/editPlantilla', arguments: [itemMC.results.elementAt(element).descripcion, _clave,itemMC.results.elementAt(element).machote, itemMC.results.elementAt(element).idMachote.toString()]);
+          .pushNamed('/editPlantilla', arguments: [itemMC.results.elementAt(element).descripcion, itemMC.results.elementAt(element).clave,itemMC.results.elementAt(element).machote, itemMC.results.elementAt(element).idMachote.toString()]);
         //print(itemModelMC.results.elementAt(element).machote);
       },
       child: Card(
@@ -50,8 +50,14 @@ class _MachotesState extends State<Machotes> {
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text(itemMC.results.elementAt(element).descripcion,
-                style: TextStyle(fontSize: 20),
+              title: Container(alignment: Alignment.topLeft,
+                height: 25,
+                width: double.infinity,
+                child: FittedBox(
+                                child: Text(itemMC.results.elementAt(element).descripcion,
+                    style: TextStyle(fontSize: 20),textAlign: TextAlign.left,
+                  ),
+                ),
               ),
               subtitle: Container(
                   height: 55,
@@ -67,15 +73,43 @@ class _MachotesState extends State<Machotes> {
   }
 
   _constructorLista(ItemModelMachotes modelMC) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-      child: ListView(
-        scrollDirection: Axis.vertical,
-        children: <Widget>[
-          for (var i = 0; i < modelMC.results.length; i++)
-            _contectCont(modelMC, i)
-        ],
-      ),
+    return IndexedStack(
+          index: _selectedIndex,
+          children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'CT')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'RC')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'PG')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+          ]
     );
   }
 
@@ -194,6 +228,31 @@ class _MachotesState extends State<Machotes> {
           await _showMyDialogGuardar();
         },
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.gavel),
+            label: 'Contratos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt),
+            label: 'Recibos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.request_page),
+            label: 'Pagos',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  int _selectedIndex = 0;
 }
