@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weddingplanner/src/ui/LandingPage/landing.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/contratos/view_contrato_pdf.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
@@ -23,6 +24,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
+        //return MaterialPageRoute(builder: (context) => Landing());
         //return MaterialPageRoute(builder: (context) => Contratos());
         //return MaterialPageRoute(builder: (context) => LoginT());
         //return MaterialPageRoute(builder: (context) => HomeAdmin());
@@ -46,6 +48,9 @@ class RouteGenerator {
       case '/addContrato':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddContrato());
+      case '/viewContrato':
+        return MaterialPageRoute(
+            builder: (context) => ViewPdfContrato(htmlPdf: args,));
       case '/addMachote':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddMachote(

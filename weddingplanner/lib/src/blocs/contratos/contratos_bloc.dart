@@ -68,6 +68,16 @@ class ContratosBloc extends Bloc<ContratosEvent, ContratosState> {
       } on TokenException {
         yield ErrorTokenContratosState("Sesión caducada");
       }
+    } else if (event is FechtContratosPdfViewEvent) {
+      yield LoadingContratosPdfViewState();
+      try {
+        String contrato = await logic.fetchContratosPdf(event.data);
+        yield MostrarContratosPdfViewState(contrato);
+      } on ListaContratosPdfException {
+        yield ErrorListaContratosPdfState("Error contrato");
+      } on TokenException {
+        yield ErrorTokenContratosState("Sesión caducada");
+      }
     }
   }
 }

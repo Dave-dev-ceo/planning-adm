@@ -41,6 +41,8 @@ dependencies:
   shared_preferences: ^2.0.5
   native_pdf_view: ^4.0.1
   syncfusion_flutter_pdf: ^19.1.67-beta
+  flutter_staggered_grid_view: ^0.4.0
+  transparent_image: ^2.0.0
   #fab_circular_menu: ^1.0.2
   flutter_speed_dial: ^3.0.5
   #zefyrka: ^1.0.3+2

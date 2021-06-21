@@ -9,10 +9,20 @@ class LoadingContratosState extends ContratosState {}
 
 class LoadingContratosPdfState extends ContratosState {}
 
+class LoadingContratosPdfViewState extends ContratosState {}
+
 class MostrarContratosPdfState extends ContratosState {
   final String contratos;
 
   MostrarContratosPdfState(this.contratos);
+
+  String get props => contratos;
+}
+
+class MostrarContratosPdfViewState extends ContratosState {
+  final String contratos;
+
+  MostrarContratosPdfViewState(this.contratos);
 
   String get props => contratos;
 }

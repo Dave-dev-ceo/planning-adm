@@ -5,6 +5,14 @@ abstract class ContratosEvent {}
 
 class FechtContratosEvent extends ContratosEvent {}
 
+class FechtContratosPdfViewEvent extends ContratosEvent {
+  final Map<String, dynamic> data;
+
+  FechtContratosPdfViewEvent(this.data);
+
+  List<Object> get props => [data];
+}
+
 class FechtContratosPdfEvent extends ContratosEvent {
   final Map<String, dynamic> data;
 

@@ -126,7 +126,10 @@ class _AgregarContratoState extends State<AgregarContrato> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                nombreDocumento = itemMC.results.elementAt(element).descripcion;
+                                contratosBloc.add(FechtContratosPdfViewEvent({"machote": itemMC.results.elementAt(element).machote}));
+                              },
                               icon: Icon(Icons.remove_red_eye_rounded),
                               label: Text('Ver')),
                         ),
@@ -194,7 +197,13 @@ class _AgregarContratoState extends State<AgregarContrato> {
           } else if (state is MostrarContratosPdfState) {
             Navigator.pop(_ingresando);
             _createPDF(state.contratos);  
-          } else {
+          }else if(state is LoadingContratosPdfViewState){
+            return _dialogMSG('Espere un momento');
+          } else if(state is MostrarContratosPdfViewState){
+            Navigator.pop(_ingresando);
+            Navigator.pushNamed(context, '/viewContrato',arguments: state.contratos);
+          }
+          else {
             if(_ingresando != null){
               Navigator.pop(_ingresando);
             }
