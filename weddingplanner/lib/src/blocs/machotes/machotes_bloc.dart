@@ -16,45 +16,34 @@ class MachotesBloc extends Bloc<MachotesEvent, MachotesState> {
   Stream<MachotesState> mapEventToState(
     MachotesEvent event,
   ) async* {
-    if(event is FechtMachotesEvent){
+    if (event is FechtMachotesEvent) {
       yield LoadingMachotesState();
 
       try {
-        
         ItemModelMachotes machotes = await logic.fetchMachotes();
         yield MostrarMachotesState(machotes);
-
-      }on ListaMachotesException{
-        
+      } on ListaMachotesException {
         yield ErrorListaMachotesState("Sin machotes");
-      
-      }on TokenException{
+      } on TokenException {
         yield ErrorTokenMachotesState("Sesión caducada");
       }
-    }else if(event is CreateMachotesEvent){
+    } else if (event is CreateMachotesEvent) {
       try {
         int idMachotes = await logic.createMachotes(event.data);
-        /*ItemModelMachotes model = event.machotes;
-        String dato = event.data['descripcion'];
-        String tipo = event.data['machote'];
-        Map<String,dynamic> lista = {'id_machote':idMachotes,'descripcion':dato, 'machote':tipo};
-        Machotes est = new Machotes(lista);
-        model.results.add(est);*/
-        //yield CreateMachotesState(machotes);
-        //yield MostrarMachotesState(model);
-        add(FechtMachotesEvent());
-        
-      }on CreateMachotesException{
+        if (idMachotes == 0) {
+          add(FechtMachotesEvent());
+        }
+      } on CreateMachotesException {
         yield ErrorCreateMachotesState("No se pudo insertar");
       }
-    }else if(event is UpdateMachotesEvent){
-      try{
+    } else if (event is UpdateMachotesEvent) {
+      try {
         bool response = await logic.updateMachotes(event.data);
 
-        if(response){
-          add(FechtMachotesEvent());  
+        if (response) {
+          add(FechtMachotesEvent());
         }
-      }on UpdateMachotesException{
+      } on UpdateMachotesException {
         yield ErrorUpdateMachotesState("No de actualizo");
       }
     }

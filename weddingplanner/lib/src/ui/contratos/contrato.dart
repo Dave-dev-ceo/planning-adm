@@ -27,7 +27,7 @@ class _ContratosState extends State<Contratos> {
     super.initState();
   }
 
-  _contectCont(String etiqueta) {
+  /*_contectCont(String etiqueta) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: EdgeInsets.all(20),
@@ -49,9 +49,9 @@ class _ContratosState extends State<Contratos> {
         ],
       ),
     );
-  }
+  }*/
 
-  _constructorLista(ItemModelContratos modelMC) {
+  /*_constructorLista(ItemModelContratos modelMC) {
     return Container(
       margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
       child: ListView(
@@ -62,7 +62,7 @@ class _ContratosState extends State<Contratos> {
         ],
       ),
     );
-  }
+  }*/
 
   String validateDescripcion(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
