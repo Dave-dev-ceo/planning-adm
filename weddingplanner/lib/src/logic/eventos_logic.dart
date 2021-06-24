@@ -7,10 +7,11 @@ import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaEventosLogic {
   Future<ItemModelEventos> fetchEventos();
-  Future<Map<String,dynamic>> createEventos(Map<String,dynamic> dataEvento);
+  Future<int> createEventos(Map<String, dynamic> dataEvento);
 }
 
 class ListaEventosException implements Exception {}
+
 class CreateEventoException implements Exception {}
 
 class TokenException implements Exception {}
@@ -25,7 +26,9 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-       Uri.parse(confiC.url+confiC.puerto+'/wedding/EVENTOS/obtenerEventos/$idPlanner'),
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/EVENTOS/obtenerEventos/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
@@ -41,20 +44,22 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   }
 
   @override
-  Future<Map<String, dynamic>> createEventos(Map<String,dynamic> dataEvento) async{
+  Future<int> createEventos(Map<String, dynamic> dataEvento) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
     dataEvento['id_planner'] = idPlanner.toString();
     dataEvento['id_usuario'] = idUsuario.toString();
     final response = await client.post(
-        Uri.parse(confiC.url+confiC.puerto+'/wedding/EVENTOS/createEventos'),
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/EVENTOS/createEventos'),
         body: dataEvento,
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
-      return responseEvento;
+      await _sharedPreferences.setToken(responseEvento['token']);
+      return 0;
     } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
