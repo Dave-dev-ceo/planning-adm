@@ -27,7 +27,6 @@ class _LandingState extends State<Landing> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-<<<<<<< HEAD
         appBar: AppBar(toolbarHeight: 120,
           bottom: TabBar( onTap: (int index) {
             setState(
@@ -41,28 +40,10 @@ class _LandingState extends State<Landing> {
             tabs: [
               Tab(
                 
-=======
-        appBar: AppBar(
-          toolbarHeight: 120,
-          bottom: TabBar(
-            onTap: (int index) {
-              setState(
-                () {
-                  _pageIndex = index;
-                },
-              );
-            },
-            indicatorColor: Colors.white,
-            isScrollable: true,
-            labelPadding: EdgeInsets.fromLTRB(32, 0, 32, 0),
-            tabs: [
-              Tab(
->>>>>>> 8fd014b94775fb78a8c3d67d53ef05ac250b1ff6
                 child: Text(
                   'Requisitos para ceremonias',
                   style: TextStyle(fontSize: 17),
                 ),
-<<<<<<< HEAD
               ),
               Tab(
                 //text: 'Home',
@@ -134,74 +115,6 @@ class _LandingState extends State<Landing> {
           ),
 
         ),
-=======
-              ),
-              Tab(
-                //text: 'Home',
-                child: Text(
-                  'Tips',
-                  style: TextStyle(fontSize: 17),
-                ),
-              ),
-              Tab(
-                //text: 'Timings',
-                child: Text(
-                  'Tradiciones',
-                  style: TextStyle(fontSize: 17),
-                ),
-              ),
-            ],
-          ),
-          leading: Image.asset(
-            'assets/logo.png',
-            height: 180.0,
-            width: 450,
-          ),
-          leadingWidth: 200,
-          automaticallyImplyLeading: true,
-        ),
-        body: IndexedStack(index: _pageIndex, children: [
-          Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 350,
-                            width: 350,
-                            child: FittedBox(
-                              child: Image.network(
-                                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-                              child: Title(
-                                  color: Colors.black,
-                                  child: Text(
-                                    'Titulo',
-                                    style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
-                                  ))),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              child: Text(
-                                'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen.',
-                                textAlign: TextAlign.justify,
-                              ))
-                        ],
-                      ),
-                    );
-                  })),
-        ]),
->>>>>>> 8fd014b94775fb78a8c3d67d53ef05ac250b1ff6
       ),
     );
   }
