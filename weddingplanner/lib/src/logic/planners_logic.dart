@@ -18,8 +18,8 @@ class FetchListaPlannersLogic extends ListaPlannersLogic {
 
   @override
   Future<ItemModelPlanners> fetchPrueba() async {
-    final response = await client
-        .get(Uri.parse(confiC.url+confiC.puerto+'/wedding/PLANNER/obtenerPlanners/'));
+    final response = await client.get(Uri.parse(
+        confiC.url + confiC.puerto + '/wedding/PLANNER/obtenerPlanners/'));
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -33,7 +33,6 @@ class FetchListaPlannersLogic extends ListaPlannersLogic {
 
   @override
   Future<int> createPlanners(Map<String, dynamic> json) {
-    // TODO: implement createPlanners
     throw UnimplementedError();
   }
 }

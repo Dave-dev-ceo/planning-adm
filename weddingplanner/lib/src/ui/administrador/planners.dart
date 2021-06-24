@@ -11,14 +11,14 @@ class Planners extends StatefulWidget {
 class _PlannersState extends State<Planners> {
   PlannersBloc plannerBloc;
   ItemModelPlanners itemModelPlanners;
-  final _formKey = GlobalKey<FormState>();
+
   @override
-  void initState(){
+  void initState() {
     plannerBloc = BlocProvider.of<PlannersBloc>(context);
     plannerBloc.add(FechtPlannersEvent());
     super.initState();
   }
-  void _showError(BuildContext context, String message) {
+  /*void _showError(BuildContext context, String message) {
     //Navigator.pop(_ingresando);
     final snackBar = SnackBar(
       content: Container(
@@ -30,7 +30,7 @@ class _PlannersState extends State<Planners> {
       backgroundColor: Colors.red,  
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  }*/
 
   Widget buildList(ItemModelPlanners snapshot) {
     return ListView(
@@ -69,38 +69,43 @@ class _PlannersState extends State<Planners> {
           );*/
   }
   formItemsDesign(icon, item) {
-   return Padding(
-     padding: EdgeInsets.symmetric(vertical: 7),
-     child: Card(child: ListTile(leading: Icon(icon), title: item)),
-   );
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 7),
+      child: Card(child: ListTile(leading: Icon(icon), title: item)),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
         child: BlocBuilder<PlannersBloc, PlannersState>(
-            builder: (context, state) {
-              if(state is PlannersInitialState){
-                return Center(child: CircularProgressIndicator());
-              }else if(state is LoadingPlannersState) {
-                return Center(child: CircularProgressIndicator());
-              }else if (state is MostrarPlannersState){
-                itemModelPlanners = state.planners;
-                return buildList(state.planners);
-              }else if (state is ErrorListaPlannersState){
-                return Center(child: Text(state.message),);
-                //_showError(context, state.message);
-              }else{
-                return buildList(itemModelPlanners);
-              }
-              
-            },
-          ),
+          builder: (context, state) {
+            if (state is PlannersInitialState) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is LoadingPlannersState) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is MostrarPlannersState) {
+              itemModelPlanners = state.planners;
+              return buildList(state.planners);
+            } else if (state is ErrorListaPlannersState) {
+              return Center(
+                child: Text(state.message),
+              );
+              //_showError(context, state.message);
+            } else {
+              return buildList(itemModelPlanners);
+            }
+          },
         ),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add),onPressed: (){
-        Navigator.of(context).pushNamed('/addPlanners');
-      },),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/addPlanners');
+        },
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
@@ -124,15 +129,15 @@ class _Row {
 }
 
 class _DataSource extends DataTableSource {
-  BuildContext _cont;
+  //BuildContext _cont;
 
   _DataSource(context, BuildContext cont) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(context[i].idPlanner, context[i].empresa, context[i].correo,
-          context[i].telefono, context[i].pais));
+      _rows.add(_Row(context[i].idPlanner, context[i].empresa,
+          context[i].correo, context[i].telefono, context[i].pais));
     }
-    _cont = cont;
+    //_cont = cont;
   }
 
   List<_Row> _rows;

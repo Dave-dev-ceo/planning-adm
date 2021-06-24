@@ -69,7 +69,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     );
   }
 
-  _msgSnackBar(String error, Color color) {
+  /*_msgSnackBar(String error, Color color) {
     final snackBar = SnackBar(
       content: Container(
         height: 30,
@@ -80,7 +80,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
       backgroundColor: color,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  }*/
 
   Future<Map<String, dynamic>> _saveEstatus(BuildContext context) async {
     /*if (estatusCtrl.text.trim() == "" || estatusCtrl.text.trim() == null) {
@@ -406,7 +406,7 @@ class _DataSource extends DataTableSource {
     }
   }
 
-  _msgSnackBar(String error, Color color) {
+  /*_msgSnackBar(String error, Color color) {
     final snackBar = SnackBar(
       content: Container(
         height: 30,
@@ -418,7 +418,7 @@ class _DataSource extends DataTableSource {
       backgroundColor: color,
     );
     ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
-  }
+  }*/
 
   List<_Row> _rows;
 

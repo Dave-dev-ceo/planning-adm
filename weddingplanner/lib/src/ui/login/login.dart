@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/home/home_admin.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
@@ -92,11 +90,11 @@ class _LoginState extends State<Login> {
                   borderRadius: BorderRadius.all(Radius.circular(32.0))),
             );
           });
-      Map<String, String> json = {
+      /*Map<String, String> json = {
         "nombre_completo": nombreRCtrl.text,
         "correo": emailRCtrl.text,
         "contrasena": passwordRCtrl.text
-      };
+      };*/
 //      int response = await api.registroPlanner(json);
       int response = 0;
       if (response == 0) {
@@ -184,47 +182,45 @@ class _LoginState extends State<Login> {
     }
   }
 
-  _dialogMSG(String title, String msg, String type){
+  _dialogMSG(String title, String msg, String type) {
     Widget child;
-    if (type == "msg"){
+    if (type == "msg") {
       child = Text(msg);
-    }else if (type == "log"){
+    } else if (type == "log") {
       child = AnimatedOpacity(
-        duration: Duration(milliseconds: 500),
-        opacity: _visible ? 1.0 : 0.0,
-        child: Image.asset(
-          'assets/logo.png',
-          height: 100.0,
-          width: 150.0,
-          color: Colors.purple,
-        )
-      );
+          duration: Duration(milliseconds: 500),
+          opacity: _visible ? 1.0 : 0.0,
+          child: Image.asset(
+            'assets/logo.png',
+            height: 100.0,
+            width: 150.0,
+            color: Colors.purple,
+          ));
     }
     showDialog(
-      context: context,
-      //barrierDismissible: false,
-      builder: (BuildContext context) {
-        _ingresando = context;
-        return AlertDialog(
-          title: Text(
-            title,
-            textAlign: TextAlign.center,
-          ),
-          content: child,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
-          actions: type!="log"?
-            <Widget>[
-              TextButton(
-                child: Text('Cerrar'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+          _ingresando = context;
+          return AlertDialog(
+              title: Text(
+                title,
+                textAlign: TextAlign.center,
               ),
-            ]
-            : null
-        );
-      });
+              content: child,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
+              actions: type != "log"
+                  ? <Widget>[
+                      TextButton(
+                        child: Text('Cerrar'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ]
+                  : null);
+        });
   }
 
   _registrarDataUser() {
@@ -437,15 +433,16 @@ class _LoginState extends State<Login> {
   _authDataUser(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if(state is ErrorLogginState){
+        if (state is ErrorLogginState) {
           Navigator.pop(_ingresando);
-          _dialogMSG('Datos invalidos', 'Correo o contraseña incorrectos','msg');
-        }else if(state is LogginState){
-          _dialogMSG('Iniciando sesión', '','log');
-        }else if(state is MsgLogginState){
+          _dialogMSG(
+              'Datos invalidos', 'Correo o contraseña incorrectos', 'msg');
+        } else if (state is LogginState) {
+          _dialogMSG('Iniciando sesión', '', 'log');
+        } else if (state is MsgLogginState) {
           //Navigator.pop(_ingresando);
-          _dialogMSG('Datos invalidos', state.message,'msg');
-        }else if(state is LoggedState){
+          _dialogMSG('Datos invalidos', state.message, 'msg');
+        } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
           Navigator.pop(_ingresando);
           Navigator.pushNamed(context, '/home');
@@ -502,7 +499,8 @@ class _LoginState extends State<Login> {
                     },
                   ),
                 ),
-                onPressed: () => loginBloc.add(LogginEvent(emailCtrl.text.trim(),passwordCtrl.text.trim())), 
+                onPressed: () => loginBloc.add(LogginEvent(
+                    emailCtrl.text.trim(), passwordCtrl.text.trim())),
                 child: Text(
                   'Iniciar Sesión',
                   style: TextStyle(fontSize: 17),
@@ -545,24 +543,28 @@ class _LoginState extends State<Login> {
           //    Expanded(
           //                          child:
           TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      overlayColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered))
-                                return Colors.purple.withOpacity(0.04);
-                              if (states.contains(MaterialState.focused) ||
-                                  states.contains(MaterialState.pressed))
-                                return Colors.purple.withOpacity(0.12);
-                              return null; // Defer to the widget's default.
-                        },
-                      ),
-                    ),
-                    onPressed: () {setState(() {
-                      _index = 1;
-                    }); },
-                    child: Text('Registro',style: TextStyle(fontSize: 12),)
-                  ),
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.hovered))
+                      return Colors.purple.withOpacity(0.04);
+                    if (states.contains(MaterialState.focused) ||
+                        states.contains(MaterialState.pressed))
+                      return Colors.purple.withOpacity(0.12);
+                    return null; // Defer to the widget's default.
+                  },
+                ),
+              ),
+              onPressed: () {
+                setState(() {
+                  _index = 1;
+                });
+              },
+              child: Text(
+                'Registro',
+                style: TextStyle(fontSize: 12),
+              )),
           //),
           //),
           //],
@@ -599,12 +601,11 @@ class _LoginState extends State<Login> {
                     width: 370,
                     height: 600,
                     child: Center(
-                      child:
-                          IndexedStack(
-                          index: _index,
-                          children: <Widget>[
+                      child: IndexedStack(
+                        index: _index,
+                        children: <Widget>[
                           _authDataUser(context),
-                      _registrarDataUser()
+                          _registrarDataUser()
                         ],
                       ),
                     ),

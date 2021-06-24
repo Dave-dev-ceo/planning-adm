@@ -31,8 +31,11 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
     } else if (event is CreateEventosEvent) {
       try {
         yield CreateEventosState();
-        Map<String, dynamic> jsonMap = await logic.createEventos(event.data);
-        add(FechtEventosEvent());
+        int data = await logic.createEventos(event.data);
+        if (data == 0) {
+          add(FechtEventosEvent());
+        }
+
         yield CreateEventosOkState();
       } on CreateEventoException {
         yield ErrorCreateEventosState("No se pudo insertar");

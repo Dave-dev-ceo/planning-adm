@@ -9,7 +9,7 @@ import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class ListaEventosLogic {
   Future<ItemModelEventos> fetchEventos();
-  Future<Map<String, dynamic>> createEventos(Map<String, dynamic> dataEvento);
+  Future<int> createEventos(Map<String, dynamic> dataEvento);
   Future<ItemModelEvento> fetchEventoPorId(String id_evento);
 }
 
@@ -82,8 +82,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   }
 
   @override
-  Future<Map<String, dynamic>> createEventos(
-      Map<String, dynamic> dataEvento) async {
+  Future<int> createEventos(Map<String, dynamic> dataEvento) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
@@ -97,7 +96,8 @@ class FetchListaEventosLogic extends ListaEventosLogic {
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
-      return responseEvento;
+      await _sharedPreferences.setToken(responseEvento['token']);
+      return 0;
     } else if (response.statusCode == 401) {
       throw TokenException();
     } else {

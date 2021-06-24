@@ -17,7 +17,7 @@ class BackendLoginLogic implements LoginLogic {
   @override
   Future<int> login(String correo, String password) async {
     final response = await client.post(
-        Uri.parse(confiC.url+confiC.puerto+"/wedding/ACCESO/loginPlanner"),
+        Uri.parse(confiC.url + confiC.puerto + "/wedding/ACCESO/loginPlanner"),
         //Uri.http('localhost:3005', 'wedding/ACCESO/loginPlanner'),
         body: {"correo": correo, "contrasena": password});
     if (response.statusCode == 200) {
@@ -27,7 +27,12 @@ class BackendLoginLogic implements LoginLogic {
       await _sharedPreferences.setLogic(data['usuario']['admin']);
       await _sharedPreferences.setToken(data['token']);
       await _sharedPreferences.setSesion(true);
-      List<String> dataJsonWPlanner = [data['usuario']['id_planner'].toString(),data['usuario']['id_usuario'].toString(),data['usuario']['admin'].toString(),data['token']];
+      List<String> dataJsonWPlanner = [
+        data['usuario']['id_planner'].toString(),
+        data['usuario']['id_usuario'].toString(),
+        data['usuario']['admin'].toString(),
+        data['token']
+      ];
       await _sharedPreferences.setJsonData(dataJsonWPlanner);
       return 0;
     } else if (response.statusCode == 403) {
@@ -39,7 +44,6 @@ class BackendLoginLogic implements LoginLogic {
 
   @override
   Future<String> logout() {
-    // TODO: implement logout
     throw UnimplementedError();
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_evento.dart';
 
-
 class ReporteEvento extends StatefulWidget {
   final String dataView;
   final int dataId;
@@ -15,42 +14,40 @@ class ReporteEvento extends StatefulWidget {
 }
 
 class _ReporteEventoState extends State<ReporteEvento> {
-  
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   final String dataView;
   final int dataId;
   bool dialVisible = true;
-  
 
-  _ReporteEventoState(this.dataView, this.dataId);  
+  _ReporteEventoState(this.dataView, this.dataId);
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
-  
-  listaReporte(BuildContext cont){
-    Map<String, String> data = {"reporte" : dataView, "id":dataId.toString()};
-    blocReporte.fetchAllReportes(cont,data);
+
+  listaReporte(BuildContext cont) {
+    Map<String, String> data = {"reporte": dataView, "id": dataId.toString()};
+    blocReporte.fetchAllReportes(cont, data);
     return StreamBuilder(
-            stream: blocReporte.allReportes,
-            builder: (context, AsyncSnapshot<ItemModelReporte> snapshot) {
-              if (snapshot.hasData) {
-                return buildList(snapshot);
-              } else if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
-              return Center(child: CircularProgressIndicator());
-            },
-          );
+      stream: blocReporte.allReportes,
+      builder: (context, AsyncSnapshot<ItemModelReporte> snapshot) {
+        if (snapshot.hasData) {
+          return buildList(snapshot);
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        return Center(child: CircularProgressIndicator());
+      },
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     //double pHz = MediaQuery.of(context).size.width;
     return Scaffold(
-          body: Container(
+      body: Container(
         width: double.infinity,
         child: Center(
-          child:
-            listaReporte(context),
+          child: listaReporte(context),
         ),
       ),
       /*floatingActionButton: FloatingActionButton(
@@ -63,28 +60,27 @@ class _ReporteEventoState extends State<ReporteEvento> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,*/
     );
   }
+
   Widget buildList(AsyncSnapshot<ItemModelReporte> snapshot) {
     return ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          PaginatedDataTable(
-            header: Text('Invitados'),
-            rowsPerPage: 8,
-            
-            showCheckboxColumn: false,
-            columns: [
-              DataColumn(label: Text('Nombre', style:estiloTxt)),
-              DataColumn(label: Text('Telefono', style:estiloTxt)),
-              DataColumn(label: Text('Correo', style:estiloTxt)),
-            ],
-            
-            source: _DataSource(snapshot.data.results,context),
-          ),
-        ],
-      );
+      padding: const EdgeInsets.all(16),
+      children: [
+        PaginatedDataTable(
+          header: Text('Invitados'),
+          rowsPerPage: 8,
+          showCheckboxColumn: false,
+          columns: [
+            DataColumn(label: Text('Nombre', style: estiloTxt)),
+            DataColumn(label: Text('Telefono', style: estiloTxt)),
+            DataColumn(label: Text('Correo', style: estiloTxt)),
+          ],
+          source: _DataSource(snapshot.data.results, context),
+        ),
+      ],
+    );
   }
-  
 }
+
 class _Row {
   _Row(
     this.valueId,
@@ -101,21 +97,20 @@ class _Row {
 }
 
 class _DataSource extends DataTableSource {
-  BuildContext _cont;
-  _DataSource(context,BuildContext cont) {
+  //BuildContext _cont;
+  _DataSource(context, BuildContext cont) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(context[i].idInvitado,context[i].nombre, context[i].telefono, context[i].email));  
+      _rows.add(_Row(context[i].idInvitado, context[i].nombre,
+          context[i].telefono, context[i].email));
     }
-    _cont=cont;
+    // _cont=cont;
   }
-  
-  
 
   List<_Row> _rows;
 
   int _selectedCount = 0;
-  
+
   @override
   DataRow getRow(int index) {
     assert(index >= 0);

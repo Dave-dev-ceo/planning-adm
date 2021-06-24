@@ -480,7 +480,7 @@ class _DataSource extends DataTableSource {
     }
   }
 
-  _listaGrupos(int idInvitado) {
+  /*_listaGrupos(int idInvitado) {
     ///bloc.dispose();
     blocGrupos.fetchAllGrupos(_cont);
     return StreamBuilder(
@@ -499,9 +499,9 @@ class _DataSource extends DataTableSource {
         return Center(child: CircularProgressIndicator());
       },
     );
-  }
+  }*/
 
-  _dataGrupo(ItemModelGrupos grupos) {
+  /*_dataGrupo(ItemModelGrupos grupos) {
     print(grupos.results.length);
     /*List<Text> lT;
     for(int i = 0; i < grupos.results.length; i++){
@@ -520,7 +520,7 @@ class _DataSource extends DataTableSource {
               child: Center(
                   child: Text(grupos.results.elementAt(index).nombreGrupo)));
         });
-  }
+  }*/
 
   _listaGruposEvento(int idInvitado) async {
     _grupos = await api.fetchGruposList(_cont);
@@ -698,7 +698,7 @@ class _DataSource extends DataTableSource {
     );
   }
 
-  _viewShowDialogEstatus(int idInvitado) {
+  /* _viewShowDialogEstatus(int idInvitado) {
     showDialog(
         context: _cont,
         builder: (BuildContext context) => CupertinoAlertDialog(
@@ -779,7 +779,7 @@ class _DataSource extends DataTableSource {
                   ),
                 ],
               ));*/
-  }
+  }*/
 
   List<_Row> _rows;
 

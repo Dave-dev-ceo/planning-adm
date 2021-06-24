@@ -197,35 +197,35 @@ class _AgregarPlannersState extends State<AgregarPlanners> {
               maxLength: 10,
               validator: validateTelefono,
             )),
-            Container(
-              child: BlocBuilder<PaisesBloc, PaisesState>(
-                builder: (context, state) {
-                  if(state is PaisesInitialState){
-                        return Center(child: CircularProgressIndicator());
-                      }else if(state is LoadingPaisesState) {
-                        return Center(child: CircularProgressIndicator());
-                      }else if (state is MostrarPaisesState){
-                        itemModelPaises = state.paises;
-                        return formItemsDesign(
-                          Icons.phone,
-                          Row(
-                            children: <Widget>[
-                              Text('País'),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              _dropDownPaises(state.paises),
-                            ],
-                          ));
-                      }else if (state is ErrorListaPaisesState){
-                        return Center(child: Text(state.message),);
-                        //_showError(context, state.message);
-                      }else{
-                        return Center(child: CircularProgressIndicator());
-                      }
-                },
-              )
-    ),
+        Container(child: BlocBuilder<PaisesBloc, PaisesState>(
+          builder: (context, state) {
+            if (state is PaisesInitialState) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is LoadingPaisesState) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is MostrarPaisesState) {
+              itemModelPaises = state.paises;
+              return formItemsDesign(
+                  Icons.phone,
+                  Row(
+                    children: <Widget>[
+                      Text('País'),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      _dropDownPaises(state.paises),
+                    ],
+                  ));
+            } else if (state is ErrorListaPaisesState) {
+              return Center(
+                child: Text(state.message),
+              );
+              //_showError(context, state.message);
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        )),
         GestureDetector(
             onTap: () {
               save();
@@ -274,11 +274,11 @@ class _AgregarPlannersState extends State<AgregarPlanners> {
 
   save() async {
     if (keyForm.currentState.validate()) {
-      Map<String, String> json = {
+      /*Map<String, String> json = {
         "nombre_empresa": nombreCtrl.text,
         "telefono": telefonoCtrl.text,
         "email": emailCtrl.text
-      };
+      };*/
     }
   }
 }
