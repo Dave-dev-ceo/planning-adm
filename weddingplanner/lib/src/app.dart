@@ -10,6 +10,7 @@ import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/blocs/planners/planners_bloc.dart';
 import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
+import 'package:weddingplanner/src/blocs/usuarios/usuarios_bloc.dart';
 import 'package:weddingplanner/src/logic/contratos_logic.dart';
 import 'package:weddingplanner/src/logic/etiquetas_logic.dart';
 import 'package:weddingplanner/src/logic/lista_invitados_logic.dart';
@@ -22,6 +23,7 @@ import 'blocs/paises/paises_bloc.dart';
 import 'logic/estatus_logic.dart';
 import 'logic/eventos_logic.dart';
 import 'logic/paises_logic.dart';
+import 'logic/usuarios.logic.dart';
 
 class MyApp extends StatelessWidget {
   Color hexToColor(String code) {
@@ -51,9 +53,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate
-      ],
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate],
       supportedLocales: [
         const Locale('en'),
         const Locale('fr'),
@@ -99,7 +99,10 @@ class AppState extends StatelessWidget {
       BlocProvider<ContratosBloc>(
           create: (_) => ContratosBloc(logic: FetchListaContratosLogic())),
       BlocProvider<TiposEventosBloc>(
-          create: (_) => TiposEventosBloc(logic: FetchListaTiposEventosLogic())),
+          create: (_) =>
+              TiposEventosBloc(logic: FetchListaTiposEventosLogic())),
+      BlocProvider<UsuariosBloc>(
+          create: (_) => UsuariosBloc(logic: FetchListaUsuariosLogic())),
     ], child: MyApp());
   }
 }

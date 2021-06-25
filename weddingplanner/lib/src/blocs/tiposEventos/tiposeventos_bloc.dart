@@ -16,18 +16,14 @@ class TiposEventosBloc extends Bloc<TiposEventosEvent, TiposEventosState> {
   Stream<TiposEventosState> mapEventToState(
     TiposEventosEvent event,
   ) async* {
-    if(event is FechtTiposEventosEvent){
+    if (event is FetchTiposEventosEvent) {
       yield LoadingTiposEventosState();
 
       try {
-        
         ItemModelTipoEvento tiposEventos = await logic.fetchTiposEventos();
         yield MostrarTiposEventosState(tiposEventos);
-
-      }on ListaTiposEventosException{
-        
+      } on ListaTiposEventosException {
         yield ErrorListaTiposEventosState("Sin tiposEventos");
-      
       }
     }
   }

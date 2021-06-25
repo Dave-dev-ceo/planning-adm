@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/machotes/machotes.dart';
+import 'package:weddingplanner/src/ui/usuarios/usuarios.dart';
+import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 
 class Home extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -28,11 +30,29 @@ class _HomeState extends State<Home> {
       idEvento = await _sharedPreferences.getIdEvento();
   }*/
 
+  /**
+   * Crea tab de menu
+   * 
+   * @Param titulo el titulo del tab
+   * @param icono el icono a mostrar
+   * 
+   * @Returns widget tab con icono personalizado
+   */
+  _tabs(String titulo, IconData icono) {
+    return Tab(
+      icon: Icon(icono, size: 18),
+      child: Text(
+        titulo,
+        style: TextStyle(fontSize: 12),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
-        length: 7,
+        length: 8,
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -57,62 +77,22 @@ class _HomeState extends State<Home> {
               indicatorColor: Colors.white,
               isScrollable: true,
               tabs: [
-                Tab(
-                  icon: Icon(Icons.calendar_today_outlined),
-                  //text: 'Resumen',
-                  child: Text(
-                    'Eventos',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.card_membership_rounded),
-                  //text: 'Home',
-                  child: Text(
-                    'Estatus de invitaciones',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.event_note_outlined),
-                  //text: 'Timings',
-                  child: Text(
-                    'Tipos de eventos',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.support_agent_outlined),
-                  //text: 'Proveedores',
-                  child: Text(
-                    'Proveedores',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.featured_play_list_outlined),
-                  //text: 'Inventario',
-                  child: Text(
-                    'Inventario',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.attach_money_sharp),
-                  //text: 'Presupuesto',
-                  child: Text(
-                    'Presupuesto',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.copy),
-                  //text: 'Autorizaciones',
-                  child: Text(
-                    'Plantillas',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
+                TabItem(
+                    titulo: 'Eventos', icono: Icons.calendar_today_outlined),
+                TabItem(
+                    titulo: 'Estatus de invitaciones',
+                    icono: Icons.card_membership_rounded),
+                TabItem(
+                    titulo: 'Tipos de eventos',
+                    icono: Icons.event_note_outlined),
+                TabItem(
+                    titulo: 'Proveedores', icono: Icons.support_agent_outlined),
+                TabItem(
+                    titulo: 'Inventario',
+                    icono: Icons.featured_play_list_outlined),
+                TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
+                TabItem(titulo: 'Plantillas', icono: Icons.copy),
+                TabItem(titulo: 'Usuarios', icono: Icons.people),
               ],
             ),
           ),
@@ -127,6 +107,7 @@ class _HomeState extends State<Home> {
                 ListaEstatusInvitaciones(),
                 ListaEstatusInvitaciones(),
                 Machotes(),
+                Usuarios()
               ],
             ),
           ),

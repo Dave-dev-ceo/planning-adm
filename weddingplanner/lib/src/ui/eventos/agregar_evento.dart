@@ -43,14 +43,15 @@ class _AgregarEventoState extends State<AgregarEvento> {
   void initState() {
     eventosBloc = BlocProvider.of<EventosBloc>(context);
     tiposEventosBloc = BlocProvider.of<TiposEventosBloc>(context);
-    tiposEventosBloc.add(FechtTiposEventosEvent());
+    tiposEventosBloc.add(FetchTiposEventosEvent());
     _setInitialController();
     fechaInicio = DateTime.now();
     fechaFin = DateTime.now();
     _setDate();
     super.initState();
   }
-  _clearController(){
+
+  _clearController() {
     descripcionCtrl.clear();
     nombreCtrl.clear();
     apellidoCtrl.clear();
@@ -60,56 +61,58 @@ class _AgregarEventoState extends State<AgregarEvento> {
     estadoCtrl.clear();
     _setDate();
   }
-  _dialogMSG(String title){
+
+  _dialogMSG(String title) {
     Widget child = CircularProgressIndicator();
     showDialog(
-      context: context,
-      //barrierDismissible: false,
-      builder: (BuildContext context) {
-        _ingresando = context;
-        return AlertDialog(
-          title: Text(
-            title,
-            textAlign: TextAlign.center,
-          ),
-          content: child,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
-        );
-      });
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+          _ingresando = context;
+          return AlertDialog(
+            title: Text(
+              title,
+              textAlign: TextAlign.center,
+            ),
+            content: child,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          );
+        });
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: BlocListener<EventosBloc, EventosState>(
         listener: (context, state) {
-          if(state is CreateEventosState){
+          if (state is CreateEventosState) {
             return _dialogMSG('Creando evento');
-          }else if(state is CreateEventosOkState){
+          } else if (state is CreateEventosOkState) {
             Navigator.pop(_ingresando);
             final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-              child: Text('Evento agregardo'),
-            ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.green,  
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          _clearController();  
-          }else if(state is ErrorCreateEventosState){
+              content: Container(
+                height: 30,
+                child: Center(
+                  child: Text('Evento agregardo'),
+                ),
+                //color: Colors.red,
+              ),
+              backgroundColor: Colors.green,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            _clearController();
+          } else if (state is ErrorCreateEventosState) {
             Navigator.pop(_ingresando);
             final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-              child: Text('Error al crear evento'),
-            ),
-              //color: Colors.red,
-            ),
-              backgroundColor: Colors.red,  
+              content: Container(
+                height: 30,
+                child: Center(
+                  child: Text('Error al crear evento'),
+                ),
+                //color: Colors.red,
+              ),
+              backgroundColor: Colors.red,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
@@ -302,7 +305,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
         "direccion": direccionCtrl.text,
         "estado": estadoCtrl.text
       };
-      eventosBloc.add(CreateEventosEvent(jsonEvento,itemModelEventos));
+      eventosBloc.add(CreateEventosEvent(jsonEvento, itemModelEventos));
     }
   }
 

@@ -1,7 +1,7 @@
-class ItemModelEventos {
+class ItemModelEvento {
   List<Evento> _results = [];
 
-  ItemModelEventos.fromJson(Map<dynamic, dynamic> parsedJson) {
+  ItemModelEvento.fromJson(Map<dynamic, dynamic> parsedJson) {
     List<Evento> temp = [];
     for (int i = 0; i < parsedJson['evento'].length; i++) {
       Evento result = Evento(parsedJson['evento'][i]);
@@ -11,7 +11,7 @@ class ItemModelEventos {
   }
   List<Evento> get results => _results;
 
-  ItemModelEventos.fromJsonUnit(Map<dynamic, dynamic> parsedJson) {
+  ItemModelEvento.fromJsonUnit(Map<dynamic, dynamic> parsedJson) {
     List<Evento> temp = [];
     for (int i = 0; i < parsedJson['evento'].length; i++) {
       Evento result = Evento(parsedJson['evento'][i]);
