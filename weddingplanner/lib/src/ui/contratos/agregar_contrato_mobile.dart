@@ -1,10 +1,16 @@
 import 'dart:convert';
-import 'dart:html';
+import 'dart:io';
+import 'dart:typed_data';
+
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:open_file/open_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
@@ -12,20 +18,20 @@ import 'package:weddingplanner/src/models/item_model_contratos.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
 
-class AgregarContrato extends StatefulWidget {
-  const AgregarContrato({Key key}) : super(key: key);
+class AgregarContratoMobile extends StatefulWidget {
+  const AgregarContratoMobile({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => AgregarContrato(),
+        builder: (context) => AgregarContratoMobile(),
       );
 
   @override
-  _AgregarContratoState createState() => _AgregarContratoState();
+  _AgregarContratoMobileState createState() => _AgregarContratoMobileState();
 }
 
-class _AgregarContratoState extends State<AgregarContrato> {
+class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   MachotesBloc machotesBloc;
   ItemModelMachotes itemModelMC;
-  // EventosBloc eventosBloc;
+  EventosBloc eventosBloc;
   ItemModelEventos itemModelEV;
   ContratosBloc contratosBloc;
   ItemModelContratos itemModelCT;
@@ -35,8 +41,8 @@ class _AgregarContratoState extends State<AgregarContrato> {
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     machotesBloc.add(FechtMachotesEvent());
-    // eventosBloc = BlocProvider.of<EventosBloc>(context);
-    // eventosBloc.add(FechtEventosEvent());
+    eventosBloc = BlocProvider.of<EventosBloc>(context);
+    eventosBloc.add(FechtEventosEvent());
     contratosBloc = BlocProvider.of<ContratosBloc>(context);
     super.initState();
   }
@@ -50,39 +56,37 @@ class _AgregarContratoState extends State<AgregarContrato> {
   }*/
   Future<void> _createPDF(String contrato) async {
     //Create a PDF document
-    PdfDocument document = PdfDocument.fromBase64String(contrato);
-    List<int> bytes = document.save();
+    //PdfDocument document = PdfDocument.fromBase64String(contrato);
+    //List<int> bytes = document.save();
     //Dispose the document
-    document.dispose();
+    //document.dispose();
     //Download the output file
-    if(kIsWeb){
-      AnchorElement(
-        href:
-            "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
-      ..setAttribute("download", nombreDocumento + ".pdf")
-      ..click();
-    }else{
-      print("gogogogogo");
-    }
+    Uint8List bytes = base64.decode(contrato);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = File(
+        "$dir/" + DateTime.now().millisecondsSinceEpoch.toString() + ".pdf");
+    await file.writeAsBytes(bytes);
+    //print("file://"+file.path);
+    final message = await OpenFile.open(file.path);
+    print(message);
   }
-
-  _dialogMSG(String title) {
+  _dialogMSG(String title){
     Widget child = CircularProgressIndicator();
     showDialog(
-        context: context,
-        //barrierDismissible: false,
-        builder: (BuildContext context) {
-          _ingresando = context;
-          return AlertDialog(
-            title: Text(
-              title,
-              textAlign: TextAlign.center,
-            ),
-            content: child,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0))),
-          );
-        });
+      context: context,
+      //barrierDismissible: false,
+      builder: (BuildContext context) {
+        _ingresando = context;
+        return AlertDialog(
+          title: Text(
+            title,
+            textAlign: TextAlign.center,
+          ),
+          content: child,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        );
+      });
   }
 
   _contectCont(ItemModelMachotes itemMC, int element) {
@@ -96,21 +100,20 @@ class _AgregarContratoState extends State<AgregarContrato> {
       child:*/
         Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.all(10),
       elevation: 10,
       child: Column(
         children: <Widget>[
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-            title: Container(
-                alignment: Alignment.topLeft,
+            title: Container(alignment: Alignment.topLeft,
                 height: 25,
                 width: double.infinity,
                 child: FittedBox(
-                    child: Text(
-                  itemModelMC.results.elementAt(element).descripcion,
-                  style: TextStyle(fontSize: 20),
-                ))),
+                  child: Text(
+              itemModelMC.results.elementAt(element).descripcion,
+              style: TextStyle(fontSize: 20),
+            ))),
             subtitle: Container(
                 height: 80,
                 //color: Colors.purple,
@@ -119,16 +122,11 @@ class _AgregarContratoState extends State<AgregarContrato> {
                     Row(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
                           child: TextButton.icon(
                               onPressed: () {
-                                nombreDocumento = itemMC.results
-                                    .elementAt(element)
-                                    .descripcion;
-                                contratosBloc.add(FechtContratosPdfEvent({
-                                  "machote":
-                                      itemMC.results.elementAt(element).machote
-                                }));
+                                nombreDocumento = itemMC.results.elementAt(element).descripcion;
+                                contratosBloc.add(FechtContratosPdfEvent({"machote": itemMC.results.elementAt(element).machote}));
                               },
                               icon: Icon(Icons.cloud_download_outlined),
                               label: Text('Descargar')),
@@ -137,13 +135,8 @@ class _AgregarContratoState extends State<AgregarContrato> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton.icon(
                               onPressed: () {
-                                nombreDocumento = itemMC.results
-                                    .elementAt(element)
-                                    .descripcion;
-                                contratosBloc.add(FechtContratosPdfViewEvent({
-                                  "machote":
-                                      itemMC.results.elementAt(element).machote
-                                }));
+                                nombreDocumento = itemMC.results.elementAt(element).descripcion;
+                                contratosBloc.add(FechtContratosPdfViewEvent({"machote": itemMC.results.elementAt(element).machote}));
                               },
                               icon: Icon(Icons.remove_red_eye_rounded),
                               label: Text('Ver')),
@@ -161,41 +154,44 @@ class _AgregarContratoState extends State<AgregarContrato> {
   }
 
   _constructorLista(ItemModelMachotes modelMC) {
-    return IndexedStack(index: _selectedIndex, children: [
-      Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'CT')
-                _contectCont(modelMC, i)
-          ],
-        ),
-      ),
-      Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'RC')
-                _contectCont(modelMC, i)
-          ],
-        ),
-      ),
-      Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'PG')
-                _contectCont(modelMC, i)
-          ],
-        ),
-      ),
-    ]);
+    return IndexedStack(
+          index: _selectedIndex,
+          children: [
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'CT')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'RC')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'PG')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+          ]
+    );
   }
 
   @override
@@ -205,21 +201,22 @@ class _AgregarContratoState extends State<AgregarContrato> {
         child: BlocListener<ContratosBloc, ContratosState>(
           listener: (context, state) {
             if (state is LoadingContratosPdfState) {
-              return _dialogMSG('Descargando contrato');
-            } else if (state is MostrarContratosPdfState) {
+            return _dialogMSG('Descargando contrato');
+          } else if (state is MostrarContratosPdfState) {
+            Navigator.pop(_ingresando);
+            _createPDF(state.contratos);  
+          }else if(state is LoadingContratosPdfViewState){
+            return _dialogMSG('Espere un momento');
+          } else if(state is MostrarContratosPdfViewState){
+            Navigator.pop(_ingresando);
+            Navigator.pushNamed(context, '/viewContrato',arguments: state.contratos);
+          }
+          else {
+            if(_ingresando != null){
               Navigator.pop(_ingresando);
-              _createPDF(state.contratos);
-            } else if (state is LoadingContratosPdfViewState) {
-              return _dialogMSG('Espere un momento');
-            } else if (state is MostrarContratosPdfViewState) {
-              Navigator.pop(_ingresando);
-              Navigator.pushNamed(context, '/viewContrato',
-                  arguments: state.contratos);
-            } else {
-              if (_ingresando != null) {
-                Navigator.pop(_ingresando);
-              }
             }
+            
+          }
           },
           child: BlocBuilder<MachotesBloc, MachotesState>(
             builder: (context, state) {
@@ -266,6 +263,5 @@ class _AgregarContratoState extends State<AgregarContrato> {
       _selectedIndex = index;
     });
   }
-
   int _selectedIndex = 0;
 }
