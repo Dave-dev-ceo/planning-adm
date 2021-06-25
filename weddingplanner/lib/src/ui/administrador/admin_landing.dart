@@ -58,7 +58,7 @@ class _Row {
 }
 
 class _DataSource extends DataTableSource {
-  BuildContext _cont;
+  //BuildContext _cont;
 
   _DataSource(context, BuildContext cont) {
     _rows = <_Row>[];
@@ -66,7 +66,7 @@ class _DataSource extends DataTableSource {
       _rows.add(_Row(context[i].idPlanner, context[i].empresa, context[i].correo,
           context[i].telefono, context[i].pais));
     }
-    _cont = cont;
+    //_cont = cont;
   }
 
   List<_Row> _rows;

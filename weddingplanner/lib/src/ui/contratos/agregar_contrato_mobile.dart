@@ -1,10 +1,16 @@
 import 'dart:convert';
-import 'dart:html';
+import 'dart:io';
+import 'dart:typed_data';
+
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:open_file/open_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
@@ -12,17 +18,17 @@ import 'package:weddingplanner/src/models/item_model_contratos.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
 
-class AgregarContrato extends StatefulWidget {
-  const AgregarContrato({Key key}) : super(key: key);
+class AgregarContratoMobile extends StatefulWidget {
+  const AgregarContratoMobile({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => AgregarContrato(),
+        builder: (context) => AgregarContratoMobile(),
       );
 
   @override
-  _AgregarContratoState createState() => _AgregarContratoState();
+  _AgregarContratoMobileState createState() => _AgregarContratoMobileState();
 }
 
-class _AgregarContratoState extends State<AgregarContrato> {
+class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   MachotesBloc machotesBloc;
   ItemModelMachotes itemModelMC;
   EventosBloc eventosBloc;
@@ -50,20 +56,19 @@ class _AgregarContratoState extends State<AgregarContrato> {
   }*/
   Future<void> _createPDF(String contrato) async {
     //Create a PDF document
-    PdfDocument document = PdfDocument.fromBase64String(contrato);
-    List<int> bytes = document.save();
+    //PdfDocument document = PdfDocument.fromBase64String(contrato);
+    //List<int> bytes = document.save();
     //Dispose the document
-    document.dispose();
+    //document.dispose();
     //Download the output file
-    if(kIsWeb){
-      AnchorElement(
-        href:
-            "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
-      ..setAttribute("download", nombreDocumento+".pdf")
-      ..click();
-    }else{
-      print("gogogogogo");
-    }
+    Uint8List bytes = base64.decode(contrato);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = File(
+        "$dir/" + DateTime.now().millisecondsSinceEpoch.toString() + ".pdf");
+    await file.writeAsBytes(bytes);
+    //print("file://"+file.path);
+    final message = await OpenFile.open(file.path);
+    print(message);
   }
   _dialogMSG(String title){
     Widget child = CircularProgressIndicator();
@@ -95,7 +100,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
       child:*/
         Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.all(10),
       elevation: 10,
       child: Column(
         children: <Widget>[
@@ -117,7 +122,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
                     Row(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
                           child: TextButton.icon(
                               onPressed: () {
                                 nombreDocumento = itemMC.results.elementAt(element).descripcion;
