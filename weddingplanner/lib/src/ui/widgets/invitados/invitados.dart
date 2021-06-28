@@ -5,22 +5,23 @@ import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 //import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
+import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 
 class Invitados extends StatefulWidget {
   //static const routeName = '/eventos';
-  final int idEvento;
-  const Invitados({Key key, this.idEvento}) : super(key: key);
+  final Map<dynamic, dynamic> detalleEvento;
+  const Invitados({Key key, this.detalleEvento}) : super(key: key);
 
   @override
-  _InvitadosState createState() => _InvitadosState(idEvento);
+  _InvitadosState createState() => _InvitadosState(detalleEvento);
 }
 
 class _InvitadosState extends State<Invitados> {
   //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  final int idEvento;
+  final Map<dynamic, dynamic> detalleEvento;
   int _pageIndex = 0;
 
-  _InvitadosState(this.idEvento);
+  _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -60,70 +61,17 @@ class _InvitadosState extends State<Invitados> {
               indicatorColor: Colors.white,
               isScrollable: true,
               tabs: [
-                Tab(
-                  icon: Icon(Icons.list),
-                  //text: 'Resumen',
-                  child: Text(
-                    'Resumen',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.people),
-                  //text: 'Invitados',
-                  child: Text(
-                    'Invitados',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.access_time_sharp),
-                  //text: 'Timings',
-                  child: Text(
-                    'Timings',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.support_agent_outlined),
-                  //text: 'Proveedores',
-                  child: Text(
-                    'Proveedores',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.featured_play_list_outlined),
-                  //text: 'Inventario',
-                  child: Text(
-                    'Inventario',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.attach_money_sharp),
-                  //text: 'Presupuesto',
-                  child: Text(
-                    'Presupuesto',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.lock_open),
-                  //text: 'Autorizaciones',
-                  child: Text(
-                    'Autorizaciones',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
-                Tab(
-                  icon: Icon(Icons.description_outlined),
-                  //text: 'Autorizaciones',
-                  child: Text(
-                    'Contratos',
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ),
+                TabItem(titulo: 'Resumen', icono: Icons.list),
+                TabItem(titulo: 'Invitados', icono: Icons.people),
+                TabItem(titulo: 'Timings', icono: Icons.access_time_sharp),
+                TabItem(
+                    titulo: 'Proveedores', icono: Icons.support_agent_outlined),
+                TabItem(
+                    titulo: 'Inventario',
+                    icono: Icons.featured_play_list_outlined),
+                TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
+                TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open),
+                TabItem(titulo: 'Contratos', icono: Icons.description_outlined),
               ],
             ),
           ),
@@ -132,25 +80,25 @@ class _InvitadosState extends State<Invitados> {
               index: _pageIndex,
               children: <Widget>[
                 ResumenEvento(
-                  idEvento: idEvento,
+                  detalleEvento: detalleEvento,
                 ),
                 ListaInvitados(
-                  idEvento: idEvento,
+                  idEvento: detalleEvento['idEvento'],
                 ),
                 ListaInvitados(
-                  idEvento: idEvento,
+                  idEvento: detalleEvento['idEvento'],
                 ),
                 ListaInvitados(
-                  idEvento: idEvento,
+                  idEvento: detalleEvento['idEvento'],
                 ),
                 ListaInvitados(
-                  idEvento: idEvento,
+                  idEvento: detalleEvento['idEvento'],
                 ),
                 ListaInvitados(
-                  idEvento: idEvento,
+                  idEvento: detalleEvento['idEvento'],
                 ),
                 ListaInvitados(
-                  idEvento: idEvento,
+                  idEvento: detalleEvento['idEvento'],
                 ),
                 Contratos(),
               ],

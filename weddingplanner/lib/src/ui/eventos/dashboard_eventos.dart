@@ -22,7 +22,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
     eventosBloc.add(FechtEventosEvent());
     super.initState();
   }
-  
 
   listaEventos(ItemModelEventos eventos) {
     /*bloc.fetchAllEventos(context);
@@ -89,7 +88,13 @@ class _DashboardEventosState extends State<DashboardEventos> {
       ),
       onTap: () async {
         await _sharedPreferences.setIdEvento(idEvento);
-        Navigator.pushNamed(context, '/eventos', arguments: idEvento);
+        Navigator.pushNamed(context, '/eventos', arguments: {
+          'idEvento': idEvento,
+          'titulo': titulo,
+          'inicio': inicio,
+          'fin': fin,
+          'involucrados': involucrados
+        });
       },
     );
   }
@@ -154,8 +159,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
           child: Icon(Icons.event_available),
           backgroundColor: hexToColor('#880B55'),
           onPressed: () {
-            Navigator.of(context)
-                .pushNamed('/addEvento');
+            Navigator.of(context).pushNamed('/addEvento');
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );

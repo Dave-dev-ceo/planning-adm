@@ -1,39 +1,28 @@
-//import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:weddingplanner/src/blocs/blocs.dart';
-import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart' as EvtBloc;
-import 'package:weddingplanner/src/models/item_model_evento.dart';
-//import 'package:weddingplanner/src/logic/eventos_logic.dart';
-// import 'package:weddingplanner/src/models/item_model_eventos.dart';
-//import 'package:weddingplanner/src/blocs/invitados_bloc.dart';
+
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
-// import 'package:weddingplanner/src/ui/eventos/reporte_evento.dart';
 
 class ResumenEvento extends StatefulWidget {
-  final int idEvento;
-  final String detalleEvento;
+  final Map<dynamic, dynamic> detalleEvento;
 
-  const ResumenEvento({Key key, this.idEvento, this.detalleEvento})
-      : super(key: key);
+  const ResumenEvento({Key key, this.detalleEvento}) : super(key: key);
   @override
-  _ResumenEventoState createState() => _ResumenEventoState(idEvento);
+  _ResumenEventoState createState() => _ResumenEventoState(detalleEvento);
 }
 
 class _ResumenEventoState extends State<ResumenEvento> {
-  final int idEvento;
-  EvtBloc.EventosBloc eventosBloc;
+  final Map<dynamic, dynamic> detalleEvento;
 
   @override
   void initState() {
-    eventosBloc = BlocProvider.of<EvtBloc.EventosBloc>(context);
-    eventosBloc.add(EvtBloc.FetchEventoPorIdEvent(this.idEvento.toString()));
     super.initState();
   }
 
-  _ResumenEventoState(this.idEvento);
+  _ResumenEventoState(this.detalleEvento);
   reporteGrupos() {
     blocInvitados.fetchAllReporteGrupos(context);
     return StreamBuilder(
@@ -220,28 +209,11 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget reporteEvento() {
-    return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
-      builder: (context, state) {
-        //print(state);
-        if (state is EvtBloc.LoadingEventoPorIdState) {
-          return Center(child: CircularProgressIndicator());
-        } else if (state is EvtBloc.MostrarEventoPorIdState) {
-          return Container(
-              width: 400,
-              height: 150,
-              child: miCardREporteDetallesEvento(state.evento));
-        } else if (state is EvtBloc.ErrorEventoPorIdState) {
-          return Center(
-            child: Text(state.message),
-          );
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-    );
+    return Container(
+        width: 400, height: 150, child: miCardReporteDetallesEvento());
   }
 
-  miCardREporteDetallesEvento(ItemModelEvento dataEvento) {
+  miCardReporteDetallesEvento() {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: EdgeInsets.all(20),
@@ -261,19 +233,18 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Evento: ' + dataEvento.results.elementAt(0).tipoEvento,
+                    'Evento: ' + detalleEvento['titulo'],
                     style: TextStyle(fontSize: 15),
                   ),
                   Text(
-                    'Fecha inicio: ' +
-                        dataEvento.results.elementAt(0).fechaInicio,
+                    'Fecha inicio: ' + detalleEvento['inicio'],
                     style: TextStyle(fontSize: 10),
                   ),
                   Text(
-                    'Fecha fin: ' + dataEvento.results.elementAt(0).fechaFin,
+                    'Fecha fin: ' + detalleEvento['fin'],
                     style: TextStyle(fontSize: 12),
                   ),
-                  for (var item in dataEvento.results.elementAt(0).involucrados)
+                  for (var item in detalleEvento['involucrados'])
                     Text(
                       item.tipoInvolucrado + ': ' + item.nombre,
                       style: TextStyle(fontSize: 12),
