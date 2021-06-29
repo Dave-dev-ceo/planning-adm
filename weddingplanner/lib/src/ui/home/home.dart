@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
+import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/machotes/machotes.dart';
 import 'package:weddingplanner/src/ui/usuarios/usuarios.dart';
@@ -52,7 +53,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
-        length: 8,
+        length: 9,
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -83,6 +84,9 @@ class _HomeState extends State<Home> {
                     titulo: 'Estatus de invitaciones',
                     icono: Icons.card_membership_rounded),
                 TabItem(
+                    titulo: 'Timing',
+                    icono: Icons.hourglass_bottom_rounded),
+                TabItem(
                     titulo: 'Tipos de eventos',
                     icono: Icons.event_note_outlined),
                 TabItem(
@@ -102,10 +106,11 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 DashboardEventos(),
                 ListaEstatusInvitaciones(),
-                ListaEstatusInvitaciones(),
-                ListaEstatusInvitaciones(),
-                ListaEstatusInvitaciones(),
-                ListaEstatusInvitaciones(),
+                Construccion(),
+                Construccion(),
+                Construccion(),
+                Construccion(),
+                Construccion(),
                 Machotes(),
                 Usuarios()
               ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:weddingplanner/src/models/item_model_parametros.dart';
 //import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
+import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 //import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
@@ -85,21 +86,11 @@ class _InvitadosState extends State<Invitados> {
                 ListaInvitados(
                   idEvento: detalleEvento['idEvento'],
                 ),
-                ListaInvitados(
-                  idEvento: detalleEvento['idEvento'],
-                ),
-                ListaInvitados(
-                  idEvento: detalleEvento['idEvento'],
-                ),
-                ListaInvitados(
-                  idEvento: detalleEvento['idEvento'],
-                ),
-                ListaInvitados(
-                  idEvento: detalleEvento['idEvento'],
-                ),
-                ListaInvitados(
-                  idEvento: detalleEvento['idEvento'],
-                ),
+                Construccion(),
+                Construccion(),
+                Construccion(),
+                Construccion(),
+                Construccion(),
                 Contratos(),
               ],
             ),
