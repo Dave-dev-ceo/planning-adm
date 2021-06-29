@@ -15,10 +15,13 @@ class _UsuariosState extends State<Usuarios> {
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   UsuariosBloc usuariosBloc;
   ItemModelUsuarios itemModelUsuarios;
+  ItemModelUsuarios filterUsuarios;
   bool bandera = false;
   List<bool> sort = [false, false, false, false];
   int _sortColumnIndex = 0;
   bool sortArrow = false;
+
+  bool crt = true;
 
   _UsuariosState();
 
@@ -41,15 +44,19 @@ class _UsuariosState extends State<Usuarios> {
             } else if (state is LoadingUsuariosState) {
               return Center(child: CircularProgressIndicator());
             } else if (state is MostrarUsuariosState) {
-              itemModelUsuarios = state.usuarios;
-              return buildList(itemModelUsuarios);
+              if (crt) {
+                itemModelUsuarios = state.usuarios;
+                filterUsuarios = itemModelUsuarios.copy();
+                crt = false;
+              }
+              return buildList(filterUsuarios);
             } else if (state is ErrorMostrarUsuariosState) {
               return Center(
                 child: Text(state.message),
               );
               //_showError(context, state.message);
             } else {
-              return buildList(itemModelUsuarios);
+              return buildList(filterUsuarios);
             }
           },
         ),
@@ -74,77 +81,96 @@ class _UsuariosState extends State<Usuarios> {
         PaginatedDataTable(
           sortColumnIndex: _sortColumnIndex,
           sortAscending: sortArrow,
-          header: Row(
+          header: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(child: Text('Usuarios')),
-              Expanded(
+              Container(height: 30, child: Text('Usuarios')),
+              Container(
+                height: 30,
                 child: TextField(
                   decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                    ),
-                    prefixText: "Buscar:",
-                  ),
-                  onSubmitted: (String value) async {
-                    await showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Thanks!'),
-                          content: Text(
-                              'You typed "$value", which has length ${value.characters.length}.'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                      prefixIcon: Icon(
+                        Icons.search,
+                      ),
+                      hintText: 'Buscar...'),
+                  onChanged: (String value) async {
+                    if (value.length > 2) {
+                      List<dynamic> usrs = itemModelUsuarios.results
+                          .where((imu) =>
+                              imu.nombre_completo
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()) ||
+                              imu.correo
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()) ||
+                              imu.telefono
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
+                          .toList();
+                      setState(() {
+                        filterUsuarios.results.clear();
+                        if (usrs.length > 0) {
+                          for (var usr in usrs) {
+                            filterUsuarios.results.add(usr);
+                          }
+                        } else {}
+                      });
+                    } else {
+                      setState(() {
+                        filterUsuarios = itemModelUsuarios.copy();
+                      });
+                    }
                   },
                 ),
               ),
             ],
           ),
-          rowsPerPage:
-              snapshot.results.length < 8 ? snapshot.results.length : 8,
+          rowsPerPage: snapshot.results.length > 8
+              ? 8
+              : snapshot.results.length < 1
+                  ? 1
+                  : snapshot.results.length,
           showCheckboxColumn: bandera,
           columns: [
             DataColumn(
                 label: Text('Nombre'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    itemModelUsuarios =
-                        onSortColum(columnIndex, ascending, itemModelUsuarios);
+                    snapshot.results.length > 0
+                        ? itemModelUsuarios = onSortColum(
+                            columnIndex, ascending, itemModelUsuarios)
+                        : null;
                   });
                 }),
             DataColumn(
                 label: Text('telefono'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    itemModelUsuarios =
-                        onSortColum(columnIndex, ascending, itemModelUsuarios);
+                    snapshot.results.length > 0
+                        ? itemModelUsuarios = onSortColum(
+                            columnIndex, ascending, itemModelUsuarios)
+                        : null;
                   });
                 }),
             DataColumn(
                 label: Text('Correo'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    itemModelUsuarios =
-                        onSortColum(columnIndex, ascending, itemModelUsuarios);
+                    snapshot.results.length > 0
+                        ? itemModelUsuarios = onSortColum(
+                            columnIndex, ascending, itemModelUsuarios)
+                        : null;
                   });
                 }),
             DataColumn(
                 label: Text('¿Es administrador?'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    itemModelUsuarios =
-                        onSortColum(columnIndex, ascending, itemModelUsuarios);
+                    snapshot.results.length > 0
+                        ? itemModelUsuarios = onSortColum(
+                            columnIndex, ascending, itemModelUsuarios)
+                        : null;
                   });
                 }),
           ],
@@ -217,13 +243,17 @@ class _Row {
 class _DataSource extends DataTableSource {
   _DataSource(context, BuildContext cont) {
     _rows = <_Row>[];
-    for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(
-          context[i].id_usuario,
-          context[i].nombre_completo,
-          context[i].telefono,
-          context[i].correo,
-          context[i].admin ? 'Si' : 'No'));
+    if (context.length > 0) {
+      for (int i = 0; i < context.length; i++) {
+        _rows.add(_Row(
+            context[i].id_usuario,
+            context[i].nombre_completo,
+            context[i].telefono,
+            context[i].correo,
+            context[i].admin ? 'Si' : 'No'));
+      }
+    } else {
+      _rows.add(_Row(null, 'Sin datos', '', '', ''));
     }
   }
 

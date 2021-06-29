@@ -1,11 +1,9 @@
 class ItemModelUsuarios {
   List<_Result> _results = [];
 
-  ItemModelUsuarios.fromJson(List<dynamic> parsedJson) {
-    // _results = parsedJson.map((res) {
-    //   return _Result(res);
-    // });
+  ItemModelUsuarios(this._results);
 
+  ItemModelUsuarios.fromJson(List<dynamic> parsedJson) {
     List<_Result> temp = [];
 
     for (int i = 0; i < parsedJson.length; i++) {
@@ -13,6 +11,26 @@ class ItemModelUsuarios {
       temp.add(result);
     }
     _results = temp;
+  }
+
+  ItemModelUsuarios copy() {
+    List<_Result> temp = [];
+
+    for (int i = 0; i < _results.length; i++) {
+      _Result result = _Result.fromModel(_results[i]);
+      temp.add(result);
+    }
+
+    return new ItemModelUsuarios(temp);
+  }
+
+  ItemModelUsuarios copyWith(ItemModelUsuarios obj) {
+    List<_Result> temp = [];
+
+    for (int i = 0; i < obj.results.length; i++) {
+      _Result result = _Result.fromModel(obj.results[i]);
+      temp.add(result);
+    }
   }
 
   List<_Result> get results => _results;
@@ -39,6 +57,18 @@ class _Result {
     _modificado = result['modificado'].toString();
     _creadoPor = result['creado_por'];
     _modificadoPor = result['modificado_por'];
+  }
+
+  _Result.fromModel(dataObj) {
+    _idUsuario = dataObj._idUsuario;
+    _correo = dataObj._correo;
+    _admin = dataObj._admin;
+    _nombreCompleto = dataObj._nombreCompleto;
+    _telefono = dataObj._telefono;
+    _creado = dataObj._creado;
+    _modificado = dataObj._modificado;
+    _creadoPor = dataObj._creadoPor;
+    _modificadoPor = dataObj._modificadoPor;
   }
 
   int get id_usuario => this._idUsuario;
