@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/administrador/planners.dart';
+import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 
 class HomeAdmin extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -80,6 +81,8 @@ class _HomeAdminState extends State<HomeAdmin> {
           index: _pageIndex,
           children: <Widget>[
             Planners(),
+            Construccion(),
+            Construccion()
             //DashboardEventos(),
             //ListaEstatusInvitaciones(idPlanner: idPlanne,)
           ],

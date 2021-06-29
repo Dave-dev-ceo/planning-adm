@@ -69,7 +69,26 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
   @override
   Future<int> createEstatus(Map<String, dynamic> data) async {
     if (data['descripcion'] != null && data['descripcion'] != "") {
-      return 58; //int.parse(data['id_estatus_invitado']);
+      int idPlanner = await _sharedPreferences.getIdPlanner();
+      int idUsuario = await _sharedPreferences.getIdUsuario();
+      data['id_usuario'] = idUsuario.toString();
+      data['id_planner'] = idPlanner.toString();
+      String token = await _sharedPreferences.getToken();
+      final response = await client.post(
+          Uri.parse(confiC.url+confiC.puerto+'/wedding/ESTATUS/createEstatus'),
+          body: data,
+          headers: {HttpHeaders.authorizationHeader: token});
+
+      if (response.statusCode == 201) {
+        Map<String, dynamic> res = json.decode(response.body);
+        await _sharedPreferences.setToken(res['token']);
+        return 0;
+      } else if (response.statusCode == 401) {
+        
+        throw TokenException();
+      } else {
+        throw CreateEstatusException();
+      }
     } else {
       throw CreateEstatusException();
     }

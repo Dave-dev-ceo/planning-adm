@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:weddingplanner/src/logic/estatus_logic.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
+import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
 
 part 'estatus_event.dart';
 part 'estatus_state.dart';
@@ -31,16 +32,20 @@ class EstatusBloc extends Bloc<EstatusEvent, EstatusState> {
     } else if (event is CreateEstatusEvent) {
       try {
         int idEstatusInvitado = await logic.createEstatus(event.data);
-        ItemModelEstatusInvitado model = event.estatus;
-        String dato = event.data['descripcion'];
-        Map<String, dynamic> lista = {
+        //ItemModelEstatusInvitado model = event.estatus;
+        //String dato = event.data['descripcion'];
+        /*Map<String, dynamic> lista = {
           'id_estatus_invitado': idEstatusInvitado,
           'descripcion': dato
-        };
-        Estatus est = new Estatus(lista);
-        model.results.add(est);
+        };*/
+        //Estatus est = new Estatus(lista);
+        //model.results.add(est);
         //yield CreateEstatusState(estatus);
-        yield MostrarEstatusState(model);
+        //yield MostrarEstatusState(model);
+        if(idEstatusInvitado == 0){
+          add(FechtEstatusEvent());
+        }
+        
       } on CreateEstatusException {
         yield ErrorCreateEstatusState("No se pudo insertar");
       }

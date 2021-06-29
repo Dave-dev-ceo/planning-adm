@@ -225,14 +225,14 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                       if (state is LoadingEstatusState) {
                         return Center(child: CircularProgressIndicator());
                       } else if (state is MostrarEstatusState) {
-                        itemModelEI = state.estatus;
+                        //itemModelEI = state.estatus;
                         return _constructorTable(state.estatus);
                       } else if (state is ErrorListaEstatusState) {
                         return Center(
                           child: Text(state.message),
                         );
                       } else {
-                        return _constructorTable(itemModelEI);
+                        return Center(child: CircularProgressIndicator());
                       }
                     },
                   ),
