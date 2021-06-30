@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_evento.dart';

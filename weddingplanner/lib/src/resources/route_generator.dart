@@ -7,6 +7,7 @@ import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
 import 'package:weddingplanner/src/ui/scannerQr/scannerQr.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_actividades.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_contrato.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
@@ -70,6 +71,9 @@ class RouteGenerator {
       case '/addEvento':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddEvento());
+      case '/addActividadesTiming':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddActividades());
       case '/addContactos':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialog(
