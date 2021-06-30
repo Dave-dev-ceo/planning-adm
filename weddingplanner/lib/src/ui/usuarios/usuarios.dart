@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/usuarios/usuarios_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_usuarios.dart';
@@ -66,7 +66,8 @@ class _UsuariosState extends State<Usuarios> {
         child: Icon(Icons.add),
         onPressed: () {
           setState(() {
-            bandera = !bandera;
+            // bandera = !bandera;
+            Navigator.pushNamed(context, '/crearUsuario');
           });
         },
       ),

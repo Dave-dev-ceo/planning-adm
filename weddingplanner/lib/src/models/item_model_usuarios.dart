@@ -15,12 +15,10 @@ class ItemModelUsuarios {
 
   ItemModelUsuarios copy() {
     List<_Result> temp = [];
-
     for (int i = 0; i < _results.length; i++) {
       _Result result = _Result.fromModel(_results[i]);
       temp.add(result);
     }
-
     return new ItemModelUsuarios(temp);
   }
 
@@ -34,6 +32,29 @@ class ItemModelUsuarios {
   }
 
   List<_Result> get results => _results;
+}
+
+class ItemModelUsuario {
+  _Result _result;
+
+  ItemModelUsuario(this._result);
+
+  ItemModelUsuario.fromJson(List<dynamic> parsedJson) {
+    _Result temp = _Result(parsedJson[0]);
+
+    _result = temp;
+  }
+
+  ItemModelUsuario copy() {
+    return new ItemModelUsuario(_result);
+  }
+
+  ItemModelUsuario copyWith(ItemModelUsuarios obj) {
+    _Result result = _Result.fromModel(obj);
+    return ItemModelUsuario(result);
+  }
+
+  _Result get result => _result;
 }
 
 class _Result {
