@@ -20,6 +20,7 @@ import 'package:weddingplanner/src/logic/planners_logic.dart';
 import 'package:weddingplanner/src/logic/tipos_eventos_logic.dart';
 import 'package:weddingplanner/src/resources/route_generator.dart';
 import 'blocs/paises/paises_bloc.dart';
+import 'blocs/usuarios/usuario/usuario_bloc.dart';
 import 'logic/estatus_logic.dart';
 import 'logic/eventos_logic.dart';
 import 'logic/paises_logic.dart';
@@ -103,6 +104,8 @@ class AppState extends StatelessWidget {
               TiposEventosBloc(logic: FetchListaTiposEventosLogic())),
       BlocProvider<UsuariosBloc>(
           create: (_) => UsuariosBloc(logic: FetchListaUsuariosLogic())),
+      BlocProvider<UsuarioBloc>(
+          create: (_) => UsuarioBloc(logic: UsuarioCrud())),
     ], child: MyApp());
   }
 }
