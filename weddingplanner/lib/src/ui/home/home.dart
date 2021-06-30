@@ -3,6 +3,7 @@ import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_eve
 import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/machotes/machotes.dart';
+import 'package:weddingplanner/src/ui/timings/timing.dart';
 import 'package:weddingplanner/src/ui/usuarios/usuarios.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 
@@ -106,7 +107,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 DashboardEventos(),
                 ListaEstatusInvitaciones(),
-                Construccion(),
+                Timing(),
                 Construccion(),
                 Construccion(),
                 Construccion(),

@@ -39,6 +39,8 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
         yield CreateEventosOkState();
       } on CreateEventoException {
         yield ErrorCreateEventosState("No se pudo insertar");
+      } on TokenException {
+        yield ErrorTokenEventosState("Sesión caducada");
       }
     } else if (event is FetchEventoPorIdEvent) {
       yield LoadingEventoPorIdState();
