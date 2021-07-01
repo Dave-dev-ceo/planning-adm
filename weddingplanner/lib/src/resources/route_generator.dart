@@ -26,12 +26,12 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        //return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
+        return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
         //return MaterialPageRoute(builder: (context) => Landing());
         //return MaterialPageRoute(builder: (context) => Contratos());
         //return MaterialPageRoute(builder: (context) => LoginT());
         //return MaterialPageRoute(builder: (context) => HomeAdmin());
-        return MaterialPageRoute(builder: (context) => Login());
+        //return MaterialPageRoute(builder: (context) => Login());
       case '/homeAdmin':
         return MaterialPageRoute(builder: (context) => HomeAdmin());
       case '/home':
