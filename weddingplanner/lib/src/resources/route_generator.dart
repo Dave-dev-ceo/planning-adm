@@ -97,7 +97,10 @@ class RouteGenerator {
                 ));
       case '/crearUsuario':
         return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddUsuario());
+            builder: (context) => FullScreenDialogAddUsuario(datos: args));
+      case '/editarUsuario':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddUsuario(datos: args));
       default:
         return _errorRoute();
     }
