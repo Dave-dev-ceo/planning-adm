@@ -162,6 +162,7 @@ class _TimingState extends State<Timing> {
 
   Widget buildList(ItemModelTimings snapshot) {
     return ListView(
+      shrinkWrap: true,
       padding: const EdgeInsets.all(16),
       children: [
         PaginatedDataTable(

@@ -32,9 +32,21 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     _initControlers();
     super.initState();
   }
+
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
+
+  _clearData() {
+    _mySelectionAT = '0';
+    _itemCount = 0;
+    numCtrl.text = _itemCount.toString();
+    _actVisible = false;
+    actividadCtrl.clear();
+    descripcionCtrl.clear();
+
+  }
+
   _initControlers() {
     actividadCtrl = new TextEditingController();
     numCtrl = new TextEditingController(text: 0.toString());
@@ -48,6 +60,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
       return null;
     }
   }
+
   String validateDescripcion(String value) {
     if (value.length == 0) {
       return "Falta descripcion";
@@ -55,6 +68,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
       return null;
     }
   }
+
   _save() {
     if (keyForm.currentState.validate()) {
       Map<String, dynamic> jsonActividad = {
@@ -62,9 +76,10 @@ class _AgregarActividadesState extends State<AgregarActividades> {
         "descripcion": descripcionCtrl.text,
         "visible_involucrados": _actVisible.toString(),
         "dias": numCtrl.text,
-        "predecesor": _mySelectionAT, 
+        "predecesor": _mySelectionAT,
       };
-      actividadestimingBloc.add(CreateActividadesTimingsEvent(jsonActividad , idTiming));
+      actividadestimingBloc
+          .add(CreateActividadesTimingsEvent(jsonActividad, idTiming));
     }
   }
 
@@ -172,7 +187,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   child: ElevatedButton(
-                    onPressed:() {
+                    onPressed: () {
                       _save();
                     },
                     child: Text('Guardar',
@@ -180,7 +195,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     style: ElevatedButton.styleFrom(
                       primary: hexToColor('#880B55'), // background
                       onPrimary: Colors.white, // foreground
-                      padding: EdgeInsets.symmetric(horizontal: 68, vertical: 25),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 68, vertical: 25),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
@@ -195,54 +211,56 @@ class _AgregarActividadesState extends State<AgregarActividades> {
       ),
     );
   }
+
   _dropDownActividades(ItemModelActividadesTimings items) {
-    return items.results.length != 0 ? DropdownButton(
-      value: _mySelectionAT,
-      icon: const Icon(Icons.arrow_drop_down_outlined),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Color(0xFF880B55)),
-      underline: Container(
-        height: 2,
-        color: Color(0xFF880B55),
-      ),
-      /*onChanged: (newValue) {
-        setState(() {
-          _mySelectionTE = newValue;
-        });
-      },*/
-      items: items.results.map((item) {
-        return DropdownMenuItem(
-          value: item.idActividad.toString(),
-          child: Text(
-            item.nombreActividad,
-            style: TextStyle(fontSize: 18),
-          ),
-        );
-      }).toList(),
-    )
-    : Container(child: Center(child: Text('Sin predecesores')))
-    ;
+    return items.results.length != 0
+        ? DropdownButton(
+            value: _mySelectionAT,
+            icon: const Icon(Icons.arrow_drop_down_outlined),
+            iconSize: 24,
+            elevation: 16,
+            style: const TextStyle(color: Color(0xFF880B55)),
+            underline: Container(
+              height: 2,
+              color: Color(0xFF880B55),
+            ),
+            onChanged: (newValue) {
+              setState(() {
+                _mySelectionAT = newValue;
+              });
+            },
+            items: items.results.map((item) {
+              return DropdownMenuItem(
+                value: item.idActividad.toString(),
+                child: Text(
+                  item.nombreActividad,
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+            }).toList(),
+          )
+        : Container(child: Center(child: Text('Sin predecesores')));
   }
-  _constructorDropDownAT(){
+
+  _constructorDropDownAT() {
     return BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
-          builder: (context, state) {
-            if (state is ActividadestimingInitial) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is LoadingActividadesTimingsState) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is MostrarActividadesTimingsState) {
-                return _dropDownActividades(state.actividadesTimings);
-              } else if (state is ErrorMostrarActividadesTimingsState) {
-                return Center(
-                  child: Text(state.message),
-                );
-                //_showError(context, state.message);
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-          },
-        );
+      builder: (context, state) {
+        if (state is ActividadestimingInitial) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is LoadingActividadesTimingsState) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is MostrarActividadesTimingsState) {
+          return _dropDownActividades(state.actividadesTimings);
+        } else if (state is ErrorMostrarActividadesTimingsState) {
+          return Center(
+            child: Text(state.message),
+          );
+          //_showError(context, state.message);
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
+    );
   }
 
   _actividadesTiming() {
@@ -257,111 +275,178 @@ class _AgregarActividadesState extends State<AgregarActividades> {
         child: BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
           builder: (context, state) {
             if (state is ActividadestimingInitial) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is LoadingActividadesTimingsState) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is MostrarActividadesTimingsState) {
-                
-                return _constructorListView(state.actividadesTimings);
-              } else if (state is ErrorMostrarActividadesTimingsState) {
-                return Center(
-                  child: Text(state.message),
-                );
-                //_showError(context, state.message);
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
+              return Center(child: CircularProgressIndicator());
+            } else if (state is LoadingActividadesTimingsState) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is MostrarActividadesTimingsState) {
+              return _constructorListView(state.actividadesTimings);
+            } else if (state is ErrorMostrarActividadesTimingsState) {
+              return Center(
+                child: Text(state.message),
+              );
+              //_showError(context, state.message);
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
           },
         ),
       ),
     );
   }
 
-  _constructorListView(ItemModelActividadesTimings item){
-    return item.results.length != 0?ListView.builder(
-                itemCount: item.results.length-1,
-                itemBuilder: (BuildContext context, int i) {
-                  //final item = items[i];
-                  i++;
-                  final row = item.results.elementAt(i);
-                  return Dismissible(
-                    key: Key(row.idActividad.toString()),
-                    confirmDismiss: (value) async {
-                      return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                                width: double.infinity,
-                                child: AlertDialog(
-                                  title: Text('¿Eliminar actividad?'),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            actividadestimingBloc.add(DeleteActividadesTimingsEvent(idTiming, item.results.elementAt(i).idActividad));
-                                            item.results.removeAt(i);
-                                          });
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Sí')),
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('No')),
-                                  ],
-                                ));
-                          });
-                    },
-                    background: Container(
-                      color: Colors.red[400],
-                      child: Icon(
-                        Icons.cancel,
-                        color: Colors.white,
-                      ),
-                      alignment: Alignment.topLeft,
-                    ),
-                    child: Container(
-                      child: ListTile(
-                        title: Text(item.results.elementAt(i).nombreActividad != null ?item.results.elementAt(i).nombreActividad:''),
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black12)),
-                    ),
-                  );
+  _constructorListView(ItemModelActividadesTimings item) {
+    return item.results.length != 0
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemCount: item.results.length - 1,
+            itemBuilder: (BuildContext context, int i) {
+              //final item = items[i];
+              i++;
+              final row = item.results.elementAt(i);
+              return Dismissible(
+                key: Key(row.idActividad.toString()),
+                secondaryBackground: Container(
+                  color: Colors.green[400],
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  alignment: Alignment.topRight,
+                ),
+                confirmDismiss: (DismissDirection direccion) async {
+                  if(direccion == DismissDirection.endToStart){
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: double.infinity,
+                            child: AlertDialog(
+                              title: Text('Editar actividad'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: [
+                                    _formIu()
+                                  ],)),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        actividadestimingBloc.add(
+                                            DeleteActividadesTimingsEvent(
+                                                idTiming,
+                                                item.results
+                                                    .elementAt(i)
+                                                    .idActividad));
+                                        item.results.removeAt(i);
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Sí')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('No')),
+                              ],
+                            ));
+                      });
+                  }else{
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: double.infinity,
+                            child: AlertDialog(
+                              title: Text('¿Eliminar actividad?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        actividadestimingBloc.add(
+                                            DeleteActividadesTimingsEvent(
+                                                idTiming,
+                                                item.results
+                                                    .elementAt(i)
+                                                    .idActividad));
+                                        item.results.removeAt(i);
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Sí')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('No')),
+                              ],
+                            ));
+                      });
+                  }
                   
-                })
-                :Container(child: Center(child: Text('Sin actividades')),)
-                ;
+                },
+                background: Container(
+                  color: Colors.red[400],
+                  child: Icon(
+                    Icons.cancel,
+                    color: Colors.white,
+                  ),
+                  alignment: Alignment.topLeft,
+                ),
+                child: Container(
+                  child: ListTile(
+                    title: Text(
+                        item.results.elementAt(i).nombreActividad != null
+                            ? item.results.elementAt(i).nombreActividad
+                            : ''),
+                    subtitle: ListBody(
+                      children: [
+                        Text(item.results.elementAt(i).descripcion != null 
+                        ?item.results.elementAt(i).descripcion
+                        :''),
+                        Text(item.results.elementAt(i).visibleInvolucrados?'Visible para los novios':'No visible para los novios')
+                      ],
+                    ),
+                  ),
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.black12)),
+                ),
+              );
+            })
+        : Container(
+            child: Center(child: Text('Sin actividades')),
+          );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                child:Form(
-                  key: keyForm,
-                  child: _formIu())
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Actividades',
-                style: TextStyle(fontSize: 24),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              _actividadesTiming(),
-            ],
-          )),
+    return BlocListener<ActividadestimingBloc, ActividadestimingState>(
+      listener: (context, state) {
+        if(state is CreateActividadesTimingsOkState){
+          _clearData();
+        }
+      },
+      child: SingleChildScrollView(
+        child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(child: Form(key: keyForm, child: _formIu())),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Actividades',
+                  style: TextStyle(fontSize: 24),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                _actividadesTiming(),
+              ],
+            )),
+      ),
     );
   }
 }
