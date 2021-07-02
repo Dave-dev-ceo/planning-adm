@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:weddingplanner/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/estatus/estatus_bloc.dart';
 import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:weddingplanner/src/blocs/planners/planners_bloc.dart';
 import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
 import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/usuarios/usuarios_bloc.dart';
+import 'package:weddingplanner/src/logic/actividades_timing_logic.dart';
 import 'package:weddingplanner/src/logic/contratos_logic.dart';
 import 'package:weddingplanner/src/logic/etiquetas_logic.dart';
 import 'package:weddingplanner/src/logic/lista_invitados_logic.dart';
@@ -110,6 +112,8 @@ class AppState extends StatelessWidget {
           create: (_) => UsuarioBloc(logic: UsuarioCrud())),
       BlocProvider<TimingsBloc>(
           create: (_) => TimingsBloc(logic: FetchListaTimingsLogic())),
+      BlocProvider<ActividadestimingBloc>(
+          create: (_) => ActividadestimingBloc(logic: FetchListaActividadesTimingsLogic())),
     ], child: MyApp());
   }
 }
