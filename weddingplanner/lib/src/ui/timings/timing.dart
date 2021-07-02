@@ -35,30 +35,32 @@ class _TimingState extends State<Timing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        child: BlocBuilder<TimingsBloc, TimingsState>(
-          builder: (context, state) {
-            if (state is TimingsInitial) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is LoadingTimingsState) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is MostrarTimingsState) {
-              if (crt) {
-                itemModelTimings = state.usuarios;
-                filterTimings = itemModelTimings;//.copy()
-                crt = false;
+      body: SingleChildScrollView(
+              child: Container(
+          width: double.infinity,
+          child: BlocBuilder<TimingsBloc, TimingsState>(
+            builder: (context, state) {
+              if (state is TimingsInitial) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is LoadingTimingsState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is MostrarTimingsState) {
+                if (crt) {
+                  itemModelTimings = state.usuarios;
+                  filterTimings = itemModelTimings;//.copy()
+                  crt = false;
+                }
+                return _constructorTable(filterTimings);
+              } else if (state is ErrorMostrarTimingsState) {
+                return Center(
+                  child: Text(state.message),
+                );
+                //_showError(context, state.message);
+              } else {
+                return buildList(filterTimings);
               }
-              return _constructorTable(filterTimings);
-            } else if (state is ErrorMostrarTimingsState) {
-              return Center(
-                child: Text(state.message),
-              );
-              //_showError(context, state.message);
-            } else {
-              return buildList(filterTimings);
-            }
-          },
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -296,7 +298,7 @@ class _DataSource extends DataTableSource {
       },
       cells: [
         DataCell(Text(row.valueA), onTap: () {
-          Navigator.pushNamed(_cont, '/addActividadesTiming');
+          Navigator.pushNamed(_cont, '/addActividadesTiming',arguments: row.valueId);
         }),
       ],
     );

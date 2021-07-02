@@ -3,14 +3,16 @@ import 'package:weddingplanner/src/ui/actividades/actividades_timing.dart';
 import 'package:weddingplanner/src/ui/eventos/agregar_evento.dart';
 
 class FullScreenDialogAddActividades extends StatefulWidget {
-
-  const FullScreenDialogAddActividades({Key key}) : super(key: key);
+  final int idTiming;
+  const FullScreenDialogAddActividades({Key key, this.idTiming}) : super(key: key);
   @override
-  _FullScreenDialogAddActividadesState createState() => _FullScreenDialogAddActividadesState();
+  _FullScreenDialogAddActividadesState createState() => _FullScreenDialogAddActividadesState(idTiming);
 }
 
 class _FullScreenDialogAddActividadesState extends State<FullScreenDialogAddActividades> {
-  
+  final int idTiming;
+
+  _FullScreenDialogAddActividadesState(this.idTiming);
     @override
   void initState() {
     super.initState();
@@ -29,7 +31,7 @@ class _FullScreenDialogAddActividadesState extends State<FullScreenDialogAddActi
         ),
         body:  SafeArea(
         child: 
-            AgregarActividades()
+            AgregarActividades(idTiming: idTiming,)
       ),
     );
   }

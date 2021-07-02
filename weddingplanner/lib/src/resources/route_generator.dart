@@ -26,10 +26,8 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        // return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
+        //return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
         //return MaterialPageRoute(builder: (context) => Landing());
-        //return MaterialPageRoute(builder: (context) => Contratos());
-        //return MaterialPageRoute(builder: (context) => LoginT());
         //return MaterialPageRoute(builder: (context) => HomeAdmin());
         return MaterialPageRoute(builder: (context) => Login());
       case '/homeAdmin':
@@ -73,7 +71,8 @@ class RouteGenerator {
       case '/addEvento':
         return MaterialPageRoute(builder: (context) => FullScreenDialogAddEvento());
       case '/addActividadesTiming':
-        return MaterialPageRoute(builder: (context) => FullScreenDialogAddActividades());
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddActividades(idTiming: args,));
       case '/addContactos':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialog(
