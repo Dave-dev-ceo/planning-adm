@@ -9,7 +9,11 @@ class UsuarioInitial extends UsuarioState {}
 
 class LoadingCrearUsuarioState extends UsuarioState {}
 
-class UsuarioCreadoState extends UsuarioState {}
+class UsuarioCreadoState extends UsuarioState {
+  final ItemModelUsuario usuario;
+  UsuarioCreadoState(this.usuario);
+  ItemModelUsuario get data => this.usuario;
+}
 
 class ErrorCrearUsuarioState extends UsuarioState {
   final String message;
@@ -18,26 +22,15 @@ class ErrorCrearUsuarioState extends UsuarioState {
   List<Object> get props => [message];
 }
 
-// ESTADOS DE BAJA DE USUARIO
-
-class LoadingEliminarUsuarioState extends UsuarioState {}
-
-class UsuarioEliminadoState extends UsuarioState {
-  final bool eliminado;
-  UsuarioEliminadoState(this.eliminado);
-}
-
-class ErrorEliminarUsuarioState extends UsuarioState {
-  final String message;
-  ErrorEliminarUsuarioState(this.message);
-  List<Object> get props => [message];
-}
-
 // ESTADOS DE EDICION DE USUARIO
 
 class LoadingEditarUsuarioState extends UsuarioState {}
 
-class UsuarioEditadoState extends UsuarioState {}
+class UsuarioEditadoState extends UsuarioState {
+  final ItemModelUsuario usuario;
+  UsuarioEditadoState(this.usuario);
+  ItemModelUsuario get data => this.usuario;
+}
 
 class ErrorEditarUsuarioState extends UsuarioState {
   final String message;

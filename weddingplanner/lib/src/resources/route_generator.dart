@@ -26,12 +26,12 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
+        // return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
         //return MaterialPageRoute(builder: (context) => Landing());
         //return MaterialPageRoute(builder: (context) => Contratos());
         //return MaterialPageRoute(builder: (context) => LoginT());
         //return MaterialPageRoute(builder: (context) => HomeAdmin());
-        //return MaterialPageRoute(builder: (context) => Login());
+        return MaterialPageRoute(builder: (context) => Login());
       case '/homeAdmin':
         return MaterialPageRoute(builder: (context) => HomeAdmin());
       case '/home':
@@ -49,8 +49,7 @@ class RouteGenerator {
                   id: args,
                 ));
       case '/addContrato':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddContrato());
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddContrato());
       case '/viewContrato':
         return MaterialPageRoute(
             builder: (context) => ViewPdfContrato(
@@ -67,14 +66,11 @@ class RouteGenerator {
                   dataPlantilla: args,
                 ));
       case '/addPlanners':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddPlanners());
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddPlanners());
       case '/addEvento':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddEvento());
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddEvento());
       case '/addActividadesTiming':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddActividades());
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddActividades());
       case '/addContactos':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialog(
@@ -96,11 +92,9 @@ class RouteGenerator {
                   reporte: args,
                 ));
       case '/crearUsuario':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddUsuario(datos: args));
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddUsuario(datos: args));
       case '/editarUsuario':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddUsuario(datos: args));
+        return MaterialPageRoute(builder: (context) => FullScreenDialogAddUsuario(datos: args));
       default:
         return _errorRoute();
     }
