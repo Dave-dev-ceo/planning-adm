@@ -176,7 +176,7 @@ class _FormUsuarioState extends State<FormUsuario> {
             Icons.admin_panel_settings,
             Row(
               children: [
-                Text('¿Es administrador?'),
+                Text('¿Es Administrador?'),
                 Checkbox(
                   checkColor: Colors.white,
                   value: esAdmin,
@@ -192,7 +192,7 @@ class _FormUsuarioState extends State<FormUsuario> {
           onPressed: () {
             _save();
           },
-          child: Text(datos['accion'] == 0 ? 'Crear usuario' : 'Editar Usuario', style: TextStyle(fontSize: 18, color: Colors.white)),
+          child: Text(datos['accion'] == 0 ? 'Crear Usuario' : 'Editar Usuario', style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
             primary: hexToColor('#880B55'), // background
             onPrimary: Colors.white, // foreground

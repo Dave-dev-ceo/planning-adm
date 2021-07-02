@@ -157,7 +157,7 @@ class _UsuariosState extends State<Usuarios> {
                   });
                 }),
             DataColumn(
-                label: Text('telefono'),
+                label: Text('Teléfono'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
                     snapshot.usuarios.length > 0 ? filterUsuarios = onSortColum(columnIndex, ascending, filterUsuarios) : null;
