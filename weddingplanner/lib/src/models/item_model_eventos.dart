@@ -25,6 +25,7 @@ class Evento {
   int _idEvento;
   String _fechaInicio;
   String _fechaFin;
+  String _fechaEvento;
   String _tipoEvento;
   List<Involucrados> _involucrados = [];
   Evento(datos) {
@@ -32,6 +33,7 @@ class Evento {
     _fechaInicio = datos['fecha_inicio'];
     _fechaFin = datos['fecha_fin'];
     _tipoEvento = datos['tipo_evento'];
+    _fechaEvento = datos['fecha_evento'];
 
     List<Involucrados> tempI = [];
     for (var i = 0; i < datos['involucrados'].length; i++) {
@@ -44,6 +46,7 @@ class Evento {
   int get idEvento => _idEvento;
   String get fechaInicio => _fechaInicio;
   String get fechaFin => _fechaFin;
+  String get fechaEvento => _fechaEvento;
   String get tipoEvento => _tipoEvento;
   List<Involucrados> get involucrados => _involucrados;
 }
