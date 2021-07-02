@@ -249,7 +249,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         SpeedDialChild(
           foregroundColor: Colors.white,
           child: Tooltip(
-            child: Icon(Icons.qr_code_2_rounded),
+            child: Icon(Icons.qr_code_outlined),
             message: "Escáner Código QR",
           ),
           backgroundColor: hexToColor("#880B55"),
