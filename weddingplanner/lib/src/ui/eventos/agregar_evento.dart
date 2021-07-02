@@ -29,8 +29,10 @@ class _AgregarEventoState extends State<AgregarEvento> {
   TextEditingController estadoCtrl;
   TextEditingController fechaInicioCtrl;
   TextEditingController fechaFinCtrl;
+  TextEditingController fechaEventoCtrl;
   DateTime fechaInicio;
   DateTime fechaFin;
+  DateTime fechaEvento;
   bool isExpaned = true;
   bool isExpanedT = false;
   TiposEventosBloc tiposEventosBloc;
@@ -47,7 +49,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
     _setInitialController();
     fechaInicio = DateTime.now();
     fechaFin = DateTime.now();
-    _setDate();
+    fechaEvento = DateTime.now();
     super.initState();
   }
 
@@ -59,6 +61,9 @@ class _AgregarEventoState extends State<AgregarEvento> {
     emailCtrl.clear();
     direccionCtrl.clear();
     estadoCtrl.clear();
+    fechaInicioCtrl.clear();
+    fechaFinCtrl.clear();
+    fechaEventoCtrl.clear();
     _setDate();
   }
 
@@ -75,8 +80,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
   }
@@ -170,11 +174,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 3),
       child: Container(
-        child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            elevation: 10,
-            child: ListTile(leading: Icon(icon), title: item)),
+        child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), elevation: 10, child: ListTile(leading: Icon(icon), title: item)),
         width: large,
         height: ancho,
       ),
@@ -196,6 +196,13 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   String validateFechaFin(String value) {
+    if (value.length == 0) {
+      return "La fecha final es necesaria";
+    }
+    return null;
+  }
+
+  String validateFechaEvento(String value) {
     if (value.length == 0) {
       return "La fecha final es necesaria";
     }
@@ -248,6 +255,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
     descripcionCtrl = new TextEditingController();
     fechaInicioCtrl = new TextEditingController();
     fechaFinCtrl = new TextEditingController();
+    fechaEventoCtrl = new TextEditingController();
     nombreCtrl = new TextEditingController();
     apellidoCtrl = new TextEditingController();
     telefonoCtrl = new TextEditingController();
@@ -257,8 +265,8 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   _setDate() {
-    fechaInicioCtrl.text = fechaInicio.toLocal().toString().split(' ')[0];
-    fechaFinCtrl.text = fechaFin.toLocal().toString().split(' ')[0];
+    // fechaInicioCtrl.text = fechaInicio.toLocal().toString().split(' ')[0];
+    // fechaFinCtrl.text = fechaFin.toLocal().toString().split(' ')[0];
   }
 
   _selectDateInicio(BuildContext context) async {
@@ -291,12 +299,28 @@ class _AgregarEventoState extends State<AgregarEvento> {
       });
   }
 
+  _selectDateEvento(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      locale: const Locale("es", "ES"),
+      initialDate: fechaFin, // Refer step 1
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != fechaEvento)
+      setState(() {
+        fechaFin = picked;
+        fechaEventoCtrl.text = fechaEvento.toLocal().toString().split(' ')[0];
+      });
+  }
+
   _save() {
     if (keyForm.currentState.validate()) {
       Map<String, dynamic> jsonEvento = {
         "descripcion_evento": descripcionCtrl.text,
         "fecha_inicio": fechaInicioCtrl.text,
         "fecha_fin": fechaFinCtrl.text,
+        "fecha_evento": fechaEventoCtrl.text,
         "id_tipo_evento": _mySelectionTE,
         "nombre": nombreCtrl.text,
         "apellidos": apellidoCtrl.text,
@@ -385,13 +409,26 @@ class _AgregarEventoState extends State<AgregarEvento> {
                               500.0,
                               80.0),
                           onTap: () => _selectDateFin(context),
-                        )
+                        ),
                       ],
                     ),
                     Wrap(
                       children: <Widget>[
-                        Container(child:
-                            BlocBuilder<TiposEventosBloc, TiposEventosState>(
+                        GestureDetector(
+                          child: formItemsDesign(
+                              Icons.date_range_outlined,
+                              TextFormField(
+                                controller: fechaEventoCtrl,
+                                decoration: new InputDecoration(
+                                  labelText: 'Fecha Evento',
+                                ),
+                                validator: validateFechaEvento,
+                              ),
+                              500.0,
+                              80.0),
+                          onTap: () => _selectDateEvento(context),
+                        ),
+                        Expanded(child: BlocBuilder<TiposEventosBloc, TiposEventosState>(
                           builder: (context, state) {
                             if (state is TiposEventosInitial) {
                               return Center(child: CircularProgressIndicator());
@@ -410,7 +447,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                       _dropDownTiposEventos(state.tiposEventos),
                                     ],
                                   ),
-                                  900.0,
+                                  500.0,
                                   80.0);
                             } else if (state is ErrorListaTiposEventosState) {
                               return Center(
