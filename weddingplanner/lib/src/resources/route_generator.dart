@@ -43,6 +43,9 @@ class RouteGenerator {
             builder: (context) => Invitados(
                   detalleEvento: args,
                 ));
+
+      case '/lectorQr':
+        return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
       case '/addInvitados':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAdd(
