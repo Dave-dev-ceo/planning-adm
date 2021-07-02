@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
@@ -15,8 +17,7 @@ class FullScreenDialogEdit extends StatefulWidget {
 
   const FullScreenDialogEdit({Key key, this.idInvitado}) : super(key: key);
   @override
-  _FullScreenDialogEditState createState() =>
-      _FullScreenDialogEditState(idInvitado);
+  _FullScreenDialogEditState createState() => _FullScreenDialogEditState(idInvitado);
 }
 
 class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
@@ -51,6 +52,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   String _mySelectionG = "1";
   String _mySelectionM = "0";
   bool _lights = false;
+
+  String _base64qr;
+
   _FullScreenDialogEditState(this.idInvitado);
   Map<int, Widget> _children = {
     0: Text(
@@ -170,11 +174,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       ),
       onChanged: (newValue) {
         setState(() {
-          if (newValue ==
-              grupos.results
-                  .elementAt(grupos.results.length - 1)
-                  .idGrupo
-                  .toString()) {
+          if (newValue == grupos.results.elementAt(grupos.results.length - 1).idGrupo.toString()) {
             _showMyDialog();
           } else {
             _mySelectionG = newValue;
@@ -344,21 +344,15 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   String gender;
   String edad;
   formItemsDesign(icon, item, large, ancho) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
-        child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            elevation: 10,
-            child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
-      ),
+    return Container(
+      child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), elevation: 10, child: ListTile(leading: Icon(icon), title: item)),
+      width: large,
+      height: ancho,
     );
   }
 
   Widget formUI(ItemModelInvitado invitado) {
+    _base64qr = invitado.codigoQr;
     if (contActualiza <= 0) {
       if (invitado.asistencia != null) {
         _mySelection = invitado.asistencia.toString();
@@ -545,14 +539,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           500.0,
                           80.0),
                       formItemsDesign(
-                          !invitado.estatusInvitacion
-                              ? Icons.cancel
-                              : Icons.check_box,
+                          !invitado.estatusInvitacion ? Icons.cancel : Icons.check_box,
                           MergeSemantics(
                             child: ListTile(
-                              title: Text(!invitado.estatusInvitacion
-                                  ? 'Invitación pendiente'
-                                  : 'Invitación enviada'),
+                              title: Text(!invitado.estatusInvitacion ? 'Invitación pendiente' : 'Invitación enviada'),
                               trailing: CupertinoSwitch(
                                 value: _lights, //invitado.estatusInvitacion,
                                 onChanged: (bool value) {
@@ -684,6 +674,21 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                             100.0),
                       ],
                     ),
+                    _base64qr != ''
+                        ? formItemsDesign(
+                            null,
+                            Column(children: [
+                              //Expanded(child: Text('Código QR')),
+                              Expanded(
+                                  child: Image.memory(
+                                base64Decode(_base64qr.substring(_base64qr.indexOf(',') + 1)),
+                                width: 250,
+                                height: 250,
+                              )),
+                            ]),
+                            400.0,
+                            200.0)
+                        : SizedBox.shrink(),
                     SizedBox(
                       height: 30.0,
                     ),

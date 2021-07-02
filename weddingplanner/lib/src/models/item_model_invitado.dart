@@ -13,8 +13,9 @@ class ItemModelInvitado {
   String _alergias;
   String _asistenciaEspecial;
   bool _estatusInvitacion;
+  String _qr;
 
-  ItemModelInvitado.fromJson(Map<dynamic,dynamic> parsedJson){
+  ItemModelInvitado.fromJson(Map<dynamic, dynamic> parsedJson) {
     _idInvitado = parsedJson['id_invitado'];
     _nombre = parsedJson['nombre'];
     _telefono = parsedJson['telefono'];
@@ -29,7 +30,9 @@ class ItemModelInvitado {
     _alimentacion = parsedJson['alimentacion'];
     _alergias = parsedJson['alergias'];
     _asistenciaEspecial = parsedJson['asistencia_especial'];
+    _qr = parsedJson.containsKey('qr') ? parsedJson['qr'] : '';
   }
+
   int get idInvitado => _idInvitado;
   String get nombre => _nombre;
   String get telefono => _telefono;
@@ -44,4 +47,5 @@ class ItemModelInvitado {
   String get alergias => _alergias;
   String get asistenciaEspecial => _asistenciaEspecial;
   bool get estatusInvitacion => _estatusInvitacion;
+  String get codigoQr => _qr;
 }
