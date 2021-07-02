@@ -67,12 +67,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 child: ListView.builder(
                     itemCount: dataGrupos.results.length,
                     itemBuilder: (_, int index) {
-                      return Text(dataGrupos.results.elementAt(index).grupo +
-                          ': ' +
-                          dataGrupos.results
-                              .elementAt(index)
-                              .cantidad
-                              .toString());
+                      return Text(dataGrupos.results.elementAt(index).grupo + ': ' + dataGrupos.results.elementAt(index).cantidad.toString());
                     }),
               ),
               leading: Icon(Icons.event),
@@ -128,9 +123,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 child: ListView.builder(
                     itemCount: reporte.results.length,
                     itemBuilder: (_, int index) {
-                      return Text(reporte.results.elementAt(index).estatus +
-                          ': ' +
-                          reporte.results.elementAt(index).cantidad.toString());
+                      return Text(reporte.results.elementAt(index).estatus + ': ' + reporte.results.elementAt(index).cantidad.toString());
                     }),
               ),
               leading: Icon(Icons.event),
@@ -139,8 +132,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
         ),
       ),
       onTap: () {
-        Navigator.of(context)
-            .pushNamed('/reporteEvento', arguments: "asistencia");
+        Navigator.of(context).pushNamed('/reporteEvento', arguments: "asistencia");
       },
     );
   }
@@ -149,8 +141,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
     blocInvitados.fetchAllReporteInvitadosGenero(context);
     return StreamBuilder(
       stream: blocInvitados.reporteInvitadosGenero,
-      builder:
-          (context, AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
+      builder: (context, AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
         if (snapshot.hasData) {
           return buildListGenero(snapshot);
         } else if (snapshot.hasError) {
@@ -161,13 +152,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
     );
   }
 
-  Widget buildListGenero(
-      AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
-    return Container(
-        width: 400,
-        height: 150,
-        child: miCardReportesInvitadosGenero(
-            snapshot.data.masculino, snapshot.data.femenino));
+  Widget buildListGenero(AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
+    return Container(width: 400, height: 150, child: miCardReportesInvitadosGenero(snapshot.data.masculino, snapshot.data.femenino));
   }
 
   miCardReportesInvitadosGenero(String hombre, String mujer) {
@@ -209,8 +195,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget reporteEvento() {
-    return Container(
-        width: 400, height: 150, child: miCardReporteDetallesEvento());
+    return Container(width: 400, height: 150, child: miCardReporteDetallesEvento());
   }
 
   miCardReporteDetallesEvento() {
@@ -222,27 +207,31 @@ class _ResumenEventoState extends State<ResumenEvento> {
         child: Column(
           children: <Widget>[
             ListTile(
-              contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+              contentPadding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
               title: Text(
                 'Detalles del evento',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 16),
               ),
               subtitle: Wrap(
-                spacing: 10,
-                runSpacing: 7,
+                spacing: 5,
+                runSpacing: 5,
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     'Evento: ' + detalleEvento['titulo'],
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 13),
                   ),
                   Text(
                     'Fecha inicio: ' + detalleEvento['inicio'],
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 11),
                   ),
                   Text(
                     'Fecha fin: ' + detalleEvento['fin'],
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  Text(
+                    'Fecha evento: ' + detalleEvento['fevento'],
+                    style: TextStyle(fontSize: 11),
                   ),
                   for (var item in detalleEvento['involucrados'])
                     Text(

@@ -42,24 +42,15 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget buildList(ItemModelEventos snapshot) {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 400,
-            mainAxisExtent: 200,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
+            maxCrossAxisExtent: 400, mainAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 20, mainAxisSpacing: 20),
         itemCount: snapshot.results.length,
         itemBuilder: (BuildContext ctx, index) {
-          return miCard(
-              snapshot.results.elementAt(index).idEvento,
-              snapshot.results.elementAt(index).tipoEvento,
-              snapshot.results.elementAt(index).fechaInicio,
-              snapshot.results.elementAt(index).fechaFin,
-              snapshot.results.elementAt(index).involucrados);
+          return miCard(snapshot.results.elementAt(index).idEvento, snapshot.results.elementAt(index).tipoEvento, snapshot.results.elementAt(index).fechaInicio,
+              snapshot.results.elementAt(index).fechaFin, snapshot.results.elementAt(index).fechaEvento, snapshot.results.elementAt(index).involucrados);
         });
   }
 
-  miCard(int idEvento, String titulo, String inicio, String fin,
-      List involucrados) {
+  miCard(int idEvento, String titulo, String inicio, String fin, String fevento, List involucrados) {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -75,10 +66,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
                 children: <Widget>[
                   Text('Fecha Inicio: ' + inicio),
                   Text('Fecha Fin: ' + fin),
-                  for (var i = 0; i < involucrados.length; i++)
-                    Text(involucrados[i].tipoInvolucrado +
-                        ' : ' +
-                        involucrados[i].nombre),
+                  Text('Fecha Evento: ' + fevento),
+                  for (var i = 0; i < involucrados.length; i++) Text(involucrados[i].tipoInvolucrado + ' : ' + involucrados[i].nombre),
                 ],
               ),
               leading: Icon(Icons.event),
@@ -88,13 +77,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
       ),
       onTap: () async {
         await _sharedPreferences.setIdEvento(idEvento);
-        Navigator.pushNamed(context, '/eventos', arguments: {
-          'idEvento': idEvento,
-          'titulo': titulo,
-          'inicio': inicio,
-          'fin': fin,
-          'involucrados': involucrados
-        });
+        Navigator.pushNamed(context, '/eventos',
+            arguments: {'idEvento': idEvento, 'titulo': titulo, 'inicio': inicio, 'fin': fin, 'fevento': fevento, 'involucrados': involucrados});
       },
     );
   }
@@ -111,16 +95,13 @@ class _DashboardEventosState extends State<DashboardEventos> {
               "Sesión",
               textAlign: TextAlign.center,
             ),
-            content: Text(
-                'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            content: Text('Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
             actions: <Widget>[
               TextButton(
                 child: Text('Cerrar'),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/', (route) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                 },
               ),
             ],
