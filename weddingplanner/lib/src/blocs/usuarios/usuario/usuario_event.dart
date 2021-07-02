@@ -9,12 +9,6 @@ class CrearUsuarioEvent extends UsuarioEvent {
   Map<String, dynamic> get data => this.jsonUsuario;
 }
 
-class EliminarUsuarioEvent extends UsuarioEvent {
-  final String idUsr;
-  EliminarUsuarioEvent(this.idUsr);
-  String get idUsuario => this.idUsr;
-}
-
 class EditarUsuarioEvent extends UsuarioEvent {
   final Map<String, dynamic> jsonUsuario;
   EditarUsuarioEvent(this.jsonUsuario);

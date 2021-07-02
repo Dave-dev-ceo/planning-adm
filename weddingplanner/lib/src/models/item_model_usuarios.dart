@@ -25,13 +25,13 @@ class ItemModelUsuarios {
   ItemModelUsuarios copyWith(ItemModelUsuarios obj) {
     List<_Result> temp = [];
 
-    for (int i = 0; i < obj.results.length; i++) {
-      _Result result = _Result.fromModel(obj.results[i]);
+    for (int i = 0; i < obj.usuarios.length; i++) {
+      _Result result = _Result.fromModel(obj.usuarios[i]);
       temp.add(result);
     }
   }
 
-  List<_Result> get results => _results;
+  List<_Result> get usuarios => _results;
 }
 
 class ItemModelUsuario {
@@ -63,6 +63,7 @@ class _Result {
   bool _admin;
   String _nombreCompleto;
   String _telefono;
+  String _estatus;
   String _creado;
   String _modificado;
   String _creadoPor;
@@ -74,6 +75,7 @@ class _Result {
     _admin = result['admin'];
     _nombreCompleto = result['nombre_completo'];
     _telefono = result['telefono'];
+    _estatus = result['estatus'];
     _creado = result['creado'].toString();
     _modificado = result['modificado'].toString();
     _creadoPor = result['creado_por'];
@@ -86,6 +88,7 @@ class _Result {
     _admin = dataObj._admin;
     _nombreCompleto = dataObj._nombreCompleto;
     _telefono = dataObj._telefono;
+    _estatus = dataObj._estatus;
     _creado = dataObj._creado;
     _modificado = dataObj._modificado;
     _creadoPor = dataObj._creadoPor;
@@ -111,6 +114,10 @@ class _Result {
   String get telefono => this._telefono;
 
   set telefono(value) => this._telefono = value;
+
+  String get estatus => this._estatus;
+
+  set estatus(value) => this._estatus = value;
 
   String get creado => this._creado;
 

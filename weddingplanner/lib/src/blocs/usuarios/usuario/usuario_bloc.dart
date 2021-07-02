@@ -16,26 +16,28 @@ class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
   Stream<UsuarioState> mapEventToState(
     UsuarioEvent event,
   ) async* {
+    // Crear usuario
     if (event is CrearUsuarioEvent) {
       yield LoadingCrearUsuarioState();
       try {
         ItemModelUsuario usuario = await logic.crearUsuario(event.data);
-        yield MostrarUsuarioState(usuario);
+        yield UsuarioCreadoState(new ItemModelUsuario(usuario.result));
       } on CrearUsuarioException {
         yield ErrorCrearUsuarioState("Error al crear Usuario");
       } on TokenException {
         yield ErrorTokenUsuarioState("Error de validación de token");
       }
-    } else if (event is EliminarUsuarioEvent) {
-      yield LoadingCrearUsuarioState();
+    } // Editar usuario
+    if (event is EditarUsuarioEvent) {
+      yield LoadingEditarUsuarioState();
       try {
-        bool eliminado = await logic.eliminarUsuario(event.idUsuario);
-        yield UsuarioEliminadoState(eliminado);
+        ItemModelUsuario usuario = await logic.editarUsuario(event.data);
+        yield UsuarioCreadoState(new ItemModelUsuario(usuario.result));
       } on CrearUsuarioException {
-        yield ErrorCrearUsuarioState("Sin Usuarios");
+        yield ErrorCrearUsuarioState("Error al crear Usuario");
       } on TokenException {
         yield ErrorTokenUsuarioState("Error de validación de token");
       }
-    } else if (event is EditarUsuarioEvent) {}
+    }
   }
 }
