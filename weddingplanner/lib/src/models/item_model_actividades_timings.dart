@@ -47,6 +47,7 @@ class _Result {
   bool _visibleInvolucrados;
   String _dias;
   int _predecesor;
+  int _idTipoTimig;
 
   _Result(result) {
     _idActividad = result['id_actividad_timing'];
@@ -55,6 +56,7 @@ class _Result {
     _visibleInvolucrados = result['visible_involucrados'];
     _dias = result['dias'];
     _predecesor = result['predecesor'];
+    _idTipoTimig = result['id_tipo_timing'];
   }
 
   _Result.fromModel(dataObj) {
@@ -71,6 +73,7 @@ class _Result {
   bool get visibleInvolucrados => this._visibleInvolucrados;
   String get dias => this._dias;
   int get predecesor => this._predecesor;
+  int get idTipoTimig => this._idTipoTimig;
   
   set addidActividad(int value) => this._idActividad = value;
   set addnombreActividad(String value) => this._nombreActividad = value;
@@ -78,4 +81,5 @@ class _Result {
   set addvisibleInvolucrados(bool value) => this._visibleInvolucrados = value;
   set adddias(String value) => this._dias = value;
   set addpredecesor(int value) => this._predecesor = value;
+  set addidTipoTimig(int value) => this._idTipoTimig = value;
 }

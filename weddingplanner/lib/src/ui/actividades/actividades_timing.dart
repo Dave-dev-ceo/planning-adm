@@ -15,14 +15,19 @@ class AgregarActividades extends StatefulWidget {
 class _AgregarActividadesState extends State<AgregarActividades> {
   final int idTiming;
   TextEditingController actividadCtrl;
+  TextEditingController actividadEditCtrl;
   TextEditingController descripcionCtrl;
+  TextEditingController descripcionEditCtrl;
   TextEditingController numCtrl;
+  TextEditingController numEditCtrl;
   ActividadestimingBloc actividadestimingBloc;
   ItemModelActividadesTimings itemModelActividadesTimings;
   GlobalKey<FormState> keyForm = new GlobalKey();
   String _mySelectionAT = '0';
   int _itemCount = 0;
   bool _actVisible = false;
+  int _itemCountEdit = 0;
+  bool _actVisibleEdit = false;
 
   _AgregarActividadesState(this.idTiming);
   @override
@@ -46,7 +51,14 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     descripcionCtrl.clear();
 
   }
-
+  _initControlersEdit(ItemModelActividadesTimings actividad, int i) {
+    actividadEditCtrl = new TextEditingController(text: actividad.results.elementAt(i).nombreActividad);
+    _itemCountEdit = int.parse(actividad.results.elementAt(i).dias);
+    numEditCtrl = new TextEditingController(text: _itemCountEdit.toString());
+    _actVisibleEdit = actividad.results.elementAt(i).visibleInvolucrados;
+    descripcionEditCtrl = new TextEditingController(text: actividad.results.elementAt(i).descripcion);
+    //_mySelectionAT = actividad.results.elementAt(i).idTipoTimig.toString();
+  }
   _initControlers() {
     actividadCtrl = new TextEditingController();
     numCtrl = new TextEditingController(text: 0.toString());
@@ -69,6 +81,22 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     }
   }
 
+  String validateActividadEdit(String value) {
+    if (value.length == 0) {
+      return "Falta actividad";
+    } else {
+      return null;
+    }
+  }
+
+  String validateDescripcionEdit(String value) {
+    if (value.length == 0) {
+      return "Falta descripcion";
+    } else {
+      return null;
+    }
+  }
+
   _save() {
     if (keyForm.currentState.validate()) {
       Map<String, dynamic> jsonActividad = {
@@ -83,7 +111,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     }
   }
 
-  _formIu() {
+  _formIu(bool et) {
     return Container(
       width: 1200,
       //height: 600,
@@ -100,22 +128,22 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 TextFormFields(
                     icon: Icons.local_activity,
                     item: TextFormField(
-                      controller: actividadCtrl,
+                      controller: et?actividadCtrl:actividadEditCtrl,
                       decoration: new InputDecoration(
                         labelText: 'Nombre',
                       ),
-                      validator: validateActividad,
+                      validator: et?validateActividad:validateActividadEdit,
                     ),
                     large: 500.0,
                     ancho: 80.0),
                 TextFormFields(
                     icon: Icons.drive_file_rename_outline,
                     item: TextFormField(
-                      controller: descripcionCtrl,
+                      controller: et?descripcionCtrl:descripcionEditCtrl,
                       decoration: new InputDecoration(
                         labelText: 'Descripción',
                       ),
-                      validator: validateDescripcion,
+                      validator: et?validateDescripcion:validateActividadEdit,
                     ),
                     large: 500.0,
                     ancho: 80.0),
@@ -131,13 +159,21 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                   item: Row(
                     children: [
                       Expanded(child: Text("Duración en días:")),
-                      IconButton(
+                      et?IconButton(
                         icon: Icon(Icons.remove),
                         onPressed: _itemCount == 0
                             ? null
                             : () => setState(() {
                                   _itemCount--;
                                   numCtrl.text = _itemCount.toString();
+                                }),
+                      ):IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: _itemCountEdit == 0
+                            ? null
+                            : () => setState(() {
+                                  _itemCountEdit--;
+                                  numEditCtrl.text = _itemCountEdit.toString();
                                 }),
                       ),
                       Container(
@@ -146,21 +182,28 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 3),
                           child: TextFormField(
-                            controller: numCtrl,
+                            controller: et?numCtrl:numEditCtrl,
                             textAlign: TextAlign.center,
                           ),
                         ),
                       ),
-                      IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () => setState(() {
-                                _itemCount++;
-                                numCtrl.text = _itemCount.toString();
-                              }))
+                      et?IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () => setState(() {
+                          _itemCount++;
+                          numCtrl.text = _itemCount.toString();
+                        })
+                      ):IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () => setState(() {
+                          _itemCountEdit++;
+                          numEditCtrl.text = _itemCountEdit.toString();
+                        })
+                      ),
                     ],
                   ),
                 ),
-                TextFormFields(
+                et?TextFormFields(
                   icon: null,
                   item: CheckboxListTile(
                     title: Text('Visible para novios'),
@@ -170,6 +213,23 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     onChanged: (bool value) {
                       setState(() {
                         _actVisible = value;
+                      });
+                    },
+                    activeColor: Colors.green,
+                    checkColor: Colors.black,
+                  ),
+                  ancho: 80,
+                  large: 363.0,
+                ):TextFormFields(
+                  icon: null,
+                  item: CheckboxListTile(
+                    title: Text('Visible para novios'),
+                    //secondary: Icon(Icons.be),
+                    controlAffinity: ListTileControlAffinity.platform,
+                    value: _actVisibleEdit,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _actVisibleEdit = value;
                       });
                     },
                     activeColor: Colors.green,
@@ -315,6 +375,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 ),
                 confirmDismiss: (DismissDirection direccion) async {
                   if(direccion == DismissDirection.endToStart){
+                    _initControlersEdit(item,i);
                     return await showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -325,7 +386,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: [
-                                    _formIu()
+                                    _formIu(false)
                                   ],)),
                               actions: [
                                 TextButton(
@@ -337,7 +398,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                                 item.results
                                                     .elementAt(i)
                                                     .idActividad));
-                                        item.results.removeAt(i);
+                                        //item.results.removeAt(i);
                                       });
                                       Navigator.of(context).pop();
                                     },
@@ -432,7 +493,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(child: Form(key: keyForm, child: _formIu())),
+                Container(child: Form(key: keyForm, child: _formIu(true))),
                 SizedBox(
                   height: 20,
                 ),
