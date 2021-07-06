@@ -204,7 +204,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
 
   String validateFechaEvento(String value) {
     if (value.length == 0) {
-      return "La fecha final es necesaria";
+      return "La fecha del evento es necesaria";
     }
     return null;
   }
@@ -303,13 +303,13 @@ class _AgregarEventoState extends State<AgregarEvento> {
     final DateTime picked = await showDatePicker(
       context: context,
       locale: const Locale("es", "ES"),
-      initialDate: fechaFin, // Refer step 1
+      initialDate: fechaEvento, // Refer step 1
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
     if (picked != null && picked != fechaEvento)
       setState(() {
-        fechaFin = picked;
+        fechaEvento = picked;
         fechaEventoCtrl.text = fechaEvento.toLocal().toString().split(' ')[0];
       });
   }
@@ -436,7 +436,8 @@ class _AgregarEventoState extends State<AgregarEvento> {
                               return Center(child: CircularProgressIndicator());
                             } else if (state is MostrarTiposEventosState) {
                               itemModelTipoEvento = state.tiposEventos;
-                              return formItemsDesign(
+                              return SizedBox.shrink();
+                              /* formItemsDesign(
                                   Icons.event,
                                   Row(
                                     children: <Widget>[
@@ -448,7 +449,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                     ],
                                   ),
                                   500.0,
-                                  80.0);
+                                  80.0); */
                             } else if (state is ErrorListaTiposEventosState) {
                               return Center(
                                 child: Text(state.message),
