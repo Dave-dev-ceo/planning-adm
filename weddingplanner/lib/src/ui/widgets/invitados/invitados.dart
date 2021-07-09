@@ -7,6 +7,7 @@ import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 //import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
+import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
 
 class Invitados extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -37,7 +38,7 @@ class _InvitadosState extends State<Invitados> {
   Widget build(BuildContext context) {
     //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
     return DefaultTabController(
-        length: 8,
+        length: 9,
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -73,6 +74,7 @@ class _InvitadosState extends State<Invitados> {
                 TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
                 TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open),
                 TabItem(titulo: 'Contratos', icono: Icons.description_outlined),
+                TabItem(titulo: 'Asistencia', icono: Icons.accessibility),
               ],
             ),
           ),
@@ -92,6 +94,7 @@ class _InvitadosState extends State<Invitados> {
                 Construccion(),
                 Construccion(),
                 Contratos(),
+                Asistencia()
               ],
             ),
           ),
