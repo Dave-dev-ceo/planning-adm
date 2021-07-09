@@ -14,6 +14,7 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_machote.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_planners.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_usuario.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_plantilla.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_reporte_evento.dart';
@@ -70,9 +71,16 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => FullScreenDialogAddPlanners());
       case '/addEvento':
         return MaterialPageRoute(builder: (context) => FullScreenDialogAddEvento());
+      case '/editarEvento':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogEditEvento(
+                  evento: args,
+                ));
       case '/addActividadesTiming':
         return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddActividades(idTiming: args,));
+            builder: (context) => FullScreenDialogAddActividades(
+                  idTiming: args,
+                ));
       case '/addContactos':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialog(
