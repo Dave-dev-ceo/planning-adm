@@ -35,17 +35,41 @@ class ItemModelAsistencia {
 }
 
 class _Result {
+  String _idInvitado;
   String _nombreCompleto;
+  String _mesa;
+  String _grupo;
+  String _asistencia;
 
   _Result(result) {
-    _nombreCompleto = result['nombre_completo'];
+    _idInvitado = result['id_invitado'].toString();
+    _nombreCompleto = result['nombre'];
+    _mesa = result['mesa'];
+    _grupo = result['grupo'];
+    _asistencia = result['asistencia'].toString();
   }
 
   _Result.fromModel(dataObj) {
     _nombreCompleto = dataObj._nombreCompleto;
   }
 
-  String get nombre_completo => this._nombreCompleto;
+  String get id_invitado => this._idInvitado;
 
-  set nombre_completo(value) => this._nombreCompleto = value;
+  set id_invitado(value) => this._idInvitado = value;
+
+  String get nombre => this._nombreCompleto;
+
+  set nombre(value) => this._nombreCompleto = value;
+
+  String get mesa => this._mesa;
+
+  set mesa(value) => this._mesa = value;
+
+  String get grupo => this._grupo;
+
+  set grupo(value) => this._grupo = value;
+
+  String get asistencia => this._asistencia;
+
+  set asistencia(value) => this._asistencia = value;
 }

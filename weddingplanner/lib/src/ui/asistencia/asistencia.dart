@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/asistencia/asistencia_bloc.dart';
 
+// model
+import 'package:weddingplanner/src/models/item_model_asistencia.dart';
+
 class Asistencia extends StatefulWidget {
   Asistencia({Key key}) : super(key: key);
 
@@ -14,6 +17,9 @@ class Asistencia extends StatefulWidget {
 class _AsistenciaState extends State<Asistencia> {
   // variables bloc
   AsistenciaBloc asistenciaBloc;
+
+  // variables model
+  ItemModelAsistencia itemModelAsistencia;
 
   //stilos
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
@@ -26,7 +32,7 @@ class _AsistenciaState extends State<Asistencia> {
   @override
   void initState() {
     super.initState();
-    //
+    // BlocProvider - cargamos el evento
     asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
     asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
   }
@@ -36,11 +42,34 @@ class _AsistenciaState extends State<Asistencia> {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(30.0),
-        child: Center(
-          child: ListView(
-            children: [_crearTabla()],
-          ),
+        // BlocBuilder - revisamos el estado
+        child: BlocBuilder<AsistenciaBloc, AsistenciaState>(
+          builder: (context, state) {
+            // state Iniciando
+            if(state is AsistenciaInitialState)
+              return Center(child: CircularProgressIndicator());
+            // state Loading
+            else if(state is LodingAsistenciaState)
+              return Center(child: CircularProgressIndicator());
+            // state Data
+            else if(state is MostrarAsistenciaState)
+              return getAsistencia(state.asistencia);
+            // state Error
+            else if(state is ErrorMostrarAsistenciaState)
+              return Center(child: Text(state.message));
+            // state No Data
+            else
+              return Center(child: Text('no data'));
+          },
         ),
+      ),
+    );
+  }
+  
+  Widget getAsistencia(asistencia) {
+    return Center(
+      child: ListView(
+        children: [_crearTabla()],
       ),
     );
   }

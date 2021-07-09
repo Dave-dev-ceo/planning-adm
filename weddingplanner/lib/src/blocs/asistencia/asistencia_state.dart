@@ -3,10 +3,13 @@ part of 'asistencia_bloc.dart';
 @immutable
 abstract class AsistenciaState {}
 
+// estado inicial
 class AsistenciaInitialState extends AsistenciaState {}
 
+// estado cargando
 class LodingAsistenciaState extends AsistenciaState {}
 
+// estado con datos
 class MostrarAsistenciaState extends AsistenciaState {
   final ItemModelAsistencia asistencia;
 
@@ -15,6 +18,7 @@ class MostrarAsistenciaState extends AsistenciaState {
   ItemModelAsistencia get props => asistencia;
 }
 
+// estado error data
 class ErrorMostrarAsistenciaState extends AsistenciaState {
   final String message;
 
@@ -23,7 +27,7 @@ class ErrorMostrarAsistenciaState extends AsistenciaState {
   List<Object> get props => [message];
 }
 
-// ERROR EN TOKEN:
+// estado error token
 class ErrorTokenAsistenciaState extends AsistenciaState {
   final String message;
 
