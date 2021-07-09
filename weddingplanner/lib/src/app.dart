@@ -29,6 +29,8 @@ import 'logic/estatus_logic.dart';
 import 'logic/eventos_logic.dart';
 import 'logic/paises_logic.dart';
 import 'logic/usuarios.logic.dart';
+import 'blocs/asistencia/asistencia_bloc.dart';
+import 'logic/asistencia_logic.dart';
 
 class MyApp extends StatelessWidget {
   Color hexToColor(String code) {
@@ -114,6 +116,7 @@ class AppState extends StatelessWidget {
           create: (_) => TimingsBloc(logic: FetchListaTimingsLogic())),
       BlocProvider<ActividadestimingBloc>(
           create: (_) => ActividadestimingBloc(logic: FetchListaActividadesTimingsLogic())),
+      BlocProvider(create: (_) => AsistenciaBloc(logic: FetchListaAsistenciaLogic()))
     ], child: MyApp());
   }
 }

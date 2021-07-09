@@ -24,13 +24,14 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner() async {
     // TODO: implement fetchAsistenciaPorPlanner
     int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(confiC.url +
             confiC.puerto +
-            '/wedding/USUARIOS/obtenerAsistenciasPorPlanner'),
-        body: {'id_planner': idPlanner.toString()},
+            '/wedding/ASISTENCIA/obtenerAsistenciasPorPlanner'),
+        body: {'id_planner': idPlanner.toString(), 'id_evento': idEvento.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
