@@ -5,13 +5,8 @@ abstract class EventosState {}
 
 class EventosInitial extends EventosState {}
 
+// Lista Eventos
 class LoadingEventosState extends EventosState {}
-
-class LoadingEventoPorIdState extends EventosState {}
-
-class CreateEventosState extends EventosState {}
-
-class CreateEventosOkState extends EventosState {}
 
 class MostrarEventosState extends EventosState {
   final ItemModelEventos eventos;
@@ -19,14 +14,6 @@ class MostrarEventosState extends EventosState {
   MostrarEventosState(this.eventos);
 
   ItemModelEventos get props => eventos;
-}
-
-class MostrarEventoPorIdState extends EventosState {
-  final ItemModelEvento evento;
-
-  MostrarEventoPorIdState(this.evento);
-
-  ItemModelEvento get props => evento;
 }
 
 class ErrorListaEventosState extends EventosState {
@@ -37,6 +24,17 @@ class ErrorListaEventosState extends EventosState {
   List<Object> get props => [message];
 }
 
+// Evento por id
+class LoadingEventoPorIdState extends EventosState {}
+
+class MostrarEventoPorIdState extends EventosState {
+  final ItemModelEvento evento;
+
+  MostrarEventoPorIdState(this.evento);
+
+  ItemModelEvento get props => evento;
+}
+
 class ErrorEventoPorIdState extends EventosState {
   final String message;
 
@@ -45,10 +43,28 @@ class ErrorEventoPorIdState extends EventosState {
   List<Object> get props => [message];
 }
 
+// Crear Evento
+class CreateEventosState extends EventosState {}
+
+class CreateEventosOkState extends EventosState {}
+
 class ErrorCreateEventosState extends EventosState {
   final String message;
 
   ErrorCreateEventosState(this.message);
+
+  List<Object> get props => [message];
+}
+
+// Editar Evento
+class EditarEventosState extends EventosState {}
+
+class EditarEventosOkState extends EventosState {}
+
+class ErrorEditarEventosState extends EventosState {
+  final String message;
+
+  ErrorEditarEventosState(this.message);
 
   List<Object> get props => [message];
 }

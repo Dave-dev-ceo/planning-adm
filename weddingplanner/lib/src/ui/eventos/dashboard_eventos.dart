@@ -12,6 +12,7 @@ class DashboardEventos extends StatefulWidget {
 class _DashboardEventosState extends State<DashboardEventos> {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   EventosBloc eventosBloc;
+  ItemModelEventos eventos;
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -64,9 +65,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Fecha Inicio: ' + inicio),
-                  Text('Fecha Fin: ' + fin),
                   Text('Fecha Evento: ' + fevento),
+                  Text('Planeación de evento: Del ' + inicio + ' al ' + fin),
                   for (var i = 0; i < involucrados.length; i++) Text(involucrados[i].tipoInvolucrado + ' : ' + involucrados[i].nombre),
                 ],
               ),
@@ -77,8 +77,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       ),
       onTap: () async {
         await _sharedPreferences.setIdEvento(idEvento);
-        Navigator.pushNamed(context, '/eventos',
-            arguments: {'idEvento': idEvento, 'titulo': titulo, 'inicio': inicio, 'fin': fin, 'fevento': fevento, 'involucrados': involucrados});
+        Navigator.pushNamed(context, '/eventos', arguments: {'idEvento': idEvento});
       },
     );
   }
@@ -123,15 +122,22 @@ class _DashboardEventosState extends State<DashboardEventos> {
             if (state is LoadingEventosState) {
               return Center(child: CircularProgressIndicator());
             } else if (state is MostrarEventosState) {
+              eventos = state.eventos;
               return Container(
-                child: buildList(state.eventos),
+                child: buildList(eventos),
               );
             } else if (state is ErrorListaEventosState) {
               return Center(
                 child: Text(state.message),
               );
             } else {
-              return Center(child: CircularProgressIndicator());
+              if (eventos != null) {
+                return Container(
+                  child: buildList(eventos),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
             }
           },
         ),

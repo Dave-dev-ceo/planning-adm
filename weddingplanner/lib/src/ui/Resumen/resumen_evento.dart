@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:weddingplanner/src/blocs/blocs.dart';
+import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart' as EvtBloc;
+import 'package:weddingplanner/src/models/item_model_evento.dart';
 
 import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
 import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
@@ -16,9 +19,12 @@ class ResumenEvento extends StatefulWidget {
 
 class _ResumenEventoState extends State<ResumenEvento> {
   final Map<dynamic, dynamic> detalleEvento;
+  EvtBloc.EventosBloc eventosBloc;
 
   @override
   void initState() {
+    eventosBloc = BlocProvider.of<EvtBloc.EventosBloc>(context);
+    eventosBloc.add(EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
     super.initState();
   }
 
@@ -194,58 +200,89 @@ class _ResumenEventoState extends State<ResumenEvento> {
     );
   }
 
+  ItemModelEvento evento;
+
   Widget reporteEvento() {
-    return Container(width: 400, height: 150, child: miCardReporteDetallesEvento());
+    return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
+      builder: (context, state) {
+        //print(state);
+        if (state is EvtBloc.LoadingEventoPorIdState) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is EvtBloc.MostrarEventoPorIdState) {
+          evento = state.evento;
+          eventosBloc.add(EvtBloc.FechtEventosEvent());
+          return Container(width: 400, height: 150, child: miCardReporteDetallesEvento(evento));
+        } else if (state is EvtBloc.ErrorEventoPorIdState) {
+          return Center(
+            child: Text(state.message),
+          );
+        } else {
+          if (evento != null) {
+            return Container(width: 400, height: 150, child: miCardReporteDetallesEvento(evento));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      },
+    );
   }
 
-  miCardReporteDetallesEvento() {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      margin: EdgeInsets.all(20),
-      elevation: 10,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-              title: Text(
-                'Detalles del evento',
-                style: TextStyle(fontSize: 16),
-              ),
-              subtitle: Wrap(
-                spacing: 5,
-                runSpacing: 5,
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Evento: ' + detalleEvento['titulo'],
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  Text(
-                    'Fecha inicio: ' + detalleEvento['inicio'],
-                    style: TextStyle(fontSize: 11),
-                  ),
-                  Text(
-                    'Fecha fin: ' + detalleEvento['fin'],
-                    style: TextStyle(fontSize: 11),
-                  ),
-                  Text(
-                    'Fecha evento: ' + detalleEvento['fevento'],
-                    style: TextStyle(fontSize: 11),
-                  ),
-                  for (var item in detalleEvento['involucrados'])
+  miCardReporteDetallesEvento(ItemModelEvento evtt) {
+    return GestureDetector(
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: EdgeInsets.all(20),
+        elevation: 10,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                title: Text(
+                  'Detalles del evento',
+                  style: TextStyle(fontSize: 16),
+                ),
+                subtitle: Wrap(
+                  spacing: 5,
+                  runSpacing: 5,
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
                     Text(
-                      item.tipoInvolucrado + ': ' + item.nombre,
+                      'Evento: ' + evtt.results.elementAt(0).evento,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    Text(
+                      'Fecha evento: ' + evtt.results.elementAt(0).fechaEvento,
                       style: TextStyle(fontSize: 12),
                     ),
-                ],
+                    Text(
+                      'Planeación: Del ' + evtt.results.elementAt(0).fechaInicio + ' al ' + evtt.results.elementAt(0).fechaFin,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    for (var inv in evtt.results.elementAt(0).involucrados) mostrarInvolucrado(inv),
+                  ],
+                ),
+                leading: Icon(Icons.event),
               ),
-              leading: Icon(Icons.event),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+      onTap: () async {
+        await Navigator.pushNamed(context, '/editarEvento', arguments: {'evento': evtt});
+      },
     );
+  }
+
+  mostrarInvolucrado(dynamic involucrado) {
+    if (involucrado.nombre == 'Sin nombre') {
+      return Text('Sin involucrados', style: TextStyle(fontSize: 12));
+    } else {
+      return Text(
+        involucrado.tipoInvolucrado + ': ' + involucrado.nombre,
+        style: TextStyle(fontSize: 12),
+      );
+    }
   }
 
   @override
