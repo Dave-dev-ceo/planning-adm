@@ -25,7 +25,7 @@ class _AsistenciaState extends State<Asistencia> {
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
 
   // variables tablaAsistencia
-  var dts = DTS();
+  var dts;
   int _rowPerPage = 10;
 
   // ini
@@ -65,16 +65,22 @@ class _AsistenciaState extends State<Asistencia> {
       ),
     );
   }
-  
+
   Widget getAsistencia(asistencia) {
     return Center(
       child: ListView(
-        children: [_crearTabla()],
+        children: [_crearTabla(asistencia)],
       ),
     );
   }
 
-  Widget _crearTabla() {
+  Widget _crearTabla(asistencia) {
+    // variables
+    itemModelAsistencia = asistencia.copy();
+    dts = DTS(asistenciaData : itemModelAsistencia);
+
+    // metodo
+
     return PaginatedDataTable(
       header: _crearHeader(),
       columns: _crearColumna(),
@@ -137,24 +143,42 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   _changePerPages(valor) {
-    setState(() {
-      return _rowPerPage = valor;
-    });
-  }
+    setState(() => _rowPerPage = valor);
+  }  
+}
+  
+// test - metodo afuera que lo llame el fulwidget y ese metodo foraneo use el metodo para crear el row
+// bool myV = false;
+cambiarAsistencia(valor){
+  print(valor);
 }
 
 class DTS extends DataTableSource {
+  // modelo
+  final ItemModelAsistencia _asistenciaData;
+  BuildContext gridContext;
+
+  DTS({
+    @required ItemModelAsistencia asistenciaData,this.gridContext
+  }) : _asistenciaData = asistenciaData,
+    assert(asistenciaData != null);
+
   @override
   DataRow getRow(int index) {
-    return DataRow.byIndex(index: index, cells: [
-      DataCell(Text("#cell$index")),
-      DataCell(Text("#cell$index")),
-      DataCell(Text("#cell$index")),
-      DataCell(Checkbox(
-        value: true,
-        onChanged: (valor) {},
-      )),
-    ]);
+    final _asistencia = _asistenciaData.asistencias[index];
+
+    return DataRow.byIndex(
+      index: index,
+      cells: <DataCell>[
+        DataCell(Text('${_asistencia.nombre}')),
+        DataCell(Text('${_asistencia.mesa}')),
+        DataCell(Text('${_asistencia.grupo}')),
+        DataCell(Checkbox(
+          value: _asistencia.asistencia,
+          onChanged: cambiarAsistencia,
+        )),
+      ],
+    );
   }
 
   @override
@@ -163,7 +187,7 @@ class DTS extends DataTableSource {
 
   @override
   // TODO: implement rowCount
-  int get rowCount => 100;
+  int get rowCount => _asistenciaData.asistencias.length;
 
   @override
   // TODO: implement selectedRowCount
