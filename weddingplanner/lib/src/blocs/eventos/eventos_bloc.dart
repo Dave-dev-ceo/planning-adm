@@ -35,16 +35,27 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
         if (data == 0) {
           add(FechtEventosEvent());
         }
-
         yield CreateEventosOkState();
       } on CreateEventoException {
         yield ErrorCreateEventosState("No se pudo insertar");
       } on TokenException {
         yield ErrorTokenEventosState("Sesión caducada");
       }
+    } else if (event is EditarEventosEvent) {
+      try {
+        yield EditarEventosState();
+        int data = await logic.EditarEvento(event.data);
+        yield EditarEventosOkState();
+        if (data >= 0) {
+          add(FetchEventoPorIdEvent(data.toString()));
+        }
+      } on EditarEventoException {
+        yield ErrorEditarEventosState("No se pudo editar");
+      } on TokenException {
+        yield ErrorTokenEventosState("Sesión caducada");
+      }
     } else if (event is FetchEventoPorIdEvent) {
       yield LoadingEventoPorIdState();
-
       try {
         ItemModelEvento evento = await logic.fetchEventoPorId(event.id_evento);
         yield MostrarEventoPorIdState(evento);

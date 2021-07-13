@@ -12,6 +12,13 @@ class CreateEventosEvent extends EventosEvent {
   List<Object> get props => [data, eventos];
 }
 
+class EditarEventosEvent extends EventosEvent {
+  final ItemModelEventos eventos;
+  final Map<String, dynamic> data;
+  EditarEventosEvent(this.data, this.eventos);
+  List<Object> get props => [data, eventos];
+}
+
 class FetchEventoPorIdEvent extends EventosEvent {
   final String id_evento;
 
