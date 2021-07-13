@@ -39,7 +39,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
                     decoration: new InputDecoration(
                       labelText: 'Nombre',
                     ),
-                    validator: validateNombre,
+                    validator: /* validateNombre */ null,
                   ),
                   500.0,
                   80.0),
@@ -50,7 +50,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
                     decoration: new InputDecoration(
                       labelText: 'Teléfono',
                     ),
-                    validator: validateTelefono,
+                    validator: /* validateTelefono */ null,
                   ),
                   500.0,
                   80.0),
@@ -65,7 +65,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
                     decoration: new InputDecoration(
                       labelText: 'Correo',
                     ),
-                    validator: validateCorreo,
+                    validator: /* validateCorreo */ null,
                   ),
                   500.0,
                   80.0),
@@ -93,10 +93,12 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
               ? Wrap(
                   children: <Widget>[
                     esUsr
-                        ? agregarInput(Icons.lock, TextInputType.visiblePassword, passwdInvoCtrl, 'Contraseña', validatePwd, null, obscureT: true, maxL: 30)
+                        ? agregarInput(Icons.lock, TextInputType.visiblePassword, passwdInvoCtrl, 'Contraseña', /* validatePwd */ null, null,
+                            obscureT: true, maxL: 30)
                         : SizedBox.shrink(),
                     esUsr
-                        ? agregarInput(Icons.lock, TextInputType.visiblePassword, passwdConfirmInvoCtrl, 'Confirmar Contraseña', validateConfirmPwd, null,
+                        ? agregarInput(
+                            Icons.lock, TextInputType.visiblePassword, passwdConfirmInvoCtrl, 'Confirmar Contraseña', /* validateConfirmPwd */ null, null,
                             obscureT: true, maxL: 30)
                         : SizedBox.shrink(),
                     // BlocListener(listener: listener)
