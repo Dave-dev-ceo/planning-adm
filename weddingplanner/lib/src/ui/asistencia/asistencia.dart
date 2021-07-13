@@ -18,14 +18,12 @@ class _AsistenciaState extends State<Asistencia> {
   // variables bloc
   AsistenciaBloc asistenciaBloc;
 
-  // variables model
-  ItemModelAsistencia itemModelAsistencia;
-
   //stilos
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
 
   // variables tablaAsistencia
-  var dts;
+  ItemModelAsistencia itemModelAsistencia;
+  ItemModelAsistencia copyItemFinal;
   int _rowPerPage = 10;
 
   // ini
@@ -52,11 +50,30 @@ class _AsistenciaState extends State<Asistencia> {
             else if(state is LodingAsistenciaState)
               return Center(child: CircularProgressIndicator());
             // state Data
-            else if(state is MostrarAsistenciaState)
-              return getAsistencia(state.asistencia);
+            else if(state is MostrarAsistenciaState){
+              if (state.asistencia != null) {
+                if(itemModelAsistencia != state.asistencia){
+                  itemModelAsistencia = state.asistencia;
+                  if (itemModelAsistencia != null) {
+                    copyItemFinal = itemModelAsistencia.copy();
+                  }
+                }
+              } else {
+                asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
+                return Center(child: CircularProgressIndicator());
+              }
+              if(copyItemFinal != null) {
+                return getAsistencia(copyItemFinal);
+              }else {
+                return Center(child: Text('Sin datos'));
+              }
+            }
             // state Error
             else if(state is ErrorMostrarAsistenciaState)
               return Center(child: Text(state.message));
+            // update
+            else if(state is SavedAsistenciaState)
+              return Center(child: Text('Cambiando asistencia'));
             // state No Data
             else
               return Center(child: Text('no data'));
@@ -75,22 +92,16 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   Widget _crearTabla(asistencia) {
-    // variables
-    itemModelAsistencia = asistencia.copy();
-    dts = DTS(asistenciaData : itemModelAsistencia);
-
-    // metodo
-
     return PaginatedDataTable(
-      header: _crearHeader(),
+      header: _crearHeader(asistencia),
       columns: _crearColumna(),
-      source: dts,
+      source: DTS(invitadosList:_crearLista(asistencia)),
       onRowsPerPageChanged: _changePerPages,
       rowsPerPage: _rowPerPage,
     );
   }
 
-  Widget _crearHeader() {
+  Widget _crearHeader(asistencia) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
@@ -107,6 +118,7 @@ class _AsistenciaState extends State<Asistencia> {
                       Icons.search,
                     ),
                     hintText: 'Buscar...'),
+                onChanged: (valor) {_buscadorInvitados(valor,asistencia);},
               )),
         ],
       ),
@@ -142,42 +154,88 @@ class _AsistenciaState extends State<Asistencia> {
     ];
   }
 
+  List<List<DataCell>> _crearLista(ItemModelAsistencia itemModel) {
+    List<List<DataCell>> invitadosList = [];
+    if(itemModel.asistencias.length > 0){
+      itemModel.asistencias.forEach((element) {
+        List<DataCell> invitadosListTemp = [
+          DataCell(Text('${element.nombre}')),
+          DataCell(Text('${element.mesa}')),
+          DataCell(Text('${element.grupo}')),
+          DataCell(Checkbox(
+            value: element.asistencia,
+            onChanged: (valor){
+              _guardarAsistencia(element.id_invitado,valor);
+              setState(() => element.asistencia = valor);
+            },
+          )),
+        ];
+        invitadosList.add(invitadosListTemp);
+      });
+    }
+    else {
+      List<DataCell> invitadosListNoData = [
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+      ];
+      invitadosList.add(invitadosListNoData);
+    }
+
+    return invitadosList;
+  }
+
   _changePerPages(valor) {
     setState(() => _rowPerPage = valor);
-  }  
-}
-  
-// test - metodo afuera que lo llame el fulwidget y ese metodo foraneo use el metodo para crear el row
-// bool myV = false;
-cambiarAsistencia(valor){
-  print(valor);
+  }
+
+  _guardarAsistencia(int idInvitado,bool asistenciaValor) {
+    // print('id: $idInvitado \nvalor: $asistenciaValor');
+    // BlocProvider - cargamos el evento
+    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
+  }
+
+  _buscadorInvitados(String valor, ItemModelAsistencia asistencia) {
+    if(valor.length > 2) {
+      List<dynamic> buscador = itemModelAsistencia.asistencias.where((element) =>
+        element.nombre.toLowerCase().contains(valor.toLowerCase()) ||
+        element.grupo.toLowerCase().contains(valor.toLowerCase()) ||
+        element.mesa.toLowerCase().contains(valor.toLowerCase())
+      ).toList();
+      setState((){
+        copyItemFinal.asistencias.clear();
+        if(buscador.length > 0) {
+          buscador.forEach((element) {
+            copyItemFinal.asistencias.add(element);
+          });
+        }
+        else {}
+      });
+    } else {
+      setState((){
+        if (itemModelAsistencia != null) {
+          copyItemFinal = itemModelAsistencia.copy();
+        }
+      });
+    }
+  }
 }
 
 class DTS extends DataTableSource {
   // modelo
-  final ItemModelAsistencia _asistenciaData;
-  BuildContext gridContext;
+  final List<List<DataCell>> _invitadosList;
 
   DTS({
-    @required ItemModelAsistencia asistenciaData,this.gridContext
-  }) : _asistenciaData = asistenciaData,
-    assert(asistenciaData != null);
+    @required List<List<DataCell>> invitadosList
+  }) : _invitadosList = invitadosList,
+    assert(invitadosList != null);
 
   @override
   DataRow getRow(int index) {
-    final _asistencia = _asistenciaData.asistencias[index];
-
     return DataRow.byIndex(
       index: index,
-      cells: <DataCell>[
-        DataCell(Text('${_asistencia.nombre}')),
-        DataCell(Text('${_asistencia.mesa}')),
-        DataCell(Text('${_asistencia.grupo}')),
-        DataCell(Checkbox(
-          value: _asistencia.asistencia,
-          onChanged: cambiarAsistencia,
-        )),
-      ],
+      cells: _invitadosList[index],
     );
   }
 
@@ -187,7 +245,7 @@ class DTS extends DataTableSource {
 
   @override
   // TODO: implement rowCount
-  int get rowCount => _asistenciaData.asistencias.length;
+  int get rowCount => _invitadosList.length;
 
   @override
   // TODO: implement selectedRowCount

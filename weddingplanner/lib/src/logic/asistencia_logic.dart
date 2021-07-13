@@ -9,6 +9,7 @@ import 'package:weddingplanner/src/models/item_model_asistencia.dart';
 
 abstract class AsistenciaLogic {
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner();
+  Future<int> saveAsistencia(int idInvitado, bool asistencia);
 }
 
 class ListaAsistenciaException implements Exception {}
@@ -45,4 +46,18 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
       throw ListaAsistenciaException;
     }
   }
+
+  Future<int> saveAsistencia(int idInvitado, bool asistencia) async{
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ASISTENCIA/saveAsistenciasPorPlanner'),
+        body: {'id_invitado': idInvitado.toString(), 'asistencia': asistencia.toString(), 'id_planner' : idPlanner.toString()},
+        headers: {HttpHeaders.authorizationHeader: token});
+    return 0;
+  }
 }
+

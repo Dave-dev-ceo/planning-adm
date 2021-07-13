@@ -29,5 +29,12 @@ class AsistenciaBloc extends Bloc<AsistenciaEvent, AsistenciaState> {
         yield ErrorTokenAsistenciaState("Error de validación de token");
       }
     }
+    // mejorar
+    else if(event is SaveAsistenciaEvent){
+      int response = await logic.saveAsistencia(event.idInvitado, event.asistencia);
+      // yield SavedAsistenciaState(response);
+      ItemModelAsistencia usuarios = await logic.fetchAsistenciaPorPlanner();
+      yield MostrarAsistenciaState(usuarios);
+    }
   }
 }
