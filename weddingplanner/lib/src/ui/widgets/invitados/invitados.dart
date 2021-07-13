@@ -8,6 +8,7 @@ import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
+import 'package:weddingplanner/src/ui/timing_evento/timings_eventos.dart';
 
 class Invitados extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -88,7 +89,7 @@ class _InvitadosState extends State<Invitados> {
                 ListaInvitados(
                   idEvento: detalleEvento['idEvento'],
                 ),
-                Construccion(),
+                TimingsEventos(),
                 Construccion(),
                 Construccion(),
                 Construccion(),

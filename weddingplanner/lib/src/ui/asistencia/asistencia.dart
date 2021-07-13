@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,6 +52,7 @@ class _AsistenciaState extends State<Asistencia> {
               return Center(child: CircularProgressIndicator());
             // state Data
             else if(state is MostrarAsistenciaState){
+              // buscador en header
               if (state.asistencia != null) {
                 if(itemModelAsistencia != state.asistencia){
                   itemModelAsistencia = state.asistencia;
@@ -68,6 +70,7 @@ class _AsistenciaState extends State<Asistencia> {
                 return Center(child: Text('Sin datos'));
               }
             }
+            // fin buscador
             // state Error
             else if(state is ErrorMostrarAsistenciaState)
               return Center(child: Text(state.message));
@@ -80,6 +83,7 @@ class _AsistenciaState extends State<Asistencia> {
           },
         ),
       ),
+      floatingActionButton: _crearBotonFlotante(MediaQuery.of(context).size.width),
     );
   }
 
@@ -219,6 +223,56 @@ class _AsistenciaState extends State<Asistencia> {
         }
       });
     }
+  }
+
+  // colores
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
+  // boton flotante
+  SpeedDial _crearBotonFlotante(double pHz) {
+    return SpeedDial(
+      marginEnd: pHz - 100,
+      marginBottom: 20,
+
+      icon: Icons.add,
+      activeIcon: Icons.close_rounded,
+      buttonSize: 56.0,
+      visible: true,
+
+      closeManually: false,
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+
+      tooltip: 'Opciones',
+      heroTag: 'Opciones',
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.white,
+      elevation: 8.0,
+      shape: CircleBorder(),
+
+      gradientBoxShape: BoxShape.circle,
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [hexToColor("#880B55"), hexToColor("#880B55")],
+      ),
+      children: [
+        SpeedDialChild(
+          foregroundColor: Colors.white,
+          child: Tooltip(
+            child: Icon(Icons.qr_code_outlined),
+            message: "Escáner Código QR",
+          ),
+          backgroundColor: hexToColor("#880B55"),
+          onTap: () async {
+            final result = await Navigator.of(context).pushNamed('/lectorQr');
+          },
+        ),
+      ],
+    );
   }
 }
 
