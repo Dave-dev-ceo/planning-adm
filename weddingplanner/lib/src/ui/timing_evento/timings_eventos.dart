@@ -23,29 +23,35 @@ class _TimingsEventosState extends State<TimingsEventos> {
   // ventanas - filas
   Widget _rowTiming() {
     return Row(
-      children: <Widget>[
-        _tablaTiming(),
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        _crearTabla(),
+        _crearTabla(),
       ],
     );
   }
 
-  // fila 1 - tabla-timing
-  Widget _tablaTiming() {
-    return Column(
-      children: <Widget>[
-        //_crearTabla(),
-      ],
-    );
-  }
+  // fila 1 - tabla-timing // la columna de la tabla no cubre todo su espacio
+  // Widget _tablaTiming() {
+  //   return Expanded(
+  //     child: Column(
+  //       children: [
+  //         _crearTabla(),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   // crea tabla-timing
   Widget _crearTabla() {
-    return PaginatedDataTable(
-      header: _crearHeader(),
-      columns: _crearColumnas(),
-      source: DTS(),
-      // rowsPerPage: null,
-      // showCheckboxColumn: null,
+    return Expanded(
+      child: PaginatedDataTable(
+        header: _crearHeader(),
+        columns: _crearColumnas(),
+        source: DTS(timingsList: _crearLista()),
+        rowsPerPage: 1,
+        // showCheckboxColumn: null,
+      ),
     );
   }
 
@@ -59,7 +65,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
     return [
       DataColumn(
         label: Text(
-          'Nombre',
+          'Timing',
           style: _boldStyle,
         ),
       ),
@@ -67,14 +73,36 @@ class _TimingsEventosState extends State<TimingsEventos> {
   }
 
   // crear lista
+  List<List<DataCell>> _crearLista() {
+    List<List<DataCell>> timingsList = [];
+    
+    // testData
+    List<DataCell> timingsListNoData = [
+      DataCell(Text('Sin datos')),
+    ];
+
+    // send data
+    timingsList.add(timingsListNoData);
+    return timingsList;
+  }
 
 }
 
 class DTS extends DataTableSource {
+  // modelo
+  final List<List<DataCell>> _timingsList;
+
+  DTS({
+    @required List<List<DataCell>> timingsList
+  }) : _timingsList = timingsList,
+    assert(timingsList != null);
+
   @override
   DataRow getRow(int index) {
-    // TODO: implement getRow
-    return null;
+    return DataRow.byIndex(
+      index: index,
+      cells: _timingsList[index],
+    );
   }
 
   @override
@@ -83,7 +111,7 @@ class DTS extends DataTableSource {
 
   @override
   // TODO: implement rowCount
-  int get rowCount => 10;
+  int get rowCount => _timingsList.length;
 
   @override
   // TODO: implement selectedRowCount

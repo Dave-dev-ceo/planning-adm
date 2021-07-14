@@ -100,8 +100,9 @@ class _AsistenciaState extends State<Asistencia> {
       header: _crearHeader(asistencia),
       columns: _crearColumna(),
       source: DTS(invitadosList:_crearLista(asistencia)),
-      onRowsPerPageChanged: _changePerPages,
-      rowsPerPage: _rowPerPage,
+      onRowsPerPageChanged: null,
+      rowsPerPage: asistencia.asistencias.length,
+      dataRowHeight: 90.0,
     );
   }
 
@@ -133,28 +134,10 @@ class _AsistenciaState extends State<Asistencia> {
     return [
       DataColumn(
         label: Text(
-          'Nombre',
+          '',
           style: _boldStyle,
         ),
       ),
-      DataColumn(
-        label: Text(
-          'Mesa',
-          style: _boldStyle,
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'Grupo',
-          style: _boldStyle,
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'Asistencia',
-          style: _boldStyle,
-        ),
-      )
     ];
   }
 
@@ -163,25 +146,31 @@ class _AsistenciaState extends State<Asistencia> {
     if(itemModel.asistencias.length > 0){
       itemModel.asistencias.forEach((element) {
         List<DataCell> invitadosListTemp = [
-          DataCell(Text('${element.nombre}')),
-          DataCell(Text('${element.mesa}')),
-          DataCell(Text('${element.grupo}')),
-          DataCell(Checkbox(
+          DataCell(
+            SwitchListTile(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('${element.nombre}', style: _boldStyle,),
+                Text('Grupo: ${element.grupo}'),
+                Text('Mesa: ${element.mesa}'),
+              ],
+            ),
             value: element.asistencia,
-            onChanged: (valor){
-              _guardarAsistencia(element.id_invitado,valor);
-              setState(() => element.asistencia = valor);
+            onChanged: (value){
+            _guardarAsistencia(element.id_invitado,value);
+            setState(() => element.asistencia = value);
             },
-          )),
+            ),
+          )
         ];
         invitadosList.add(invitadosListTemp);
       });
     }
     else {
       List<DataCell> invitadosListNoData = [
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),
       ];
       invitadosList.add(invitadosListNoData);
@@ -190,9 +179,10 @@ class _AsistenciaState extends State<Asistencia> {
     return invitadosList;
   }
 
-  _changePerPages(valor) {
-    setState(() => _rowPerPage = valor);
-  }
+  // cambia pagina en la tabla
+  // _changePerPages(valor) {
+  //   setState(() => _rowPerPage = valor);
+  // }
 
   _guardarAsistencia(int idInvitado,bool asistenciaValor) {
     // print('id: $idInvitado \nvalor: $asistenciaValor');
@@ -236,8 +226,8 @@ class _AsistenciaState extends State<Asistencia> {
       marginEnd: pHz - 100,
       marginBottom: 20,
 
-      icon: Icons.add,
-      activeIcon: Icons.close_rounded,
+      icon: Icons.qr_code_outlined,
+      activeIcon: Icons.qr_code_outlined,
       buttonSize: 56.0,
       visible: true,
 
@@ -259,19 +249,9 @@ class _AsistenciaState extends State<Asistencia> {
         end: Alignment.bottomCenter,
         colors: [hexToColor("#880B55"), hexToColor("#880B55")],
       ),
-      children: [
-        SpeedDialChild(
-          foregroundColor: Colors.white,
-          child: Tooltip(
-            child: Icon(Icons.qr_code_outlined),
-            message: "Escáner Código QR",
-          ),
-          backgroundColor: hexToColor("#880B55"),
-          onTap: () async {
-            final result = await Navigator.of(context).pushNamed('/lectorQr');
-          },
-        ),
-      ],
+      onPress: () async {
+        final result = await Navigator.of(context).pushNamed('/lectorQr');
+      },
     );
   }
 }
