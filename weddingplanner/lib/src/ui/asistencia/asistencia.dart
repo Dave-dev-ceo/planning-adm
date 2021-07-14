@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,14 +91,25 @@ class _AsistenciaState extends State<Asistencia> {
   Widget getAsistencia(asistencia) {
     return Center(
       child: ListView(
-        children: [_crearTabla(asistencia)],
+        children: [
+          StickyHeader(
+            header: Container(
+              height: 100.0,
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 35.0),
+              alignment: Alignment.centerLeft,
+              child: _crearHeader(asistencia)
+            ),
+            content: Expanded(child: _crearTabla(asistencia)),
+          ),
+        ],
       ),
     );
   }
 
   Widget _crearTabla(asistencia) {
     return PaginatedDataTable(
-      header: _crearHeader(asistencia),
+      // header: _crearHeader(asistencia),
       columns: _crearColumna(),
       source: DTS(invitadosList:_crearLista(asistencia)),
       onRowsPerPageChanged: null,
@@ -114,7 +126,7 @@ class _AsistenciaState extends State<Asistencia> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 3, child: Text('Asistencia')),
+          Expanded(flex: 3, child: Text('Asistencia', style: TextStyle(fontSize: 20.0),)),
           Expanded(
               flex: 5,
               child: TextField(
