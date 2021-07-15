@@ -26,7 +26,6 @@ class _AsistenciaState extends State<Asistencia> {
   // variables tablaAsistencia
   ItemModelAsistencia itemModelAsistencia;
   ItemModelAsistencia copyItemFinal;
-  int _rowPerPage = 10;
 
   // ini
   @override
@@ -108,13 +107,16 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   Widget _crearTabla(asistencia) {
-    return PaginatedDataTable(
-      // header: _crearHeader(asistencia),
-      columns: _crearColumna(),
-      source: DTS(invitadosList:_crearLista(asistencia)),
-      onRowsPerPageChanged: null,
-      rowsPerPage: asistencia.asistencias.length,
-      dataRowHeight: 90.0,
+    return SizedBox(
+      width: double.infinity,
+      child: PaginatedDataTable(
+        // header: _crearHeader(asistencia),
+        columns: _crearColumna(),
+        source: DTS(invitadosList:_crearLista(asistencia)),
+        onRowsPerPageChanged: null,
+        rowsPerPage: asistencia.asistencias.length,
+        dataRowHeight: 90.0,
+      ),
     );
   }
 

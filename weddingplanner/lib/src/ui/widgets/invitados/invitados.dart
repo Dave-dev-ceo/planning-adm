@@ -66,7 +66,7 @@ class _InvitadosState extends State<Invitados> {
               tabs: [
                 TabItem(titulo: 'Resumen', icono: Icons.list),
                 TabItem(titulo: 'Invitados', icono: Icons.people),
-                TabItem(titulo: 'Timings', icono: Icons.access_time_sharp),
+                TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp),
                 TabItem(
                     titulo: 'Proveedores', icono: Icons.support_agent_outlined),
                 TabItem(

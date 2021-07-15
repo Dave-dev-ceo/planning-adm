@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
                     titulo: 'Estatus de invitaciones',
                     icono: Icons.card_membership_rounded),
                 TabItem(
-                    titulo: 'Timing', icono: Icons.hourglass_bottom_rounded),
+                    titulo: 'Tareas', icono: Icons.hourglass_bottom_rounded),
                 TabItem(
                     titulo: 'Tipos de eventos',
                     icono: Icons.event_note_outlined),

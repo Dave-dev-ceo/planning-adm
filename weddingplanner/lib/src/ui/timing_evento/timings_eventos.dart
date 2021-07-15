@@ -1,5 +1,6 @@
 // imports dart/flutter
 import 'package:flutter/material.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 class TimingsEventos extends StatefulWidget {
   const TimingsEventos({ Key key }) : super(key: key);
@@ -16,37 +17,28 @@ class _TimingsEventosState extends State<TimingsEventos> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _rowTiming(),
+      padding: EdgeInsets.all(30.0),
+      child: Center(child: _agregarTabla()),
     );
   }
 
-  // ventanas - filas
-  Widget _rowTiming() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
+  Widget _agregarTabla(){
+    return ListView(
       children: [
-        _crearTabla(),
-        _crearTabla(),
+        StickyHeader(
+          header: _crearHeader(),
+          content: _crearTabla(),
+        ),
       ],
     );
   }
 
-  // fila 1 - tabla-timing // la columna de la tabla no cubre todo su espacio
-  // Widget _tablaTiming() {
-  //   return Expanded(
-  //     child: Column(
-  //       children: [
-  //         _crearTabla(),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   // crea tabla-timing
   Widget _crearTabla() {
-    return Expanded(
+    return SizedBox(
+      width: double.infinity,
       child: PaginatedDataTable(
-        header: _crearHeader(),
+        // header: _crearHeader(),
         columns: _crearColumnas(),
         source: DTS(timingsList: _crearLista()),
         rowsPerPage: 1,
@@ -57,7 +49,33 @@ class _TimingsEventosState extends State<TimingsEventos> {
 
   // crear header
   Widget _crearHeader() {
-    return null;
+    return Container(
+      height: 100.0,
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 35.0),
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 3, child: Text('Actividades', style: TextStyle(fontSize: 20.0),)),
+            Expanded(
+                flex: 5,
+                child: TextField(
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.search,
+                      ),
+                      hintText: 'Buscar...'),
+                  // onChanged: (valor) {_buscadorInvitados(valor,asistencia);},
+                )),
+          ],
+        ),
+      ),
+    );
   }
 
   // crear columnas
@@ -65,7 +83,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
     return [
       DataColumn(
         label: Text(
-          'Timing',
+          '',
           style: _boldStyle,
         ),
       ),
