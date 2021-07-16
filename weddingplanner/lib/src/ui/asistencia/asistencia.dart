@@ -20,12 +20,12 @@ class _AsistenciaState extends State<Asistencia> {
   // variables bloc
   AsistenciaBloc asistenciaBloc;
 
-  //stilos
-  final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
-
-  // variables tablaAsistencia
+  // variables model
   ItemModelAsistencia itemModelAsistencia;
   ItemModelAsistencia copyItemFinal;
+
+  //stilos
+  final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
 
   // ini
   @override

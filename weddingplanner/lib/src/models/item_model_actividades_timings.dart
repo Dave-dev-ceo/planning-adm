@@ -17,6 +17,16 @@ class ItemModelActividadesTimings {
     _results = temp;
   }
 
+  ItemModelActividadesTimings.fromJsonEvento(List<dynamic> parsedJson) {
+    List<_Result> temp = [];
+    
+    for (int i = 0; i < parsedJson.length; i++) {
+      _Result result = _Result(parsedJson[i]);
+      temp.add(result);
+    }
+    _results = temp;
+  }
+
   ItemModelActividadesTimings copy() {
     List<_Result> temp = [];
 
@@ -28,14 +38,14 @@ class ItemModelActividadesTimings {
     return new ItemModelActividadesTimings(temp);
   }
 
-ItemModelActividadesTimings copyWith(ItemModelActividadesTimings obj) {
-    List<_Result> temp = [];
+  ItemModelActividadesTimings copyWith(ItemModelActividadesTimings obj) {
+      List<_Result> temp = [];
 
-    for (int i = 0; i < obj.results.length; i++) {
-      _Result result = _Result.fromModel(obj.results[i]);
-      temp.add(result);
+      for (int i = 0; i < obj.results.length; i++) {
+        _Result result = _Result.fromModel(obj.results[i]);
+        temp.add(result);
+      }
     }
-  }
 
   List<_Result> get results => _results;
 }

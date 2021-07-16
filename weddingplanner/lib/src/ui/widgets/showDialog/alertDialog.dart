@@ -41,6 +41,7 @@ class _DialogAlertState extends State<DialogAlert> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      scrollable: false,
       title: Center(child: Text('Datos de invitado')),
       content: SingleChildScrollView(
         child: ListBody(
@@ -73,11 +74,17 @@ class _DialogAlertState extends State<DialogAlert> {
         ),
       ),
       actions: [
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Aceptar'))
+        _botonesAlert(),
+      ],
+    );
+  }
+
+  Row _botonesAlert() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, false), child: Text('Cancelar'))),
+        Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, 'lol'), child: Text('Aceptar'))),
       ],
     );
   }
