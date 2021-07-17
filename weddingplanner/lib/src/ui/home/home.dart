@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
+import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/models/model_perfilado.dart';
 import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
 import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
@@ -17,44 +23,57 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  //final int idPlanner;
   int _pageIndex = 0;
+  int _pages = 0;
+  PermisosBloc permisosBloc;
+  BuildContext _dialogContext;
+
+  ItemModelPerfil permisos;
+
+  void initState() {
+    permisosBloc = BlocProvider.of<PermisosBloc>(context);
+    permisosBloc.add(obtenerPermisosEvent());
+    super.initState();
+  }
 
   //_HomeState(this.idPlanner);
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
-  /*@override
-  void initState() async{
-      super.initState();
-      idEvento = await _sharedPreferences.getIdEvento();
-  }*/
-
-  /**
-   * Crea tab de menu
-   * 
-   * @Param titulo el titulo del tab
-   * @param icono el icono a mostrar
-   * 
-   * @Returns widget tab con icono personalizado
-   */
-  _tabs(String titulo, IconData icono) {
-    return Tab(
-      icon: Icon(icono, size: 18),
-      child: Text(
-        titulo,
-        style: TextStyle(fontSize: 12),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: BlocBuilder<PermisosBloc, PermisosState>(
+        builder: (context, state) {
+          if (state is PermisosInitial) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is ErrorTokenPermisos) {
+            return _showDialogMsg(context);
+          } else if (state is LoadingPermisos) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is PermisosOk) {
+            permisos = state.permisos;
+            List<TabItem> tabs = obtenerTabs(state.permisos.secciones); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
+            List<Widget> pantallas = obtenerPantallasSecciones(state.permisos.secciones); /* <Widget>[Center(child: Text('Test'))]; */
+            // Navigator.pop(_dialogContext);
+            return crearPantalla(context, tabs, pantallas);
+          } else if (state is ErrorPermisos) {
+            return Center(
+              child: Text(state.message),
+            );
+          } else {
+            return Center(child: Text('Sin permisos'));
+          }
+        },
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    //final ScreenArguments param =  ModalRoute.of(context).settings.arguments;
+  Widget crearPantalla(BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
     return DefaultTabController(
-        length: 9,
+        length: _pages,
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: true,
@@ -78,44 +97,162 @@ class _HomeState extends State<Home> {
               },
               indicatorColor: Colors.white,
               isScrollable: true,
-              tabs: [
-                TabItem(
-                    titulo: 'Eventos', icono: Icons.calendar_today_outlined),
-                TabItem(
-                    titulo: 'Estatus de invitaciones',
-                    icono: Icons.card_membership_rounded),
-                TabItem(
-                    titulo: 'Timing', icono: Icons.hourglass_bottom_rounded),
-                TabItem(
-                    titulo: 'Tipos de eventos',
-                    icono: Icons.event_note_outlined),
-                TabItem(
-                    titulo: 'Proveedores', icono: Icons.support_agent_outlined),
-                TabItem(
-                    titulo: 'Inventario',
-                    icono: Icons.featured_play_list_outlined),
-                TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
-                TabItem(titulo: 'Plantillas', icono: Icons.copy),
-                TabItem(titulo: 'Usuarios', icono: Icons.people),
-              ],
+              tabs: tabs,
+              // [
+              // TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined),
+              // TabItem(titulo: 'Estatus de invitaciones', icono: Icons.card_membership_rounded),
+              // TabItem(titulo: 'Timing', icono: Icons.hourglass_bottom_rounded),
+              // TabItem(titulo: 'Tipos de eventos', icono: Icons.event_note_outlined),
+              // TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined),
+              // TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined),
+              // TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
+              // TabItem(titulo: 'Plantillas', icono: Icons.copy),
+              // TabItem(titulo: 'Usuarios', icono: Icons.people),
+              // ],
             ),
           ),
           body: SafeArea(
             child: IndexedStack(
               index: _pageIndex,
-              children: <Widget>[
-                DashboardEventos(),
-                ListaEstatusInvitaciones(),
-                Timing(),
-                Construccion(),
-                Construccion(),
-                Construccion(),
-                Construccion(),
-                Machotes(),
-                Usuarios()
-              ],
+              children: pantallas,
+              // <Widget>[
+              //   DashboardEventos(),
+              //   ListaEstatusInvitaciones(),
+              //   Timing(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Machotes(),
+              //   Usuarios()
+              // ],
             ),
           ),
         ));
+  }
+
+  List<TabItem> obtenerTabs(ItemModelSecciones secciones) {
+    List<TabItem> tabs = [];
+    int temp = 0;
+    if (secciones != null) {
+      if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
+        tabs.add(TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
+        tabs.add(TabItem(titulo: 'Estatus de invitaciones', icono: Icons.card_membership_rounded));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
+        tabs.add(TabItem(titulo: 'Timing', icono: Icons.hourglass_bottom_rounded));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
+        tabs.add(TabItem(titulo: 'Tipos de eventos', icono: Icons.event_note_outlined));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
+        tabs.add(TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-IVT')) {
+        tabs.add(TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PRS')) {
+        tabs.add(TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
+        tabs.add(TabItem(titulo: 'Plantillas', icono: Icons.copy));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-USR')) {
+        tabs.add(TabItem(titulo: 'Usuarios', icono: Icons.people));
+        temp += 1;
+      }
+      _pages = temp;
+      return tabs;
+    } else {
+      return [TabItem(titulo: 'Sin permisos', icono: Icons.block)];
+    }
+  }
+
+  List<Widget> obtenerPantallasSecciones(ItemModelSecciones secciones) {
+    List<Widget> pan = [];
+    if (secciones != null) {
+      if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
+        pan.add(DashboardEventos(WP_EVT_CRT: permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT')));
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
+        pan.add(ListaEstatusInvitaciones());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
+        pan.add(Timing());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
+        pan.add(Construccion());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
+        pan.add(Construccion());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-IVT')) {
+        pan.add(Construccion());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PRS')) {
+        pan.add(Construccion());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
+        pan.add(Machotes());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-USR')) {
+        pan.add(Usuarios());
+      }
+      return pan;
+    } else {
+      return [
+        Center(
+          child: Text('Sin permisos.'),
+        )
+      ];
+    }
+  }
+
+  // _dialogSpinner(String title) {
+  //   Widget child = CircularProgressIndicator();
+  //   showDialog(
+  //       barrierDismissible: false,
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         _dialogContext = context;
+  //         return AlertDialog(
+  //           title: Text(
+  //             title,
+  //             textAlign: TextAlign.center,
+  //           ),
+  //           content: child,
+  //           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+  //         );
+  //       });
+  // }
+
+  _showDialogMsg(BuildContext contextT) {
+    _dialogContext = contextT;
+    return AlertDialog(
+      title: Text(
+        "Sesión",
+        textAlign: TextAlign.center,
+      ),
+      content: Text('Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+      actions: <Widget>[
+        TextButton(
+          child: Text('Cerrar'),
+          onPressed: () {
+            Navigator.of(contextT).pushNamedAndRemoveUntil('/', (route) => false);
+          },
+        ),
+      ],
+    );
   }
 }
