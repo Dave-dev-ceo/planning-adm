@@ -14,22 +14,35 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ListaInvitados extends StatefulWidget {
   final int idEvento;
+  final bool WP_EVT_INV_CRT;
+  final bool WP_EVT_INV_EDT;
+  final bool WP_EVT_INV_ENV;
 
-  const ListaInvitados({Key key, this.idEvento}) : super(key: key);
+  const ListaInvitados({Key key, this.idEvento, this.WP_EVT_INV_CRT, this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => ListaInvitados(),
       );
   @override
-  _ListaInvitadosState createState() => _ListaInvitadosState(idEvento);
+  _ListaInvitadosState createState() => _ListaInvitadosState(idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV);
 }
 
 class _ListaInvitadosState extends State<ListaInvitados> {
   ApiProvider api = new ApiProvider();
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   final int idEvento;
+
+  final bool WP_EVT_INV_CRT;
+  final bool WP_EVT_INV_EDT;
+  final bool WP_EVT_INV_ENV;
+
   bool dialVisible = true;
 
   BuildContext _dialogContext;
+
+  _ListaInvitadosState(this.idEvento, this.WP_EVT_INV_CRT, this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV);
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
 
   void setDialVisible(bool value) {
     setState(() {
@@ -42,8 +55,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(
               title: Text('Importación de excel'),
-              content: Text(
-                  'Procedera a abrir su explorador de archivos para seleccionar un archivo excel,¿Desea continuar?'),
+              content: Text('Procedera a abrir su explorador de archivos para seleccionar un archivo excel,¿Desea continuar?'),
               actions: <Widget>[
                 CupertinoDialogAction(
                   child: Text(
@@ -88,16 +100,9 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         //print(excel.tables[table].maxCols);
         //print(excel.tables[table].maxRows);
         dynamic xx = excel.tables[table].rows;
-        if (xx[0][0] == "NOMBRE" &&
-            xx[0][1] == "EMAIL" &&
-            xx[0][2] == "TELÉFONO") {
+        if (xx[0][0] == "NOMBRE" && xx[0][1] == "EMAIL" && xx[0][2] == "TELÉFONO") {
           for (var i = 1; i < xx.length; i++) {
-            Map<String, String> json = {
-              "nombre": xx[i][0],
-              "telefono": xx[i][2].toString(),
-              "email": xx[i][1],
-              "id_evento": idEvento.toString()
-            };
+            Map<String, String> json = {"nombre": xx[i][0], "telefono": xx[i][2].toString(), "email": xx[i][1], "id_evento": idEvento.toString()};
             bool response = await api.createInvitados(json, context);
             if (response) {
             } else {
@@ -148,8 +153,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
 
   Future<PermissionStatus> _getPermission() async {
     PermissionStatus permission = await Permission.contacts.status;
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.permanentlyDenied) {
+    if (permission != PermissionStatus.granted && permission != PermissionStatus.permanentlyDenied) {
       PermissionStatus permissionStatus = await Permission.contacts.request();
       return permissionStatus;
     } else {
@@ -163,10 +167,9 @@ class _ListaInvitadosState extends State<ListaInvitados> {
       //Navigator.push(
       //  context, MaterialPageRoute(builder: (context) => FullScreenDialog(id: idEvento,)));
 
-      final result = await Navigator.of(context)
-          .pushNamed('/addContactos', arguments: idEvento);
+      final result = await Navigator.of(context).pushNamed('/addContactos', arguments: idEvento);
       if (result == null || result == "" || result == false || result == 0) {
-        _ListaInvitadosState(idEvento).listaInvitados(context);
+        _ListaInvitadosState(idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV).listaInvitados(context);
       }
     } else {
       //If permissions have been denied show standard cupertino alert dialog
@@ -219,93 +222,80 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         end: Alignment.bottomCenter,
         colors: [hexToColor("#880B55"), hexToColor("#880B55")],
       ),
-      children: [
-        SpeedDialChild(
-          foregroundColor: Colors.white,
-          child: Tooltip(
-            child: Icon(Icons.person_add),
-            message: "Agregar invitado",
-          ),
-          backgroundColor: hexToColor("#880B55"),
-          onTap: () async {
-            final result = await Navigator.of(context)
-                .pushNamed('/addInvitados', arguments: idEvento);
-            if (result == null ||
-                result == "" ||
-                result == false ||
-                result == 0) {
-              _ListaInvitadosState(idEvento).listaInvitados(context);
-            }
-          },
-          onLongPress: () => print('FIRST CHILD LONG PRESS'),
-        ),
-        SpeedDialChild(
-          foregroundColor: Colors.white,
-          child: Tooltip(
-            child: Icon(Icons.table_chart_outlined),
-            message: "Importar excel",
-          ),
-          backgroundColor: hexToColor("#880B55"),
-          //label: 'Importar excel',
-          //labelStyle: TextStyle(fontSize: 14.0),
-          onTap: () => _viewShowDialogExcel(),
-          onLongPress: () => print('SECOND CHILD LONG PRESS'),
-        ),
-        SpeedDialChild(
-          foregroundColor: Colors.white,
-          child: Tooltip(
-            child: Icon(Icons.import_contacts_rounded),
-            message: "Importar contactos",
-          ),
-          backgroundColor: hexToColor("#880B55"),
-          //label: 'Importar contactos',
-          //labelStyle: TextStyle(fontSize: 14.0),
-          onTap: () => _viewContact(),
-          onLongPress: () => print('THIRD CHILD LONG PRESS'),
-        ),
-        SpeedDialChild(
-          foregroundColor: Colors.white,
-          child: Tooltip(
-            child: Icon(Icons.qr_code_outlined),
-            message: "Escáner Código QR",
-          ),
-          backgroundColor: hexToColor("#880B55"),
-          onTap: () async {
-            final result = await Navigator.of(context).pushNamed('/lectorQr');
-          },
-        ),
-        SpeedDialChild(
-          foregroundColor: Colors.white,
-          child: Tooltip(
-            child: Icon(Icons.send_and_archive_sharp),
-            message: "Enviar QR a invitados",
-          ),
-          backgroundColor: hexToColor("#880B55"),
-          onTap: () async {
-            _dialogSpinner('Enviando QR...');
-            Map<String, dynamic> response =
-                await api.enviarInvitacionesPorEvento();
-            Navigator.pop(_dialogContext);
-            SnackBar sb = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text(response['msg']),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.green,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(sb);
-          },
-        ),
-      ],
+      children: armarBotonesAcciones(),
     );
   }
 
-  _ListaInvitadosState(this.idEvento);
-  Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  List<SpeedDialChild> armarBotonesAcciones() {
+    List<SpeedDialChild> temp = [];
+    if (WP_EVT_INV_CRT) {
+      temp.add(SpeedDialChild(
+        foregroundColor: Colors.white,
+        child: Tooltip(
+          child: Icon(Icons.person_add),
+          message: "Agregar invitado",
+        ),
+        backgroundColor: hexToColor("#880B55"),
+        onTap: () async {
+          final result = await Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
+          if (result == null || result == "" || result == false || result == 0) {
+            _ListaInvitadosState(idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV).listaInvitados(context);
+          }
+        },
+        onLongPress: () => print('FIRST CHILD LONG PRESS'),
+      ));
+      temp.add(SpeedDialChild(
+        foregroundColor: Colors.white,
+        child: Tooltip(
+          child: Icon(Icons.table_chart_outlined),
+          message: "Importar excel",
+        ),
+        backgroundColor: hexToColor("#880B55"),
+        //label: 'Importar excel',
+        //labelStyle: TextStyle(fontSize: 14.0),
+        onTap: () => _viewShowDialogExcel(),
+        onLongPress: () => print('SECOND CHILD LONG PRESS'),
+      ));
+      temp.add(SpeedDialChild(
+        foregroundColor: Colors.white,
+        child: Tooltip(
+          child: Icon(Icons.import_contacts_rounded),
+          message: "Importar contactos",
+        ),
+        backgroundColor: hexToColor("#880B55"),
+        //label: 'Importar contactos',
+        //labelStyle: TextStyle(fontSize: 14.0),
+        onTap: () => _viewContact(),
+        onLongPress: () => print('THIRD CHILD LONG PRESS'),
+      ));
+    }
+    if (WP_EVT_INV_ENV) {
+      temp.add(SpeedDialChild(
+        foregroundColor: Colors.white,
+        child: Tooltip(
+          child: Icon(Icons.send_and_archive_sharp),
+          message: "Enviar QR a invitados",
+        ),
+        backgroundColor: hexToColor("#880B55"),
+        onTap: () async {
+          _dialogSpinner('Enviando QR...');
+          Map<String, dynamic> response = await api.enviarInvitacionesPorEvento();
+          Navigator.pop(_dialogContext);
+          SnackBar sb = SnackBar(
+            content: Container(
+              height: 30,
+              child: Center(
+                child: Text(response['msg']),
+              ),
+              //color: Colors.red,
+            ),
+            backgroundColor: Colors.green,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(sb);
+        },
+      ));
+    }
+    return temp;
   }
 
   alertaLlamada() {
@@ -380,8 +370,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
   }
@@ -402,7 +391,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
             //DataColumn(label: Text('', style:estiloTxt),),
             //DataColumn(label: Text('', style:estiloTxt)),
           ],
-          source: _DataSource(snapshot.data.results, context, idEvento),
+          source: _DataSource(snapshot.data.results, context, idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV),
         ),
       ],
     );
@@ -429,22 +418,20 @@ class _Row {
 class _DataSource extends DataTableSource {
   BuildContext _cont;
   final int idEvento;
+  final bool WP_EVT_INV_CRT;
+  final bool WP_EVT_INV_EDT;
+  final bool WP_EVT_INV_ENV;
+
   ItemModelGrupos _grupos;
   ItemModelEstatusInvitado _estatus;
   String _grupoSelect = "0";
   String _estatusSelect = "0";
   ApiProvider api = new ApiProvider();
-  _DataSource(context, BuildContext cont, this.idEvento) {
+  _DataSource(context, BuildContext cont, this.idEvento, this.WP_EVT_INV_CRT, this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(
-          context[i].idInvitado,
-          context[i].nombre,
-          context[i].telefono,
-          (context[i].grupo == null ? 'Sin grupo' : context[i].grupo),
-          context[i].asistencia == null
-              ? 'Sin estatus'
-              : context[i].asistencia));
+      _rows.add(_Row(context[i].idInvitado, context[i].nombre, context[i].telefono, (context[i].grupo == null ? 'Sin grupo' : context[i].grupo),
+          context[i].asistencia == null ? 'Sin estatus' : context[i].asistencia));
     }
     _cont = cont;
   }
@@ -515,14 +502,11 @@ class _DataSource extends DataTableSource {
               ));
   }*/
   _updateEstatus(int idInvitado) async {
-    Map<String, String> json = {
-      "id_invitado": idInvitado.toString(),
-      "id_estatus_invitado": _estatusSelect.toString()
-    };
+    Map<String, String> json = {"id_invitado": idInvitado.toString(), "id_estatus_invitado": _estatusSelect.toString()};
 
     bool response = await api.updateEstatusInvitado(json, _cont);
     if (response) {
-      _ListaInvitadosState(idEvento).listaInvitados(_cont);
+      _ListaInvitadosState(idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV).listaInvitados(_cont);
       //print("actualizado");
     } else {
       _msgSnackBar("Error al actualizar el estatus", Colors.red);
@@ -530,11 +514,10 @@ class _DataSource extends DataTableSource {
   }
 
   _viewShowDialogEditar(int idInvitado) async {
-    final resultE = await Navigator.of(_cont)
-        .pushNamed('/editInvitado', arguments: idInvitado);
+    final resultE = await Navigator.of(_cont).pushNamed('/editInvitado', arguments: idInvitado);
     if (resultE == null || resultE == "" || resultE == false || resultE == 0) {
       //print("edit " + resultE.toString());
-      _ListaInvitadosState(idEvento).listaInvitados(_cont);
+      _ListaInvitadosState(idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV).listaInvitados(_cont);
     }
   }
 
@@ -611,15 +594,13 @@ class _DataSource extends DataTableSource {
                 CupertinoPicker(
                     itemExtent: 32.0,
                     onSelectedItemChanged: (value) {
-                      _grupoSelect =
-                          _grupos.results.elementAt(value).idGrupo.toString();
+                      _grupoSelect = _grupos.results.elementAt(value).idGrupo.toString();
                       print(_grupoSelect);
                     },
                     children: <Widget>[
                   //for (var i = 0; i < _grupos.results.length; i++)
                   for (var data in _grupos.results)
-                    if (data.nombreGrupo != "Nuevo grupo")
-                      Text(data.nombreGrupo),
+                    if (data.nombreGrupo != "Nuevo grupo") Text(data.nombreGrupo),
                 ]),
             // _listaGrupos(),
             // ],
@@ -690,13 +671,10 @@ class _DataSource extends DataTableSource {
   }*/
   _updateGrupo(int idInvitado) async {
     bool response;
-    Map<String, String> json = {
-      "id_invitado": idInvitado.toString(),
-      "id_grupo": _grupoSelect
-    };
+    Map<String, String> json = {"id_invitado": idInvitado.toString(), "id_grupo": _grupoSelect};
     response = await api.updateGrupoInvitado(json, _cont);
     if (response) {
-      _ListaInvitadosState(idEvento).listaInvitados(_cont);
+      _ListaInvitadosState(idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV).listaInvitados(_cont);
     } else {
       _msgSnackBar("Error al actualizar el grupo", Colors.red);
     }
@@ -716,10 +694,7 @@ class _DataSource extends DataTableSource {
                 CupertinoPicker(
                     itemExtent: 32.0,
                     onSelectedItemChanged: (value) {
-                      _estatusSelect = _estatus.results
-                          .elementAt(value)
-                          .idEstatusInvitado
-                          .toString();
+                      _estatusSelect = _estatus.results.elementAt(value).idEstatusInvitado.toString();
                       print(_grupoSelect);
                     },
                     children: <Widget>[

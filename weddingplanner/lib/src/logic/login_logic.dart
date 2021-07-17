@@ -16,8 +16,7 @@ class BackendLoginLogic implements LoginLogic {
   Client client = Client();
   @override
   Future<int> login(String correo, String password) async {
-    final response = await client.post(
-        Uri.parse(confiC.url + confiC.puerto + "/wedding/ACCESO/loginPlanner"),
+    final response = await client.post(Uri.parse(confiC.url + confiC.puerto + "/wedding/ACCESO/loginPlanner"),
         //Uri.http('localhost:3005', 'wedding/ACCESO/loginPlanner'),
         body: {"correo": correo, "contrasena": password});
     if (response.statusCode == 200) {
@@ -34,6 +33,7 @@ class BackendLoginLogic implements LoginLogic {
         data['token']
       ];
       await _sharedPreferences.setJsonData(dataJsonWPlanner);
+      await _sharedPreferences.setPermisos(json.encode(data['permisos']));
       return 0;
     } else if (response.statusCode == 403) {
       throw LoginException();

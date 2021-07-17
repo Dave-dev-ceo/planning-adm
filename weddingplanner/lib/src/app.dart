@@ -9,6 +9,7 @@ import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/invitados/invitados_bloc.dart';
 import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
+import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
 import 'package:weddingplanner/src/blocs/planners/planners_bloc.dart';
 import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
 import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:weddingplanner/src/logic/etiquetas_logic.dart';
 import 'package:weddingplanner/src/logic/lista_invitados_logic.dart';
 import 'package:weddingplanner/src/logic/login_logic.dart';
 import 'package:weddingplanner/src/logic/machotes_logic.dart';
+import 'package:weddingplanner/src/logic/permisos_logic.dart';
 import 'package:weddingplanner/src/logic/planners_logic.dart';
 import 'package:weddingplanner/src/logic/timings_logic.dart';
 import 'package:weddingplanner/src/logic/tipos_eventos_logic.dart';
@@ -61,11 +63,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: [GlobalMaterialLocalizations.delegate],
-      supportedLocales: [
-        const Locale('en'),
-        const Locale('fr'),
-        const Locale('es')
-      ],
+      supportedLocales: [const Locale('en'), const Locale('fr'), const Locale('es')],
       title: 'App',
       theme: ThemeData(
           primarySwatch: createMaterialColor(Color(0xFF880B55)),
@@ -95,28 +93,18 @@ class AppState extends StatelessWidget {
       BlocProvider<EstatusBloc>(
         create: (_) => EstatusBloc(logic: FetchListaEstatusLogic()),
       ),
-      BlocProvider<PlannersBloc>(
-          create: (_) => PlannersBloc(logic: FetchListaPlannersLogic())),
-      BlocProvider<PaisesBloc>(
-          create: (_) => PaisesBloc(logic: FetchListaPaisesLogic())),
-      BlocProvider<EtiquetasBloc>(
-          create: (_) => EtiquetasBloc(logic: FetchListaEtiquetasLogic())),
-      BlocProvider<MachotesBloc>(
-          create: (_) => MachotesBloc(logic: FetchListaMachotesLogic())),
-      BlocProvider<ContratosBloc>(
-          create: (_) => ContratosBloc(logic: FetchListaContratosLogic())),
-      BlocProvider<TiposEventosBloc>(
-          create: (_) =>
-              TiposEventosBloc(logic: FetchListaTiposEventosLogic())),
-      BlocProvider<UsuariosBloc>(
-          create: (_) => UsuariosBloc(logic: FetchListaUsuariosLogic())),
-      BlocProvider<UsuarioBloc>(
-          create: (_) => UsuarioBloc(logic: UsuarioCrud())),
-      BlocProvider<TimingsBloc>(
-          create: (_) => TimingsBloc(logic: FetchListaTimingsLogic())),
-      BlocProvider<ActividadestimingBloc>(
-          create: (_) => ActividadestimingBloc(logic: FetchListaActividadesTimingsLogic())),
-      BlocProvider(create: (_) => AsistenciaBloc(logic: FetchListaAsistenciaLogic()))
+      BlocProvider<PlannersBloc>(create: (_) => PlannersBloc(logic: FetchListaPlannersLogic())),
+      BlocProvider<PaisesBloc>(create: (_) => PaisesBloc(logic: FetchListaPaisesLogic())),
+      BlocProvider<EtiquetasBloc>(create: (_) => EtiquetasBloc(logic: FetchListaEtiquetasLogic())),
+      BlocProvider<MachotesBloc>(create: (_) => MachotesBloc(logic: FetchListaMachotesLogic())),
+      BlocProvider<ContratosBloc>(create: (_) => ContratosBloc(logic: FetchListaContratosLogic())),
+      BlocProvider<TiposEventosBloc>(create: (_) => TiposEventosBloc(logic: FetchListaTiposEventosLogic())),
+      BlocProvider<UsuariosBloc>(create: (_) => UsuariosBloc(logic: FetchListaUsuariosLogic())),
+      BlocProvider<UsuarioBloc>(create: (_) => UsuarioBloc(logic: UsuarioCrud())),
+      BlocProvider<TimingsBloc>(create: (_) => TimingsBloc(logic: FetchListaTimingsLogic())),
+      BlocProvider<ActividadestimingBloc>(create: (_) => ActividadestimingBloc(logic: FetchListaActividadesTimingsLogic())),
+      BlocProvider<AsistenciaBloc>(create: (_) => AsistenciaBloc(logic: FetchListaAsistenciaLogic())),
+      BlocProvider<PermisosBloc>(create: (_) => PermisosBloc(logic: PerfiladoLogic())),
     ], child: MyApp());
   }
 }

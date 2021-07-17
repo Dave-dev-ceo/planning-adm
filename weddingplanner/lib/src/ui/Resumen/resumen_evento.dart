@@ -11,14 +11,16 @@ import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
 
 class ResumenEvento extends StatefulWidget {
   final Map<dynamic, dynamic> detalleEvento;
+  final bool WP_EVT_RES_EDT;
 
-  const ResumenEvento({Key key, this.detalleEvento}) : super(key: key);
+  const ResumenEvento({Key key, this.detalleEvento, this.WP_EVT_RES_EDT}) : super(key: key);
   @override
-  _ResumenEventoState createState() => _ResumenEventoState(detalleEvento);
+  _ResumenEventoState createState() => _ResumenEventoState(detalleEvento, WP_EVT_RES_EDT);
 }
 
 class _ResumenEventoState extends State<ResumenEvento> {
   final Map<dynamic, dynamic> detalleEvento;
+  final bool WP_EVT_RES_EDT;
   EvtBloc.EventosBloc eventosBloc;
 
   @override
@@ -28,7 +30,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
     super.initState();
   }
 
-  _ResumenEventoState(this.detalleEvento);
+  _ResumenEventoState(this.detalleEvento, this.WP_EVT_RES_EDT);
   reporteGrupos() {
     blocInvitados.fetchAllReporteGrupos(context);
     return StreamBuilder(
@@ -268,9 +270,11 @@ class _ResumenEventoState extends State<ResumenEvento> {
           ),
         ),
       ),
-      onTap: () async {
-        await Navigator.pushNamed(context, '/editarEvento', arguments: {'evento': evtt});
-      },
+      onTap: WP_EVT_RES_EDT
+          ? () async {
+              await Navigator.pushNamed(context, '/editarEvento', arguments: {'evento': evtt});
+            }
+          : null,
     );
   }
 

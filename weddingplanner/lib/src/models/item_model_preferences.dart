@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
-class SharedPreferencesT{
+
+class SharedPreferencesT {
   SharedPreferences _sharedPreferences;
 
   setIdPlanner(int idPlanner) async {
@@ -32,6 +33,16 @@ class SharedPreferencesT{
     return _sharedPreferences.getInt('idEvento');
   }
 
+  setPermisos(String json) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setString('permisos', json);
+  }
+
+  getPermisos() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getString('permisos');
+  }
+
   setToken(String token) async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.setString('token', token);
@@ -49,7 +60,7 @@ class SharedPreferencesT{
 
   getSession() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getBool('session') == null ? false:_sharedPreferences.getBool('session');
+    return _sharedPreferences.getBool('session') == null ? false : _sharedPreferences.getBool('session');
   }
 
   setLogic(bool logic) async {
@@ -59,7 +70,7 @@ class SharedPreferencesT{
 
   getLogic() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getBool('logic') == null ? false:_sharedPreferences.getBool('logic');
+    return _sharedPreferences.getBool('logic') == null ? false : _sharedPreferences.getBool('logic');
   }
 
   setJsonData(List<String> json) async {

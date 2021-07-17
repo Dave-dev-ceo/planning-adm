@@ -1,18 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
+import 'package:weddingplanner/src/logic/permisos_logic.dart';
 import 'package:weddingplanner/src/models/item_model_eventos.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 
 class DashboardEventos extends StatefulWidget {
+  final bool WP_EVT_CRT;
+
+  const DashboardEventos({Key key, this.WP_EVT_CRT}) : super(key: key);
+
   @override
-  _DashboardEventosState createState() => _DashboardEventosState();
+  _DashboardEventosState createState() => _DashboardEventosState(this.WP_EVT_CRT);
 }
 
 class _DashboardEventosState extends State<DashboardEventos> {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   EventosBloc eventosBloc;
   ItemModelEventos eventos;
+  PerfiladoLogic perfilado;
+  final bool WP_EVT_CRT;
+
+  _DashboardEventosState(this.WP_EVT_CRT);
+
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -67,7 +79,10 @@ class _DashboardEventosState extends State<DashboardEventos> {
                 children: <Widget>[
                   Text('Fecha Evento: ' + fevento),
                   Text('Planeación de evento: Del ' + inicio + ' al ' + fin),
-                  for (var i = 0; i < involucrados.length; i++) Text(involucrados[i].tipoInvolucrado + ' : ' + involucrados[i].nombre),
+                  for (var i = 0; i < involucrados.length; i++)
+                    involucrados[0].tipoInvolucrado != 'Sin involucrado'
+                        ? Text(involucrados[i].tipoInvolucrado + ' : ' + involucrados[i].nombre)
+                        : Text('Sin involucrados'),
                 ],
               ),
               leading: Icon(Icons.event),
@@ -142,12 +157,14 @@ class _DashboardEventosState extends State<DashboardEventos> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.event_available),
-          backgroundColor: hexToColor('#880B55'),
-          onPressed: () {
-            Navigator.of(context).pushNamed('/addEvento');
-          }),
+      floatingActionButton: WP_EVT_CRT
+          ? FloatingActionButton(
+              child: Icon(Icons.event_available),
+              backgroundColor: hexToColor('#880B55'),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/addEvento');
+              })
+          : SizedBox.shrink(),
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
