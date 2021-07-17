@@ -11,6 +11,8 @@ abstract class ActividadesTimingsLogic {
   Future<ItemModelActividadesTimings> fetchActividadesTimingsPorPlanner(int idTiming);
   Future<int> createActividadesTiming(Map<String, dynamic> dataTiming, int idTiming);
   Future<int> deleteActividadesTiming(int idActividadTiming, int idTiming);
+  
+  Future<ItemModelActividadesTimings> fetchActividadesTimingsIdPorPlanner();
 }
 
 class ListaActividadesTimingsException implements Exception {}
@@ -96,4 +98,29 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
       throw CreateActividadesTimingException();
     }
   }
+
+  @override
+  Future<ItemModelActividadesTimings> fetchActividadesTimingsIdPorPlanner() async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsIdPorPlanner'),
+        body: {'id_planner': idPlanner.toString()},
+        headers: {HttpHeaders.authorizationHeader: token});
+
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return ItemModelActividadesTimings.fromJsonEvento(data['data']);
+    } else if (response.statusCode == 401) {
+      return null;
+    } else {
+      throw ListaActividadesTimingsException;
+    }
+  }
+
 }

@@ -141,7 +141,7 @@ class _InvitadosState extends State<Invitados> {
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-        tabs.add(TabItem(titulo: 'Timings', icono: Icons.access_time_sharp));
+        tabs.add(TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {

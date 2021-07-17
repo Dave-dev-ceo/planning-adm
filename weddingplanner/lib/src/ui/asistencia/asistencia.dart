@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,13 +20,12 @@ class _AsistenciaState extends State<Asistencia> {
   // variables bloc
   AsistenciaBloc asistenciaBloc;
 
-  //stilos
-  final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
-
-  // variables tablaAsistencia
+  // variables model
   ItemModelAsistencia itemModelAsistencia;
   ItemModelAsistencia copyItemFinal;
-  int _rowPerPage = 10;
+
+  //stilos
+  final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
 
   // ini
   @override
@@ -90,18 +90,33 @@ class _AsistenciaState extends State<Asistencia> {
   Widget getAsistencia(asistencia) {
     return Center(
       child: ListView(
-        children: [_crearTabla(asistencia)],
+        children: [
+          StickyHeader(
+            header: Container(
+              height: 100.0,
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 35.0),
+              alignment: Alignment.centerLeft,
+              child: _crearHeader(asistencia)
+            ),
+            content: Expanded(child: _crearTabla(asistencia)),
+          ),
+        ],
       ),
     );
   }
 
   Widget _crearTabla(asistencia) {
-    return PaginatedDataTable(
-      header: _crearHeader(asistencia),
-      columns: _crearColumna(),
-      source: DTS(invitadosList:_crearLista(asistencia)),
-      onRowsPerPageChanged: _changePerPages,
-      rowsPerPage: _rowPerPage,
+    return SizedBox(
+      width: double.infinity,
+      child: PaginatedDataTable(
+        // header: _crearHeader(asistencia),
+        columns: _crearColumna(),
+        source: DTS(invitadosList:_crearLista(asistencia)),
+        onRowsPerPageChanged: null,
+        rowsPerPage: asistencia.asistencias.length,
+        dataRowHeight: 90.0,
+      ),
     );
   }
 
@@ -113,7 +128,7 @@ class _AsistenciaState extends State<Asistencia> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 3, child: Text('Asistencia')),
+          Expanded(flex: 3, child: Text('Asistencia', style: TextStyle(fontSize: 20.0),)),
           Expanded(
               flex: 5,
               child: TextField(
@@ -133,28 +148,10 @@ class _AsistenciaState extends State<Asistencia> {
     return [
       DataColumn(
         label: Text(
-          'Nombre',
+          '',
           style: _boldStyle,
         ),
       ),
-      DataColumn(
-        label: Text(
-          'Mesa',
-          style: _boldStyle,
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'Grupo',
-          style: _boldStyle,
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'Asistencia',
-          style: _boldStyle,
-        ),
-      )
     ];
   }
 
@@ -163,25 +160,31 @@ class _AsistenciaState extends State<Asistencia> {
     if(itemModel.asistencias.length > 0){
       itemModel.asistencias.forEach((element) {
         List<DataCell> invitadosListTemp = [
-          DataCell(Text('${element.nombre}')),
-          DataCell(Text('${element.mesa}')),
-          DataCell(Text('${element.grupo}')),
-          DataCell(Checkbox(
+          DataCell(
+            SwitchListTile(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('${element.nombre}', style: _boldStyle,),
+                Text('Grupo: ${element.grupo}'),
+                Text('Mesa: ${element.mesa}'),
+              ],
+            ),
             value: element.asistencia,
-            onChanged: (valor){
-              _guardarAsistencia(element.id_invitado,valor);
-              setState(() => element.asistencia = valor);
+            onChanged: (value){
+            _guardarAsistencia(element.id_invitado,value);
+            setState(() => element.asistencia = value);
             },
-          )),
+            ),
+          )
         ];
         invitadosList.add(invitadosListTemp);
       });
     }
     else {
       List<DataCell> invitadosListNoData = [
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),
       ];
       invitadosList.add(invitadosListNoData);
@@ -190,9 +193,10 @@ class _AsistenciaState extends State<Asistencia> {
     return invitadosList;
   }
 
-  _changePerPages(valor) {
-    setState(() => _rowPerPage = valor);
-  }
+  // cambia pagina en la tabla
+  // _changePerPages(valor) {
+  //   setState(() => _rowPerPage = valor);
+  // }
 
   _guardarAsistencia(int idInvitado,bool asistenciaValor) {
     // print('id: $idInvitado \nvalor: $asistenciaValor');
@@ -236,8 +240,8 @@ class _AsistenciaState extends State<Asistencia> {
       marginEnd: pHz - 100,
       marginBottom: 20,
 
-      icon: Icons.add,
-      activeIcon: Icons.close_rounded,
+      icon: Icons.qr_code_outlined,
+      activeIcon: Icons.qr_code_outlined,
       buttonSize: 56.0,
       visible: true,
 
@@ -259,19 +263,9 @@ class _AsistenciaState extends State<Asistencia> {
         end: Alignment.bottomCenter,
         colors: [hexToColor("#880B55"), hexToColor("#880B55")],
       ),
-      children: [
-        SpeedDialChild(
-          foregroundColor: Colors.white,
-          child: Tooltip(
-            child: Icon(Icons.qr_code_outlined),
-            message: "Escáner Código QR",
-          ),
-          backgroundColor: hexToColor("#880B55"),
-          onTap: () async {
-            final result = await Navigator.of(context).pushNamed('/lectorQr');
-          },
-        ),
-      ],
+      onPress: () async {
+        final result = await Navigator.of(context).pushNamed('/lectorQr');
+      },
     );
   }
 }

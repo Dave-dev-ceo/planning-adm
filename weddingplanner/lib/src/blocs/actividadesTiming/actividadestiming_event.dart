@@ -9,6 +9,10 @@ class FetchActividadesTimingsPorPlannerEvent extends ActividadestimingEvent {
   List<Object> get props => [idTiming];
 }
 
+class FetchActividadesTimingsPorIdPlannerEvent extends ActividadestimingEvent {
+  FetchActividadesTimingsPorIdPlannerEvent();
+}
+
 class CreateActividadesTimingsEvent extends ActividadestimingEvent {
   final Map<String, dynamic> data;
   final int idTiming;

@@ -5,6 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 
+// Padilla
+import 'package:weddingplanner/src/ui/widgets/text_form_filed/password_wplanner.dart';
+
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
   @override
@@ -14,8 +17,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   int _index = 0;
   dynamic loginBloc;
-  TextEditingController emailCtrl = new TextEditingController();
-  TextEditingController passwordCtrl = new TextEditingController();
+  TextEditingController emailCtrl = new TextEditingController(text: 'soporte@grupotum.com');
+  TextEditingController passwordCtrl = new TextEditingController(text: 'N0v4-2020');
   TextEditingController emailRCtrl = new TextEditingController();
   TextEditingController passwordRCtrl = new TextEditingController();
   TextEditingController nombreRCtrl = new TextEditingController();
@@ -472,15 +475,39 @@ class _LoginState extends State<Login> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-            child: TextFormField(
-              controller: passwordCtrl,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              style: TextStyle(color: Colors.white),
-              decoration: _decorationText("Contraseña"),
-              cursorColor: Colors.purple[100],
+            // child: TextFormField(
+            //   controller: passwordCtrl,
+            //   obscureText: true,
+            //   enableSuggestions: false,
+            //   autocorrect: false,
+            //   style: TextStyle(color: Colors.white),
+            //   decoration: _decorationText("Contraseña"),
+            //   cursorColor: Colors.purple[100],
+            // ),
+            //Padilla
+            child: Center(
+              child: PasswordWplanner(
+                // WP
+                controller: passwordCtrl,
+                inputStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.purple[100]),
+                // suffixIcon: Icon(Icons.remove_red_eye, color: Colors.purple[100]),
+                autoFocus: false,
+                // F WP
+                
+                hasFloatingPlaceholder: true,
+                // pattern: r'.*[@$#.*].*',
+                border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(width: 2.0, color: Colors.purple[100])),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                  borderSide: BorderSide(color: Colors.white)
+                ),
+                // errorMessage: 'must contain special character either . * @ # \$',
+              ),
             ),
+            //FinPadilla
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 1.0),
