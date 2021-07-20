@@ -114,7 +114,7 @@ class _AsistenciaState extends State<Asistencia> {
         columns: _crearColumna(),
         source: DTS(invitadosList:_crearLista(asistencia)),
         onRowsPerPageChanged: null,
-        rowsPerPage: asistencia.asistencias.length,
+        rowsPerPage: asistencia.asistencias.length == 0 ? 1:asistencia.asistencias.length,
         dataRowHeight: 90.0,
       ),
     );
@@ -174,8 +174,8 @@ class _AsistenciaState extends State<Asistencia> {
             ),
             value: element.asistencia,
             onChanged: (value){
-            _guardarAsistencia(element.id_invitado,value);
-            setState(() => element.asistencia = value);
+              _guardarAsistencia(element.id_invitado,value);
+              setState(() => element.asistencia = value);
             },
             ),
           )

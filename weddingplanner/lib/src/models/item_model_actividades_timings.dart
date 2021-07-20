@@ -58,6 +58,8 @@ class _Result {
   String _dias;
   int _predecesor;
   int _idTipoTimig;
+  bool _addActividad;
+  DateTime _fechaInicio;
 
   _Result(result) {
     _idActividad = result['id_actividad_timing'];
@@ -67,6 +69,8 @@ class _Result {
     _dias = result['dias'];
     _predecesor = result['predecesor'];
     _idTipoTimig = result['id_tipo_timing'];
+    _addActividad = false;
+    _fechaInicio = DateTime.now();
   }
 
   _Result.fromModel(dataObj) {
@@ -76,7 +80,10 @@ class _Result {
     _visibleInvolucrados = dataObj._visibleInvolucrados;
     _dias = dataObj._dias;
     _predecesor = dataObj._predecesor;
+    _addActividad = false;
+    _fechaInicio = DateTime.now();
   }
+
   int get idActividad => this._idActividad;
   String get nombreActividad => this._nombreActividad;
   String get descripcion => this._descripcion;
@@ -84,6 +91,8 @@ class _Result {
   String get dias => this._dias;
   int get predecesor => this._predecesor;
   int get idTipoTimig => this._idTipoTimig;
+  bool get addActividad => this._addActividad;
+  DateTime get fechaInicio => this._fechaInicio;
   
   set addidActividad(int value) => this._idActividad = value;
   set addnombreActividad(String value) => this._nombreActividad = value;
@@ -92,4 +101,6 @@ class _Result {
   set adddias(String value) => this._dias = value;
   set addpredecesor(int value) => this._predecesor = value;
   set addidTipoTimig(int value) => this._idTipoTimig = value;
+  set addActividad(bool value) => this._addActividad = value;
+  set fechaInicio(DateTime value) => this._fechaInicio;
 }

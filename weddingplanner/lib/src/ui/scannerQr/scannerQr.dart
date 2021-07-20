@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:weddingplanner/src/blocs/asistencia/asistencia_bloc.dart';
 import 'package:weddingplanner/src/ui/widgets/showDialog/alertDialog.dart';
 
 class ScannerQrInvitado extends StatefulWidget {
@@ -38,23 +36,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
               child: DialogAlert(
                 dataInfo: datos,
               ));
-        }).then((exit) {
-            if (exit == null) return;
-
-            if (exit) {
-              // user pressed Yes button
-              print('objectXXXXXXXXXXXXXXXXXXXXXXXXXXX: $exit');
-            } else {
-              // user pressed No button
-            }
-          });
-  }
-  
-  _guardarAsistencia(int idInvitado,bool asistenciaValor) {
-    // print('id: $idInvitado \nvalor: $asistenciaValor');
-    AsistenciaBloc asistenciaBloc;
-    asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
-    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
+        });
   }
 
   @override

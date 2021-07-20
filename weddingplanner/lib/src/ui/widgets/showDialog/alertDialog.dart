@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/asistencia/asistencia_bloc.dart';
+
+import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
+
 class DialogAlert extends StatefulWidget {
   final String dataInfo;
 
@@ -84,8 +89,42 @@ class _DialogAlertState extends State<DialogAlert> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, false), child: Text('Cancelar'))),
-        Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, 'lol'), child: Text('Aceptar'))),
+        Expanded(flex: 5,child: TextButton(onPressed: () => _guardarAsistencia(int.parse(lista.elementAt(0)),lista.elementAt(1),true), child: Text('Aceptar'))),
       ],
     );
+  }
+
+  _guardarAsistencia(int idInvitado,String nombre,bool asistenciaValor) {
+    // print('id: $idInvitado \nvalor: $asistenciaValor');
+    // BlocProvider - cargamos el evento
+    AsistenciaBloc asistenciaBloc;
+    asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
+    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
+    Navigator.pop(context, true);
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('¡Bienvenido!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+            children: [
+              Padding(
+                child: Center(child: Text('${lista.elementAt(1)} estás en el evento ${lista.elementAt(6)}')),
+                padding: EdgeInsets.all(10),
+              ),
+              Padding(
+                child: Center(child: Text('Gracias por asistir.')),
+                padding: EdgeInsets.all(10),
+              ),
+            ],
+            ),
+          ),
+          actions: [
+            Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Ok'))),
+          ],
+        );
+    });
   }
 }
