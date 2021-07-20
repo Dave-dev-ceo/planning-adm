@@ -23,6 +23,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   int _pageIndex = 0;
   int _pages = 0;
   PermisosBloc permisosBloc;
@@ -248,7 +250,8 @@ class _HomeState extends State<Home> {
       actions: <Widget>[
         TextButton(
           child: Text('Cerrar'),
-          onPressed: () {
+          onPressed: () async {
+            await _sharedPreferences.clear();
             Navigator.of(contextT).pushNamedAndRemoveUntil('/', (route) => false);
           },
         ),
