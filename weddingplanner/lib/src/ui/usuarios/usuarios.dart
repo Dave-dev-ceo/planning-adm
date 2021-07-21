@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/usuarios/usuarios_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_usuarios.dart';
+import 'package:weddingplanner/src/ui/Roles/roles.dart';
 
 class Usuarios extends StatefulWidget {
   const Usuarios({Key key}) : super(key: key);
@@ -22,6 +23,7 @@ class _UsuariosState extends State<Usuarios> {
   List<bool> sort = [false, false, false, false];
   int _sortColumnIndex = 0;
   bool sortArrow = false;
+  List<Widget> footerTabs;
 
   _UsuariosState();
 
@@ -29,6 +31,45 @@ class _UsuariosState extends State<Usuarios> {
   void initState() {
     usuariosBloc = BlocProvider.of<UsuariosBloc>(context);
     usuariosBloc.add(FetchUsuariosPorPlannerEvent());
+    footerTabs = [
+      BlocBuilder<UsuariosBloc, UsuariosState>(
+        builder: (context, state) {
+          if (state is UsuariosInitialState) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is LoadingUsuariosState) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is MostrarUsuariosState) {
+            if (state.usuarios != null) {
+              if (itemModelUsuarios != state.usuarios) {
+                itemModelUsuarios = state.usuarios;
+                if (itemModelUsuarios != null) {
+                  filterUsuarios = itemModelUsuarios.copy();
+                }
+                crt = false;
+              }
+            } else {
+              crt = true;
+              usuariosBloc.add(FetchUsuariosPorPlannerEvent());
+              return Center(child: CircularProgressIndicator());
+            }
+            if (filterUsuarios.usuarios != null) {
+              return buildList(filterUsuarios);
+            } else {
+              return Center(child: Text('Sin datos'));
+            }
+          } else if (state is ErrorMostrarUsuariosState) {
+            return Center(
+              child: Text(state.message),
+            );
+          } else {
+            crt = true;
+            return Center(child: Text('no data'));
+          }
+        },
+      ),
+      // Roles()
+      Center(child: Text('En construccin'))
+    ];
     super.initState();
   }
 
@@ -36,43 +77,8 @@ class _UsuariosState extends State<Usuarios> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: double.infinity,
-        child: BlocBuilder<UsuariosBloc, UsuariosState>(
-          builder: (context, state) {
-            if (state is UsuariosInitialState) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is LoadingUsuariosState) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is MostrarUsuariosState) {
-              if (state.usuarios != null) {
-                if (itemModelUsuarios != state.usuarios) {
-                  itemModelUsuarios = state.usuarios;
-                  if (itemModelUsuarios != null) {
-                    filterUsuarios = itemModelUsuarios.copy();
-                  }
-                  crt = false;
-                }
-              } else {
-                crt = true;
-                usuariosBloc.add(FetchUsuariosPorPlannerEvent());
-                return Center(child: CircularProgressIndicator());
-              }
-              if (filterUsuarios.usuarios != null) {
-                return buildList(filterUsuarios);
-              } else {
-                return Center(child: Text('Sin datos'));
-              }
-            } else if (state is ErrorMostrarUsuariosState) {
-              return Center(
-                child: Text(state.message),
-              );
-            } else {
-              crt = true;
-              return Center(child: Text('no data'));
-            }
-          },
-        ),
-      ),
+          width: double.infinity,
+          child: IndexedStack(index: _selectedIndex, children: footerTabs)),
       floatingActionButton: FloatingActionButton(
         heroTag: null,
         child: Icon(Icons.add),
@@ -83,6 +89,20 @@ class _UsuariosState extends State<Usuarios> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.gavel),
+            label: 'Usuarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt),
+            label: 'Roles',
+          )
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 
@@ -245,6 +265,15 @@ class _UsuariosState extends State<Usuarios> {
 
     return sortData;
   }
+
+  // TABS
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  int _selectedIndex = 0;
 }
 
 bool crt = true;
