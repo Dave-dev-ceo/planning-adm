@@ -117,9 +117,15 @@ class _UsuariosState extends State<Usuarios> {
                       if (value.length > 2) {
                         List<dynamic> usrs = itemModelUsuarios.usuarios
                             .where((imu) =>
-                                imu.nombre_completo.toLowerCase().contains(value.toLowerCase()) ||
-                                imu.correo.toLowerCase().contains(value.toLowerCase()) ||
-                                imu.telefono.toLowerCase().contains(value.toLowerCase()))
+                                imu.nombre_completo
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()) ||
+                                imu.correo
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()) ||
+                                imu.telefono
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
                             .toList();
                         setState(() {
                           filterUsuarios.usuarios.clear();
@@ -153,52 +159,72 @@ class _UsuariosState extends State<Usuarios> {
                 label: Text('Nombre'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0 ? filterUsuarios = onSortColum(columnIndex, ascending, filterUsuarios) : null;
+                    snapshot.usuarios.length > 0
+                        ? filterUsuarios =
+                            onSortColum(columnIndex, ascending, filterUsuarios)
+                        : null;
                   });
                 }),
             DataColumn(
                 label: Text('Teléfono'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0 ? filterUsuarios = onSortColum(columnIndex, ascending, filterUsuarios) : null;
+                    snapshot.usuarios.length > 0
+                        ? filterUsuarios =
+                            onSortColum(columnIndex, ascending, filterUsuarios)
+                        : null;
                   });
                 }),
             DataColumn(
                 label: Text('Correo'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0 ? filterUsuarios = onSortColum(columnIndex, ascending, filterUsuarios) : null;
+                    snapshot.usuarios.length > 0
+                        ? filterUsuarios =
+                            onSortColum(columnIndex, ascending, filterUsuarios)
+                        : null;
                   });
                 }),
             DataColumn(
                 label: Text('Estatus'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0 ? filterUsuarios = onSortColum(columnIndex, ascending, filterUsuarios) : null;
+                    snapshot.usuarios.length > 0
+                        ? filterUsuarios =
+                            onSortColum(columnIndex, ascending, filterUsuarios)
+                        : null;
                   });
                 }),
           ],
-          source: _DataSource(snapshot != null ? snapshot.usuarios : [], context),
+          source:
+              _DataSource(snapshot != null ? snapshot.usuarios : [], context),
         ),
       ],
     );
   }
 
-  ItemModelUsuarios onSortColum(int columnIndex, bool ascending, ItemModelUsuarios sortData) {
+  ItemModelUsuarios onSortColum(
+      int columnIndex, bool ascending, ItemModelUsuarios sortData) {
     sort[columnIndex] = !sort[columnIndex];
     switch (columnIndex) {
       case 0:
         sort[columnIndex]
-            ? sortData.usuarios.sort((a, b) => a.nombre_completo.compareTo((b.nombre_completo)))
-            : sortData.usuarios.sort((a, b) => b.nombre_completo.compareTo(a.nombre_completo));
+            ? sortData.usuarios.sort(
+                (a, b) => a.nombre_completo.compareTo((b.nombre_completo)))
+            : sortData.usuarios
+                .sort((a, b) => b.nombre_completo.compareTo(a.nombre_completo));
         break;
       case 1:
         sort[columnIndex]
-            ? sortData.usuarios.sort((a, b) => a.telefono.compareTo((b.telefono)))
-            : sortData.usuarios.sort((a, b) => b.telefono.compareTo(a.telefono));
+            ? sortData.usuarios
+                .sort((a, b) => a.telefono.compareTo((b.telefono)))
+            : sortData.usuarios
+                .sort((a, b) => b.telefono.compareTo(a.telefono));
         break;
       case 2:
-        sort[columnIndex] ? sortData.usuarios.sort((a, b) => a.correo.compareTo((b.correo))) : sortData.usuarios.sort((a, b) => b.correo.compareTo(a.correo));
+        sort[columnIndex]
+            ? sortData.usuarios.sort((a, b) => a.correo.compareTo((b.correo)))
+            : sortData.usuarios.sort((a, b) => b.correo.compareTo(a.correo));
         break;
       case 3:
         sort[columnIndex]
@@ -224,10 +250,13 @@ class _UsuariosState extends State<Usuarios> {
 bool crt = true;
 
 Future<bool> mostrarForm(formContext, accion, usr) async {
-  dynamic usuario = await Navigator.pushNamed(formContext, '${accion == 0 ? '/crearUsuario' : '/editarUsuario'}', arguments: {'accion': accion, 'data': usr});
+  dynamic usuario = await Navigator.pushNamed(
+      formContext, '${accion == 0 ? '/crearUsuario' : '/editarUsuario'}',
+      arguments: {'accion': accion, 'data': usr});
   if (usuario != null) {
     ScaffoldMessenger.of(formContext).showSnackBar(SnackBar(
-      content: Text('${usuario.result.nombre_completo} ${accion == 0 ? 'Agregado a Usuarios' : 'editado'}'),
+      content: Text(
+          '${usuario.result.nombre_completo} ${accion == 0 ? 'Agregado a Usuarios' : 'editado'}'),
       onVisible: () {
         usuariosBloc.add(FetchUsuariosPorPlannerEvent());
         crt = true;
@@ -247,8 +276,12 @@ class _DataSource extends DataTableSource {
     if (context.length > 0) {
       ims = new ItemModelUsuarios(context);
       for (int i = 0; i < context.length; i++) {
-        _rows.add(
-            _Row(context[i].id_usuario, context[i].nombre_completo, context[i].telefono, context[i].correo, context[i].estatus == 'A' ? 'Activo' : 'Inactivo'));
+        _rows.add(_Row(
+            context[i].id_usuario,
+            context[i].nombre_completo,
+            context[i].telefono,
+            context[i].correo,
+            context[i].estatus == 'A' ? 'Activo' : 'Inactivo'));
       }
     } else {
       _rows.add(_Row(null, 'Sin datos', '', '', ''));

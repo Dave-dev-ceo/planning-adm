@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:weddingplanner/src/blocs/roles/roles_bloc.dart';
 import 'package:weddingplanner/src/blocs/usuarios/usuario/usuario_bloc.dart';
+import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/item_model_usuarios.dart';
+import 'package:weddingplanner/src/models/model_roles.dart';
 
 class FormUsuario extends StatefulWidget {
   final Map<String, dynamic> datos;
@@ -16,8 +19,11 @@ class FormUsuario extends StatefulWidget {
 }
 
 class _FormUsuarioState extends State<FormUsuario> {
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   final Map<String, dynamic> datos;
+  RolesBloc rolesBloc;
 
+  ItemModelRoles _roles;
   GlobalKey<FormState> formKey = new GlobalKey();
 
   BuildContext _dialogContext;
@@ -49,9 +55,14 @@ class _FormUsuarioState extends State<FormUsuario> {
 
   _FormUsuarioState(this.datos);
 
+  int _mySelectionG = 0;
+  int _rolSelect = 0;
+
   @override
   void initState() {
     usuarioBloc = BlocProvider.of<UsuarioBloc>(context);
+    rolesBloc = BlocProvider.of<RolesBloc>(context);
+    rolesBloc.add(ObtenerRolesEvent());
     _setInitialController();
     super.initState();
   }
@@ -70,7 +81,10 @@ class _FormUsuarioState extends State<FormUsuario> {
             Navigator.pop(context, state.data);
           } else if (state is ErrorCrearUsuarioState) {
             Navigator.pop(_dialogContext);
-            _dialogMSG('Error al ${datos['accion'] == 0 ? 'crear' : 'editar'} usuario: ', state.message, 'msg');
+            _dialogMSG(
+                'Error al ${datos['accion'] == 0 ? 'crear' : 'editar'} usuario: ',
+                state.message,
+                'msg');
           }
           // Edicion de usuario
           else if (state is LoadingEditarUsuarioState) {
@@ -80,7 +94,10 @@ class _FormUsuarioState extends State<FormUsuario> {
             Navigator.pop(context, state.data);
           } else if (state is ErrorEditarUsuarioState) {
             Navigator.pop(_dialogContext);
-            _dialogMSG('Error al ${datos['accion'] == 0 ? 'crear' : 'editar'} usuario: ', state.message, 'msg');
+            _dialogMSG(
+                'Error al ${datos['accion'] == 0 ? 'crear' : 'editar'} usuario: ',
+                state.message,
+                'msg');
           }
         },
         child: Container(
@@ -92,7 +109,7 @@ class _FormUsuarioState extends State<FormUsuario> {
             margin: new EdgeInsets.all(10.0),
             child: new Form(
               key: formKey,
-              child: formUI(),
+              child: formUI(context),
             ),
           ),
         ),
@@ -101,9 +118,14 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   _setInitialController() {
-    nombreCtrl = new TextEditingController(text: datos['accion'] == 1 ? datos['data'].result.nombre_completo : '');
-    correoCtrl = new TextEditingController(text: datos['accion'] == 1 ? datos['data'].result.correo : '');
-    telefonoCtrl = new TextEditingController(text: datos['accion'] == 1 ? datos['data'].result.telefono.toString() : '');
+    nombreCtrl = new TextEditingController(
+        text: datos['accion'] == 1 ? datos['data'].result.nombre_completo : '');
+    correoCtrl = new TextEditingController(
+        text: datos['accion'] == 1 ? datos['data'].result.correo : '');
+    telefonoCtrl = new TextEditingController(
+        text: datos['accion'] == 1
+            ? datos['data'].result.telefono.toString()
+            : '');
     pwdCtrl = new TextEditingController();
     confirmPwdCtrl = new TextEditingController();
     _estatusSeleccionado = datos['accion'] == 1
@@ -114,8 +136,15 @@ class _FormUsuarioState extends State<FormUsuario> {
     esAdmin = datos['accion'] == 1 ? datos['data'].result.admin : false;
   }
 
-  agregarInput(IconData icono, TextInputType inputType, TextEditingController controller, String titulo, Function validator, List<TextInputFormatter> inputF,
-      {bool obscureT: false, int maxL: 0}) {
+  agregarInput(
+      IconData icono,
+      TextInputType inputType,
+      TextEditingController controller,
+      String titulo,
+      Function validator,
+      List<TextInputFormatter> inputF,
+      {bool obscureT: false,
+      int maxL: 0}) {
     return formItemsDesign(
         icono,
         TextFormField(
@@ -132,20 +161,34 @@ class _FormUsuarioState extends State<FormUsuario> {
         ));
   }
 
-  Widget formUI() {
+  Widget formUI(BuildContext contextForm) {
     return Column(
       children: <Widget>[
-        agregarInput(Icons.person, TextInputType.name, nombreCtrl, 'Nombre completo', validateNombre, null, maxL: 150),
-        agregarInput(Icons.email, TextInputType.emailAddress, correoCtrl, 'Correo', validateCorreo, null, maxL: 100),
-        agregarInput(Icons.phone, TextInputType.emailAddress, telefonoCtrl, 'Teléfono', validateTelefono, null,
+        agregarInput(Icons.person, TextInputType.name, nombreCtrl,
+            'Nombre completo', validateNombre, null,
+            maxL: 150),
+        agregarInput(Icons.email, TextInputType.emailAddress, correoCtrl,
+            'Correo', validateCorreo, null,
+            maxL: 100),
+        agregarInput(Icons.phone, TextInputType.emailAddress, telefonoCtrl,
+            'Teléfono', validateTelefono, null,
             // <TextInputFormatter>[FilteringTextInputFormatter.allow(new RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$'))]
             maxL: 13),
         datos['accion'] == 0
-            ? agregarInput(Icons.lock, TextInputType.visiblePassword, pwdCtrl, 'Contraseña', validatePwd, null, obscureT: true, maxL: 30)
+            ? agregarInput(Icons.lock, TextInputType.visiblePassword, pwdCtrl,
+                'Contraseña', validatePwd, null,
+                obscureT: true, maxL: 30)
             : SizedBox.shrink(),
         datos['accion'] == 0
-            ? agregarInput(Icons.lock, TextInputType.visiblePassword, confirmPwdCtrl, 'Confirmar Contraseña', validateConfirmPwd, null,
-                obscureT: true, maxL: 30)
+            ? agregarInput(
+                Icons.lock,
+                TextInputType.visiblePassword,
+                confirmPwdCtrl,
+                'Confirmar Contraseña',
+                validateConfirmPwd,
+                null,
+                obscureT: true,
+                maxL: 30)
             : SizedBox.shrink(),
         datos['accion'] == 1
             ? formItemsDesign(
@@ -173,26 +216,22 @@ class _FormUsuarioState extends State<FormUsuario> {
                 ))
             : SizedBox.shrink(),
         formItemsDesign(
-            Icons.admin_panel_settings,
+            Icons.group,
             Row(
-              children: [
-                Text('¿Es Administrador?'),
-                Checkbox(
-                  checkColor: Colors.white,
-                  value: esAdmin,
-                  onChanged: (bool value) {
-                    setState(() {
-                      esAdmin = value;
-                    });
-                  },
-                )
+              children: <Widget>[
+                Text('Rol a Asignar'),
+                SizedBox(
+                  width: 15,
+                ),
+                _listaRoles(),
               ],
             )),
         ElevatedButton(
           onPressed: () {
-            _save();
+            _save(contextForm);
           },
-          child: Text(datos['accion'] == 0 ? 'Crear Usuario' : 'Editar Usuario', style: TextStyle(fontSize: 18, color: Colors.white)),
+          child: Text(datos['accion'] == 0 ? 'Crear Usuario' : 'Editar Usuario',
+              style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
             primary: hexToColor('#880B55'), // background
             onPrimary: Colors.white, // foreground
@@ -214,27 +253,34 @@ class _FormUsuarioState extends State<FormUsuario> {
     );
   }
 
-  _save() {
+  _save(BuildContext contextSB) {
     if (formKey.currentState.validate()) {
-      if (datos['accion'] == 0) {
-        Map<String, dynamic> jsonUsuario = {
-          'nombre_completo': nombreCtrl.text,
-          'correo': correoCtrl.text,
-          'telefono': telefonoCtrl.text,
-          'pwd': pwdCtrl.text,
-          'admin': esAdmin,
-        };
-        usuarioBloc.add(CrearUsuarioEvent(jsonUsuario));
+      if (_mySelectionG != 0) {
+        if (datos['accion'] == 0) {
+          Map<String, dynamic> jsonUsuario = {
+            'nombre_completo': nombreCtrl.text,
+            'correo': correoCtrl.text,
+            'telefono': telefonoCtrl.text,
+            'pwd': pwdCtrl.text,
+            'admin': true,
+            'id_rol': _mySelectionG,
+          };
+          usuarioBloc.add(CrearUsuarioEvent(jsonUsuario));
+        } else {
+          Map<String, dynamic> jsonUsuario = {
+            'id_usuario': datos['data'].result.id_usuario,
+            'nombre_completo': nombreCtrl.text,
+            'correo': correoCtrl.text,
+            'telefono': telefonoCtrl.text,
+            'estatus': _estatusSeleccionado == 0 ? 'A' : 'I',
+            'id_rol': _mySelectionG,
+          };
+          usuarioBloc.add(EditarUsuarioEvent(jsonUsuario));
+        }
       } else {
-        Map<String, dynamic> jsonUsuario = {
-          'id_usuario': datos['data'].result.id_usuario,
-          'nombre_completo': nombreCtrl.text,
-          'correo': correoCtrl.text,
-          'telefono': telefonoCtrl.text,
-          'estatus': _estatusSeleccionado == 0 ? 'A' : 'I',
-          'admin': esAdmin,
-        };
-        usuarioBloc.add(EditarUsuarioEvent(jsonUsuario));
+        ScaffoldMessenger.of(contextSB).showSnackBar(SnackBar(
+            content: Text(
+                'Seleccione un rol para poder ${datos['accion'] == 0 ? 'agregar' : 'editar'} usuario')));
       }
     }
   }
@@ -256,7 +302,8 @@ class _FormUsuarioState extends State<FormUsuario> {
                 textAlign: TextAlign.center,
               ),
               content: child,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
               actions: type != "log"
                   ? <Widget>[
                       TextButton(
@@ -283,7 +330,8 @@ class _FormUsuarioState extends State<FormUsuario> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
   }
@@ -350,5 +398,93 @@ class _FormUsuarioState extends State<FormUsuario> {
 
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
+  // INPUT SELECT PARA ROL DE USUARIO
+  bool banderaSeleccion = true;
+
+  _listaRoles() {
+    return BlocBuilder<RolesBloc, RolesState>(
+      builder: (context, state) {
+        if (state is RolesInitial) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is ErrorTokenRoles) {
+          print('Error en token');
+          return _showDialogMsg(context);
+        } else if (state is LoadingRoles) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is MostrarRoles) {
+          _roles = state.roles;
+          if (banderaSeleccion && _roles.roles != null) {
+            _rolSelect = datos['accion'] == 1 ? datos['data'].result.id_rol : 0;
+            _roles.roles.any((rol) => rol.id_rol == _rolSelect)
+                ? _mySelectionG = _rolSelect
+                : _mySelectionG = 0;
+            banderaSeleccion = false;
+          } else {
+            // banderaSeleccion = true;
+          }
+          return _dropDownRoles(_roles);
+        } else if (state is ErrorRoles) {
+          return Center(
+            child: Text(state.message),
+          );
+        } else {
+          return Center(child: Text('Sin permisos'));
+        }
+      },
+    );
+  }
+
+  _dropDownRoles(ItemModelRoles roles) {
+    return DropdownButton(
+      value: _mySelectionG,
+      icon: const Icon(Icons.arrow_drop_down_outlined),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Color(0xFF880B55)),
+      underline: Container(
+        height: 2,
+        color: Color(0xFF880B55),
+      ),
+      onChanged: (newValue) {
+        setState(() {
+          _mySelectionG = newValue;
+        });
+      },
+      items: roles.roles.map((rol) {
+        return DropdownMenuItem(
+          value: rol.id_rol,
+          child: Text(
+            rol.nombre_rol,
+            style: TextStyle(fontSize: 18),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  _showDialogMsg(BuildContext contextT) {
+    _dialogContext = contextT;
+    return AlertDialog(
+      title: Text(
+        "Sesión",
+        textAlign: TextAlign.center,
+      ),
+      content: Text(
+          'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(32.0))),
+      actions: <Widget>[
+        TextButton(
+          child: Text('Cerrar'),
+          onPressed: () async {
+            await _sharedPreferences.clear();
+            Navigator.of(contextT)
+                .pushNamedAndRemoveUntil('/', (route) => false);
+          },
+        ),
+      ],
+    );
   }
 }
