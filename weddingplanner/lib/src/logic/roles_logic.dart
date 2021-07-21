@@ -4,48 +4,45 @@ import 'dart:io';
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/model_perfilado.dart';
+import 'package:weddingplanner/src/models/model_roles.dart';
 import 'package:weddingplanner/src/resources/config_conection.dart';
 
-abstract class PermisosLogic {
-  Future<ItemModelPerfil> obtenerPermisosUsuario();
+abstract class RolesLogic {
+  Future<ItemModelRoles> obtenerRolesPorPlanner();
 }
 
-class PermisosException implements Exception {}
+class RolesException implements Exception {}
 
-class TokenPermisosException implements Exception {}
+class TokenRolesException implements Exception {}
 
-class PerfiladoLogic implements PermisosLogic {
+class RolesPlannerLogic implements RolesLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
   Client client = Client();
 
-  PerfiladoLogic();
+  RolesPlannerLogic();
 
   @override
-  Future<ItemModelPerfil> obtenerPermisosUsuario() async {
-    String idUsuario = (await _sharedPreferences.getIdUsuario()).toString();
+  Future<ItemModelRoles> obtenerRolesPorPlanner() async {
+    String idPlanner = (await _sharedPreferences.getIdPlanner()).toString();
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(confiC.url +
             confiC.puerto +
-            '/wedding/USUARIOS/obtenerPermisosUsuario'),
-        body: {'id_usuario': idUsuario.toString()},
+            '/wedding/ROLES/obtenerRolesPorPlanner'),
+        body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      ItemModelSecciones secciones =
-          ItemModelSecciones.fromJson(data['secciones']);
-      ItemModelPantallas pantallas =
-          ItemModelPantallas.fromJson(data['pantallas']);
-      return new ItemModelPerfil(secciones, pantallas);
+      return new ItemModelRoles.fromJson(data['roles']);
     } else if (response.statusCode == 401) {
-      throw TokenPermisosException();
+      throw TokenRolesException();
     } else {
-      throw PermisosException();
+      throw RolesException();
     }
   }
 }

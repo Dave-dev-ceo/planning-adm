@@ -68,6 +68,8 @@ class _Result {
   String _modificado;
   String _creadoPor;
   String _modificadoPor;
+  int _idRol;
+  String _nombreRol;
 
   _Result(result) {
     _idUsuario = result['id_usuario'];
@@ -80,6 +82,8 @@ class _Result {
     _modificado = result['modificado'].toString();
     _creadoPor = result['creado_por'];
     _modificadoPor = result['modificado_por'];
+    _idRol = result['id_rol'];
+    _nombreRol = result['nombre_rol'];
   }
 
   _Result.fromModel(dataObj) {
@@ -93,45 +97,31 @@ class _Result {
     _modificado = dataObj._modificado;
     _creadoPor = dataObj._creadoPor;
     _modificadoPor = dataObj._modificadoPor;
+    _idRol = dataObj._idRol;
+    _nombreRol = dataObj._nombreRol;
   }
 
   int get id_usuario => this._idUsuario;
 
-  set id_usuario(int value) => this._idUsuario = value;
-
   String get correo => this._correo;
-
-  set correo(value) => this._correo = value;
 
   bool get admin => this._admin;
 
-  set admin(value) => this._admin = value;
-
   String get nombre_completo => this._nombreCompleto;
-
-  set nombre_completo(value) => this._nombreCompleto = value;
 
   String get telefono => this._telefono;
 
-  set telefono(value) => this._telefono = value;
-
   String get estatus => this._estatus;
-
-  set estatus(value) => this._estatus = value;
 
   String get creado => this._creado;
 
-  set creado(value) => this._creado = value;
-
   String get modificado => this._modificado;
-
-  set modificado(value) => this._modificado = value;
 
   String get creado_por => this._creadoPor;
 
-  set creado_por(value) => this._creadoPor = value;
-
   String get modificado_por => this._modificadoPor;
 
-  set modificado_por(value) => this._modificadoPor = value;
+  int get id_rol => this._idRol;
+
+  String get nombre_rol => this._nombreRol;
 }
