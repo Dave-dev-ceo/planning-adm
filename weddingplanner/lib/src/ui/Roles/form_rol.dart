@@ -425,7 +425,7 @@ class _FormUsuarioState extends State<FormUsuario> {
             // banderaSeleccion = true;
           }
           return _dropDownRoles(_roles);
-        } else if (state is ErrorRoles) {
+        } else if (state is ErrorObtenerRoles) {
           return Center(
             child: Text(state.message),
           );

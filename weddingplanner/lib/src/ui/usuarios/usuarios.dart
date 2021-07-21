@@ -79,16 +79,19 @@ class _UsuariosState extends State<Usuarios> {
       body: Container(
           width: double.infinity,
           child: IndexedStack(index: _selectedIndex, children: footerTabs)),
-      floatingActionButton: FloatingActionButton(
-        heroTag: null,
-        child: Icon(Icons.add),
-        onPressed: () {
-          setState(() {
-            mostrarForm(context, 0, null);
-          });
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton(
+              heroTag: null,
+              child: Icon(Icons.add),
+              onPressed: () {
+                setState(() {
+                  mostrarForm(context, 0, null);
+                });
+              },
+            )
+          : null,
+      floatingActionButtonLocation:
+          _selectedIndex == 0 ? FloatingActionButtonLocation.startDocked : null,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
