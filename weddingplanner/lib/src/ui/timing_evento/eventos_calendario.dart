@@ -1,3 +1,4 @@
+/*
 // imports dart/flutter
 import 'package:flutter/material.dart';
 import 'package:sticky_headers/sticky_headers.dart';
@@ -27,8 +28,6 @@ class _TimingsEventosState extends State<TimingsEventos> {
   // variables clase
   bool _allCheck = false;
   Map<int,Item> _keepStatus = ({0:Item(isCheck: true)});
-  TextEditingController fechaInicioCtrl;
-  DateTime fechaInicio;
 
   // ini
   @override
@@ -168,33 +167,43 @@ class _TimingsEventosState extends State<TimingsEventos> {
         descripcionActividad: '${itemModel.results[index].descripcion}',
         idActividad: itemModel.results[index].idActividad,
         isCheck: itemModel.results[index].addActividad,
-        fechaInicio: DateTime.now(),
+        isExpanded: itemModel.results[index].addDate,
       );
     });
   }
 
-  List<Widget> buildPanelList(List<Item> data) {
-    List<Widget> children = [];
+  List<ExpansionPanel> buildPanelList(List<Item> data) {
+    List<ExpansionPanel> children = [];
     for (int i = 0; i < data.length; i++) {
-      children.add(
-        Card(
-          child: ListTile(
+      children.add(ExpansionPanel(
+        headerBuilder: (context, isExpanded) {
+          return ListTile(
             leading: Checkbox(
               value: data[i].isCheck ?? false, 
               onChanged: (valor){
                 setState((){
+                  if(data[i].isExpanded == false) {
                     _changeCheck(copyItemModel,data[i].idActividad,valor);
+                    data[i].isCheck = valor;
+                  }
                 });
               },
             ),
             title: Text("${data[i].nombreActividad}"),
             subtitle: Text("${data[i].descripcionActividad}"),
-            trailing: data[i].isCheck == true ? _calendaryIcon(data[i].fechaInicio,data[i].idActividad) : null,
-            onTap: data[i].isCheck == true ? () {
-            } : null,
-          ),
-        )
-      );
+          );
+        },
+        isExpanded: data[i].isExpanded ?? false,
+        body: ListTile(
+          title: Text('Selecciona la fecha.'),
+          leading: const Icon(Icons.calendar_today),
+          onTap: () {
+            setState(() {
+              print('Calendary');
+            });
+          }
+        ),
+      ));
     }
     return children;
   }
@@ -206,9 +215,17 @@ class _TimingsEventosState extends State<TimingsEventos> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return SingleChildScrollView(
-              child: Column(
-                children: buildPanelList(snapshot.data)
-              ),
+              child: ExpansionPanelList(
+                  animationDuration: Duration(milliseconds: 500),
+                  expansionCallback: (int index, bool isExpanded) {
+                    setState(() {
+                      if(snapshot.data[index].isCheck == true) {
+                        _changeExpanded(copyItemModel,snapshot.data[index].idActividad, !isExpanded);
+                        snapshot.data[index].isExpanded = !isExpanded;
+                      }
+                    });
+                  },
+                  children: buildPanelList(snapshot.data)),
             );
           } else {
             return Center(
@@ -269,6 +286,14 @@ class _TimingsEventosState extends State<TimingsEventos> {
       }
     }
   }
+
+  void _changeExpanded(ItemModelActividadesTimings modelChange, int idActividad,bool newValor) {
+    for(int i = 0; i<modelChange.results.length; i++) {
+      if(modelChange.results[i].idActividad == idActividad) {
+        modelChange.results[i].addDate = newValor;
+      }
+    }
+  }
   // fin Cargar las actividades - eventos/todo
   
   Widget _myBotonSave() {
@@ -281,36 +306,6 @@ class _TimingsEventosState extends State<TimingsEventos> {
   void _saveActividades() {
     print('Abemus boton!');
   }
-
-  // parte del calendary put
-  Widget _calendaryIcon(DateTime fechaInicio,int idActividad) {
-    // TextEditingController dateCtl = TextEditingController();
-
-    return GestureDetector(
-      child: Icon(Icons.calendar_today),
-      onTap: () async {
-
-      
-      print('date: $fechaInicio');
-      FocusScope.of(context).requestFocus(new FocusNode());
-
-      fechaInicio = await showDatePicker(
-                    context: context, 
-                    initialDate: fechaInicio.isBefore(DateTime.now()) == true ? DateTime.now() : DateTime(fechaInicio.year,fechaInicio.month,fechaInicio.day),
-                    firstDate:DateTime(2000),
-                    lastDate: DateTime(2100));
-
-      // dateCtl.text = fechaInicio.toIso8601String();
-      copyItemModel.results.forEach((element) {
-        if(idActividad == element.idActividad)
-          element.fechaInicio = fechaInicio;
-      });
-      print('date: $fechaInicio');
-      // print('dateCtl: ${dateCtl.text}');
-
-      },
-    );
-  }
   
 }
 
@@ -321,12 +316,13 @@ class Item {
     this.nombreActividad,
     this.idActividad,
     this.isCheck,
-    this.fechaInicio,
+    this.isExpanded
   });
 
   String descripcionActividad;
   String nombreActividad;
   int idActividad;
   bool isCheck;
-  DateTime fechaInicio;
+  bool isExpanded;
 }
+*/
