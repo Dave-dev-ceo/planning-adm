@@ -13,9 +13,9 @@ class MostrarRoles extends RolesState {
   ItemModelRoles get props => roles;
 }
 
-class ErrorRoles extends RolesState {
+class ErrorObtenerRoles extends RolesState {
   final String message;
-  ErrorRoles(this.message);
+  ErrorObtenerRoles(this.message);
   get props => message;
 }
 

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/permisos_logic.dart';
 import 'package:weddingplanner/src/logic/roles_logic.dart';
 import 'package:weddingplanner/src/models/model_roles.dart';
 
@@ -23,8 +22,8 @@ class RolesBloc extends Bloc<RolesEvent, RolesState> {
       try {
         ItemModelRoles roles = await logic.obtenerRolesPorPlanner();
         yield MostrarRoles(roles);
-      } on PermisosException {
-        yield ErrorRoles("Sin permisos");
+      } on RolesException {
+        yield ErrorObtenerRoles("Sin permisos");
       } on TokenRolesException {
         yield ErrorTokenRoles("Sesión caducada");
       }
