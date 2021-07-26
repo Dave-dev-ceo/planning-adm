@@ -71,6 +71,8 @@ class _Rol {
   String _agregadoPor;
   String _editadoPor;
 
+  bool _editable;
+
   _Rol(result) {
     _idRol = int.parse(result['id_rol']);
     _claveRol = result['clave_rol'];
@@ -83,6 +85,7 @@ class _Rol {
     _modificadoPor = result['modificado_por'];
     _agregadoPor = result['agregado_por'];
     _editadoPor = result['editado_por'];
+    _editable = result['editable'];
   }
 
   _Rol.fromModel(dataObj) {
@@ -97,6 +100,7 @@ class _Rol {
     _modificadoPor = dataObj._modificadoPor;
     _agregadoPor = dataObj._agregadoPor;
     _editadoPor = dataObj._editadoPor;
+    _editable = dataObj._editable;
   }
 
   int get id_rol => this._idRol;
@@ -120,4 +124,6 @@ class _Rol {
   String get agregado_por => this._agregadoPor;
 
   String get editado_por => this._editadoPor;
+
+  bool get editable => this._editable;
 }

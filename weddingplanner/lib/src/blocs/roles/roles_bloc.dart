@@ -20,12 +20,22 @@ class RolesBloc extends Bloc<RolesEvent, RolesState> {
       yield LoadingRoles();
 
       try {
-        ItemModelRoles roles = await logic.obtenerRolesPorPlanner();
+        ItemModelRoles roles = await logic.obtenerRolesSelect();
         yield MostrarRoles(roles);
       } on RolesException {
-        yield ErrorObtenerRoles("Sin permisos");
+        yield ErrorObtenerRoles("Error al obtener Roles");
       } on TokenRolesException {
         yield ErrorTokenRoles("Sesión caducada");
+      }
+    } else if (event is ObtenerRolesPlannerEvent) {
+      yield LoadingRolesPlanner();
+      try {
+        ItemModelRoles roles = await logic.obtenerRolesPorPlanner();
+        yield MostrarRolesPlanner(roles);
+      } on RolesPlannerException {
+        yield ErrorObtenerRolesPlanner("Error al obtener lista de Roles");
+      } on TokenRolesException {
+        yield ErrorTokenRolesPlanner("Sesión caducada");
       }
     }
   }

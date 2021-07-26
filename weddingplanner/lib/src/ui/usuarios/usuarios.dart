@@ -63,12 +63,16 @@ class _UsuariosState extends State<Usuarios> {
             );
           } else {
             crt = true;
-            return Center(child: Text('no data'));
+            if (filterUsuarios.usuarios != null) {
+              return buildList(filterUsuarios);
+            } else {
+              return Center(child: Text('Sin datos'));
+            }
           }
         },
       ),
-      // Roles()
-      Center(child: Text('En construccin'))
+      Roles()
+      // Center(child: Text('En construccin'))
     ];
     super.initState();
   }

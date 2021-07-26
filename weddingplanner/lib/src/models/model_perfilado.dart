@@ -92,19 +92,23 @@ class ItemModelPantallas {
 }
 
 class _Pantalla {
+  int _idSeccion;
   String _clavePantalla;
   bool _acceso;
 
   _Pantalla(data) {
+    _idSeccion = data['id_seccion'];
     _clavePantalla = data['clave_pantalla'];
     _acceso = data['acceso'];
   }
 
   _Pantalla.fromModel(dataObj) {
-    _clavePantalla = dataObj.clavePantalla;
-    _acceso = dataObj.acceso;
+    _idSeccion = dataObj._idPantalla;
+    _clavePantalla = dataObj._clavePantalla;
+    _acceso = dataObj._acceso;
   }
 
+  int get id_seccion => _idSeccion;
   String get clavePantalla => _clavePantalla;
   bool get acceso => _acceso;
 }

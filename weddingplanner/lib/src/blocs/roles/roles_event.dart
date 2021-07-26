@@ -6,3 +6,7 @@ abstract class RolesEvent {}
 class ObtenerRolesEvent extends RolesEvent {
   ObtenerRolesEvent();
 }
+
+class ObtenerRolesPlannerEvent extends RolesEvent {
+  ObtenerRolesPlannerEvent();
+}

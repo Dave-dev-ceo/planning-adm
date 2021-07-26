@@ -25,22 +25,12 @@ class _RolesState extends State<Roles> {
   int _sortColumnIndex = 0;
   bool sortArrow = false;
 
-  // TABS
-  List<Widget> _footerTabs;
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   _RolesState();
 
   @override
   void initState() {
     rolesBloc = BlocProvider.of<RolesBloc>(context);
-    rolesBloc.add(ObtenerRolesEvent());
+    rolesBloc.add(ObtenerRolesPlannerEvent());
     super.initState();
   }
 
@@ -51,9 +41,9 @@ class _RolesState extends State<Roles> {
         builder: (context, state) {
           if (state is RolesInitial) {
             return Center(child: CircularProgressIndicator());
-          } else if (state is LoadingRoles) {
+          } else if (state is LoadingRolesPlanner) {
             return Center(child: CircularProgressIndicator());
-          } else if (state is MostrarRoles) {
+          } else if (state is MostrarRolesPlanner) {
             if (state.roles != null) {
               if (itemModelRoles != state.roles) {
                 itemModelRoles = state.roles;
@@ -64,7 +54,7 @@ class _RolesState extends State<Roles> {
               }
             } else {
               crt = true;
-              rolesBloc.add(ObtenerRolesEvent());
+              rolesBloc.add(ObtenerRolesPlannerEvent());
               return Center(child: CircularProgressIndicator());
             }
             if (filterRoles.roles != null) {
@@ -72,16 +62,30 @@ class _RolesState extends State<Roles> {
             } else {
               return Center(child: Text('Sin datos'));
             }
-          } else if (state is ErrorObtenerRoles) {
+          } else if (state is ErrorObtenerRolesPlanner) {
             return Center(
               child: Text(state.message),
             );
           } else {
             crt = true;
-            return Center(child: Text('no data'));
+            if (filterRoles.roles != null) {
+              return buildList(filterRoles);
+            } else {
+              return Center(child: Text('Sin datos'));
+            }
           }
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: null,
+        child: Icon(Icons.add),
+        onPressed: () {
+          setState(() {
+            mostrarForm(context, 0, null);
+          });
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
 
@@ -120,9 +124,6 @@ class _RolesState extends State<Roles> {
                                     .toLowerCase()
                                     .contains(value.toLowerCase()) ||
                                 imu.nombre_rol
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()) ||
-                                imu.estatus
                                     .toLowerCase()
                                     .contains(value.toLowerCase()))
                             .toList();
@@ -217,7 +218,7 @@ Future<bool> mostrarForm(formContext, accion, usr) async {
       content: Text(
           '${rol.roles.nombre_rol} ${accion == 0 ? 'Agregado a Roles' : 'editado'}'),
       onVisible: () {
-        rolesBloc.add(ObtenerRolesEvent());
+        rolesBloc.add(ObtenerRolesPlannerEvent());
         crt = true;
       },
     ));

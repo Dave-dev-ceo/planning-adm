@@ -11,6 +11,8 @@ import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
 import 'package:weddingplanner/src/blocs/planners/planners_bloc.dart';
+import 'package:weddingplanner/src/blocs/roles/formRol/formRol_bloc.dart';
+import 'package:weddingplanner/src/blocs/roles/rol/rol_bloc.dart';
 import 'package:weddingplanner/src/blocs/roles/roles_bloc.dart';
 import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
 import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
@@ -127,6 +129,9 @@ class AppState extends StatelessWidget {
           create: (_) => PermisosBloc(logic: PerfiladoLogic())),
       BlocProvider<RolesBloc>(
           create: (_) => RolesBloc(logic: RolesPlannerLogic())),
+      BlocProvider<RolBloc>(create: (_) => RolBloc(logic: RolCrud())),
+      BlocProvider<FormRolBloc>(
+          create: (_) => FormRolBloc(logic: FormRolLogic())),
     ], child: MyApp());
   }
 }

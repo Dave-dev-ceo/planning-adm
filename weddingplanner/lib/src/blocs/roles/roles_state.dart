@@ -25,3 +25,24 @@ class ErrorTokenRoles extends RolesState {
   ErrorTokenRoles(this.message);
   List<Object> get props => [message];
 }
+
+class LoadingRolesPlanner extends RolesState {}
+
+class MostrarRolesPlanner extends RolesState {
+  final ItemModelRoles roles;
+  MostrarRolesPlanner(this.roles);
+  ItemModelRoles get props => roles;
+}
+
+class ErrorObtenerRolesPlanner extends RolesState {
+  final String message;
+  ErrorObtenerRolesPlanner(this.message);
+  get props => message;
+}
+
+// ERROR EN TOKEN:
+class ErrorTokenRolesPlanner extends RolesState {
+  final String message;
+  ErrorTokenRolesPlanner(this.message);
+  List<Object> get props => [message];
+}

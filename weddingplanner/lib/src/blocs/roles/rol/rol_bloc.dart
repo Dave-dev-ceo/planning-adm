@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:weddingplanner/src/logic/roles_logic.dart';
-import 'package:weddingplanner/src/logic/usuarios.logic.dart';
-import 'package:weddingplanner/src/models/item_model_usuarios.dart';
 import 'package:weddingplanner/src/models/model_roles.dart';
 
 part 'rol_event.dart';
