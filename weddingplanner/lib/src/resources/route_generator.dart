@@ -13,6 +13,7 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_machote.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_planners.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_rol.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_usuario.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
@@ -51,7 +52,8 @@ class RouteGenerator {
                   id: args,
                 ));
       case '/addContrato':
-        return MaterialPageRoute(builder: (context) => FullScreenDialogAddContrato());
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddContrato());
       case '/viewContrato':
         return MaterialPageRoute(
             builder: (context) => ViewPdfContrato(
@@ -68,9 +70,11 @@ class RouteGenerator {
                   dataPlantilla: args,
                 ));
       case '/addPlanners':
-        return MaterialPageRoute(builder: (context) => FullScreenDialogAddPlanners());
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddPlanners());
       case '/addEvento':
-        return MaterialPageRoute(builder: (context) => FullScreenDialogAddEvento());
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddEvento());
       case '/editarEvento':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogEditEvento(
@@ -102,9 +106,17 @@ class RouteGenerator {
                   reporte: args,
                 ));
       case '/crearUsuario':
-        return MaterialPageRoute(builder: (context) => FullScreenDialogAddUsuario(datos: args));
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddUsuario(datos: args));
       case '/editarUsuario':
-        return MaterialPageRoute(builder: (context) => FullScreenDialogAddUsuario(datos: args));
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddUsuario(datos: args));
+      case '/crearRol':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddRol(datos: args));
+      case '/editarRol':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogAddRol(datos: args));
       default:
         return _errorRoute();
     }

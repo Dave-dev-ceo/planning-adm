@@ -3,17 +3,20 @@ import 'dart:io';
 
 import 'package:http/http.dart' show Client;
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/model_perfilado.dart';
+import 'package:weddingplanner/src/models/model_form.dart';
 import 'package:weddingplanner/src/models/model_roles.dart';
 import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class RolesLogic {
   Future<ItemModelRoles> obtenerRolesPorPlanner();
+  Future<ItemModelRoles> obtenerRolesSelect();
 }
 
 // ROLES
 
 class RolesException implements Exception {}
+
+class RolesPlannerException implements Exception {}
 
 class TokenRolesException implements Exception {}
 
@@ -26,13 +29,36 @@ class RolesPlannerLogic implements RolesLogic {
 
   @override
   Future<ItemModelRoles> obtenerRolesPorPlanner() async {
-    String idPlanner = (await _sharedPreferences.getIdPlanner()).toString();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ROLES/obtenerRolesPorPlanner'),
+        body: {'id_planner': idPlanner.toString()},
+        headers: {HttpHeaders.authorizationHeader: token});
+
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return new ItemModelRoles.fromJson(data['roles']);
+    } else if (response.statusCode == 401) {
+      throw TokenRolesException();
+    } else {
+      throw RolesPlannerException();
+    }
+  }
+
+  @override
+  Future<ItemModelRoles> obtenerRolesSelect() async {
+    String idPlanner = (await _sharedPreferences.getIdPlanner()).toString();
+    String token = await _sharedPreferences.getToken();
+
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/ROLES/obtenerRolesSelect'),
         body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -80,13 +106,12 @@ class RolCrud extends RolLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/USUARIOS/crearRolParaPlanner'),
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/ROLES/crearRolPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_usuario': idUsuario.toString(),
-          'rol': jsonEncode(dataRol)
+          'rol': dataRol.toString()
         },
         headers: {
           HttpHeaders.authorizationHeader: token
@@ -111,9 +136,8 @@ class RolCrud extends RolLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/USUARIOS/editarRolParaPlanner'),
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/ROLES/editarRolPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_usuario': idUsuario.toString(),
@@ -154,6 +178,44 @@ class RolCrud extends RolLogic {
       return null;
     } else {
       throw EliminarRolException();
+    }
+  }
+}
+
+class ObtenerFormRolException implements Exception {}
+
+class TokenFormRolException implements Exception {}
+
+abstract class RolFormLogic {
+  Future<ItemModelFormRol> obtenerRolesForm();
+}
+
+class FormRolLogic implements RolFormLogic {
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  ConfigConection confiC = new ConfigConection();
+  Client client = Client();
+
+  FormRolLogic();
+
+  @override
+  Future<ItemModelFormRol> obtenerRolesForm() async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/ROLES/obtenerRolesForm'),
+        body: {'id_planner': idPlanner.toString()},
+        headers: {HttpHeaders.authorizationHeader: token});
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return new ItemModelFormRol.fromJson(data['form']);
+    } else if (response.statusCode == 401) {
+      throw TokenFormRolException();
+    } else {
+      throw RolesPlannerException();
     }
   }
 }
