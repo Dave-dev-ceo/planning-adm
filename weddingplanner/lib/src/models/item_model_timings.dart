@@ -39,22 +39,25 @@ class ItemModelTimings {
 class _Result {
   int _idTiming;
   String _nombreTiming;
+  int _idEventoTiming;
 
   _Result(result) {
     _idTiming = result['id_tipo_timing'];
     _nombreTiming = result['nombre_timing'];
+    _idEventoTiming = result['id_evento_timing'];
   }
 
   _Result.fromModel(dataObj) {
     _idTiming = dataObj._idTiming;
     _nombreTiming = dataObj._nombreTiming;
+    _idEventoTiming = dataObj._idEventoTiming;
   }
 
   int get id_timing => this._idTiming;
+  String get nombre_timing => this._nombreTiming;
+  int get idEventoTiming => this._idEventoTiming;
 
   set id_timing(int value) => this._idTiming = value;
-
-  String get nombre_timing => this._nombreTiming;
-
   set nombre_timing(value) => this._nombreTiming = value;
+  set idEventoTiming(int value) => this._idEventoTiming = value;
 }

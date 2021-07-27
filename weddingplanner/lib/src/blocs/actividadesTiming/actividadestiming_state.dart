@@ -47,6 +47,14 @@ class MostrarActividadesTimingsEventosState extends ActividadestimingState {
   ItemModelActividadesTimings get props => actividadesTimings;
 }
 
+class MostrarTimingsState extends ActividadestimingState {
+  final ItemModelTimings usuarios;
+
+  MostrarTimingsState(this.usuarios);
+
+  ItemModelTimings get props => usuarios;
+}
+
 class ErrorMostrarActividadesTimingsState extends ActividadestimingState {
   final String message;
 

@@ -21,6 +21,8 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_reporte_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
+import 'package:weddingplanner/src/ui/timing_evento/eventos_calendario.dart';
+import 'package:weddingplanner/src/ui/timing_evento/table_calendar.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -117,6 +119,8 @@ class RouteGenerator {
       case '/editarRol':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddRol(datos: args));
+      case '/eventoCalendario':
+              return MaterialPageRoute(builder: (context) => EventoCalendario());
       default:
         return _errorRoute();
     }

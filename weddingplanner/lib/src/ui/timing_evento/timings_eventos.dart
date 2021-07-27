@@ -1,6 +1,8 @@
 // imports dart/flutter
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sticky_headers/sticky_headers.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 // blocs
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,9 +28,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
 
   // variables clase
   bool _allCheck = false;
-  Map<int,Item> _keepStatus = ({0:Item(isCheck: true)});
-  TextEditingController fechaInicioCtrl;
-  DateTime fechaInicio;
+  List<Tarea> _listFull = [];
 
   // ini
   @override
@@ -53,6 +53,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                 itemModel = state.actividadesTimings;
                 if (itemModel != null) {
                   copyItemModel = itemModel.copy();
+                  _listFull = _crearListaEditable(copyItemModel);
                 }
               }
             } else {
@@ -108,8 +109,8 @@ class _TimingsEventosState extends State<TimingsEventos> {
         mainAxisSize: MainAxisSize.max,
         children: [
           _tituloHeader(),
-          SizedBox(height: 10.0,),
-          _buscadorHeader(),
+          // SizedBox(height: 10.0,),
+          // _buscadorHeader(),
           SizedBox(height: 15.0,),
           _checkActividadesHeader(),
         ],
@@ -140,14 +141,17 @@ class _TimingsEventosState extends State<TimingsEventos> {
           onChanged: (valor){
             setState((){
               _allCheck = !_allCheck;
-              copyItemModel.results.forEach((element) {
-                element.addActividad = !_allCheck;
-                _changeCheck(copyItemModel,element.idActividad,valor);
+              _listFull.forEach((tarea) {
+                tarea.check_tarea = _allCheck;
+                tarea.expanded_tarea = _allCheck;
+                tarea.actividad.forEach((actividad) {
+                  actividad.agregar_actividad = _allCheck;
+                });
               });
             });
           },
         ),
-        Text('Selecciona todas las actividades.'),
+        Text('Seleccionar todo.'),
       ],
     );
   }
@@ -160,55 +164,27 @@ class _TimingsEventosState extends State<TimingsEventos> {
   }
 
   // Cargar las actividades - eventos/todo
-  Future<List<Item>> loadData(ItemModelActividadesTimings itemModel) async {
-    // await Future.delayed(Duration(seconds: 3));
-    return List.generate(itemModel.results.length, (int index) {
-      return Item(
-        nombreActividad: '${itemModel.results[index].nombreActividad}',
-        descripcionActividad: '${itemModel.results[index].descripcion}',
-        idActividad: itemModel.results[index].idActividad,
-        isCheck: itemModel.results[index].addActividad,
-        fechaInicio: DateTime.now(),
-      );
-    });
-  }
-
-  List<Widget> buildPanelList(List<Item> data) {
-    List<Widget> children = [];
-    for (int i = 0; i < data.length; i++) {
-      children.add(
-        Card(
-          child: ListTile(
-            leading: Checkbox(
-              value: data[i].isCheck ?? false, 
-              onChanged: (valor){
-                setState((){
-                    _changeCheck(copyItemModel,data[i].idActividad,valor);
-                });
-              },
-            ),
-            title: Text("${data[i].nombreActividad}"),
-            subtitle: Text("${data[i].descripcionActividad}"),
-            trailing: data[i].isCheck == true ? _calendaryIcon(data[i].fechaInicio,data[i].idActividad) : null,
-            onTap: data[i].isCheck == true ? () {
-            } : null,
-          ),
-        )
-      );
-    }
-    return children;
+  Future<List<Tarea>> loadData(ItemModelActividadesTimings itemInMethod) async {
+    // acomodar el modelo para que carge las actividades dentro de una sola tarea
+    return _crearListaEditable(itemInMethod);
   }
 
   Widget listaToda(ItemModelActividadesTimings itemModel) {
     if(itemModel.results.length > 0) {
-      return FutureBuilder<List<Item>>(
+      return FutureBuilder<List<Tarea>>(
         future: loadData(itemModel),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return SingleChildScrollView(
-              child: Column(
-                children: buildPanelList(snapshot.data)
-              ),
+              child: ExpansionPanelList(
+                  animationDuration: Duration(milliseconds: 500),
+                  expansionCallback: (int index, bool isExpanded) {
+                    setState(() {
+                      if(_listFull[index].check_tarea == true)
+                        _listFull[index].expanded_tarea = !isExpanded;
+                    });
+                  },
+                  children: buildPanelList(snapshot.data)),
             );
           } else {
             return Center(
@@ -223,10 +199,100 @@ class _TimingsEventosState extends State<TimingsEventos> {
     }
   }
 
+  List<ExpansionPanel> buildPanelList(List<Tarea> data) {
+    List<ExpansionPanel> children = [];
+    for (int i = 0; i < data.length; i++) {
+      List<ListTile> listTiles = [];
+      for(int j = 0; j < data[i].actividad.length; j++){
+        listTiles.add(
+          ListTile(
+            leading: Checkbox(
+              value: _listFull[i].actividad[j].agregar_actividad,
+              onChanged: (valor){
+                setState(() {
+                  _listFull[i].actividad[j].agregar_actividad = valor;
+                });
+              },
+            ),
+            title: Text('${data[i].actividad[j].nombre_actividad}'),
+            subtitle: Text('${data[i].actividad[j].describe_actividad}'),
+            trailing: _listFull[i].actividad[j].agregar_actividad == true ? _calendaryIcon(_listFull[i].actividad[j].fecha_inicio_actividad,_listFull[i].actividad[j].id_actividad,_listFull[i].actividad[j].fecha_inicio_evento,_listFull[i].actividad[j].fecha_final_evento,_listFull[i].actividad[j].dias) : null,
+            // onTap: _listFull[i].actividad[j].agregar_actividad == true ? (){} : null,
+          )
+        );
+      }
+      children.add(ExpansionPanel(
+        headerBuilder: (context, isExpanded) {
+          return ListTile(
+            leading: Checkbox(
+              value: _listFull[i].check_tarea ?? false,
+              onChanged: (valor){
+                setState((){
+                  if(_listFull[i].expanded_tarea == false)
+                    _listFull[i].check_tarea = valor;
+                });
+              },
+            ),
+            title: Text("${data[i].nombre_tarea}"),
+          );
+        },
+        isExpanded: _listFull[i].expanded_tarea ?? false,
+        body: Column(
+          children: listTiles,
+        ),
+      ));
+    }
+    return children;
+  }
+
+  List<Tarea> _crearListaEditable(ItemModelActividadesTimings itemInMethod) {
+    //
+    List<Tarea> tempTarea = [];
+    //
+    for(int i = 0; i < itemInMethod.results.length; i++) {
+      //
+      List<Actividad> tempActividad = [];
+      //
+      for(int j = 1; j < itemInMethod.results.length; j++) {
+        if(itemInMethod.results[i].idEventoTiming == itemInMethod.results[j].idEventoTiming)
+          tempActividad.add(Actividad(
+            id_actividad: itemInMethod.results[j].idEventoActividad,
+            nombre_actividad: itemInMethod.results[j].nombreEventoActividad,
+            describe_actividad: itemInMethod.results[j].descripcion,
+            dias: itemInMethod.results[j].dia,
+            fecha_inicio_actividad: itemInMethod.results[j].fechaInicioActividad,
+            fecha_inicio_evento: itemInMethod.results[j].fechaInicioEvento,
+            fecha_final_evento: itemInMethod.results[j].fechaFinalEvento,
+            agregar_actividad: itemInMethod.results[j].addActividad,
+          ));
+      }
+      //
+      if(i == 0)
+        tempTarea.add(Tarea(
+          id_tarea: itemInMethod.results[i].idEventoTiming,
+          nombre_tarea: itemInMethod.results[i].nombreEventoTarea,
+          check_tarea: itemInMethod.results[i].isCheck,
+          expanded_tarea: itemInMethod.results[i].isExpanded,
+          actividad: tempActividad,
+        ));
+      else {
+        if(itemInMethod.results[(i-1)].idEventoTiming != itemInMethod.results[i].idEventoTiming)
+          tempTarea.add(Tarea(
+            id_tarea: itemInMethod.results[i].idEventoTiming,
+            nombre_tarea: itemInMethod.results[i].nombreEventoTarea,
+            check_tarea: itemInMethod.results[i].isCheck,
+            expanded_tarea: itemInMethod.results[i].isExpanded,
+            actividad: tempActividad,
+          ));
+      }
+    }
+    return tempTarea;
+  }
+
   _buscadorActividades(String valor) {
     if(valor.length > 2) {
       List<dynamic> buscador = itemModel.results.where((element) =>
-        element.nombreActividad.toLowerCase().contains(valor.toLowerCase())
+        element.nombreEventoTarea.toLowerCase().contains(valor.toLowerCase())
       ).toList();
       setState((){
         copyItemModel.results.clear();
@@ -234,10 +300,10 @@ class _TimingsEventosState extends State<TimingsEventos> {
           buscador.forEach((element) {
             copyItemModel.results.add(element);
             // rescribir cheks
-            copyItemModel.results.forEach((element) {
-              if(_keepStatus[element.idActividad] != null)
-                element.addActividad = _keepStatus[element.idActividad].isCheck;
-            });
+            // copyItemModel.results.forEach((element) {
+            //   if(_keepStatus[element.idActividad] != null)
+            //     element.addActividad = _keepStatus[element.idActividad].isCheck;
+            // });
           });
         }
         else {}
@@ -247,86 +313,183 @@ class _TimingsEventosState extends State<TimingsEventos> {
         if (itemModel != null) {
           copyItemModel = itemModel.copy();
           // rescribir cheks
-          copyItemModel.results.forEach((element) {
-            if(_keepStatus[element.idActividad] != null)
-              element.addActividad = _keepStatus[element.idActividad].isCheck;
-          });
+          // copyItemModel.results.forEach((element) {
+          //   if(_keepStatus[element.idActividad] != null)
+          //     element.addActividad = _keepStatus[element.idActividad].isCheck;
+          // });
         }
       });
-    }
-  }
-
-  void _changeCheck(ItemModelActividadesTimings modelChange, int idActividad,bool newValor) {
-
-    if(_keepStatus[idActividad] == null)
-      _keepStatus.addAll({idActividad:Item(isCheck: newValor)});
-    else
-    _keepStatus[idActividad].isCheck = newValor;
-
-    for(int i = 0; i<modelChange.results.length; i++) {
-      if(modelChange.results[i].idActividad == idActividad) {
-        modelChange.results[i].addActividad = newValor;
-      }
     }
   }
   // fin Cargar las actividades - eventos/todo
   
   Widget _myBotonSave() {
-    return FloatingActionButton(
-      child: Icon(Icons.add),
-      onPressed: () => _saveActividades(),
+    return SpeedDial(
+      icon: Icons.add,
+      activeIcon: Icons.close_rounded,
+      visible: true,
+      tooltip: 'Opciones',
+      heroTag: 'Opciones',
+      backgroundColor: Colors.pink[900],
+      foregroundColor: Colors.white,
+      gradientBoxShape: BoxShape.circle,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+      children: _armarBotonesAcciones(),
+    );
+  }
+
+  List<SpeedDialChild> _armarBotonesAcciones() {
+    List<SpeedDialChild> temp = [];
+    temp.add(_agregarNuevaActividad());
+    temp.add(_agregarActividadCalendario());
+    return temp;
+  }
+
+  SpeedDialChild _agregarNuevaActividad() {
+    return SpeedDialChild(
+      backgroundColor: Colors.pink[900],
+      foregroundColor: Colors.white,
+      child: Tooltip(
+        child: Icon(Icons.access_time_sharp),
+        message: "Agregar tareas.",
+      ),
+      onTap: () async {},
+    );
+  }
+
+  SpeedDialChild _agregarActividadCalendario() {
+    return SpeedDialChild(
+      backgroundColor: Colors.pink[900],
+      foregroundColor: Colors.white,
+      child: Tooltip(
+        child: Icon(Icons.calendar_today_outlined),
+        message: "Agregar a calendario.",
+      ),
+      onTap: () async { await _saveActividades();},
     );
   }
 
   void _saveActividades() {
-    print('Abemus boton!');
+    // crear metodo para actualizar estado
+    Navigator.of(context).pushNamed('/eventoCalendario');
   }
 
   // parte del calendary put
-  Widget _calendaryIcon(DateTime fechaInicio,int idActividad) {
-    // TextEditingController dateCtl = TextEditingController();
-
+  Widget _calendaryIcon(DateTime fechaInicio,int idActividad, DateTime fechaInicioEvento, DateTime fechaFinalEvento, int dias) {
     return GestureDetector(
       child: Icon(Icons.calendar_today),
       onTap: () async {
+        FocusScope.of(context).requestFocus(new FocusNode());
 
-      
-      print('date: $fechaInicio');
-      FocusScope.of(context).requestFocus(new FocusNode());
-
-      fechaInicio = await showDatePicker(
-                    context: context, 
-                    initialDate: fechaInicio.isBefore(DateTime.now()) == true ? DateTime.now() : DateTime(fechaInicio.year,fechaInicio.month,fechaInicio.day),
-                    firstDate:DateTime(2000),
-                    lastDate: DateTime(2100));
-
-      // dateCtl.text = fechaInicio.toIso8601String();
-      copyItemModel.results.forEach((element) {
-        if(idActividad == element.idActividad)
-          element.fechaInicio = fechaInicio;
-      });
-      print('date: $fechaInicio');
-      // print('dateCtl: ${dateCtl.text}');
-
+        fechaInicio = await showDatePicker(
+                      context: context, 
+                      initialDate: fechaInicio,
+                      errorFormatText: 'Error en el formato',
+                      errorInvalidText: 'Error en la fecha',
+                      fieldHintText: 'día/mes/año',
+                      fieldLabelText: 'Fecha de inicio de actividad',
+                      firstDate: fechaInicioEvento,
+                      lastDate: fechaFinalEvento,
+        );
+        
+        // // agregamos la nueva fecha
+        _listFull.forEach((tareas) {
+          tareas.actividad.forEach((actividades) {
+            if(actividades.id_actividad == idActividad){
+              if(fechaInicio != null) {
+                if(fechaInicio.add(Duration(days: actividades.dias)).isAfter(actividades.fecha_final_evento))
+                  _alertaFechas(actividades.nombre_actividad,actividades.fecha_inicio_evento,fechaInicio,actividades.fecha_final_evento,actividades.dias);
+                else
+                  actividades.fecha_inicio_actividad = fechaInicio;
+              }
+              else {
+              }
+            }
+          });
+        });
       },
     );
   }
+
+  // mensajes
+  Future<void> _alertaFechas(String actividad, DateTime fechaInicialEvento, DateTime fechaActividad, DateTime fechaFinalEvento, int duracion) {
+    String txtDuracion;
+
+    if(duracion > 1)
+      txtDuracion = 'tiene la duración de $duracion dias';
+    else
+      txtDuracion = 'tiene la duración de $duracion dia';
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error en la fecha'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('La actividad: $actividad'),
+                Text('$txtDuracion'),
+                SizedBox(height: 15.0,),
+                Text('No puedes exceder el día final del evento,'),
+                SizedBox(height: 15.0,),
+                Text('fecha final: ${DateFormat("yyyy-MM-dd").format(fechaFinalEvento)}')
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  // fin calendary put
   
 }
+// clases para manejar el modelo
+// tarea
+class Tarea {
+  int id_tarea;
+  String nombre_tarea;
+  bool check_tarea;
+  bool expanded_tarea;
+  List<Actividad> actividad;
 
-// stores ExpansionPanel state information
-class Item {
-  Item({
-    this.descripcionActividad,
-    this.nombreActividad,
-    this.idActividad,
-    this.isCheck,
-    this.fechaInicio,
+  Tarea({
+    this.id_tarea,
+    this.nombre_tarea,
+    this.check_tarea,
+    this.expanded_tarea,
+    this.actividad,
   });
+}
+// actividad
+class Actividad {
+  int id_actividad;
+  String nombre_actividad;
+  String describe_actividad;
+  int dias;
+  DateTime fecha_inicio_actividad;
+  DateTime fecha_inicio_evento;
+  DateTime fecha_final_evento;
+  bool agregar_actividad;
 
-  String descripcionActividad;
-  String nombreActividad;
-  int idActividad;
-  bool isCheck;
-  DateTime fechaInicio;
+  Actividad({
+    this.id_actividad,
+    this.nombre_actividad,
+    this.describe_actividad,
+    this.dias,
+    this.fecha_inicio_actividad,
+    this.fecha_inicio_evento,
+    this.fecha_final_evento,
+    this.agregar_actividad,
+  });
 }
