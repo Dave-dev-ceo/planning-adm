@@ -5,6 +5,7 @@ import 'package:weddingplanner/src/models/model_perfilado.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
 import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
+import 'package:weddingplanner/src/ui/listas/Listas.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
@@ -50,8 +51,10 @@ class _InvitadosState extends State<Invitados> {
           } else if (state is LoadingPermisos) {
             return Center(child: CircularProgressIndicator());
           } else if (state is PermisosOk) {
-            List<TabItem> tabs = obtenerTabsPantallas(state.permisos.pantallas); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
-            List<Widget> pantallas = obtenerPantallasContent(state.permisos.pantallas); /* <Widget>[Center(child: Text('Test'))]; */
+            List<TabItem> tabs = obtenerTabsPantallas(state.permisos
+                .pantallas); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
+            List<Widget> pantallas = obtenerPantallasContent(state.permisos
+                .pantallas); /* <Widget>[Center(child: Text('Test'))]; */
             // Navigator.pop(_dialogContext);
             return crearPantallas(context, tabs, pantallas);
           } else if (state is ErrorPermisos) {
@@ -66,7 +69,8 @@ class _InvitadosState extends State<Invitados> {
     );
   }
 
-  Widget crearPantallas(BuildContext context, List<TabItem> pantallasTabs, List<Widget> PantallasCOntent) {
+  Widget crearPantallas(BuildContext context, List<TabItem> pantallasTabs,
+      List<Widget> PantallasCOntent) {
     return DefaultTabController(
         length: _pages,
         child: Scaffold(
@@ -82,6 +86,18 @@ class _InvitadosState extends State<Invitados> {
             ),
             toolbarHeight: 150.0,
             backgroundColor: hexToColor('#880B55'),
+            actions: <Widget>[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text('CONFIGURACIÓN EVENTO'),
+              ),
+              Container(
+                  margin: EdgeInsets.only(right: 10.0),
+                  child: CircleAvatar(
+                    child: Text('MF'),
+                    backgroundColor: hexToColor('#d39942'),
+                  ))
+            ],
             bottom: TabBar(
                 onTap: (int index) {
                   setState(
@@ -141,19 +157,23 @@ class _InvitadosState extends State<Invitados> {
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-        tabs.add(TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
+        tabs.add(
+            TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
-        tabs.add(TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined));
+        tabs.add(TabItem(
+            titulo: 'Proveedores', icono: Icons.support_agent_outlined));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-IVT')) {
-        tabs.add(TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
+        tabs.add(TabItem(
+            titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRS')) {
-        tabs.add(TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
+        tabs.add(
+            TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
@@ -161,11 +181,16 @@ class _InvitadosState extends State<Invitados> {
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
-        tabs.add(TabItem(titulo: 'Contratos', icono: Icons.description_outlined));
+        tabs.add(
+            TabItem(titulo: 'Contratos', icono: Icons.description_outlined));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
         tabs.add(TabItem(titulo: 'Asistencia', icono: Icons.accessibility));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ART')) {
+        tabs.add(TabItem(titulo: 'Listas', icono: Icons.list));
         temp += 1;
       }
       _pages = temp;
@@ -213,6 +238,9 @@ class _InvitadosState extends State<Invitados> {
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
         temp.add(Asistencia());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ART')) {
+        temp.add(Listas());
       }
       return temp;
     } else {

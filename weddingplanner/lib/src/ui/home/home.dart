@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   int _pageIndex = 0;
   int _pages = 0;
@@ -57,8 +57,10 @@ class _HomeState extends State<Home> {
             return Center(child: CircularProgressIndicator());
           } else if (state is PermisosOk) {
             permisos = state.permisos;
-            List<TabItem> tabs = obtenerTabs(state.permisos.secciones); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
-            List<Widget> pantallas = obtenerPantallasSecciones(state.permisos.secciones); /* <Widget>[Center(child: Text('Test'))]; */
+            List<TabItem> tabs = obtenerTabs(state.permisos
+                .secciones); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
+            List<Widget> pantallas = obtenerPantallasSecciones(state.permisos
+                .secciones); /* <Widget>[Center(child: Text('Test'))]; */
             // Navigator.pop(_dialogContext);
             return crearPantalla(context, tabs, pantallas);
           } else if (state is ErrorPermisos) {
@@ -73,7 +75,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget crearPantalla(BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
+  Widget crearPantalla(
+      BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
     return DefaultTabController(
         length: _pages,
         child: Scaffold(
@@ -87,6 +90,18 @@ class _HomeState extends State<Home> {
                 width: 250.0,
               )),
             ),
+            actions: <Widget>[
+              Container(
+                margin: EdgeInsets.only(right: 20.0),
+                child: Text('CONFIGURACIÓN PLANNER'),
+              ),
+              Container(
+                  margin: EdgeInsets.only(right: 10.0),
+                  child: CircleAvatar(
+                    child: Text('MF'),
+                    backgroundColor: hexToColor('#d39942'),
+                  ))
+            ],
             toolbarHeight: 150.0,
             backgroundColor: hexToColor('#880B55'),
             bottom: TabBar(
@@ -136,33 +151,42 @@ class _HomeState extends State<Home> {
   List<TabItem> obtenerTabs(ItemModelSecciones secciones) {
     List<TabItem> tabs = [];
     int temp = 0;
+
     if (secciones != null) {
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
-        tabs.add(TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
+        tabs.add(
+            TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
-        tabs.add(TabItem(titulo: 'Estatus de invitaciones', icono: Icons.card_membership_rounded));
+        tabs.add(TabItem(
+            titulo: 'Estatus de invitaciones',
+            icono: Icons.card_membership_rounded));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
-        tabs.add(TabItem(titulo: 'Tareas', icono: Icons.hourglass_bottom_rounded));
+        tabs.add(
+            TabItem(titulo: 'Tareas', icono: Icons.hourglass_bottom_rounded));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
-        tabs.add(TabItem(titulo: 'Tipos de eventos', icono: Icons.event_note_outlined));
+        tabs.add(TabItem(
+            titulo: 'Tipos de eventos', icono: Icons.event_note_outlined));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
-        tabs.add(TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined));
+        tabs.add(TabItem(
+            titulo: 'Proveedores', icono: Icons.support_agent_outlined));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-IVT')) {
-        tabs.add(TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
+        tabs.add(TabItem(
+            titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRS')) {
-        tabs.add(TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
+        tabs.add(
+            TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
@@ -184,7 +208,9 @@ class _HomeState extends State<Home> {
     List<Widget> pan = [];
     if (secciones != null) {
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
-        pan.add(DashboardEventos(WP_EVT_CRT: permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT')));
+        pan.add(DashboardEventos(
+            WP_EVT_CRT:
+                permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT')));
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
         pan.add(ListaEstatusInvitaciones());
@@ -245,14 +271,17 @@ class _HomeState extends State<Home> {
         "Sesión",
         textAlign: TextAlign.center,
       ),
-      content: Text('Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+      content: Text(
+          'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[
         TextButton(
           child: Text('Cerrar'),
           onPressed: () async {
             await _sharedPreferences.clear();
-            Navigator.of(contextT).pushNamedAndRemoveUntil('/', (route) => false);
+            Navigator.of(contextT)
+                .pushNamedAndRemoveUntil('/', (route) => false);
           },
         ),
       ],

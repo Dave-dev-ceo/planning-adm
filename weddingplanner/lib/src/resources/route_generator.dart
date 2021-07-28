@@ -15,6 +15,7 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_planners.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_rol.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_usuario.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_detalle_lista.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_plantilla.dart';
@@ -120,7 +121,11 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddRol(datos: args));
       case '/eventoCalendario':
-              return MaterialPageRoute(builder: (context) => EventoCalendario());
+        return MaterialPageRoute(builder: (context) => EventoCalendario());
+      case '/detalleListas':
+        return MaterialPageRoute(
+            builder: (context) =>
+                FullScreenDialogDetalleListasEvent(datos: args));
       default:
         return _errorRoute();
     }
