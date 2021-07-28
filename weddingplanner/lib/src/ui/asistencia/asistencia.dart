@@ -45,16 +45,16 @@ class _AsistenciaState extends State<Asistencia> {
         child: BlocBuilder<AsistenciaBloc, AsistenciaState>(
           builder: (context, state) {
             // state Iniciando
-            if(state is AsistenciaInitialState)
+            if (state is AsistenciaInitialState)
               return Center(child: CircularProgressIndicator());
             // state Loading
-            else if(state is LodingAsistenciaState)
+            else if (state is LodingAsistenciaState)
               return Center(child: CircularProgressIndicator());
             // state Data
-            else if(state is MostrarAsistenciaState){
+            else if (state is MostrarAsistenciaState) {
               // buscador en header
               if (state.asistencia != null) {
-                if(itemModelAsistencia != state.asistencia){
+                if (itemModelAsistencia != state.asistencia) {
                   itemModelAsistencia = state.asistencia;
                   if (itemModelAsistencia != null) {
                     copyItemFinal = itemModelAsistencia.copy();
@@ -64,18 +64,18 @@ class _AsistenciaState extends State<Asistencia> {
                 asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
                 return Center(child: CircularProgressIndicator());
               }
-              if(copyItemFinal != null) {
+              if (copyItemFinal != null) {
                 return getAsistencia(copyItemFinal);
-              }else {
+              } else {
                 return Center(child: Text('Sin datos'));
               }
             }
             // fin buscador
             // state Error
-            else if(state is ErrorMostrarAsistenciaState)
+            else if (state is ErrorMostrarAsistenciaState)
               return Center(child: Text(state.message));
             // update
-            else if(state is SavedAsistenciaState)
+            else if (state is SavedAsistenciaState)
               return Center(child: Text('Cambiando asistencia'));
             // state No Data
             else
@@ -83,7 +83,8 @@ class _AsistenciaState extends State<Asistencia> {
           },
         ),
       ),
-      floatingActionButton: _crearBotonFlotante(MediaQuery.of(context).size.width),
+      floatingActionButton:
+          _crearBotonFlotante(MediaQuery.of(context).size.width),
     );
   }
 
@@ -93,12 +94,11 @@ class _AsistenciaState extends State<Asistencia> {
         children: [
           StickyHeader(
             header: Container(
-              height: 100.0,
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 35.0),
-              alignment: Alignment.centerLeft,
-              child: _crearHeader(asistencia)
-            ),
+                height: 100.0,
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 35.0),
+                alignment: Alignment.centerLeft,
+                child: _crearHeader(asistencia)),
             content: Expanded(child: _crearTabla(asistencia)),
           ),
         ],
@@ -112,9 +112,11 @@ class _AsistenciaState extends State<Asistencia> {
       child: PaginatedDataTable(
         // header: _crearHeader(asistencia),
         columns: _crearColumna(),
-        source: DTS(invitadosList:_crearLista(asistencia)),
+        source: DTS(invitadosList: _crearLista(asistencia)),
         onRowsPerPageChanged: null,
-        rowsPerPage: asistencia.asistencias.length == 0 ? 1:asistencia.asistencias.length,
+        rowsPerPage: asistencia.asistencias.length == 0
+            ? 1
+            : asistencia.asistencias.length,
         dataRowHeight: 90.0,
       ),
     );
@@ -128,7 +130,12 @@ class _AsistenciaState extends State<Asistencia> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 3, child: Text('Asistencia', style: TextStyle(fontSize: 20.0),)),
+          Expanded(
+              flex: 3,
+              child: Text(
+                'Asistencia',
+                style: TextStyle(fontSize: 20.0),
+              )),
           Expanded(
               flex: 5,
               child: TextField(
@@ -137,7 +144,9 @@ class _AsistenciaState extends State<Asistencia> {
                       Icons.search,
                     ),
                     hintText: 'Buscar...'),
-                onChanged: (valor) {_buscadorInvitados(valor,asistencia);},
+                onChanged: (valor) {
+                  _buscadorInvitados(valor, asistencia);
+                },
               )),
         ],
       ),
@@ -157,33 +166,35 @@ class _AsistenciaState extends State<Asistencia> {
 
   List<List<DataCell>> _crearLista(ItemModelAsistencia itemModel) {
     List<List<DataCell>> invitadosList = [];
-    if(itemModel.asistencias.length > 0){
+    if (itemModel.asistencias.length > 0) {
       itemModel.asistencias.forEach((element) {
         List<DataCell> invitadosListTemp = [
           DataCell(
             SwitchListTile(
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('${element.nombre}', style: _boldStyle,),
-                Text('Grupo: ${element.grupo}'),
-                Text('Mesa: ${element.mesa}'),
-              ],
-            ),
-            value: element.asistencia,
-            onChanged: (value){
-              _guardarAsistencia(element.id_invitado,value);
-              setState(() => element.asistencia = value);
-            },
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${element.nombre}',
+                    style: _boldStyle,
+                  ),
+                  Text('Grupo: ${element.grupo}'),
+                  Text('Mesa: ${element.mesa}'),
+                ],
+              ),
+              value: element.asistencia,
+              onChanged: (value) {
+                _guardarAsistencia(element.id_invitado, value);
+                setState(() => element.asistencia = value);
+              },
             ),
           )
         ];
         invitadosList.add(invitadosListTemp);
       });
-    }
-    else {
+    } else {
       List<DataCell> invitadosListNoData = [
         DataCell(Text('Sin datos')),
       ];
@@ -198,30 +209,30 @@ class _AsistenciaState extends State<Asistencia> {
   //   setState(() => _rowPerPage = valor);
   // }
 
-  _guardarAsistencia(int idInvitado,bool asistenciaValor) {
+  _guardarAsistencia(int idInvitado, bool asistenciaValor) {
     // print('id: $idInvitado \nvalor: $asistenciaValor');
     // BlocProvider - cargamos el evento
     asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
   }
 
   _buscadorInvitados(String valor, ItemModelAsistencia asistencia) {
-    if(valor.length > 2) {
-      List<dynamic> buscador = itemModelAsistencia.asistencias.where((element) =>
-        element.nombre.toLowerCase().contains(valor.toLowerCase()) ||
-        element.grupo.toLowerCase().contains(valor.toLowerCase()) ||
-        element.mesa.toLowerCase().contains(valor.toLowerCase())
-      ).toList();
-      setState((){
+    if (valor.length > 2) {
+      List<dynamic> buscador = itemModelAsistencia.asistencias
+          .where((element) =>
+              element.nombre.toLowerCase().contains(valor.toLowerCase()) ||
+              element.grupo.toLowerCase().contains(valor.toLowerCase()) ||
+              element.mesa.toLowerCase().contains(valor.toLowerCase()))
+          .toList();
+      setState(() {
         copyItemFinal.asistencias.clear();
-        if(buscador.length > 0) {
+        if (buscador.length > 0) {
           buscador.forEach((element) {
             copyItemFinal.asistencias.add(element);
           });
-        }
-        else {}
+        } else {}
       });
     } else {
-      setState((){
+      setState(() {
         if (itemModelAsistencia != null) {
           copyItemFinal = itemModelAsistencia.copy();
         }
@@ -239,29 +250,25 @@ class _AsistenciaState extends State<Asistencia> {
     return SpeedDial(
       marginEnd: pHz - 100,
       marginBottom: 20,
-
       icon: Icons.qr_code_outlined,
       activeIcon: Icons.qr_code_outlined,
       buttonSize: 56.0,
       visible: true,
-
       closeManually: false,
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
-
       tooltip: 'Opciones',
       heroTag: 'Opciones',
       backgroundColor: Colors.white,
       foregroundColor: Colors.white,
       elevation: 8.0,
       shape: CircleBorder(),
-
       gradientBoxShape: BoxShape.circle,
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [hexToColor("#880B55"), hexToColor("#880B55")],
+        colors: [hexToColor("#000000"), hexToColor("#000000")],
       ),
       onPress: () async {
         final result = await Navigator.of(context).pushNamed('/lectorQr');
@@ -274,10 +281,9 @@ class DTS extends DataTableSource {
   // modelo
   final List<List<DataCell>> _invitadosList;
 
-  DTS({
-    @required List<List<DataCell>> invitadosList
-  }) : _invitadosList = invitadosList,
-    assert(invitadosList != null);
+  DTS({@required List<List<DataCell>> invitadosList})
+      : _invitadosList = invitadosList,
+        assert(invitadosList != null);
 
   @override
   DataRow getRow(int index) {

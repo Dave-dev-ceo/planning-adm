@@ -24,12 +24,12 @@ class _FullScreenDialogAddContratoState
     return Scaffold(
       appBar: AppBar(
         title: Text('Seleccione una plantilla'),
-        backgroundColor: hexToColor('#880B55'),
+        backgroundColor: hexToColor('#000000'),
         actions: [],
         automaticallyImplyLeading: true,
       ),
       body: SafeArea(
-        child: /*AgregarContrato()*/Container(),
+        child: /*AgregarContrato()*/ Container(),
       ),
     );
   }

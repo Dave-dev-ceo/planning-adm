@@ -33,7 +33,7 @@ class _FullScreenDialogEditPlantillaState
     return Scaffold(
       appBar: AppBar(
         title: Text('Agregar Plantilla'),
-        backgroundColor: hexToColor('#880B55'),
+        backgroundColor: hexToColor('#000000'),
         actions: [],
         automaticallyImplyLeading: true,
       ),

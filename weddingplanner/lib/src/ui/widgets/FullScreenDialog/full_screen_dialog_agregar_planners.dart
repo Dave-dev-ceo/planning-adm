@@ -2,33 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/planners/agregar_planner.dart';
 
 class FullScreenDialogAddPlanners extends StatefulWidget {
-
   const FullScreenDialogAddPlanners({Key key}) : super(key: key);
   @override
-  _FullScreenDialogAddPlannersState createState() => _FullScreenDialogAddPlannersState();
+  _FullScreenDialogAddPlannersState createState() =>
+      _FullScreenDialogAddPlannersState();
 }
 
-class _FullScreenDialogAddPlannersState extends State<FullScreenDialogAddPlanners> {
-  
-    @override
+class _FullScreenDialogAddPlannersState
+    extends State<FullScreenDialogAddPlanners> {
+  @override
   void initState() {
     super.initState();
   }
+
   Color hexToColor(String code) {
-      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
+
   @override
   Widget build(BuildContext context) {
     //return DefaultTabController(
-      //length: 2,
-          //child: 
-          return Scaffold(
-        appBar: AppBar(
-          title: Text('Agregar Planner'),
-          backgroundColor: hexToColor('#880B55'),
-          actions: [],
-          automaticallyImplyLeading: true,
-          /*bottom: TabBar(
+    //length: 2,
+    //child:
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Agregar Planner'),
+        backgroundColor: hexToColor('#000000'),
+        actions: [],
+        automaticallyImplyLeading: true,
+        /*bottom: TabBar(
             onTap: (int index){
               setState(() {
                 _pageIndex = index;  
@@ -49,21 +51,18 @@ class _FullScreenDialogAddPlannersState extends State<FullScreenDialogAddPlanner
               ),
             ],
           ),*/
-        ),
-        body:  SafeArea(
-        child: 
-        //IndexedStack(
-          //index: _pageIndex,
-          //children: <Widget>[
+      ),
+      body: SafeArea(
+        child:
+            //IndexedStack(
+            //index: _pageIndex,
+            //children: <Widget>[
             AgregarPlanners(),
-            //CargarExcel(id: id,),
-          //],
-        ),
-     // ),
-        
-        
-        
-          
+        //CargarExcel(id: id,),
+        //],
+      ),
+      // ),
+
       //),
     );
   }

@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
       ],
       title: 'App',
       theme: ThemeData(
-          primarySwatch: createMaterialColor(Color(0xFF880B55)),
+          primarySwatch: createMaterialColor(Color(0xFF000000)),
           //backgroundColor: createMaterialColor(Color(0xD34444)),
           scaffoldBackgroundColor: hexToColor('#FFF9F9'),
           fontFamily: 'Comfortaa'),

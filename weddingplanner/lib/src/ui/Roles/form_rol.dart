@@ -183,8 +183,8 @@ class _FormRolState extends State<FormRol> {
         //               child: MaterialSegmentedControl(
         //                 children: _estatus,
         //                 selectionIndex: _estatusSeleccionado,
-        //                 borderColor: Color(0xFF880B55),
-        //                 selectedColor: Color(0xFF880B55),
+        //                 borderColor: Color(0xFF000000),
+        //                 selectedColor: Color(0xFF000000),
         //                 unselectedColor: Colors.white,
         //                 borderRadius: 32.0,
         //                 horizontalPadding: EdgeInsets.all(8),
@@ -206,7 +206,7 @@ class _FormRolState extends State<FormRol> {
           child: Text((datos['accion'] == 0 ? 'Crear' : 'Editar') + ' Rol',
               style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
-            primary: hexToColor('#880B55'), // background
+            primary: hexToColor('#000000'), // background
             onPrimary: Colors.white, // foreground
             padding: EdgeInsets.symmetric(horizontal: 68, vertical: 25),
             shape: const RoundedRectangleBorder(

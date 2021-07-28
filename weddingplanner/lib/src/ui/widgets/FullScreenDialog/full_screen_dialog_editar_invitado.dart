@@ -17,7 +17,8 @@ class FullScreenDialogEdit extends StatefulWidget {
 
   const FullScreenDialogEdit({Key key, this.idInvitado}) : super(key: key);
   @override
-  _FullScreenDialogEditState createState() => _FullScreenDialogEditState(idInvitado);
+  _FullScreenDialogEditState createState() =>
+      _FullScreenDialogEditState(idInvitado);
 }
 
 class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
@@ -139,10 +140,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Color(0xFF880B55)),
+      style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF880B55),
+        color: Color(0xFF000000),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -167,14 +168,18 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Color(0xFF880B55)),
+      style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF880B55),
+        color: Color(0xFF000000),
       ),
       onChanged: (newValue) {
         setState(() {
-          if (newValue == grupos.results.elementAt(grupos.results.length - 1).idGrupo.toString()) {
+          if (newValue ==
+              grupos.results
+                  .elementAt(grupos.results.length - 1)
+                  .idGrupo
+                  .toString()) {
             _showMyDialog();
           } else {
             _mySelectionG = newValue;
@@ -294,10 +299,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Color(0xFF880B55)),
+      style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF880B55),
+        color: Color(0xFF000000),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -345,7 +350,11 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   String edad;
   formItemsDesign(icon, item, large, ancho) {
     return Container(
-      child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), elevation: 10, child: ListTile(leading: Icon(icon), title: item)),
+      child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 10,
+          child: ListTile(leading: Icon(icon), title: item)),
       width: large,
       height: ancho,
     );
@@ -483,8 +492,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                               child: MaterialSegmentedControl(
                                 children: _children,
                                 selectionIndex: _currentSelection,
-                                borderColor: Color(0xFF880B55),
-                                selectedColor: Color(0xFF880B55),
+                                borderColor: Color(0xFF000000),
+                                selectedColor: Color(0xFF000000),
                                 unselectedColor: Colors.white,
                                 borderRadius: 32.0,
                                 horizontalPadding: EdgeInsets.all(8),
@@ -507,8 +516,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                               child: MaterialSegmentedControl(
                                 children: _childrenGenero,
                                 selectionIndex: _currentSelectionGenero,
-                                borderColor: Color(0xFF880B55),
-                                selectedColor: Color(0xFF880B55),
+                                borderColor: Color(0xFF000000),
+                                selectedColor: Color(0xFF000000),
                                 unselectedColor: Colors.white,
                                 borderRadius: 32.0,
                                 horizontalPadding: EdgeInsets.all(8),
@@ -539,10 +548,14 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           500.0,
                           80.0),
                       formItemsDesign(
-                          !invitado.estatusInvitacion ? Icons.cancel : Icons.check_box,
+                          !invitado.estatusInvitacion
+                              ? Icons.cancel
+                              : Icons.check_box,
                           MergeSemantics(
                             child: ListTile(
-                              title: Text(!invitado.estatusInvitacion ? 'Invitación pendiente' : 'Invitación enviada'),
+                              title: Text(!invitado.estatusInvitacion
+                                  ? 'Invitación pendiente'
+                                  : 'Invitación enviada'),
                               trailing: CupertinoSwitch(
                                 value: _lights, //invitado.estatusInvitacion,
                                 onChanged: (bool value) {
@@ -681,7 +694,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                               //Expanded(child: Text('Código QR')),
                               Expanded(
                                   child: Image.memory(
-                                base64Decode(_base64qr.substring(_base64qr.indexOf(',') + 1)),
+                                base64Decode(_base64qr
+                                    .substring(_base64qr.indexOf(',') + 1)),
                                 width: 250,
                                 height: 250,
                               )),
@@ -836,7 +850,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         appBar: AppBar(
           title: Text('Editar Invitado'),
           automaticallyImplyLeading: true,
-          backgroundColor: hexToColor('#880B55'),
+          backgroundColor: hexToColor('#000000'),
         ),
         body: SingleChildScrollView(
           child: Container(

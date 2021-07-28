@@ -4,8 +4,10 @@ import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 
 class HomeAdmin extends StatefulWidget {
   //static const routeName = '/eventos';
- // final int idPlanner;
-  const HomeAdmin({Key key,}) : super(key: key);
+  // final int idPlanner;
+  const HomeAdmin({
+    Key key,
+  }) : super(key: key);
 
   @override
   _HomeAdminState createState() => _HomeAdminState();
@@ -13,13 +15,12 @@ class HomeAdmin extends StatefulWidget {
 
 class _HomeAdminState extends State<HomeAdmin> {
   int _pageIndex = 0;
-    //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-
+  //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
 
 //  _HomeAdminState(this.idPlanner);
-    Color hexToColor(String code) {
-      return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-    }
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
 
   /*@override
   void initState() async{
@@ -33,36 +34,53 @@ class _HomeAdminState extends State<HomeAdmin> {
     return DefaultTabController(
         length: 3,
         child: Scaffold(
-      appBar: AppBar(
+          appBar: AppBar(
             automaticallyImplyLeading: true,
-            title: Center(child: FittedBox(child: Image.asset('assets/logo.png',height: 100.0,width: 250.0,)),),
+            title: Center(
+              child: FittedBox(
+                  child: Image.asset(
+                'assets/logo.png',
+                height: 100.0,
+                width: 250.0,
+              )),
+            ),
             toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#880B55'),
+            backgroundColor: hexToColor('#000000'),
             bottom: TabBar(
-              onTap: (int index){
+              onTap: (int index) {
                 setState(
                   () {
                     _pageIndex = index;
-                  },);
-                },
+                  },
+                );
+              },
               indicatorColor: Colors.white,
               isScrollable: true,
               tabs: [
-              Tab(
-                icon: Icon(Icons.calendar_today_outlined),
-                //text: 'Resumen',
-                child: Text('Planners', style: TextStyle(fontSize: 17),),
-              ),
-              Tab(
-                icon: Icon(Icons.card_membership_rounded),
-                //text: 'HomeAdmin',
-                child: Text('Planes', style: TextStyle(fontSize: 17),),
-              ),
-              Tab(
-                icon: Icon(Icons.event_note_outlined),
-                //text: 'Timings',
-                child: Text('Proveedores', style: TextStyle(fontSize: 17),),
-              ),
+                Tab(
+                  icon: Icon(Icons.calendar_today_outlined),
+                  //text: 'Resumen',
+                  child: Text(
+                    'Planners',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                Tab(
+                  icon: Icon(Icons.card_membership_rounded),
+                  //text: 'HomeAdmin',
+                  child: Text(
+                    'Planes',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
+                Tab(
+                  icon: Icon(Icons.event_note_outlined),
+                  //text: 'Timings',
+                  child: Text(
+                    'Proveedores',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
                 /*Tab(
                 icon: Icon(Icons.support_agent_outlined),
                 //text: 'Proveedores',
@@ -73,23 +91,21 @@ class _HomeAdminState extends State<HomeAdmin> {
                 //text: 'Inventario',
                 child: Text('Proveedores', style: TextStyle(fontSize: 17),),
               ),*/
-            ],
+              ],
             ),
           ),
-      body: SafeArea(
-        child: IndexedStack(
-          index: _pageIndex,
-          children: <Widget>[
-            Planners(),
-            Construccion(),
-            Construccion()
-            //DashboardEventos(),
-            //ListaEstatusInvitaciones(idPlanner: idPlanne,)
-          ],
-        ),
-      ),
-    )
-  );
-
+          body: SafeArea(
+            child: IndexedStack(
+              index: _pageIndex,
+              children: <Widget>[
+                Planners(),
+                Construccion(),
+                Construccion()
+                //DashboardEventos(),
+                //ListaEstatusInvitaciones(idPlanner: idPlanne,)
+              ],
+            ),
+          ),
+        ));
   }
 }

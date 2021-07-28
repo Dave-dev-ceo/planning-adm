@@ -13,7 +13,8 @@ class DashboardEventos extends StatefulWidget {
   const DashboardEventos({Key key, this.WP_EVT_CRT}) : super(key: key);
 
   @override
-  _DashboardEventosState createState() => _DashboardEventosState(this.WP_EVT_CRT);
+  _DashboardEventosState createState() =>
+      _DashboardEventosState(this.WP_EVT_CRT);
 }
 
 class _DashboardEventosState extends State<DashboardEventos> {
@@ -55,15 +56,25 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget buildList(ItemModelEventos snapshot) {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 400, mainAxisExtent: 200, childAspectRatio: 3 / 2, crossAxisSpacing: 20, mainAxisSpacing: 20),
+            maxCrossAxisExtent: 400,
+            mainAxisExtent: 200,
+            childAspectRatio: 3 / 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20),
         itemCount: snapshot.results.length,
         itemBuilder: (BuildContext ctx, index) {
-          return miCard(snapshot.results.elementAt(index).idEvento, snapshot.results.elementAt(index).tipoEvento, snapshot.results.elementAt(index).fechaInicio,
-              snapshot.results.elementAt(index).fechaFin, snapshot.results.elementAt(index).fechaEvento, snapshot.results.elementAt(index).involucrados);
+          return miCard(
+              snapshot.results.elementAt(index).idEvento,
+              snapshot.results.elementAt(index).tipoEvento,
+              snapshot.results.elementAt(index).fechaInicio,
+              snapshot.results.elementAt(index).fechaFin,
+              snapshot.results.elementAt(index).fechaEvento,
+              snapshot.results.elementAt(index).involucrados);
         });
   }
 
-  miCard(int idEvento, String titulo, String inicio, String fin, String fevento, List involucrados) {
+  miCard(int idEvento, String titulo, String inicio, String fin, String fevento,
+      List involucrados) {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -81,7 +92,9 @@ class _DashboardEventosState extends State<DashboardEventos> {
                   Text('Planeación de evento: Del ' + inicio + ' al ' + fin),
                   for (var i = 0; i < involucrados.length; i++)
                     involucrados[0].tipoInvolucrado != 'Sin involucrado'
-                        ? Text(involucrados[i].tipoInvolucrado + ' : ' + involucrados[i].nombre)
+                        ? Text(involucrados[i].tipoInvolucrado +
+                            ' : ' +
+                            involucrados[i].nombre)
                         : Text('Sin involucrados'),
                 ],
               ),
@@ -92,7 +105,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
       ),
       onTap: () async {
         await _sharedPreferences.setIdEvento(idEvento);
-        Navigator.pushNamed(context, '/eventos', arguments: {'idEvento': idEvento});
+        Navigator.pushNamed(context, '/eventos',
+            arguments: {'idEvento': idEvento});
       },
     );
   }
@@ -109,13 +123,16 @@ class _DashboardEventosState extends State<DashboardEventos> {
               "Sesión",
               textAlign: TextAlign.center,
             ),
-            content: Text('Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            content: Text(
+                'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
             actions: <Widget>[
               TextButton(
                 child: Text('Cerrar'),
                 onPressed: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (route) => false);
                 },
               ),
             ],
@@ -160,7 +177,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       floatingActionButton: WP_EVT_CRT
           ? FloatingActionButton(
               child: Icon(Icons.event_available),
-              backgroundColor: hexToColor('#880B55'),
+              backgroundColor: hexToColor('#000000'),
               onPressed: () {
                 Navigator.of(context).pushNamed('/addEvento');
               })

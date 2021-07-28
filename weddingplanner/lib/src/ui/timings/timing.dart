@@ -4,7 +4,7 @@ import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_timings.dart';
 
 class Timing extends StatefulWidget {
-  const Timing({ Key key }) : super(key: key);
+  const Timing({Key key}) : super(key: key);
 
   @override
   _TimingState createState() => _TimingState();
@@ -36,7 +36,7 @@ class _TimingState extends State<Timing> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-              child: Container(
+        child: Container(
           width: double.infinity,
           child: BlocBuilder<TimingsBloc, TimingsState>(
             builder: (context, state) {
@@ -47,7 +47,7 @@ class _TimingState extends State<Timing> {
               } else if (state is MostrarTimingsState) {
                 if (crt) {
                   itemModelTimings = state.usuarios;
-                  filterTimings = itemModelTimings;//.copy()
+                  filterTimings = itemModelTimings; //.copy()
                   crt = false;
                 }
                 return _constructorTable(filterTimings);
@@ -75,7 +75,7 @@ class _TimingState extends State<Timing> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
-  
+
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -94,6 +94,7 @@ class _TimingState extends State<Timing> {
       ),
     );
   }
+
   _constructorTable(ItemModelTimings model) {
     return Container(
       width: double.infinity,
@@ -133,14 +134,14 @@ class _TimingState extends State<Timing> {
                             ),
                           ),
                           decoration: BoxDecoration(
-                            color: hexToColor('#880B55'),
+                            color: hexToColor('#000000'),
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
                         onTap: () async {
                           crt = true;
-                          timingBloc
-                              .add(CreateTimingsEvent({"timing":timingCtrl.text}));
+                          timingBloc.add(
+                              CreateTimingsEvent({"timing": timingCtrl.text}));
                         },
                       ),
                     ),
@@ -184,10 +185,9 @@ class _TimingState extends State<Timing> {
                   onChanged: (String value) async {
                     if (value.length > 2) {
                       List<dynamic> usrs = itemModelTimings.results
-                          .where((imu) =>
-                              imu.nombre_timing
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase()))
+                          .where((imu) => imu.nombre_timing
+                              .toLowerCase()
+                              .contains(value.toLowerCase()))
                           .toList();
                       setState(() {
                         filterTimings.results.clear();
@@ -237,8 +237,8 @@ class _TimingState extends State<Timing> {
     switch (columnIndex) {
       case 0:
         sort[columnIndex]
-            ? sortData.results.sort(
-                (a, b) => a.nombre_timing.compareTo((b.nombre_timing)))
+            ? sortData.results
+                .sort((a, b) => a.nombre_timing.compareTo((b.nombre_timing)))
             : sortData.results
                 .sort((a, b) => b.nombre_timing.compareTo(a.nombre_timing));
         break;
@@ -267,9 +267,7 @@ class _DataSource extends DataTableSource {
     _rows = <_Row>[];
     if (context.length > 0) {
       for (int i = 0; i < context.length; i++) {
-        _rows.add(_Row(
-            context[i].id_timing,
-            context[i].nombre_timing));
+        _rows.add(_Row(context[i].id_timing, context[i].nombre_timing));
       }
     } else {
       _rows.add(_Row(null, 'Sin datos'));
@@ -299,7 +297,8 @@ class _DataSource extends DataTableSource {
       },
       cells: [
         DataCell(Text(row.valueA), onTap: () {
-          Navigator.pushNamed(_cont, '/addActividadesTiming',arguments: row.valueId);
+          Navigator.pushNamed(_cont, '/addActividadesTiming',
+              arguments: row.valueId);
         }),
       ],
     );

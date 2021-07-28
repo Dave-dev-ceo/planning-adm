@@ -81,10 +81,10 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
-      style: const TextStyle(color: Color(0xFF880B55)),
+      style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF880B55),
+        color: Color(0xFF000000),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -382,7 +382,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
           _saveContact();
         },
         child: const Icon(Icons.cloud_upload_outlined),
-        backgroundColor: Color(0xFF880B55),
+        backgroundColor: Color(0xFF000000),
       ),
     );
   }

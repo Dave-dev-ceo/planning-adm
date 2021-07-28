@@ -5,7 +5,7 @@ import 'package:weddingplanner/src/models/model_perfilado.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
 import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
-import 'package:weddingplanner/src/ui/listas/Listas.dart';
+import 'package:weddingplanner/src/ui/Listas/listas.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
@@ -85,7 +85,7 @@ class _InvitadosState extends State<Invitados> {
               )),
             ),
             toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#880B55'),
+            backgroundColor: hexToColor('#000000'),
             actions: <Widget>[
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20.0),

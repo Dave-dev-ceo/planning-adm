@@ -103,7 +103,7 @@ class _HomeState extends State<Home> {
                   ))
             ],
             toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#880B55'),
+            backgroundColor: hexToColor('#000000'),
             bottom: TabBar(
               onTap: (int index) {
                 setState(

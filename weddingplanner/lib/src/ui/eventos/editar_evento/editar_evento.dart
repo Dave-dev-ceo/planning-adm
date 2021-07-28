@@ -133,7 +133,8 @@ class _EditarEventoState extends State<EditarEvento> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
   }
@@ -201,10 +202,10 @@ class _EditarEventoState extends State<EditarEvento> {
   //     icon: const Icon(Icons.arrow_drop_down_outlined),
   //     iconSize: 24,
   //     elevation: 16,
-  //     style: const TextStyle(color: Color(0xFF880B55)),
+  //     style: const TextStyle(color: Color(0xFF000000)),
   //     underline: Container(
   //       height: 2,
-  //       color: Color(0xFF880B55),
+  //       color: Color(0xFF000000),
   //     ),
   //     /*onChanged: (newValue) {
   //       setState(() {
@@ -227,7 +228,11 @@ class _EditarEventoState extends State<EditarEvento> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 3),
       child: Container(
-        child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), elevation: 10, child: ListTile(leading: Icon(icon), title: item)),
+        child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 10,
+            child: ListTile(leading: Icon(icon), title: item)),
         width: large,
         height: ancho,
       ),
