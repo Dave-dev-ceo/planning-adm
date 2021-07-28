@@ -23,7 +23,7 @@ class ItemModelFormRol {
   _listToJson() {
     List<String> temp = [];
     for (var sec in _form) {
-      temp.add(sec.toJson().toString());
+      temp.add(sec.toJsonStr().toString());
     }
     return temp;
   }
@@ -40,7 +40,7 @@ class _SeccionRol {
     _idSeccion = int.parse(json['id_seccion']);
     _claveSeccion = json['clave_seccion'];
     _nombreSeccion = json['nombre_seccion'];
-    _selected = false;
+    _selected = json['selected'];
     List<_PantallaRol> temp = [];
     if (json['pantallas'].length == 0) {
       _pantallasSeccion = null;
@@ -69,11 +69,19 @@ class _SeccionRol {
         'selected': _selected
       };
 
+  Map<String, dynamic> toJsonStr() => {
+        '"id_seccion"': _idSeccion,
+        '"clave_seccion"': '"$_claveSeccion"',
+        '"nombre_seccion"': '"$_nombreSeccion"',
+        '"pantallas"': _listToJsonStr(),
+        '"selected"': _selected
+      };
+
   _listToJsonStr() {
     List<String> temp = [];
     if (_pantallasSeccion != null) {
       for (var pan in _pantallasSeccion) {
-        temp.add(pan.toJson().toString());
+        temp.add(pan.toJsonStr().toString());
       }
       return temp.toString();
     } else {
@@ -104,7 +112,7 @@ class _PantallaRol {
     _idPantalla = int.parse(result['id_pantalla']);
     _clavePantalla = result['clave_pantalla'];
     _nombrePantalla = result['nombre_pantalla'];
-    _selected = false;
+    _selected = result['selected'];
   }
 
   _PantallaRol.fromModel(dataObj) {
@@ -119,6 +127,13 @@ class _PantallaRol {
         'clave_pantalla': _clavePantalla,
         'nombre_pantalla': _nombrePantalla,
         'selected': _selected
+      };
+
+  Map<String, dynamic> toJsonStr() => {
+        '"id_pantalla"': _idPantalla,
+        '"clave_pantalla"': '"$_clavePantalla"',
+        '"nombre_pantalla"': '"$_nombrePantalla"',
+        '"selected"': _selected
       };
 
   int get id_pantalla => this._idPantalla;

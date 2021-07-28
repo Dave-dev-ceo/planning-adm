@@ -19,7 +19,8 @@ class FormRolBloc extends Bloc<GetFormRolEvent, FormRolState> {
     if (event is GetFormRolEvent) {
       yield LoadingMostrarFormRol();
       try {
-        ItemModelFormRol rol = await logic.obtenerRolesForm();
+        ItemModelFormRol rol =
+            await logic.obtenerRolesForm(idRol: event.idRol0);
         yield MostrarFormRol(rol);
       } on ObtenerFormRolException {
         yield ErrorMostrarFormRol("Error al crear Usuario");

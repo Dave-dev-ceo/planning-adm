@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/roles/roles_bloc.dart';
-import 'package:weddingplanner/src/blocs/usuarios/usuarios_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_usuarios.dart';
 import 'package:weddingplanner/src/models/model_roles.dart';
 
 class Roles extends StatefulWidget {
@@ -216,7 +214,7 @@ Future<bool> mostrarForm(formContext, accion, usr) async {
   if (rol != null) {
     ScaffoldMessenger.of(formContext).showSnackBar(SnackBar(
       content: Text(
-          '${rol.roles.nombre_rol} ${accion == 0 ? 'Agregado a Roles' : 'editado'}'),
+          '${rol.result.nombre_rol} ${accion == 0 ? 'Agregado a Roles' : 'editado'}'),
       onVisible: () {
         rolesBloc.add(ObtenerRolesPlannerEvent());
         crt = true;
@@ -268,11 +266,11 @@ class _DataSource extends DataTableSource {
         DataCell(Text(row.valueA), onTap: () async {
           ItemModelRol rol;
           ims.roles.forEach((rl) {
-            if (rol.result.id_rol == row.valueId) {
+            if (rl.id_rol == row.valueId) {
               rol = new ItemModelRol(rl);
             }
           });
-          // mostrarForm(_gridContext, 1, rol);
+          mostrarForm(_gridContext, 1, rol);
         }),
         DataCell(
           Text(row.valueB),

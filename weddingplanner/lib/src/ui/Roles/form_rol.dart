@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:weddingplanner/src/blocs/roles/formRol/formRol_bloc.dart';
 import 'package:weddingplanner/src/blocs/roles/rol/rol_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
@@ -58,7 +55,12 @@ class _FormRolState extends State<FormRol> {
   void initState() {
     rolBloc = BlocProvider.of<RolBloc>(context);
     rolFormBloc = BlocProvider.of<FormRolBloc>(context);
-    rolFormBloc.add(GetFormRolEvent());
+    if (datos['accion'] == 0) {
+      rolFormBloc.add(GetFormRolEvent());
+    } else if (datos['accion'] == 1) {
+      rolFormBloc
+          .add(GetFormRolEvent(idRol0: datos['data'].result.id_rol.toString()));
+    }
     _setInitialController();
     super.initState();
   }
@@ -74,6 +76,7 @@ class _FormRolState extends State<FormRol> {
             if (state is LoadingCrearRolState) {
               _dialogSpinner('');
             } else if (state is RolCreadoState) {
+              _formRoles = null;
               Navigator.pop(_dialogContext);
               Navigator.pop(context, state.data);
             } else if (state is ErrorCrearRolState) {
@@ -95,6 +98,12 @@ class _FormRolState extends State<FormRol> {
                   'Error al ${datos['accion'] == 0 ? 'crear' : 'editar'} rol: ',
                   state.message,
                   'msg');
+            }
+            //ERROR DE TOKEN
+            else if (state is ErrorTokenRolState) {
+              Navigator.pop(_dialogContext);
+              print('Error en token');
+              return _showDialogMsg(context);
             }
           },
           child: Container(
@@ -159,37 +168,36 @@ class _FormRolState extends State<FormRol> {
     return Column(
       children: <Widget>[
         agregarInput(Icons.tag, TextInputType.name, claveCtrl, 'Clave de Rol',
-            validateNombre, null, datos['accion'] == 0,
-            maxL: 150),
+            validateClave, null, datos['accion'] == 0,
+            maxL: 15),
         agregarInput(Icons.phone, TextInputType.name, nombreCtrl,
-            'Nombre de Rol', validateClave, null, true,
-            // <TextInputFormatter>[FilteringTextInputFormatter.allow(new RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$'))]
-            maxL: 13),
-        datos['accion'] == 1
-            ? formItemsDesign(
-                Icons.bar_chart,
-                Row(
-                  children: [
-                    Expanded(child: Text('Estatus')),
-                    Expanded(
-                      child: MaterialSegmentedControl(
-                        children: _estatus,
-                        selectionIndex: _estatusSeleccionado,
-                        borderColor: Color(0xFF880B55),
-                        selectedColor: Color(0xFF880B55),
-                        unselectedColor: Colors.white,
-                        borderRadius: 32.0,
-                        horizontalPadding: EdgeInsets.all(8),
-                        onSegmentChosen: (index) {
-                          setState(() {
-                            _estatusSeleccionado = index;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ))
-            : SizedBox.shrink(),
+            'Nombre de Rol', validateNombre, null, true,
+            maxL: 75),
+        // datos['accion'] == 1
+        //     ? formItemsDesign(
+        //         Icons.bar_chart,
+        //         Row(
+        //           children: [
+        //             Expanded(child: Text('Estatus')),
+        //             Expanded(
+        //               child: MaterialSegmentedControl(
+        //                 children: _estatus,
+        //                 selectionIndex: _estatusSeleccionado,
+        //                 borderColor: Color(0xFF880B55),
+        //                 selectedColor: Color(0xFF880B55),
+        //                 unselectedColor: Colors.white,
+        //                 borderRadius: 32.0,
+        //                 horizontalPadding: EdgeInsets.all(8),
+        //                 onSegmentChosen: (index) {
+        //                   setState(() {
+        //                     _estatusSeleccionado = index;
+        //                   });
+        //                 },
+        //               ),
+        //             ),
+        //           ],
+        //         ))
+        //     : SizedBox.shrink(),
         _formPermisos(),
         ElevatedButton(
           onPressed: () {
@@ -222,16 +230,17 @@ class _FormRolState extends State<FormRol> {
     if (formKey.currentState.validate()) {
       if (datos['accion'] == 0) {
         Map<String, dynamic> jsonRol = {
-          'clave_rol': nombreCtrl.text,
-          'nombre_rol': true,
-          'permisos': _formRoles.toJsonStr()
+          '"clave_rol"': '"${claveCtrl.text}"',
+          '"nombre_rol"': '"${claveCtrl.text}"',
+          '"permisos"': _formRoles.toJsonStr()
         };
         rolBloc.add(CrearRolEvent(jsonRol));
       } else {
         Map<String, dynamic> jsonRol = {
-          'clave_rol': nombreCtrl.text,
-          'nombre_rol': true,
-          'permisos': _formRoles.toJsonStr()
+          '"id_rol"': datos['data'].result.id_rol,
+          '"clave_rol"': '"${claveCtrl.text}"',
+          '"nombre_rol"': '"${claveCtrl.text}"',
+          '"permisos"': _formRoles.toJsonStr()
         };
         rolBloc.add(EditarRolEvent(jsonRol));
       }
@@ -297,7 +306,7 @@ class _FormRolState extends State<FormRol> {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = new RegExp(pattern);
     if (value.length < 5) {
-      return "El nombre es necesario";
+      return "El nombre debe tener al menos 5 caracteres";
     } else if (!regExp.hasMatch(value)) {
       return "El nombre debe de ser a-z y A-Z";
     }
@@ -308,9 +317,9 @@ class _FormRolState extends State<FormRol> {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = new RegExp(pattern);
     if (value.length < 5) {
-      return "El nombre es necesario";
+      return "La clave debe tener al menos 5 caracteres";
     } else if (!regExp.hasMatch(value)) {
-      return "El nombre debe de ser a-z y A-Z";
+      return "La clave debe de ser a-z y A-Z";
     }
     return null;
   }

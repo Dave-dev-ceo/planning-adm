@@ -39,8 +39,8 @@ class ItemModelRol {
 
   ItemModelRol(this._result);
 
-  ItemModelRol.fromJson(List<dynamic> parsedJson) {
-    _Rol temp = _Rol(parsedJson[0]);
+  ItemModelRol.fromJson(dynamic parsedJson) {
+    _Rol temp = _Rol(parsedJson);
 
     _result = temp;
   }

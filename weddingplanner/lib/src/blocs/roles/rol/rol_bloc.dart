@@ -23,7 +23,7 @@ class RolBloc extends Bloc<RolEvent, RolState> {
         ItemModelRol rol = await logic.crearRol(event.data);
         yield RolCreadoState(new ItemModelRol(rol.result));
       } on CrearRolException {
-        yield ErrorCrearRolState("Error al crear Usuario");
+        yield ErrorCrearRolState("Error al crear rol");
       } on TokenRolException {
         yield ErrorTokenRolState("Error de validación de token");
       }
@@ -34,7 +34,7 @@ class RolBloc extends Bloc<RolEvent, RolState> {
         ItemModelRol rol = await logic.editarRol(event.data);
         yield RolEditadoState(new ItemModelRol(rol.result));
       } on EditarRolException {
-        yield ErrorEditarRolState("Error al crear Usuario");
+        yield ErrorEditarRolState("Error al editar rol");
       } on TokenRolException {
         yield ErrorTokenRolState("Error de validación de token");
       }
