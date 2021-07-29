@@ -2,10 +2,14 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:weddingplanner/src/models/item_model_actividades_timings.dart';
 
 // import '../utils.dart';
 
 class TableEventsExample extends StatefulWidget {
+  final ItemModelActividadesTimings itemModel;
+  const TableEventsExample({ Key key,  @required this.itemModel}) : super(key: key);
+
   @override
   _TableEventsExampleState createState() => _TableEventsExampleState();
 }
@@ -35,8 +39,20 @@ class _TableEventsExampleState extends State<TableEventsExample> {
   }
 
   List<Event> _getEventsForDay(DateTime day) {
+    // widget.itemModel
     // Implementation example
-    return kEvents[day] ?? [];
+    final ItemModelActividadesTimings itemRecived = widget.itemModel;
+
+  final _kEventSourceModel = Map.fromIterable(List.generate(itemRecived.results.length, (index) => index),
+      key: (item) => DateTime.utc(itemRecived.results[item].fechaInicioActividad.year, itemRecived.results[item].fechaInicioActividad.month, itemRecived.results[item].fechaInicioActividad.day),
+      value: (item) => List.generate(item, (index) => Event('${itemRecived.results[index].nombreEventoActividad}')))
+    ..addAll({});
+
+    final kEventsModel = LinkedHashMap<DateTime, List<Event>>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    )..addAll(_kEventSourceModel);
+    return kEventsModel[day] ?? [];
   }
 
   List<Event> _getEventsForRange(DateTime start, DateTime end) {
@@ -90,6 +106,11 @@ class _TableEventsExampleState extends State<TableEventsExample> {
       body: Column(
         children: [
           TableCalendar<Event>(
+            locale: 'es_ES',
+            headerStyle: HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: true,
+            ),
             firstDay: kFirstDay,
             lastDay: kLastDay,
             focusedDay: _focusedDay,
@@ -170,8 +191,7 @@ final kEvents = LinkedHashMap<DateTime, List<Event>>(
 
 final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
     key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
-    value: (item) => List.generate(
-        6, (index) => Event('Event $item | ${index + 1}')))
+    value: (item) => List.generate(item % 4 + 1, (index) => Event('Event $item | ${index + 1}')))
   ..addAll({
     kToday: [
       Event('Today\'s Event 1'),

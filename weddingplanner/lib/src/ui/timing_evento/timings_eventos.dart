@@ -10,6 +10,7 @@ import 'package:weddingplanner/src/blocs/actividadesTiming/actividadestiming_blo
 
 // model
 import 'package:weddingplanner/src/models/item_model_actividades_timings.dart';
+import 'package:weddingplanner/src/ui/timing_evento/table_calendar.dart';
 
 class TimingsEventos extends StatefulWidget {
   const TimingsEventos({Key key}) : super(key: key);
@@ -86,7 +87,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _myBotonSave(),
+      floatingActionButton: _myBotonSave(copyItemModel),
     );
   }
 
@@ -323,7 +324,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
   }
   // fin Cargar las actividades - eventos/todo
   
-  Widget _myBotonSave() {
+  Widget _myBotonSave(itemModel) {
     return SpeedDial(
       icon: Icons.add,
       activeIcon: Icons.close_rounded,
@@ -335,14 +336,14 @@ class _TimingsEventosState extends State<TimingsEventos> {
       gradientBoxShape: BoxShape.circle,
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
-      children: _armarBotonesAcciones(),
+      children: _armarBotonesAcciones(itemModel),
     );
   }
 
-  List<SpeedDialChild> _armarBotonesAcciones() {
+  List<SpeedDialChild> _armarBotonesAcciones(itemModel) {
     List<SpeedDialChild> temp = [];
     temp.add(_agregarNuevaActividad());
-    temp.add(_agregarActividadCalendario());
+    temp.add(_agregarActividadCalendario(itemModel));
     return temp;
   }
 
@@ -358,7 +359,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
     );
   }
 
-  SpeedDialChild _agregarActividadCalendario() {
+  SpeedDialChild _agregarActividadCalendario(itemModel) {
     return SpeedDialChild(
       backgroundColor: Colors.pink[900],
       foregroundColor: Colors.white,
@@ -366,13 +367,18 @@ class _TimingsEventosState extends State<TimingsEventos> {
         child: Icon(Icons.calendar_today_outlined),
         message: "Agregar a calendario.",
       ),
-      onTap: () async { await _saveActividades();},
+      onTap: () async { await _saveActividades(itemModel);},
     );
   }
 
-  void _saveActividades() {
+  void _saveActividades(itemModel) {
     // crear metodo para actualizar estado
-    Navigator.of(context).pushNamed('/eventoCalendario');
+    // Navigator.pushNamed(
+    //   context,
+    //   '/eventoCalendario',
+    //   arguments: TableEventsExample(itemModel: itemModel)
+    // );
+    Navigator.of(context).pushNamed('/eventoCalendario', arguments: itemModel);
   }
 
   // parte del calendary put
