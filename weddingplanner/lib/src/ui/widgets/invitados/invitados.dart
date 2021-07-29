@@ -189,7 +189,7 @@ class _InvitadosState extends State<Invitados> {
         tabs.add(TabItem(titulo: 'Asistencia', icono: Icons.accessibility));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ART')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         tabs.add(TabItem(titulo: 'Listas', icono: Icons.list));
         temp += 1;
       }
@@ -239,7 +239,7 @@ class _InvitadosState extends State<Invitados> {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
         temp.add(Asistencia());
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ART')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Listas());
       }
       return temp;

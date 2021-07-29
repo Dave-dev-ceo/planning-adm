@@ -22,9 +22,10 @@ class _ListaState extends State<Listas> {
   //stilos
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
-  TextEditingController claveCantidadCtrl = new TextEditingController();
-  TextEditingController nombreDescripcionCtrl = new TextEditingController();
-  TextEditingController descripcionActividadCtrl = new TextEditingController();
+
+  // TextEditingController claveCtrl = new TextEditingController();
+  // TextEditingController nombreCtrl = new TextEditingController();
+  // TextEditingController descripcionCtrl = new TextEditingController();
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -70,19 +71,19 @@ class _ListaState extends State<Listas> {
                     ),
                   ),
                 ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.startFloat,
                 floatingActionButton: FloatingActionButton(
                   child: Icon(Icons.add),
                   onPressed: () async {
-                    // Navigator.of(context).pushNamed('/addPlanners');
-                    print('Agregar lista------>  ');
-                    Map<String, dynamic> json = await _saveArticulo(context);
-                    print(json);
-                    listasBloc.add(CreateListasEvent(json, itemModelListas));
-                    await _limpiarForm();
+                    await Navigator.pushNamed(context, '/detalleListas',
+                        arguments: {'event': itemModelListas});
+                    // Map<String, dynamic> json = await _saveArticulo(context);
+                    // print(json);
+                    // listasBloc.add(CreateListasEvent(json, itemModelListas));
+                    // await _limpiarForm();
                   },
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.startDocked);
+                ));
           } else if (snapshot.hasError) {
             return Scaffold(
               body: Container(
@@ -111,60 +112,10 @@ class _ListaState extends State<Listas> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.all(10),
-              child: Card(
-                color: Colors.white,
-                elevation: 12,
-                shadowColor: Colors.black12,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Listas', style: TextStyle(fontSize: 24)),
-                    Wrap(
-                      children: <Widget>[
-                        formItemsDesign(
-                            null,
-                            TextFormField(
-                              controller: claveCantidadCtrl,
-                              decoration:
-                                  new InputDecoration(labelText: 'Clave'),
-                            ),
-                            500.0,
-                            80.0),
-                        formItemsDesign(
-                            null,
-                            TextFormField(
-                              controller: descripcionActividadCtrl,
-                              decoration:
-                                  new InputDecoration(labelText: 'Nombre'),
-                            ),
-                            500.0,
-                            80.0),
-                        formItemsDesign(
-                            null,
-                            TextFormField(
-                              controller: nombreDescripcionCtrl,
-                              decoration:
-                                  new InputDecoration(labelText: 'Descripción'),
-                            ),
-                            500.0,
-                            80.0),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            Container(height: 400.0, width: 650.0, child: buildList(model)),
             SizedBox(
               height: 20,
             ),
-            Container(
-                child: Container(
-                    height: 400.0, width: 600.0, child: buildList(model)))
           ],
         ),
       ),
@@ -222,8 +173,15 @@ class _ListaState extends State<Listas> {
   }
 
   List<Widget> _createListItems(ItemModelListas item) {
+    // Creación de lista de Widget.
     List<Widget> lista = new List<Widget>();
-
+    // Se agrega el titulo del card
+    final titulo = Text('Listas',
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 24));
+    lista.add(titulo);
+    // Se agregar lista.
     for (var opt in item.results) {
       final tempWidget = ListTile(
         title: Text(opt.clave + ' - ' + opt.nombre),
@@ -254,18 +212,18 @@ class _ListaState extends State<Listas> {
     );
   }
 
-  Future<Map<String, dynamic>> _saveArticulo(BuildContext context) async {
-    Map<String, dynamic> json = {
-      'clave': claveCantidadCtrl.text,
-      'nombre': nombreDescripcionCtrl.text,
-      'descripcion': descripcionActividadCtrl.text
-    };
-    return json;
-  }
+  // Future<Map<String, dynamic>> _saveArticulo(BuildContext context) async {
+  //   Map<String, dynamic> json = {
+  //     'clave': claveCtrl.text,
+  //     'nombre': nombreCtrl.text,
+  //     'descripcion': descripcionCtrl.text
+  //   };
+  //   return json;
+  // }
 
-  void _limpiarForm() {
-    claveCantidadCtrl.text = '';
-    nombreDescripcionCtrl.text = '';
-    descripcionActividadCtrl.text = '';
-  }
+  // void _limpiarForm() {
+  //   claveCtrl.text = '';
+  //   nombreCtrl.text = '';
+  //   descripcionCtrl.text = '';
+  // }
 }
