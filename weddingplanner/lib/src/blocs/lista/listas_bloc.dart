@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/logic/listas_logic.dart';
 
@@ -19,23 +19,11 @@ class ListasBloc extends Bloc<ListasEvent, ListasState> {
       yield LoadingListasState();
       try {
         ItemModelListas listas = await logic.fetchListas();
-        print('Datos de la listas');
-        print(listas);
         yield MostrarListasState(listas);
       } on ListasException {
         yield ErrorMostrarListasState('Sin articulos');
       } on TokenException {
         yield ErrorCreateListasrState('Sesión caducada');
-      }
-    } else if (event is CreateListasEvent) {
-      try {
-        int idArticulo = await logic.createLista(event.data);
-        if (idArticulo == 0) {
-          add(FechtListasEvent());
-        }
-      } catch (e) {
-        print(e);
-        yield ErrorCreateListasrState('No se pudo insertar');
       }
     }
   }

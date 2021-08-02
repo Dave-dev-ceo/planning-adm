@@ -60,7 +60,6 @@ class _ListaState extends State<Listas> {
                         if (state is LoadingListasState) {
                           return Center(child: CircularProgressIndicator());
                         } else if (state is MostrarListasState) {
-                          print('State en from');
                           return getLista(state.listas);
                         } else if (state is ErrorCreateListasrState) {
                           return Center(child: Text(state.message));
@@ -77,11 +76,11 @@ class _ListaState extends State<Listas> {
                   child: Icon(Icons.add),
                   onPressed: () async {
                     await Navigator.pushNamed(context, '/detalleListas',
-                        arguments: {'event': itemModelListas});
-                    // Map<String, dynamic> json = await _saveArticulo(context);
-                    // print(json);
-                    // listasBloc.add(CreateListasEvent(json, itemModelListas));
-                    // await _limpiarForm();
+                        arguments: {
+                          'id_lista': null,
+                          'nombre': '',
+                          'descripcion': ''
+                        });
                   },
                 ));
           } else if (snapshot.hasError) {
@@ -184,12 +183,14 @@ class _ListaState extends State<Listas> {
     // Se agregar lista.
     for (var opt in item.results) {
       final tempWidget = ListTile(
-        title: Text(opt.clave + ' - ' + opt.nombre),
+        title: Text(opt.nombre),
         subtitle: Text(opt.descripcion),
         onTap: () async {
-          print(opt.clave);
-          await Navigator.pushNamed(context, '/detalleListas',
-              arguments: {'event': item});
+          await Navigator.pushNamed(context, '/detalleListas', arguments: {
+            'id_lista': opt.idLista,
+            'nombre': opt.nombre,
+            'descripcion': opt.descripcion
+          });
         },
       );
       lista.add(tempWidget);
@@ -211,15 +212,6 @@ class _ListaState extends State<Listas> {
       ),
     );
   }
-
-  // Future<Map<String, dynamic>> _saveArticulo(BuildContext context) async {
-  //   Map<String, dynamic> json = {
-  //     'clave': claveCtrl.text,
-  //     'nombre': nombreCtrl.text,
-  //     'descripcion': descripcionCtrl.text
-  //   };
-  //   return json;
-  // }
 
   // void _limpiarForm() {
   //   claveCtrl.text = '';

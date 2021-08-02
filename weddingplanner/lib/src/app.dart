@@ -7,6 +7,7 @@ import 'package:weddingplanner/src/blocs/estatus/estatus_bloc.dart';
 import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/invitados/invitados_bloc.dart';
+import 'package:weddingplanner/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
 import 'package:weddingplanner/src/blocs/lista/listas_bloc.dart';
 import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
 import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/usuarios/usuarios_bloc.dart';
 import 'package:weddingplanner/src/logic/actividades_timing_logic.dart';
+import 'package:weddingplanner/src/logic/detalle_listas_logic.dart';
 import 'package:weddingplanner/src/logic/listas_logic.dart';
 import 'package:weddingplanner/src/logic/contratos_logic.dart';
 import 'package:weddingplanner/src/logic/etiquetas_logic.dart';
@@ -135,7 +137,9 @@ class AppState extends StatelessWidget {
       BlocProvider<FormRolBloc>(
           create: (_) => FormRolBloc(logic: FormRolLogic())),
       BlocProvider<ListasBloc>(
-          create: (_) => ListasBloc(logic: FetchListaLogic()))
+          create: (_) => ListasBloc(logic: FetchListaLogic())),
+      BlocProvider<DetalleListasBloc>(
+          create: (_) => DetalleListasBloc(logic: FetchDetalleListaLogic()))
     ], child: MyApp());
   }
 }

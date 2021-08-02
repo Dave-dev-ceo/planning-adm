@@ -1,18 +1,10 @@
 class ItemModelListas {
   List<Listas> _results = [];
-  // ItemModelArticulosRecibir(this._results);
   ItemModelListas.fromJson(List<dynamic> parsedJson) {
     try {
-      print('parsedJson');
-      print(parsedJson);
-      print(parsedJson.length);
       List<Listas> temp = [];
       for (int i = 0; i < parsedJson.length; i++) {
-        print('result');
-        print(parsedJson);
         Listas result = Listas(parsedJson[i]);
-        print('result --> ');
-        print(result);
         temp.add(result);
       }
       _results = temp;
@@ -22,24 +14,29 @@ class ItemModelListas {
 }
 
 class Listas {
-  String _clave;
+  int _idLista;
   String _nombre;
   String _descripcion;
 
   Listas(datos) {
-    _clave = datos['clave'];
+    _idLista = datos['id_lista'];
     _nombre = datos['nombre'];
     _descripcion = datos['descripcion'];
   }
+
+  set addIdLista(int data) {
+    _idLista = data;
+  }
+
+  set addNombre(String data) {
+    _nombre = data;
+  }
+
   set addDescripcion(String data) {
     _descripcion = data;
   }
 
-  set addActividad(String data) {
-    _clave = data;
-  }
-
-  String get clave => _clave;
+  int get idLista => _idLista;
   String get nombre => _nombre;
   String get descripcion => _descripcion;
 }

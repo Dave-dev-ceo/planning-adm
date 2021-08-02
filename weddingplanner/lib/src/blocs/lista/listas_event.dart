@@ -12,10 +12,3 @@ class FechtListasEvent implements ListasEvent {
 class FetchListasIdPlannerEvent extends ListasEvent {
   FetchListasIdPlannerEvent();
 }
-
-class CreateListasEvent extends ListasEvent {
-  final Map<String, dynamic> data;
-  final ItemModelListas listas;
-  CreateListasEvent(this.data, this.listas);
-  List<Object> get props => [data, listas];
-}

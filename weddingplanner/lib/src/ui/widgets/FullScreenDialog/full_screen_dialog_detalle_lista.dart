@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/models/item_model_listas.dart';
+import 'package:weddingplanner/src/ui/Listas/detalleListas.dart';
 
 class FullScreenDialogDetalleListasEvent extends StatefulWidget {
-  final Map<String, dynamic> datos;
-  const FullScreenDialogDetalleListasEvent({Key key, @required this.datos})
+  final Map<String, dynamic> lista;
+  const FullScreenDialogDetalleListasEvent({Key key, @required this.lista})
       : super(key: key);
   @override
   _FullScreenDialogDetalleListasState createState() =>
-      _FullScreenDialogDetalleListasState(this.datos['event']);
+      _FullScreenDialogDetalleListasState(lista);
 }
 
 class _FullScreenDialogDetalleListasState
     extends State<FullScreenDialogDetalleListasEvent> {
-  final ItemModelListas datos;
+  final Map<String, dynamic> lista;
 
-  _FullScreenDialogDetalleListasState(this.datos);
+  _FullScreenDialogDetalleListasState(this.lista);
 
   @override
   void initState() {
@@ -27,12 +27,16 @@ class _FullScreenDialogDetalleListasState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-      title: Text('Detallado de Listas'),
-      //backgroundColor: hexToColor('#7030a0'),
-      actions: [],
-      automaticallyImplyLeading: true,
-    ));
+    return DetalleListas(lista: lista);
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text('Detallado de Listas'),
+    //     actions: [],
+    //     automaticallyImplyLeading: true,
+    //   ),
+    //   body: SingleChildScrollView(
+    //     child: DetalleListas(idLista: idLista),
+    //   ),
+    // );
   }
 }

@@ -7,8 +7,6 @@ class ListasInitial extends ListasState {}
 
 class LoadingListasState extends ListasState {}
 
-class CreateListasState extends ListasState {}
-
 class CreateListasOkState extends ListasState {}
 
 class DeleteListasState extends ListasState {}

@@ -14,17 +14,18 @@ class ItemModelDetalleListas {
 }
 
 class DetalleListas {
+  int _id_lista;
+  int _id_detalle_lista;
   int _cantidad;
   String _nombre;
   String _descripcion;
 
   DetalleListas(datos) {
-    _cantidad = datos['cantidad'];
+    _id_lista = datos['id_lista'];
+    _id_detalle_lista = datos['id_lista_detalle'];
+    _cantidad = int.parse(datos['cantidad']);
     _nombre = datos['nombre'];
     _descripcion = datos['descripcion'];
-  }
-  set addCantidad(int data) {
-    _cantidad = data;
   }
 
   set setNombre(String data) {
@@ -35,6 +36,8 @@ class DetalleListas {
     _descripcion = data;
   }
 
+  int get id_lista => _id_lista;
+  int get id_detalle_lista => _id_detalle_lista;
   int get cantidad => _cantidad;
   String get nombre => _nombre;
   String get descripcion => _descripcion;
