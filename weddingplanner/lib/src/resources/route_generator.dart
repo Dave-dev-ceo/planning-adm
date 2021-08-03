@@ -121,11 +121,14 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogAddRol(datos: args));
       case '/eventoCalendario':
-        return MaterialPageRoute(builder: (context) => TableEventsExample(itemModel: args,));
+        return MaterialPageRoute(
+            builder: (context) => TableEventsExample(
+                  itemModel: args,
+                ));
       case '/detalleListas':
         return MaterialPageRoute(
             builder: (context) =>
-                FullScreenDialogDetalleListasEvent(datos: args));
+                FullScreenDialogDetalleListasEvent(lista: args));
       default:
         return _errorRoute();
     }
