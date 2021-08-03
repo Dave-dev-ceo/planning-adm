@@ -86,6 +86,7 @@ class ActividadestimingBloc extends Bloc<ActividadestimingEvent, Actividadestimi
                 'visible_involucrados':plannerActividad.visibleInvolucrados.toString(), 
                 'dias':plannerActividad.dias,
                 'id_tipo_timing' : plannerActividad.idTipoTimig.toString(),
+                'fecha_inicio_actividad': eventoTarea.fechaInicio.toString(),
               };
               await logic.createActividadesEvento(eventoActividades);
             }
