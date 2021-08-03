@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sticky_headers/sticky_headers.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter/services.dart';
 
 // blocs
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +10,7 @@ import 'package:weddingplanner/src/blocs/actividadesTiming/actividadestiming_blo
 
 // model
 import 'package:weddingplanner/src/models/item_model_actividades_timings.dart';
-import 'package:weddingplanner/src/ui/timing_evento/table_calendar.dart';
+import 'package:weddingplanner/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
 class TimingsEventos extends StatefulWidget {
   const TimingsEventos({Key key}) : super(key: key);
@@ -30,6 +30,11 @@ class _TimingsEventosState extends State<TimingsEventos> {
   // variables clase
   bool _allCheck = false;
   List<Tarea> _listFull = [];
+
+  // varables valida
+  bool nombreValidador = false;
+  bool descripcionValidador = false;
+  bool diaValidador = false;
 
   // ini
   @override
@@ -66,6 +71,16 @@ class _TimingsEventosState extends State<TimingsEventos> {
             }else {
               return Center(child: Text('Sin datos'));
             }
+        } else if (state is AddActividadesState) {
+            // eventoTimingBloc.add(FetchActividadesTimingsPorIdPlannerEvent());
+            // return Center(child: CircularProgressIndicator());
+            _listFull.forEach((tarea) {
+              tarea.actividad.forEach((actividad) {
+                if(tarea.id_tarea == state.idTarea && actividad.id_actividad == 0)
+                  actividad.id_actividad = state.idActividad;
+              });
+            });
+            return _crearVista(copyItemModel);
         } else if (state is ErrorMostrarActividadesTimingsState) {
           return Center(child: Text(state.message),);
         } else {
@@ -84,10 +99,10 @@ class _TimingsEventosState extends State<TimingsEventos> {
             header: _agregarHeader(),
             content: _agregarActividades(copyItemModel),
           ),
+          SizedBox(height: 60.0,)
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _myBotonSave(copyItemModel),
+      floatingActionButton: _agregarActividadCalendario(),
     );
   }
 
@@ -138,7 +153,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
     return Row(
       children: [
         Checkbox(
-          value: _allCheck, 
+          value: _allCheck,
           onChanged: (valor){
             setState((){
               _allCheck = !_allCheck;
@@ -203,25 +218,253 @@ class _TimingsEventosState extends State<TimingsEventos> {
   List<ExpansionPanel> buildPanelList(List<Tarea> data) {
     List<ExpansionPanel> children = [];
     for (int i = 0; i < data.length; i++) {
-      List<ListTile> listTiles = [];
-      for(int j = 0; j < data[i].actividad.length; j++){
-        listTiles.add(
-          ListTile(
-            leading: Checkbox(
-              value: _listFull[i].actividad[j].agregar_actividad,
-              onChanged: (valor){
+      List<Widget> listTiles = [];
+      for(int j = 0; j < _listFull[i].actividad.length; j++){
+        if(_listFull[i].actividad[j].id_actividad != 0) {
+          listTiles.add(
+            ListTile(
+              leading: Checkbox(
+                value: _listFull[i].actividad[j].agregar_actividad,
+                onChanged: (valor){
+                  setState(() {
+                    _listFull[i].actividad[j].agregar_actividad = valor;
+                  });
+                },
+              ),
+              title: Text('${_listFull[i].actividad[j].nombre_actividad}'),
+              subtitle: Text('${_listFull[i].actividad[j].describe_actividad}'),
+              trailing: _listFull[i].actividad[j].agregar_actividad == true ? _calendaryIcon(_listFull[i].actividad[j].fecha_inicio_actividad,_listFull[i].actividad[j].id_actividad,_listFull[i].actividad[j].fecha_inicio_evento,_listFull[i].actividad[j].fecha_final_evento,_listFull[i].actividad[j].dias) : null,
+              // onTap: _listFull[i].actividad[j].agregar_actividad == true ? (){} : null,
+            )
+          );
+        } else {
+          listTiles.add(
+            // _formAddActividad(
+            //   _listFull[i].id_tarea,
+            //   _listFull[i].actividad[j].id_actividad,
+            //   _listFull[i].actividad
+            // )
+            Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 15.0,),
+              Wrap(
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  TextFormFields(
+                      icon: Icons.local_activity,
+                      large: 500.0,
+                      ancho: 80.0,
+                      item: TextFormField(
+                        controller: TextEditingController(text: '${_listFull[i].actividad[j].nombre_actividad}'),
+                        decoration: new InputDecoration(
+                          labelText: 'Nombre:',
+                          errorText: nombreValidador ? 'Campo obligatorio.':null
+                        ),
+                        onChanged: (valor) {
+                          _listFull[i].actividad[j].nombre_actividad = valor;
+                        },
+                      ),
+                  ),
+                  TextFormFields(
+                    icon: Icons.drive_file_rename_outline,
+                    large: 500.0,
+                    ancho: 80.0,
+                    item: TextFormField(
+                      controller: TextEditingController(text: '${_listFull[i].actividad[j].describe_actividad}'),
+                      decoration: new InputDecoration(
+                        labelText: 'Descripción:',
+                        errorText: descripcionValidador ? 'Campo obligatorio.':null
+                      ),
+                      onChanged: (valor) {
+                        _listFull[i].actividad[j].describe_actividad = valor;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0,),
+              Wrap(
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  TextFormFields(
+                    icon: Icons.date_range_outlined,
+                    large: 500.0,
+                    ancho: 80.0,
+                    item: Row(
+                      children: [
+                        Expanded(child: Text("Duración en días:")),
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          onPressed: _listFull[i].actividad[j].dias > 0 ? () {
+                            setState(() => _listFull[i].actividad[j].dias--);
+                          }:null,
+                        ),
+                        Container(
+                          width: 45,
+                          height: 45,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 3),
+                            child: TextFormField(
+                              controller: TextEditingController(text: '${_listFull[i].actividad[j].dias}'),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                              ],
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                errorText: diaValidador ? 'Error':null
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            setState(() => _listFull[i].actividad[j].dias++);
+                          }
+                        )
+                      ],
+                    ),
+                  ),
+                  TextFormFields(
+                    icon: Icons.remove_red_eye,
+                    large: 500.0,
+                    ancho: 80,
+                    item: CheckboxListTile(
+                      title: Text('Visible para novios:'),
+                      controlAffinity: ListTileControlAffinity.platform,
+                      value: _listFull[i].actividad[j].visible_actividad,
+                      onChanged: (valor) { setState(() =>  _listFull[i].actividad[j].visible_actividad = valor); },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0,),
+              Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  TextFormFields(
+                    icon: Icons.linear_scale_outlined,
+                    large: 500,
+                    ancho: 80,
+                    // item: _crearSelect(listActividad, idTarea, idActividad),
+                    item: DropdownButton(
+                      isExpanded: true,
+                      value: _listFull[i].actividad[j].predecesor_actividad,
+                      icon: const Icon(Icons.arrow_drop_down_outlined),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Color(0xFF000000)),
+                      underline: Container(
+                        height: 2,
+                        color: Color(0xFF000000),
+                      ),
+                      onChanged: (valor) {
+                        setState(() {
+                          _listFull[i].actividad[j].predecesor_actividad = valor;
+                        });
+                      },
+                      items: _listFull[i].actividad.map((item) {
+                        return DropdownMenuItem(
+                          value: item.id_actividad,
+                          child: Text(
+                            item.id_actividad != 0 ? item.nombre_actividad:'Selecciona un predecesor',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: ElevatedButton(
+                      child: Tooltip(
+                        child: Icon(Icons.save_sharp),
+                        message: "Agregar actividad.",
+                      ),
+                      onPressed: () {
+                        // validamos data
+                        if(_listFull[i].actividad[j].nombre_actividad == '') {
+                          setState(() =>nombreValidador = true);
+                        }
+                        else if(_listFull[i].actividad[j].describe_actividad == '') {
+                          setState(() =>descripcionValidador = true);
+                        }
+                        else if(_listFull[i].actividad[j].dias <= 0) {
+                          setState(() =>diaValidador = true);
+                        }
+                        else {
+                          // validaciones
+                          // setState(() =>nombreValidador = false);
+                          // setState(() =>descripcionValidador = false);
+                          // setState(() =>diaValidador = false);
+                          // preparamos Actividad
+                          Map<String, dynamic>  actividadTemporal = {
+                            'id_actividad': _listFull[i].actividad[j].id_actividad.toString(),
+                            'nombre_actividad': _listFull[i].actividad[j].nombre_actividad.toString(),
+                            'describe_actividad': _listFull[i].actividad[j].describe_actividad.toString(),
+                            'dias': _listFull[i].actividad[j].dias.toString(),
+                            'fecha_inicio_actividad': DateTime.now().toString(),
+                            'agregar_actividad': false.toString(),
+                            'visible_actividad': _listFull[i].actividad[j].visible_actividad.toString(),
+                            'predecesor_actividad': _listFull[i].actividad[j].predecesor_actividad == 0 ? '0':_listFull[i].actividad[j].predecesor_actividad.toString(),
+                          };
+                          _addActividad(_listFull[i].id_tarea, actividadTemporal);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30.0,),
+            ],
+          )
+
+          );
+        }
+      }
+
+      // add new activities
+      listTiles.add(
+        Container(
+          padding: EdgeInsets.only(right: 15.0,bottom: 15.0),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              child: Tooltip(
+                child: _listFull[i].nueva_actividad == true ? Icon(Icons.add):Icon(Icons.remove),
+                message: "Agregar actividades.",
+              ),
+              onPressed: () {
                 setState(() {
-                  _listFull[i].actividad[j].agregar_actividad = valor;
+                  if(_listFull[i].nueva_actividad == true) {
+                    _listFull[i].actividad.add(
+                      Actividad(
+                        id_actividad: 0,
+                        nombre_actividad: '',
+                        describe_actividad: '',
+                        dias: 1,
+                        fecha_inicio_actividad: DateTime.now(),
+                        agregar_actividad: false,
+                        visible_actividad: false,
+                        predecesor_actividad: 0
+                      )
+                    );
+                    _listFull[i].nueva_actividad = false;
+                  } else {
+                    _listFull[i].actividad..removeLast();
+                    _listFull[i].nueva_actividad = true;
+                  }
                 });
               },
             ),
-            title: Text('${data[i].actividad[j].nombre_actividad}'),
-            subtitle: Text('${data[i].actividad[j].describe_actividad}'),
-            trailing: _listFull[i].actividad[j].agregar_actividad == true ? _calendaryIcon(_listFull[i].actividad[j].fecha_inicio_actividad,_listFull[i].actividad[j].id_actividad,_listFull[i].actividad[j].fecha_inicio_evento,_listFull[i].actividad[j].fecha_final_evento,_listFull[i].actividad[j].dias) : null,
-            // onTap: _listFull[i].actividad[j].agregar_actividad == true ? (){} : null,
           )
-        );
-      }
+        )
+      );
+      // end add new activities
+
       children.add(ExpansionPanel(
         headerBuilder: (context, isExpanded) {
           return ListTile(
@@ -254,8 +497,10 @@ class _TimingsEventosState extends State<TimingsEventos> {
       //
       List<Actividad> tempActividad = [];
       //
-      for(int j = 1; j < itemInMethod.results.length; j++) {
-        if(itemInMethod.results[i].idEventoTiming == itemInMethod.results[j].idEventoTiming)
+      bool isOpen = false;
+      //
+      for(int j = 0; j < itemInMethod.results.length; j++) {
+        if(itemInMethod.results[i].idEventoTiming == itemInMethod.results[j].idEventoTiming) {
           tempActividad.add(Actividad(
             id_actividad: itemInMethod.results[j].idEventoActividad,
             nombre_actividad: itemInMethod.results[j].nombreEventoActividad,
@@ -266,14 +511,19 @@ class _TimingsEventosState extends State<TimingsEventos> {
             fecha_final_evento: itemInMethod.results[j].fechaFinalEvento,
             agregar_actividad: itemInMethod.results[j].addActividad,
           ));
+
+          if(itemInMethod.results[j].addActividad == true)
+            isOpen = true;
+        }
       }
       //
       if(i == 0)
         tempTarea.add(Tarea(
           id_tarea: itemInMethod.results[i].idEventoTiming,
           nombre_tarea: itemInMethod.results[i].nombreEventoTarea,
-          check_tarea: itemInMethod.results[i].isCheck,
-          expanded_tarea: itemInMethod.results[i].isExpanded,
+          check_tarea: isOpen,
+          expanded_tarea: isOpen,
+          nueva_actividad: true,
           actividad: tempActividad,
         ));
       else {
@@ -281,12 +531,14 @@ class _TimingsEventosState extends State<TimingsEventos> {
           tempTarea.add(Tarea(
             id_tarea: itemInMethod.results[i].idEventoTiming,
             nombre_tarea: itemInMethod.results[i].nombreEventoTarea,
-            check_tarea: itemInMethod.results[i].isCheck,
-            expanded_tarea: itemInMethod.results[i].isExpanded,
+            check_tarea: isOpen,
+            expanded_tarea: isOpen,
+            nueva_actividad: true,
             actividad: tempActividad,
           ));
       }
     }
+
     return tempTarea;
   }
 
@@ -323,73 +575,48 @@ class _TimingsEventosState extends State<TimingsEventos> {
     }
   }
   // fin Cargar las actividades - eventos/todo
-  
-  Widget _myBotonSave(itemModel) {
-    return SpeedDial(
-      icon: Icons.add,
-      activeIcon: Icons.close_rounded,
-      visible: true,
-      tooltip: 'Opciones',
-      heroTag: 'Opciones',
-      backgroundColor: Colors.pink[900],
-      foregroundColor: Colors.white,
-      gradientBoxShape: BoxShape.circle,
-      overlayColor: Colors.black,
-      overlayOpacity: 0.5,
-      children: _armarBotonesAcciones(itemModel),
-    );
+
+  // colores
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
-  List<SpeedDialChild> _armarBotonesAcciones(itemModel) {
-    List<SpeedDialChild> temp = [];
-    temp.add(_agregarNuevaActividad());
-    temp.add(_agregarActividadCalendario(itemModel));
-    return temp;
-  }
-
-  SpeedDialChild _agregarNuevaActividad() {
-    return SpeedDialChild(
-      backgroundColor: Colors.pink[900],
-      foregroundColor: Colors.white,
-      child: Tooltip(
-        child: Icon(Icons.access_time_sharp),
-        message: "Agregar tareas.",
-      ),
-      onTap: () async {},
-    );
-  }
-
-  SpeedDialChild _agregarActividadCalendario(itemModel) {
-    return SpeedDialChild(
-      backgroundColor: Colors.pink[900],
+  FloatingActionButton _agregarActividadCalendario() {
+    return FloatingActionButton(
+      backgroundColor: hexToColor('#000000'),
       foregroundColor: Colors.white,
       child: Tooltip(
         child: Icon(Icons.calendar_today_outlined),
         message: "Agregar a calendario.",
       ),
-      onTap: () async { await _saveActividades(itemModel);},
+      onPressed: () async { await _saveActividades();},
     );
   }
 
-  void _saveActividades(itemModel) {
-    // crear metodo para actualizar estado
-    // Navigator.pushNamed(
-    //   context,
-    //   '/eventoCalendario',
-    //   arguments: TableEventsExample(itemModel: itemModel)
-    // );
-    Navigator.of(context).pushNamed('/eventoCalendario', arguments: itemModel);
+  void _saveActividades() {
+    List<Actividad> send = [];
+
+    _listFull.forEach((full) {
+      full.actividad.forEach((actividad) {
+        if(actividad.agregar_actividad == true)
+          send.add(actividad);
+        eventoTimingBloc.add(ActulizarTimingsEvent(actividad.id_actividad,actividad.agregar_actividad,actividad.fecha_inicio_actividad));
+      });
+    });
+
+    // agregamos a la base de datos
+    Navigator.of(context).pushNamed('/eventoCalendario', arguments: send);
   }
 
   // parte del calendary put
   Widget _calendaryIcon(DateTime fechaInicio,int idActividad, DateTime fechaInicioEvento, DateTime fechaFinalEvento, int dias) {
     return GestureDetector(
-      child: Icon(Icons.calendar_today),
+      child: Icon(Icons.calendar_today, color: Colors.black,),
       onTap: () async {
         FocusScope.of(context).requestFocus(new FocusNode());
 
         fechaInicio = await showDatePicker(
-                      context: context, 
+                      context: context,
                       initialDate: fechaInicio,
                       errorFormatText: 'Error en el formato',
                       errorInvalidText: 'Error en la fecha',
@@ -398,7 +625,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                       firstDate: fechaInicioEvento,
                       lastDate: fechaFinalEvento,
         );
-        
+
         // // agregamos la nueva fecha
         _listFull.forEach((tareas) {
           tareas.actividad.forEach((actividades) {
@@ -457,8 +684,174 @@ class _TimingsEventosState extends State<TimingsEventos> {
       },
     );
   }
+
   // fin calendary put
-  
+  void _addActividad(int id_tarea, Map<String, dynamic> actividad) {
+    _listFull.forEach((tarea) {
+      if(tarea.id_tarea == id_tarea)
+        tarea.nueva_actividad = true;
+    });
+    eventoTimingBloc.add(AddActividadesEvent(actividad,id_tarea));
+  }
+
+  // tiene un bug
+  Widget _formAddActividad(int idTarea, int idActividad, List<Actividad> listActividad) {
+    Column temp;
+
+    _listFull.forEach((tarea) {
+      tarea.actividad.forEach((actividad) {
+        if(actividad.id_actividad == idActividad) {
+          temp =  Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 15.0,),
+              Wrap(
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  TextFormFields(
+                      icon: Icons.local_activity,
+                      large: 500.0,
+                      ancho: 80.0,
+                      item: TextFormField(
+                        controller: null,
+                        decoration: new InputDecoration(
+                          labelText: 'Nombre:',
+                        ),
+                      ),
+                  ),
+                  TextFormFields(
+                    icon: Icons.drive_file_rename_outline,
+                    large: 500.0,
+                    ancho: 80.0,
+                    item: TextFormField(
+                      decoration: new InputDecoration(
+                        labelText: 'Descripción:',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0,),
+              Wrap(
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  TextFormFields(
+                    icon: Icons.date_range_outlined,
+                    large: 500.0,
+                    ancho: 80.0,
+                    item: Row(
+                      children: [
+                        Expanded(child: Text("Duración en días:")),
+                        IconButton(
+                          icon: Icon(Icons.remove),
+                          onPressed: () {},
+                        ),
+                        Container(
+                          width: 45,
+                          height: 45,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 3),
+                            child: TextFormField(
+                              // controller: et ? numCtrl : numEditCtrl,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {}
+                        )
+                      ],
+                    ),
+                  ),
+                  TextFormFields(
+                    icon: Icons.remove_red_eye,
+                    large: 500.0,
+                    ancho: 80,
+                    item: CheckboxListTile(
+                      title: Text('Visible para novios:'),
+                      controlAffinity: ListTileControlAffinity.platform,
+                      value: false,
+                      onChanged: (valor) {},
+                      activeColor: Colors.green,
+                      checkColor: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0,),
+              Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  TextFormFields(
+                    icon: Icons.linear_scale_outlined,
+                    large: 500,
+                    ancho: 80,
+                    item: _crearSelect(listActividad, idTarea, idActividad),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: ElevatedButton(
+                      child: Tooltip(
+                        child: Icon(Icons.save_sharp),
+                        message: "Agregar actividad.",
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30.0,),
+            ],
+          );
+        }
+      });
+    });
+
+    return temp;
+  }
+
+  // tiene un bug
+  Widget _crearSelect(List<Actividad> listActividades, int idTarea, int idActividad) {
+    Widget temp;
+
+    _listFull.forEach((tareas) {
+      tareas.actividad.forEach((actividades) {
+        if(actividades.id_actividad == idActividad) {
+          temp = DropdownButton(
+            isExpanded: true,
+            value: actividades.predecesor_actividad,
+            icon: const Icon(Icons.arrow_drop_down_outlined),
+            iconSize: 24,
+            elevation: 16,
+            style: const TextStyle(color: Color(0xFF000000)),
+            underline: Container(
+              height: 2,
+              color: Color(0xFF000000),
+            ),
+            onChanged: (valor) {
+              setState(() {
+                actividades.predecesor_actividad = valor;
+              });
+            },
+            items: tareas.actividad.map((item) {
+              return DropdownMenuItem(
+                value: item.id_actividad,
+                child: Text(
+                  item.id_actividad != 0 ? item.nombre_actividad:'Selecciona un predecesor',
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+            }).toList(),
+          );
+        }
+      });
+    });
+
+    return listActividades.length > 1 ? temp:Container(child: Center(child: Text('Sin predecesores')));
+  }
+
 }
 // clases para manejar el modelo
 // tarea
@@ -467,6 +860,7 @@ class Tarea {
   String nombre_tarea;
   bool check_tarea;
   bool expanded_tarea;
+  bool nueva_actividad;
   List<Actividad> actividad;
 
   Tarea({
@@ -474,6 +868,7 @@ class Tarea {
     this.nombre_tarea,
     this.check_tarea,
     this.expanded_tarea,
+    this.nueva_actividad,
     this.actividad,
   });
 }
@@ -487,6 +882,8 @@ class Actividad {
   DateTime fecha_inicio_evento;
   DateTime fecha_final_evento;
   bool agregar_actividad;
+  bool visible_actividad;
+  int predecesor_actividad;
 
   Actividad({
     this.id_actividad,
@@ -497,5 +894,7 @@ class Actividad {
     this.fecha_inicio_evento,
     this.fecha_final_evento,
     this.agregar_actividad,
+    this.visible_actividad,
+    this.predecesor_actividad,
   });
 }

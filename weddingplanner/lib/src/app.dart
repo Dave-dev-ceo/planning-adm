@@ -41,6 +41,8 @@ import 'logic/paises_logic.dart';
 import 'logic/usuarios.logic.dart';
 import 'blocs/asistencia/asistencia_bloc.dart';
 import 'logic/asistencia_logic.dart';
+import 'package:weddingplanner/src/blocs/comentariosActividades/comentariosactividades_bloc.dart';
+import 'logic/comentarios_actividades_logic.dart';
 
 class MyApp extends StatelessWidget {
   Color hexToColor(String code) {
@@ -139,7 +141,10 @@ class AppState extends StatelessWidget {
       BlocProvider<ListasBloc>(
           create: (_) => ListasBloc(logic: FetchListaLogic())),
       BlocProvider<DetalleListasBloc>(
-          create: (_) => DetalleListasBloc(logic: FetchDetalleListaLogic()))
+          create: (_) => DetalleListasBloc(logic: FetchDetalleListaLogic())),
+      BlocProvider<ComentariosactividadesBloc>(
+        create: (_) => ComentariosactividadesBloc(logic: ConsultasComentarioLogic()),
+      ),
     ], child: MyApp());
   }
 }

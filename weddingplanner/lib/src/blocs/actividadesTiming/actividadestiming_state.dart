@@ -15,6 +15,23 @@ class DeleteActividadesTimingsState extends ActividadestimingState {}
 
 class DeleteActividadesTimingsOkState extends ActividadestimingState {}
 
+class AddActividadesState extends ActividadestimingState {
+  final int idActividad;
+  final int idTarea;
+
+  AddActividadesState(this.idActividad, this.idTarea);
+
+  List<int> get props => [idActividad, idTarea];
+}
+
+class UpdateActividadesState extends ActividadestimingState {
+  final String message;
+
+  UpdateActividadesState(this.message);
+
+  List<Object> get props => [message];
+}
+
 class ErrorDeleteActividadesTimingsState extends ActividadestimingState {
   final String message;
 

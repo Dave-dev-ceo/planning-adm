@@ -102,5 +102,17 @@ class ActividadestimingBloc extends Bloc<ActividadestimingEvent, Actividadestimi
         yield ErrorTokenActividadesTimingsState("Error de validación de token");
       }
     }
+    else if(event is ActulizarTimingsEvent) {
+      int data = await logic.updateEventoActividades(
+        event.idEventoActividad,
+        event.addEventoActividad,
+        event.fechaEventoActividad,
+      );
+      // yield UpdateActividadesState('Agregado');
+    }
+    else if(event is AddActividadesEvent) {
+      int data = await logic.creatActividadInEvent(event.data, event.idTarea);
+      yield AddActividadesState(data,event.idTarea);
+    }
   }
 }

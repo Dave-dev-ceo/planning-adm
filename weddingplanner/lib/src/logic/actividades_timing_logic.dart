@@ -22,6 +22,8 @@ abstract class ActividadesTimingsLogic {
   Future<ItemModelActividadesTimings> fetchActividadesEvento();
   Future<ItemModelTimings> fetchNoInEvento();
   Future<ItemModelActividadesTimings> fetchNoInEventoActividades();
+  Future<int> updateEventoActividades(int idActividad, bool addActividad, DateTime addDate);
+  Future<int> creatActividadInEvent(Map<String, dynamic> dataActividad, int idTarea);
 }
 
 class ListaActividadesTimingsException implements Exception {}
@@ -332,6 +334,68 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
       return null;
     } else {
       throw ListaActividadesTimingsException;
+    }
+  }
+
+  Future<int> updateEventoActividades(int idActividad, bool addActividad, DateTime addDate) async {
+    //aqui
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+    
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/ACTIVIDADESTIMINGS/actulizarTimingsEvent'),
+        body: {"id_planner":idPlanner.toString(),"id_actividad":idActividad.toString(),"agregar_actividad":addActividad.toString(),"fecha_actividad":addDate.toString()},
+        headers: {HttpHeaders.authorizationHeader: token});
+
+    if (response.statusCode == 201) {
+      Map<String, dynamic> responseEvento = json.decode(response.body);
+      await _sharedPreferences.setToken(responseEvento['token']);
+      return 0;
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw CreateActividadesTimingException();
+    }
+  }
+
+  @override
+  Future<int> creatActividadInEvent(Map<String, dynamic> dataActividad, int idTarea) async {
+    // implement creatActividadInEvent
+
+    //aqui
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int idEvent = await _sharedPreferences.getIdEvento();
+    String token = await _sharedPreferences.getToken();
+
+    // keep
+    dataActividad['id_planner'] = idPlanner.toString();
+    dataActividad['id_usuario'] = idUsuario.toString();
+    dataActividad['id_evento'] = idEvent.toString();
+    dataActividad['id_tarea'] = idTarea.toString();
+
+    // send data
+    final response = await client.post(
+      Uri.parse(
+        confiC.url + 
+        confiC.puerto + 
+        '/wedding/ACTIVIDADESTIMINGS/createActividadesEnEvento'
+      ),
+      body: dataActividad,
+      headers: {HttpHeaders.authorizationHeader: token}
+    );
+
+    if (response.statusCode == 201) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      // data
+      ItemModelActividadesTimings id = ItemModelActividadesTimings.fromJsonEvento(data['data']);
+      return id.results[0].idEventoActividad;
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw CreateActividadesTimingException();
     }
   }
 

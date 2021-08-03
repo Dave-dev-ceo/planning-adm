@@ -91,10 +91,18 @@ class _Result {
     _nombreEventoActividad = result['nombre'];
     _isCheck = false;
     _isExpanded = false;
-    _fechaInicioActividad = DateTime.parse(result['fecha_inicio_actividad']);
-    _fechaInicioEvento = DateTime.parse(result['fecha_inicio_evento']);
-    _fechaFinalEvento = DateTime.parse(result['fecha_final_evento']);
-    _dia = result['dias'];
+    if(result['fecha_inicio_actividad'] != null)
+      _fechaInicioActividad = DateTime.parse(result['fecha_inicio_actividad']);
+    if(result['fecha_inicio_evento'] != null)
+      _fechaInicioEvento = DateTime.parse(result['fecha_inicio_evento']);
+    if(result['fecha_final_evento'] != null)
+      _fechaFinalEvento = DateTime.parse(result['fecha_final_evento']);
+    if(result['dias'] != null) {
+      if(result['dias'].runtimeType == String)
+        _dia = int.parse(result['dias']);
+        else
+          _dia = result['dias'];
+    }
   }
 
   _Result.fromModel(dataObj) {
@@ -104,8 +112,8 @@ class _Result {
     _visibleInvolucrados = dataObj._visibleInvolucrados;
     _dias = dataObj._dias;
     _predecesor = dataObj._predecesor;
-    _addActividad = false;
-    _fechaInicio = DateTime.now();
+    _addActividad = dataObj._addActividad;
+    _fechaInicio = dataObj._fechaInicio;
     /* nuevas */
     _idEventoTiming = dataObj._idEventoTiming;
     _nombreEventoTarea = dataObj._nombreEventoTarea;

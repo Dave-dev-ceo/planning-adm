@@ -123,7 +123,7 @@ class RouteGenerator {
       case '/eventoCalendario':
         return MaterialPageRoute(
             builder: (context) => TableEventsExample(
-                  itemModel: args,
+                  actividadesLista : args,
                 ));
       case '/detalleListas':
         return MaterialPageRoute(

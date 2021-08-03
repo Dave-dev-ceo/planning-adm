@@ -23,7 +23,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
 
   @override
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner() async {
-    // TODO: implement fetchAsistenciaPorPlanner
+    // implement fetchAsistenciaPorPlanner
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
