@@ -76,7 +76,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
             // return Center(child: CircularProgressIndicator());
             _listFull.forEach((tarea) {
               tarea.actividad.forEach((actividad) {
-                if(tarea.id_tarea == state.idTarea && actividad.id_actividad == 0)
+                if(tarea.id_tarea == state.idTarea && actividad.id_actividad == 0 && tarea.nueva_actividad == true)
                   actividad.id_actividad = state.idActividad;
               });
             });
@@ -449,7 +449,9 @@ class _TimingsEventosState extends State<TimingsEventos> {
                         fecha_inicio_actividad: DateTime.now(),
                         agregar_actividad: false,
                         visible_actividad: false,
-                        predecesor_actividad: 0
+                        predecesor_actividad: 0,
+                        fecha_inicio_evento: _listFull[i].fecha_inicio_evento,
+                        fecha_final_evento: _listFull[i].fecha_final_evento,
                       )
                     );
                     _listFull[i].nueva_actividad = false;
@@ -524,6 +526,8 @@ class _TimingsEventosState extends State<TimingsEventos> {
           check_tarea: isOpen,
           expanded_tarea: isOpen,
           nueva_actividad: true,
+          fecha_inicio_evento: itemInMethod.results[i].fechaInicioEvento,
+          fecha_final_evento: itemInMethod.results[i].fechaFinalEvento,
           actividad: tempActividad,
         ));
       else {
@@ -534,6 +538,8 @@ class _TimingsEventosState extends State<TimingsEventos> {
             check_tarea: isOpen,
             expanded_tarea: isOpen,
             nueva_actividad: true,
+            fecha_inicio_evento: itemInMethod.results[i].fechaInicioEvento,
+            fecha_final_evento: itemInMethod.results[i].fechaFinalEvento,
             actividad: tempActividad,
           ));
       }
@@ -861,6 +867,8 @@ class Tarea {
   bool check_tarea;
   bool expanded_tarea;
   bool nueva_actividad;
+  DateTime fecha_inicio_evento;
+  DateTime fecha_final_evento;
   List<Actividad> actividad;
 
   Tarea({
@@ -869,6 +877,8 @@ class Tarea {
     this.check_tarea,
     this.expanded_tarea,
     this.nueva_actividad,
+    this.fecha_inicio_evento,
+    this.fecha_final_evento,
     this.actividad,
   });
 }
