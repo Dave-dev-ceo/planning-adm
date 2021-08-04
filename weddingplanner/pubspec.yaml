@@ -59,6 +59,7 @@ dependencies:
   passwordfield: ^0.0.82
   table_sticky_headers: ^2.0.0
   table_calendar: ^3.0.1
+  multi_select_flutter: ^4.0.0
 
 
 dev_dependencies:
