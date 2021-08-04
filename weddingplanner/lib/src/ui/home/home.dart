@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
             actions: <Widget>[
               Container(
                 margin: EdgeInsets.only(right: 20.0),
-                child: Text('CONFIGURACIÓN PLANNER'),
+                child: Text('PLANNER'),
               ),
               Container(
                   margin: EdgeInsets.only(right: 10.0),

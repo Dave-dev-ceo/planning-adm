@@ -89,7 +89,7 @@ class _InvitadosState extends State<Invitados> {
             actions: <Widget>[
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text('CONFIGURACIÓN EVENTO'),
+                child: Text('EVENTO: Boda Laura y Carlos'),
               ),
               Container(
                   margin: EdgeInsets.only(right: 10.0),
