@@ -39,12 +39,12 @@ class _Comentarios {
   }
 
   // model
-  _Comentarios.fromModel(dataObj) {
-    _idComentario = dataObj._idComentario;
-    _comentarioActividad = dataObj._comentarioActividad;
-    _estadoComentario = dataObj._estadoComentario;
-    _idEventoActividad = dataObj._idEventoActividad;
-  }
+  // _Comentarios.fromModel(dataObj) {
+  //   _idComentario = dataObj._idComentario;
+  //   _comentarioActividad = dataObj._comentarioActividad;
+  //   _estadoComentario = dataObj._estadoComentario;
+  //   _idEventoActividad = dataObj._idEventoActividad;
+  // }
 
   /// creamos getter
   int get idComentario => this._idComentario;

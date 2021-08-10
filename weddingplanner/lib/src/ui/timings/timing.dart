@@ -1,315 +1,255 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_timings.dart';
+import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
+import 'package:weddingplanner/src/models/model_perfilado.dart';
+import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
+import 'package:weddingplanner/src/ui/construccion/construccion.dart';
+import 'package:weddingplanner/src/ui/contratos/contrato.dart';
+import 'package:weddingplanner/src/ui/Listas/listas.dart';
+import 'package:weddingplanner/src/ui/planes/planes.dart';
+import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
+import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
+import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
+import 'package:weddingplanner/src/ui/timing_evento/timings_eventos.dart';
 
-class Timing extends StatefulWidget {
-  const Timing({Key key}) : super(key: key);
+class Invitados extends StatefulWidget {
+  //static const routeName = '/eventos';
+  final Map<dynamic, dynamic> detalleEvento;
+  const Invitados({Key key, this.detalleEvento}) : super(key: key);
 
   @override
-  _TimingState createState() => _TimingState();
+  _InvitadosState createState() => _InvitadosState(detalleEvento);
 }
 
-class _TimingState extends State<Timing> {
-  final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
-  TextEditingController timingCtrl = new TextEditingController();
-  TimingsBloc timingBloc;
-  ItemModelTimings itemModelTimings;
-  ItemModelTimings filterTimings;
-  bool bandera = false;
-  List<bool> sort = [false, false, false, false];
-  int _sortColumnIndex = 0;
-  bool sortArrow = false;
+class _InvitadosState extends State<Invitados> {
+  //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final Map<dynamic, dynamic> detalleEvento;
+  int _pageIndex = 0;
+  int _pages = 0;
+  PermisosBloc permisosBloc;
 
-  bool crt = true;
+  _InvitadosState(this.detalleEvento);
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
 
-  _TimingState();
-
-  @override
   void initState() {
-    timingBloc = BlocProvider.of<TimingsBloc>(context);
-    timingBloc.add(FetchTimingsPorPlannerEvent());
+    permisosBloc = BlocProvider.of<PermisosBloc>(context);
+    permisosBloc.add(obtenerPermisosEvent());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          child: BlocBuilder<TimingsBloc, TimingsState>(
-            builder: (context, state) {
-              if (state is TimingsInitial) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is LoadingTimingsState) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is MostrarTimingsState) {
-                if (crt) {
-                  itemModelTimings = state.usuarios;
-                  filterTimings = itemModelTimings; //.copy()
-                  crt = false;
-                }
-                return _constructorTable(filterTimings);
-              } else if (state is ErrorMostrarTimingsState) {
-                return Center(
-                  child: Text(state.message),
-                );
-                //_showError(context, state.message);
-              } else {
-                return buildList(filterTimings);
-              }
-            },
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: null,
-        child: Icon(Icons.add),
-        onPressed: () {
-          setState(() {
-            bandera = !bandera;
-          });
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
-    );
-  }
-
-  Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-  }
-
-  formItemsDesign(icon, item, large, ancho) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
-        child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            elevation: 10,
-            child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
-      ),
-    );
-  }
-
-  _constructorTable(ItemModelTimings model) {
     return Container(
       width: double.infinity,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 50.0,
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.all(15),
-            child: formItemsDesign(
-                null,
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: timingCtrl,
-                        decoration: new InputDecoration(
-                          labelText: 'Timing',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        child: Container(
-                          margin: const EdgeInsets.all(15),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 12),
-                          child: FittedBox(
-                            child: Text(
-                              "Agregar",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w100,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                            color: hexToColor('#000000'),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onTap: () async {
-                          crt = true;
-                          timingBloc.add(
-                              CreateTimingsEvent({"timing": timingCtrl.text}));
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                570.0,
-                80.0),
-          ),
-          Center(
-            child:
-                Container(height: 400.0, width: 600.0, child: buildList(model)
-                    //listaEstatusInvitaciones(context),
-                    ),
-          ),
-        ],
+      child: BlocBuilder<PermisosBloc, PermisosState>(
+        builder: (context, state) {
+          if (state is PermisosInitial) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is ErrorTokenPermisos) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is LoadingPermisos) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is PermisosOk) {
+            List<TabItem> tabs = obtenerTabsPantallas(state.permisos
+                .pantallas); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
+            List<Widget> pantallas = obtenerPantallasContent(state.permisos
+                .pantallas); /* <Widget>[Center(child: Text('Test'))]; */
+            // Navigator.pop(_dialogContext);
+            return crearPantallas(context, tabs, pantallas);
+          } else if (state is ErrorPermisos) {
+            return Center(
+              child: Text(state.message),
+            );
+          } else {
+            return Center(child: Text('Sin permisos'));
+          }
+        },
       ),
     );
   }
 
-  Widget buildList(ItemModelTimings snapshot) {
-    return ListView(
-      shrinkWrap: true,
-      padding: const EdgeInsets.all(16),
-      children: [
-        PaginatedDataTable(
-          sortColumnIndex: _sortColumnIndex,
-          sortAscending: sortArrow,
-          header: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(height: 30, child: Text('Timings')),
+  Widget crearPantallas(BuildContext context, List<TabItem> pantallasTabs,
+      List<Widget> PantallasCOntent) {
+    return DefaultTabController(
+        length: _pages,
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: true,
+            title: Center(
+              child: FittedBox(
+                  child: Image.asset(
+                'assets/logo.png',
+                height: 100.0,
+                width: 250.0,
+              )),
+            ),
+            toolbarHeight: 150.0,
+            backgroundColor: hexToColor('#000000'),
+            actions: <Widget>[
               Container(
-                height: 30,
-                child: TextField(
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.search,
-                      ),
-                      hintText: 'Buscar...'),
-                  onChanged: (String value) async {
-                    if (value.length > 2) {
-                      List<dynamic> usrs = itemModelTimings.results
-                          .where((imu) => imu.nombre_timing
-                              .toLowerCase()
-                              .contains(value.toLowerCase()))
-                          .toList();
-                      setState(() {
-                        filterTimings.results.clear();
-                        if (usrs.length > 0) {
-                          for (var usr in usrs) {
-                            filterTimings.results.add(usr);
-                          }
-                        } else {}
-                      });
-                    } else {
-                      setState(() {
-                        filterTimings = itemModelTimings.copy();
-                      });
-                    }
-                  },
-                ),
+                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text('CONFIGURACIÓN EVENTO'),
               ),
+              Container(
+                  margin: EdgeInsets.only(right: 10.0),
+                  child: CircleAvatar(
+                    child: Text('MF'),
+                    backgroundColor: hexToColor('#d39942'),
+                  ))
             ],
+            bottom: TabBar(
+                onTap: (int index) {
+                  setState(
+                    () {
+                      _pageIndex = index;
+                    },
+                  );
+                },
+                indicatorColor: Colors.white,
+                isScrollable: true,
+                tabs: pantallasTabs
+                //  [
+                // TabItem(titulo: 'Resumen', icono: Icons.list),
+                // TabItem(titulo: 'Invitados', icono: Icons.people),
+                // TabItem(titulo: 'Timings', icono: Icons.access_time_sharp),
+                // TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined),
+                // TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined),
+                // TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
+                // TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open),
+                // TabItem(titulo: 'Contratos', icono: Icons.description_outlined),
+                // TabItem(titulo: 'Asistencia', icono: Icons.accessibility),
+                // ],
+                ),
           ),
-          rowsPerPage: snapshot.results.length > 8
-              ? 8
-              : snapshot.results.length < 1
-                  ? 1
-                  : snapshot.results.length,
-          showCheckboxColumn: bandera,
-          columns: [
-            DataColumn(
-                label: Text('Timing'),
-                onSort: (columnIndex, ascending) {
-                  setState(() {
-                    snapshot.results.length > 0
-                        ? itemModelTimings = onSortColum(
-                            columnIndex, ascending, itemModelTimings)
-                        : null;
-                  });
-                }),
-          ],
-          source: _DataSource(snapshot.results, context),
-        ),
-      ],
-    );
+          body: SafeArea(
+            child: IndexedStack(index: _pageIndex, children: PantallasCOntent
+                // <Widget> [
+                // ResumenEvento(
+                //   detalleEvento: detalleEvento,
+                // ),
+                // ListaInvitados(
+                //   idEvento: detalleEvento['idEvento'],
+                // ),
+                // TimingsEventos(),
+                // Construccion(),
+                // Construccion(),
+                // Construccion(),
+                // Construccion(),
+                // Contratos(),
+                // Asistencia()
+                // ],
+                ),
+          ),
+        ));
   }
 
-  ItemModelTimings onSortColum(
-      int columnIndex, bool ascending, ItemModelTimings sortData) {
-    sort[columnIndex] = !sort[columnIndex];
-    switch (columnIndex) {
-      case 0:
-        sort[columnIndex]
-            ? sortData.results
-                .sort((a, b) => a.nombre_timing.compareTo((b.nombre_timing)))
-            : sortData.results
-                .sort((a, b) => b.nombre_timing.compareTo(a.nombre_timing));
-        break;
-    }
-    _sortColumnIndex = columnIndex;
-    sortArrow = !sortArrow;
-
-    return sortData;
-  }
-}
-
-class _Row {
-  _Row(
-    this.valueId,
-    this.valueA,
-  );
-  final int valueId;
-  final String valueA;
-
-  bool selected = false;
-}
-
-class _DataSource extends DataTableSource {
-  BuildContext _cont;
-  _DataSource(context, BuildContext cont) {
-    _rows = <_Row>[];
-    if (context.length > 0) {
-      for (int i = 0; i < context.length; i++) {
-        _rows.add(_Row(context[i].id_timing, context[i].nombre_timing));
+  List<TabItem> obtenerTabsPantallas(ItemModelPantallas pantallas) {
+    List<TabItem> tabs = [];
+    int temp = 0;
+    if (pantallas != null) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES')) {
+        tabs.add(TabItem(titulo: 'Resumen', icono: Icons.list));
+        temp += 1;
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+        tabs.add(TabItem(titulo: 'Invitados', icono: Icons.people));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
+        tabs.add(
+            TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
+        tabs.add(TabItem(
+            titulo: 'Proveedores', icono: Icons.support_agent_outlined));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-IVT')) {
+        tabs.add(TabItem(
+            titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRS')) {
+        tabs.add(
+            TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+        tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
+        tabs.add(
+            TabItem(titulo: 'Contratos', icono: Icons.description_outlined));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
+        tabs.add(TabItem(titulo: 'Asistencia', icono: Icons.accessibility));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+        tabs.add(TabItem(titulo: 'Listas', icono: Icons.list));
+        temp += 1;
+      }
+      _pages = temp;
+      return tabs;
     } else {
-      _rows.add(_Row(null, 'Sin datos'));
+      _pages += 1;
+      return [TabItem(titulo: 'Sin permisos', icono: Icons.block)];
     }
-    _cont = cont;
   }
 
-  List<_Row> _rows;
-
-  int _selectedCount = 0;
-
-  @override
-  DataRow getRow(int index) {
-    assert(index >= 0);
-    if (index >= _rows.length) return null;
-    final row = _rows[index];
-    return DataRow.byIndex(
-      index: index,
-      selected: row.selected,
-      onSelectChanged: (value) {
-        if (row.selected != value) {
-          _selectedCount += value ? 1 : -1;
-          assert(_selectedCount >= 0);
-          row.selected = value;
-          notifyListeners();
-        }
-      },
-      cells: [
-        DataCell(Text(row.valueA), onTap: () {
-          Navigator.pushNamed(_cont, '/addActividadesTiming',
-              arguments: row.valueId);
-        }),
-      ],
-    );
+  List<Widget> obtenerPantallasContent(ItemModelPantallas pantallas) {
+    List<Widget> temp = [];
+    if (pantallas != null) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES')) {
+        temp.add(ResumenEvento(
+          detalleEvento: detalleEvento,
+          WP_EVT_RES_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
+        ));
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+        temp.add(ListaInvitados(
+          idEvento: detalleEvento['idEvento'],
+          WP_EVT_INV_CRT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+          WP_EVT_INV_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+          WP_EVT_INV_ENV: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+        ));
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
+        temp.add(Planes());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
+        temp.add(Construccion());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-IVT')) {
+        temp.add(Construccion());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRS')) {
+        temp.add(Construccion());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+        temp.add(Construccion());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
+        temp.add(Contratos());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
+        temp.add(Asistencia());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+        temp.add(Listas());
+      }
+      return temp;
+    } else {
+      return [
+        Center(
+          child: Text('Sin permisos.'),
+        )
+      ];
+    }
   }
-
-  @override
-  int get rowCount => _rows.length;
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get selectedRowCount => _selectedCount;
 }

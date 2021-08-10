@@ -56,64 +56,65 @@ class ActividadestimingBloc extends Bloc<ActividadestimingEvent, Actividadestimi
         yield ErrorTokenActividadesTimingsState("Error de validación de token");
       }
     }
-    else if(event is FetchActividadesTimingsPorIdPlannerEvent) {
-      yield LoadingActividadesTimingsState();
-      try {
-        // consulta cargada - las tareas que no existen en tareasEvento
-        ItemModelTimings plannerTareas = await logic.fetchNoInEvento();
-        var itemTareasPlanner = MostrarTimingsState(plannerTareas);
+    // pre 04 de agosto del 2021
+    // else if(event is FetchActividadesTimingsPorIdPlannerEvent) {
+    //   yield LoadingActividadesTimingsState();
+    //   try {
+    //     // consulta cargada - las tareas que no existen en tareasEvento
+    //     ItemModelTimings plannerTareas = await logic.fetchNoInEvento();
+    //     var itemTareasPlanner = MostrarTimingsState(plannerTareas);
 
-        // insertamos - tareas en evento
-        itemTareasPlanner.usuarios.results.forEach((planner) async {
-          await logic.createTiming({'timing':planner.nombre_timing, 'id_tipo_timing':planner.id_timing.toString()});
-        });
+    //     // insertamos - tareas en evento
+    //     itemTareasPlanner.usuarios.results.forEach((planner) async {
+    //       await logic.createTiming({'timing':planner.nombre_timing, 'id_tipo_timing':planner.id_timing.toString()});
+    //     });
 
-        // consulta cargada - las actividades que no existen en actividadesEvento
-        ItemModelActividadesTimings plannerActividades = await logic.fetchNoInEventoActividades();
-        var itemActividadesPlanner = MostrarActividadesTimingsState(plannerActividades);
-        // consulta cargada - las tareas de evento
-        ItemModelTimings eventoTareas = await logic.fetchTimingsEvento();
-        var itemTareasEvento = MostrarTimingsState(eventoTareas);
+    //     // consulta cargada - las actividades que no existen en actividadesEvento
+    //     ItemModelActividadesTimings plannerActividades = await logic.fetchNoInEventoActividades();
+    //     var itemActividadesPlanner = MostrarActividadesTimingsState(plannerActividades);
+    //     // consulta cargada - las tareas de evento
+    //     ItemModelTimings eventoTareas = await logic.fetchTimingsEvento();
+    //     var itemTareasEvento = MostrarTimingsState(eventoTareas);
 
-        // insertamos - acividades en evento
-        itemTareasEvento.usuarios.results.forEach((eventoTarea) async {
-          itemActividadesPlanner.actividadesTimings.results.forEach((plannerActividad) async {
-            if(eventoTarea.id_timing == plannerActividad.idTipoTimig) {
-              Map<String,dynamic> eventoActividades = {
-                'id_evento_timing':eventoTarea.idEventoTiming.toString(),
-                'nombre':plannerActividad.nombreActividad, 
-                'descripcion':plannerActividad.descripcion, 
-                'visible_involucrados':plannerActividad.visibleInvolucrados.toString(), 
-                'dias':plannerActividad.dias,
-                'id_tipo_timing' : plannerActividad.idTipoTimig.toString(),
-                'fecha_inicio_actividad': eventoTarea.fechaInicio.toString(),
-              };
-              await logic.createActividadesEvento(eventoActividades);
-            }
-          });
-        });
+    //     // insertamos - acividades en evento
+    //     itemTareasEvento.usuarios.results.forEach((eventoTarea) async {
+    //       itemActividadesPlanner.actividadesTimings.results.forEach((plannerActividad) async {
+    //         if(eventoTarea.id_timing == plannerActividad.idTipoTimig) {
+    //           Map<String,dynamic> eventoActividades = {
+    //             'id_evento_timing':eventoTarea.idEventoTiming.toString(),
+    //             'nombre':plannerActividad.nombreActividad, 
+    //             'descripcion':plannerActividad.descripcion, 
+    //             'visible_involucrados':plannerActividad.visibleInvolucrados.toString(), 
+    //             'dias':plannerActividad.dias,
+    //             'id_tipo_timing' : plannerActividad.idTipoTimig.toString(),
+    //             'fecha_inicio_actividad': eventoTarea.fechaInicio.toString(),
+    //           };
+    //           await logic.createActividadesEvento(eventoActividades);
+    //         }
+    //       });
+    //     });
 
-        // consulta cargada - la información a mostrar Tareas y sus Actividades
-        ItemModelActividadesTimings mostrarTodo = await logic.fetchActividadesTimingsIdPorPlanner();
+    //     // consulta cargada - la información a mostrar Tareas y sus Actividades
+    //     ItemModelActividadesTimings mostrarTodo = await logic.fetchActividadesTimingsIdPorPlanner();
 
-        yield MostrarActividadesTimingsEventosState(mostrarTodo);
-      } on ListaActividadesTimingsException {
-        yield ErrorMostrarActividadesTimingsState("Sin Actividades");
-      } on TokenException {
-        yield ErrorTokenActividadesTimingsState("Error de validación de token");
-      }
-    }
-    else if(event is ActulizarTimingsEvent) {
-      int data = await logic.updateEventoActividades(
-        event.idEventoActividad,
-        event.addEventoActividad,
-        event.fechaEventoActividad,
-      );
-      // yield UpdateActividadesState('Agregado');
-    }
-    else if(event is AddActividadesEvent) {
-      int data = await logic.creatActividadInEvent(event.data, event.idTarea);
-      yield AddActividadesState(data,event.idTarea);
-    }
+    //     yield MostrarActividadesTimingsEventosState(mostrarTodo);
+    //   } on ListaActividadesTimingsException {
+    //     yield ErrorMostrarActividadesTimingsState("Sin Actividades");
+    //   } on TokenException {
+    //     yield ErrorTokenActividadesTimingsState("Error de validación de token");
+    //   }
+    // }
+    // else if(event is ActulizarTimingsEvent) {
+    //   int data = await logic.updateEventoActividades(
+    //     event.idEventoActividad,
+    //     event.addEventoActividad,
+    //     event.fechaEventoActividad,
+    //   );
+    //   // yield UpdateActividadesState('Agregado');
+    // }
+    // else if(event is AddActividadesEvent) {
+    //   int data = await logic.creatActividadInEvent(event.data, event.idTarea);
+    //   yield AddActividadesState(data,event.idTarea);
+    // }
   }
 }

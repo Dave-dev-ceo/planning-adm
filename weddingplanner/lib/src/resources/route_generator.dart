@@ -6,6 +6,8 @@ import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
+import 'package:weddingplanner/src/ui/planes/agregar_planes.dart';
+import 'package:weddingplanner/src/ui/planes/calendario.dart';
 import 'package:weddingplanner/src/ui/scannerQr/scannerQr.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_actividades.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_contrato.dart';
@@ -129,6 +131,10 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (context) =>
                 FullScreenDialogDetalleListasEvent(lista: args));
+      case '/agregarPlan':
+        return MaterialPageRoute(builder: (context) => AgregarPlanes(lista: args));
+      case '/calendarPlan':
+        return MaterialPageRoute(builder: (context) => CalendarioPlan(actividadesLista: args));
       default:
         return _errorRoute();
     }
