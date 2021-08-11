@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:weddingplanner/src/logic/servicios_logic.dart';
 import 'package:weddingplanner/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
+import 'package:weddingplanner/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/estatus/estatus_bloc.dart';
 import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
@@ -160,6 +162,8 @@ class AppState extends StatelessWidget {
       BlocProvider<ArchivoProveedorBloc>(
           create: (_) =>
               ArchivoProveedorBloc(logic: FetchArchivoProveedoresLogic())),
+      BlocProvider<ServiciosBloc>(
+          create: (_) => ServiciosBloc(logic: FetchServiciosLogic())),
     ], child: MyApp());
   }
 }
