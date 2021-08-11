@@ -77,7 +77,9 @@ class _ProveedoresState extends State<Proveedores> {
         child: BlocBuilder<ProveedorBloc, ProveedorState>(
             builder: (context, state) {
           if (state is MostrarProveedorState) {
-            _data = _createDataListProv(state.detlistas);
+            if(state.detlistas != null) {
+              _data = _createDataListProv(state.detlistas);
+            }
             return Text('');
           } else if (state is MostrarSevicioByProveedorState) {
             if (_data != null) {
