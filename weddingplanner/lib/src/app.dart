@@ -45,6 +45,10 @@ import 'blocs/asistencia/asistencia_bloc.dart';
 import 'logic/asistencia_logic.dart';
 import 'package:weddingplanner/src/blocs/comentariosActividades/comentariosactividades_bloc.dart';
 import 'logic/comentarios_actividades_logic.dart';
+import 'package:weddingplanner/src/blocs/proveedores/archivo_proveedor/bloc/archivo_proveedor_bloc.dart';
+import 'package:weddingplanner/src/blocs/proveedores/proveedor_bloc.dart';
+import 'package:weddingplanner/src/logic/archivos_proveedores_logic.dart';
+import 'package:weddingplanner/src/logic/proveedores_logic.dart';
 
 class MyApp extends StatelessWidget {
   Color hexToColor(String code) {
@@ -145,11 +149,17 @@ class AppState extends StatelessWidget {
       BlocProvider<DetalleListasBloc>(
           create: (_) => DetalleListasBloc(logic: FetchDetalleListaLogic())),
       BlocProvider<ComentariosactividadesBloc>(
-        create: (_) => ComentariosactividadesBloc(logic: ConsultasComentarioLogic()),
+        create: (_) =>
+            ComentariosactividadesBloc(logic: ConsultasComentarioLogic()),
       ),
       BlocProvider<PlanesBloc>(
         create: (_) => PlanesBloc(logic: ConsultasPlanesLogic()),
       ),
+      BlocProvider<ProveedorBloc>(
+          create: (_) => ProveedorBloc(logic: FetchProveedoresLogic())),
+      BlocProvider<ArchivoProveedorBloc>(
+          create: (_) =>
+              ArchivoProveedorBloc(logic: FetchArchivoProveedoresLogic())),
     ], child: MyApp());
   }
 }

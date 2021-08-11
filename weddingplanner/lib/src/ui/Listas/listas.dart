@@ -39,6 +39,7 @@ class _ListaState extends State<Listas> {
 
   @override
   Widget build(BuildContext context) {
+    print('Entro una vez');
     return FutureBuilder(
         future: _getId(),
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
@@ -75,12 +76,18 @@ class _ListaState extends State<Listas> {
                 floatingActionButton: FloatingActionButton(
                   child: Icon(Icons.add),
                   onPressed: () async {
-                    await Navigator.pushNamed(context, '/detalleListas',
-                        arguments: {
-                          'id_lista': null,
-                          'nombre': '',
-                          'descripcion': ''
-                        });
+                    final result = await Navigator.of(context)
+                        .pushNamed('/detalleListas', arguments: {
+                      'id_lista': null,
+                      'nombre': '',
+                      'descripcion': ''
+                    });
+                    if (result == null ||
+                        result == "" ||
+                        result == false ||
+                        result == 0) {
+                      listasBloc.add(FechtListasEvent());
+                    }
                   },
                 ));
           } else if (snapshot.hasError) {

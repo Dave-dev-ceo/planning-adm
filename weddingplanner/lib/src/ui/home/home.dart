@@ -222,9 +222,9 @@ class _HomeState extends State<Home> {
       if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
         pan.add(Construccion());
       }
-      // if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
-      //   pan.add(Proveedores());
-      // }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
+        pan.add(Proveedores());
+      }
       if (secciones.hasAcceso(claveSeccion: 'WP-IVT')) {
         pan.add(Construccion());
       }

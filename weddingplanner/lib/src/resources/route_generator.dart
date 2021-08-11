@@ -26,6 +26,8 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
 import 'package:weddingplanner/src/ui/timing_evento/eventos_calendario.dart';
 import 'package:weddingplanner/src/ui/timing_evento/table_calendar.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_archivo_prov_serv.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_proveedor.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -125,16 +127,26 @@ class RouteGenerator {
       case '/eventoCalendario':
         return MaterialPageRoute(
             builder: (context) => TableEventsExample(
-                  actividadesLista : args,
+                  actividadesLista: args,
                 ));
       case '/detalleListas':
         return MaterialPageRoute(
             builder: (context) =>
                 FullScreenDialogDetalleListasEvent(lista: args));
       case '/agregarPlan':
-        return MaterialPageRoute(builder: (context) => AgregarPlanes(lista: args));
+        return MaterialPageRoute(
+            builder: (context) => AgregarPlanes(lista: args));
       case '/calendarPlan':
-        return MaterialPageRoute(builder: (context) => CalendarioPlan(actividadesLista: args));
+        return MaterialPageRoute(
+            builder: (context) => CalendarioPlan(actividadesLista: args));
+      case '/agregarProveedores':
+        return MaterialPageRoute(
+            builder: (context) =>
+                FullScreenDialogAgregarProveedorEvent(proveedor: args));
+      case '/agregarArchivo':
+        return MaterialPageRoute(
+            builder: (context) =>
+                FullScreenDialogAgregarArchivoProvServEvent(provsrv: args));
       default:
         return _errorRoute();
     }

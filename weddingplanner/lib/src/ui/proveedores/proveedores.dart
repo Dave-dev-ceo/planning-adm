@@ -1,147 +1,239 @@
-// import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/proveedores/proveedor_bloc.dart';
+import 'package:weddingplanner/src/models/item_model_proveedores.dart';
+import 'package:weddingplanner/src/models/item_model_servicios.dart';
+import 'package:weddingplanner/src/ui/proveedores/servicios.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:multi_select_flutter/dialog/mult_select_dialog.dart';
-// import 'package:multi_select_flutter/multi_select_flutter.dart';
-// import 'package:weddingplanner/src/models/item_model_servicios.dart';
-// import 'package:weddingplanner/src/ui/proveedores/servicios.dart';
-// import 'package:weddingplanner/src/ui/widgets/text_form_filed/text_form_filed.dart';
+class Proveedores extends StatefulWidget {
+  const Proveedores({Key key}) : super(key: key);
+  static Route<dynamic> route() => MaterialPageRoute(
+        builder: (context) => Proveedores(),
+      );
+  @override
+  _ProveedoresState createState() => _ProveedoresState();
+}
 
-// class Proveedores extends StatefulWidget {
-//   const Proveedores({Key key}) : super(key: key);
-//   static Route<dynamic> route() => MaterialPageRoute(
-//         builder: (context) => Proveedores(),
-//       );
-//   @override
-//   _ProveedoresState createState() => _ProveedoresState();
-// }
+class _ProveedoresState extends State<Proveedores> {
+  ProveedorBloc proveedorBloc;
+  ItemModelProveedores itemModelProv;
 
-// class _ProveedoresState extends State<Proveedores> {
-//   Map<String, dynamic> json = {
-//     'nombre': 'ffffffff',
-//     'descripcion': 'gfgfhfghfg',
-//   };
+  List<ItemProveedor> _data = [];
 
-//   //   int id_servicio;
-//   // String nombre;
-//   static List<ServiciosModel> _optItem = [
-//     ServiciosModel(id_servicio: 0, nombre: 'Servicio 1'),
-//     ServiciosModel(id_servicio: 0, nombre: 'Servicio 2'),
-//     ServiciosModel(id_servicio: 0, nombre: 'Servicio 3'),
-//     ServiciosModel(id_servicio: 0, nombre: 'Servicio 4')
-//   ];
-//   final _items = _optItem
-//       .map((animal) => MultiSelectItem<ServiciosModel>(animal, animal.nombre))
-//       .toList();
-//   List<ServiciosModel> _selectedAnimals = [];
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
+  @override
+  void initState() {
+    proveedorBloc = BlocProvider.of<ProveedorBloc>(context);
+    proveedorBloc.add(FechtProveedorEvent());
+    proveedorBloc.add(FechtSevicioByProveedorEvent());
+    super.initState();
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//           child: IndexedStack(
-//         index: _selectedIndex,
-//         children: [
-//           Container(
-//             width: double.infinity,
-//             padding: EdgeInsets.all(10),
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.start,
-//               children: [
-//                 Card(
-//                   color: Colors.white,
-//                   elevation: 12,
-//                   shadowColor: Colors.black12,
-//                   shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(10)),
-//                   child: Column(
-//                     children: <Widget>[
-//                       Wrap(
-//                         alignment: WrapAlignment.center,
-//                         children: <Widget>[
-//                           TextFormFields(
-//                             icon: Icons.local_activity,
-//                             item: TextFormField(
-//                               decoration: new InputDecoration(
-//                                 labelText: 'Nombre',
-//                               ),
-//                             ),
-//                             large: 400.0,
-//                             ancho: 80.0,
-//                           ),
-//                           TextFormFields(
-//                             icon: Icons.drive_file_rename_outline,
-//                             item: TextFormField(
-//                               decoration: new InputDecoration(
-//                                 labelText: 'Descripción',
-//                               ),
-//                             ),
-//                             large: 400.0,
-//                             ancho: 80.0,
-//                           )
-//                         ],
-//                       ),
-//                       Wrap(
-//                         alignment: WrapAlignment.center,
-//                         children: <Widget>[
-//                           TextFormFields(
-//                               icon: Icons.select_all,
-//                               item: MultiSelectDialogField(
-//                                 buttonText: Text('Servicios'),
-//                                 title: Text('Servicios'),
-//                                 items: _items,
-//                                 initialValue: _selectedAnimals,
-//                                 onConfirm: (values) {},
-//                               ),
-//                               large: 400.0,
-//                               ancho: 80.0),
-//                           TextFormFields(
-//                             icon: Icons.drive_file_rename_outline,
-//                             item: TextFormField(
-//                               decoration: new InputDecoration(
-//                                 labelText: 'Descripción',
-//                               ),
-//                             ),
-//                             large: 400.0,
-//                             ancho: 80.0,
-//                           )
-//                         ],
-//                       )
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Servicios()
-//         ],
-//       )),
-//       bottomNavigationBar: BottomNavigationBar(
-//         items: const <BottomNavigationBarItem>[
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.attribution),
-//             label: 'Proveedores',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.sell),
-//             label: 'Servicios',
-//           ),
-//         ],
-//         currentIndex: _selectedIndex,
-//         onTap: _onItemTapped,
-//       ),
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+          child: IndexedStack(
+        index: _selectedIndex,
+        children: [_listaProveedore(), Servicios()],
+      )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          Navigator.of(context).pushNamed('/agregarProveedores',
+              arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.attribution),
+            label: 'Proveedores',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sell),
+            label: 'Servicios',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
 
-//   void _onItemTapped(int index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-//   }
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
-//   int _selectedIndex = 0;
-// }
+  int _selectedIndex = 0;
+
+  Widget _listaProveedore() {
+    return SingleChildScrollView(
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(15),
+        child: BlocBuilder<ProveedorBloc, ProveedorState>(
+            builder: (context, state) {
+          if (state is MostrarProveedorState) {
+            _data = _createDataListProv(state.detlistas);
+            return Text('');
+          } else if (state is MostrarSevicioByProveedorState) {
+            if (_data != null) {
+              // List<ServiciosModel> listaServ = [];
+              _data.forEach((elmProv) {
+                List<ServiciosModel> listaServ = [];
+                if (state.detlistas.results.length > 0) {
+                  state.detlistas.results.forEach((sev) {
+                    if (elmProv.id_proveedor == sev.id_proveedor) {
+                      listaServ.add(ServiciosModel(
+                          id_servicio: sev.id_servicio, nombre: sev.nombre));
+                    }
+                    elmProv.servicio = listaServ;
+                  });
+                }
+              });
+            }
+
+            return _listaBuild();
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }),
+      ),
+    );
+  }
+
+  Widget _listaBuild() {
+    return Container(
+        child: ExpansionPanelList(
+      animationDuration: Duration(milliseconds: 500),
+      expansionCallback: (int index, bool isExpanded) {
+        setState(() {
+          _data[index].isExpanded = !isExpanded;
+        });
+      },
+      children: _data.map<ExpansionPanel>((ItemProveedor item) {
+        return ExpansionPanel(
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return ListTile(
+              title: Text(item.nombre),
+              subtitle: Text(item.descripcion),
+              trailing: Wrap(spacing: 12, children: <Widget>[
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/agregarArchivo',
+                          arguments: {
+                            'id_proveedor': item.id_proveedor,
+                            'id_servicio': null
+                          });
+                    },
+                    icon: const Icon(Icons.file_present)),
+              ]),
+            );
+          },
+          body: Column(children: _listServicio(item.servicio)),
+          isExpanded: item.isExpanded,
+        );
+      }).toList(),
+    ));
+  }
+
+  List<Widget> _listServicio(itemServicio) {
+    List<Widget> lista = new List<Widget>();
+    for (var opt in itemServicio) {
+      final tempWidget = ListTile(
+          title: Text(opt.nombre),
+          trailing: Wrap(
+            spacing: 12,
+            children: <Widget>[
+              IconButton(
+                  onPressed: () => showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          _eliminarDetalleLista(opt.id_servicio)),
+                  icon: const Icon(Icons.delete)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/agregarArchivo',
+                        arguments: {
+                          'id_proveedor': null,
+                          'id_servicio': opt.id_servicio
+                        });
+                  },
+                  icon: const Icon(Icons.file_present))
+            ],
+          ));
+      lista.add(tempWidget);
+    }
+    return lista;
+  }
+
+  _createDataListProv(ItemModelProveedores prov) {
+    List<ItemProveedor> _dataProv = [];
+    List<ServiciosModel> listaServ = [];
+    prov.results.forEach((element) {
+      _dataProv.add(ItemProveedor(
+          id_proveedor: element.id_proveedor,
+          nombre: element.nombre,
+          descripcion: element.descripcion,
+          servicio: listaServ,
+          isExpanded: false));
+    });
+    return _dataProv;
+  }
+
+  Widget _buildPanel() {
+    return ExpansionPanelList(
+      expansionCallback: (int index, bool isExpanded) {
+        setState(() {
+          _data[index].isExpanded = !isExpanded;
+        });
+      },
+      children: _data.map<ExpansionPanel>((ItemProveedor item) {
+        return ExpansionPanel(
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return ListTile(
+              title: Text('item.headerValue'),
+            );
+          },
+          body: ListTile(
+              title: Text('item.expandedValue'),
+              subtitle:
+                  const Text('To delete this panel, tap the trash can icon'),
+              trailing: const Icon(Icons.delete),
+              onTap: () {
+                setState(() {
+                  _data.removeWhere(
+                      (ItemProveedor currentItem) => item == currentItem);
+                });
+              }),
+          isExpanded: item.isExpanded,
+        );
+      }).toList(),
+    );
+  }
+
+  _eliminarDetalleLista(int idServ) {
+    return AlertDialog(
+      title: const Text('Eliminar'),
+      content: const Text('¿Desea eliminar el elemento?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () => {
+            proveedorBloc.add(DeleteServicioProvEvent(idServ)),
+            Navigator.pop(context, 'Aceptar')
+          },
+          child: const Text('Aceptar'),
+        ),
+      ],
+    );
+  }
+
+  _editarDetalleLista() {}
+}
