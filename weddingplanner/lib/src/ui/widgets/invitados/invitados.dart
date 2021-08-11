@@ -6,6 +6,7 @@ import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
 import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/Listas/listas.dart';
+import 'package:weddingplanner/src/ui/planes/planes.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
@@ -89,7 +90,7 @@ class _InvitadosState extends State<Invitados> {
             actions: <Widget>[
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text('EVENTO: Boda Laura y Carlos'),
+                child: Text('CONFIGURACIÓN EVENTO'),
               ),
               Container(
                   margin: EdgeInsets.only(right: 10.0),
@@ -219,7 +220,7 @@ class _InvitadosState extends State<Invitados> {
         ));
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-        temp.add(TimingsEventos());
+        temp.add(Planes());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
         temp.add(Construccion());
