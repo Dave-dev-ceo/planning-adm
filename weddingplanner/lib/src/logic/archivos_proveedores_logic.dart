@@ -9,6 +9,7 @@ abstract class LogicArchivoProveedores {
   Future<int> createArchivos(Map<String, dynamic> data);
   Future<ItemModelArchivoProvServ> fetchArchivosProvServ(int prov, int serv);
   Future<int> deleteArchivo(int idArchivo);
+  Future<ItemModelArchivoProvServ> fetchArchivosById(int idArchivo);
 }
 
 class ArchivoProveedoresException implements Exception {}
@@ -74,7 +75,6 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       }
     } catch (e) {
       print(e);
-      print('Entro aqui 2');
     }
   }
 
@@ -101,6 +101,31 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       throw TokenException();
     } else {
       throw ArchivoProveedoresException();
+    }
+  }
+
+  @override
+  Future<ItemModelArchivoProvServ> fetchArchivosById(int idArchivo) async {
+    try {
+      int id_planner = await _sharedPreferences.getIdPlanner();
+      String token = await _sharedPreferences.getToken();
+      final response = await client.get(
+          Uri.parse(configC.url +
+              configC.puerto +
+              '/wedding/PROVEEDORES/obtenerArchivosById/$id_planner/$idArchivo'),
+          headers: {HttpHeaders.authorizationHeader: token});
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        return ItemModelArchivoProvServ.fromJson(data['data']);
+      } else if (response.statusCode == 401) {
+        throw TokenException();
+      } else {
+        throw ArchivoProveedoresException();
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

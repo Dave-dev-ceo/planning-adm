@@ -23,6 +23,7 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_plantilla.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_reporte_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_view_file.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
 import 'package:weddingplanner/src/ui/timing_evento/eventos_calendario.dart';
 import 'package:weddingplanner/src/ui/timing_evento/table_calendar.dart';
@@ -147,6 +148,9 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (context) =>
                 FullScreenDialogAgregarArchivoProvServEvent(provsrv: args));
+      case '/viewArchivo':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogViewFileEvent(archivo: args));
       default:
         return _errorRoute();
     }

@@ -9,6 +9,7 @@ import 'package:weddingplanner/src/models/item_model_proveedores.dart';
 import 'package:weddingplanner/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:mime_type/mime_type.dart';
 
 class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
   final Map<String, dynamic> provsrv;
@@ -25,7 +26,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     extends State<FullScreenDialogAgregarArchivoProvServEvent> {
   GlobalKey<FormState> keyForm = new GlobalKey();
   final Map<String, dynamic> provsrv;
-
+  String _fileBase64 = '';
   _FullScreenDialogAgregarArchivoProvServEvent(this.provsrv);
   TextEditingController descripcionCtrl = new TextEditingController();
   ArchivoProveedorBloc archivoProveedorBloc;
@@ -42,7 +43,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Agregar Archivo')),
+      appBar: AppBar(title: Text(this.provsrv['nombre'].toString())),
       body: SingleChildScrollView(
           child: Container(
         width: double.infinity,
@@ -87,7 +88,6 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                           icon: const Icon(Icons.upload_file),
                           color: Colors.white,
                           onPressed: () async {
-                            print(this.provsrv);
                             _selectFile();
                           },
                         ),
@@ -112,7 +112,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   _selectFile() async {
-    const extensiones = ['pdf'];
+    const extensiones = ['pdf', 'jpg', 'png', 'jpeg'];
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: extensiones,
@@ -128,13 +128,14 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             bytes = File(f.path).readAsBytesSync();
           }
           String fileBase64 = base64.encode(bytes);
-
+          String mimeType = mime(f.name.replaceAll(' ', ''));
           String fileName = f.name;
           // files
           json = {
             'id_proveedor': this.provsrv['id_proveedor'],
             'id_servicio': this.provsrv['id_servicio'],
-            'tipo_mime': 'data:application/pdf;base64,',
+            // 'tipo_mime': 'data:application/pdf;base64,',
+            'tipo_mime': mimeType,
             'archivo': fileBase64,
             'nombre': fileName,
             'descripcion': descripcionCtrl.text
@@ -181,7 +182,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
 
   List<Widget> _createListItems(ItemModelArchivoProvServ item) {
     // Creación de lista de Widget.
-    List<Widget> lista = new List<Widget>();
+    List<Widget> lista = [];
     // Se agrega el titulo del card
     final titulo = Text('Archivos',
         textAlign: TextAlign.center,
@@ -205,12 +206,15 @@ class _FullScreenDialogAgregarArchivoProvServEvent
               icon: const Icon(Icons.delete)),
           IconButton(
               // opt.tipoMime.toString() + opt.archivo.toString()
-              onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      // _pdfController.loadDocument(PdfDocument.openData(Base64Decoder().convert(file))),
-                      _viewPfd(opt.archivo.toString())),
-              icon: const Icon(Icons.picture_as_pdf))
+              onPressed: () {
+                Navigator.of(context).pushNamed('/viewArchivo', arguments: {
+                  'nombre': opt.nombre,
+                  'id_archivo': opt.idArchivo
+                });
+              },
+              icon: opt.tipoMime == 'application/pdf'
+                  ? const Icon(Icons.picture_as_pdf)
+                  : const Icon(Icons.image)),
         ]),
         onTap: () async {
           print(opt.nombre);
@@ -219,33 +223,6 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       lista.add(tempWidget);
     }
     return lista;
-  }
-
-  _viewPfd(String file) {
-    return AlertDialog(
-      title: const Text('Archivo'),
-      content: Container(
-        width: 650.0,
-        height: 550.0,
-        child: _buildVisor(file),
-      ),
-      // content: _buildVisor(file),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'Cancelar'),
-          child: const Text('Cerrar'),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildVisor(file) {
-    final bytes = base64Decode(file);
-    return SfPdfViewer.memory(
-      bytes,
-      canShowScrollStatus: false,
-      interactionMode: PdfInteractionMode.pan,
-    );
   }
 
   _eliminarArchivoLista(int idArchivo, int idProveedor, int idServicio) {

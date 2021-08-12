@@ -147,27 +147,50 @@ class _FullScreenDialogAgregarProveedorEvent
                         icon: const Icon(Icons.save),
                         color: Colors.white,
                         onPressed: () async {
-                          Navigator.of(context).pop();
                           // keyForm.currentState.reset();
-                          print('VAmos a agrgar');
-                          Map<String, dynamic> json =
-                              await _jsonAgregarProveedor(context);
-                          await proveedorBloc
-                              .add(CreateProveedorEvent(json, itemProveedores));
-                          print(json);
-                          final snackBar = SnackBar(
-                            content: Container(
-                              height: 30,
-                              child: Center(
-                                child: Text(
-                                    'EL proveedor se agrego correctamente.'),
+                          print(_selectedServicios.length);
+                          if (_selectedServicios.length > 0) {
+                            Navigator.of(context).pop();
+                            Map<String, dynamic> json =
+                                await _jsonAgregarProveedor(context);
+                            await proveedorBloc.add(
+                                CreateProveedorEvent(json, itemProveedores));
+                            final snackBar = SnackBar(
+                              content: Container(
+                                height: 30,
+                                child: Center(
+                                  child: Text(
+                                      'EL proveedor se agrego correctamente.'),
+                                ),
                               ),
-                              //color: Colors.red,
-                            ),
-                            backgroundColor: Colors.green,
-                          );
-                          await ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBar);
+                              backgroundColor: Colors.green,
+                            );
+                            await ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else {
+                            await ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                action: SnackBarAction(
+                                  label: 'Action',
+                                  onPressed: () {
+                                    // Code to execute.
+                                  },
+                                ),
+                                content: const Text(
+                                    'Es necessario seleccionar al menos un servicio.'),
+                                duration: const Duration(milliseconds: 2000),
+                                width: 290.0, // Width of the SnackBar.
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal:
+                                      8.0, // Inner padding for SnackBar content.
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
                     )

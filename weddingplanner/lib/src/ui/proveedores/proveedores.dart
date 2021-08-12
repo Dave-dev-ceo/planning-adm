@@ -77,7 +77,7 @@ class _ProveedoresState extends State<Proveedores> {
         child: BlocBuilder<ProveedorBloc, ProveedorState>(
             builder: (context, state) {
           if (state is MostrarProveedorState) {
-            if(state.detlistas != null) {
+            if (state.detlistas != null) {
               _data = _createDataListProv(state.detlistas);
             }
             return Text('');
@@ -128,7 +128,8 @@ class _ProveedoresState extends State<Proveedores> {
                       Navigator.of(context).pushNamed('/agregarArchivo',
                           arguments: {
                             'id_proveedor': item.id_proveedor,
-                            'id_servicio': null
+                            'id_servicio': null,
+                            'nombre': item.nombre
                           });
                     },
                     icon: const Icon(Icons.file_present)),
@@ -161,7 +162,8 @@ class _ProveedoresState extends State<Proveedores> {
                     Navigator.of(context).pushNamed('/agregarArchivo',
                         arguments: {
                           'id_proveedor': null,
-                          'id_servicio': opt.id_servicio
+                          'id_servicio': opt.id_servicio,
+                          'nombre': opt.nombre
                         });
                   },
                   icon: const Icon(Icons.file_present))
