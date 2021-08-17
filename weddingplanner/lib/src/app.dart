@@ -54,6 +54,8 @@ import 'package:weddingplanner/src/blocs/proveedores/archivo_proveedor/bloc/arch
 import 'package:weddingplanner/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:weddingplanner/src/logic/archivos_proveedores_logic.dart';
 import 'package:weddingplanner/src/logic/proveedores_logic.dart';
+import 'package:weddingplanner/src/blocs/autorizacion/autorizacion_bloc.dart';
+import 'package:weddingplanner/src/logic/autorizacion_logic.dart';
 
 class MyApp extends StatelessWidget {
   Color hexToColor(String code) {
@@ -173,6 +175,10 @@ class AppState extends StatelessWidget {
       BlocProvider<ProveedoreventosBloc>(
           create: (_) =>
               ProveedoreventosBloc(logic: FetchProveedoresEventoLogic())),
+                    BlocProvider<AutorizacionBloc>(
+        create: (_) => AutorizacionBloc(logic: ConsultasAutorizacionLogic()),
+      ),
     ], child: MyApp());
+    
   }
 }
