@@ -12,6 +12,7 @@ import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
 import 'package:weddingplanner/src/ui/timing_evento/timings_eventos.dart';
+import 'package:weddingplanner/src/ui/autorizacion/lista_autorizacion.dart';
 
 class Invitados extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -47,11 +48,26 @@ class _InvitadosState extends State<Invitados> {
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
           if (state is PermisosInitial) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is ErrorTokenPermisos) {
-            return Center(child: CircularProgressIndicator());
+            return  Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+              ),
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }  else if (state is ErrorTokenPermisos) {
+            return  Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+              ),
+              body: Center(child: CircularProgressIndicator()),
+            );
           } else if (state is LoadingPermisos) {
-            return Center(child: CircularProgressIndicator());
+            return   Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+              ),
+              body: Center(child: CircularProgressIndicator()),
+            );
           } else if (state is PermisosOk) {
             List<TabItem> tabs = obtenerTabsPantallas(state.permisos
                 .pantallas); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
@@ -235,6 +251,9 @@ class _InvitadosState extends State<Invitados> {
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Listas());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+        temp.add(AutorizacionLista());
       }
       return temp;
     } else {

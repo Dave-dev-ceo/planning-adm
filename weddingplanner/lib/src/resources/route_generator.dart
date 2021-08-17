@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/LandingPage/landing.dart';
+import 'package:weddingplanner/src/ui/autorizacion/galeria_autorizacion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/contratos/view_contrato_pdf.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
@@ -151,6 +152,9 @@ class RouteGenerator {
       case '/viewArchivo':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogViewFileEvent(archivo: args));
+      case '/galeriaEvidencia':
+        return MaterialPageRoute(
+            builder: (context) => GaleriaEvidencia(id: args));
       default:
         return _errorRoute();
     }
