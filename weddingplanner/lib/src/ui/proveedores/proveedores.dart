@@ -188,37 +188,6 @@ class _ProveedoresState extends State<Proveedores> {
     return _dataProv;
   }
 
-  Widget _buildPanel() {
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _data[index].isExpanded = !isExpanded;
-        });
-      },
-      children: _data.map<ExpansionPanel>((ItemProveedor item) {
-        return ExpansionPanel(
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              title: Text('item.headerValue'),
-            );
-          },
-          body: ListTile(
-              title: Text('item.expandedValue'),
-              subtitle:
-                  const Text('To delete this panel, tap the trash can icon'),
-              trailing: const Icon(Icons.delete),
-              onTap: () {
-                setState(() {
-                  _data.removeWhere(
-                      (ItemProveedor currentItem) => item == currentItem);
-                });
-              }),
-          isExpanded: item.isExpanded,
-        );
-      }).toList(),
-    );
-  }
-
   _eliminarDetalleLista(int idServ) {
     return AlertDialog(
       title: const Text('Eliminar'),

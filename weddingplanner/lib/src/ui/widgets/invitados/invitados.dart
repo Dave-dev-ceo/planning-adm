@@ -7,6 +7,7 @@ import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/Listas/listas.dart';
 import 'package:weddingplanner/src/ui/planes/planes.dart';
+import 'package:weddingplanner/src/ui/proveedores_evento/proveedores_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
@@ -222,10 +223,14 @@ class _InvitadosState extends State<Invitados> {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
         temp.add(Planes());
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
+        temp.add(ProveedorEvento());
+      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
         temp.add(Contratos());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
+        print('Asistencia--> ');
         temp.add(Asistencia());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
