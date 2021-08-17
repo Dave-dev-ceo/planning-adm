@@ -179,6 +179,10 @@ class _InvitadosState extends State<Invitados> {
             TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
         temp += 1;
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+        tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open));
+        temp += 1;
+      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
         tabs.add(TabItem(
             titulo: 'Proveedores', icono: Icons.support_agent_outlined));
@@ -192,10 +196,6 @@ class _InvitadosState extends State<Invitados> {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRS')) {
         tabs.add(
             TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
-        temp += 1;
-      }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-        tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
@@ -239,6 +239,9 @@ class _InvitadosState extends State<Invitados> {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
         temp.add(Planes());
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+        temp.add(AutorizacionLista());
+      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
         temp.add(ProveedorEvento());
       }
@@ -246,14 +249,10 @@ class _InvitadosState extends State<Invitados> {
         temp.add(Contratos());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
-        print('Asistencia--> ');
         temp.add(Asistencia());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Listas());
-      }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-        temp.add(AutorizacionLista());
       }
       return temp;
     } else {

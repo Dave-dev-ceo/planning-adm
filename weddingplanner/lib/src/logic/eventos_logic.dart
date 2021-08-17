@@ -52,7 +52,6 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   Future<ItemModelEvento> fetchEventoPorId(String id_evento) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    print('idPlanner -> ' + idPlanner.toString());
     final response = await client.post(Uri.parse(confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventoPorId/'),
         headers: {HttpHeaders.authorizationHeader: token}, body: {'id_planner': idPlanner.toString(), 'id_evento': id_evento});
     // var uri = Uri.parse(

@@ -39,7 +39,6 @@ class _ListaState extends State<Listas> {
 
   @override
   Widget build(BuildContext context) {
-    print('Entro una vez');
     return FutureBuilder(
         future: _getId(),
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
