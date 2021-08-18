@@ -109,7 +109,10 @@ class _PantallaRol {
   bool _selected;
 
   _PantallaRol(result) {
-    _idPantalla = int.parse(result['id_pantalla']);
+    if(result['id_pantalla'].runtimeType == String)
+      _idPantalla = int.parse(result['id_pantalla']);
+    if(result['id_pantalla'].runtimeType == int)
+      _idPantalla = result['id_pantalla'];
     _clavePantalla = result['clave_pantalla'];
     _nombrePantalla = result['nombre_pantalla'];
     _selected = result['selected'];
