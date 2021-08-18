@@ -154,7 +154,6 @@ class _EditarEventoState extends State<EditarEvento> {
                 child: Center(
                   child: Text('Evento actualizado'),
                 ),
-                //color: Colors.red,
               ),
               backgroundColor: Colors.green,
             );
@@ -168,7 +167,6 @@ class _EditarEventoState extends State<EditarEvento> {
                 child: Center(
                   child: Text('Error al editar evento'),
                 ),
-                //color: Colors.red,
               ),
               backgroundColor: Colors.red,
             );

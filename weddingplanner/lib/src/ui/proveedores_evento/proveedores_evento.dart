@@ -106,7 +106,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           trailing: Wrap(
             spacing: 12,
             children: <Widget>[
-              Text('Seleccionado: SI'),
+              Text('Seleccionado: No'),
               Text('Observaciónes: '),
               Checkbox(
                 checkColor: Colors.white,
