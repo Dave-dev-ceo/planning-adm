@@ -92,6 +92,17 @@ class AutorizacionBloc extends Bloc<AutorizacionEvent, AutorizacionState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
+    } else if(event is UpdateEvidenciaEvent) {
+      yield AutorizacionLodingState();
+      try {
+        await logic.updateImage(event.idEvidencia, event.descripcion);
+        ItemModelAutorizacion autorizacion = await logic.selectEvidencia(event.idAutorizacion);
+        yield SelectEvidenciaState(autorizacion);
+      } on AutorizacionException {
+        yield AutorizacionErrorState('Error en update evidencia');
+      } on TokenException {
+        yield AutorizacionTokenErrorState('Error token');
+      }
     } 
   }
 }

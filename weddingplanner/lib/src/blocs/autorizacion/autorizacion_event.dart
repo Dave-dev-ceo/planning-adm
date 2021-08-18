@@ -65,3 +65,16 @@ class CrearImagenEvent extends AutorizacionEvent {
 
   Map get props => data;
 }
+
+// evento - update evidencia
+class UpdateEvidenciaEvent extends AutorizacionEvent {
+  final int idEvidencia;
+  final int idAutorizacion;
+  final String descripcion;
+
+  UpdateEvidenciaEvent(this.idEvidencia, this.idAutorizacion, this.descripcion);
+
+  int get props => idEvidencia;
+  int get prop => idAutorizacion;
+  String get pro => descripcion;
+}

@@ -13,11 +13,13 @@ class Machotes extends StatefulWidget {
 class _MachotesState extends State<Machotes> {
   MachotesBloc machotesBloc;
   ItemModelMachotes itemModelMC;
-  List<Map<String,String>> radioB = [{"nombre":"Contratos","clave":"CT"},{"nombre":"Recibos","clave":"RC"},{"nombre":"Pagos","clave":"PG"}];
+  List<Map<String,String>> radioB = [{"nombre":"Contratos","clave":"CT"},{"nombre":"Recibos","clave":"RC"},{"nombre":"Pagos","clave":"PG"},{"nombre":"Minutas","clave":"MT"}];
   TextEditingController descripcionMachote;
   GlobalKey<FormState> keyForm;
   int _grupoRadio = 0;
   String _clave = "CT";
+  int _selectedIndex = 0;
+  
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
@@ -105,6 +107,17 @@ class _MachotesState extends State<Machotes> {
                 children: <Widget>[
                   for (var i = 0; i < modelMC.results.length; i++)
                     if(modelMC.results.elementAt(i).clave == 'PG')
+                      _contectCont(modelMC, i)
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  for (var i = 0; i < modelMC.results.length; i++)
+                    if(modelMC.results.elementAt(i).clave == 'MT')
                       _contectCont(modelMC, i)
                 ],
               ),
@@ -229,7 +242,8 @@ class _MachotesState extends State<Machotes> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        type: BottomNavigationBarType.fixed, 
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.gavel),
             label: 'Contratos',
@@ -241,6 +255,10 @@ class _MachotesState extends State<Machotes> {
           BottomNavigationBarItem(
             icon: Icon(Icons.request_page),
             label: 'Pagos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.request_page),
+            label: 'Minutas',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -254,5 +272,4 @@ class _MachotesState extends State<Machotes> {
       _selectedIndex = index;
     });
   }
-  int _selectedIndex = 0;
 }

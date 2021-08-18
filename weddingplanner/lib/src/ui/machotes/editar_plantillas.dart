@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:html_editor_enhanced/html_editor.dart';
+// import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_etiquetas.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
+import 'package:zefyrka/zefyrka.dart';
 
 class EditarPlantillas extends StatefulWidget {
   final String descripcionPlantilla;
@@ -31,15 +32,18 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
   MachotesBloc machotesBloc;
   ItemModelEtiquetas itemModelET;
   ItemModelMachotes itemModelMC;
-  HtmlEditorController controller;
+  // HtmlEditorController controller;
+  ZefyrController _controller = ZefyrController();
+  FocusNode _focusNode;
 
   _EditarPlantillasState(this.descripcionPlantilla, this.clavePlantilla, this.plantilla, this.idMachote);
   @override
   void initState() {
+    _focusNode = FocusNode();
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     etiquetasBloc = BlocProvider.of<EtiquetasBloc>(context);
     etiquetasBloc.add(FechtEtiquetasEvent());
-    controller = new HtmlEditorController();
+    // controller = new HtmlEditorController();
     
     super.initState();
   }
@@ -60,7 +64,7 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
           ),
         ),
         onTap: () async {
-          controller.insertText("<¡$etiqueta!>");
+          // controller.insertText("<¡$etiqueta!>");
         },
       ),
     );
@@ -122,17 +126,29 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
                 thickness: 5,
               ),
               Container(
-                child: HtmlEditor(
-                  controller: controller, //required
-                  htmlEditorOptions: HtmlEditorOptions(
-                    hint: "Ingrese el texto...",
-                    initialText: plantilla,
-                  ),
-                  otherOptions: OtherOptions(
-                    height: 580,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black, width: 1)),
-                  ),
+                // child: HtmlEditor(
+                //   controller: controller, //required
+                //   htmlEditorOptions: HtmlEditorOptions(
+                //     hint: "Ingrese el texto...",
+                //     initialText: plantilla,
+                //   ),
+                //   otherOptions: OtherOptions(
+                //     height: 580,
+                //     decoration: BoxDecoration(
+                //         border: Border.all(color: Colors.black, width: 1)),
+                //   ),
+                // ),
+                child:Column(
+                  children: [
+                    ZefyrToolbar.basic(
+                      controller: _controller,
+                    ),
+                    ZefyrField(
+                      padding: EdgeInsets.all(16),
+                      controller: _controller,
+                      focusNode: _focusNode,
+                    )
+                  ],
                 ),
               )
             ],
@@ -142,9 +158,9 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
         onPressed: () async {
-          String txt = await controller.getText();
+          // String txt = await _controller.getText();
           machotesBloc.add(UpdateMachotesEvent(
-              {"descripcion": descripcionPlantilla, "machote": txt, "clave":clavePlantilla,"id_machote" : idMachote},
+              {"descripcion": descripcionPlantilla, "machote": 'txt', "clave":clavePlantilla,"id_machote" : idMachote},
               itemModelMC));
           Navigator.of(context).pop();
           //await _showMyDialogGuardar(context);

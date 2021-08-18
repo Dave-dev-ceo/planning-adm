@@ -154,7 +154,7 @@ class RouteGenerator {
             builder: (context) => FullScreenDialogViewFileEvent(archivo: args));
       case '/galeriaEvidencia':
         return MaterialPageRoute(
-            builder: (context) => GaleriaEvidencia(id: args));
+            builder: (context) => GaleriaEvidencia(map: args,));
       default:
         return _errorRoute();
     }

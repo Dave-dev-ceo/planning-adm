@@ -24,6 +24,7 @@ class _Autorizacion {
   // variables
   int _idAutorizacion;
   String _descripcionAutorizacion;
+  String _nombre;
   int _idEvidencia;
   String _archivo;
   String _comentario;
@@ -32,6 +33,7 @@ class _Autorizacion {
   _Autorizacion(consulta) {
     _idAutorizacion = consulta['id_autorizacion'];
     _descripcionAutorizacion = consulta['descripcion'];
+    _nombre = consulta['nombre'];
     _idEvidencia = consulta['id_evidencia'];
     _archivo = consulta['archivo'];
     _comentario = consulta['comentario'];
@@ -40,6 +42,7 @@ class _Autorizacion {
   // ini getters
   int get idAutorizacion => this._idAutorizacion;
   String get descripcionAutorizacion => this._descripcionAutorizacion;
+  String get nombre => this._nombre;
   int get idEvidencia => this._idEvidencia;
   String get archivo => this._archivo;
   String get comentario => this._comentario;
@@ -48,6 +51,7 @@ class _Autorizacion {
   // ini setters
   set idAutorizacion(value) => this._idAutorizacion;
   set descripcionAutorizacion(value) => this._descripcionAutorizacion;
+  set nombre(value) => this._nombre;
   set idEvidencia(value) => this._idEvidencia;
   set archivo(value) => this._archivo;
   set comentario(value) => this._comentario;

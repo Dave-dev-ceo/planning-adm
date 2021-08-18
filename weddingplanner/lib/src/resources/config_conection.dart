@@ -13,12 +13,12 @@ class ConfigConection {
   String get url => _url;
   String get puerto => _puerto;
   ConfigConection() {
-    if (ambiente) {
+    if(ambiente) {
       addPuerto = "3005";
       addUrl = "http://localhost:";
     } else {
       addPuerto = "9005";
-      addUrl = "https://pruebas.grupotum.com:";
+      addUrl = "https://server02.grupotum.com:";
     }
   }
 }

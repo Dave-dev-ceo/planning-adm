@@ -12,8 +12,8 @@ import 'package:weddingplanner/src/blocs/autorizacion/autorizacion_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_autorizacion.dart';
 
 class GaleriaEvidencia extends StatefulWidget {
-  final int id;
-  GaleriaEvidencia({Key key, @required this.id}) : super(key: key);
+  final Map map;
+  GaleriaEvidencia({Key key, @required this.map}) : super(key: key);
 
   @override
   _GaleriaEvidenciaState createState() => _GaleriaEvidenciaState();
@@ -26,11 +26,14 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
   // variables model
   ItemModelAutorizacion itemModelAutorizacion;
 
+  // variabls clase
+  List<Evidencia> _listaEvidencia = [];
+
   @override
   void initState() {
     super.initState();
     autorizacionBloc = BlocProvider.of<AutorizacionBloc>(context);
-    autorizacionBloc.add(SelectEvidenciaEvent(widget.id));
+    autorizacionBloc.add(SelectEvidenciaEvent(widget.map['id']));
   }
 
   @override
@@ -42,12 +45,12 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Galeria de Evidencias'),
+          title: Text('Galeria de ${widget.map['name']}'),
         ),
         body: _buildBloc(),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () => _addImage(widget.id),
+          onPressed: () => _addImage(widget.map['id']),
         ),
       ),
     );
@@ -65,7 +68,13 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
           return Center(child: CircularProgressIndicator(),);
         else if(state is SelectEvidenciaState) {
           if(state.evidencia != null) {
-            itemModelAutorizacion = state.evidencia;
+            if(itemModelAutorizacion != state.evidencia) {
+              itemModelAutorizacion = state.evidencia;
+              if(itemModelAutorizacion != null) {
+                _listaEvidencia = _copyModel(itemModelAutorizacion);
+              }
+
+            }
             return _crearGaleria(itemModelAutorizacion);
           } else {
             return Center(child: Text('Sin datos'));
@@ -87,20 +96,69 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
       crossAxisSpacing: 8,
       padding: const EdgeInsets.all(8),
       childAspectRatio: 1,
-      children: _creaLista(item),
+      children: _creaLista(),
     );
   }
 
   // creamos lista
-  List<Widget> _creaLista(ItemModelAutorizacion item) {
+  List<Widget> _creaLista() {
     List<Widget> temp = [];
 
-    item.autorizacion.forEach((evidencia) {
+    _listaEvidencia.forEach((evidencia) {
       final bytes = base64Decode(evidencia.archivo);
       final image = MemoryImage(bytes);
 
       temp.add(
         GridTile(
+          header: Material(
+            color: Colors.transparent,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: GridTileBar(
+              backgroundColor: Colors.black45,  
+              title: Row(
+                children: [
+                  Expanded(
+                    flex: 9,
+                    child: evidencia.valida ? Text('${evidencia.nombre}'):TextFormField(
+                      controller: TextEditingController(text: '${evidencia.nombre}'),
+                      decoration: InputDecoration(
+                        hintText: 'Descripción',
+                      ),
+                      onChanged: (valor) {
+                        evidencia.nombre = valor;
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: evidencia.valida ? GestureDetector(
+                      child: Icon(Icons.edit),
+                      onTap: () {
+                        setState(() {
+                          evidencia.valida = !evidencia.valida;
+                        });
+                      },
+                    ):GestureDetector(
+                      child: Icon(Icons.save),
+                      onTap: () {
+                        setState(() {
+                          evidencia.valida = !evidencia.valida;
+                        });
+                        autorizacionBloc.add(UpdateEvidenciaEvent(evidencia.idEvidencia, widget.map['id'], evidencia.nombre));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              // subtitle: GestureDetector(
+              //   child: Icon(Icons.edit),
+              //   onTap: () {print('editar');},
+              // ),
+            ),
+          ),
           footer: Material(
             color: Colors.transparent,
             shape: const RoundedRectangleBorder(
@@ -166,7 +224,7 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
 
     if(temp.length > 0) {
       mapTemp = {
-        'id_autorizacion':widget.id,
+        'id_autorizacion':widget.map['id'],
         'lista':temp
       };
       autorizacionBloc.add(CrearImagenEvent(mapTemp));
@@ -177,8 +235,25 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
 
   // delete image
   _borrarImage(int idEvidencia) {
-    autorizacionBloc.add(DeleteEvidenciaEvent(idEvidencia,widget.id));
+    autorizacionBloc.add(DeleteEvidenciaEvent(idEvidencia,widget.map['id']));
     _mensaje('Imagen borrada.');
+  }
+
+  List<Evidencia> _copyModel(ItemModelAutorizacion item) {
+    List<Evidencia> temp = [];
+
+    item.autorizacion.forEach((evidencia) {
+      temp.add(
+        Evidencia(
+          idEvidencia: evidencia.idEvidencia,
+          nombre: evidencia.nombre,
+          archivo: evidencia.archivo,
+          valida: true,
+        )
+      );
+    });
+
+    return temp;
   }
 }
 
@@ -187,12 +262,14 @@ class Evidencia {
   String archivo;
   String nombre;
   String tipo;
+  bool valida;
 
   Evidencia({
     this.idEvidencia,
     this.archivo,
     this.nombre,
-    this.tipo
+    this.tipo,
+    this.valida,
   });
 
   // solucion al enviar objetos al servidor

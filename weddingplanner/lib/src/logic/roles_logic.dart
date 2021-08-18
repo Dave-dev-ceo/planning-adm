@@ -204,7 +204,7 @@ class FormRolLogic implements RolFormLogic {
     final response = await client.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/ROLES/obtenerRolesForm'),
-        body: {'id_planner': idPlanner.toString(), 'id_rol': idRol},
+        body: {'id_planner': idPlanner.toString(), 'id_rol': idRol.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {

@@ -285,7 +285,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
                   flex: 9,
                   child: autorizacion.validacion ? GestureDetector(
                     child: Text('${autorizacion.descripcion}'),
-                    onTap: () => _showImagenes(autorizacion.idAutorizacion),
+                    onTap: () => _showImagenes(autorizacion.idAutorizacion, autorizacion.descripcion),
                   ):TextFormField(
                     controller: TextEditingController(text: '${autorizacion.descripcion}'),
                     decoration: InputDecoration(
@@ -404,8 +404,12 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
   }
 
   // vamos a la vista con las imagenes
-  void _showImagenes(int idAutorizacion) {
-    Navigator.of(context).pushNamed('/galeriaEvidencia', arguments: idAutorizacion);
+  void _showImagenes(int idAutorizacion, String txt) {
+    Map send = {
+      'id':idAutorizacion,
+      'name': txt
+    };
+    Navigator.of(context).pushNamed('/galeriaEvidencia', arguments: send);
   }
 
   void _editAutorizacion(int idAutorizacion) {

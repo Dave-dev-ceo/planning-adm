@@ -19,6 +19,7 @@ abstract class AutorizacionLogic {
   Future<bool> deleteAutorizacion(int idAuditorizacion);
   Future<bool> deleteImage(int idEvidencia);
   Future<bool> addImage(Map evidencia);
+  Future<bool> updateImage(int id, String descripcion);
 }
 
 // class exiende - van las consultas
@@ -245,6 +246,35 @@ class ConsultasAutorizacionLogic extends AutorizacionLogic {
     } else {
       throw AutorizacionException();
     }  
+  }
+
+  @override
+  Future<bool> updateImage(int id, String descripcion) async {
+    // variables
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+
+    // pedido al servidor
+    final response = await client.post(
+      Uri.parse(
+        confiC.url + 
+        confiC.puerto +
+        '/wedding/AUTORIZACION/updateImage'
+      ),
+      body: {'id_planner':idPlanner.toString(), 'id_evidencia':id.toString(), 'descripcion':descripcion},
+      headers: {HttpHeaders.authorizationHeader:token}
+    );
+
+    // filtro
+    if(response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return true;
+    } else if(response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw AutorizacionException();
+    }   
   }
 }
 
