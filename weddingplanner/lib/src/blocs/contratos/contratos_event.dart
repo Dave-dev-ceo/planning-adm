@@ -36,3 +36,23 @@ class UpdateContratosEvent extends ContratosEvent {
   UpdateContratosEvent(this.data, this.contratos, this.id);
   List<Object> get props => [data, contratos, id];
 }
+
+class UploadFileEvent extends ContratosEvent {
+  final int id;
+  final String file;
+  final String name;
+
+  UploadFileEvent(this.id, this.file,this.name);
+
+  int get props => id;
+  String get prop => file;
+  String get pro => name;
+}
+
+class SeeUploadFileEvent extends ContratosEvent {
+  final int id;
+
+  SeeUploadFileEvent(this.id);
+
+  int get props => id;
+}

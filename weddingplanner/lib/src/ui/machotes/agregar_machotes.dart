@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_etiquetas.dart';
 import 'package:weddingplanner/src/models/item_model_machotes.dart';
-import 'package:zefyrka/zefyrka.dart';
 
 class AgregarMachote extends StatefulWidget {
   final String descripcionMachote;
@@ -28,8 +27,8 @@ class _AgregarMachoteState extends State<AgregarMachote> {
   MachotesBloc machotesBloc;
   ItemModelEtiquetas itemModelET;
   ItemModelMachotes itemModelMC;
-  // HtmlEditorController controller = new HtmlEditorController();
-  ZefyrController _controller = ZefyrController();
+  
+  HtmlEditorController controller = new HtmlEditorController();
 
   _AgregarMachoteState(this.descripcionMachote, this.claveMachote);
   @override
@@ -56,7 +55,7 @@ class _AgregarMachoteState extends State<AgregarMachote> {
           ),
         ),
         onTap: () async {
-          // controller.insertText("<¡$etiqueta!>");
+          controller.insertText("<¡$etiqueta!>");
         },
       ),
     );
@@ -118,27 +117,16 @@ class _AgregarMachoteState extends State<AgregarMachote> {
                 thickness: 5,
               ),
               Container(
-                // child: HtmlEditor(
-                //   controller: controller, //required
-                //   htmlEditorOptions: HtmlEditorOptions(
-                //     hint: "Ingrese el texto...",
-                //   ),
-                //   otherOptions: OtherOptions(
-                //     height: 580,
-                //     decoration: BoxDecoration(
-                //         border: Border.all(color: Colors.black, width: 1)),
-                //   ),
-                // ),
-                child: Column(
-                  children: [
-    ZefyrToolbar.basic(controller: _controller),
-    Expanded(
-      child: ZefyrEditor(
-        controller: _controller,
-      ),
-    ),
-
-                  ],
+                child: HtmlEditor(
+                  controller: controller, //required
+                  htmlEditorOptions: HtmlEditorOptions(
+                    hint: "Ingrese el texto...",
+                  ),
+                  otherOptions: OtherOptions(
+                    height: 580,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1)),
+                  ),
                 ),
               )
             ],
@@ -148,9 +136,9 @@ class _AgregarMachoteState extends State<AgregarMachote> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
         onPressed: () async {
-          // String txt = await controller.getText();
+          String txt = await controller.getText();
           machotesBloc.add(CreateMachotesEvent(
-              {"descripcion": descripcionMachote, "machote": 'txt', "clave": claveMachote},
+              {"descripcion": descripcionMachote, "machote": txt, "clave": claveMachote},
               itemModelMC));
           Navigator.of(context).pop();
           //await _showMyDialogGuardar(context);

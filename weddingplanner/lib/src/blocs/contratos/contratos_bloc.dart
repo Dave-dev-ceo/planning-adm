@@ -78,6 +78,37 @@ class ContratosBloc extends Bloc<ContratosEvent, ContratosState> {
       } on TokenException {
         yield ErrorTokenContratosState("Sesión caducada");
       }
+    } else if (event is UploadFileEvent) {
+      yield LoadingUploadFileState();
+      try {
+        Map<String, dynamic> data = {
+          'id_machote':event.id,
+          'archivo':event.file,
+          'descripcion':event.name
+        };
+
+        bool contrato = await logic.updateFile(data);
+        // yield MostrarContratosPdfViewState(contrato);
+      } on ListaContratosPdfException {
+        yield ErrorListaContratosPdfState("Error contrato");
+      } on TokenException {
+        yield ErrorTokenContratosState("Sesión caducada");
+      }
+    } else if (event is SeeUploadFileEvent) {
+      yield LoadingSeeUploadFileState();
+      try {
+
+        Map<String, dynamic> data = {
+          'id_machote':event.id.toString()
+        };
+
+        String contrato = await logic.seeUploadFile(data);
+        yield MostrarUploadPdfViewState(contrato);
+      } on ListaContratosPdfException {
+        yield ErrorListaContratosPdfState("Error contrato");
+      } on TokenException {
+        yield ErrorTokenContratosState("Sesión caducada");
+      }
     }
   }
 }

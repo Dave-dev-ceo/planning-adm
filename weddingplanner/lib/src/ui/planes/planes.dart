@@ -215,10 +215,12 @@ class _PlanesState extends State<Planes> {
       for(int j = 0; j < model.planes.length; j++) {
         // junta las actividades de cada tarea en una lista
         if(model.planes[i].idPlan == model.planes[j].idPlan) {
-          if(!model.planes[j].statusProgreso)
-            tempCheck = false;
-          else
-            progreso++;
+          if(model.planes[j].statusProgreso != null) {
+            if(!model.planes[j].statusProgreso)
+              tempCheck = false;
+            else
+              progreso++;
+          }
           tempActividad.add(ActividadPlanner(
             idActividadPlanner: model.planes[j].idActividad,
             nombreActividadPlanner: model.planes[j].nombreActividad,

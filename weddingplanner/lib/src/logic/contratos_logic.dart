@@ -10,6 +10,8 @@ abstract class ListaContratosLogic {
   Future<bool> updateContratos(Map<String, dynamic> data);
   Future<int> createContratos(Map<String, dynamic> data);
   Future<String> fetchContratosPdf(Map<String, dynamic> data);
+  Future<bool> updateFile(Map<String, dynamic> data);
+  Future<String> seeUploadFile(Map<String, dynamic> data);
 }
 
 class ListaContratosException implements Exception {}
@@ -100,6 +102,58 @@ class FetchListaContratosLogic extends ListaContratosLogic {
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
         Uri.parse(confiC.url+confiC.puerto+'/wedding/PDF/createPDF'),
+        body: data,
+        headers: {HttpHeaders.authorizationHeader: token});
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return data['data'];
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw ListaContratosPdfException();
+    }
+  }
+
+  @override
+  Future<bool> updateFile(Map<String, dynamic> data) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    String token = await _sharedPreferences.getToken();
+
+    data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
+
+    final response = await client.post(
+        Uri.parse(confiC.url+confiC.puerto+'/wedding/Contratos/uploadPDF'),
+        body: jsonEncode(data),
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          HttpHeaders.authorizationHeader: token
+        });
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return true;
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw ListaContratosPdfException();
+    }
+  }
+
+  @override
+  Future<String> seeUploadFile(Map<String, dynamic> data) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    String token = await _sharedPreferences.getToken();
+    data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
+    final response = await client.post(
+        Uri.parse(confiC.url+confiC.puerto+'/wedding/PDF/seeUploadFile'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 

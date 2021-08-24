@@ -11,6 +11,10 @@ class LoadingContratosPdfState extends ContratosState {}
 
 class LoadingContratosPdfViewState extends ContratosState {}
 
+class LoadingUploadFileState extends ContratosState {}
+
+class LoadingSeeUploadFileState extends ContratosState {}
+
 class MostrarContratosPdfState extends ContratosState {
   final String contratos;
 
@@ -23,6 +27,14 @@ class MostrarContratosPdfViewState extends ContratosState {
   final String contratos;
 
   MostrarContratosPdfViewState(this.contratos);
+
+  String get props => contratos;
+}
+
+class MostrarUploadPdfViewState extends ContratosState {
+  final String contratos;
+
+  MostrarUploadPdfViewState(this.contratos);
 
   String get props => contratos;
 }
