@@ -3,6 +3,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferencesT {
   SharedPreferences _sharedPreferences;
 
+  setNombre(String nombre) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.setString('nombre', nombre);
+  }
+
+  getNombre() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getString('nombre');
+  }
+
   setIdPlanner(int idPlanner) async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences.setInt('idPlanner', idPlanner);

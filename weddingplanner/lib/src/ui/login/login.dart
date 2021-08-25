@@ -34,7 +34,7 @@ class _LoginState extends State<Login> {
   void _checkSession() async {
     bool sesion = await _sharedPreferences.getSession();
     if (sesion) {
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/home', arguments: await _sharedPreferences.getNombre());
     }
   }
 
@@ -448,7 +448,7 @@ class _LoginState extends State<Login> {
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
           Navigator.pop(_ingresando);
-          Navigator.pushNamed(context, '/home');
+          Navigator.pushNamed(context, '/home', arguments: state.response);
         }
       },
       child: Column(

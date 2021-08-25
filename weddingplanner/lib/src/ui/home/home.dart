@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:html';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
@@ -18,7 +19,8 @@ import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 class Home extends StatefulWidget {
   //static const routeName = '/eventos';
   //final int idPlanner;
-  const Home({Key key}) : super(key: key);
+  final String nombre;
+  const Home({Key key, @required this.nombre}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -80,70 +82,99 @@ class _HomeState extends State<Home> {
       BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
     return DefaultTabController(
         length: _pages,
-        child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: true,
-            title: Center(
-              child: FittedBox(
-                  child: Image.asset(
-                'assets/logo.png',
-                height: 100.0,
-                width: 250.0,
-              )),
-            ),
-            actions: <Widget>[
-              Container(
-                margin: EdgeInsets.only(right: 20.0),
-                child: Text('PLANNER'),
+        child: WillPopScope(
+          onWillPop: () async { return false;},
+          child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Center(
+                child: FittedBox(
+                    child: Image.asset(
+                  'assets/logo.png',
+                  height: 100.0,
+                  width: 250.0,
+                )),
               ),
-              Container(
-                  margin: EdgeInsets.only(right: 10.0),
-                  child: CircleAvatar(
-                    child: Text('MF'),
-                    backgroundColor: hexToColor('#d39942'),
-                  ))
-            ],
-            toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#000000'),
-            bottom: TabBar(
-              onTap: (int index) {
-                setState(
-                  () {
-                    _pageIndex = index;
-                  },
-                );
-              },
-              indicatorColor: Colors.white,
-              isScrollable: true,
-              tabs: tabs,
-              // [
-              // TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined),
-              // TabItem(titulo: 'Estatus de invitaciones', icono: Icons.card_membership_rounded),
-              // TabItem(titulo: 'Timing', icono: Icons.hourglass_bottom_rounded),
-              // TabItem(titulo: 'Tipos de eventos', icono: Icons.event_note_outlined),
-              // TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined),
-              // TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined),
-              // TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
-              // TabItem(titulo: 'Plantillas', icono: Icons.copy),
-              // TabItem(titulo: 'Usuarios', icono: Icons.people),
-              // ],
+              leading: Container(
+                child: Center(child: Text('PLANNER'))),
+              leadingWidth: 100.0,
+              actions: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(15.0),
+                  child: Center(
+                    child: CircleAvatar(
+                      backgroundColor: hexToColor('#d39942'),
+                      child: PopupMenuButton(
+                        child: Icon(Icons.person),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text("Perfil"),
+                          ),
+                          PopupMenuItem(
+                            value: 2,
+                            child: Text("${widget.nombre}")
+                          ),
+                          PopupMenuItem(
+                            value: 3,
+                            child: Text("Cerrar sesión"),
+                          )
+                        ],
+                        onSelected: (valor) {
+                          if(valor == 1) {
+                            Navigator.pushNamed(context, '/perfil');
+                          } else if(valor == 3) {
+                            _sharedPreferences.clear();
+                            Navigator.pushNamed(context, '/');
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              ],
+              toolbarHeight: 150.0,
+              backgroundColor: hexToColor('#000000'),
+              bottom: TabBar(
+                onTap: (int index) {
+                  setState(
+                    () {
+                      _pageIndex = index;
+                    },
+                  );
+                },
+                indicatorColor: Colors.white,
+                isScrollable: true,
+                tabs: tabs,
+                // [
+                // TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined),
+                // TabItem(titulo: 'Estatus de invitaciones', icono: Icons.card_membership_rounded),
+                // TabItem(titulo: 'Timing', icono: Icons.hourglass_bottom_rounded),
+                // TabItem(titulo: 'Tipos de eventos', icono: Icons.event_note_outlined),
+                // TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined),
+                // TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined),
+                // TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
+                // TabItem(titulo: 'Plantillas', icono: Icons.copy),
+                // TabItem(titulo: 'Usuarios', icono: Icons.people),
+                // ],
+              ),
             ),
-          ),
-          body: SafeArea(
-            child: IndexedStack(
-              index: _pageIndex,
-              children: pantallas,
-              // <Widget>[
-              //   DashboardEventos(),
-              //   ListaEstatusInvitaciones(),
-              //   Timing(),
-              //   Construccion(),
-              //   Construccion(),
-              //   Construccion(),
-              //   Construccion(),
-              //   Machotes(),
-              //   Usuarios()
-              // ],
+            body: SafeArea(
+              child: IndexedStack(
+                index: _pageIndex,
+                children: pantallas,
+                // <Widget>[
+                //   DashboardEventos(),
+                //   ListaEstatusInvitaciones(),
+                //   Timing(),
+                //   Construccion(),
+                //   Construccion(),
+                //   Construccion(),
+                //   Construccion(),
+                //   Machotes(),
+                //   Usuarios()
+                // ],
+              ),
             ),
           ),
         ));
@@ -210,8 +241,9 @@ class _HomeState extends State<Home> {
     if (secciones != null) {
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
         pan.add(DashboardEventos(
-            WP_EVT_CRT:
-                permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT')));
+            WP_EVT_CRT:permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT'),
+            nombre:widget.nombre
+        ));
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
         pan.add(ListaEstatusInvitaciones());

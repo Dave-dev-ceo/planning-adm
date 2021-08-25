@@ -9,8 +9,9 @@ import 'package:weddingplanner/src/models/item_model_preferences.dart';
 
 class DashboardEventos extends StatefulWidget {
   final bool WP_EVT_CRT;
+  final String nombre;
 
-  const DashboardEventos({Key key, this.WP_EVT_CRT}) : super(key: key);
+  const DashboardEventos({Key key, this.WP_EVT_CRT, this.nombre}) : super(key: key);
 
   @override
   _DashboardEventosState createState() =>
@@ -106,7 +107,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       onTap: () async {
         await _sharedPreferences.setIdEvento(idEvento);
         Navigator.pushNamed(context, '/eventos',
-            arguments: {'idEvento': idEvento});
+            arguments: {'idEvento': idEvento, 'nEvento':titulo, 'nombre':widget.nombre});
       },
     );
   }

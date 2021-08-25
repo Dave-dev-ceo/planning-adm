@@ -10,11 +10,11 @@ class LogginState extends LoginState {
 }
 
 class LoggedState extends LoginState {
-  final int response;
+  final String response;
 
   LoggedState(this.response);
 
-  List<Object> get props => [response];
+  String get props => response;
 }
 
 class MsgLogginState extends LoginState {

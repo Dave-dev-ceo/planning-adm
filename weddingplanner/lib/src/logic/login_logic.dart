@@ -4,7 +4,7 @@ import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/resources/config_conection.dart';
 
 abstract class LoginLogic {
-  Future<int> login(String correo, String password);
+  Future<String> login(String correo, String password);
   Future<String> logout();
 }
 
@@ -15,7 +15,7 @@ class BackendLoginLogic implements LoginLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   Client client = Client();
   @override
-  Future<int> login(String correo, String password) async {
+  Future<String> login(String correo, String password) async {
     final response = await client.post(Uri.parse(confiC.url + confiC.puerto + "/wedding/ACCESO/loginPlanner"),
         //Uri.http('localhost:3005', 'wedding/ACCESO/loginPlanner'),
         body: {"correo": correo, "contrasena": password});
@@ -25,6 +25,7 @@ class BackendLoginLogic implements LoginLogic {
       await _sharedPreferences.setIdUsuario(data['usuario']['id_usuario']);
       await _sharedPreferences.setLogic(data['usuario']['admin']);
       await _sharedPreferences.setToken(data['token']);
+      await _sharedPreferences.setNombre(data['usuario']['nombre_completo']);
       await _sharedPreferences.setSesion(true);
       List<String> dataJsonWPlanner = [
         data['usuario']['id_planner'].toString(),
@@ -34,7 +35,7 @@ class BackendLoginLogic implements LoginLogic {
       ];
       await _sharedPreferences.setJsonData(dataJsonWPlanner);
       await _sharedPreferences.setPermisos(json.encode(data['permisos']));
-      return 0;
+      return data['usuario']['nombre_completo'];
     } else if (response.statusCode == 403) {
       throw LoginException();
     } else {
@@ -50,13 +51,13 @@ class BackendLoginLogic implements LoginLogic {
 
 class SimpleLoginLogic extends LoginLogic {
   @override
-  Future<int> login(String correo, String password) async {
+  Future<String> login(String correo, String password) async {
     await Future.delayed(Duration(seconds: 2));
 
     if (correo != "demo@demo.com" || password != "1234") {
       throw LoginException();
     }
-    return 0;
+    return '';
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
+import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/model_perfilado.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
 import 'package:weddingplanner/src/ui/construccion/construccion.dart';
@@ -24,7 +25,7 @@ class Invitados extends StatefulWidget {
 }
 
 class _InvitadosState extends State<Invitados> {
-  //SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   final Map<dynamic, dynamic> detalleEvento;
   int _pageIndex = 0;
   int _pages = 0;
@@ -95,25 +96,63 @@ class _InvitadosState extends State<Invitados> {
           appBar: AppBar(
             automaticallyImplyLeading: true,
             title: Center(
-              child: FittedBox(
-                  child: Image.asset(
-                'assets/logo.png',
-                height: 100.0,
-                width: 250.0,
-              )),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        children: [
+                          Text('CONFIGURACIÓN EVENTO', style: TextStyle(fontSize: 12.0),),
+                          Text('${widget.detalleEvento['nEvento']}', style: TextStyle(fontSize: 12.0),),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 100.0,),
+                  Flexible(
+                    child: FittedBox(
+                        child: Image.asset(
+                      'assets/logo.png',
+                      height: 100.0,
+                      width: 250.0,
+                    )),
+                  ),
+                ],
+              ),
             ),
             toolbarHeight: 150.0,
             backgroundColor: hexToColor('#000000'),
             actions: <Widget>[
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text('CONFIGURACIÓN EVENTO'),
-              ),
-              Container(
                   margin: EdgeInsets.only(right: 10.0),
                   child: CircleAvatar(
-                    child: Text('MF'),
                     backgroundColor: hexToColor('#d39942'),
+                    child:   PopupMenuButton(
+                      child: Icon(Icons.person),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          child: Text("Perfil"),
+                        ),
+                        PopupMenuItem(
+                          value: 2,
+                          child: Text("${widget.detalleEvento['nombre']}")
+                        ),
+                        PopupMenuItem(
+                          value: 3,
+                          child: Text("Cerrar sesión"),
+                        )
+                      ],
+                      onSelected: (valor) {
+                        if(valor == 1) {
+                          Navigator.pushNamed(context, '/perfil');
+                        } else if(valor == 3) {
+                          _sharedPreferences.clear();
+                          Navigator.pushNamed(context, '/');
+                        }
+                      },
+                    ),
                   ))
             ],
             bottom: TabBar(

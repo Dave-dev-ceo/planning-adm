@@ -7,6 +7,7 @@ import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
+import 'package:weddingplanner/src/ui/perfil/perfil.dart';
 import 'package:weddingplanner/src/ui/planes/agregar_planes.dart';
 import 'package:weddingplanner/src/ui/planes/calendario.dart';
 import 'package:weddingplanner/src/ui/scannerQr/scannerQr.dart';
@@ -44,7 +45,9 @@ class RouteGenerator {
       case '/homeAdmin':
         return MaterialPageRoute(builder: (context) => HomeAdmin());
       case '/home':
-        return MaterialPageRoute(builder: (context) => Home());
+        return MaterialPageRoute(builder: (context) => Home(
+          nombre: args,
+        ));
       case '/dasboard':
         return MaterialPageRoute(builder: (context) => DashboardEventos());
       case '/eventos':
@@ -155,6 +158,9 @@ class RouteGenerator {
       case '/galeriaEvidencia':
         return MaterialPageRoute(
             builder: (context) => GaleriaEvidencia(map: args,));
+      case '/perfil':
+        return MaterialPageRoute(
+            builder: (context) => Perfil());
       default:
         return _errorRoute();
     }
