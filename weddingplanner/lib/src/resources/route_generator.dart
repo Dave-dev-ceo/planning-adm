@@ -164,7 +164,7 @@ class RouteGenerator {
             builder: (context) => Perfil());
       case '/addContratos':
         return MaterialPageRoute(
-            builder: (context) => AddMachote(clave:args));
+            builder: (context) => AddMachote(map:args));
       default:
         return _errorRoute();
     }
