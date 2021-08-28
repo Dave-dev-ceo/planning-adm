@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/ui/LandingPage/landing.dart';
 import 'package:weddingplanner/src/ui/autorizacion/galeria_autorizacion.dart';
+import 'package:weddingplanner/src/ui/contratos/add_contrato.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/contratos/view_contrato_pdf.dart';
 import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
@@ -161,6 +162,9 @@ class RouteGenerator {
       case '/perfil':
         return MaterialPageRoute(
             builder: (context) => Perfil());
+      case '/addContratos':
+        return MaterialPageRoute(
+            builder: (context) => AddMachote(clave:args));
       default:
         return _errorRoute();
     }
