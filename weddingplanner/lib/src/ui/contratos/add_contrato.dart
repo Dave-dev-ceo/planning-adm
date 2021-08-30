@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/add_contratos_bloc.dart';
-import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
+import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
+import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart' as verlitener;
 
 class AddMachote extends StatefulWidget {
   final Map map;
@@ -15,7 +16,8 @@ class AddMachote extends StatefulWidget {
 class _AddMachoteState extends State<AddMachote> {
   // variables bloc
   AddContratosBloc addContratosBloc;
-  ContratosBloc contratosBloc;
+  verlitener.ContratosBloc contratosBloc;
+  ContratosDosBloc beforeBloc;
 
   // variables model
   List<Contratos> itemModel = [];
@@ -28,14 +30,15 @@ class _AddMachoteState extends State<AddMachote> {
     super.initState();
     addContratosBloc = BlocProvider.of<AddContratosBloc>(context);
     addContratosBloc.add(AddContratosSelect());
-    contratosBloc = BlocProvider.of<ContratosBloc>(context);
+    contratosBloc = BlocProvider.of<verlitener.ContratosBloc>(context);
+    beforeBloc = BlocProvider.of<ContratosDosBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        setState(() => itemModel.clear());
+        beforeBloc.add(ContratosSelect());
         return true;
       },
       child: Scaffold(
@@ -63,11 +66,11 @@ class _AddMachoteState extends State<AddMachote> {
 
   // BLoC
   _myBloc() {
-    return BlocListener<ContratosBloc, ContratosState>(
+    return BlocListener<verlitener.ContratosBloc, verlitener.ContratosState>(
         listener: (context, state) {
-      if (state is LoadingContratosPdfViewState) {
+      if (state is verlitener.LoadingContratosPdfViewState) {
         return _dialogMSG('Espere un momento');
-      } else if (state is MostrarContratosPdfViewState) {
+      } else if (state is verlitener.MostrarContratosPdfViewState) {
         Navigator.pop(_ingresando);
         Navigator.pushNamed(context, '/viewContrato',
             arguments: state.contratos);
@@ -84,7 +87,6 @@ class _AddMachoteState extends State<AddMachote> {
           );
         } else if (state is SelectAddContratosState) {
           if (itemModel.length == 0) {
-            print('in::${state.contratos.contrato.length}');
             itemModel = state.contratos.contrato.map((item) {
               return Contratos(
                   idContrato: item.idMachote,
@@ -105,7 +107,6 @@ class _AddMachoteState extends State<AddMachote> {
                   newTitulo: '');
             }).toList();
           }
-          print('after::${state.contratos.contrato.length}');
           return Container(
             child: _generaContratos(itemModel, widget.map['clave']),
           );
@@ -123,7 +124,6 @@ class _AddMachoteState extends State<AddMachote> {
   // genera cards
   _generaContratos(List<Contratos> contratos, String clave) {
     List<Widget> listContrato = [];
-
     if (contratos.length > 0) {
       contratos.forEach((data) {
         if (data.clave == clave) {
@@ -174,13 +174,17 @@ class _AddMachoteState extends State<AddMachote> {
           ));
         }
       });
-      return ListView(
-        children: [
-          Column(
-            children: listContrato,
-          )
-        ],
-      );
+      if(listContrato.length > 0) {
+        return ListView(
+          children: [
+            Column(
+              children: listContrato,
+            )
+          ],
+        );
+      } else {
+        return Center(child: Text('Sin datos'));
+      }
     } else {
       return Center(child: Text('No sean creado plantillas'));
     }
@@ -206,7 +210,7 @@ class _AddMachoteState extends State<AddMachote> {
 
   // evento - muestra pdf
   _verFile(String archivo) {
-    contratosBloc.add(FechtContratosPdfViewEvent({'machote': archivo}));
+    contratosBloc.add(verlitener.FechtContratosPdfViewEvent({'machote': archivo}));
   }
 
   // mensaje
@@ -253,11 +257,4 @@ class Contratos {
     this.valida,
     this.newTitulo,
   });
-
-  // solucion al enviar objetos al servidor
-  Map<String, dynamic> toJson() => {
-        'id_machote': idContrato,
-        'descripcion': newTitulo,
-        'clave': clave,
-      };
 }

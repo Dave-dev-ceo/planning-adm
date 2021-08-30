@@ -27,6 +27,7 @@ class _Contratos {
   String _descripcion;
   String _machote;
   String _archivo;
+  String _original;
   String _clavePlantilla;
 
   // constructor
@@ -35,7 +36,8 @@ class _Contratos {
     _idContrato = consulta['id_contrato'];
     _descripcion = consulta['descripcion'];
     _machote = consulta['machote'];
-    _archivo = consulta['original'];
+    _archivo = consulta['archivo'];
+    _original = consulta['original'];
     _clavePlantilla = consulta['clave_plantilla'];
   }
 
@@ -45,6 +47,7 @@ class _Contratos {
   String get descripcion => this._descripcion;
   String get machote => this._machote;
   String get archivo => this._archivo;
+  String get original => this._original;
   String get clavePlantilla => this._clavePlantilla;
 
   // ini setters
@@ -53,5 +56,6 @@ class _Contratos {
   set descripcion(value) => this._descripcion;
   set machote(value) => this._machote;
   set archivo(value) => this._archivo;
+  set original(value) => this._original  ;
   set clavePlantilla(value) => this._clavePlantilla;
 }
