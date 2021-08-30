@@ -180,7 +180,7 @@ packages:
       name: flutter_colorpicker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.0"
+    version: "0.4.0"
   flutter_inappwebview:
     dependency: transitive
     description:
@@ -265,7 +265,7 @@ packages:
       name: html_editor_enhanced
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0+1-dev.1"
+    version: "2.2.0"
   http:
     dependency: "direct main"
     description:

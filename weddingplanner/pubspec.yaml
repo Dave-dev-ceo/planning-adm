@@ -61,7 +61,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^19.2.51-beta  
   mime_type: ^1.0.0
   # no quitar - sin esto falla
-  flutter_colorpicker: ^0.5.0
+  flutter_colorpicker: ^0.4.0
 
 dev_dependencies:
   flutter_test:
