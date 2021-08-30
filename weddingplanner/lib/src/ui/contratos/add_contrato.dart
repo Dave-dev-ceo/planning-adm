@@ -33,17 +33,23 @@ class _AddMachoteState extends State<AddMachote> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _giveTitle(widget.map['clave']),
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() => itemModel.clear());
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: _giveTitle(widget.map['clave']),
+        ),
+        body: _myBloc(),
       ),
-      body: _myBloc(),
     );
   }
 
   // titulos
   _giveTitle(String clave) {
-    switch(clave) {
+    switch (clave) {
       case 'CT':
         return Text('Selecciona contratos');
       case 'RC':
@@ -58,68 +64,79 @@ class _AddMachoteState extends State<AddMachote> {
   // BLoC
   _myBloc() {
     return BlocListener<ContratosBloc, ContratosState>(
-      listener: (context, state) {
-        if (state is LoadingContratosPdfViewState) {
-              return _dialogMSG('Espere un momento');
-        }
-        else if(state is MostrarContratosPdfViewState) {
-          Navigator.pop(_ingresando);
-          Navigator.pushNamed(context, '/viewContrato', arguments: state.contratos);
-        }
-      },
-      child: BlocBuilder<AddContratosBloc,AddContratosState>(
-        builder: (context, state) {
-          if(state is AddContratosInitialState) {
-            return Center(child: CircularProgressIndicator(),);
-          } else if(state is AddContratosLoggingState) {
-            return Center(child: CircularProgressIndicator(),);
-          } else if(state is SelectAddContratosState) {
-            if(itemModel.length == 0) {
-              itemModel = state.contratos.contrato.map((item) {
-                return Contratos(
+        listener: (context, state) {
+      if (state is LoadingContratosPdfViewState) {
+        return _dialogMSG('Espere un momento');
+      } else if (state is MostrarContratosPdfViewState) {
+        Navigator.pop(_ingresando);
+        Navigator.pushNamed(context, '/viewContrato',
+            arguments: state.contratos);
+      }
+    }, child: BlocBuilder<AddContratosBloc, AddContratosState>(
+      builder: (context, state) {
+        if (state is AddContratosInitialState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is AddContratosLoggingState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is SelectAddContratosState) {
+          if (itemModel.length == 0) {
+            print('in::${state.contratos.contrato.length}');
+            itemModel = state.contratos.contrato.map((item) {
+              return Contratos(
                   idContrato: item.idMachote,
                   description: item.descripcion,
                   clave: item.clavePlantilla,
                   archivo: item.machote,
                   valida: false,
-                  newTitulo: ''
-                );
-              }).toList();
-            }
-            return Container(
-              child: _generaContratos(itemModel,widget.map['clave']),
-            );
-          } else if(state is InsertAddContratosState) {
-            return Container(
-              child: _generaContratos(itemModel,widget.map['clave']),
-            );
-          }else {
-              return Center(child: Text('Sin datos'));
-            }
-        },
-      )
-    );
-    
+                  newTitulo: '');
+            }).toList();
+          } else if (itemModel.length != state.contratos.contrato.length) {
+            itemModel = state.contratos.contrato.map((item) {
+              return Contratos(
+                  idContrato: item.idMachote,
+                  description: item.descripcion,
+                  clave: item.clavePlantilla,
+                  archivo: item.machote,
+                  valida: false,
+                  newTitulo: '');
+            }).toList();
+          }
+          print('after::${state.contratos.contrato.length}');
+          return Container(
+            child: _generaContratos(itemModel, widget.map['clave']),
+          );
+        } else if (state is InsertAddContratosState) {
+          return Container(
+            child: _generaContratos(itemModel, widget.map['clave']),
+          );
+        } else {
+          return Center(child: Text('Sin datos'));
+        }
+      },
+    ));
   }
 
   // genera cards
   _generaContratos(List<Contratos> contratos, String clave) {
     List<Widget> listContrato = [];
 
-    if(contratos.length > 0) {
+    if (contratos.length > 0) {
       contratos.forEach((data) {
-        if(data.clave == clave) {
-          listContrato.add(
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: EdgeInsets.all(20),
-              elevation: 10,
-              child: ListTile(
+        if (data.clave == clave) {
+          listContrato.add(Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: EdgeInsets.all(20),
+            elevation: 10,
+            child: ListTile(
                 contentPadding: EdgeInsets.all(20.0),
                 leading: Checkbox(
-                  value: data.valida,
-                  onChanged: (valor) => setState(() => data.valida = valor)
-                ),
+                    value: data.valida,
+                    onChanged: (valor) => setState(() => data.valida = valor)),
                 title: Row(
                   children: [
                     Expanded(
@@ -136,27 +153,25 @@ class _AddMachoteState extends State<AddMachote> {
                       ),
                     ),
                     Expanded(
-                      child: data.valida ? 
-                        TextFormField(
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.description),
-                            hintText: 'Titulo:'
-                          ),
-                          onChanged: (valor) => data.newTitulo = valor,
-                        )
-                        :SizedBox()
-                    )
+                        child: data.valida
+                            ? TextFormField(
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.description),
+                                    hintText: 'Titulo:'),
+                                onChanged: (valor) => data.newTitulo = valor,
+                              )
+                            : SizedBox())
                   ],
                 ),
-                trailing: data.valida ? 
-                  TextButton.icon(
-                    icon: Icon(Icons.save),
-                    label: Text(''),
-                    onPressed: () => _addContrato(data.idContrato,data.newTitulo,data.archivo,data.clave),
-                  ):SizedBox()
-              ),
-            )
-          );
+                trailing: data.valida
+                    ? TextButton.icon(
+                        icon: Icon(Icons.save),
+                        label: Text(''),
+                        onPressed: () => _addContrato(data.idContrato,
+                            data.newTitulo, data.archivo, data.clave),
+                      )
+                    : SizedBox()),
+          ));
         }
       });
       return ListView(
@@ -167,27 +182,23 @@ class _AddMachoteState extends State<AddMachote> {
         ],
       );
     } else {
-      return Center(
-        child: Text('No sean creado plantillas')
-      );
+      return Center(child: Text('No sean creado plantillas'));
     }
   }
 
   // evento - guarda
   _addContrato(int idContrato, String titulo, String archivo, String clave) {
-    if(titulo.isNotEmpty) {
+    if (titulo.isNotEmpty) {
       _mensaje('Contrato agregado.');
       setState(() {
         itemModel.removeWhere((item) => item.idContrato == idContrato);
       });
-      addContratosBloc.add(AddContratosInsert(
-        {
-          'id_machote': idContrato.toString(),
-          'titulo': titulo,
-          'archivo': archivo,
-          'clave': clave
-        }
-      ));
+      addContratosBloc.add(AddContratosInsert({
+        'id_machote': idContrato.toString(),
+        'titulo': titulo,
+        'archivo': archivo,
+        'clave': clave
+      }));
     } else {
       _mensaje('Descripcion vacia.');
     }
@@ -195,16 +206,14 @@ class _AddMachoteState extends State<AddMachote> {
 
   // evento - muestra pdf
   _verFile(String archivo) {
-    contratosBloc.add(FechtContratosPdfViewEvent({'machote':archivo}));
+    contratosBloc.add(FechtContratosPdfViewEvent({'machote': archivo}));
   }
-  
+
   // mensaje
   Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(txt),
-      )
-    );
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
   }
 
   //
@@ -247,8 +256,8 @@ class Contratos {
 
   // solucion al enviar objetos al servidor
   Map<String, dynamic> toJson() => {
-    'id_machote':idContrato,
-    'descripcion':newTitulo,
-    'clave':clave,
-  };
+        'id_machote': idContrato,
+        'descripcion': newTitulo,
+        'clave': clave,
+      };
 }

@@ -27,59 +27,64 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
   Future<ItemModelAddContratos> selectContratosFromPlanner() async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
-      Uri.parse(
-        confiC.url + 
-        confiC.puerto +
-        '/wedding/ADDCONTRATOS/selectContratosPlaner'
-      ),
-      body: {'id_planner':idPlanner.toString()},
-      headers: {HttpHeaders.authorizationHeader:token}
-    );
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ADDCONTRATOS/selectContratosPlaner'),
+        body: {
+          'id_planner': idPlanner.toString(),
+          "id_evento": idEvento.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     // filtro
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
       return ItemModelAddContratos.fromJson(data['data']);
-    } else if(response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
       throw AutorizacionException();
-    }  
-    
+    }
   }
 
   @override
-  Future<ItemModelAddContratos> selectContratosArchivoPlaner(int idMachote) async {
+  Future<ItemModelAddContratos> selectContratosArchivoPlaner(
+      int idMachote) async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
-      Uri.parse(
-        confiC.url + 
-        confiC.puerto +
-        '/wedding/ADDCONTRATOS/selectContratosArchivoPlaner'
-      ),
-      body: {'id_planner':idPlanner.toString(), 'id_machote':idMachote.toString()},
-      headers: {HttpHeaders.authorizationHeader:token}
-    );
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ADDCONTRATOS/selectContratosArchivoPlaner'),
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_machote': idMachote.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     // filtro
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
       return ItemModelAddContratos.fromJson(data['data']);
-    } else if(response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
       throw AutorizacionException();
-    }  
+    }
   }
 
   @override
@@ -94,28 +99,25 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
 
     // pedido al servidor
     final response = await client.post(
-      Uri.parse(
-        confiC.url + 
-        confiC.puerto +
-        '/wedding/ADDCONTRATOS/inserContrato'
-      ),
-      body: contrato,
-      headers: {HttpHeaders.authorizationHeader:token}
-    );
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/ADDCONTRATOS/inserContrato'),
+        body: contrato,
+        headers: {HttpHeaders.authorizationHeader: token});
 
     // filtro
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
       return true;
-    } else if(response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
       throw AutorizacionException();
-    }  
+    }
   }
 }
 
 // clases para manejar errores
 class AutorizacionException implements Exception {}
+
 class TokenException implements Exception {}

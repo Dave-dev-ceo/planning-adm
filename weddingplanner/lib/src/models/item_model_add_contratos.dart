@@ -23,27 +23,35 @@ class ItemModelAddContratos {
 class _Contratos {
   // variables
   int _idMachote;
+  int _idContrato;
   String _descripcion;
   String _machote;
+  String _archivo;
   String _clavePlantilla;
 
   // constructor
   _Contratos(consulta) {
     _idMachote = consulta['id_machote'];
+    _idContrato = consulta['id_contrato'];
     _descripcion = consulta['descripcion'];
     _machote = consulta['machote'];
+    _archivo = consulta['original'];
     _clavePlantilla = consulta['clave_plantilla'];
   }
 
   // ini getters
   int get idMachote => this._idMachote;
+  int get idContrato => this._idContrato;
   String get descripcion => this._descripcion;
   String get machote => this._machote;
+  String get archivo => this._archivo;
   String get clavePlantilla => this._clavePlantilla;
 
   // ini setters
   set idMachote(value) => this._idMachote;
+  set idContrato(value) => this._idContrato;
   set descripcion(value) => this._descripcion;
   set machote(value) => this._machote;
+  set archivo(value) => this._archivo;
   set clavePlantilla(value) => this._clavePlantilla;
 }

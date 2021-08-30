@@ -1,5 +1,6 @@
 // imports flutter/dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // imports
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -46,7 +47,7 @@ class New_ContratoState extends State<NewContrato> {
 
   // select lista
   _itemsContratos() {
-    switch(_selectedIndex) {
+    switch (_selectedIndex) {
       case 0:
         return _contratosItem();
       case 1:
@@ -61,30 +62,25 @@ class New_ContratoState extends State<NewContrato> {
   // ini items
   _contratosItem() {
     List<Widget> item = [];
-    item.add(
-      Text('contratos')
-    );
+    item.add(Text('contratos'));
     return item;
   }
+
   _recibosItem() {
     List<Widget> item = [];
-    item.add(
-      Text('recibos')
-    );
+    item.add(Text('recibos'));
     return item;
   }
+
   _pagosItem() {
     List<Widget> item = [];
-    item.add(
-      Text('pagos')
-    );
+    item.add(Text('pagos'));
     return item;
   }
+
   _minutasItem() {
     List<Widget> item = [];
-    item.add(
-      Text('minutas')
-    );
+    item.add(Text('minutas'));
     return item;
   }
   // fin items
@@ -130,28 +126,22 @@ class New_ContratoState extends State<NewContrato> {
   _childrenButtons() {
     List<SpeedDialChild> temp = [];
     // 2do
-    temp.add(
-      SpeedDialChild(
+    temp.add(SpeedDialChild(
         child: Icon(Icons.upload_file),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        onTap: _eventoUpload
-      )
-    );
+        onTap: _eventoUpload));
     // 1ro
-    temp.add(
-      SpeedDialChild(
+    temp.add(SpeedDialChild(
         child: Icon(Icons.send_and_archive_sharp),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        onTap: _eventoAdd
-      )
-    );
+        onTap: _eventoAdd));
     return temp;
   }
 
   _eventoUpload() {
-    switch(_selectedIndex) {
+    switch (_selectedIndex) {
       case 0:
         print('up1');
         break;
@@ -168,18 +158,22 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   _eventoAdd() {
-    switch(_selectedIndex) {
+    switch (_selectedIndex) {
       case 0:
-        Navigator.pushNamed(context, '/addContratos', arguments: 'CT');
+        Navigator.pushNamed(context, '/addContratos',
+            arguments: {'clave': 'CT'});
         break;
       case 1:
-        Navigator.pushNamed(context, '/addContratos', arguments: 'RC');
+        Navigator.pushNamed(context, '/addContratos',
+            arguments: {'clave': 'RC'});
         break;
       case 2:
-        Navigator.pushNamed(context, '/addContratos', arguments: 'PG');
+        Navigator.pushNamed(context, '/addContratos',
+            arguments: {'clave': 'PG'});
         break;
       default:
-        Navigator.pushNamed(context, '/addContratos', arguments: 'MT');
+        Navigator.pushNamed(context, '/addContratos',
+            arguments: {'clave': 'MT'});
         break;
     }
   }

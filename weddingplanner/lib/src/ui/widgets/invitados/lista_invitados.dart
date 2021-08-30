@@ -211,10 +211,6 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   SpeedDial buildSpeedDial(double pHz) {
     return SpeedDial(
       /// both default to 16
-
-      marginEnd: pHz - 100,
-      marginBottom: 20,
-
       icon: Icons.add,
       activeIcon: Icons.close_rounded,
       buttonSize: 56.0,

@@ -248,8 +248,6 @@ class _AsistenciaState extends State<Asistencia> {
   // boton flotante
   SpeedDial _crearBotonFlotante(double pHz) {
     return SpeedDial(
-      marginEnd: pHz - 100,
-      marginBottom: 20,
       icon: Icons.qr_code_outlined,
       activeIcon: Icons.qr_code_outlined,
       buttonSize: 56.0,
