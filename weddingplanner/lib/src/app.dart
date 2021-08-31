@@ -4,9 +4,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
+import 'package:weddingplanner/src/blocs/involucrados/involucrados_bloc.dart';
 import 'package:weddingplanner/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 import 'package:weddingplanner/src/logic/add_contratos_logic.dart';
+import 'package:weddingplanner/src/logic/involucrados_logic.dart';
 import 'package:weddingplanner/src/logic/proveedores_evento_logic.dart';
 import 'package:weddingplanner/src/logic/servicios_logic.dart';
 import 'package:weddingplanner/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
@@ -191,6 +193,9 @@ class AppState extends StatelessWidget {
       BlocProvider<VerContratosBloc>(
           create: (_) =>
               VerContratosBloc(logic: ConsultasAddContratosLogic())),
+      BlocProvider<InvolucradosBloc>(
+          create: (_) =>
+              InvolucradosBloc(logic: ConsultasInvolucradosLogic())),
     ], child: MyApp());
     
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/involucrados/involucrados_bloc.dart';
 
 class InvolucradosPorEvento extends StatefulWidget {
   const InvolucradosPorEvento({Key key}) : super(key: key);
@@ -10,143 +10,113 @@ class InvolucradosPorEvento extends StatefulWidget {
 }
 
 class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
-  // Controllers data Involucrado
-  TextEditingController nombreInvoCtrl;
-  TextEditingController telefonoInvoCtrl;
-  TextEditingController emailInvoCtrl;
-  TextEditingController passwdInvoCtrl;
-  TextEditingController passwdConfirmInvoCtrl;
-  bool esUsr = false;
+  // variables bloc
+  InvolucradosBloc involucradosBloc;
+
+  // variables class
+  bool saveShow = false;
+  Involucrado item = Involucrado(
+    idInvolucrado: 0,
+    nombre: '',
+    email: '',
+    telefono: ''
+  );
 
   @override
   void initState() {
-    _setInitialController();
-    _clearControllerInvo();
     super.initState();
+    involucradosBloc = BlocProvider.of<InvolucradosBloc>(context);
+    involucradosBloc.add(SelectInvolucrado());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Wrap(
-            children: <Widget>[
-              formItemsDesign(
-                  Icons.person,
-                  TextFormField(
-                    controller: nombreInvoCtrl,
-                    decoration: new InputDecoration(
-                      labelText: 'Nombre',
-                    ),
-                    validator: /* validateNombre */ null,
-                  ),
-                  500.0,
-                  80.0),
-              formItemsDesign(
-                  Icons.phone,
-                  TextFormField(
-                    controller: telefonoInvoCtrl,
-                    decoration: new InputDecoration(
-                      labelText: 'Teléfono',
-                    ),
-                    validator: /* validateTelefono */ null,
-                  ),
-                  500.0,
-                  80.0),
-            ],
-          ),
-          Wrap(
-            children: <Widget>[
-              formItemsDesign(
-                  Icons.email,
-                  TextFormField(
-                    controller: emailInvoCtrl,
-                    decoration: new InputDecoration(
-                      labelText: 'Correo',
-                    ),
-                    validator: /* validateCorreo */ null,
-                  ),
-                  500.0,
-                  80.0),
-              formItemsDesign(
-                  Icons.import_contacts,
-                  Row(
-                    children: [
-                      Text('¿Puede ver información de evento?'),
-                      Checkbox(
-                        value: esUsr,
-                        onChanged: (bool value) {
-                          setState(() {
-                            esUsr = !esUsr;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  500.0,
-                  80.0),
-              // BlocListener(listener: listener)
-            ],
-          ),
-          esUsr
-              ? Wrap(
-                  children: <Widget>[
-                    esUsr
-                        ? agregarInput(Icons.lock, TextInputType.visiblePassword, passwdInvoCtrl, 'Contraseña', /* validatePwd */ null, null,
-                            obscureT: true, maxL: 30)
-                        : SizedBox.shrink(),
-                    esUsr
-                        ? agregarInput(
-                            Icons.lock, TextInputType.visiblePassword, passwdConfirmInvoCtrl, 'Confirmar Contraseña', /* validateConfirmPwd */ null, null,
-                            obscureT: true, maxL: 30)
-                        : SizedBox.shrink(),
-                    // BlocListener(listener: listener)
-                  ],
-                )
-              : SizedBox.shrink(),
-        ],
-      ),
+    return BlocBuilder<InvolucradosBloc,InvolucradosState>(
+      builder: (context, state) {
+        if(state is InvolucradosInitial) {
+          return Center(child: CircularProgressIndicator(),);
+        } else if(state is InvolucradosLogging) {
+          return Center(child: CircularProgressIndicator(),);
+        } else if(state is InvolucradosSelect) {
+          if(state.autorizacion.contrato.length > 0) {
+            item = Involucrado(
+              idInvolucrado:state.autorizacion.contrato[0].idInvolucrado,
+              nombre:state.autorizacion.contrato[0].nombreCompleto,
+              email:state.autorizacion.contrato[0].email,
+              telefono:state.autorizacion.contrato[0].telefono
+            );
+          }
+          return viewForm();
+        } else if(state is InvolucradosInsert) {
+          if(state.autorizacion.contrato.length > 0) {
+            item = Involucrado(
+              idInvolucrado:state.autorizacion.contrato[0].idInvolucrado,
+              nombre:state.autorizacion.contrato[0].nombreCompleto,
+              email:state.autorizacion.contrato[0].email,
+              telefono:state.autorizacion.contrato[0].telefono
+            );
+          }
+          return viewForm();
+        } else {
+          return Center(child: CircularProgressIndicator(),);
+        }
+      },
     );
   }
 
-  agregarInput(IconData icono, TextInputType inputType, TextEditingController controller, String titulo, Function validator, List<TextInputFormatter> inputF,
-      {bool obscureT: false, int maxL: 0, largo: 500, ancho: 80}) {
-    return formItemsDesign(
-        icono,
-        TextFormField(
-          keyboardType: inputType,
-          controller: controller,
-          decoration: new InputDecoration(
-            labelText: titulo,
+  Widget viewForm() {
+    return  Container(
+      child: Column(
+        children: <Widget>[
+          formItemsDesign(
+              Icons.person,
+              TextFormField(
+                controller: TextEditingController(text: item.nombre),
+                decoration: new InputDecoration(
+                  labelText: 'Nombre',
+                ),
+                onChanged: (valor) {
+                  item.nombre = valor;
+                },
+              ),
+              500.0,
+              80.0),
+          formItemsDesign(
+              Icons.phone,
+              TextFormField(
+                controller: TextEditingController(text: item.telefono),
+                decoration: new InputDecoration(
+                  labelText: 'Teléfono',
+                ),
+                onChanged: (valor) {
+                  item.telefono = valor;
+                },
+              ),
+              500.0,
+              80.0),
+          formItemsDesign(
+              Icons.email,
+              TextFormField(
+                controller: TextEditingController(text: item.email),
+                decoration: new InputDecoration(
+                  labelText: 'Correo',
+                ),
+                onChanged: (valor) {
+                  item.email = valor;
+                },
+              ),
+              500.0,
+              80.0),
+          SizedBox(height: 30.0,),
+          IconButton(
+            icon: Icon(Icons.save),
+            color: Colors.black,
+            onPressed: () => validaTodo(),
           ),
-          validator: validator,
-          inputFormatters: inputF,
-          obscureText: obscureT,
-          maxLength: maxL,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-        ),
-        500.0,
-        80.0);
-  }
-
-  _setInitialController() {
-    nombreInvoCtrl = new TextEditingController();
-    telefonoInvoCtrl = new TextEditingController();
-    emailInvoCtrl = new TextEditingController();
-    passwdInvoCtrl = new TextEditingController();
-    passwdConfirmInvoCtrl = new TextEditingController();
-  }
-
-  _clearControllerInvo() {
-    nombreInvoCtrl.clear();
-    telefonoInvoCtrl.clear();
-    emailInvoCtrl.clear();
-    passwdInvoCtrl.clear();
-    passwdConfirmInvoCtrl.clear();
-    setState(() {
-      esUsr = false;
-    });
+          SizedBox(height: 30.0,),
+        ],
+      ),
+    );
   }
 
   formItemsDesign(icon, item, large, ancho) {
@@ -160,63 +130,83 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
     );
   }
 
-  String validateNombre(String value) {
+  bool validateNombre(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = new RegExp(pattern);
     if (value.length < 10) {
-      return "Mínimo 10 caractéres";
+      return false;
     } else if (!regExp.hasMatch(value)) {
-      return "El nombre debe de ser a-z y A-Z";
+      return false;
     }
-    return null;
+    return true;
   }
 
-  String validateCorreo(String value) {
+  bool validateCorreo(String value) {
     RegExp regExp = new RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
     if (value.length == 0) {
-      return 'Dato requerido';
+      return false;
     } else if (!regExp.hasMatch(value)) {
-      return 'Formato de correo inválido';
+      return false;
     } else {
-      return null;
+      return true;
     }
   }
 
-  String validateTelefono(String value) {
+  bool validateTelefono(String value) {
     RegExp regExp = new RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$');
     if (value.length == 0) {
-      return 'Dato requerido';
+      return false;
     } else if (!regExp.hasMatch(value)) {
-      return 'Número telefónico inválido';
+      return false;
     } else {
-      return null;
+      return true;
     }
   }
 
-  String validatePwd(String value) {
-    RegExp regExp = new RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
-    if (value.length == 0) {
-      return 'Dato requerido';
-    } else if (!regExp.hasMatch(value)) {
-      return 'La contraseña debe tener al menos 8 dígitos, una letra mayúscula, una letra minúscula y un número';
+  validaTodo() {
+    if(validateNombre(item.nombre) && validateCorreo(item.email) && validateTelefono(item.telefono)) {
+      involucradosBloc.add(InsertInvolucrado(item));
+      _mensaje('Involucrado actualizado.');
+    } else if(!validateNombre(item.nombre)) {
+      _mensaje('Inserta un nombre valido.');
+    } else if(!validateTelefono(item.telefono)) {
+      _mensaje('Inserta un telefono valido.');
+    } else if(!validateCorreo(item.email)) {
+      _mensaje('Inserta un correo electronico valido.');
     } else {
-      return null;
+      _mensaje('Inserta valores validos.');
     }
   }
 
-  String validateConfirmPwd(String value) {
-    RegExp regExp = new RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
-    if (value.length == 0) {
-      return 'Dato requerido';
-    } else {
-      if (!regExp.hasMatch(value)) {
-        return 'La contraseña debe tener al menos 8 dígitos, una letra mayúscula, una letra minúscula y un número';
-      } else if (passwdInvoCtrl.text != value) {
-        return 'Las contraseñas deben coincidir';
-      } else {
-        return null;
-      }
-    }
+  // mensaje
+  Future<void> _mensaje(String txt) async {
+    return await ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(txt),
+      )
+    );
   }
+}
+
+class Involucrado {
+  int idInvolucrado;
+  String nombre;
+  String email;
+  String telefono;
+
+  Involucrado({
+    this.idInvolucrado,
+    this.nombre,
+    this.email,
+    this.telefono
+  });
+
+  // solucion al enviar objetos al servidor
+  Map<String, dynamic> toJson() =>{
+    'id_involucrado':idInvolucrado,
+    'nombre_completo':nombre,
+    'email':email,
+    'telefono':telefono,
+  };
 }

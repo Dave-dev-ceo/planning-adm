@@ -2,10 +2,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' show Client;
+import 'package:weddingplanner/src/resources/config_conection.dart';
 
 // imports weeding
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
 
 // import model
 import 'package:weddingplanner/src/models/item_model_add_contratos.dart';
