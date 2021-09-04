@@ -17,7 +17,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   int _index = 0;
   dynamic loginBloc;
-  TextEditingController emailCtrl = new TextEditingController(text: 'soporte@grupotum.com');
+  TextEditingController emailCtrl = new TextEditingController(text: 'padiiyaa@gmail.com');
+  // TextEditingController emailCtrl = new TextEditingController(text: 'soporte@grupotum.com');
   TextEditingController passwordCtrl = new TextEditingController(text: 'N0v4-2020');
   TextEditingController emailRCtrl = new TextEditingController();
   TextEditingController passwordRCtrl = new TextEditingController();
@@ -25,6 +26,7 @@ class _LoginState extends State<Login> {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   BuildContext _ingresando;
   bool _visible = true;
+
   @override
   void initState() {
     super.initState();
@@ -33,8 +35,23 @@ class _LoginState extends State<Login> {
 
   void _checkSession() async {
     bool sesion = await _sharedPreferences.getSession();
+    int involucrado = await _sharedPreferences.getIdInvolucrado();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    String titulo = await _sharedPreferences.getEventoNombre();
+    String nombreUser = await _sharedPreferences.getNombre();
+    String image = await _sharedPreferences.getImagen();
+
+    Map data = {
+      'name':await _sharedPreferences.getNombre(),
+      'imag':image
+    };
+
     if (sesion) {
-      Navigator.pushNamed(context, '/home', arguments: await _sharedPreferences.getNombre());
+      if(involucrado == null) {
+        Navigator.pushNamed(context, '/home', arguments: data);
+      } else {
+        Navigator.pushNamed(context, '/eventos', arguments: {'idEvento': idEvento, 'nEvento':titulo, 'nombre':nombreUser,'boton':false,'imag':image});
+      }
     }
   }
 
@@ -448,7 +465,15 @@ class _LoginState extends State<Login> {
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
           Navigator.pop(_ingresando);
-          Navigator.pushNamed(context, '/home', arguments: state.response);
+          if(state.response['usuario']['id_involucrado'] == 'null') {
+            Map data = {
+              'name':state.response['usuario']['nombre_completo'],
+              'imag':state.response['usuario']['imagen']
+            };
+            Navigator.pushNamed(context, '/home', arguments: data);
+          } else {
+            Navigator.pushNamed(context, '/eventos', arguments: {'idEvento': state.response['usuario']['id_evento'], 'nEvento':state.response['usuario']['descripcion'], 'nombre':state.response['usuario']['nombre_completo'],'boton':false,'imag':state.response['usuario']['imagen']});
+          }
         }
       },
       child: Column(
@@ -489,12 +514,13 @@ class _LoginState extends State<Login> {
               child: PasswordWplanner(
                 // WP
                 controller: passwordCtrl,
+                suffixIcon: Icon(Icons.remove_red_eye,color: Colors.purple[100],),
+                color: Colors.purple[100],
+                iconColor: Colors.purple[100],
+                iconColorSelect: Colors.white,
                 inputStyle: TextStyle(color: Colors.white),
                 hintStyle: TextStyle(color: Colors.purple[100]),
-                // suffixIcon: Icon(Icons.remove_red_eye, color: Colors.purple[100]),
                 autoFocus: false,
-                // F WP
-                
                 hasFloatingPlaceholder: true,
                 // pattern: r'.*[@$#.*].*',
                 border: OutlineInputBorder(
@@ -504,7 +530,6 @@ class _LoginState extends State<Login> {
                   borderRadius: BorderRadius.circular(25.0),
                   borderSide: BorderSide(color: Colors.white)
                 ),
-                // errorMessage: 'must contain special character either . * @ # \$',
               ),
             ),
             //FinPadilla

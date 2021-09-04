@@ -31,7 +31,7 @@ class _Involucrados {
   _Involucrados(consulta) {
     _idInvolucrado = consulta['id_involucrado'];
     _nombreCompleto = consulta['nombre_completo'];
-    _email = consulta['email'];
+    _email = consulta['correo'];
     _telefono = consulta['telefono'];
   }
 

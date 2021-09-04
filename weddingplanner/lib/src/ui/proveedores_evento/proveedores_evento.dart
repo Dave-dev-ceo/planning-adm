@@ -39,6 +39,9 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             builder: (context, state) {
           if (state is MostrarProveedorEventoState) {
             if (state.detlistas != null && _dataPrvEv.length == 0) {
+              state.detlistas.results.forEach((element) {
+                print(element.idPlanner);
+              });
               _dataPrvEv = _createDataListProvEvt(state.detlistas);
             }
             return _listaBuild();

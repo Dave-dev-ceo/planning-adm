@@ -45,6 +45,13 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
               email:state.autorizacion.contrato[0].email,
               telefono:state.autorizacion.contrato[0].telefono
             );
+          } else {
+            item = Involucrado(
+              idInvolucrado:0,
+              nombre:'',
+              email:'',
+              telefono:''
+            );
           }
           return viewForm();
         } else if(state is InvolucradosInsert) {

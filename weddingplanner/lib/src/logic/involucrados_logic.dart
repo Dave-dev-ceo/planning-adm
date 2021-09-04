@@ -33,7 +33,7 @@ class ConsultasInvolucradosLogic extends Involucrados {
             '/wedding/INVOLUCRADOS/obtenerInvolucrados'),
         body: {
           'id_planner': idPlanner.toString(),
-          "id_evento": idEvento.toString()
+          'id_evento': idEvento.toString()
         },
         headers: {
           HttpHeaders.authorizationHeader: token

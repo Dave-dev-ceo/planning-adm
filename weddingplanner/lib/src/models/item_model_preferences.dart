@@ -22,6 +22,50 @@ class SharedPreferencesT {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getInt('idPlanner');
   }
+  
+  // ini permisos involucrado
+  setIdInvolucrado(int idInvolucrado) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.setInt('idInvolucrado', idInvolucrado);
+  }
+
+  getIdInvolucrado() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getInt('idInvolucrado');
+  }
+
+  setEventoNombre(String json) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setString('eventoNombre', json);
+  }
+
+  getEventoNombre() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getString('eventoNombre');
+  }
+
+  setPermisoBoton(bool json) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setBool('permisoBoton', json);
+  }
+
+  getPermisoBoton() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getBool('permisoBoton');
+  }
+  // fin permisos involucrado
+
+  // ini perfil
+  setImagen(String json) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setString('imagen', json);
+  }
+
+  getImagen() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getString('imagen');
+  }
+  // fin perfil
 
   setIdUsuario(int idUsuario) async {
     _sharedPreferences = await SharedPreferences.getInstance();

@@ -47,10 +47,12 @@ import 'package:weddingplanner/src/logic/timings_logic.dart';
 import 'package:weddingplanner/src/logic/tipos_eventos_logic.dart';
 import 'package:weddingplanner/src/resources/route_generator.dart';
 import 'blocs/paises/paises_bloc.dart';
+import 'blocs/perfil/perfil_bloc.dart';
 import 'blocs/usuarios/usuario/usuario_bloc.dart';
 import 'logic/estatus_logic.dart';
 import 'logic/eventos_logic.dart';
 import 'logic/paises_logic.dart';
+import 'logic/perfil_logic.dart';
 import 'logic/usuarios.logic.dart';
 import 'blocs/asistencia/asistencia_bloc.dart';
 import 'logic/asistencia_logic.dart';
@@ -196,6 +198,9 @@ class AppState extends StatelessWidget {
       BlocProvider<InvolucradosBloc>(
           create: (_) =>
               InvolucradosBloc(logic: ConsultasInvolucradosLogic())),
+      BlocProvider<PerfilBloc>(
+          create: (_) =>
+              PerfilBloc(logic: ConsultasPerfilLogic())),
     ], child: MyApp());
     
   }

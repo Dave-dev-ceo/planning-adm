@@ -47,7 +47,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => HomeAdmin());
       case '/home':
         return MaterialPageRoute(builder: (context) => Home(
-          nombre: args,
+          data: args,
         ));
       case '/dasboard':
         return MaterialPageRoute(builder: (context) => DashboardEventos());

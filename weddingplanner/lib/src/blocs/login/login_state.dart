@@ -10,11 +10,11 @@ class LogginState extends LoginState {
 }
 
 class LoggedState extends LoginState {
-  final String response;
+  final Map<dynamic, dynamic> response;
 
   LoggedState(this.response);
 
-  String get props => response;
+  Map<dynamic, dynamic> get props => response;
 }
 
 class MsgLogginState extends LoginState {

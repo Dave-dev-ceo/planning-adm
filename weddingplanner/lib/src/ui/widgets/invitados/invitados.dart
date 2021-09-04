@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
@@ -95,7 +97,7 @@ class _InvitadosState extends State<Invitados> {
         length: _pages,
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: true,
+            automaticallyImplyLeading: widget.detalleEvento['boton'],
             title: Center(
               child: Row(
                 children: [
@@ -129,8 +131,10 @@ class _InvitadosState extends State<Invitados> {
                   margin: EdgeInsets.only(right: 10.0),
                   child: CircleAvatar(
                     backgroundColor: hexToColor('#d39942'),
-                    child:   PopupMenuButton(
-                      child: Icon(Icons.person),
+                    child: PopupMenuButton(
+                      child: widget.detalleEvento['imag'] == null ? Icon(Icons.person):CircleAvatar(
+                        backgroundImage: MemoryImage(base64Decode(widget.detalleEvento['imag'])),
+                      ),
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           value: 1,

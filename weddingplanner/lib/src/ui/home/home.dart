@@ -4,6 +4,7 @@ import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/model_perfilado.dart';
@@ -19,8 +20,8 @@ import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 class Home extends StatefulWidget {
   //static const routeName = '/eventos';
   //final int idPlanner;
-  final String nombre;
-  const Home({Key key, @required this.nombre}) : super(key: key);
+  final Map data;
+  const Home({Key key, @required this.data}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -50,6 +51,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      color: Colors.white,
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
           if (state is PermisosInitial) {
@@ -78,8 +80,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget crearPantalla(
-      BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
+  Widget crearPantalla(BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
     return DefaultTabController(
         length: _pages,
         child: WillPopScope(
@@ -105,7 +106,9 @@ class _HomeState extends State<Home> {
                     child: CircleAvatar(
                       backgroundColor: hexToColor('#d39942'),
                       child: PopupMenuButton(
-                        child: Icon(Icons.person),
+                        child:widget.data['imag'] == null ? Icon(Icons.person):CircleAvatar(
+                          backgroundImage: MemoryImage(base64Decode(widget.data['imag'])),
+                        ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
@@ -113,7 +116,7 @@ class _HomeState extends State<Home> {
                           ),
                           PopupMenuItem(
                             value: 2,
-                            child: Text("${widget.nombre}")
+                            child: Text("${widget.data['name']}")
                           ),
                           PopupMenuItem(
                             value: 3,
@@ -242,7 +245,7 @@ class _HomeState extends State<Home> {
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
         pan.add(DashboardEventos(
             WP_EVT_CRT:permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT'),
-            nombre:widget.nombre
+            data:widget.data
         ));
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {

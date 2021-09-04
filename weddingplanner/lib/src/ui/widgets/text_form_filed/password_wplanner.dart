@@ -10,6 +10,8 @@ class PasswordWplanner extends StatefulWidget {
       this.border,
       this.focusedBorder,
       this.color,
+      this.iconColor,
+      this.iconColorSelect,      
       this.controller,
       this.hasFloatingPlaceholder = false,
       this.hintText,
@@ -23,9 +25,11 @@ class PasswordWplanner extends StatefulWidget {
       this.backgroundBorderRadius,
       this.textPadding,
       this.errorStyle,
-      @deprecated this.onChanged,
+      this.onChanged,
+      this.validador,
       this.errorFocusedBorder,
       this.errorMessage,
+      this.prefixIcon,
       this.suffixIcon,
       this.pattern,
       this.suffixIconEnabled = true})
@@ -43,7 +47,8 @@ class PasswordWplanner extends StatefulWidget {
 
   /// changes the primary color of the PasswordWplanner
   final Color color;
-
+  final Color iconColor;  
+  final Color iconColorSelect;
   /// Background Color for the textfield must be specified with [backgroundBorderRadius]
   final Color backgroundColor;
 
@@ -121,11 +126,14 @@ class PasswordWplanner extends StatefulWidget {
 
   /// A Callback function triggered when the text insude the PasswordWplanner changes
   ///
-  @deprecated
   final Function onChanged;
+
+  //
+  final Function validador;
 
   /// Icon used to unhide the password when touch in Contact with the icon
   final Icon suffixIcon;
+  final Icon prefixIcon;
 
   /// The Icon to show at the right end of the textfield, suffix Icon can be removed by setting suffixIconEnabled to false,defaults to true
   final bool suffixIconEnabled;
@@ -138,10 +146,7 @@ class PasswordWplanner extends StatefulWidget {
 
 class PasswordWplannerState extends State<PasswordWplanner> {
   bool obscureText = true;
-  Icon iconBoton = Icon(
-    Icons.remove_red_eye,
-    color: Colors.purple[100],
-  );
+  Icon iconBoton;
 //wrap your toggle icon in Gesture Detector
 
   void inContact(TapDownDetails details) {
@@ -156,80 +161,80 @@ class PasswordWplannerState extends State<PasswordWplanner> {
     });
   }
 
+  @override
+  void initState() { 
+    super.initState();
+    iconBoton = widget.suffixIcon;
+  }
+
   PasswordBloc bloc = PasswordBloc();
   Widget PasswordWplannerWidget() {
-    return Theme(
-      data: ThemeData(
-          primaryColor:
-              widget.color ?? Theme.of(context).primaryColor ?? Colors.red),
-      child: StreamBuilder<String>(
-        stream: bloc.password,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Container(
-            padding: widget.backgroundColor != null ? widget.textPadding : null,
-            decoration: widget.backgroundColor != null
-                ? BoxDecoration(
-                    color: widget.backgroundColor,
-                    borderRadius: widget.backgroundBorderRadius)
-                : null,
-            child: TextField(
-              cursorColor: Colors.purple[100],
-              maxLength: widget.maxLength,
-              controller: widget.controller,
-              obscureText: obscureText,
-              autofocus: widget.autoFocus,
-              decoration: InputDecoration(
-                  border: widget.backgroundColor != null
-                      ? InputBorder.none
-                      : widget.border,
-                  errorText: snapshot.hasError
-                      ? widget.errorMessage ?? snapshot.error
-                      : null,
-                  errorMaxLines: widget.errorMaxLines,
-                  errorStyle: widget.errorStyle,
-                  enabledBorder: widget.border,
-                  focusedBorder: widget.focusedBorder,
-                  hintText:
-                      widget.hasFloatingPlaceholder ? null : widget.hintText,
-                  hintStyle: widget.hintStyle ?? widget.inputStyle,
-                  counterText: '',
-                  focusedErrorBorder: widget.errorFocusedBorder,
-                  floatingLabelBehavior: widget.hasFloatingPlaceholder
-                      ? FloatingLabelBehavior.auto
-                      : FloatingLabelBehavior.never,
-                  labelText: widget.hasFloatingPlaceholder
-                      ? widget.floatingText ?? 'Contraseña'
-                      : (widget.hintText ?? 'Contraseña'),
-                  labelStyle: widget.hintStyle ?? widget.inputStyle,
-                  suffixIcon: widget.suffixIconEnabled
-                      ? GestureDetector(
-                          onTap: (){ setState(() {
-                            obscureText = !obscureText; 
-                            if(obscureText)
-                              iconBoton = Icon(
-                                Icons.remove_red_eye,
-                                color: Colors.purple[100],
-                              );
-                            else
-                              iconBoton = Icon(
-                                Icons.remove_red_eye_outlined,
-                                color: Colors.white,
-                              );
-                          });},
-                          child:
-                              widget.suffixIcon ?? iconBoton,
-                          // onTapDown: inContact,
-                          // onTapUp: outContact,
-                        )
-                      : null),
-              onSubmitted: widget.onSubmit,
-              style: widget.inputStyle,
-              onChanged: (text) =>
-                  bloc.onPasswordChanged(widget.pattern ?? '.*', text),
-            ),
-          );
-        },
-      ),
+    return StreamBuilder<String>(
+      stream: bloc.password,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          // padding: widget.color != null ? widget.textPadding : null,
+          decoration: BoxDecoration(
+            color: widget.backgroundColor,
+            // borderRadius: widget.backgroundBorderRadius
+          ),
+          child: TextFormField(
+            cursorColor: widget.color,
+            maxLength: widget.maxLength,
+            controller: widget.controller,
+            obscureText: obscureText,
+            autofocus: widget.autoFocus,
+            decoration: InputDecoration(
+                border: widget.backgroundColor != null
+                    ? InputBorder.none
+                    : widget.border,
+                errorText: snapshot.hasError
+                    ? widget.errorMessage ?? snapshot.error
+                    : null,
+                errorMaxLines: widget.errorMaxLines,
+                errorStyle: widget.errorStyle,
+                enabledBorder: widget.border,
+                focusedBorder: widget.focusedBorder,
+                hintText:
+                    widget.hasFloatingPlaceholder ? null : widget.hintText,
+                hintStyle: widget.hintStyle ?? widget.inputStyle,
+                counterText: '',
+                focusedErrorBorder: widget.errorFocusedBorder,
+                floatingLabelBehavior: widget.hasFloatingPlaceholder
+                    ? FloatingLabelBehavior.auto
+                    : FloatingLabelBehavior.never,
+                labelText: widget.hasFloatingPlaceholder
+                    ? widget.floatingText ?? 'Contraseña'
+                    : (widget.hintText ?? 'Contraseña'),
+                labelStyle: widget.hintStyle ?? widget.inputStyle,
+                prefixIcon: widget.prefixIcon,
+                suffixIcon: widget.suffixIconEnabled
+                    ? GestureDetector(
+                        onTap: (){ setState(() {
+                          obscureText = !obscureText; 
+                          if(obscureText)
+                            iconBoton = Icon(
+                              Icons.remove_red_eye,
+                              color: widget.iconColor,
+                            );
+                          else
+                            iconBoton = Icon(
+                              Icons.remove_red_eye_outlined,
+                              color: widget.iconColorSelect,
+                            );
+                        });},
+                        child: iconBoton,
+                        // onTapDown: inContact,
+                        // onTapUp: outContact,
+                      )
+                    : null),
+            // onSubmitted: widget.onSubmit,
+            style: widget.inputStyle,
+            onChanged: widget.onChanged,
+            validator: widget.validador,
+          ),
+        );
+      },
     );
   }
 
