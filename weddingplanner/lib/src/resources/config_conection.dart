@@ -18,7 +18,7 @@ class ConfigConection {
       addUrl = "http://localhost:";
     } else {
       addPuerto = "9005";
-      addUrl = "https://server02.grupotum.com:";
+      addUrl = "https://pruebas.grupotum.com:";
     }
   }
 }
