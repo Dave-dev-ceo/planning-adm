@@ -8,6 +8,8 @@ import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
+import 'package:weddingplanner/src/ui/pagos/edit_pago.dart';
+import 'package:weddingplanner/src/ui/pagos/form_pago.dart';
 import 'package:weddingplanner/src/ui/perfil/perfil.dart';
 import 'package:weddingplanner/src/ui/planes/agregar_planes.dart';
 import 'package:weddingplanner/src/ui/planes/calendario.dart';
@@ -165,6 +167,12 @@ class RouteGenerator {
       case '/addContratos':
         return MaterialPageRoute(
             builder: (context) => AddMachote(map:args));
+      case '/addPagosForm':
+        return MaterialPageRoute(
+            builder: (context) => FormPago());
+      case '/editPagosForm':
+        return MaterialPageRoute(
+            builder: (context) => FormEditPago(id:args));
       default:
         return _errorRoute();
     }

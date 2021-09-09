@@ -5,10 +5,12 @@ import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/involucrados/involucrados_bloc.dart';
+import 'package:weddingplanner/src/blocs/pagos/pagos_bloc.dart';
 import 'package:weddingplanner/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 import 'package:weddingplanner/src/logic/add_contratos_logic.dart';
 import 'package:weddingplanner/src/logic/involucrados_logic.dart';
+import 'package:weddingplanner/src/logic/pagos_logic.dart';
 import 'package:weddingplanner/src/logic/proveedores_evento_logic.dart';
 import 'package:weddingplanner/src/logic/servicios_logic.dart';
 import 'package:weddingplanner/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
@@ -201,6 +203,9 @@ class AppState extends StatelessWidget {
       BlocProvider<PerfilBloc>(
           create: (_) =>
               PerfilBloc(logic: ConsultasPerfilLogic())),
+      BlocProvider<PagosBloc>(
+          create: (_) =>
+              PagosBloc(logic: ConsultasPagosLogic())),
     ], child: MyApp());
     
   }
