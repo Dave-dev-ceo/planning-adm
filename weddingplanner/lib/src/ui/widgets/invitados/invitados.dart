@@ -10,6 +10,7 @@ import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/Listas/listas.dart';
 import 'package:weddingplanner/src/ui/contratos/new_contrato.dart';
+import 'package:weddingplanner/src/ui/pagos/pagos.dart';
 import 'package:weddingplanner/src/ui/planes/planes.dart';
 import 'package:weddingplanner/src/ui/proveedores_evento/proveedores_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
@@ -52,21 +53,21 @@ class _InvitadosState extends State<Invitados> {
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
           if (state is PermisosInitial) {
-            return  Scaffold(
+            return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
               body: Center(child: CircularProgressIndicator()),
             );
-          }  else if (state is ErrorTokenPermisos) {
-            return  Scaffold(
+          } else if (state is ErrorTokenPermisos) {
+            return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (state is LoadingPermisos) {
-            return   Scaffold(
+            return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
@@ -106,13 +107,21 @@ class _InvitadosState extends State<Invitados> {
                       margin: EdgeInsets.symmetric(horizontal: 20.0),
                       child: Column(
                         children: [
-                          Text('CONFIGURACIÓN EVENTO', style: TextStyle(fontSize: 12.0),),
-                          Text('${widget.detalleEvento['nEvento']}', style: TextStyle(fontSize: 12.0),),
+                          Text(
+                            'CONFIGURACIÓN EVENTO',
+                            style: TextStyle(fontSize: 12.0),
+                          ),
+                          Text(
+                            '${widget.detalleEvento['nEvento']}',
+                            style: TextStyle(fontSize: 12.0),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(width: 100.0,),
+                  SizedBox(
+                    width: 100.0,
+                  ),
                   Flexible(
                     child: FittedBox(
                         child: Image.asset(
@@ -132,27 +141,29 @@ class _InvitadosState extends State<Invitados> {
                   child: CircleAvatar(
                     backgroundColor: hexToColor('#d39942'),
                     child: PopupMenuButton(
-                      child: widget.detalleEvento['imag'] == null ? Icon(Icons.person):CircleAvatar(
-                        backgroundImage: MemoryImage(base64Decode(widget.detalleEvento['imag'])),
-                      ),
+                      child: widget.detalleEvento['imag'] == null
+                          ? Icon(Icons.person)
+                          : CircleAvatar(
+                              backgroundImage: MemoryImage(
+                                  base64Decode(widget.detalleEvento['imag'])),
+                            ),
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           value: 1,
                           child: Text("Perfil"),
                         ),
                         PopupMenuItem(
-                          value: 2,
-                          child: Text("${widget.detalleEvento['nombre']}")
-                        ),
+                            value: 2,
+                            child: Text("${widget.detalleEvento['nombre']}")),
                         PopupMenuItem(
                           value: 3,
                           child: Text("Cerrar sesión"),
                         )
                       ],
                       onSelected: (valor) {
-                        if(valor == 1) {
+                        if (valor == 1) {
                           Navigator.pushNamed(context, '/perfil');
-                        } else if(valor == 3) {
+                        } else if (valor == 3) {
                           _sharedPreferences.clear();
                           Navigator.pushNamed(context, '/');
                         }
@@ -255,6 +266,10 @@ class _InvitadosState extends State<Invitados> {
         tabs.add(TabItem(titulo: 'Listas', icono: Icons.list));
         temp += 1;
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+        tabs.add(TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
+        temp += 1;
+      }
       _pages = temp;
       return tabs;
     } else {
@@ -297,6 +312,9 @@ class _InvitadosState extends State<Invitados> {
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Listas());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+        temp.add(Pagos());
       }
       return temp;
     } else {
