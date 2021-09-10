@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/model_perfilado.dart';

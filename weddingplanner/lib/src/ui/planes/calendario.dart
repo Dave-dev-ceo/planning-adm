@@ -1,7 +1,6 @@
 // imports from flutter/dart
 import 'dart:collection';
 import 'package:intl/intl.dart';
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';

@@ -1,6 +1,4 @@
 // imports from flutter/dart
-import 'dart:js';
-
 import 'package:http/http.dart' show Client;
 import 'dart:io';
 import 'dart:convert';
