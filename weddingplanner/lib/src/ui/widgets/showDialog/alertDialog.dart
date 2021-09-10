@@ -108,16 +108,10 @@ class _DialogAlertState extends State<DialogAlert> {
         return AlertDialog(
           title: Text('¡Bienvenido!'),
           content: SingleChildScrollView(
-            child: Column(
+            child: ListBody(
             children: [
-              Padding(
-                child: Center(child: Text('${lista.elementAt(1)} estás en el evento ${lista.elementAt(6)}')),
-                padding: EdgeInsets.all(10),
-              ),
-              Padding(
-                child: Center(child: Text('Gracias por asistir.')),
-                padding: EdgeInsets.all(10),
-              ),
+              Center(child: Text('${lista.elementAt(1)} estás en el evento ${lista.elementAt(6)}')),
+              Center(child: Text('Gracias por asistir.')),
             ],
             ),
           ),

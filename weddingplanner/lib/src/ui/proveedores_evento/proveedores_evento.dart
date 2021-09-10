@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
+import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/item_model_proveedores.dart';
 import 'package:weddingplanner/src/models/item_model_proveedores_evento.dart';
 
@@ -20,37 +21,69 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   List<ItemProveedorEvento> _dataPrvEv = [];
 
   ItemModelProveedoresEvent provEvet;
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  var checkInvolucrado;
+
+  void getValues() async {
+    checkInvolucrado = await _sharedPreferences.getIdInvolucrado();
+  }
 
   @override
   void initState() {
     proveedoreventosBloc = BlocProvider.of<ProveedoreventosBloc>(context);
     proveedoreventosBloc.add(FechtProveedorEventosEvent());
     super.initState();
+    getValues();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(15),
-        child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
-            builder: (context, state) {
-          if (state is MostrarProveedorEventoState) {
-            if (state.detlistas != null && _dataPrvEv.length == 0) {
-              state.detlistas.results.forEach((element) {
-                print(element.idPlanner);
-              });
-              _dataPrvEv = _createDataListProvEvt(state.detlistas);
+    if(checkInvolucrado == null) {
+      return Scaffold(
+          body: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(15),
+          child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
+              builder: (context, state) {
+            if (state is MostrarProveedorEventoState) {
+              if (state.detlistas != null && _dataPrvEv.length == 0) {
+                state.detlistas.results.forEach((element) {
+                  print(element.idPlanner);
+                });
+                _dataPrvEv = _createDataListProvEvt(state.detlistas);
+              }
+              return _listaBuild();
+            } else {
+              return Center(child: CircularProgressIndicator());
             }
-            return _listaBuild();
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }),
-      ),
-    ));
+          }),
+        ),
+      ));
+    } else {
+      return Scaffold(
+        body:  SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(15),
+            child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
+                builder: (context, state) {
+              if (state is MostrarProveedorEventoState) {
+                if (state.detlistas != null && _dataPrvEv.length == 0) {
+                  state.detlistas.results.forEach((element) {
+                    print(element.idPlanner);
+                  });
+                  _dataPrvEv = _createDataListProvEvt(state.detlistas);
+                }
+                return Center(child: Text('Involucrado'),);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
+          ),
+        )
+      );
+    }
   }
 
   Widget _listaBuild() {

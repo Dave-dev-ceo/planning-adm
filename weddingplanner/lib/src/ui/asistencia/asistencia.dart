@@ -107,15 +107,18 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   Widget _crearTabla(asistencia) {
-    return PaginatedDataTable(
-      // header: _crearHeader(asistencia),
-      columns: _crearColumna(),
-      source: DTS(invitadosList: _crearLista(asistencia)),
-      onRowsPerPageChanged: null,
-      rowsPerPage: asistencia.asistencias.length == 0
-          ? 1
-          : asistencia.asistencias.length,
-      dataRowHeight: 90.0,
+    return Container(
+      width: double.infinity,
+      child: PaginatedDataTable(
+        // header: _crearHeader(asistencia),
+        columns: _crearColumna(),
+        source: DTS(invitadosList: _crearLista(asistencia)),
+        onRowsPerPageChanged: null,
+        rowsPerPage: asistencia.asistencias.length == 0
+            ? 1
+            : asistencia.asistencias.length,
+        dataRowHeight: 90.0,
+      ),
     );
   }
 
