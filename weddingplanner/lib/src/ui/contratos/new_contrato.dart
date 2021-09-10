@@ -1,6 +1,6 @@
 // imports flutter/dart
 import 'dart:convert';
-import 'dart:html';
+// import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -606,11 +606,11 @@ class New_ContratoState extends State<NewContrato> {
     document.dispose();
     //Download the output file
     if(kIsWeb){
-      AnchorElement(
-        href:
-            "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
-      ..setAttribute("download", nombreDocumento + ".pdf")
-      ..click();
+      // AnchorElement(
+      //   href:
+      //       "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
+      // ..setAttribute("download", nombreDocumento + ".pdf")
+      // ..click();
     }else{
       print("Error download");
     }

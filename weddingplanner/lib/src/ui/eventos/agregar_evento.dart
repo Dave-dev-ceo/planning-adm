@@ -88,54 +88,51 @@ class _AgregarEventoState extends State<AgregarEvento> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: BlocListener<EventosBloc, EventosState>(
-        listener: (context, state) {
-          if (state is CreateEventosState) {
-            return _dialogMSG('Creando evento');
-          } else if (state is CreateEventosOkState) {
-            Navigator.pop(_ingresando);
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Evento agregardo'),
-                ),
-                //color: Colors.red,
+    return BlocListener<EventosBloc, EventosState>(
+      listener: (context, state) {
+        if (state is CreateEventosState) {
+          return _dialogMSG('Creando evento');
+        } else if (state is CreateEventosOkState) {
+          Navigator.pop(_ingresando);
+          final snackBar = SnackBar(
+            content: Container(
+              height: 30,
+              child: Center(
+                child: Text('Evento agregardo'),
               ),
-              backgroundColor: Colors.green,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            _clearController();
-          } else if (state is ErrorCreateEventosState) {
-            Navigator.pop(_ingresando);
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Error al crear evento'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.red,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-        },
-        child: Container(
-          width: double.infinity,
-          alignment: Alignment.center,
-          child: new Container(
-            width: 1200,
-            margin: new EdgeInsets.all(10.0),
-            child: new Form(
-              key: keyForm,
-              child: formUI(),
+              //color: Colors.red,
             ),
+            backgroundColor: Colors.green,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          _clearController();
+        } else if (state is ErrorCreateEventosState) {
+          Navigator.pop(_ingresando);
+          final snackBar = SnackBar(
+            content: Container(
+              height: 30,
+              child: Center(
+                child: Text('Error al crear evento'),
+              ),
+              //color: Colors.red,
+            ),
+            backgroundColor: Colors.red,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
+      child: Container(
+        width: double.infinity,
+        alignment: Alignment.center,
+        child: new Container(
+          width: 1200,
+          margin: new EdgeInsets.all(10.0),
+          child: new Form(
+            key: keyForm,
+            child: formUI(),
           ),
         ),
       ),
-      //),
     );
   }
 
