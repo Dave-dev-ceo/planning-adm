@@ -33,7 +33,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   DateTime fechaInicio;
   DateTime fechaFin;
   DateTime fechaEvento;
-  bool isExpaned = true;
+  bool isExpaned = false;
   bool isExpanedT = false;
   TiposEventosBloc tiposEventosBloc;
   ItemModelTipoEvento itemModelTipoEvento;

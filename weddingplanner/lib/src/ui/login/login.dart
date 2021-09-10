@@ -17,8 +17,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   int _index = 0;
   dynamic loginBloc;
-  TextEditingController emailCtrl = new TextEditingController(text: 'padiiyaa@gmail.com');
-  // TextEditingController emailCtrl = new TextEditingController(text: 'soporte@grupotum.com');
+  // TextEditingController emailCtrl = new TextEditingController(text: 'padiiyaa@gmail.com');
+  TextEditingController emailCtrl = new TextEditingController(text: 'soporte@grupotum.com');
   TextEditingController passwordCtrl = new TextEditingController(text: 'N0v4-2020');
   TextEditingController emailRCtrl = new TextEditingController();
   TextEditingController passwordRCtrl = new TextEditingController();
