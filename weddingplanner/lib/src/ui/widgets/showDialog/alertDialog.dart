@@ -107,17 +107,19 @@ class _DialogAlertState extends State<DialogAlert> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('¡Bienvenido!'),
-          content: ListBody(
-          children: [
-            Padding(
-              child: Center(child: Text('${lista.elementAt(1)} estás en el evento ${lista.elementAt(6)}')),
-              padding: EdgeInsets.all(10),
+          content: SingleChildScrollView(
+            child: Column(
+            children: [
+              Padding(
+                child: Center(child: Text('${lista.elementAt(1)} estás en el evento ${lista.elementAt(6)}')),
+                padding: EdgeInsets.all(10),
+              ),
+              Padding(
+                child: Center(child: Text('Gracias por asistir.')),
+                padding: EdgeInsets.all(10),
+              ),
+            ],
             ),
-            Padding(
-              child: Center(child: Text('Gracias por asistir.')),
-              padding: EdgeInsets.all(10),
-            ),
-          ],
           ),
           actions: [
             Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Ok'))),
