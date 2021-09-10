@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sticky_headers/sticky_headers.dart';
+// import 'package:sticky_headers/sticky_headers.dart';
 import 'package:weddingplanner/src/blocs/pagos/pagos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_pagos.dart';
 
@@ -58,7 +58,9 @@ class _PagosState extends State<Pagos> {
     return Center(
       child: ListView(
         children: [
-          Expanded(child: StickyHeader(header: _getHeader(), content: _getContent(itemPago)))
+          // StickyHeader(header: _getHeader(), content: _getContent(itemPago))
+          _getHeader(),
+          _getContent(itemPago)
         ],
       ),
     );

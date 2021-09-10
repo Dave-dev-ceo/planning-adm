@@ -367,110 +367,112 @@ class _AgregarEventoState extends State<AgregarEvento> {
               },
               canTapOnHeader: true,
               isExpanded: isExpaned,
-              body: Expanded(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Wrap(
-                        children: <Widget>[
-                          formItemsDesign(
-                              Icons.notes,
-                              TextFormField(
-                                controller: descripcionCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Descripción del evento',
-                                ),
-                                validator: validateDescripcion,
-                              ),
-                              1000.0,
-                              80.0),
-                        ],
-                      ),
-                      Wrap(
-                        children: <Widget>[
-                          GestureDetector(
-                            child: formItemsDesign(
-                                Icons.date_range_outlined,
+              body: Container(
+                child: ListView(
+                  children: [
+                    Column(
+                      children: <Widget>[
+                        Wrap(
+                          children: <Widget>[
+                            formItemsDesign(
+                                Icons.notes,
                                 TextFormField(
-                                  controller: fechaInicioCtrl,
+                                  controller: descripcionCtrl,
                                   decoration: new InputDecoration(
-                                    labelText: 'Fecha Inicio',
+                                    labelText: 'Descripción del evento',
                                   ),
-                                  validator: validateFechaInicio,
+                                  validator: validateDescripcion,
                                 ),
-                                500.0,
+                                1000.0,
                                 80.0),
-                            onTap: () => _selectDateInicio(context),
-                          ),
-                          GestureDetector(
-                            child: formItemsDesign(
-                                Icons.date_range_outlined,
-                                TextFormField(
-                                  controller: fechaFinCtrl,
-                                  decoration: new InputDecoration(
-                                    labelText: 'Fecha Fin',
-                                  ),
-                                  validator: validateFechaFin,
-                                ),
-                                500.0,
-                                80.0),
-                            onTap: () => _selectDateFin(context),
-                          ),
-                        ],
-                      ),
-                      Wrap(
-                        children: <Widget>[
-                          GestureDetector(
-                            child: formItemsDesign(
-                                Icons.date_range_outlined,
-                                TextFormField(
-                                  controller: fechaEventoCtrl,
-                                  decoration: new InputDecoration(
-                                    labelText: 'Fecha Evento',
-                                  ),
-                                  validator: validateFechaEvento,
-                                ),
-                                500.0,
-                                80.0),
-                            onTap: () => _selectDateEvento(context),
-                          ),
-                          Expanded(child:
-                              BlocBuilder<TiposEventosBloc, TiposEventosState>(
-                            builder: (context, state) {
-                              if (state is TiposEventosInitial) {
-                                return Center(child: CircularProgressIndicator());
-                              } else if (state is LoadingTiposEventosState) {
-                                return Center(child: CircularProgressIndicator());
-                              } else if (state is MostrarTiposEventosState) {
-                                itemModelTipoEvento = state.tiposEventos;
-                                return SizedBox.shrink();
-                                /* formItemsDesign(
-                                    Icons.event,
-                                    Row(
-                                      children: <Widget>[
-                                        Text('Evento'),
-                                        SizedBox(
-                                          width: 15,
-                                        ),
-                                        _dropDownTiposEventos(state.tiposEventos),
-                                      ],
+                          ],
+                        ),
+                        Wrap(
+                          children: <Widget>[
+                            GestureDetector(
+                              child: formItemsDesign(
+                                  Icons.date_range_outlined,
+                                  TextFormField(
+                                    controller: fechaInicioCtrl,
+                                    decoration: new InputDecoration(
+                                      labelText: 'Fecha Inicio',
                                     ),
-                                    500.0,
-                                    80.0); */
-                              } else if (state is ErrorListaTiposEventosState) {
-                                return Center(
-                                  child: Text(state.message),
-                                );
-                                //_showError(context, state.message);
-                              } else {
-                                return Center(child: CircularProgressIndicator());
-                              }
-                            },
-                          )),
-                        ],
-                      )
-                    ],
-                  ),
+                                    validator: validateFechaInicio,
+                                  ),
+                                  500.0,
+                                  80.0),
+                              onTap: () => _selectDateInicio(context),
+                            ),
+                            GestureDetector(
+                              child: formItemsDesign(
+                                  Icons.date_range_outlined,
+                                  TextFormField(
+                                    controller: fechaFinCtrl,
+                                    decoration: new InputDecoration(
+                                      labelText: 'Fecha Fin',
+                                    ),
+                                    validator: validateFechaFin,
+                                  ),
+                                  500.0,
+                                  80.0),
+                              onTap: () => _selectDateFin(context),
+                            ),
+                          ],
+                        ),
+                        Wrap(
+                          children: <Widget>[
+                            GestureDetector(
+                              child: formItemsDesign(
+                                  Icons.date_range_outlined,
+                                  TextFormField(
+                                    controller: fechaEventoCtrl,
+                                    decoration: new InputDecoration(
+                                      labelText: 'Fecha Evento',
+                                    ),
+                                    validator: validateFechaEvento,
+                                  ),
+                                  500.0,
+                                  80.0),
+                              onTap: () => _selectDateEvento(context),
+                            ),
+                            Expanded(child:
+                                BlocBuilder<TiposEventosBloc, TiposEventosState>(
+                              builder: (context, state) {
+                                if (state is TiposEventosInitial) {
+                                  return Center(child: CircularProgressIndicator());
+                                } else if (state is LoadingTiposEventosState) {
+                                  return Center(child: CircularProgressIndicator());
+                                } else if (state is MostrarTiposEventosState) {
+                                  itemModelTipoEvento = state.tiposEventos;
+                                  return SizedBox.shrink();
+                                  /* formItemsDesign(
+                                      Icons.event,
+                                      Row(
+                                        children: <Widget>[
+                                          Text('Evento'),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          _dropDownTiposEventos(state.tiposEventos),
+                                        ],
+                                      ),
+                                      500.0,
+                                      80.0); */
+                                } else if (state is ErrorListaTiposEventosState) {
+                                  return Center(
+                                    child: Text(state.message),
+                                  );
+                                  //_showError(context, state.message);
+                                } else {
+                                  return Center(child: CircularProgressIndicator());
+                                }
+                              },
+                            )),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:sticky_headers/sticky_headers.dart';
+// import 'package:sticky_headers/sticky_headers.dart';
 
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,17 +92,17 @@ class _AsistenciaState extends State<Asistencia> {
     return Center(
       child: ListView(
         children: [
-          Expanded(
-            child: StickyHeader(
-              header: Container(
-                  height: 100.0,
-                  color: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 35.0),
-                  alignment: Alignment.centerLeft,
-                  child: _crearHeader(asistencia)),
-              content: Expanded(child: _crearTabla(asistencia)),
-            ),
-          ),
+          // StickyHeader(
+          //   header: Container(
+          //       height: 100.0,
+          //       color: Colors.white,
+          //       padding: EdgeInsets.symmetric(horizontal: 35.0),
+          //       alignment: Alignment.centerLeft,
+          //       child: _crearHeader(asistencia)),
+          //   content: Expanded(child: _crearTabla(asistencia)),
+          // ),
+          _crearHeader(asistencia),
+          _crearTabla(asistencia)
         ],
       ),
     );
