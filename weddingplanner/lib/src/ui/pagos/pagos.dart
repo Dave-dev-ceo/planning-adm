@@ -55,10 +55,10 @@ class _PagosState extends State<Pagos> {
   }
 
   _stickyHeader(itemPago) {
-    return Container(
+    return Center(
       child: ListView(
         children: [
-          StickyHeader(header: _getHeader(), content: _getContent(itemPago))
+          Expanded(child: StickyHeader(header: _getHeader(), content: _getContent(itemPago)))
         ],
       ),
     );
