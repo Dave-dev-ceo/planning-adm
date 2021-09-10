@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:sticky_headers/sticky_headers.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 import 'package:weddingplanner/src/blocs/pagos/pagos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_pagos.dart';
 
@@ -58,9 +58,7 @@ class _PagosState extends State<Pagos> {
     return Center(
       child: ListView(
         children: [
-          // StickyHeader(header: _getHeader(), content: _getContent(itemPago))
-          _getHeader(),
-          _getContent(itemPago)
+          StickyHeader(header: _getHeader(), content: _getContent(itemPago))
         ],
       ),
     );
@@ -93,18 +91,14 @@ class _PagosState extends State<Pagos> {
   }
 
   _getContent(itemPago) {
-    return Expanded(
-        child: SizedBox(
-      width: double.infinity,
-      child: PaginatedDataTable(
-        // header: _crearHeader(asistencia),
-        columns: _crearColumna(),
-        source: DTS(pago: _crearLista(itemPago)),
-        onRowsPerPageChanged: null,
-        rowsPerPage: itemPago.pagos.length == 0 ? 1 : itemPago.pagos.length+1,
-        dataRowHeight: 25.0,
-      ),
-    ));
+    return PaginatedDataTable(
+      // header: _crearHeader(asistencia),
+      columns: _crearColumna(),
+      source: DTS(pago: _crearLista(itemPago)),
+      onRowsPerPageChanged: null,
+      rowsPerPage: itemPago.pagos.length == 0 ? 1 : itemPago.pagos.length+1,
+      dataRowHeight: 25.0,
+    );
   }
 
   List<DataColumn> _crearColumna() {
