@@ -143,33 +143,33 @@ class _AgregarEventoState extends State<AgregarEvento> {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
-  _dropDownTiposEventos(ItemModelTipoEvento tiposEventos) {
-    return DropdownButton(
-      value: _mySelectionTE,
-      icon: const Icon(Icons.arrow_drop_down_outlined),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Color(0xFF000000)),
-      underline: Container(
-        height: 2,
-        color: Color(0xFF000000),
-      ),
-      /*onChanged: (newValue) {
-        setState(() {
-          _mySelectionTE = newValue;
-        });
-      },*/
-      items: tiposEventos.results.map((item) {
-        return DropdownMenuItem(
-          value: item.idTipoEvento.toString(),
-          child: Text(
-            item.nombreEvento,
-            style: TextStyle(fontSize: 18),
-          ),
-        );
-      }).toList(),
-    );
-  }
+  // _dropDownTiposEventos(ItemModelTipoEvento tiposEventos) {
+  //   return DropdownButton(
+  //     value: _mySelectionTE,
+  //     icon: const Icon(Icons.arrow_drop_down_outlined),
+  //     iconSize: 24,
+  //     elevation: 16,
+  //     style: const TextStyle(color: Color(0xFF000000)),
+  //     underline: Container(
+  //       height: 2,
+  //       color: Color(0xFF000000),
+  //     ),
+  //     /*onChanged: (newValue) {
+  //       setState(() {
+  //         _mySelectionTE = newValue;
+  //       });
+  //     },*/
+  //     items: tiposEventos.results.map((item) {
+  //       return DropdownMenuItem(
+  //         value: item.idTipoEvento.toString(),
+  //         child: Text(
+  //           item.nombreEvento,
+  //           style: TextStyle(fontSize: 18),
+  //         ),
+  //       );
+  //     }).toList(),
+  //   );
+  // }
 
   formItemsDesign(icon, item, large, ancho) {
     return Padding(
@@ -339,244 +339,246 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   formUI() {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          width: 60,
-        ),
-        ExpansionPanelList(
-          animationDuration: Duration(milliseconds: 1000),
-          expansionCallback: (int index, bool expaned) {
-            setState(() {
-              if (index == 0) {
-                isExpaned = !isExpaned;
-              } else {
-                isExpanedT = !isExpanedT;
-              }
-              //print(index);
-            });
-          },
-          children: [
-            ExpansionPanel(
-              headerBuilder: (BuildContext context, bool isExpaned) {
-                return Center(
-                    child: Text(
-                  'Información general',
-                  style: TextStyle(fontSize: 20.0),
-                ));
-              },
-              canTapOnHeader: true,
-              isExpanded: isExpaned,
-              body: Container(
-                child: Column(
-                  children: <Widget>[
-                    Wrap(
-                      children: <Widget>[
-                        formItemsDesign(
-                            Icons.notes,
-                            TextFormField(
-                              controller: descripcionCtrl,
-                              decoration: new InputDecoration(
-                                labelText: 'Descripción del evento',
-                              ),
-                              validator: validateDescripcion,
-                            ),
-                            1000.0,
-                            80.0),
-                      ],
-                    ),
-                    Wrap(
-                      children: <Widget>[
-                        GestureDetector(
-                          child: formItemsDesign(
-                              Icons.date_range_outlined,
-                              TextFormField(
-                                controller: fechaInicioCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Fecha Inicio',
-                                ),
-                                validator: validateFechaInicio,
-                              ),
-                              500.0,
-                              80.0),
-                          onTap: () => _selectDateInicio(context),
-                        ),
-                        GestureDetector(
-                          child: formItemsDesign(
-                              Icons.date_range_outlined,
-                              TextFormField(
-                                controller: fechaFinCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Fecha Fin',
-                                ),
-                                validator: validateFechaFin,
-                              ),
-                              500.0,
-                              80.0),
-                          onTap: () => _selectDateFin(context),
-                        ),
-                      ],
-                    ),
-                    Wrap(
-                      children: <Widget>[
-                        GestureDetector(
-                          child: formItemsDesign(
-                              Icons.date_range_outlined,
-                              TextFormField(
-                                controller: fechaEventoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Fecha Evento',
-                                ),
-                                validator: validateFechaEvento,
-                              ),
-                              500.0,
-                              80.0),
-                          onTap: () => _selectDateEvento(context),
-                        ),
-                        Expanded(child:
-                            BlocBuilder<TiposEventosBloc, TiposEventosState>(
-                          builder: (context, state) {
-                            if (state is TiposEventosInitial) {
-                              return Center(child: CircularProgressIndicator());
-                            } else if (state is LoadingTiposEventosState) {
-                              return Center(child: CircularProgressIndicator());
-                            } else if (state is MostrarTiposEventosState) {
-                              itemModelTipoEvento = state.tiposEventos;
-                              return SizedBox.shrink();
-                              /* formItemsDesign(
-                                  Icons.event,
-                                  Row(
-                                    children: <Widget>[
-                                      Text('Evento'),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      _dropDownTiposEventos(state.tiposEventos),
-                                    ],
-                                  ),
-                                  500.0,
-                                  80.0); */
-                            } else if (state is ErrorListaTiposEventosState) {
-                              return Center(
-                                child: Text(state.message),
-                              );
-                              //_showError(context, state.message);
-                            } else {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                          },
-                        )),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            ExpansionPanel(
+    return Expanded(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: 60,
+          ),
+          ExpansionPanelList(
+            animationDuration: Duration(milliseconds: 1000),
+            expansionCallback: (int index, bool expaned) {
+              setState(() {
+                if (index == 0) {
+                  isExpaned = !isExpaned;
+                } else {
+                  isExpanedT = !isExpanedT;
+                }
+                //print(index);
+              });
+            },
+            children: [
+              ExpansionPanel(
                 headerBuilder: (BuildContext context, bool isExpaned) {
                   return Center(
                       child: Text(
-                    'Datos contrato',
+                    'Información general',
                     style: TextStyle(fontSize: 20.0),
                   ));
                 },
                 canTapOnHeader: true,
-                isExpanded: isExpanedT,
+                isExpanded: isExpaned,
                 body: Container(
                   child: Column(
                     children: <Widget>[
                       Wrap(
                         children: <Widget>[
                           formItemsDesign(
-                              Icons.person,
+                              Icons.notes,
                               TextFormField(
-                                controller: nombreCtrl,
+                                controller: descripcionCtrl,
                                 decoration: new InputDecoration(
-                                  labelText: 'Nombre',
+                                  labelText: 'Descripción del evento',
                                 ),
-                                validator: validateNombre,
+                                validator: validateDescripcion,
                               ),
-                              500.0,
-                              80.0),
-                          formItemsDesign(
-                              null,
-                              TextFormField(
-                                controller: apellidoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Apellidos',
-                                ),
-                                validator: validateApellido,
-                              ),
-                              500.0,
+                              1000.0,
                               80.0),
                         ],
                       ),
                       Wrap(
                         children: <Widget>[
-                          formItemsDesign(
-                              Icons.phone,
-                              TextFormField(
-                                controller: telefonoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Teléfono',
+                          GestureDetector(
+                            child: formItemsDesign(
+                                Icons.date_range_outlined,
+                                TextFormField(
+                                  controller: fechaInicioCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Fecha Inicio',
+                                  ),
+                                  validator: validateFechaInicio,
                                 ),
-                                validator: validateTelefono,
-                              ),
-                              500.0,
-                              80.0),
-                          formItemsDesign(
-                              Icons.email,
-                              TextFormField(
-                                controller: emailCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Correo',
+                                500.0,
+                                80.0),
+                            onTap: () => _selectDateInicio(context),
+                          ),
+                          GestureDetector(
+                            child: formItemsDesign(
+                                Icons.date_range_outlined,
+                                TextFormField(
+                                  controller: fechaFinCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Fecha Fin',
+                                  ),
+                                  validator: validateFechaFin,
                                 ),
-                                validator: validateEmail,
-                              ),
-                              500.0,
-                              80.0),
+                                500.0,
+                                80.0),
+                            onTap: () => _selectDateFin(context),
+                          ),
                         ],
                       ),
                       Wrap(
                         children: <Widget>[
-                          formItemsDesign(
-                              null,
-                              TextFormField(
-                                controller: direccionCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Dirección completa',
+                          GestureDetector(
+                            child: formItemsDesign(
+                                Icons.date_range_outlined,
+                                TextFormField(
+                                  controller: fechaEventoCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Fecha Evento',
+                                  ),
+                                  validator: validateFechaEvento,
                                 ),
-                                validator: validateDireccion,
-                              ),
-                              500.0,
-                              80.0),
-                          formItemsDesign(
-                              null,
-                              TextFormField(
-                                controller: estadoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Estado',
-                                ),
-                                validator: validateEstado,
-                              ),
-                              500.0,
-                              80.0),
+                                500.0,
+                                80.0),
+                            onTap: () => _selectDateEvento(context),
+                          ),
+                          Expanded(child:
+                              BlocBuilder<TiposEventosBloc, TiposEventosState>(
+                            builder: (context, state) {
+                              if (state is TiposEventosInitial) {
+                                return Center(child: CircularProgressIndicator());
+                              } else if (state is LoadingTiposEventosState) {
+                                return Center(child: CircularProgressIndicator());
+                              } else if (state is MostrarTiposEventosState) {
+                                itemModelTipoEvento = state.tiposEventos;
+                                return SizedBox.shrink();
+                                /* formItemsDesign(
+                                    Icons.event,
+                                    Row(
+                                      children: <Widget>[
+                                        Text('Evento'),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        _dropDownTiposEventos(state.tiposEventos),
+                                      ],
+                                    ),
+                                    500.0,
+                                    80.0); */
+                              } else if (state is ErrorListaTiposEventosState) {
+                                return Center(
+                                  child: Text(state.message),
+                                );
+                                //_showError(context, state.message);
+                              } else {
+                                return Center(child: CircularProgressIndicator());
+                              }
+                            },
+                          )),
                         ],
-                      ),
+                      )
                     ],
                   ),
-                ))
-          ],
-        ),
-        SizedBox(
-          height: 30.0,
-        ),
-        GestureDetector(
-            onTap: () {
-              _save();
-            },
-            child: CallToAction('Guardar'))
-      ],
+                ),
+              ),
+              ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpaned) {
+                    return Center(
+                        child: Text(
+                      'Datos contrato',
+                      style: TextStyle(fontSize: 20.0),
+                    ));
+                  },
+                  canTapOnHeader: true,
+                  isExpanded: isExpanedT,
+                  body: Container(
+                    child: Column(
+                      children: <Widget>[
+                        Wrap(
+                          children: <Widget>[
+                            formItemsDesign(
+                                Icons.person,
+                                TextFormField(
+                                  controller: nombreCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Nombre',
+                                  ),
+                                  validator: validateNombre,
+                                ),
+                                500.0,
+                                80.0),
+                            formItemsDesign(
+                                null,
+                                TextFormField(
+                                  controller: apellidoCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Apellidos',
+                                  ),
+                                  validator: validateApellido,
+                                ),
+                                500.0,
+                                80.0),
+                          ],
+                        ),
+                        Wrap(
+                          children: <Widget>[
+                            formItemsDesign(
+                                Icons.phone,
+                                TextFormField(
+                                  controller: telefonoCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Teléfono',
+                                  ),
+                                  validator: validateTelefono,
+                                ),
+                                500.0,
+                                80.0),
+                            formItemsDesign(
+                                Icons.email,
+                                TextFormField(
+                                  controller: emailCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Correo',
+                                  ),
+                                  validator: validateEmail,
+                                ),
+                                500.0,
+                                80.0),
+                          ],
+                        ),
+                        Wrap(
+                          children: <Widget>[
+                            formItemsDesign(
+                                null,
+                                TextFormField(
+                                  controller: direccionCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Dirección completa',
+                                  ),
+                                  validator: validateDireccion,
+                                ),
+                                500.0,
+                                80.0),
+                            formItemsDesign(
+                                null,
+                                TextFormField(
+                                  controller: estadoCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Estado',
+                                  ),
+                                  validator: validateEstado,
+                                ),
+                                500.0,
+                                80.0),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ))
+            ],
+          ),
+          SizedBox(
+            height: 30.0,
+          ),
+          GestureDetector(
+              onTap: () {
+                _save();
+              },
+              child: CallToAction('Guardar'))
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:convert';
-// import 'dart:html';
+import 'dart:html';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -60,11 +60,11 @@ class _AgregarContratoState extends State<AgregarContrato> {
     document.dispose();
     //Download the output file
     if(kIsWeb){
-      // AnchorElement(
-      //   href:
-      //       "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
-      // ..setAttribute("download", nombreDocumento + ".pdf")
-      // ..click();
+      AnchorElement(
+        href:
+            "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
+      ..setAttribute("download", nombreDocumento + ".pdf")
+      ..click();
     }else{
       print("gogogogogo");
     }

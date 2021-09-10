@@ -89,19 +89,21 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   Widget getAsistencia(asistencia) {
-    return Center(
-      child: ListView(
-        children: [
-          StickyHeader(
-            header: Container(
-                height: 100.0,
-                color: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 35.0),
-                alignment: Alignment.centerLeft,
-                child: _crearHeader(asistencia)),
-            content: Expanded(child: _crearTabla(asistencia)),
-          ),
-        ],
+    return Expanded(
+      child: Center(
+        child: ListView(
+          children: [
+            StickyHeader(
+              header: Container(
+                  height: 100.0,
+                  color: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 35.0),
+                  alignment: Alignment.centerLeft,
+                  child: _crearHeader(asistencia)),
+              content: Expanded(child: _crearTabla(asistencia)),
+            ),
+          ],
+        ),
       ),
     );
   }
