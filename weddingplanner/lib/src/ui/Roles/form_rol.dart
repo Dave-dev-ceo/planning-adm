@@ -459,7 +459,7 @@ class _FormRolState extends State<FormRol> {
         textAlign: TextAlign.center,
       ),
       content:
-          Text('Lo sentimos; sa sesión a caducado. Inicie sesión de nuevo.'),
+          Text('Lo sentimos; la sesión a caducado. Inicie sesión de nuevo.'),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[
