@@ -27,8 +27,7 @@ class _FullScreenDialogAddEventoState extends State<FullScreenDialogAddEvento> {
           automaticallyImplyLeading: true,
         ),
         body:  SafeArea(
-        child: 
-            AgregarEvento()
+        child: AgregarEvento()
       ),
     );
   }

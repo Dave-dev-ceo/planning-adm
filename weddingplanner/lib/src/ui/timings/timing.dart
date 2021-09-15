@@ -63,16 +63,16 @@ class _TimingState extends State<Timing> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        heroTag: null,
-        child: Icon(Icons.add),
-        onPressed: () {
-          setState(() {
-            bandera = !bandera;
-          });
-        },
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   heroTag: null,
+      //   child: Icon(Icons.add),
+      //   onPressed: () {
+      //     setState(() {
+      //       bandera = !bandera;
+      //     });
+      //   },
+      // ),
     );
   }
 
@@ -114,7 +114,7 @@ class _TimingState extends State<Timing> {
                       child: TextFormField(
                         controller: timingCtrl,
                         decoration: new InputDecoration(
-                          labelText: 'Timing',
+                          labelText: 'Cronograma',
                         ),
                       ),
                     ),
@@ -173,7 +173,7 @@ class _TimingState extends State<Timing> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(height: 30, child: Text('Timings')),
+              Container(height: 30, child: Text('Cronogramas')),
               Container(
                 height: 30,
                 child: TextField(
@@ -215,7 +215,7 @@ class _TimingState extends State<Timing> {
           showCheckboxColumn: bandera,
           columns: [
             DataColumn(
-                label: Text('Timing'),
+                label: Text('Cronograma'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
                     snapshot.results.length > 0

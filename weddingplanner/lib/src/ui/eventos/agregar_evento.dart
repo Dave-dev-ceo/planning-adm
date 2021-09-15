@@ -95,17 +95,22 @@ class _AgregarEventoState extends State<AgregarEvento> {
             return _dialogMSG('Creando evento');
           } else if (state is CreateEventosOkState) {
             Navigator.pop(_ingresando);
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Evento agregardo'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.green,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // final snackBar = SnackBar(
+            //   content: Container(
+            //     height: 30,
+            //     child: Center(
+            //       child: Text('Evento agregardo'),
+            //     ),
+            //     //color: Colors.red,
+            //   ),
+            //   backgroundColor: Colors.green,
+            // );
+            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+             ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Evento agregardo'),
+                )
+              );
             _clearController();
           } else if (state is ErrorCreateEventosState) {
             Navigator.pop(_ingresando);
@@ -215,44 +220,44 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   String validateNombre(String value) {
-    /*if (value.length == 0) {
+    if (value.length == 0) {
       return "El nombre es necesario";
-    }*/
+    }
     return null;
   }
 
   String validateApellido(String value) {
-    /*if (value.length == 0) {
+    if (value.length == 0) {
       return "El apellido es necesario";
-    }*/
+    }
     return null;
   }
 
   String validateTelefono(String value) {
-    /*if (value.length == 0) {
+    if (value.length == 0) {
       return "El télefono es necesario";
-    }*/
+    }
     return null;
   }
 
   String validateEmail(String value) {
-    /*if (value.length == 0) {
+    if (value.length == 0) {
       return "El correo es necesario";
-    }*/
+    }
     return null;
   }
 
   String validateDireccion(String value) {
-    /*if (value.length == 0) {
+    if (value.length == 0) {
       return "La dirección es necesaria";
-    }*/
+    }
     return null;
   }
 
   String validateEstado(String value) {
-    /*if (value.length == 0) {
+    if (value.length == 0) {
       return "El estado es necesario";
-    }*/
+    }
     return null;
   }
 
@@ -350,7 +355,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
               } else {
                 isExpanedT = !isExpanedT;
               }
-              //print(index);
+              // print(index);
             });
           },
           children: [
@@ -365,7 +370,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
               canTapOnHeader: true,
               isExpanded: isExpaned,
               body: Container(
-                child: Column(
+                child: Wrap(
                   children: <Widget>[
                     formItemsDesign(
                         Icons.notes,
@@ -376,7 +381,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                           ),
                           validator: validateDescripcion,
                         ),
-                        1000.0,
+                        450.0,
                         80.0),
                     GestureDetector(
                       child: formItemsDesign(
@@ -388,7 +393,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                             ),
                             validator: validateFechaInicio,
                           ),
-                          500.0,
+                          450.0,
                           80.0),
                       onTap: () => _selectDateInicio(context),
                     ),
@@ -402,7 +407,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                             ),
                             validator: validateFechaFin,
                           ),
-                          500.0,
+                          450.0,
                           80.0),
                       onTap: () => _selectDateFin(context),
                     ),
@@ -416,43 +421,45 @@ class _AgregarEventoState extends State<AgregarEvento> {
                             ),
                             validator: validateFechaEvento,
                           ),
-                          500.0,
+                          450.0,
                           80.0),
                       onTap: () => _selectDateEvento(context),
                     ),
-                    Expanded(child:
-                        BlocBuilder<TiposEventosBloc, TiposEventosState>(
-                      builder: (context, state) {
-                        if (state is TiposEventosInitial) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (state is LoadingTiposEventosState) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (state is MostrarTiposEventosState) {
-                          itemModelTipoEvento = state.tiposEventos;
-                          return SizedBox.shrink();
-                          /* formItemsDesign(
-                              Icons.event,
-                              Row(
-                                children: <Widget>[
-                                  Text('Evento'),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  _dropDownTiposEventos(state.tiposEventos),
-                                ],
-                              ),
-                              500.0,
-                              80.0); */
-                        } else if (state is ErrorListaTiposEventosState) {
-                          return Center(
-                            child: Text(state.message),
-                          );
-                          //_showError(context, state.message);
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    ))
+                    SizedBox(height: 150.0,)
+                    // Descomentar solo si el item drop tiene sus eventos de lo contrario truena
+                    // Expanded(child:
+                    //     BlocBuilder<TiposEventosBloc, TiposEventosState>(
+                    //   builder: (context, state) {
+                    //     if (state is TiposEventosInitial) {
+                    //       return Center(child: CircularProgressIndicator());
+                    //     } else if (state is LoadingTiposEventosState) {
+                    //       return Center(child: CircularProgressIndicator());
+                    //     } else if (state is MostrarTiposEventosState) {
+                    //       itemModelTipoEvento = state.tiposEventos;
+                    //       return SizedBox.shrink();
+                    //       /* formItemsDesign(
+                    //           Icons.event,
+                    //           Row(
+                    //             children: <Widget>[
+                    //               Text('Evento'),
+                    //               SizedBox(
+                    //                 width: 15,
+                    //               ),
+                    //               _dropDownTiposEventos(state.tiposEventos),
+                    //             ],
+                    //           ),
+                    //           450.0,
+                    //           80.0); */
+                    //     } else if (state is ErrorListaTiposEventosState) {
+                    //       return Center(
+                    //         child: Text(state.message),
+                    //       );
+                    //       //_showError(context, state.message);
+                    //     } else {
+                    //       return Center(child: CircularProgressIndicator());
+                    //     }
+                    //   },
+                    // ))
                   ],
                 ),
               ),
@@ -481,10 +488,10 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                 ),
                                 validator: validateNombre,
                               ),
-                              500.0,
+                              450.0,
                               80.0),
                           formItemsDesign(
-                              null,
+                              Icons.person,
                               TextFormField(
                                 controller: apellidoCtrl,
                                 decoration: new InputDecoration(
@@ -492,7 +499,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                 ),
                                 validator: validateApellido,
                               ),
-                              500.0,
+                              450.0,
                               80.0),
                         ],
                       ),
@@ -507,7 +514,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                 ),
                                 validator: validateTelefono,
                               ),
-                              500.0,
+                              450.0,
                               80.0),
                           formItemsDesign(
                               Icons.email,
@@ -518,14 +525,14 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                 ),
                                 validator: validateEmail,
                               ),
-                              500.0,
+                              450.0,
                               80.0),
                         ],
                       ),
                       Wrap(
                         children: <Widget>[
                           formItemsDesign(
-                              null,
+                              Icons.home_filled,
                               TextFormField(
                                 controller: direccionCtrl,
                                 decoration: new InputDecoration(
@@ -533,10 +540,10 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                 ),
                                 validator: validateDireccion,
                               ),
-                              500.0,
+                              450.0,
                               80.0),
                           formItemsDesign(
-                              null,
+                              Icons.map_outlined,
                               TextFormField(
                                 controller: estadoCtrl,
                                 decoration: new InputDecoration(
@@ -544,10 +551,11 @@ class _AgregarEventoState extends State<AgregarEvento> {
                                 ),
                                 validator: validateEstado,
                               ),
-                              500.0,
+                              450.0,
                               80.0),
                         ],
                       ),
+                      SizedBox(height: 50.0,)
                     ],
                   ),
                 ))

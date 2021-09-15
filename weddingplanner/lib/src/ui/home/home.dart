@@ -199,7 +199,7 @@ class _HomeState extends State<Home> {
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
         tabs.add(
-            TabItem(titulo: 'Tareas', icono: Icons.hourglass_bottom_rounded));
+            TabItem(titulo: 'Cronogramas', icono: Icons.hourglass_bottom_rounded));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
