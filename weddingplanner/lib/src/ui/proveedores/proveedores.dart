@@ -129,7 +129,8 @@ class _ProveedoresState extends State<Proveedores> {
                           arguments: {
                             'id_proveedor': item.id_proveedor,
                             'id_servicio': null,
-                            'nombre': item.nombre
+                            'nombre': item.nombre,
+                            'type':0
                           });
                     },
                     icon: const Icon(Icons.file_present)),
@@ -163,7 +164,8 @@ class _ProveedoresState extends State<Proveedores> {
                         arguments: {
                           'id_proveedor': null,
                           'id_servicio': opt.id_servicio,
-                          'nombre': opt.nombre
+                          'nombre': opt.nombre,
+                          'type':0
                         });
                   },
                   icon: const Icon(Icons.file_present))

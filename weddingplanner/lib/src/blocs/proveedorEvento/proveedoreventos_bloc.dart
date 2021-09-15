@@ -27,24 +27,24 @@ class ProveedoreventosBloc
         yield ErrorCreateProveedorEventoState('Error');
       }
     } else if (event is CreateProveedorEventosEvent) {
-      print('Vamos a insertar ');
       try {
-        print('Vamos a insertar ');
         int listaData = await logic.createProveedorEvento(event.data);
         // yield CreateProveedorEventoState(listaData);
       } catch (e) {
-        print(e);
         yield ErrorCreateProveedorEventoState('No se pudo insertar');
       }
     } else if (event is DeleteProveedorEventosEvent) {
-      print('Vamos a insertar ');
       try {
-        print('Vamos a insertar ');
         int listaData = await logic.deleteProveedorEvento(event.data);
         // yield CreateProveedorEventoState(listaData);
       } catch (e) {
-        print(e);
         yield ErrorDeleteProveedorEventoState('No se pudo insertar');
+      }
+    } else if (event is UpdateProveedorEventosEvent) {
+      try {
+        await logic.updateProveedorEvento(event.data);
+      } catch (e) {
+        yield ErrorCreateProveedorEventoState('No se pudo actualizar');
       }
     }
   }

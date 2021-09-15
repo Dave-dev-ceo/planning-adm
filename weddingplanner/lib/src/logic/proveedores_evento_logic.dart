@@ -8,6 +8,7 @@ import 'package:weddingplanner/src/resources/config_conection.dart';
 abstract class LogicProveedoresEvento {
   Future<ItemModelProveedoresEvento> fetchProveedorEvento();
   Future<int> createProveedorEvento(Map<String, dynamic> data);
+  updateProveedorEvento(Map data);
 }
 
 class ProveedoresException implements Exception {}
@@ -33,6 +34,7 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         await _sharedPreferences.setToken(data['token']);
+        // print(data['data']);
         return ItemModelProveedoresEvento.fromJson(data['data']);
       } else if (response.statusCode == 401) {
         throw TokenException();
@@ -46,15 +48,10 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
 
   @override
   Future<int> createProveedorEvento(Map<String, dynamic> data) async {
-    print('Query insert');
-    print(data['id_servicio']);
-    print(data['id_proveedor']);
     if (data['id_servicio'] != 0 && data['id_proveedor'] != 0) {
-      print('dddd');
       int idPlanner = await _sharedPreferences.getIdPlanner();
       int idEvento = await _sharedPreferences.getIdEvento();
       int idUsuario = await _sharedPreferences.getIdUsuario();
-      data['seleccionado'] = '';
       data['observacion'] = '';
       data['id_servicio'] = data['id_servicio'].toString();
       data['id_proveedor'] = data['id_proveedor'].toString();
@@ -109,5 +106,36 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
         throw ProveedoresException();
       }
     }
+  }
+
+  @override
+  updateProveedorEvento(Map data) async {
+    // variables
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    String token = await _sharedPreferences.getToken();
+
+    data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
+
+    final response = await client.post(
+      Uri.parse(
+        configC.url + 
+        configC.puerto +
+        '/wedding/PROVEEDORES/updateProveedorEvento'
+      ),
+      body: data,
+      headers: {HttpHeaders.authorizationHeader:token}
+    );
+
+    // filtro
+    if(response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+    } else if(response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw ProveedoresException();
+    } 
   }
 }

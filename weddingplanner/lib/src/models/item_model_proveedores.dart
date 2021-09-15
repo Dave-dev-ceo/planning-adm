@@ -36,12 +36,16 @@ class ItemProveedor {
       this.nombre,
       this.descripcion,
       this.servicio,
-      this.isExpanded = false});
+      this.isExpanded = false,
+      this.seleccion,
+      this.observacion});
   int id_proveedor;
   String nombre;
   String descripcion;
   List<ServiciosModel> servicio;
   bool isExpanded;
+  bool seleccion;
+  String observacion;
 }
 
 class ItemProveedorServicio {

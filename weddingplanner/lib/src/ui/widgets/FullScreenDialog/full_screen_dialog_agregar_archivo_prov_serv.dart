@@ -51,6 +51,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            widget.provsrv['type'] == 0 ?
             Card(
               color: Colors.white,
               elevation: 12,
@@ -94,7 +95,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                       )
                     ],
                   )),
-            ),
+            ):SizedBox(),
             BlocBuilder<ArchivoProveedorBloc, ArchivoProveedorState>(
                 builder: (context, state) {
               if (state is LoadingArchivoProveedorState) {

@@ -11,6 +11,12 @@ class CreateProveedorEventosEvent extends ProveedoreventosEvent {
   List<Object> get props => [data];
 }
 
+class UpdateProveedorEventosEvent extends ProveedoreventosEvent {
+  final Map data;
+  UpdateProveedorEventosEvent(this.data);
+  Map get props => data;
+}
+
 class DeleteProveedorEventosEvent extends ProveedoreventosEvent {
   final Map<String, dynamic> data;
   DeleteProveedorEventosEvent(this.data);

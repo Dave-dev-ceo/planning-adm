@@ -21,12 +21,18 @@ class ProveedoresEvento {
   int _id_planner;
   String _nombre;
   List _prov;
+  //
+  bool _seleccion;
+  String _observacion;
 
   ProveedoresEvento(datos) {
     _id_servicio = datos['id_servicio'];
     _id_planner = datos['id_planner'];
     _nombre = datos['nombre'];
     _prov = datos['prov'];
+    //
+    _seleccion = datos['seleccionado'];
+    _observacion = datos['observacion'];
   }
 
   int get idServicio => _id_servicio;
@@ -34,6 +40,9 @@ class ProveedoresEvento {
   int get idPlanner => _id_planner;
   String get nombre => _nombre;
   List get prov => _prov;
+  //
+  String get observacion => _observacion;
+  bool get seleccion => _seleccion;
 }
 
 class ItemProveedorEvento {
@@ -42,12 +51,17 @@ class ItemProveedorEvento {
       this.id_planner,
       this.nombre,
       this.prov,
-      this.isExpanded = true});
+      this.isExpanded = true,
+      this.seleccion,
+      this.observacion});
   int id_servicio;
   int id_planner;
   String nombre;
   List<ItemProveedor> prov;
   bool isExpanded;
+  //
+  bool seleccion;
+  String observacion;
 }
 
 class ItemModelProveedoresEvent {
@@ -69,20 +83,23 @@ class ProveedoresEvent {
   int _id_planner;
   int _id_servicio;
   int _id_proveedor;
-  String _seleccionado;
+  //
+  bool _seleccionado;
   String _observacion;
 
   ProveedoresEvent(datos) {
     _id_planner = datos['id_planner'];
     _id_servicio = datos['id_servicio'];
     _id_proveedor = datos['id_proveedor'];
-    _observacion = datos['seleccionado'];
+    //
+    _seleccionado = datos['seleccionado'];
     _observacion = datos['observacion'];
   }
 
   int get idPlanner => _id_planner;
   int get idServicio => _id_servicio;
   int get idProveedor => _id_proveedor;
-  String get nombre => _seleccionado;
-  String get prov => _observacion;
+  //
+  bool get seleccionado => _seleccionado;
+  String get observacion => _observacion;
 }
