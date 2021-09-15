@@ -102,6 +102,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
           SizedBox(height: 60.0,)
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: _agregarActividadCalendario(),
     );
   }

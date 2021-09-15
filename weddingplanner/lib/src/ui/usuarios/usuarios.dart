@@ -95,7 +95,7 @@ class _UsuariosState extends State<Usuarios> {
             )
           : null,
       floatingActionButtonLocation:
-          _selectedIndex == 0 ? FloatingActionButtonLocation.startDocked : null,
+          _selectedIndex == 0 ? FloatingActionButtonLocation.endFloat : null,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

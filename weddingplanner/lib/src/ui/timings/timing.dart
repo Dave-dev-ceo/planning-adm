@@ -63,6 +63,7 @@ class _TimingState extends State<Timing> {
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         heroTag: null,
         child: Icon(Icons.add),
@@ -72,7 +73,6 @@ class _TimingState extends State<Timing> {
           });
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
   }
 

@@ -362,6 +362,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           child: listaInvitados(context),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: buildSpeedDial(pHz),
       /*floatingActionButton: FloatingActionButton(
         onPressed: () async{

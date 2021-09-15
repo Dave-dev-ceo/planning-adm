@@ -183,7 +183,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
                 Navigator.of(context).pushNamed('/addEvento');
               })
           : SizedBox.shrink(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

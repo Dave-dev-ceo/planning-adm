@@ -161,7 +161,7 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
           //print(txt);
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

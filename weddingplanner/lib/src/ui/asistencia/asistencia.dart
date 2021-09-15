@@ -83,6 +83,7 @@ class _AsistenciaState extends State<Asistencia> {
           },
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton:
           _crearBotonFlotante(MediaQuery.of(context).size.width),
     );

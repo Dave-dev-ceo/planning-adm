@@ -70,8 +70,7 @@ class _ListaState extends State<Listas> {
                     ),
                   ),
                 ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.startFloat,
+                floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
                 floatingActionButton: FloatingActionButton(
                   child: Icon(Icons.add),
                   onPressed: () async {

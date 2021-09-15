@@ -133,6 +133,7 @@ class _AgregarMachoteState extends State<AgregarMachote> {
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
         onPressed: () async {
@@ -153,7 +154,6 @@ class _AgregarMachoteState extends State<AgregarMachote> {
           //print(txt);
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
     );
   }
 }

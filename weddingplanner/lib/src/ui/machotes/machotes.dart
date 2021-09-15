@@ -234,6 +234,7 @@ class _MachotesState extends State<Machotes> {
           },
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         heroTag: null,
         child: Icon(Icons.add),

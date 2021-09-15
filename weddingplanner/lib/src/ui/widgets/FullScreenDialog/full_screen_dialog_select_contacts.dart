@@ -377,6 +377,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
           ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _saveContact();

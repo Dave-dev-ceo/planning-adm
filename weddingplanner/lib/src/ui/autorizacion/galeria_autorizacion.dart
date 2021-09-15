@@ -48,6 +48,7 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
           title: Text('Galeria de ${widget.map['name']}'),
         ),
         body: _buildBloc(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () => _addImage(widget.map['id']),

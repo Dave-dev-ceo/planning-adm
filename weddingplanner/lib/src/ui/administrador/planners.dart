@@ -106,7 +106,7 @@ class _PlannersState extends State<Planners> {
           Navigator.of(context).pushNamed('/addPlanners');
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -36,7 +36,7 @@ class _ProveedoresState extends State<Proveedores> {
         index: _selectedIndex,
         children: [_listaProveedore(), Servicios()],
       )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {

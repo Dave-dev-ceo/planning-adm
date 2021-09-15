@@ -83,7 +83,7 @@ class _RolesState extends State<Roles> {
           });
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
