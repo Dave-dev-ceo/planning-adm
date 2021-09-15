@@ -23,12 +23,22 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
   @override
   Future<ItemModelProveedoresEvento> fetchProveedorEvento() async {
     try {
+      // var checkInvolucrado;
+
       int id_planner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
+      var checkInvolucrado = await _sharedPreferences.getIdInvolucrado();
+      print(checkInvolucrado);
+      if (checkInvolucrado == null) {
+        checkInvolucrado = '1';
+      } else {
+        checkInvolucrado = '0';
+      }
+      print(checkInvolucrado);
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerProveedoresEvento/$id_planner'),
+              '/wedding/PROVEEDORES/obtenerProveedoresEvento/$id_planner/$checkInvolucrado'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -119,23 +129,20 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
     data['id_evento'] = idEvento.toString();
 
     final response = await client.post(
-      Uri.parse(
-        configC.url + 
-        configC.puerto +
-        '/wedding/PROVEEDORES/updateProveedorEvento'
-      ),
-      body: data,
-      headers: {HttpHeaders.authorizationHeader:token}
-    );
+        Uri.parse(configC.url +
+            configC.puerto +
+            '/wedding/PROVEEDORES/updateProveedorEvento'),
+        body: data,
+        headers: {HttpHeaders.authorizationHeader: token});
 
     // filtro
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-    } else if(response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
       throw ProveedoresException();
-    } 
+    }
   }
 }
