@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
+import 'package:weddingplanner/src/models/item_model-acompanante.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/models/item_model_invitado.dart';
@@ -32,6 +33,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   int contActualizaMesa = 0;
   bool isExpaned = true;
   bool isExpanedT = false;
+  bool isExpaneA = false;
   GlobalKey<FormState> keyForm = new GlobalKey();
   GlobalKey<FormState> keyFormG = new GlobalKey();
   TextEditingController nombreCtrl = new TextEditingController();
@@ -55,6 +57,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   bool _lights = false;
 
   String _base64qr;
+  // Acompañante
+  TextEditingController nombreAcompananteCtrl = new TextEditingController();
+  int _mySelectionAEdad = 0;
+  int _mySelectionAGenero = 0;
 
   _FullScreenDialogEditState(this.idInvitado);
   Map<int, Widget> _children = {
@@ -85,8 +91,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       builder: (context, AsyncSnapshot<ItemModelInvitado> snapshot) {
         if (snapshot.hasData) {
           //_mySelection = ((snapshot.data.results.length - 1).toString());
-          //print(_mySelection);
-          return formUI(snapshot.data);
+          ItemModelAcompanante l;
+          return formUI(snapshot.data, l);
           //print(snapshot.data);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
@@ -96,6 +102,56 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     );
   }
 
+  Widget _listaAcompanantes() {
+    blocInvitado.fetchAllAcompanante(idInvitado, context);
+    return StreamBuilder(
+      stream: blocInvitado.allAcompanante,
+      builder: (context, AsyncSnapshot<ItemModelAcompanante> snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            width: 1000,
+            child: Column(
+              children: <Widget>[
+                Wrap(
+                  children: _createListItemsAcomp(snapshot.data),
+                )
+              ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  List<Widget> _createListItemsAcomp(ItemModelAcompanante data) {
+    // Creación de lista de Widget.
+    List<Widget> listaAcompa = new List<Widget>();
+    for (var opt in data.results) {
+      final tempWidget = ListTile(
+          title: Text(opt.nombre),
+          subtitle: Text(opt.edad),
+          trailing: Wrap(spacing: 12, children: <Widget>[
+            IconButton(
+                onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) => _eliminarAcompanante()),
+                icon: const Icon(Icons.delete)),
+            IconButton(
+                onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) => _editarAcompanante()),
+                icon: const Icon(Icons.edit))
+          ]));
+      listaAcompa.add(tempWidget);
+    }
+    return listaAcompa;
+  }
+
+  _eliminarAcompanante() {}
+  _editarAcompanante() {}
   _listaGrupos() {
     ///bloc.dispose();
     blocGrupos.fetchAllGrupos(context);
@@ -307,7 +363,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       onChanged: (newValue) {
         setState(() {
           _mySelection = newValue;
-          print(_mySelection);
         });
       },
       items: estatus.results.map((item) {
@@ -360,13 +415,12 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     );
   }
 
-  Widget formUI(ItemModelInvitado invitado) {
+  Widget formUI(ItemModelInvitado invitado, ItemModelAcompanante acompanante) {
     _base64qr = invitado.codigoQr;
     if (contActualiza <= 0) {
       if (invitado.asistencia != null) {
         _mySelection = invitado.asistencia.toString();
         contActualiza++;
-        print('entro en confirmado');
       } else {
         _mySelection = "0";
         contActualiza++;
@@ -376,11 +430,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       if (invitado.edad == "A") {
         _currentSelection = 0;
         contActualizaEdad++;
-        print('entro en A');
       } else if (invitado.edad == "N") {
         _currentSelection = 1;
         contActualizaEdad++;
-        print('entro en N');
       }
     }
 
@@ -388,11 +440,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       if (invitado.genero == "H") {
         _currentSelectionGenero = 0;
         contActualizaGenero++;
-        print('entro en H');
       } else if (invitado.genero == "M") {
         _currentSelectionGenero = 1;
         contActualizaGenero++;
-        print('entro en M');
       }
     }
     if (contActualizaGrupo <= 0) {
@@ -430,8 +480,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           setState(() {
             if (index == 0) {
               isExpaned = !isExpaned;
-            } else {
+            } else if (index == 1) {
               isExpanedT = !isExpanedT;
+            } else if (index == 2) {
+              isExpaneA = !isExpaneA;
             }
             //print(index);
           });
@@ -709,6 +761,132 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                   ],
                 ),
               )),
+          ExpansionPanel(
+              headerBuilder: (BuildContext context, bool isExpaned) {
+                return Center(
+                    child: Text(
+                  'Acompañantes',
+                  style: TextStyle(fontSize: 20.0),
+                ));
+              },
+              canTapOnHeader: true,
+              isExpanded: isExpaneA,
+              body: Container(
+                child: Column(
+                  children: <Widget>[
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                            Icons.person,
+                            TextFormField(
+                              controller: nombreAcompananteCtrl,
+                              decoration: new InputDecoration(
+                                labelText: 'Nombre completo',
+                              ),
+                              //initialValue: invitado.nombre,
+                              validator: validateNombre,
+                            ),
+                            500.0,
+                            80.0),
+                        formItemsDesign(
+                            Icons.av_timer_rounded,
+                            Row(children: <Widget>[
+                              Text('Edad'),
+                              //SizedBox(width: 15,),
+                              Expanded(
+                                child: MaterialSegmentedControl(
+                                  children: _children,
+                                  selectionIndex: _mySelectionAEdad,
+                                  borderColor: Color(0xFF000000),
+                                  selectedColor: Color(0xFF000000),
+                                  unselectedColor: Colors.white,
+                                  borderRadius: 32.0,
+                                  horizontalPadding: EdgeInsets.all(8),
+                                  onSegmentChosen: (index) {
+                                    setState(() {
+                                      _mySelectionAEdad = index;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ]),
+                            500.0,
+                            80.0),
+                        formItemsDesign(
+                            MyFlutterApp.transgender,
+                            Row(children: <Widget>[
+                              Text('Genero'),
+                              //SizedBox(width: 15,),
+                              Expanded(
+                                child: MaterialSegmentedControl(
+                                  children: _childrenGenero,
+                                  selectionIndex: _mySelectionAGenero,
+                                  borderColor: Color(0xFF000000),
+                                  selectedColor: Color(0xFF000000),
+                                  unselectedColor: Colors.white,
+                                  borderRadius: 32.0,
+                                  horizontalPadding: EdgeInsets.all(8),
+                                  onSegmentChosen: (index) {
+                                    setState(() {
+                                      _mySelectionAGenero = index;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ]),
+                            500.0,
+                            80.0),
+                      ],
+                    ),
+                    Ink(
+                        padding: EdgeInsets.all(5),
+                        width: 100.0,
+                        // height: 100.0,
+                        decoration: const ShapeDecoration(
+                          color: Colors.black,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                            icon: const Icon(Icons.add),
+                            color: Colors.white,
+                            onPressed: () async {
+                              print('Vamos a agregar acom');
+                              print(nombreAcompananteCtrl.text);
+                              print(_mySelectionAEdad);
+                              print(_mySelectionAGenero);
+                              String edad = '';
+                              String genero = '';
+                              if (_mySelectionAEdad == 0) {
+                                edad = 'A';
+                              } else {
+                                edad = 'N';
+                              }
+                              if (_mySelectionAGenero == 0) {
+                                genero = 'H';
+                              } else {
+                                genero = 'M';
+                              }
+
+                              Map<String, String> json = {
+                                "id_invitado": idInvitado.toString(),
+                                "nombre": nombreAcompananteCtrl.text,
+                                "edad": edad,
+                                "genero": genero
+                              };
+                              await api.agregarAcompanante(json, context);
+                              await blocInvitado.fetchAllAcompanante(
+                                  idInvitado, context);
+                            })),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    _listaAcompanantes(),
+                    SizedBox(
+                      height: 30.0,
+                    )
+                  ],
+                ),
+              )),
         ],
       ),
       SizedBox(
@@ -721,6 +899,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           child: CallToAction('Guardar'))
     ]);
   }
+
+  _limpiarAcompanante() {}
 
   String validateGrupo(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
