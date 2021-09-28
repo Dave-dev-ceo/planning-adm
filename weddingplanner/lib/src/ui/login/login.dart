@@ -17,9 +17,9 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   int _index = 0;
   dynamic loginBloc;
-  TextEditingController emailCtrl = new TextEditingController(text: 'padiiyaa@gmail.com');
-  // TextEditingController emailCtrl = new TextEditingController(text: 'soporte@grupotum.com');
-  TextEditingController passwordCtrl = new TextEditingController(text: 'N0v4-2020');
+  // TextEditingController emailCtrl = new TextEditingController(text: 'padiiyaa@gmail.com');
+  TextEditingController emailCtrl = new TextEditingController(text: '');
+  TextEditingController passwordCtrl = new TextEditingController(text: '');
   TextEditingController emailRCtrl = new TextEditingController();
   TextEditingController passwordRCtrl = new TextEditingController();
   TextEditingController nombreRCtrl = new TextEditingController();
@@ -41,16 +41,19 @@ class _LoginState extends State<Login> {
     String nombreUser = await _sharedPreferences.getNombre();
     String image = await _sharedPreferences.getImagen();
 
-    Map data = {
-      'name':await _sharedPreferences.getNombre(),
-      'imag':image
-    };
+    Map data = {'name': await _sharedPreferences.getNombre(), 'imag': image};
 
     if (sesion) {
-      if(involucrado == null) {
+      if (involucrado == null) {
         Navigator.pushNamed(context, '/home', arguments: data);
       } else {
-        Navigator.pushNamed(context, '/eventos', arguments: {'idEvento': idEvento, 'nEvento':titulo, 'nombre':nombreUser,'boton':false,'imag':image});
+        Navigator.pushNamed(context, '/eventos', arguments: {
+          'idEvento': idEvento,
+          'nEvento': titulo,
+          'nombre': nombreUser,
+          'boton': false,
+          'imag': image
+        });
       }
     }
   }
@@ -465,14 +468,20 @@ class _LoginState extends State<Login> {
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
           Navigator.pop(_ingresando);
-          if(state.response['usuario']['id_involucrado'] == 'null') {
+          if (state.response['usuario']['id_involucrado'] == 'null') {
             Map data = {
-              'name':state.response['usuario']['nombre_completo'],
-              'imag':state.response['usuario']['imagen']
+              'name': state.response['usuario']['nombre_completo'],
+              'imag': state.response['usuario']['imagen']
             };
             Navigator.pushNamed(context, '/home', arguments: data);
           } else {
-            Navigator.pushNamed(context, '/eventos', arguments: {'idEvento': state.response['usuario']['id_evento'], 'nEvento':state.response['usuario']['descripcion'], 'nombre':state.response['usuario']['nombre_completo'],'boton':false,'imag':state.response['usuario']['imagen']});
+            Navigator.pushNamed(context, '/eventos', arguments: {
+              'idEvento': state.response['usuario']['id_evento'],
+              'nEvento': state.response['usuario']['descripcion'],
+              'nombre': state.response['usuario']['nombre_completo'],
+              'boton': false,
+              'imag': state.response['usuario']['imagen']
+            });
           }
         }
       },
@@ -514,7 +523,10 @@ class _LoginState extends State<Login> {
               child: PasswordWplanner(
                 // WP
                 controller: passwordCtrl,
-                suffixIcon: Icon(Icons.remove_red_eye,color: Colors.purple[100],),
+                suffixIcon: Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.purple[100],
+                ),
                 color: Colors.purple[100],
                 iconColor: Colors.purple[100],
                 iconColorSelect: Colors.white,
@@ -524,12 +536,12 @@ class _LoginState extends State<Login> {
                 hasFloatingPlaceholder: true,
                 // pattern: r'.*[@$#.*].*',
                 border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(width: 2.0, color: Colors.purple[100])),
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide:
+                        BorderSide(width: 2.0, color: Colors.purple[100])),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  borderSide: BorderSide(color: Colors.white)
-                ),
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide: BorderSide(color: Colors.white)),
               ),
             ),
             //FinPadilla
