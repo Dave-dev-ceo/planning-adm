@@ -42,26 +42,34 @@ class EstatusBloc extends Bloc<EstatusEvent, EstatusState> {
         //model.results.add(est);
         //yield CreateEstatusState(estatus);
         //yield MostrarEstatusState(model);
-        if(idEstatusInvitado == 0){
+        if (idEstatusInvitado == 0) {
           add(FechtEstatusEvent());
         }
-        
       } on CreateEstatusException {
         yield ErrorCreateEstatusState("No se pudo insertar");
       }
     } else if (event is UpdateEstatusEvent) {
-      bool response = await logic.updateEstatus(event.data);
-      ItemModelEstatusInvitado model = event.estatus;
-      if (response) {
-        //model.results[event.id].addDescripcion = event.data['descripcion'];
-        for (int i = 0; i < model.results.length; i++) {
-          if (model.results.elementAt(i).idEstatusInvitado == event.id) {
-            model.results.elementAt(i).addDescripcion =
-                event.data['descripcion'];
-          }
-        }
+      print('event update-- ');
+      int response = await logic.updateEstatus(event.data);
+      // ItemModelEstatusInvitado model = event.estatus;
+      if (response == 0) {
+        add(FechtEstatusEvent());
       }
-      yield MostrarEstatusState(model);
+      // if (response) {
+      //   //model.results[event.id].addDescripcion = event.data['descripcion'];
+      //   for (int i = 0; i < model.results.length; i++) {
+      //     if (model.results.elementAt(i).idEstatusInvitado == event.id) {
+      //       model.results.elementAt(i).addDescripcion =
+      //           event.data['descripcion'];
+      //     }
+      //   }
+      // }
+      // yield MostrarEstatusState(model);
+    } else if (event is DeleteEstatusEvent) {
+      int response = await logic.deleteEstatus(event.idEstatus);
+      if (response == 0) {
+        add(FechtEstatusEvent());
+      }
     }
   }
 }

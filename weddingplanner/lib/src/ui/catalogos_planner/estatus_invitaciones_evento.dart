@@ -1,3 +1,4 @@
+import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +27,8 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
   int idPlanner;
   ApiProvider api = new ApiProvider();
   TextEditingController estatusCtrl = new TextEditingController();
+  TextEditingController estatusCtrlEdit = new TextEditingController();
+  GlobalKey<FormState> keyForm = new GlobalKey();
   //_ListaEstatusInvitacionesState(this.idPlanner);
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
@@ -82,7 +85,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }*/
 
-  Future<Map<String, dynamic>> _saveEstatus(BuildContext context) async {
+  Future<Map<String, dynamic>> _saveEstatusD(BuildContext context) async {
     /*if (estatusCtrl.text.trim() == "" || estatusCtrl.text.trim() == null) {
       _msgSnackBar('El campo esta vacío', Color(0x64E032));
     } else {*/
@@ -180,9 +183,10 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                         ),
                         onTap: () async {
                           Map<String, dynamic> json =
-                              await _saveEstatus(context);
-                          estatusBloc
+                              await _saveEstatusD(context);
+                          await estatusBloc
                               .add(CreateEstatusEvent(json, itemModelEI));
+                          estatusCtrl.text = '';
                         },
                       ),
                     ),
@@ -227,6 +231,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                       } else if (state is MostrarEstatusState) {
                         //itemModelEI = state.estatus;
                         return _constructorTable(state.estatus);
+                        // return Center(child: Text('data'),);
                       } else if (state is ErrorListaEstatusState) {
                         return Center(
                           child: Text(state.message),
@@ -264,55 +269,68 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        PaginatedDataTable(
-          header: Center(child: Text('Lista de los estatus')),
-          rowsPerPage: 3,
-          showCheckboxColumn: false,
-          columns: [
-            DataColumn(
-                label: Text('Descripción del estatus', style: estiloTxt)),
-          ],
-          source: _DataSource(snapshot, context, idPlanner, estatusBloc),
-        ),
+        Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          elevation: 10,
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _createListItems(snapshot)),
+        )
       ],
     );
   }
-}
 
-class _Row {
-  _Row(
-    this.valueId,
-    this.valueA,
-  );
-  final int valueId;
-  final String valueA;
-
-  bool selected = false;
-}
-
-class _DataSource extends DataTableSource {
-  BuildContext _cont;
-  EstatusBloc _estatusBloc;
-  ItemModelEstatusInvitado _itemModelEI;
-  final int idPlanner;
-  GlobalKey<FormState> keyForm = new GlobalKey();
-  TextEditingController estatusCtrl = new TextEditingController();
-  ApiProvider api = new ApiProvider();
-  _DataSource(
-      context, BuildContext cont, this.idPlanner, EstatusBloc estatusBloc) {
-    _rows = <_Row>[];
-    for (int i = 0; i < context.results.length; i++) {
-      _rows.add(_Row(context.results[i].idEstatusInvitado,
-          context.results[i].descripcion));
+  List<Widget> _createListItems(ItemModelEstatusInvitado item) {
+    // Creación de lista de Widget.
+    List<Widget> lista = new List<Widget>();
+    // Se agrega el titulo del card
+    const titulo = ListTile(
+      title: Text('Lista de los estatus',
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontSize: 20)),
+    );
+    lista.add(titulo);
+    // Se agregar lista.
+    for (var opt in item.results) {
+      final tempWidget = ListTile(
+        title: Text(opt.descripcion),
+        onTap: () async {
+          await _showMyDialogEditar(opt.idEstatusInvitado, opt.descripcion);
+        },
+      );
+      lista.add(tempWidget);
     }
-    _cont = cont;
-    _estatusBloc = estatusBloc;
-    _itemModelEI = context;
+    return lista;
   }
+
+  _saveEstatus(BuildContext context, int idEstatus) async {
+    if (keyForm.currentState.validate()) {
+      Map<String, String> json = {
+        "descripcion": estatusCtrlEdit.text,
+        "id_estatus_invitado": idEstatus.toString()
+      };
+      Navigator.of(context).pop();
+      estatusBloc.add(UpdateEstatusEvent(json, itemModelEI, idEstatus));
+      //json.
+      //bool response = await api.updateEstatus(json, context);
+      /*if (response) {
+        //_mySelection = "0";
+        Navigator.of(context).pop();
+        _msgSnackBar('Estatus actualizado', Colors.green[300]);
+        //_listaGrupos();
+      } else {
+        _msgSnackBar('Estatus actualizado', Colors.red[300]);
+      }*/
+    }
+  }
+
   Future<void> _showMyDialogEditar(int idEstatus, String estatus) async {
-    estatusCtrl.text = estatus;
+    print(idEstatus);
+    estatusCtrlEdit.text = estatus;
     return showDialog<void>(
-      context: _cont,
+      context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -326,7 +344,7 @@ class _DataSource extends DataTableSource {
                 //children: <Widget>[
 
                 TextFormField(
-              controller: estatusCtrl,
+              controller: estatusCtrlEdit,
               decoration: new InputDecoration(
                 labelText: 'Estatus',
               ),
@@ -360,6 +378,7 @@ class _DataSource extends DataTableSource {
               child: Text('Eliminar'),
               onPressed: () {
                 Navigator.of(context).pop();
+                estatusBloc.add(DeleteEstatusEvent(idEstatus));
               },
             ),
             /*TextButton(
@@ -384,81 +403,4 @@ class _DataSource extends DataTableSource {
     }
     return null;
   }
-
-  _saveEstatus(BuildContext context, int idEstatus) async {
-    if (keyForm.currentState.validate()) {
-      Map<String, String> json = {
-        "descripcion": estatusCtrl.text,
-        "id_estatus_invitado": idEstatus.toString()
-      };
-      Navigator.of(context).pop();
-      _estatusBloc.add(UpdateEstatusEvent(json, _itemModelEI, idEstatus));
-      //json.
-      //bool response = await api.updateEstatus(json, context);
-      /*if (response) {
-        //_mySelection = "0";
-        Navigator.of(context).pop();
-        _msgSnackBar('Estatus actualizado', Colors.green[300]);
-        //_listaGrupos();
-      } else {
-        _msgSnackBar('Estatus actualizado', Colors.red[300]);
-      }*/
-    }
-  }
-
-  /*_msgSnackBar(String error, Color color) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(error),
-        ),
-        //color: Colors.red,
-      ),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
-  }*/
-
-  List<_Row> _rows;
-
-  int _selectedCount = 0;
-
-  @override
-  DataRow getRow(int index) {
-    assert(index >= 0);
-    if (index >= _rows.length) return null;
-    final row = _rows[index];
-    return DataRow.byIndex(
-      index: index,
-      selected: row.selected,
-      onSelectChanged: (value) {
-        if (row.selected != value) {
-          print(value);
-          _selectedCount += value ? 1 : -1;
-          assert(_selectedCount >= 0);
-          row.selected = value;
-
-          //notifyListeners();
-        }
-      },
-      cells: [
-        //DataCell(Text(row.valueId.toString())),
-        DataCell(Text(row.valueA), onTap: () async {
-          await _showMyDialogEditar(row.valueId, row.valueA);
-        }),
-        //DataCell(Icon(Icons.edit)),
-        //DataCell(Icon(Icons.delete)),
-      ],
-    );
-  }
-
-  @override
-  int get rowCount => _rows.length;
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get selectedRowCount => _selectedCount;
 }

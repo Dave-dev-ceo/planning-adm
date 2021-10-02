@@ -3,9 +3,9 @@ class ItemModelEstatusInvitado {
 
   ItemModelEstatusInvitado.fromJson(List<dynamic> parsedJson) {
     List<Estatus> temp = [];
-    Estatus dat =
-        Estatus({"id_estatus_invitado": 0, "descripcion": "Sin estatus"});
-    temp.add(dat);
+    // Estatus dat =
+    //     Estatus({"id_estatus_invitado": 0, "descripcion": "Sin estatus"});
+    // temp.add(dat);
     for (int i = 0; i < parsedJson.length; i++) {
       Estatus result = Estatus(parsedJson[i]);
       //print(parsedJson[i]);
