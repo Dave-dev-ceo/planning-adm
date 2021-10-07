@@ -17,9 +17,10 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   int _index = 0;
   dynamic loginBloc;
-  // TextEditingController emailCtrl = new TextEditingController(text: 'padiiyaa@gmail.com');
-  TextEditingController emailCtrl = new TextEditingController(text: '');
-  TextEditingController passwordCtrl = new TextEditingController(text: '');
+  TextEditingController emailCtrl =
+      new TextEditingController(text: 'soporte@grupotum.com');
+  TextEditingController passwordCtrl =
+      new TextEditingController(text: 'N0v4-2020');
   TextEditingController emailRCtrl = new TextEditingController();
   TextEditingController passwordRCtrl = new TextEditingController();
   TextEditingController nombreRCtrl = new TextEditingController();
@@ -104,7 +105,7 @@ class _LoginState extends State<Login> {
                   duration: Duration(milliseconds: 500),
                   opacity: _visible ? 1.0 : 0.0,
                   child: Image.asset(
-                    'assets/logo.png',
+                    'assets/new_logo.png',
                     height: 100.0,
                     width: 150.0,
                     color: Colors.purple,
@@ -214,7 +215,7 @@ class _LoginState extends State<Login> {
           duration: Duration(milliseconds: 500),
           opacity: _visible ? 1.0 : 0.0,
           child: Image.asset(
-            'assets/logo.png',
+            'assets/new_logo.png',
             height: 100.0,
             width: 150.0,
             color: Colors.purple,
@@ -253,7 +254,7 @@ class _LoginState extends State<Login> {
           height: 10.0,
         ),
         Image.asset(
-          'assets/logo.png',
+          'assets/new_logo.png',
           height: 180.0,
           width: 450,
         ),
@@ -322,6 +323,7 @@ class _LoginState extends State<Login> {
             autocorrect: false,
             style: TextStyle(color: Colors.white),
             decoration: new InputDecoration(
+              floatingLabelStyle: TextStyle(color: Colors.purple[100]),
               labelText: "Contraseña",
               labelStyle: TextStyle(color: Colors.purple[100]),
               fillColor: Colors.white,
@@ -434,6 +436,9 @@ class _LoginState extends State<Login> {
 
   _decorationText(String text) {
     return InputDecoration(
+      floatingLabelStyle: TextStyle(
+        color: Colors.purple[100],
+      ),
       labelText: text,
       labelStyle: TextStyle(color: Colors.purple[100]),
       fillColor: Colors.white,
@@ -491,7 +496,7 @@ class _LoginState extends State<Login> {
             height: 10.0,
           ),
           Image.asset(
-            'assets/logo.png',
+            'assets/new_logo.png',
             height: 180.0,
             width: 450,
           ),

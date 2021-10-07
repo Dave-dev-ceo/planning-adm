@@ -13,9 +13,11 @@ class ResumenEvento extends StatefulWidget {
   final Map<dynamic, dynamic> detalleEvento;
   final bool WP_EVT_RES_EDT;
 
-  const ResumenEvento({Key key, this.detalleEvento, this.WP_EVT_RES_EDT}) : super(key: key);
+  const ResumenEvento({Key key, this.detalleEvento, this.WP_EVT_RES_EDT})
+      : super(key: key);
   @override
-  _ResumenEventoState createState() => _ResumenEventoState(detalleEvento, WP_EVT_RES_EDT);
+  _ResumenEventoState createState() =>
+      _ResumenEventoState(detalleEvento, WP_EVT_RES_EDT);
 }
 
 class _ResumenEventoState extends State<ResumenEvento> {
@@ -26,7 +28,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
   @override
   void initState() {
     eventosBloc = BlocProvider.of<EvtBloc.EventosBloc>(context);
-    eventosBloc.add(EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
+    eventosBloc.add(
+        EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
     super.initState();
   }
 
@@ -75,7 +78,12 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 child: ListView.builder(
                     itemCount: dataGrupos.results.length,
                     itemBuilder: (_, int index) {
-                      return Text(dataGrupos.results.elementAt(index).grupo + ': ' + dataGrupos.results.elementAt(index).cantidad.toString());
+                      return Text(dataGrupos.results.elementAt(index).grupo +
+                          ': ' +
+                          dataGrupos.results
+                              .elementAt(index)
+                              .cantidad
+                              .toString());
                     }),
               ),
               leading: Icon(Icons.event),
@@ -131,7 +139,9 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 child: ListView.builder(
                     itemCount: reporte.results.length,
                     itemBuilder: (_, int index) {
-                      return Text(reporte.results.elementAt(index).estatus + ': ' + reporte.results.elementAt(index).cantidad.toString());
+                      return Text(reporte.results.elementAt(index).estatus +
+                          ': ' +
+                          reporte.results.elementAt(index).cantidad.toString());
                     }),
               ),
               leading: Icon(Icons.event),
@@ -140,7 +150,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
         ),
       ),
       onTap: () {
-        Navigator.of(context).pushNamed('/reporteEvento', arguments: "asistencia");
+        Navigator.of(context)
+            .pushNamed('/reporteEvento', arguments: "asistencia");
       },
     );
   }
@@ -149,7 +160,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
     blocInvitados.fetchAllReporteInvitadosGenero(context);
     return StreamBuilder(
       stream: blocInvitados.reporteInvitadosGenero,
-      builder: (context, AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
+      builder:
+          (context, AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
         if (snapshot.hasData) {
           return buildListGenero(snapshot);
         } else if (snapshot.hasError) {
@@ -160,8 +172,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
     );
   }
 
-  Widget buildListGenero(AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
-    return Container(width: 400, height: 150, child: miCardReportesInvitadosGenero(snapshot.data.masculino, snapshot.data.femenino));
+  Widget buildListGenero(
+      AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
+    return Container(
+        width: 400,
+        height: 150,
+        child: miCardReportesInvitadosGenero(
+            snapshot.data.masculino, snapshot.data.femenino));
   }
 
   miCardReportesInvitadosGenero(String hombre, String mujer) {
@@ -213,14 +230,20 @@ class _ResumenEventoState extends State<ResumenEvento> {
         } else if (state is EvtBloc.MostrarEventoPorIdState) {
           evento = state.evento;
           eventosBloc.add(EvtBloc.FechtEventosEvent());
-          return Container(width: 400, height: 150, child: miCardReporteDetallesEvento(evento));
+          return Container(
+              width: 400,
+              height: 150,
+              child: miCardReporteDetallesEvento(evento));
         } else if (state is EvtBloc.ErrorEventoPorIdState) {
           return Center(
             child: Text(state.message),
           );
         } else {
           if (evento != null) {
-            return Container(width: 400, height: 150, child: miCardReporteDetallesEvento(evento));
+            return Container(
+                width: 400,
+                height: 150,
+                child: miCardReporteDetallesEvento(evento));
           } else {
             return Center(child: CircularProgressIndicator());
           }
@@ -236,43 +259,57 @@ class _ResumenEventoState extends State<ResumenEvento> {
         margin: EdgeInsets.all(20),
         elevation: 10,
         child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                title: Text(
-                  'Detalles del evento',
-                  style: TextStyle(fontSize: 16),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                  title: Text(
+                    'Detalles del evento',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  subtitle: Wrap(
+                    spacing: 5,
+                    runSpacing: 5,
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Evento: ' + evtt.results.elementAt(0).evento,
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Text(
+                        'Fecha evento: ' +
+                            evtt.results.elementAt(0).fechaEvento,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        'Planeación: Del ' +
+                            evtt.results.elementAt(0).fechaInicio +
+                            ' al ' +
+                            evtt.results.elementAt(0).fechaFin,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        'Número de inivtados: ${evtt.results.elementAt(0).numeroInivtados}',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      for (var inv in evtt.results.elementAt(0).involucrados)
+                        mostrarInvolucrado(inv),
+                    ],
+                  ),
+                  leading: Icon(Icons.event),
                 ),
-                subtitle: Wrap(
-                  spacing: 5,
-                  runSpacing: 5,
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Evento: ' + evtt.results.elementAt(0).evento,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Text(
-                      'Fecha evento: ' + evtt.results.elementAt(0).fechaEvento,
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    Text(
-                      'Planeación: Del ' + evtt.results.elementAt(0).fechaInicio + ' al ' + evtt.results.elementAt(0).fechaFin,
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    for (var inv in evtt.results.elementAt(0).involucrados) mostrarInvolucrado(inv),
-                  ],
-                ),
-                leading: Icon(Icons.event),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
       onTap: WP_EVT_RES_EDT
           ? () async {
-              await Navigator.pushNamed(context, '/editarEvento', arguments: {'evento': evtt});
+              await Navigator.pushNamed(context, '/editarEvento',
+                  arguments: {'evento': evtt});
             }
           : null,
     );

@@ -10,6 +10,7 @@ import 'package:weddingplanner/src/ui/construccion/construccion.dart';
 import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/Listas/listas.dart';
 import 'package:weddingplanner/src/ui/contratos/new_contrato.dart';
+import 'package:weddingplanner/src/ui/mesas/mesasPage.dart';
 import 'package:weddingplanner/src/ui/pagos/pagos.dart';
 import 'package:weddingplanner/src/ui/planes/planes.dart';
 import 'package:weddingplanner/src/ui/proveedores_evento/proveedores_evento.dart';
@@ -123,18 +124,21 @@ class _InvitadosState extends State<Invitados> {
                     width: 100.0,
                   ),
                   Flexible(
-                    child: FittedBox(
-                        child: Image.asset(
-                      'assets/logo.png',
-                      height: 100.0,
-                      width: 250.0,
-                    )),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: FittedBox(
+                          child: Image.asset(
+                        'assets/new_logo.png',
+                        height: 100.0,
+                        width: 250.0,
+                      )),
+                    ),
                   ),
                 ],
               ),
             ),
             toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#000000'),
+            backgroundColor: hexToColor('#fdf4e5'),
             actions: <Widget>[
               Container(
                   margin: EdgeInsets.only(right: 10.0),
@@ -270,6 +274,10 @@ class _InvitadosState extends State<Invitados> {
         tabs.add(TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
         temp += 1;
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
+        tabs.add(TabItem(titulo: 'Mesas', icono: Icons.contact_mail_sharp));
+        temp += 1;
+      }
       _pages = temp;
       return tabs;
     } else {
@@ -315,6 +323,9 @@ class _InvitadosState extends State<Invitados> {
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Pagos());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
+        temp.add(MesasPage());
       }
       return temp;
     } else {

@@ -55,7 +55,7 @@ class _ReporteEventoState extends State<ReporteEvento> {
         },
         child: const Icon(Icons.person_add),
         
-        backgroundColor: hexToColor('#000000'),
+        backgroundColor: hexToColor('#fdf4e5'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,*/
     );

@@ -1,16 +1,19 @@
 import 'dart:io';
+
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
+
 import 'package:weddingplanner/src/blocs/blocs.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
 import '../../../models/item_model_invitados.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ListaInvitados extends StatefulWidget {
   final int idEvento;
@@ -75,9 +78,9 @@ class _ListaInvitadosState extends State<ListaInvitados> {
                 ),
                 CupertinoDialogAction(
                   child: Text('Sí'),
-                  onPressed: () {
-                    _readExcel();
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    await _readExcel();
+                    // Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -86,7 +89,6 @@ class _ListaInvitadosState extends State<ListaInvitados> {
 
   _readExcel() async {
     /// Use FilePicker to pick files in Flutter Web
-
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['xlsx'],
@@ -94,77 +96,89 @@ class _ListaInvitadosState extends State<ListaInvitados> {
     );
 
     /// file might be picked
-
     if (pickedFile != null) {
       var bytes = pickedFile.files.single.bytes;
 
       if (bytes == null) {
         bytes = File(pickedFile.files[0].path).readAsBytesSync();
+        print('error');
       }
 
       var excel = Excel.decodeBytes(bytes);
       bool bandera = true;
+
       for (var table in excel.tables.keys) {
-        //print(table); //sheet Name
-        //print(excel.tables[table].maxCols);
-        //print(excel.tables[table].maxRows);
-        dynamic xx = excel.tables[table].rows;
-        if (xx[0][0] == "NOMBRE" &&
-            xx[0][1] == "EMAIL" &&
-            xx[0][2] == "TELÉFONO") {
-          for (var i = 1; i < xx.length; i++) {
-            Map<String, String> json = {
-              "nombre": xx[i][0],
-              "telefono": xx[i][2].toString(),
-              "email": xx[i][1],
-              "id_evento": idEvento.toString()
-            };
-            bool response = await api.createInvitados(json, context);
-            if (response) {
-            } else {
-              bandera = false;
-            }
-          }
-          if (bandera) {
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Se importo el archivo con éxito'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.green,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          } else {
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Error: No se pudo realizar el registro'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.red,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-        } else {
-          final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-                child: Text('Estructura incorrecta'),
-              ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.red,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        print('tabla $table'); //sheet Name
+        print('Columnas ${excel.tables[table].maxCols}');
+        print('Filas: ${excel.tables[table].maxRows}');
+        for (var row in excel.tables[table].rows) {
+          print("Filas $row");
         }
       }
+    } else {
+      print('El file is null');
     }
+    //   }
+    // }
+    // for (var table in excel.tables.keys) {
+    //   print(table); //sheet Name
+    //   print(excel.tables[table].maxCols);
+    //   print(excel.tables[table].maxRows);
+    //   dynamic xx = excel.tables[table].rows;
+    //   if (xx[0][0] == "NOMBRE" &&
+    //       xx[0][1] == "EMAIL" &&
+    //       xx[0][2] == "TELÉFONO") {
+    //     for (var i = 1; i < xx.length; i++) {
+    //       Map<String, String> json = {
+    //         "nombre": xx[i][0],
+    //         "telefono": xx[i][2].toString(),
+    //         "email": xx[i][1],
+    //         "id_evento": idEvento.toString()
+    //       };
+    //       bool response = await api.createInvitados(json, context);
+    //       if (response) {
+    //       } else {
+    //         bandera = false;
+    //       }
+    //     }
+    //     if (bandera) {
+    //       final snackBar = SnackBar(
+    //         content: Container(
+    //           height: 30,
+    //           child: Center(
+    //             child: Text('Se importo el archivo con éxito'),
+    //           ),
+    //           //color: Colors.red,
+    //         ),
+    //         backgroundColor: Colors.green,
+    //       );
+    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //     } else {
+    //       final snackBar = SnackBar(
+    //         content: Container(
+    //           height: 30,
+    //           child: Center(
+    //             child: Text('Error: No se pudo realizar el registro'),
+    //           ),
+    //           //color: Colors.red,
+    //         ),
+    //         backgroundColor: Colors.red,
+    //       );
+    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //     }
+    //   } else {
+    //     final snackBar = SnackBar(
+    //       content: Container(
+    //         height: 30,
+    //         child: Center(
+    //           child: Text('Estructura incorrecta'),
+    //         ),
+    //         //color: Colors.red,
+    //       ),
+    //       backgroundColor: Colors.red,
+    //     );
+    //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //   }
   }
 
   Future<PermissionStatus> _getPermission() async {
@@ -236,7 +250,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [hexToColor("#000000"), hexToColor("#000000")],
+        colors: [hexToColor("#fdf4e5"), hexToColor("#fdf4e5")],
       ),
       children: armarBotonesAcciones(),
     );
@@ -251,7 +265,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           child: Icon(Icons.person_add),
           message: "Agregar invitado",
         ),
-        backgroundColor: hexToColor("#000000"),
+        backgroundColor: hexToColor("#fdf4e5"),
         onTap: () async {
           final result = await Navigator.of(context)
               .pushNamed('/addInvitados', arguments: idEvento);
@@ -272,7 +286,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           child: Icon(Icons.table_chart_outlined),
           message: "Importar excel",
         ),
-        backgroundColor: hexToColor("#000000"),
+        backgroundColor: hexToColor("#fdf4e5"),
         //label: 'Importar excel',
         //labelStyle: TextStyle(fontSize: 14.0),
         onTap: () => _viewShowDialogExcel(),
@@ -284,7 +298,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           child: Icon(Icons.import_contacts_rounded),
           message: "Importar contactos",
         ),
-        backgroundColor: hexToColor("#000000"),
+        backgroundColor: hexToColor("#fdf4e5"),
         //label: 'Importar contactos',
         //labelStyle: TextStyle(fontSize: 14.0),
         onTap: () => _viewContact(),
@@ -298,7 +312,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
           child: Icon(Icons.send_and_archive_sharp),
           message: "Enviar QR a invitados",
         ),
-        backgroundColor: hexToColor("#000000"),
+        backgroundColor: hexToColor("#fdf4e5"),
         onTap: () async {
           _dialogSpinner('Enviando QR...');
           Map<String, dynamic> response =
@@ -375,7 +389,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         },
         child: const Icon(Icons.person_add),
         
-        backgroundColor: hexToColor('#000000'),
+        backgroundColor: hexToColor('#fdf4e5'),
       ),*/
       //floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
     );
@@ -879,7 +893,7 @@ class _DataSource extends DataTableSource {
       selected: row.selected,
       onSelectChanged: (value) {
         if (row.selected != value) {
-          print(value);
+          // print(value);
           _selectedCount += value ? 1 : -1;
           assert(_selectedCount >= 0);
           row.selected = value;

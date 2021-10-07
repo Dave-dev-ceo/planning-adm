@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/tiposEventos/tiposeventos_bloc.dart';
@@ -30,6 +31,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   TextEditingController fechaInicioCtrl;
   TextEditingController fechaFinCtrl;
   TextEditingController fechaEventoCtrl;
+  TextEditingController numbInvitadosContrl;
   DateTime fechaInicio;
   DateTime fechaFin;
   DateTime fechaEvento;
@@ -64,6 +66,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
     fechaInicioCtrl.clear();
     fechaFinCtrl.clear();
     fechaEventoCtrl.clear();
+    numbInvitadosContrl.clear();
     _setDate();
   }
 
@@ -106,11 +109,9 @@ class _AgregarEventoState extends State<AgregarEvento> {
             //   backgroundColor: Colors.green,
             // );
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Evento agregardo'),
-                )
-              );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Evento agregardo'),
+            ));
             _clearController();
           } else if (state is ErrorCreateEventosState) {
             Navigator.pop(_ingresando);
@@ -272,6 +273,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
     emailCtrl = new TextEditingController();
     direccionCtrl = new TextEditingController();
     estadoCtrl = new TextEditingController();
+    numbInvitadosContrl = new TextEditingController();
   }
 
   _setDate() {
@@ -326,6 +328,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
 
   _save() {
     if (keyForm.currentState.validate()) {
+      print(numbInvitadosContrl.text);
       Map<String, dynamic> jsonEvento = {
         "descripcion_evento": descripcionCtrl.text,
         "fecha_inicio": fechaInicioCtrl.text,
@@ -337,8 +340,10 @@ class _AgregarEventoState extends State<AgregarEvento> {
         "telefono": telefonoCtrl.text,
         "correo": emailCtrl.text,
         "direccion": direccionCtrl.text,
-        "estado": estadoCtrl.text
+        "estado": estadoCtrl.text,
+        "numeroInvitados": numbInvitadosContrl.text
       };
+
       eventosBloc.add(CreateEventosEvent(jsonEvento, itemModelEventos));
     }
   }
@@ -425,7 +430,27 @@ class _AgregarEventoState extends State<AgregarEvento> {
                           80.0),
                       onTap: () => _selectDateEvento(context),
                     ),
-                    SizedBox(height: 150.0,)
+                    formItemsDesign(
+                        Icons.people,
+                        TextFormField(
+                            controller: numbInvitadosContrl,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            decoration: InputDecoration(
+                                labelText: 'Número de invitados aprox.'),
+                            validator: (value) {
+                              if (value == null || value == '') {
+                                return 'El numero de invitados es requerido';
+                              } else {
+                                return null;
+                              }
+                            }),
+                        450,
+                        80),
+                    SizedBox(
+                      height: 150.0,
+                    )
                     // Descomentar solo si el item drop tiene sus eventos de lo contrario truena
                     // Expanded(child:
                     //     BlocBuilder<TiposEventosBloc, TiposEventosState>(
@@ -555,7 +580,9 @@ class _AgregarEventoState extends State<AgregarEvento> {
                               80.0),
                         ],
                       ),
-                      SizedBox(height: 50.0,)
+                      SizedBox(
+                        height: 50.0,
+                      )
                     ],
                   ),
                 ))
@@ -566,6 +593,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
         ),
         GestureDetector(
             onTap: () {
+              print('Click Guardar');
               _save();
             },
             child: CallToAction('Guardar'))

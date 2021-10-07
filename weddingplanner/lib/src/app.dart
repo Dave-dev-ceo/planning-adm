@@ -95,7 +95,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       supportedLocales: [
         const Locale('en'),
         const Locale('fr'),
@@ -103,7 +107,9 @@ class MyApp extends StatelessWidget {
       ],
       title: 'App',
       theme: ThemeData(
-          primarySwatch: createMaterialColor(Color(0xFF000000)),
+          primarySwatch: createMaterialColor(Color(0xFFfdf4e5)),
+          inputDecorationTheme: InputDecorationTheme(
+              floatingLabelStyle: TextStyle(color: Colors.black54)),
           //backgroundColor: createMaterialColor(Color(0xD34444)),
           scaffoldBackgroundColor: hexToColor('#FFF9F9'),
           fontFamily: 'Comfortaa'),
@@ -189,24 +195,17 @@ class AppState extends StatelessWidget {
         create: (_) => AutorizacionBloc(logic: ConsultasAutorizacionLogic()),
       ),
       BlocProvider<AddContratosBloc>(
-          create: (_) =>
-              AddContratosBloc(logic: ConsultasAddContratosLogic())),
+          create: (_) => AddContratosBloc(logic: ConsultasAddContratosLogic())),
       BlocProvider<ContratosDosBloc>(
-          create: (_) =>
-              ContratosDosBloc(logic: ConsultasAddContratosLogic())),
+          create: (_) => ContratosDosBloc(logic: ConsultasAddContratosLogic())),
       BlocProvider<VerContratosBloc>(
-          create: (_) =>
-              VerContratosBloc(logic: ConsultasAddContratosLogic())),
+          create: (_) => VerContratosBloc(logic: ConsultasAddContratosLogic())),
       BlocProvider<InvolucradosBloc>(
-          create: (_) =>
-              InvolucradosBloc(logic: ConsultasInvolucradosLogic())),
+          create: (_) => InvolucradosBloc(logic: ConsultasInvolucradosLogic())),
       BlocProvider<PerfilBloc>(
-          create: (_) =>
-              PerfilBloc(logic: ConsultasPerfilLogic())),
+          create: (_) => PerfilBloc(logic: ConsultasPerfilLogic())),
       BlocProvider<PagosBloc>(
-          create: (_) =>
-              PagosBloc(logic: ConsultasPagosLogic())),
+          create: (_) => PagosBloc(logic: ConsultasPagosLogic())),
     ], child: MyApp());
-    
   }
 }

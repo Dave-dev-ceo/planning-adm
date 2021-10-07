@@ -32,7 +32,7 @@ dependencies:
   contacts_service:
   permission_handler: ^8.1.4+2
   multi_select_item:
-  url_launcher:
+  url_launcher: ^6.0.12
   open_file: ^3.2.1
   flutter_login:
   material_segmented_control:
@@ -47,7 +47,7 @@ dependencies:
   path_provider: ^2.0.2
   #fab_circular_menu: ^1.0.2
   flutter_speed_dial: ^4.2.0
-  html_editor_enhanced: ^2.0.0
+  html_editor_enhanced: ^2.2.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -61,7 +61,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^19.2.51-beta  
   mime_type: ^1.0.0
   # no quitar - sin esto falla
-  flutter_colorpicker: ^0.4.0
+  flutter_colorpicker: ^0.5.0
 
 dev_dependencies:
   flutter_test:

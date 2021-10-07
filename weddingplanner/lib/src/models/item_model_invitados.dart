@@ -1,8 +1,7 @@
 class ItemModelInvitados {
-  
   List<_Result> _results = [];
 
-  ItemModelInvitados.fromJson(List<dynamic> parsedJson){
+  ItemModelInvitados.fromJson(List<dynamic> parsedJson) {
     List<_Result> temp = [];
     //print(parsedJson.length);
     //print(parsedJson[0]['nombre']);
@@ -23,17 +22,16 @@ class _Result {
   String _grupo;
   String _asistencia;
 
-  _Result(result){
+  _Result(result) {
     _idInvitado = result['id_invitado'];
     _nombre = result['nombre'];
     _telefono = result['telefono'];
     _grupo = result['grupo'];
     _asistencia = result['descripcion'];
   }
-  int get idInvitado=>_idInvitado;
-  String get nombre=>_nombre;
-  String get telefono=>_telefono;
-  String get grupo=>_grupo;
-  String get asistencia=>_asistencia;
-
+  int get idInvitado => _idInvitado;
+  String get nombre => _nombre;
+  String get telefono => _telefono;
+  String get grupo => _grupo;
+  String get asistencia => _asistencia;
 }

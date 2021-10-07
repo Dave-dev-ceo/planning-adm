@@ -57,7 +57,7 @@ class _ServiciosState extends State<Servicios> {
                           ),
                         ),
                         decoration: BoxDecoration(
-                          color: hexToColor('#000000'),
+                          color: hexToColor('#fdf4e5'),
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),

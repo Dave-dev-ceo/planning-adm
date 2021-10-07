@@ -11,7 +11,8 @@ class DashboardEventos extends StatefulWidget {
   final bool WP_EVT_CRT;
   final Map data;
 
-  const DashboardEventos({Key key, this.WP_EVT_CRT, this.data}) : super(key: key);
+  const DashboardEventos({Key key, this.WP_EVT_CRT, this.data})
+      : super(key: key);
 
   @override
   _DashboardEventosState createState() =>
@@ -70,12 +71,13 @@ class _DashboardEventosState extends State<DashboardEventos> {
               snapshot.results.elementAt(index).fechaInicio,
               snapshot.results.elementAt(index).fechaFin,
               snapshot.results.elementAt(index).fechaEvento,
-              snapshot.results.elementAt(index).involucrados);
+              snapshot.results.elementAt(index).involucrados,
+              snapshot.results.elementAt(index).numeroInvitados);
         });
   }
 
   miCard(int idEvento, String titulo, String inicio, String fin, String fevento,
-      List involucrados) {
+      List involucrados, int numeroInivtados) {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -91,6 +93,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
                 children: <Widget>[
                   Text('Fecha Evento: ' + fevento),
                   Text('Planeación de evento: Del ' + inicio + ' al ' + fin),
+                  Text('Número de Invitados: $numeroInivtados'),
                   for (var i = 0; i < involucrados.length; i++)
                     involucrados[0].tipoInvolucrado != 'Sin involucrado'
                         ? Text(involucrados[i].tipoInvolucrado +
@@ -106,8 +109,13 @@ class _DashboardEventosState extends State<DashboardEventos> {
       ),
       onTap: () async {
         await _sharedPreferences.setIdEvento(idEvento);
-        Navigator.pushNamed(context, '/eventos',
-            arguments: {'idEvento': idEvento, 'nEvento':titulo, 'nombre':widget.data['name'],'boton':true,'imag':widget.data['imag']});
+        Navigator.pushNamed(context, '/eventos', arguments: {
+          'idEvento': idEvento,
+          'nEvento': titulo,
+          'nombre': widget.data['name'],
+          'boton': true,
+          'imag': widget.data['imag']
+        });
       },
     );
   }
@@ -178,7 +186,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       floatingActionButton: WP_EVT_CRT
           ? FloatingActionButton(
               child: Icon(Icons.event_available),
-              backgroundColor: hexToColor('#000000'),
+              backgroundColor: hexToColor('#fdf4e5'),
               onPressed: () {
                 Navigator.of(context).pushNamed('/addEvento');
               })

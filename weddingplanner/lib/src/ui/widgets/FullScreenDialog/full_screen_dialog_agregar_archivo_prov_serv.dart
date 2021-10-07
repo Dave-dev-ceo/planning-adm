@@ -25,12 +25,19 @@ class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
 class _FullScreenDialogAgregarArchivoProvServEvent
     extends State<FullScreenDialogAgregarArchivoProvServEvent> {
   GlobalKey<FormState> keyForm = new GlobalKey();
+  final _keyFormLink = GlobalKey<FormState>();
   final Map<String, dynamic> provsrv;
+  final _textcontrollerDes = TextEditingController();
+  final _textControllerUrl = TextEditingController();
+  bool _isExpanded = false;
   String _fileBase64 = '';
   _FullScreenDialogAgregarArchivoProvServEvent(this.provsrv);
   TextEditingController descripcionCtrl = new TextEditingController();
   ArchivoProveedorBloc archivoProveedorBloc;
   ItemModelProveedores itemModelProveedores;
+
+  String descripcionLink;
+  String urlValue;
 
   @override
   void initState() {
@@ -51,51 +58,177 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            widget.provsrv['type'] == 0 ?
-            Card(
-              color: Colors.white,
-              elevation: 12,
-              shadowColor: Colors.black12,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: new Form(
-                  key: keyForm,
-                  child: Column(
-                    children: <Widget>[
-                      Wrap(
-                        alignment: WrapAlignment.center,
+            if (widget.provsrv['type'] == 0)
+              Card(
+                color: Colors.white,
+                elevation: 12,
+                shadowColor: Colors.black12,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new Form(
+                      key: keyForm,
+                      child: Column(
                         children: <Widget>[
-                          TextFormFields(
-                            icon: Icons.drive_file_rename_outline,
-                            item: TextFormField(
-                              controller: descripcionCtrl,
-                              decoration: new InputDecoration(
-                                labelText: 'Descripción Archivo',
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            children: <Widget>[
+                              TextFormFields(
+                                icon: Icons.drive_file_rename_outline,
+                                item: TextFormField(
+                                  controller: descripcionCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Descripción Archivo',
+                                  ),
+                                ),
+                                large: 400.0,
+                                ancho: 80.0,
+                              ),
+                            ],
+                          ),
+                          Ink(
+                            padding: EdgeInsets.all(5),
+                            width: 100.0,
+                            decoration: const ShapeDecoration(
+                              color: Colors.black,
+                              shape: CircleBorder(),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: IconButton(
+                                icon: const Icon(Icons.upload_file),
+                                color: Colors.white,
+                                onPressed: () async {
+                                  _selectFile();
+                                },
                               ),
                             ),
-                            large: 400.0,
-                            ancho: 80.0,
-                          ),
+                          )
                         ],
+                      )),
+                ),
+              ),
+            if (widget.provsrv['type'] == 0)
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 500),
+                child: ExpansionPanelList(
+                  animationDuration: Duration(milliseconds: 1000),
+                  expansionCallback: (int index, bool expanded) {
+                    setState(() {
+                      if (index == 0) {
+                        _isExpanded = !_isExpanded;
+                      }
+                    });
+                  },
+                  children: [
+                    ExpansionPanel(
+                      headerBuilder: (BuildContext context, bool _isExpanded) {
+                        return Center(
+                          child: Text(
+                            'Agregar Link',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 23),
+                          ),
+                        );
+                      },
+                      isExpanded: _isExpanded,
+                      body: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Form(
+                            key: _keyFormLink,
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 8.0,
+                                ),
+                                Wrap(
+                                  direction: Axis.vertical,
+                                  alignment: WrapAlignment.center,
+                                  children: <Widget>[
+                                    TextFormFields(
+                                      icon: Icons.add_link_outlined,
+                                      item: TextFormField(
+                                        controller: _textcontrollerDes,
+                                        onChanged: (value) {
+                                          descripcionLink = value;
+                                        },
+                                        validator: (value) {
+                                          if (value == null || value == '') {
+                                            return 'El Campo es requerido';
+                                          } else {
+                                            return null;
+                                          }
+                                        },
+                                        decoration: new InputDecoration(
+                                          labelText: 'Descripción del link',
+                                        ),
+                                      ),
+                                      large: 400.0,
+                                      ancho: 80.0,
+                                    ),
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    TextFormFields(
+                                      icon: Icons.add_link_outlined,
+                                      item: TextFormField(
+                                        controller: _textControllerUrl,
+                                        onChanged: (value) {
+                                          urlValue = value;
+                                        },
+                                        validator: (value) {
+                                          String patternUrl =
+                                              'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}';
+                                          RegExp regExp = RegExp(patternUrl);
+
+                                          if (value == null || value == '') {
+                                            return 'El Campo es requerido';
+                                          } else if (!regExp.hasMatch(value)) {
+                                            return 'No es un dirección web valida';
+                                          } else {
+                                            return null;
+                                          }
+                                        },
+                                        decoration: new InputDecoration(
+                                          labelText: 'Url o Dirección Web',
+                                        ),
+                                      ),
+                                      large: 400.0,
+                                      ancho: 80.0,
+                                    ),
+                                  ],
+                                ),
+                                Ink(
+                                  padding: EdgeInsets.all(5),
+                                  width: 100.0,
+                                  decoration: const ShapeDecoration(
+                                    color: Colors.black,
+                                    shape: CircleBorder(),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: IconButton(
+                                      icon:
+                                          const Icon(Icons.add_circle_outline),
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        _insertLink();
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      Ink(
-                        padding: EdgeInsets.all(5),
-                        width: 100.0,
-                        decoration: const ShapeDecoration(
-                          color: Colors.black,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.upload_file),
-                          color: Colors.white,
-                          onPressed: () async {
-                            _selectFile();
-                          },
-                        ),
-                      )
-                    ],
-                  )),
-            ):SizedBox(),
+                    ),
+                  ],
+                ),
+              ),
+            SizedBox(),
             BlocBuilder<ArchivoProveedorBloc, ArchivoProveedorState>(
                 builder: (context, state) {
               if (state is LoadingArchivoProveedorState) {
@@ -105,11 +238,30 @@ class _FullScreenDialogAgregarArchivoProvServEvent
               } else {
                 return Center(child: CircularProgressIndicator());
               }
-            })
+            }),
           ],
         ),
       )),
     );
+  }
+
+  _insertLink() async {
+    Map<String, dynamic> jsonLink = {};
+    if (_keyFormLink.currentState.validate()) {
+      print(urlValue);
+      jsonLink = {
+        'id_proveedor': this.provsrv['id_proveedor'],
+        'id_servicio': this.provsrv['id_servicio'],
+        'tipo_mime': 'url',
+        'archivo': urlValue,
+        'nombre': descripcionLink,
+        'descripcion': descripcionLink
+      };
+      archivoProveedorBloc
+          .add(CreateArchivoProvServEvent(jsonLink, itemModelProveedores));
+      _textcontrollerDes.clear();
+      _textControllerUrl.clear();
+    } else {}
   }
 
   _selectFile() async {
@@ -195,6 +347,14 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     // lista.add(campos);
     lista.add(size);
     for (var opt in item.results) {
+      Icon _icon;
+      if (opt.tipoMime == 'application/pdf') {
+        _icon = Icon(Icons.picture_as_pdf);
+      } else if (opt.tipoMime == 'url') {
+        _icon = Icon(Icons.web);
+      } else {
+        _icon = Icon(Icons.image);
+      }
       final tempWidget = ListTile(
         title: Text(opt.nombre),
         subtitle: Text(opt.descripcion),
@@ -208,14 +368,21 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           IconButton(
               // opt.tipoMime.toString() + opt.archivo.toString()
               onPressed: () {
-                Navigator.of(context).pushNamed('/viewArchivo', arguments: {
-                  'nombre': opt.nombre,
-                  'id_archivo': opt.idArchivo
-                });
+                opt.tipoMime == 'url'
+                    ? Navigator.of(context).pushNamed(
+                        '/verWeb',
+                        arguments: {
+                          'nombre': opt.nombre,
+                          'id_archivo': opt.idArchivo
+                        },
+                      )
+                    : Navigator.of(context).pushNamed('/viewArchivo',
+                        arguments: {
+                            'nombre': opt.nombre,
+                            'id_archivo': opt.idArchivo
+                          });
               },
-              icon: opt.tipoMime == 'application/pdf'
-                  ? const Icon(Icons.picture_as_pdf)
-                  : const Icon(Icons.image)),
+              icon: _icon),
         ]),
         onTap: () async {
           print(opt.nombre);

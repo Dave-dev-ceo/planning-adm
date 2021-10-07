@@ -22,6 +22,9 @@ class _ItemModelAcompanante {
   int _id_evento;
   int _id_invitado;
   int _id_planner;
+  String _alimentacion;
+  String _alergias;
+  String _asistenciaEspecial;
 
   _ItemModelAcompanante(result) {
     _id_acompanante = result['id_acompanante'];
@@ -30,6 +33,9 @@ class _ItemModelAcompanante {
     _id_evento = result['id_evento'];
     _id_invitado = result['id_invitado'];
     _id_planner = result['id_planner'];
+    _alimentacion = result['alimentacion'];
+    _alergias = result['alergias'];
+    _asistenciaEspecial = result['asistencia_especial'];
   }
   int get idAcompanne => _id_acompanante;
   String get nombre => _nombre;
@@ -37,4 +43,31 @@ class _ItemModelAcompanante {
   int get idEvento => _id_evento;
   int get idInvitado => _id_invitado;
   int get idPlanner => _id_planner;
+  String get alimentacion => _alimentacion;
+  String get alergias => _alergias;
+  String get asistenciaEspecial => _asistenciaEspecial;
+
+  void set idAcompanne(int idAcompanante) {
+    _id_acompanante = idAcompanante;
+  }
+
+  void set nombre(String nombre) {
+    _nombre = nombre;
+  }
+
+  void set edad(String edad) {
+    _edad = edad;
+  }
+
+  void set alimentacion(String alimentacion) {
+    _alimentacion = alimentacion;
+  }
+
+  void set alergias(String alergias) {
+    _alergias = alergias;
+  }
+
+  void set asistenciaEspecial(String asistenciaEspecial) {
+    _asistenciaEspecial = asistenciaEspecial;
+  }
 }

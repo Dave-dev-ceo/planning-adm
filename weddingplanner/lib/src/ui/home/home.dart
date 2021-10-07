@@ -78,24 +78,26 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget crearPantalla(BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
+  Widget crearPantalla(
+      BuildContext context, List<Widget> tabs, List<Widget> pantallas) {
     return DefaultTabController(
         length: _pages,
         child: WillPopScope(
-          onWillPop: () async { return false;},
+          onWillPop: () async {
+            return false;
+          },
           child: Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
               title: Center(
                 child: FittedBox(
                     child: Image.asset(
-                  'assets/logo.png',
+                  'assets/new_logo.png',
                   height: 100.0,
                   width: 250.0,
                 )),
               ),
-              leading: Container(
-                child: Center(child: Text('PLANNER'))),
+              leading: Container(child: Center(child: Text('PLANNER'))),
               leadingWidth: 100.0,
               actions: <Widget>[
                 Container(
@@ -104,27 +106,28 @@ class _HomeState extends State<Home> {
                     child: CircleAvatar(
                       backgroundColor: hexToColor('#d39942'),
                       child: PopupMenuButton(
-                        child:widget.data['imag'] == null ? Icon(Icons.person):CircleAvatar(
-                          backgroundImage: MemoryImage(base64Decode(widget.data['imag'])),
-                        ),
+                        child: widget.data['imag'] == null
+                            ? Icon(Icons.person)
+                            : CircleAvatar(
+                                backgroundImage: MemoryImage(
+                                    base64Decode(widget.data['imag'])),
+                              ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
                             child: Text("Perfil"),
                           ),
                           PopupMenuItem(
-                            value: 2,
-                            child: Text("${widget.data['name']}")
-                          ),
+                              value: 2, child: Text("${widget.data['name']}")),
                           PopupMenuItem(
                             value: 3,
                             child: Text("Cerrar sesión"),
                           )
                         ],
                         onSelected: (valor) {
-                          if(valor == 1) {
+                          if (valor == 1) {
                             Navigator.pushNamed(context, '/perfil');
-                          } else if(valor == 3) {
+                          } else if (valor == 3) {
                             _sharedPreferences.clear();
                             Navigator.pushNamed(context, '/');
                           }
@@ -135,7 +138,7 @@ class _HomeState extends State<Home> {
                 )
               ],
               toolbarHeight: 150.0,
-              backgroundColor: hexToColor('#000000'),
+              backgroundColor: hexToColor('#fdf4e5'),
               bottom: TabBar(
                 onTap: (int index) {
                   setState(
@@ -198,8 +201,8 @@ class _HomeState extends State<Home> {
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
-        tabs.add(
-            TabItem(titulo: 'Cronogramas', icono: Icons.hourglass_bottom_rounded));
+        tabs.add(TabItem(
+            titulo: 'Cronogramas', icono: Icons.hourglass_bottom_rounded));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
@@ -242,9 +245,9 @@ class _HomeState extends State<Home> {
     if (secciones != null) {
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
         pan.add(DashboardEventos(
-            WP_EVT_CRT:permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT'),
-            data:widget.data
-        ));
+            WP_EVT_CRT:
+                permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT'),
+            data: widget.data));
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
         pan.add(ListaEstatusInvitaciones());

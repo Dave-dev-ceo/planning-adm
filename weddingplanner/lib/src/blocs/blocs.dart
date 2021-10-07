@@ -143,6 +143,7 @@ class InvitadoBloc {
 
   dispose() {
     _invitadoFetcher.close();
+    _invitadoFetcherAcompanante.close();
   }
 }
 

@@ -32,7 +32,7 @@ class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Agregar Invitado'),
-        backgroundColor: hexToColor('#000000'),
+        backgroundColor: hexToColor('#fdf4e5'),
         actions: [],
         automaticallyImplyLeading: true,
         /*bottom: TabBar(

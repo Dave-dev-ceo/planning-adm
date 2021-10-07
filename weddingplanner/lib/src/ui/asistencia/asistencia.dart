@@ -267,7 +267,7 @@ class _AsistenciaState extends State<Asistencia> {
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [hexToColor("#000000"), hexToColor("#000000")],
+        colors: [hexToColor("#fdf4e5"), hexToColor("#fdf4e5")],
       ),
       onPress: () async {
         final result = await Navigator.of(context).pushNamed('/lectorQr');

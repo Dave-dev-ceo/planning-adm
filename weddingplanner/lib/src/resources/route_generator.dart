@@ -8,6 +8,7 @@ import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
+import 'package:weddingplanner/src/ui/mesas/asignarMesasPage.dart';
 import 'package:weddingplanner/src/ui/pagos/edit_pago.dart';
 import 'package:weddingplanner/src/ui/pagos/form_pago.dart';
 import 'package:weddingplanner/src/ui/perfil/perfil.dart';
@@ -28,6 +29,7 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_plantilla.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_reporte_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_verPaginaWeb.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_view_file.dart';
 import 'package:weddingplanner/src/ui/widgets/invitados/invitados.dart';
 import 'package:weddingplanner/src/ui/timing_evento/eventos_calendario.dart';
@@ -48,9 +50,10 @@ class RouteGenerator {
       case '/homeAdmin':
         return MaterialPageRoute(builder: (context) => HomeAdmin());
       case '/home':
-        return MaterialPageRoute(builder: (context) => Home(
-          data: args,
-        ));
+        return MaterialPageRoute(
+            builder: (context) => Home(
+                  data: args,
+                ));
       case '/dasboard':
         return MaterialPageRoute(builder: (context) => DashboardEventos());
       case '/eventos':
@@ -160,19 +163,22 @@ class RouteGenerator {
             builder: (context) => FullScreenDialogViewFileEvent(archivo: args));
       case '/galeriaEvidencia':
         return MaterialPageRoute(
-            builder: (context) => GaleriaEvidencia(map: args,));
+            builder: (context) => GaleriaEvidencia(
+                  map: args,
+                ));
       case '/perfil':
-        return MaterialPageRoute(
-            builder: (context) => Perfil());
+        return MaterialPageRoute(builder: (context) => Perfil());
       case '/addContratos':
-        return MaterialPageRoute(
-            builder: (context) => AddMachote(map:args));
+        return MaterialPageRoute(builder: (context) => AddMachote(map: args));
       case '/addPagosForm':
-        return MaterialPageRoute(
-            builder: (context) => FormPago());
+        return MaterialPageRoute(builder: (context) => FormPago());
       case '/editPagosForm':
+        return MaterialPageRoute(builder: (context) => FormEditPago(id: args));
+      case '/verWeb':
         return MaterialPageRoute(
-            builder: (context) => FormEditPago(id:args));
+            builder: (context) => FullScreenViewWEB(data: args));
+      case '/asignarMesas':
+        return MaterialPageRoute(builder: (context) => AsignarMesasPage());
       default:
         return _errorRoute();
     }

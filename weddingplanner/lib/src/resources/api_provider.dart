@@ -704,6 +704,52 @@ class ApiProvider {
     }
   }
 
+  Future<void> updateAcompanante(Map<String, String> acompananteEditado) async {
+    int res = await renovarToken();
+    if (res == 0) {
+      String token = await _sharedPreferences.getToken();
+      int idUsuario = await _sharedPreferences.getIdUsuario();
+      final endPoint = 'wedding/INVITADOS/updateAcompanante';
+
+      acompananteEditado['idUsuario'] = idUsuario.toString();
+
+      final response = await client.post(
+          Uri.parse(confiC.url + confiC.puerto + '/' + endPoint),
+          body: acompananteEditado,
+          headers: {HttpHeaders.authorizationHeader: token});
+
+      if (response == 200) {
+        print('Todo salio correctamente');
+      } else {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<String> deleteAcompanante(String idAcompanante) async {
+    int res = await renovarToken();
+    String _isOk;
+    if (res == 0) {
+      String token = await _sharedPreferences.getToken();
+
+      final enpoint = 'wedding/INVITADOS/deleteAcompanante';
+
+      final data = {'idAcompanante': idAcompanante};
+
+      final response = await client.post(
+          Uri.parse(confiC.url + confiC.puerto + '/' + enpoint),
+          body: data,
+          headers: {HttpHeaders.authorizationHeader: token});
+      if (response.statusCode == 200) {
+        print('Ok');
+        return _isOk = 'Ok';
+      } else {
+        return _isOk = response.body;
+      }
+    }
+    return _isOk;
+  }
+
   Future<bool> agregarAcompanante(
       Map<String, String> data, BuildContext context) async {
     int res = await renovarToken();

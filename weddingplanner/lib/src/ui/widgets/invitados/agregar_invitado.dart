@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
 import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
 import '../../../resources/my_flutter_app_icons.dart';
@@ -27,8 +28,11 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
   //TextEditingController  apellidosCtrl = new TextEditingController();
 
   TextEditingController telefonoCtrl = new TextEditingController();
+  TextEditingController numeroAcomp = new TextEditingController();
 
   ApiProvider api = new ApiProvider();
+
+  int acompanantes = 0;
 
   String dropdownValue = 'Hombre';
 
@@ -45,6 +49,11 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
     ),
   );
 }*/
+  @override
+  void initState() {
+    numeroAcomp.text = '0';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +197,46 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
               maxLength: 10,
               validator: validateTelefono,
             )),
+        formItemsDesign(
+            Icons.people,
+            ListTile(
+              title: TextFormField(
+                controller: numeroAcomp,
+                enabled: false,
+                decoration: InputDecoration(
+                  labelText: 'Número de acompañantes',
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 2.0,
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                maxLength: 3,
+                validator: validarNumAcomp,
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (acompanantes > 0) {
+                            acompanantes--;
+                            numeroAcomp.text = acompanantes.toString();
+                          }
+                        });
+                      },
+                      icon: Icon(Icons.keyboard_arrow_down)),
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          acompanantes++;
+                          numeroAcomp.text = acompanantes.toString();
+                        });
+                      },
+                      icon: Icon(Icons.keyboard_arrow_up))
+                ],
+              ),
+            )),
         GestureDetector(
             onTap: () {
               save();
@@ -195,6 +244,14 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             child: CallToAction('Guardar'))
       ],
     );
+  }
+
+  String validarNumAcomp(String value) {
+    if (value == null || int.parse(value) < 0) {
+      return 'Número de invitados es requerido';
+    } else {
+      return null;
+    }
   }
 
   String validateNombre(String value) {
@@ -246,6 +303,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
         "telefono": telefonoCtrl.text,
         "email": emailCtrl.text,
         "genero": gender,
+        "numeroAcomp": numeroAcomp.text,
         "id_evento": id.toString()
       };
       //json.
@@ -258,6 +316,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
         nombreCtrl.clear();
         telefonoCtrl.clear();
         emailCtrl.clear();
+        numeroAcomp.clear();
         dropdownValue = "Hombre";
         final snackBar = SnackBar(
           content: Container(

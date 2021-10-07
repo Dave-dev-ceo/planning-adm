@@ -22,7 +22,7 @@ class _PagosState extends State<Pagos> {
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     pagosBloc = BlocProvider.of<PagosBloc>(context);
     pagosBloc.add(SelectPagosEvent());
@@ -40,18 +40,23 @@ class _PagosState extends State<Pagos> {
   _bloc() {
     return BlocBuilder<PagosBloc, PagosState>(
       builder: (context, state) {
-        if(state is PagosInitial) {
-          return Center(child: CircularProgressIndicator(),);
-        } else if(state is PagosLogging) {
-          return Center(child: CircularProgressIndicator(),);
-        }  else if(state is PagosSelect) {
+        if (state is PagosInitial) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is PagosLogging) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is PagosSelect) {
           return _stickyHeader(state.pagos);
         } else {
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );
-    
   }
 
   _stickyHeader(itemPago) {
@@ -82,9 +87,11 @@ class _PagosState extends State<Pagos> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 3,
-            child: Text('Pagos',style: TextStyle(fontSize: 20.0),)
-          ),
+              flex: 3,
+              child: Text(
+                'Pagos',
+                style: TextStyle(fontSize: 20.0),
+              )),
         ],
       ),
     );
@@ -96,7 +103,7 @@ class _PagosState extends State<Pagos> {
       columns: _crearColumna(),
       source: DTS(pago: _crearLista(itemPago)),
       onRowsPerPageChanged: null,
-      rowsPerPage: itemPago.pagos.length == 0 ? 1 : itemPago.pagos.length+1,
+      rowsPerPage: itemPago.pagos.length == 0 ? 1 : itemPago.pagos.length + 1,
       dataRowHeight: 25.0,
     );
   }
@@ -104,25 +111,46 @@ class _PagosState extends State<Pagos> {
   List<DataColumn> _crearColumna() {
     return [
       DataColumn(
-        label: Text('Cantidad',style: _boldStyle,),
+        label: Text(
+          'Cantidad',
+          style: _boldStyle,
+        ),
       ),
       DataColumn(
-        label: Text('Poveedor',style: _boldStyle,),
+        label: Text(
+          'Poveedor',
+          style: _boldStyle,
+        ),
       ),
       DataColumn(
-        label: Text('Descripción',style: _boldStyle,),
+        label: Text(
+          'Descripción',
+          style: _boldStyle,
+        ),
       ),
       DataColumn(
-        label: Text('P/U',style: _boldStyle,),
+        label: Text(
+          'P/U',
+          style: _boldStyle,
+        ),
       ),
       DataColumn(
-        label: Text('Total',style: _boldStyle,),
+        label: Text(
+          'Total',
+          style: _boldStyle,
+        ),
       ),
       DataColumn(
-        label: Text('Anticipo',style: _boldStyle,),
+        label: Text(
+          'Anticipo',
+          style: _boldStyle,
+        ),
       ),
       DataColumn(
-        label: Text('Saldo',style: _boldStyle,),
+        label: Text(
+          'Saldo',
+          style: _boldStyle,
+        ),
       ),
     ];
   }
@@ -137,55 +165,86 @@ class _PagosState extends State<Pagos> {
         saldo += element.saldo;
         List<DataCell> pagosListTemp = [
           DataCell(
-            Center(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Icon(Icons.delete),
-                  ),
-                  Expanded(
-                    child: Text('${element.cantidad}'),
-                  )
-                ],
+              Center(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Icon(Icons.delete),
+                    ),
+                    Expanded(
+                      child: Text('${element.cantidad}'),
+                    )
+                  ],
+                ),
               ),
-            ),
-            onTap: () => _deletePago(element.idConcepto)
-          ),
+              onTap: () => _deletePago(element.idConcepto)),
+          DataCell(Center(child: Text('${element.proveedor}')),
+              onTap: () => _editarPago(element.idConcepto)),
+          DataCell(Text('${element.descripcion}'),
+              onTap: () => _editarPago(element.idConcepto)),
           DataCell(
-            Center(child: Text('${element.proveedor}')),
-            onTap: () => _editarPago(element.idConcepto)
-          ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('\$${element.precioUnitario}.00')),
+              onTap: () => _editarPago(element.idConcepto)),
           DataCell(
-            Text('${element.descripcion}'),
-            onTap: () => _editarPago(element.idConcepto)
-          ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '\$${element.total}.00',
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              onTap: () => _editarPago(element.idConcepto)),
           DataCell(
-            Text('\$${element.precioUnitario}.00'),
-            onTap: () => _editarPago(element.idConcepto)
-          ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('\$${element.anticipo}.00',
+                        textAlign: TextAlign.right),
+                  )),
+              onTap: () => _editarPago(element.idConcepto)),
           DataCell(
-            Text('\$${element.total}.00'),
-            onTap: () => _editarPago(element.idConcepto)
-          ),
-          DataCell(
-            Text('\$${element.anticipo}.00'),
-            onTap: () => _editarPago(element.idConcepto)
-          ),
-          DataCell(
-            Text('\$${element.saldo}.00'),
-            onTap: () => _editarPago(element.idConcepto)
-          ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '\$${element.saldo}.00',
+                  )),
+              onTap: () => _editarPago(element.idConcepto)),
         ];
         pagosList.add(pagosListTemp);
       });
       List<DataCell> pagosLast = [
-        DataCell(Center(),),
-        DataCell(Center(),),
-        DataCell(Center(),),
-        DataCell(Center(),),
-        DataCell(Center(child: Text('\$${total}.00',style: _boldStyle),),),
-        DataCell(Center(),),
-        DataCell(Center(child: Text('\$${saldo}.00',style: _boldStyle),),),
+        DataCell(
+          Center(),
+        ),
+        DataCell(
+          Center(),
+        ),
+        DataCell(
+          Center(),
+        ),
+        DataCell(
+          Center(),
+        ),
+        DataCell(
+          Center(
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Text('\$${total}.00', style: _boldStyle)),
+          ),
+        ),
+        DataCell(
+          Center(),
+        ),
+        DataCell(
+          Center(
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Text('\$${saldo}.00', style: _boldStyle)),
+          ),
+        ),
       ];
       pagosList.add(pagosLast);
     } else {
@@ -218,7 +277,7 @@ class _PagosState extends State<Pagos> {
   }
 
   _editarPago(idConcepto) {
-    Navigator.pushNamed(context, '/editPagosForm',arguments: idConcepto);
+    Navigator.pushNamed(context, '/editPagosForm', arguments: idConcepto);
   }
 
   _deletePago(idConcepto) {
@@ -264,11 +323,9 @@ class _PagosState extends State<Pagos> {
 
   // mensaje
   Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(txt),
-      )
-    );
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
   }
 }
 

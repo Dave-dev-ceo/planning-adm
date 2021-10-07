@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
 import 'package:weddingplanner/src/models/item_model-acompanante.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
@@ -23,8 +25,11 @@ class FullScreenDialogEdit extends StatefulWidget {
 }
 
 class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
+  final _keyFormAcomp = GlobalKey<FormState>();
+  final _keyFormEditAcomp = GlobalKey<FormState>();
   ApiProvider api = new ApiProvider();
   final int idInvitado;
+  int _numAcomp = 0;
   int contActualiza = 0;
   int contActualizaEdad = 0;
   int contActualizaGenero = 0;
@@ -36,6 +41,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   bool isExpaneA = false;
   GlobalKey<FormState> keyForm = new GlobalKey();
   GlobalKey<FormState> keyFormG = new GlobalKey();
+  TextEditingController _numberGuestsController = TextEditingController();
   TextEditingController nombreCtrl = new TextEditingController();
 
   TextEditingController emailCtrl = new TextEditingController();
@@ -46,12 +52,15 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   TextEditingController tipoAlimentacionCtrl = new TextEditingController();
   TextEditingController asistenciaEspecialCtrl = new TextEditingController();
-  TextEditingController alergiasCtrl = new TextEditingController();
+  TextEditingController alergiasAcompCtrl = new TextEditingController();
+  TextEditingController alimentAcompContrl = TextEditingController();
+  TextEditingController alerAcompContrl = TextEditingController();
+  TextEditingController asisEspAcompContrl = TextEditingController();
 
   String dropdownValue = 'Hombre';
   int _currentSelection;
   int _currentSelectionGenero;
-  String _mySelection;
+  String _mySelection = '';
   String _mySelectionG = "1";
   String _mySelectionM = "0";
   bool _lights = false;
@@ -61,6 +70,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   TextEditingController nombreAcompananteCtrl = new TextEditingController();
   int _mySelectionAEdad = 0;
   int _mySelectionAGenero = 0;
+  int _mySelectionAEdad2 = 0;
+  int _mySelectionAGenero2 = 0;
+  int numbAcomFromDB;
 
   _FullScreenDialogEditState(this.idInvitado);
   Map<int, Widget> _children = {
@@ -108,6 +120,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       stream: blocInvitado.allAcompanante,
       builder: (context, AsyncSnapshot<ItemModelAcompanante> snapshot) {
         if (snapshot.hasData) {
+          numbAcomFromDB = snapshot.data.results.length;
           return Container(
             width: 1000,
             child: Column(
@@ -128,7 +141,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   List<Widget> _createListItemsAcomp(ItemModelAcompanante data) {
     // Creación de lista de Widget.
-    List<Widget> listaAcompa = new List<Widget>();
+    List<Widget> listaAcompa = [];
     for (var opt in data.results) {
       final tempWidget = ListTile(
           title: Text(opt.nombre),
@@ -137,12 +150,28 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
             IconButton(
                 onPressed: () => showDialog<void>(
                     context: context,
-                    builder: (BuildContext context) => _eliminarAcompanante()),
+                    builder: (BuildContext context) => AlertDialog(
+                          title: const Text('Eliminar Acompañante'),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, 'Cancelar');
+                                },
+                                child: Text('Cancelar')),
+                            TextButton(
+                                onPressed: () async {
+                                  _eliminarAcompanante(opt.idAcompanne);
+                                  Navigator.pop(context, 'Ok');
+                                },
+                                child: Text('Eliminar'))
+                          ],
+                        )),
                 icon: const Icon(Icons.delete)),
             IconButton(
                 onPressed: () => showDialog<void>(
                     context: context,
-                    builder: (BuildContext context) => _editarAcompanante()),
+                    builder: (BuildContext context) =>
+                        dialogEditAcomp(opt.idAcompanne, data)),
                 icon: const Icon(Icons.edit))
           ]));
       listaAcompa.add(tempWidget);
@@ -150,7 +179,251 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     return listaAcompa;
   }
 
-  _eliminarAcompanante() {}
+  Widget dialogEditAcomp(int idAcompanante, ItemModelAcompanante data) {
+    String genero;
+    final acompanante = data.results
+        .firstWhere((element) => element.idAcompanne == idAcompanante);
+    return AlertDialog(
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(
+              textStyle: TextStyle(
+            color: Colors.red,
+          )),
+          onPressed: () {
+            Navigator.pop(context, 'Cancelar');
+          },
+          child: Text(
+            'Cancelar',
+            textAlign: TextAlign.left,
+          ),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(textStyle: TextStyle(color: Colors.blue)),
+          onPressed: () async {
+            if (_mySelectionAEdad2 == 0) {
+              acompanante.edad = 'A';
+            } else {
+              acompanante.edad = 'N';
+            }
+
+            if (_mySelectionAGenero2 == 0) {
+              genero = 'H';
+            } else {
+              genero = 'M';
+            }
+            if (_keyFormEditAcomp.currentState.validate()) {
+              Map<String, String> editAcompanante = {
+                'idAcompanante': acompanante.idAcompanne.toString(),
+                'nombre': acompanante.nombre,
+                'edad': acompanante.edad,
+                'genero': genero,
+                'alimentacion': acompanante.alimentacion,
+                'alergias': acompanante.alergias,
+                'asistenciaEspecial': acompanante.asistenciaEspecial
+              };
+              await api.updateAcompanante(editAcompanante);
+              Navigator.pop(context, 'Agregado');
+            }
+          },
+          child: Text(
+            'Editar',
+            textAlign: TextAlign.right,
+          ),
+        )
+      ],
+      content: SingleChildScrollView(
+        child: Form(
+          key: _keyFormEditAcomp,
+          child: Container(
+            width: 600,
+            height: 500,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Text(
+                    'Editar Acompañante',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                formItemsDesign(
+                    Icons.person,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: TextFormField(
+                        initialValue: acompanante.nombre,
+                        onChanged: (value) {
+                          acompanante.nombre = value;
+                        },
+                        decoration: new InputDecoration(
+                          labelText: 'Nombre completo',
+                        ),
+                        //initialValue: invitado.nombre,
+                        validator: validateNombre,
+                      ),
+                    ),
+                    400.0,
+                    70.0),
+                formItemsDesign(
+                    Icons.av_timer_rounded,
+                    Row(children: <Widget>[
+                      Text('Edad'),
+                      //SizedBox(width: 15,),
+                      Expanded(
+                        child: MaterialSegmentedControl(
+                          children: _children,
+                          selectionIndex: _mySelectionAEdad2,
+                          borderColor: Color(0xFF000000),
+                          selectedColor: Color(0xFF000000),
+                          unselectedColor: Colors.white,
+                          borderRadius: 32.0,
+                          horizontalPadding: EdgeInsets.all(4),
+                          onSegmentChosen: (index) {
+                            setState(() {
+                              _mySelectionAEdad2 = index;
+                            });
+                          },
+                        ),
+                      ),
+                    ]),
+                    400.0,
+                    70.0),
+                formItemsDesign(
+                    MyFlutterApp.transgender,
+                    Row(children: <Widget>[
+                      Text('Genero'),
+                      //SizedBox(width: 15,),
+                      Expanded(
+                        child: MaterialSegmentedControl(
+                          children: _childrenGenero,
+                          selectionIndex: _mySelectionAGenero2,
+                          borderColor: Color(0xFF000000),
+                          selectedColor: Color(0xFF000000),
+                          unselectedColor: Colors.white,
+                          borderRadius: 32.0,
+                          horizontalPadding:
+                              EdgeInsets.symmetric(horizontal: 5.0),
+                          onSegmentChosen: (index) {
+                            setState(() {
+                              _mySelectionAGenero2 = index;
+                            });
+                          },
+                        ),
+                      ),
+                    ]),
+                    400.0,
+                    70.0),
+                formItemsDesign(
+                    Icons.restaurant_menu_sharp,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: TextFormField(
+                        initialValue: acompanante.alimentacion,
+                        onChanged: (value) {
+                          acompanante.alimentacion = value;
+                        },
+                        decoration:
+                            InputDecoration(labelText: 'Tipo de alimentación'),
+                        validator: (value) {
+                          if (value == null || value == '') {
+                            return 'El Campo esta vacio';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                    400.0,
+                    70),
+                formItemsDesign(
+                    Icons.sick_outlined,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: TextFormField(
+                        initialValue: acompanante.alergias,
+                        onChanged: (value) {
+                          acompanante.alergias = value;
+                        },
+                        decoration: InputDecoration(labelText: 'Alergias'),
+                        validator: (value) {
+                          if (value == '' || value == null) {
+                            return 'El Campo esta vacio';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                    400,
+                    70),
+                formItemsDesign(
+                    Icons.wheelchair_pickup,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      child: TextFormField(
+                        initialValue: acompanante.asistenciaEspecial,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.singleLineFormatter
+                        ],
+                        onChanged: (value) {
+                          acompanante.asistenciaEspecial = value;
+                        },
+                        decoration:
+                            InputDecoration(labelText: 'Asistencia Especial'),
+                        validator: (value) {
+                          if (value == '' || value == null) {
+                            return 'El Campo esta vacio';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                    400,
+                    70)
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _eliminarAcompanante(int idAcompanante) async {
+    final data = await api.deleteAcompanante(idAcompanante.toString());
+    print(data);
+    if (data == 'Ok') {
+      final snackbar = SnackBar(
+          backgroundColor: Colors.green,
+          content: Container(
+            width: 30,
+            child: Center(
+              child: Text('El acompañante se ha eliminado'),
+            ),
+          ));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+//
+    } else {
+      final snackbar = SnackBar(
+          backgroundColor: Colors.red,
+          content: Container(
+            width: 30,
+            child: Center(
+              child: Text('Ocurrio un error: $data'),
+            ),
+          ));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    }
+
+    await blocInvitado.fetchAllAcompanante(idInvitado, context);
+  }
+
   _editarAcompanante() {}
   _listaGrupos() {
     ///bloc.dispose();
@@ -416,6 +689,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   }
 
   Widget formUI(ItemModelInvitado invitado, ItemModelAcompanante acompanante) {
+    if (invitado.numbAcomp != null) {
+      _numAcomp = invitado.numbAcomp;
+    }
     _base64qr = invitado.codigoQr;
     if (contActualiza <= 0) {
       if (invitado.asistencia != null) {
@@ -465,10 +741,13 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       nombreCtrl.text = invitado.nombre;
       emailCtrl.text = invitado.email;
       telefonoCtrl.text = invitado.telefono;
-      alergiasCtrl.text = invitado.alergias;
+      alergiasAcompCtrl.text = invitado.alergias;
       tipoAlimentacionCtrl.text = invitado.alimentacion;
       asistenciaEspecialCtrl.text = invitado.asistenciaEspecial;
       contActualizaData++;
+      if (invitado.numbAcomp != null) {
+        _numberGuestsController.text = invitado.numbAcomp.toString();
+      }
     }
     return Column(children: <Widget>[
       SizedBox(
@@ -531,7 +810,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         ),
                         500.0,
                         80.0)
-                    //Container(width: 300,child: TextFormField(initialValue: nombre,decoration: InputDecoration(labelText: 'Nombre'))),
+                    //Container(width: 300,chilistaAld: TextFormField(initialValue: nombre,decoration: InputDecoration(labelText: 'Nombre'))),
                   ]),
                   Wrap(
                     children: <Widget>[
@@ -600,27 +879,46 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           500.0,
                           80.0),
                       formItemsDesign(
-                          !invitado.estatusInvitacion
-                              ? Icons.cancel
-                              : Icons.check_box,
+                          Icons.people,
                           MergeSemantics(
                             child: ListTile(
-                              title: Text(!invitado.estatusInvitacion
-                                  ? 'Invitación pendiente'
-                                  : 'Invitación enviada'),
-                              trailing: CupertinoSwitch(
-                                value: _lights, //invitado.estatusInvitacion,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    _lights = value;
-                                  });
-                                },
+                              title: TextFormField(
+                                enabled: false,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                // controller: _textController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    labelText: 'Número de Invitados'),
+                                controller: _numberGuestsController,
                               ),
-                              onTap: () {
-                                setState(() {
-                                  _lights = !_lights;
-                                });
-                              },
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        if (_numAcomp > 0 ||
+                                            _numAcomp >= numbAcomFromDB) {
+                                          _numAcomp -= 1;
+
+                                          _numberGuestsController.text =
+                                              _numAcomp.toString();
+                                        }
+                                        print(numbAcomFromDB == _numAcomp);
+                                      },
+                                      icon: Icon(Icons.keyboard_arrow_down)),
+                                  IconButton(
+                                      onPressed: () {
+                                        _numAcomp += 1;
+                                        print(numbAcomFromDB == _numAcomp);
+                                        _numberGuestsController.text =
+                                            _numAcomp.toString();
+                                      },
+                                      icon: Icon(Icons.keyboard_arrow_up))
+                                ],
+                              ),
                             ),
                           ),
                           500.0,
@@ -694,7 +992,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         formItemsDesign(
                             null,
                             TextFormField(
-                              controller: alergiasCtrl,
+                              controller: alergiasAcompCtrl,
                               keyboardType: TextInputType.multiline,
                               maxLines: 2,
                               //initialValue: invitado.email,
@@ -774,109 +1072,188 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
               body: Container(
                 child: Column(
                   children: <Widget>[
-                    Wrap(
-                      children: <Widget>[
-                        formItemsDesign(
-                            Icons.person,
-                            TextFormField(
-                              controller: nombreAcompananteCtrl,
-                              decoration: new InputDecoration(
-                                labelText: 'Nombre completo',
+                    Form(
+                      key: _keyFormAcomp,
+                      child: Wrap(
+                        children: <Widget>[
+                          formItemsDesign(
+                              Icons.person,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  controller: nombreAcompananteCtrl,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Nombre completo',
+                                  ),
+                                  //initialValue: invitado.nombre,
+                                  validator: validateNombre,
+                                ),
                               ),
-                              //initialValue: invitado.nombre,
-                              validator: validateNombre,
-                            ),
-                            500.0,
-                            80.0),
-                        formItemsDesign(
-                            Icons.av_timer_rounded,
-                            Row(children: <Widget>[
-                              Text('Edad'),
-                              //SizedBox(width: 15,),
-                              Expanded(
-                                child: MaterialSegmentedControl(
-                                  children: _children,
-                                  selectionIndex: _mySelectionAEdad,
-                                  borderColor: Color(0xFF000000),
-                                  selectedColor: Color(0xFF000000),
-                                  unselectedColor: Colors.white,
-                                  borderRadius: 32.0,
-                                  horizontalPadding: EdgeInsets.all(8),
-                                  onSegmentChosen: (index) {
-                                    setState(() {
-                                      _mySelectionAEdad = index;
-                                    });
+                              500.0,
+                              100.0),
+                          formItemsDesign(
+                              Icons.av_timer_rounded,
+                              Row(children: <Widget>[
+                                Text('Edad'),
+                                //SizedBox(width: 15,),
+                                Expanded(
+                                  child: MaterialSegmentedControl(
+                                    children: _children,
+                                    selectionIndex: _mySelectionAEdad,
+                                    borderColor: Color(0xFF000000),
+                                    selectedColor: Color(0xFF000000),
+                                    unselectedColor: Colors.white,
+                                    borderRadius: 32.0,
+                                    horizontalPadding: EdgeInsets.all(8),
+                                    onSegmentChosen: (index) {
+                                      setState(() {
+                                        _mySelectionAEdad = index;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ]),
+                              500.0,
+                              100.0),
+                          formItemsDesign(
+                              MyFlutterApp.transgender,
+                              Row(children: <Widget>[
+                                Text('Genero'),
+                                //SizedBox(width: 15,),
+                                Expanded(
+                                  child: MaterialSegmentedControl(
+                                    children: _childrenGenero,
+                                    selectionIndex: _mySelectionAGenero,
+                                    borderColor: Color(0xFF000000),
+                                    selectedColor: Color(0xFF000000),
+                                    unselectedColor: Colors.white,
+                                    borderRadius: 32.0,
+                                    horizontalPadding: EdgeInsets.all(8),
+                                    onSegmentChosen: (index) {
+                                      setState(() {
+                                        _mySelectionAGenero = index;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ]),
+                              500.0,
+                              100.0),
+                          formItemsDesign(
+                              Icons.restaurant_menu_sharp,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  controller: alimentAcompContrl,
+                                  decoration: InputDecoration(
+                                      labelText: 'Tipo de alimentación'),
+                                  validator: (value) {
+                                    if (value == null || value == '') {
+                                      return 'El Campo esta vacio';
+                                    } else {
+                                      return null;
+                                    }
                                   },
                                 ),
                               ),
-                            ]),
-                            500.0,
-                            80.0),
-                        formItemsDesign(
-                            MyFlutterApp.transgender,
-                            Row(children: <Widget>[
-                              Text('Genero'),
-                              //SizedBox(width: 15,),
-                              Expanded(
-                                child: MaterialSegmentedControl(
-                                  children: _childrenGenero,
-                                  selectionIndex: _mySelectionAGenero,
-                                  borderColor: Color(0xFF000000),
-                                  selectedColor: Color(0xFF000000),
-                                  unselectedColor: Colors.white,
-                                  borderRadius: 32.0,
-                                  horizontalPadding: EdgeInsets.all(8),
-                                  onSegmentChosen: (index) {
-                                    setState(() {
-                                      _mySelectionAGenero = index;
-                                    });
+                              500.0,
+                              100),
+                          formItemsDesign(
+                              Icons.sick_outlined,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  controller: alergiasAcompCtrl,
+                                  decoration:
+                                      InputDecoration(labelText: 'Alergias'),
+                                  validator: (value) {
+                                    if (value == '' || value == null) {
+                                      return 'El Campo esta vacio';
+                                    } else {
+                                      return null;
+                                    }
                                   },
                                 ),
                               ),
-                            ]),
-                            500.0,
-                            80.0),
-                      ],
+                              500,
+                              100),
+                          formItemsDesign(
+                              Icons.wheelchair_pickup,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .singleLineFormatter
+                                  ],
+                                  controller: asisEspAcompContrl,
+                                  decoration: InputDecoration(
+                                      labelText: 'Asistencia Especial'),
+                                  validator: (value) {
+                                    if (value == '' || value == null) {
+                                      return 'El Campo esta vacio';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ),
+                              500,
+                              100)
+                        ],
+                      ),
                     ),
-                    Ink(
-                        padding: EdgeInsets.all(5),
-                        width: 100.0,
-                        // height: 100.0,
-                        decoration: const ShapeDecoration(
-                          color: Colors.black,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                            icon: const Icon(Icons.add),
-                            color: Colors.white,
-                            onPressed: () async {
-                              print('Vamos a agregar acom');
-                              print(nombreAcompananteCtrl.text);
-                              print(_mySelectionAEdad);
-                              print(_mySelectionAGenero);
-                              String edad = '';
-                              String genero = '';
-                              if (_mySelectionAEdad == 0) {
-                                edad = 'A';
-                              } else {
-                                edad = 'N';
-                              }
-                              if (_mySelectionAGenero == 0) {
-                                genero = 'H';
-                              } else {
-                                genero = 'M';
-                              }
+                    (numbAcomFromDB == int.parse(_numberGuestsController.text))
+                        ? Container()
+                        : Ink(
+                            padding: EdgeInsets.all(5),
+                            width: 100.0,
+                            // height: 100.0,
+                            decoration: const ShapeDecoration(
+                              color: Colors.black,
+                              shape: CircleBorder(),
+                            ),
+                            child: IconButton(
+                                icon: const Icon(Icons.add),
+                                color: Colors.white,
+                                onPressed: () async {
+                                  print('Vamos a agregar acom');
+                                  print(nombreAcompananteCtrl.text);
+                                  print(_mySelectionAEdad);
+                                  print(_mySelectionAGenero);
+//
+//                                  if(_numAcomp > 0 && _numAcomp ){
+                                  String edad = '';
+                                  String genero = '';
+                                  if (_mySelectionAEdad == 0) {
+                                    edad = 'A';
+                                  } else {
+                                    edad = 'N';
+                                  }
+                                  if (_mySelectionAGenero == 0) {
+                                    genero = 'H';
+                                  } else {
+                                    genero = 'M';
+                                  }
+//
+                                  Map<String, String> json = {
+                                    "id_invitado": idInvitado.toString(),
+                                    "nombre": nombreAcompananteCtrl.text,
+                                    "edad": edad,
+                                    "genero": genero,
+                                    "alimentacion": alimentAcompContrl.text,
+                                    "alergias": alergiasAcompCtrl.text,
+                                    "asistenciaEspecial":
+                                        asisEspAcompContrl.text
+                                  };
 
-                              Map<String, String> json = {
-                                "id_invitado": idInvitado.toString(),
-                                "nombre": nombreAcompananteCtrl.text,
-                                "edad": edad,
-                                "genero": genero
-                              };
-                              await api.agregarAcompanante(json, context);
-                              await blocInvitado.fetchAllAcompanante(
-                                  idInvitado, context);
-                            })),
+                                  if (_keyFormAcomp.currentState.validate()) {
+                                    await api.agregarAcompanante(json, context);
+                                    await blocInvitado.fetchAllAcompanante(
+                                        idInvitado, context);
+                                  }
+// }
+                                })),
                     SizedBox(
                       height: 30.0,
                     ),
@@ -978,7 +1355,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       "id_grupo": _mySelectionG,
       "id_mesa": _mySelectionM,
       "alimentacion": tipoAlimentacionCtrl.text,
-      "alergias": alergiasCtrl.text,
+      "alergias": alergiasAcompCtrl.text,
       "asistencia_especial": asistenciaEspecialCtrl.text
     };
     //json.
@@ -1015,13 +1392,14 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     //}
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
+  @override
+  void initState() {
+    _numberGuestsController.text = _numAcomp.toString();
+    super.initState();
   }
 
   @override
@@ -1030,7 +1408,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         appBar: AppBar(
           title: Text('Editar Invitado'),
           automaticallyImplyLeading: true,
-          backgroundColor: hexToColor('#000000'),
+          backgroundColor: hexToColor('#fdf4e5'),
         ),
         body: SingleChildScrollView(
           child: Container(

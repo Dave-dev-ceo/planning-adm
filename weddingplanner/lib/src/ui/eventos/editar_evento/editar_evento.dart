@@ -32,6 +32,7 @@ class _EditarEventoState extends State<EditarEvento> {
   TextEditingController fechaInicioCtrl;
   TextEditingController fechaFinCtrl;
   TextEditingController fechaEventoCtrl;
+  TextEditingController numbInvitadosCtrl;
   DateTime fechaInicio;
   DateTime fechaFin;
   DateTime fechaEvento;
@@ -91,6 +92,7 @@ class _EditarEventoState extends State<EditarEvento> {
     fechaInicioCtrl.clear();
     fechaFinCtrl.clear();
     fechaEventoCtrl.clear();
+    numbInvitadosCtrl.clear();
   }
 
   _clearControllerInvo() {
@@ -110,6 +112,8 @@ class _EditarEventoState extends State<EditarEvento> {
     fechaInicioCtrl.text = evento.results.elementAt(0).fechaInicio;
     fechaFinCtrl.text = evento.results.elementAt(0).fechaFin;
     fechaEventoCtrl.text = evento.results.elementAt(0).fechaEvento;
+    numbInvitadosCtrl.text =
+        evento.results.elementAt(0).numeroInivtados.toString();
 
     // Contrato
     nombreCtrl.text = evento.results.elementAt(0).nombrect;
@@ -318,6 +322,7 @@ class _EditarEventoState extends State<EditarEvento> {
     emailCtrl = new TextEditingController();
     direccionCtrl = new TextEditingController();
     estadoCtrl = new TextEditingController();
+    numbInvitadosCtrl = new TextEditingController();
     _initEditForm();
   }
 
@@ -375,8 +380,9 @@ class _EditarEventoState extends State<EditarEvento> {
             '"fecha_inicio": "${fechaInicioCtrl.text}",' +
             '"fecha_fin": "${fechaFinCtrl.text}",' +
             '"fecha_evento": "${fechaEventoCtrl.text}",' +
-            '"id_tipo_evento": $_mySelectionTE' +
-            '}]',
+            '"id_tipo_evento": "$_mySelectionTE" ,' +
+            '"numero_invitados": "${numbInvitadosCtrl.text}"'
+                '}]',
         'ctdata': '[{' +
             '"id_contratante": ${evento.results.elementAt(0).idContratante.toString()},' +
             '"nombre": "${nombreCtrl.text}",' +
@@ -491,6 +497,23 @@ class _EditarEventoState extends State<EditarEvento> {
                               80.0),
                           onTap: () => _selectDateEvento(context),
                         ),
+                        formItemsDesign(
+                            Icons.people,
+                            TextFormField(
+                              controller: numbInvitadosCtrl,
+                              validator: (value) {
+                                if (value == null || value == '') {
+                                  return 'El número de invitados es requerido';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Número de Invitados aprox.',
+                              ),
+                            ),
+                            500,
+                            80)
                         /* Expanded(child: BlocBuilder<TiposEventosBloc, TiposEventosState>(
                           builder: (context, state) {
                             if (state is TiposEventosInitial) {

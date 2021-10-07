@@ -39,13 +39,13 @@ class _HomeAdminState extends State<HomeAdmin> {
             title: Center(
               child: FittedBox(
                   child: Image.asset(
-                'assets/logo.png',
+                'assets/new_logo.png',
                 height: 100.0,
                 width: 250.0,
               )),
             ),
             toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#000000'),
+            backgroundColor: hexToColor('#fdf4e5'),
             bottom: TabBar(
               onTap: (int index) {
                 setState(

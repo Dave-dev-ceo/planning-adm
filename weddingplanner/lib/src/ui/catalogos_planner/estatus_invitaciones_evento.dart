@@ -177,7 +177,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                             ),
                           ),
                           decoration: BoxDecoration(
-                            color: hexToColor('#000000'),
+                            color: hexToColor('#fdf4e5'),
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),
