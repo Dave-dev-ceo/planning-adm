@@ -145,7 +145,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     for (var opt in data.results) {
       final tempWidget = ListTile(
           title: Text(opt.nombre),
-          subtitle: Text(opt.edad),
           trailing: Wrap(spacing: 12, children: <Widget>[
             IconButton(
                 onPressed: () => showDialog<void>(
@@ -223,6 +222,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                 'asistenciaEspecial': acompanante.asistenciaEspecial
               };
               await api.updateAcompanante(editAcompanante);
+              await blocInvitado.fetchAllAcompanante(idInvitado, context);
               Navigator.pop(context, 'Agregado');
             }
           },
@@ -330,13 +330,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         },
                         decoration:
                             InputDecoration(labelText: 'Tipo de alimentación'),
-                        validator: (value) {
-                          if (value == null || value == '') {
-                            return 'El Campo esta vacio';
-                          } else {
-                            return null;
-                          }
-                        },
                       ),
                     ),
                     400.0,
@@ -351,13 +344,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           acompanante.alergias = value;
                         },
                         decoration: InputDecoration(labelText: 'Alergias'),
-                        validator: (value) {
-                          if (value == '' || value == null) {
-                            return 'El Campo esta vacio';
-                          } else {
-                            return null;
-                          }
-                        },
                       ),
                     ),
                     400,
@@ -376,13 +362,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         },
                         decoration:
                             InputDecoration(labelText: 'Asistencia Especial'),
-                        validator: (value) {
-                          if (value == '' || value == null) {
-                            return 'El Campo esta vacio';
-                          } else {
-                            return null;
-                          }
-                        },
                       ),
                     ),
                     400,
@@ -424,7 +403,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     await blocInvitado.fetchAllAcompanante(idInvitado, context);
   }
 
-  _editarAcompanante() {}
   _listaGrupos() {
     ///bloc.dispose();
     blocGrupos.fetchAllGrupos(context);
@@ -1147,13 +1125,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                   controller: alimentAcompContrl,
                                   decoration: InputDecoration(
                                       labelText: 'Tipo de alimentación'),
-                                  validator: (value) {
-                                    if (value == null || value == '') {
-                                      return 'El Campo esta vacio';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
                                 ),
                               ),
                               500.0,
@@ -1166,13 +1137,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                   controller: alergiasAcompCtrl,
                                   decoration:
                                       InputDecoration(labelText: 'Alergias'),
-                                  validator: (value) {
-                                    if (value == '' || value == null) {
-                                      return 'El Campo esta vacio';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
                                 ),
                               ),
                               500,
@@ -1189,13 +1153,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                   controller: asisEspAcompContrl,
                                   decoration: InputDecoration(
                                       labelText: 'Asistencia Especial'),
-                                  validator: (value) {
-                                    if (value == '' || value == null) {
-                                      return 'El Campo esta vacio';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
                                 ),
                               ),
                               500,
@@ -1203,57 +1160,54 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         ],
                       ),
                     ),
-                    (numbAcomFromDB == int.parse(_numberGuestsController.text))
-                        ? Container()
-                        : Ink(
-                            padding: EdgeInsets.all(5),
-                            width: 100.0,
-                            // height: 100.0,
-                            decoration: const ShapeDecoration(
-                              color: Colors.black,
-                              shape: CircleBorder(),
-                            ),
-                            child: IconButton(
-                                icon: const Icon(Icons.add),
-                                color: Colors.white,
-                                onPressed: () async {
-                                  print('Vamos a agregar acom');
-                                  print(nombreAcompananteCtrl.text);
-                                  print(_mySelectionAEdad);
-                                  print(_mySelectionAGenero);
+                    Ink(
+                        padding: EdgeInsets.all(5),
+                        width: 100.0,
+                        // height: 100.0,
+                        decoration: const ShapeDecoration(
+                          color: Colors.black,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                            icon: const Icon(Icons.add),
+                            color: Colors.white,
+                            onPressed: () async {
+                              print('Vamos a agregar acom');
+                              print(nombreAcompananteCtrl.text);
+                              print(_mySelectionAEdad);
+                              print(_mySelectionAGenero);
 //
 //                                  if(_numAcomp > 0 && _numAcomp ){
-                                  String edad = '';
-                                  String genero = '';
-                                  if (_mySelectionAEdad == 0) {
-                                    edad = 'A';
-                                  } else {
-                                    edad = 'N';
-                                  }
-                                  if (_mySelectionAGenero == 0) {
-                                    genero = 'H';
-                                  } else {
-                                    genero = 'M';
-                                  }
+                              String edad = '';
+                              String genero = '';
+                              if (_mySelectionAEdad == 0) {
+                                edad = 'A';
+                              } else {
+                                edad = 'N';
+                              }
+                              if (_mySelectionAGenero == 0) {
+                                genero = 'H';
+                              } else {
+                                genero = 'M';
+                              }
 //
-                                  Map<String, String> json = {
-                                    "id_invitado": idInvitado.toString(),
-                                    "nombre": nombreAcompananteCtrl.text,
-                                    "edad": edad,
-                                    "genero": genero,
-                                    "alimentacion": alimentAcompContrl.text,
-                                    "alergias": alergiasAcompCtrl.text,
-                                    "asistenciaEspecial":
-                                        asisEspAcompContrl.text
-                                  };
+                              Map<String, String> json = {
+                                "id_invitado": idInvitado.toString(),
+                                "nombre": nombreAcompananteCtrl.text,
+                                "edad": edad,
+                                "genero": genero,
+                                "alimentacion": alimentAcompContrl.text,
+                                "alergias": alergiasAcompCtrl.text,
+                                "asistenciaEspecial": asisEspAcompContrl.text
+                              };
 
-                                  if (_keyFormAcomp.currentState.validate()) {
-                                    await api.agregarAcompanante(json, context);
-                                    await blocInvitado.fetchAllAcompanante(
-                                        idInvitado, context);
-                                  }
+                              if (_keyFormAcomp.currentState.validate()) {
+                                await api.agregarAcompanante(json, context);
+                                await blocInvitado.fetchAllAcompanante(
+                                    idInvitado, context);
+                              }
 // }
-                                })),
+                            })),
                     SizedBox(
                       height: 30.0,
                     ),

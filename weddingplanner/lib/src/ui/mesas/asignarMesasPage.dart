@@ -28,7 +28,21 @@ class _AsignarMesasPageState extends State<AsignarMesasPage> {
         child: Column(
           children: [
             formularioAsignarMesas(size),
-            if (listMesas.isNotEmpty) _buildFormMesas(size)
+            if (listMesas.isNotEmpty) _buildFormMesas(size),
+            if (listMesas.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  child: ElevatedButton(
+                      onPressed: () {
+                        print('Guardando...');
+                      },
+                      child: Text(
+                        'Guardar',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
+                ),
+              )
           ],
         ),
       ),
@@ -73,12 +87,15 @@ class _AsignarMesasPageState extends State<AsignarMesasPage> {
                           );
                         },
                         body: Wrap(
+                          alignment: WrapAlignment.center,
                           children: [
                             Padding(
                               padding: _padding,
                               child: TextFormField(
                                 controller: numeroDeMesas,
                                 decoration: InputDecoration(
+                                    constraints: BoxConstraints(
+                                        maxWidth: size.width * 0.2),
                                     labelText: 'Número de Mesas',
                                     border: OutlineInputBorder()),
                                 inputFormatters: [
@@ -105,6 +122,8 @@ class _AsignarMesasPageState extends State<AsignarMesasPage> {
                                 ],
                                 controller: numeroDeSillas,
                                 decoration: InputDecoration(
+                                    constraints: BoxConstraints(
+                                        maxWidth: size.width * 0.2),
                                     labelText: 'Número de sillas por mesa',
                                     border: OutlineInputBorder()),
                                 validator: (value) {
@@ -120,14 +139,19 @@ class _AsignarMesasPageState extends State<AsignarMesasPage> {
                                 },
                               ),
                             ),
-                            Padding(
-                              padding: _padding,
-                              child: Center(
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      _crearMesas();
-                                    },
-                                    child: Text('Crear')),
+                            ConstrainedBox(
+                              constraints:
+                                  BoxConstraints(maxWidth: size.width * 0.4),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 15),
+                                child: Center(
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        _crearMesas();
+                                      },
+                                      child: Text('Crear')),
+                                ),
                               ),
                             )
                           ],

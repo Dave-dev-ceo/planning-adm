@@ -33,8 +33,16 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    final response = await client.post(Uri.parse(confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventos/'),
-        body: {'id_usuario': idUsuario.toString(), 'id_planner': idPlanner.toString()}, headers: {HttpHeaders.authorizationHeader: token});
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventos/'),
+        body: {
+          'id_usuario': idUsuario.toString(),
+          'id_planner': idPlanner.toString(),
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -52,8 +60,12 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   Future<ItemModelEvento> fetchEventoPorId(String id_evento) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    final response = await client.post(Uri.parse(confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventoPorId/'),
-        headers: {HttpHeaders.authorizationHeader: token}, body: {'id_planner': idPlanner.toString(), 'id_evento': id_evento});
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/EVENTOS/obtenerEventoPorId/'),
+        headers: {HttpHeaders.authorizationHeader: token},
+        body: {'id_planner': idPlanner.toString(), 'id_evento': id_evento});
     // var uri = Uri.parse(
     //     confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventoPorId/');
     // var header = {HttpHeaders.authorizationHeader: token};
@@ -77,8 +89,11 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     dataEvento['id_planner'] = idPlanner.toString();
     dataEvento['id_usuario'] = idUsuario.toString();
-    final response = await client
-        .post(Uri.parse(confiC.url + confiC.puerto + '/wedding/EVENTOS/createEventos'), body: dataEvento, headers: {HttpHeaders.authorizationHeader: token});
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/EVENTOS/createEventos'),
+        body: dataEvento,
+        headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -98,8 +113,10 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     dataEvento['id_planner'] = idPlanner.toString();
     dataEvento['id_usuario'] = idUsuario.toString();
-    final response = await client
-        .post(Uri.parse(confiC.url + confiC.puerto + '/wedding/EVENTOS/editarEvento'), body: dataEvento, headers: {HttpHeaders.authorizationHeader: token});
+    final response = await client.post(
+        Uri.parse(confiC.url + confiC.puerto + '/wedding/EVENTOS/editarEvento'),
+        body: dataEvento,
+        headers: {HttpHeaders.authorizationHeader: token});
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
       await _sharedPreferences.setToken(responseEvento['token']);

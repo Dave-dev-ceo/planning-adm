@@ -4,9 +4,7 @@ class MesasPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Mesas Page'),
-      ),
+      body: Table(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed('/asignarMesas');

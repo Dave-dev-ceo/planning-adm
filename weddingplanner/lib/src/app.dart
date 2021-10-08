@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
@@ -48,6 +49,7 @@ import 'package:weddingplanner/src/logic/roles_logic.dart';
 import 'package:weddingplanner/src/logic/timings_logic.dart';
 import 'package:weddingplanner/src/logic/tipos_eventos_logic.dart';
 import 'package:weddingplanner/src/resources/route_generator.dart';
+import 'package:weddingplanner/src/ui/widgets/showDialog/alertDialog.dart';
 import 'blocs/paises/paises_bloc.dart';
 import 'blocs/perfil/perfil_bloc.dart';
 import 'blocs/usuarios/usuario/usuario_bloc.dart';
@@ -108,6 +110,8 @@ class MyApp extends StatelessWidget {
       title: 'App',
       theme: ThemeData(
           primarySwatch: createMaterialColor(Color(0xFFfdf4e5)),
+          textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(primary: Colors.black)),
           inputDecorationTheme: InputDecorationTheme(
               floatingLabelStyle: TextStyle(color: Colors.black54)),
           //backgroundColor: createMaterialColor(Color(0xD34444)),
@@ -206,6 +210,7 @@ class AppState extends StatelessWidget {
           create: (_) => PerfilBloc(logic: ConsultasPerfilLogic())),
       BlocProvider<PagosBloc>(
           create: (_) => PagosBloc(logic: ConsultasPagosLogic())),
+      BlocProvider<MesasAsignadasBloc>(create: (_) => MesasAsignadasBloc())
     ], child: MyApp());
   }
 }
