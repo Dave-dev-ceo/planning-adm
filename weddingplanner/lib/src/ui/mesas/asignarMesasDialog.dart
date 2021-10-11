@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AsignarMesasPage extends StatefulWidget {
+class AsignarMesasDialog extends StatefulWidget {
   @override
-  _AsignarMesasPageState createState() => _AsignarMesasPageState();
+  _AsignarMesasDialogState createState() => _AsignarMesasDialogState();
 }
 
-class _AsignarMesasPageState extends State<AsignarMesasPage> {
+class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
   final _keyCrearMesas = GlobalKey<FormState>();
   final numeroDeMesas = TextEditingController();
   final numeroDeSillas = TextEditingController();
@@ -219,7 +219,7 @@ class _AsignarMesasPageState extends State<AsignarMesasPage> {
                         padding: EdgeInsets.all(10.0),
                         child: TextFormField(
                           decoration: InputDecoration(
-                              labelText: 'Silla ${index + 1}',
+                              labelText: 'Pocision ${index + 1}',
                               border: OutlineInputBorder()),
                         ),
                       )),

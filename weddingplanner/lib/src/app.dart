@@ -11,6 +11,7 @@ import 'package:weddingplanner/src/blocs/proveedorEvento/proveedoreventos_bloc.d
 import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 import 'package:weddingplanner/src/logic/add_contratos_logic.dart';
 import 'package:weddingplanner/src/logic/involucrados_logic.dart';
+import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_logic.dart';
 import 'package:weddingplanner/src/logic/pagos_logic.dart';
 import 'package:weddingplanner/src/logic/proveedores_evento_logic.dart';
 import 'package:weddingplanner/src/logic/servicios_logic.dart';
@@ -109,6 +110,10 @@ class MyApp extends StatelessWidget {
       ],
       title: 'App',
       theme: ThemeData(
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: Colors.black,
+            selectionColor: Colors.grey,
+          ),
           primarySwatch: createMaterialColor(Color(0xFFfdf4e5)),
           textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(primary: Colors.black)),
@@ -210,7 +215,9 @@ class AppState extends StatelessWidget {
           create: (_) => PerfilBloc(logic: ConsultasPerfilLogic())),
       BlocProvider<PagosBloc>(
           create: (_) => PagosBloc(logic: ConsultasPagosLogic())),
-      BlocProvider<MesasAsignadasBloc>(create: (_) => MesasAsignadasBloc())
+      BlocProvider<MesasAsignadasBloc>(
+          create: (_) =>
+              MesasAsignadasBloc(logic: ServiceMesasAsignadasLogic()))
     ], child: MyApp());
   }
 }

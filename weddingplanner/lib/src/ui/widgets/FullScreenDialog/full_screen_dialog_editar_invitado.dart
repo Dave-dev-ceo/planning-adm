@@ -186,9 +186,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       actions: [
         TextButton(
           style: TextButton.styleFrom(
+              primary: Colors.red,
               textStyle: TextStyle(
-            color: Colors.red,
-          )),
+                color: Colors.red,
+              )),
           onPressed: () {
             Navigator.pop(context, 'Cancelar');
           },
@@ -198,7 +199,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           ),
         ),
         TextButton(
-          style: TextButton.styleFrom(textStyle: TextStyle(color: Colors.blue)),
+          style: TextButton.styleFrom(
+            primary: Colors.green,
+            textStyle: TextStyle(color: Colors.blue),
+          ),
           onPressed: () async {
             if (_mySelectionAEdad2 == 0) {
               acompanante.edad = 'A';

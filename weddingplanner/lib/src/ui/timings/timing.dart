@@ -130,7 +130,7 @@ class _TimingState extends State<Timing> {
                               style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w100,
-                                  color: Colors.white),
+                                  color: Colors.black),
                             ),
                           ),
                           decoration: BoxDecoration(

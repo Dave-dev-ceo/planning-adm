@@ -8,7 +8,7 @@ import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
 import 'package:weddingplanner/src/ui/home/home.dart';
 import 'package:weddingplanner/src/ui/home/home_admin.dart';
 import 'package:weddingplanner/src/ui/login/login.dart';
-import 'package:weddingplanner/src/ui/mesas/asignarMesasPage.dart';
+import 'package:weddingplanner/src/ui/mesas/asignarMesasDialog.dart';
 import 'package:weddingplanner/src/ui/pagos/edit_pago.dart';
 import 'package:weddingplanner/src/ui/pagos/form_pago.dart';
 import 'package:weddingplanner/src/ui/perfil/perfil.dart';
@@ -178,7 +178,7 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (context) => FullScreenViewWEB(data: args));
       case '/asignarMesas':
-        return MaterialPageRoute(builder: (context) => AsignarMesasPage());
+        return MaterialPageRoute(builder: (context) => AsignarMesasDialog());
       default:
         return _errorRoute();
     }
