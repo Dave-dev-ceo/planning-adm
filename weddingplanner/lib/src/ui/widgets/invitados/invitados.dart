@@ -183,7 +183,7 @@ class _InvitadosState extends State<Invitados> {
                     },
                   );
                 },
-                indicatorColor: Colors.white,
+                indicatorColor: Colors.black,
                 isScrollable: true,
                 tabs: pantallasTabs
                 //  [

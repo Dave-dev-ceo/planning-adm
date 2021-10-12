@@ -654,7 +654,7 @@ class _LoginState extends State<Login> {
           height: heightA < 780 ? heightA = 1024 : heightA,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: Image.asset('assets/fondo.jpg').image,
+                  image: Image.asset('assets/fondo2.jpg').image,
                   fit: BoxFit.cover)),
           child: SingleChildScrollView(
             child: Center(

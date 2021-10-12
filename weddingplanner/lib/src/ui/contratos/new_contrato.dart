@@ -51,70 +51,70 @@ class New_ContratoState extends State<NewContrato> {
 
   // BLoC
   _myBloc() {
-    return BlocListener<VerContratosBloc,VerContratosState>(
-      listener: (context, state) {
-        if(state is VerContratosLoggin) {
-          return _dialogMSG('Espere un momento');
-        } else if(state is VerContratosBorrar) {
-          Navigator.pop(context);
-          contratosBloc.add(ContratosSelect());
-        } else if(state is VerContratosSubir) {
-          Navigator.pop(context);
-          contratosBloc.add(ContratosSelect());
-          _mensaje('Se ha subido el documento.');
-        } else if(state is VerContratosVer) {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/viewContrato',
-            arguments: state.archivo);
-        } else if(state is DescargarContratoState) {
-          Navigator.pop(context);
-          _descargarFile(state.archivo, state.nombre);
-        } else if(state is CrearContratoState) {
-          Navigator.pop(context);
-          contratosBloc.add(ContratosSelect());
+    return BlocListener<VerContratosBloc, VerContratosState>(
+        listener: (context, state) {
+      if (state is VerContratosLoggin) {
+        return _dialogMSG('Espere un momento');
+      } else if (state is VerContratosBorrar) {
+        Navigator.pop(context);
+        contratosBloc.add(ContratosSelect());
+      } else if (state is VerContratosSubir) {
+        Navigator.pop(context);
+        contratosBloc.add(ContratosSelect());
+        _mensaje('Se ha subido el documento.');
+      } else if (state is VerContratosVer) {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/viewContrato', arguments: state.archivo);
+      } else if (state is DescargarContratoState) {
+        Navigator.pop(context);
+        _descargarFile(state.archivo, state.nombre);
+      } else if (state is CrearContratoState) {
+        Navigator.pop(context);
+        contratosBloc.add(ContratosSelect());
+      }
+    }, child: BlocBuilder<ContratosDosBloc, ContratosState>(
+            builder: (context, state) {
+      if (state is ContratosInitial) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is ContratosLogging) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is SelectContratoState) {
+        if (itemModel.length == 0) {
+          itemModel = state.contrato.contrato
+              .map((item) => Contratos(
+                    idContrato: item.idContrato,
+                    idMachote: item.idMachote,
+                    description: item.descripcion,
+                    original: item.original,
+                    archivo: item.archivo,
+                    clave: item.clavePlantilla,
+                    valida: item.original != null ? true : false,
+                  ))
+              .toList();
+        } else if (itemModel.length != state.contrato.contrato) {
+          itemModel = state.contrato.contrato
+              .map((item) => Contratos(
+                    idContrato: item.idContrato,
+                    idMachote: item.idMachote,
+                    description: item.descripcion,
+                    original: item.original,
+                    archivo: item.archivo,
+                    clave: item.clavePlantilla,
+                    valida: item.original != null ? true : false,
+                  ))
+              .toList();
         }
-      },
-      child: BlocBuilder<ContratosDosBloc, ContratosState>(
-        builder: (context, state) {
-          if(state is ContratosInitial) {
-            return Center(child: CircularProgressIndicator(),);
-          }
-          else if(state is ContratosLogging) {
-            return Center(child: CircularProgressIndicator(),);
-          }
-          else if(state is SelectContratoState) {
-            if(itemModel.length == 0){
-              itemModel = state.contrato.contrato.map((item) => 
-                Contratos(
-                  idContrato: item.idContrato,
-                  idMachote: item.idMachote,
-                  description: item.descripcion,
-                  original: item.original,
-                  archivo: item.archivo,
-                  clave: item.clavePlantilla,
-                  valida: item.original != null ? true:false,
-                )
-              ).toList();
-            } else if(itemModel.length != state.contrato.contrato) {
-              itemModel = state.contrato.contrato.map((item) => 
-                Contratos(
-                  idContrato: item.idContrato,
-                  idMachote: item.idMachote,
-                  description: item.descripcion,
-                  original: item.original,
-                  archivo: item.archivo,
-                  clave: item.clavePlantilla,
-                  valida: item.original != null ? true:false,
-                )
-              ).toList();
-            }
-            return _showContratos();
-          } else {
-            return Center(child: CircularProgressIndicator(),);
-          }
-        }
-      )
-    );
+        return _showContratos();
+      } else {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+    }));
   }
 
   // cointener => columna => listas x tipo
@@ -147,15 +147,15 @@ class New_ContratoState extends State<NewContrato> {
   // ini items
   _contratosItem() {
     List<Widget> item = [];
-    if(itemModel.length != 0) {
+    if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if(contrato.clave == 'CT') {
-          item.add(
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: EdgeInsets.all(20),
-              elevation: 10,
-              child: ListTile(
+        if (contrato.clave == 'CT') {
+          item.add(Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: EdgeInsets.all(20),
+            elevation: 10,
+            child: ListTile(
                 contentPadding: EdgeInsets.all(20.0),
                 leading: Icon(Icons.gavel),
                 title: Text(contrato.description),
@@ -168,7 +168,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,contrato.archivo),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote, contrato.archivo),
                           )
                         ],
                       ),
@@ -180,7 +181,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,contrato.archivo,contrato.description),
+                            onPressed: () => _crearPDF(contrato.idMachote,
+                                contrato.archivo, contrato.description),
                           )
                         ],
                       ),
@@ -197,27 +199,31 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    contrato.valida ? Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver archivo subido'),
-                            onPressed: () => _verNewFile(contrato.original),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.remove_red_eye_rounded),
+                                  label: Text('Ver archivo subido'),
+                                  onPressed: () =>
+                                      _verNewFile(contrato.original),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ):SizedBox()
+                        : SizedBox()
                   ],
                 ),
                 trailing: GestureDetector(
-                  child: Icon(Icons.delete,color: Colors.black,),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
                   onTap: () => _borrarContratos(contrato.idContrato),
-                )
-              ),
-            )
-          );
+                )),
+          ));
         }
       });
     }
@@ -226,15 +232,15 @@ class New_ContratoState extends State<NewContrato> {
 
   _recibosItem() {
     List<Widget> item = [];
-    if(itemModel.length != 0) {
+    if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if(contrato.clave == 'RC') {
-          item.add(
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: EdgeInsets.all(20),
-              elevation: 10,
-              child: ListTile(
+        if (contrato.clave == 'RC') {
+          item.add(Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: EdgeInsets.all(20),
+            elevation: 10,
+            child: ListTile(
                 contentPadding: EdgeInsets.all(20.0),
                 leading: Icon(Icons.gavel),
                 title: Text(contrato.description),
@@ -247,7 +253,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,contrato.archivo),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote, contrato.archivo),
                           )
                         ],
                       ),
@@ -259,7 +266,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,contrato.archivo,contrato.description),
+                            onPressed: () => _crearPDF(contrato.idMachote,
+                                contrato.archivo, contrato.description),
                           )
                         ],
                       ),
@@ -276,27 +284,31 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    contrato.valida ? Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver archivo subido'),
-                            onPressed: () => _verNewFile(contrato.original),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.remove_red_eye_rounded),
+                                  label: Text('Ver archivo subido'),
+                                  onPressed: () =>
+                                      _verNewFile(contrato.original),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ):SizedBox()
+                        : SizedBox()
                   ],
                 ),
                 trailing: GestureDetector(
-                  child: Icon(Icons.delete,color: Colors.black,),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
                   onTap: () => _borrarContratos(contrato.idContrato),
-                )
-              ),
-            )
-          );
+                )),
+          ));
         }
       });
     }
@@ -305,15 +317,15 @@ class New_ContratoState extends State<NewContrato> {
 
   _pagosItem() {
     List<Widget> item = [];
-    if(itemModel.length != 0) {
+    if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if(contrato.clave == 'PG') {
-          item.add(
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: EdgeInsets.all(20),
-              elevation: 10,
-              child: ListTile(
+        if (contrato.clave == 'PG') {
+          item.add(Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: EdgeInsets.all(20),
+            elevation: 10,
+            child: ListTile(
                 contentPadding: EdgeInsets.all(20.0),
                 leading: Icon(Icons.gavel),
                 title: Text(contrato.description),
@@ -326,7 +338,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,contrato.archivo),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote, contrato.archivo),
                           )
                         ],
                       ),
@@ -338,7 +351,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,contrato.archivo,contrato.description),
+                            onPressed: () => _crearPDF(contrato.idMachote,
+                                contrato.archivo, contrato.description),
                           )
                         ],
                       ),
@@ -355,27 +369,31 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    contrato.valida ? Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver archivo subido'),
-                            onPressed: () => _verNewFile(contrato.original),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.remove_red_eye_rounded),
+                                  label: Text('Ver archivo subido'),
+                                  onPressed: () =>
+                                      _verNewFile(contrato.original),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ):SizedBox()
+                        : SizedBox()
                   ],
                 ),
                 trailing: GestureDetector(
-                  child: Icon(Icons.delete,color: Colors.black,),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
                   onTap: () => _borrarContratos(contrato.idContrato),
-                )
-              ),
-            )
-          );
+                )),
+          ));
         }
       });
     }
@@ -384,15 +402,15 @@ class New_ContratoState extends State<NewContrato> {
 
   _minutasItem() {
     List<Widget> item = [];
-    if(itemModel.length != 0) {
+    if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if(contrato.clave == 'MT') {
-          item.add(
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              margin: EdgeInsets.all(20),
-              elevation: 10,
-              child: ListTile(
+        if (contrato.clave == 'MT') {
+          item.add(Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: EdgeInsets.all(20),
+            elevation: 10,
+            child: ListTile(
                 contentPadding: EdgeInsets.all(20.0),
                 leading: Icon(Icons.gavel),
                 title: Text(contrato.description),
@@ -405,7 +423,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,contrato.archivo),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote, contrato.archivo),
                           )
                         ],
                       ),
@@ -417,7 +436,8 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,contrato.archivo,contrato.description),
+                            onPressed: () => _crearPDF(contrato.idMachote,
+                                contrato.archivo, contrato.description),
                           )
                         ],
                       ),
@@ -434,27 +454,31 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    contrato.valida ? Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver archivo subido'),
-                            onPressed: () => _verNewFile(contrato.original),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.remove_red_eye_rounded),
+                                  label: Text('Ver archivo subido'),
+                                  onPressed: () =>
+                                      _verNewFile(contrato.original),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ):SizedBox()
+                        : SizedBox()
                   ],
                 ),
                 trailing: GestureDetector(
-                  child: Icon(Icons.delete,color: Colors.black,),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
                   onTap: () => _borrarContratos(contrato.idContrato),
-                )
-              ),
-            )
-          );
+                )),
+          ));
         }
       });
     }
@@ -558,8 +582,8 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   // ini eventos Cards
-  _verOldFile(int id,String archivo) {
-    if(id != 0) {
+  _verOldFile(int id, String archivo) {
+    if (id != 0) {
       verContratos.add(VerContrato(archivo));
     } else {
       _verNewFile(archivo);
@@ -575,10 +599,10 @@ class New_ContratoState extends State<NewContrato> {
       allowMultiple: false,
     );
 
-    if(pickedFile != null) {
-      verContratos.add(SubirContrato(idContrato,base64.encode(pickedFile.files[0].bytes)));
+    if (pickedFile != null) {
+      verContratos.add(
+          SubirContrato(idContrato, base64.encode(pickedFile.files[0].bytes)));
     }
-
   }
 
   _verNewFile(String original) {
@@ -590,11 +614,11 @@ class New_ContratoState extends State<NewContrato> {
     _alertaBorrar(idContrato);
   }
 
-  _crearPDF(int id,String contrato, String nombreDocumento) {
-    if(id != 0) {
-      verContratos.add(DescargarContrato(nombreDocumento,contrato));
+  _crearPDF(int id, String contrato, String nombreDocumento) {
+    if (id != 0) {
+      verContratos.add(DescargarContrato(nombreDocumento, contrato));
     } else {
-      _descargarFile(contrato,nombreDocumento);
+      _descargarFile(contrato, nombreDocumento);
     }
   }
 
@@ -605,13 +629,13 @@ class New_ContratoState extends State<NewContrato> {
     //Dispose the document
     document.dispose();
     //Download the output file
-    if(kIsWeb){
+    if (kIsWeb) {
       // AnchorElement(
       //   href:
       //       "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
       // ..setAttribute("download", nombreDocumento + ".pdf")
       // ..click();
-    }else{
+    } else {
       print("Error download");
     }
   }
@@ -625,10 +649,12 @@ class New_ContratoState extends State<NewContrato> {
       allowMultiple: false,
     );
 
-    if(pickedFile != null) {
-      verContratos.add(CrearContrato((pickedFile.files[0].name).replaceAll(".pdf", ""),base64.encode(pickedFile.files[0].bytes),clave));
+    if (pickedFile != null) {
+      verContratos.add(CrearContrato(
+          (pickedFile.files[0].name).replaceAll(".pdf", ""),
+          base64.encode(pickedFile.files[0].bytes),
+          clave));
     }
-
   }
   // fin eventos Cards
 
@@ -638,23 +664,23 @@ class New_ContratoState extends State<NewContrato> {
       content: Text(txt),
     ));
   }
-  
+
   _dialogMSG(String title) {
     Widget child = CircularProgressIndicator();
     showDialog(
-      context: context,
-      //barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            textAlign: TextAlign.center,
-          ),
-          content: child,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
-        );
-      }
-    );
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              title,
+              textAlign: TextAlign.center,
+            ),
+            content: child,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          );
+        });
   }
 
   Future<void> _alertaBorrar(int idContrato) {

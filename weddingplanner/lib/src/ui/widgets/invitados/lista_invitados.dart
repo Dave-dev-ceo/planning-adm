@@ -238,8 +238,8 @@ class _ListaInvitadosState extends State<ListaInvitados> {
       //onClose: () => print('DIAL CLOSED'),
       tooltip: 'Opciones',
       heroTag: 'Opciones',
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.white,
+      backgroundColor: Colors.black,
+      foregroundColor: Colors.black,
       elevation: 8.0,
       shape: CircleBorder(),
 
@@ -260,7 +260,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
     List<SpeedDialChild> temp = [];
     if (WP_EVT_INV_CRT) {
       temp.add(SpeedDialChild(
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         child: Tooltip(
           child: Icon(Icons.person_add),
           message: "Agregar invitado",
@@ -281,7 +281,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         onLongPress: () => print('FIRST CHILD LONG PRESS'),
       ));
       temp.add(SpeedDialChild(
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         child: Tooltip(
           child: Icon(Icons.table_chart_outlined),
           message: "Importar excel",
@@ -293,7 +293,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         onLongPress: () => print('SECOND CHILD LONG PRESS'),
       ));
       temp.add(SpeedDialChild(
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         child: Tooltip(
           child: Icon(Icons.import_contacts_rounded),
           message: "Importar contactos",
@@ -307,7 +307,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
     }
     if (WP_EVT_INV_ENV) {
       temp.add(SpeedDialChild(
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         child: Tooltip(
           child: Icon(Icons.send_and_archive_sharp),
           message: "Enviar QR a invitados",

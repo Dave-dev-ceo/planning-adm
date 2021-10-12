@@ -173,7 +173,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                               style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w100,
-                                  color: Colors.white),
+                                  color: Colors.black),
                             ),
                           ),
                           decoration: BoxDecoration(
@@ -368,7 +368,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
           //),
           actions: <Widget>[
             TextButton(
-              child: Text('Editar'),
+              child: Text('Guardar'),
               onPressed: () async {
                 await _saveEstatus(context, idEstatus);
                 //Navigator.of(context).pop();

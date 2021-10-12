@@ -62,7 +62,6 @@ class _ServiciosState extends State<Servicios> {
                         ),
                       ),
                       onTap: () async {
-                        print('slkjfd');
                         Map<String, dynamic> json = {'nombre': nombreCtrl.text};
                         servicioBloc.add(
                             CreateServiciosEvent(json, itemModuleServicios));

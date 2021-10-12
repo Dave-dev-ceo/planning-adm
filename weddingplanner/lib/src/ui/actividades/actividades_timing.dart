@@ -261,7 +261,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                       _save();
                     },
                     child: Text('Guardar',
-                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                        style: TextStyle(fontSize: 18, color: Colors.black)),
                     style: ElevatedButton.styleFrom(
                       primary: hexToColor('#fdf4e5'), // background
                       onPrimary: Colors.white, // foreground

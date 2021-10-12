@@ -42,7 +42,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
 
   @override
   Widget build(BuildContext context) {
-    if(checkInvolucrado == null) {
+    if (checkInvolucrado == null) {
       return Scaffold(
           body: SingleChildScrollView(
         child: Container(
@@ -66,27 +66,26 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
       ));
     } else {
       return Scaffold(
-        body:  SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(15),
-            child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
-                builder: (context, state) {
-              if (state is MostrarProveedorEventoState) {
-                if (state.detlistas != null && _dataPrvEv.length == 0) {
-                  state.detlistas.results.forEach((element) {
-                    // print(element.idPlanner);
-                  });
-                  _dataPrvEv = _createDataListProvEvt(state.detlistas);
-                }
-                return _listaInvolucrado();
-              } else {
-                return Center(child: CircularProgressIndicator());
+          body: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(15),
+          child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
+              builder: (context, state) {
+            if (state is MostrarProveedorEventoState) {
+              if (state.detlistas != null && _dataPrvEv.length == 0) {
+                state.detlistas.results.forEach((element) {
+                  // print(element.idPlanner);
+                });
+                _dataPrvEv = _createDataListProvEvt(state.detlistas);
               }
-            }),
-          ),
-        )
-      );
+              return _listaInvolucrado();
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
+        ),
+      ));
     }
   }
 
@@ -118,21 +117,20 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
     List<ItemProveedorEvento> _dataProv = [];
     prov.results.forEach((element) {
       List<ItemProveedor> _provTemp = [];
-      
+
       servicios[element.idServicio] = 0;
 
       if (element.prov.length > 0) {
         element.prov.forEach((element2) {
           _provTemp.add(ItemProveedor(
-            id_proveedor: element2['id_proveedor'],
-            nombre: element2['nombre'],
-            descripcion: element2['descripcion'],
-            isExpanded: element2['check'],
-            seleccion: element2['seleccionado'],
-            observacion: element2['observacion']
-          ));
+              id_proveedor: element2['id_proveedor'],
+              nombre: element2['nombre'],
+              descripcion: element2['descripcion'],
+              isExpanded: element2['check'],
+              seleccion: element2['seleccionado'],
+              observacion: element2['observacion']));
 
-          if(element2['seleccionado']) {
+          if (element2['seleccionado']) {
             servicios[element.idServicio] = element2['id_proveedor'];
           }
 
@@ -154,7 +152,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           isExpanded: false,
           seleccion: element.seleccion,
           observacion: element.observacion));
-
     });
     return _dataProv;
   }
@@ -168,20 +165,20 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           trailing: Wrap(
             spacing: 12,
             children: <Widget>[
-              opt.seleccion ? 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Seleccionado'),
-                ):
-                SizedBox(),
-              opt.seleccion ? 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Observaciones: ${opt.observacion}'),
-                ):
-                SizedBox(),
+              opt.seleccion
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Seleccionado'),
+                    )
+                  : SizedBox(),
+              opt.seleccion
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Observaciones: ${opt.observacion}'),
+                    )
+                  : SizedBox(),
               Checkbox(
-                checkColor: Colors.white,
+                checkColor: Colors.black,
                 value: opt.isExpanded,
                 onChanged: (value) {
                   setState(() {
@@ -233,34 +230,36 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
               trailing: Wrap(spacing: 12, children: <Widget>[]),
             );
           },
-          body: Column(children: _listServicioInvolucrado(item.prov, item.id_servicio,servicios)),
+          body: Column(
+              children: _listServicioInvolucrado(
+                  item.prov, item.id_servicio, servicios)),
           isExpanded: item.isExpanded,
         );
       }).toList(),
     ));
   }
 
-  List<Widget> _listServicioInvolucrado(List<ItemProveedor> itemServicio, int idServi, Map servicios) {
+  List<Widget> _listServicioInvolucrado(
+      List<ItemProveedor> itemServicio, int idServi, Map servicios) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
-      if(opt.isExpanded) {
+      if (opt.isExpanded) {
         final tempWidget = ListTile(
             title: Row(
               children: [
                 Expanded(child: Text(opt.nombre)),
                 Expanded(
-                  child: 
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/agregarArchivo',
-                          arguments: {
-                            'id_proveedor': opt.id_proveedor,
-                            'id_servicio': null,
-                            'nombre': opt.nombre,
-                            'type':1
-                          });
-                    },
-                    icon: const Icon(Icons.file_present)),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushNamed('/agregarArchivo', arguments: {
+                          'id_proveedor': opt.id_proveedor,
+                          'id_servicio': null,
+                          'nombre': opt.nombre,
+                          'type': 1
+                        });
+                      },
+                      icon: const Icon(Icons.file_present)),
                 ),
               ],
             ),
@@ -280,46 +279,45 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                       servicios[idServi] = value;
                     });
                     Map data = {
-                      'id_proveedor':opt.id_proveedor.toString(),
-                      'id_servicio':idServi.toString()
+                      'id_proveedor': opt.id_proveedor.toString(),
+                      'id_servicio': idServi.toString()
                     };
                     proveedoreventosBloc.add(UpdateProveedorEventosEvent(data));
                   },
                 ),
-                servicios[idServi] == opt.id_proveedor ? 
-                  Container(
-                    width: 250.0,
-                    child: TextFormField(
-                      controller: TextEditingController(text: '${opt.observacion}'),
-                      decoration: InputDecoration(
-                        hintText: 'Observaciones: '
-                      ),
-                      onChanged: (value) {
-                        opt.observacion = value;
-                        Map data = {
-                          'id_proveedor':opt.id_proveedor.toString(),
-                          'id_servicio':idServi.toString(),
-                          'observacion':opt.observacion
-                        };
-                        proveedoreventosBloc.add(UpdateProveedorEventosEvent(data));
-                      },
-                    ),
-                  ):
-                  SizedBox()
+                servicios[idServi] == opt.id_proveedor
+                    ? Container(
+                        width: 250.0,
+                        child: TextFormField(
+                          controller:
+                              TextEditingController(text: '${opt.observacion}'),
+                          decoration:
+                              InputDecoration(hintText: 'Observaciones: '),
+                          onChanged: (value) {
+                            opt.observacion = value;
+                            Map data = {
+                              'id_proveedor': opt.id_proveedor.toString(),
+                              'id_servicio': idServi.toString(),
+                              'observacion': opt.observacion
+                            };
+                            proveedoreventosBloc
+                                .add(UpdateProveedorEventosEvent(data));
+                          },
+                        ),
+                      )
+                    : SizedBox()
               ],
             ));
         lista.add(tempWidget);
       }
     }
-    if(lista.isEmpty) {
-      lista.add(
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text('Sin datos.'),
-          ),
-        )
-      );
+    if (lista.isEmpty) {
+      lista.add(Center(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Sin datos.'),
+        ),
+      ));
     }
 
     return lista;
@@ -330,8 +328,5 @@ class Servicios {
   int id;
   int radio;
 
-  Servicios({
-    this.id,
-    this.radio
-  });
+  Servicios({this.id, this.radio});
 }

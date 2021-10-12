@@ -29,7 +29,6 @@ class _FullScreenDialogAddRolState extends State<FullScreenDialogAddRol> {
       appBar: AppBar(
         title:
             Text(datos['accion'] == 0 ? 'Agregar Rol' : 'Editar Datos de Rol'),
-        //backgroundColor: hexToColor('#7030a0'),
         actions: [],
         automaticallyImplyLeading: true,
       ),
