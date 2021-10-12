@@ -265,15 +265,15 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
           child: TextFormField(
             controller: nombreRCtrl,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
             decoration: new InputDecoration(
               labelText: "Nombre",
               labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.white,
+              fillColor: Colors.black,
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
                 borderSide: BorderSide(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
@@ -291,15 +291,15 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
           child: TextFormField(
             controller: emailRCtrl,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
             decoration: new InputDecoration(
               labelText: "Correo",
               labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.white,
+              fillColor: Colors.black,
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
                 borderSide: BorderSide(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
@@ -321,16 +321,16 @@ class _LoginState extends State<Login> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
             decoration: new InputDecoration(
               floatingLabelStyle: TextStyle(color: Colors.purple[100]),
               labelText: "Contraseña",
               labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.white,
+              fillColor: Colors.black,
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(25.0),
                 borderSide: BorderSide(
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
@@ -348,7 +348,7 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
           child: TextButton(
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                 overlayColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
                     if (states.contains(MaterialState.hovered))
@@ -380,7 +380,7 @@ class _LoginState extends State<Login> {
         //child:
         TextButton(
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
               overlayColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
                   if (states.contains(MaterialState.hovered))
@@ -409,7 +409,7 @@ class _LoginState extends State<Login> {
         /*Expanded(
                                               child: TextButton(
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                   overlayColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
                           if (states.contains(MaterialState.hovered))
@@ -441,11 +441,11 @@ class _LoginState extends State<Login> {
       ),
       labelText: text,
       labelStyle: TextStyle(color: Colors.purple[100]),
-      fillColor: Colors.white,
+      fillColor: Colors.black,
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(25.0),
         borderSide: BorderSide(
-          color: Colors.white,
+          color: Colors.black,
         ),
       ),
       enabledBorder: OutlineInputBorder(
@@ -507,7 +507,7 @@ class _LoginState extends State<Login> {
             padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
             child: TextFormField(
               controller: emailCtrl,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
               decoration: _decorationText("Correo"),
               cursorColor: Colors.purple[100],
             ),
@@ -519,7 +519,7 @@ class _LoginState extends State<Login> {
             //   obscureText: true,
             //   enableSuggestions: false,
             //   autocorrect: false,
-            //   style: TextStyle(color: Colors.white),
+            //   style: TextStyle(color: Colors.black),
             //   decoration: _decorationText("Contraseña"),
             //   cursorColor: Colors.purple[100],
             // ),
@@ -534,8 +534,8 @@ class _LoginState extends State<Login> {
                 ),
                 color: Colors.purple[100],
                 iconColor: Colors.purple[100],
-                iconColorSelect: Colors.white,
-                inputStyle: TextStyle(color: Colors.white),
+                iconColorSelect: Colors.black,
+                inputStyle: TextStyle(color: Colors.black),
                 hintStyle: TextStyle(color: Colors.purple[100]),
                 autoFocus: false,
                 hasFloatingPlaceholder: true,
@@ -546,7 +546,7 @@ class _LoginState extends State<Login> {
                         BorderSide(width: 2.0, color: Colors.purple[100])),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Colors.white)),
+                    borderSide: BorderSide(color: Colors.black)),
               ),
             ),
             //FinPadilla
@@ -556,7 +556,7 @@ class _LoginState extends State<Login> {
             child: TextButton(
                 style: ButtonStyle(
                   foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.white),
+                      MaterialStateProperty.all<Color>(Colors.black),
                   overlayColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
                       if (states.contains(MaterialState.hovered))
@@ -587,7 +587,7 @@ class _LoginState extends State<Login> {
                                                   child: 
                                                   TextButton(
                     style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                       overlayColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                               if (states.contains(MaterialState.hovered))
@@ -613,7 +613,7 @@ class _LoginState extends State<Login> {
           //                          child:
           TextButton(
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                 overlayColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) {
                     if (states.contains(MaterialState.hovered))

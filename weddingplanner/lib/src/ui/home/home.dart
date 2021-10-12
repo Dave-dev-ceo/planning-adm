@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: Colors.white,
+      color: Colors.black,
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
           if (state is PermisosInitial) {
@@ -147,7 +147,7 @@ class _HomeState extends State<Home> {
                     },
                   );
                 },
-                indicatorColor: Colors.white,
+                indicatorColor: Colors.black,
                 isScrollable: true,
                 tabs: tabs,
                 // [
