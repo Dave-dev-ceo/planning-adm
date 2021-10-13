@@ -87,8 +87,8 @@ class _CargarExcelState extends State<CargarExcel> {
           for (var i = 1; i < xx.length; i++) {
             Map<String, String> json = {
               "nombre": xx[i][0],
-              "telefono": xx[i][2].toString(),
               "email": xx[i][1],
+              "telefono": xx[i][2].toString(),
               "id_evento": id.toString()
             };
             bool response = await api.createInvitados(json, context);

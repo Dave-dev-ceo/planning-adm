@@ -255,14 +255,14 @@ class _AsistenciaState extends State<Asistencia> {
       tooltip: 'Opciones',
       heroTag: 'Opciones',
       backgroundColor: Colors.white,
-      foregroundColor: Colors.white,
+      foregroundColor: Colors.black,
       elevation: 8.0,
       shape: CircleBorder(),
       gradientBoxShape: BoxShape.circle,
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [hexToColor("#000000"), hexToColor("#000000")],
+        colors: [hexToColor("#fdf4e5"), hexToColor("#fdf4e5")],
       ),
       onPress: () async {
         final result = await Navigator.of(context).pushNamed('/lectorQr');

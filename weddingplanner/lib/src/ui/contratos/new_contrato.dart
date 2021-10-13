@@ -39,6 +39,11 @@ class New_ContratoState extends State<NewContrato> {
     verContratos = BlocProvider.of<VerContratosBloc>(context);
   }
 
+  //_HomeState(this.idPlanner);
+  Color hexToColor(String code) {
+    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -516,8 +521,9 @@ class New_ContratoState extends State<NewContrato> {
     return SpeedDial(
       icon: Icons.add,
       activeIcon: Icons.close,
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.white,
+      //backgroundColor: hexToColor('#fdf4e5'),
+      backgroundColor: hexToColor('#fdf4e5'),
+      foregroundColor: Colors.black,
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
       tooltip: 'Opciones',
