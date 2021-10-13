@@ -80,7 +80,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
                   child: Text('Sí'),
                   onPressed: () async {
                     await _readExcel();
-                    // Navigator.of(context).pop();
+                    await Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -98,22 +98,72 @@ class _ListaInvitadosState extends State<ListaInvitados> {
     /// file might be picked
     if (pickedFile != null) {
       var bytes = pickedFile.files.single.bytes;
-
       if (bytes == null) {
         bytes = File(pickedFile.files[0].path).readAsBytesSync();
         print('error');
       }
 
       var excel = Excel.decodeBytes(bytes);
-      bool bandera = true;
+      bool bandera = false;
 
       for (var table in excel.tables.keys) {
         print('tabla $table'); //sheet Name
         print('Columnas ${excel.tables[table].maxCols}');
         print('Filas: ${excel.tables[table].maxRows}');
-        for (var row in excel.tables[table].rows) {
-          print("Filas $row");
+        var sheet = excel[table];
+        if (sheet.row(0)[0].value == 'NOMBRE' &&
+            sheet.row(0)[1].value == 'EMAIL' &&
+            sheet.row(0)[2].value == 'TELÉFONO') {
+          for (int row = 1; row < sheet.maxRows; row++) {
+            Map<String, String> jsonExample = {
+              'nombre': sheet.row(row)[0].value.toString(),
+              'email': sheet.row(row)[1].value.toString(),
+              'telefono': sheet.row(row)[2].value.toString(),
+              'id_evento': idEvento.toString()
+            };
+            bool response = await api.createInvitados(jsonExample, context);
+            print(response);
+            bandera = response == true ? true : false;
+          }
+        } else {
+          final snackBar = SnackBar(
+            content: Container(
+              height: 30,
+              child: Center(
+                child: Text('Estructura del Excel es incorrecta.'),
+              ),
+              //color: Colors.red,
+            ),
+            backgroundColor: Colors.red,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
+      }
+      if (bandera) {
+        blocInvitados.fetchAllInvitados(context);
+        final snackBar = SnackBar(
+          content: Container(
+            height: 30,
+            child: Center(
+              child: Text('Se importó el archivo con éxito.'),
+            ),
+            //color: Colors.red,
+          ),
+          backgroundColor: Colors.green,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else {
+        final snackBar = SnackBar(
+          content: Container(
+            height: 30,
+            child: Center(
+              child: Text('Error: No se pudo realizar el registro.'),
+            ),
+            //color: Colors.red,
+          ),
+          backgroundColor: Colors.orange,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     } else {
       print('El file is null');
