@@ -107,9 +107,6 @@ class _ListaInvitadosState extends State<ListaInvitados> {
       bool bandera = false;
 
       for (var table in excel.tables.keys) {
-        print('tabla $table'); //sheet Name
-        print('Columnas ${excel.tables[table].maxCols}');
-        print('Filas: ${excel.tables[table].maxRows}');
         var sheet = excel[table];
         if (sheet.row(0)[0].value == 'NOMBRE' &&
             sheet.row(0)[1].value == 'EMAIL' &&
@@ -122,7 +119,6 @@ class _ListaInvitadosState extends State<ListaInvitados> {
               'id_evento': idEvento.toString()
             };
             bool response = await api.createInvitados(jsonExample, context);
-            print(response);
             bandera = response == true ? true : false;
           }
         } else {
@@ -477,8 +473,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
             DataColumn(label: Text('Telefono', style: estiloTxt)),
             DataColumn(label: Text('Grupo', style: estiloTxt)),
             DataColumn(label: Text('Asistencia', style: estiloTxt)),
-            //DataColumn(label: Text('', style:estiloTxt),),
-            //DataColumn(label: Text('', style:estiloTxt)),
+            DataColumn(label: Text('WhatsApp', style: estiloTxt)),
           ],
           source: _DataSource(snapshot.data.results, context, idEvento,
               WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV),
@@ -489,19 +484,14 @@ class _ListaInvitadosState extends State<ListaInvitados> {
 }
 
 class _Row {
-  _Row(
-    this.valueId,
-    this.valueA,
-    this.valueB,
-    this.valueC,
-    this.valueD,
-  );
+  _Row(this.valueId, this.valueA, this.valueB, this.valueC, this.valueD,
+      this.valueE);
   final int valueId;
   final String valueA;
   final String valueB;
   final String valueC;
   final String valueD;
-
+  final String valueE;
   bool selected = false;
 }
 
@@ -525,10 +515,9 @@ class _DataSource extends DataTableSource {
           context[i].idInvitado,
           context[i].nombre,
           context[i].telefono,
-          (context[i].grupo == null ? 'Sin grupo' : context[i].grupo),
-          context[i].asistencia == null
-              ? 'Sin estatus'
-              : context[i].asistencia));
+          context[i].grupo == null ? 'Sin grupo' : context[i].grupo,
+          context[i].asistencia == null ? 'Sin estatus' : context[i].asistencia,
+          context[i].telefono));
     }
     _cont = cont;
   }
@@ -568,6 +557,37 @@ class _DataSource extends DataTableSource {
               child: Text('Confirmar'),
               onPressed: () async {
                 launch('tel://$numero');
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showMyDialogWhatsApp(String numero) async {
+    return showDialog<void>(
+      context: _cont,
+      //barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Image.asset('/whatsApp.png', height: 100.0, width: 150.0),
+          content: InkWell(
+            child: Text(
+              'Abrir WhatsApp',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.green),
+            ),
+            onTap: () => launch('http://wa.me/521' + numero),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
@@ -967,6 +987,13 @@ class _DataSource extends DataTableSource {
             _listaEstatusEvento(row.valueId);
           },
         ),
+        DataCell(
+          Text(row.valueE),
+          onTap: () {
+            print('object');
+            _showMyDialogWhatsApp(row.valueE);
+          },
+        )
         //DataCell(Icon(Icons.edit)),
         //DataCell(Icon(Icons.delete)),
       ],

@@ -1,9 +1,11 @@
 //import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/resources/api_provider.dart';
 
 // Padilla
 import 'package:weddingplanner/src/ui/widgets/text_form_filed/password_wplanner.dart';
@@ -23,10 +25,13 @@ class _LoginState extends State<Login> {
       new TextEditingController(text: 'N0v4-2020');
   TextEditingController emailRCtrl = new TextEditingController();
   TextEditingController passwordRCtrl = new TextEditingController();
+  TextEditingController passwordConfirRCtrl = new TextEditingController();
   TextEditingController nombreRCtrl = new TextEditingController();
+  TextEditingController telefonoRCtrl = new TextEditingController();
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   BuildContext _ingresando;
   bool _visible = true;
+  ApiProvider api = new ApiProvider();
 
   @override
   void initState() {
@@ -65,7 +70,11 @@ class _LoginState extends State<Login> {
         nombreRCtrl.text == "" ||
         nombreRCtrl.text == null ||
         passwordRCtrl.text == "" ||
-        passwordRCtrl.text == null) {
+        passwordRCtrl.text == null ||
+        telefonoRCtrl.text == "" ||
+        telefonoRCtrl.text == null ||
+        passwordConfirRCtrl.text == "" ||
+        passwordConfirRCtrl.text == null) {
       showDialog(
           context: context,
           //barrierDismissible: false,
@@ -90,7 +99,7 @@ class _LoginState extends State<Login> {
               ],
             );
           });
-    } else {
+    } else if (passwordConfirRCtrl.text == passwordRCtrl.text) {
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -114,17 +123,20 @@ class _LoginState extends State<Login> {
                   borderRadius: BorderRadius.all(Radius.circular(32.0))),
             );
           });
-      /*Map<String, String> json = {
+      Map<String, String> json = {
         "nombre_completo": nombreRCtrl.text,
         "correo": emailRCtrl.text,
-        "contrasena": passwordRCtrl.text
-      };*/
-//      int response = await api.registroPlanner(json);
-      int response = 0;
+        "contrasena": passwordRCtrl.text,
+        "telefono": telefonoRCtrl.text
+      };
+      int response = await api.registroPlanner(json);
+      //   int response = 0;
       if (response == 0) {
         emailRCtrl.clear();
         passwordRCtrl.clear();
         nombreRCtrl.clear();
+        passwordConfirRCtrl.clear();
+        telefonoRCtrl.clear();
         _index = 0;
         Navigator.pop(_ingresando);
         showDialog(
@@ -203,6 +215,30 @@ class _LoginState extends State<Login> {
               );
             });
       }
+    } else {
+      showDialog(
+          context: context,
+          //barrierDismissible: false,
+          builder: (BuildContext context) {
+            //_ingresando = context;
+            return AlertDialog(
+              title: Text(
+                "Alerta!",
+                textAlign: TextAlign.center,
+              ),
+              content: Text('La contraseña no coincide.'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cerrar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
     }
   }
 
@@ -259,7 +295,7 @@ class _LoginState extends State<Login> {
           width: 450,
         ),
         SizedBox(
-          height: 10.0,
+          height: 5.0,
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
@@ -313,6 +349,36 @@ class _LoginState extends State<Login> {
             cursorColor: Colors.purple[100],
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
+          child: TextFormField(
+            controller: telefonoRCtrl,
+            style: TextStyle(color: Colors.black),
+            maxLength: 10,
+            decoration: new InputDecoration(
+              labelText: "Teléfono",
+              labelStyle: TextStyle(color: Colors.purple[100]),
+              fillColor: Colors.black,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(
+                  color: Colors.black,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(
+                  color: Colors.purple[100],
+                  width: 2.0,
+                ),
+              ),
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            cursorColor: Colors.purple[100],
+          ),
+        ),
         //SizedBox(height: 15.0,),
         Padding(
           padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
@@ -325,6 +391,36 @@ class _LoginState extends State<Login> {
             decoration: new InputDecoration(
               floatingLabelStyle: TextStyle(color: Colors.purple[100]),
               labelText: "Contraseña",
+              labelStyle: TextStyle(color: Colors.purple[100]),
+              fillColor: Colors.black,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(
+                  color: Colors.black,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                borderSide: BorderSide(
+                  color: Colors.purple[100],
+                  width: 2.0,
+                ),
+              ),
+            ),
+            cursorColor: Colors.purple[100],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
+          child: TextFormField(
+            controller: passwordConfirRCtrl,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            style: TextStyle(color: Colors.black),
+            decoration: new InputDecoration(
+              floatingLabelStyle: TextStyle(color: Colors.purple[100]),
+              labelText: "Confirmar Contraseña",
               labelStyle: TextStyle(color: Colors.purple[100]),
               fillColor: Colors.black,
               focusedBorder: OutlineInputBorder(
@@ -668,7 +764,7 @@ class _LoginState extends State<Login> {
                   ),
                   Container(
                     width: 370,
-                    height: 600,
+                    height: 760,
                     child: Center(
                       child: IndexedStack(
                         index: _index,
@@ -689,5 +785,14 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  // valida telefono
+  bool _validaPhone(String txt) {
+    bool temp = false;
+    // exp regular
+    RegExp validaPhone = RegExp(r"^[\d]{10,10}$");
+    if (validaPhone.hasMatch(txt)) temp = true;
+    return temp;
   }
 }
