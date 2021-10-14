@@ -1,66 +1,38 @@
-class MesasModel {
-  MesasModel({
+class MesaModel {
+  MesaModel({
     this.idMesa,
-    this.nombre,
-    this.dimension,
-    this.numeroDeMesa,
+    this.descripcion,
     this.idEvento,
-    this.asignados,
+    this.idTipoDeMesa,
+    this.estatus,
+    this.dimension,
+    this.numDeMesa,
   });
 
   int idMesa;
-  String nombre;
-  int dimension;
-  int numeroDeMesa;
+  String descripcion;
   int idEvento;
-  List<Asignados> asignados;
+  int idTipoDeMesa;
+  String estatus;
+  int dimension;
+  int numDeMesa;
 
-  factory MesasModel.fromJson(Map<String, dynamic> json) => MesasModel(
+  factory MesaModel.fromJson(Map<String, dynamic> json) => MesaModel(
         idMesa: json['id_mesa'],
-        nombre: json['nombre'],
-        dimension: json['dimencion'],
-        numeroDeMesa: json['numero_mesa'],
+        descripcion: json['descripcion'],
         idEvento: json['id_evento'],
-        asignados: List<Asignados>.from(
-            json['asignados'].map((e) => Asignados.fromJson(e))),
+        idTipoDeMesa: json['id_tipo_mesa'],
+        estatus: json['estatus'],
+        dimension: json['dimencion'],
+        numDeMesa: json['numero_mesa'],
       );
-}
-
-class Asignados {
-  Asignados({
-    this.idMesaAsignada,
-    this.mesa,
-    this.asignado,
-    this.evento,
-    this.planner,
-    this.posicion,
-    this.numeroDeMesa,
-  });
-  int idMesaAsignada;
-  String mesa;
-  String asignado;
-  String evento;
-  String planner;
-  int posicion;
-  int numeroDeMesa;
-
-  factory Asignados.fromJson(Map<String, dynamic> json) => Asignados(
-        idMesaAsignada: json['id_mesa_asignada'],
-        mesa: json['mesa'],
-        asignado: json['asignado'],
-        evento: json['evento'],
-        planner: json['planner'],
-        posicion: json['posicion'],
-        numeroDeMesa: json['numero_mesa'],
-      );
-
   Map<String, dynamic> toJson() => {
-        'id_mesa_asignada': idMesaAsignada,
-        'mesa': mesa,
-        'asignado': asignado,
-        'evento': evento,
-        'planner': planner,
-        'posicion': posicion,
-        'numero_mesa': numeroDeMesa,
+        'id_mesa': idMesa,
+        'descripcion': descripcion,
+        'id_evento': idEvento,
+        'id_tipo_mesa': idTipoDeMesa,
+        'estatus': estatus,
+        'dimencion': dimension,
+        'numero_mesa': numDeMesa,
       };
 }

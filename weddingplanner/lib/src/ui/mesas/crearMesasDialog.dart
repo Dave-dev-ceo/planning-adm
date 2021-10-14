@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class AsignarMesasDialog extends StatefulWidget {
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
+
+import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
+
+class CrearMesasDialog extends StatefulWidget {
   @override
-  _AsignarMesasDialogState createState() => _AsignarMesasDialogState();
+  _CrearMesasDialogState createState() => _CrearMesasDialogState();
 }
 
-class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
+class _CrearMesasDialogState extends State<CrearMesasDialog> {
   final _keyCrearMesas = GlobalKey<FormState>();
   final numeroDeMesas = TextEditingController();
   final numeroDeSillas = TextEditingController();
   bool isExpanded = true;
-  List<Map<String, dynamic>> listMesas = [];
   List<TextEditingController> textEditcontrollers = [];
+  List<MesaModel> listaMesas = [];
+  int idTipoMesa;
+
+  List<Map<String, dynamic>> listTipoDeMesa = [
+    {'name': 'Cuadrada', 'value': 1},
+    {'name': 'Redonda', 'value': 2},
+    {'name': 'Rectangular', 'value': 3},
+    {'name': 'Ovalada', 'value': 4},
+    {'name': 'Imperial', 'value': 5},
+    {'name': 'En forma U', 'value': 6},
+  ];
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -28,25 +45,49 @@ class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
         child: Column(
           children: [
             formularioAsignarMesas(size),
-            if (listMesas.isNotEmpty) _buildFormMesas(size),
-            if (listMesas.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: ElevatedButton(
-                      onPressed: () {
-                        print('Guardando...');
-                      },
-                      child: Text(
-                        'Guardar',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                ),
-              )
+            if (listaMesas.isNotEmpty) _SaveDataMesas(),
+            if (listaMesas.isNotEmpty) _buildFormMesas(size),
           ],
         ),
       ),
     );
+  }
+
+  Align _SaveDataMesas() {
+    return Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          child: ElevatedButton(
+              onPressed: () async {
+                await _submit();
+              },
+              child: Text(
+                'Guardar',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+        ),
+      ),
+    );
+  }
+
+  _submit() async {
+    final mesaBloc = BlocProvider.of<MesasBloc>(context);
+
+    await mesaBloc.add(CreateMesasEvent(listaMesas));
+    mesaBloc.stream.listen((state) {
+      if (state is CreatedMesasState) {
+        if (state.response == 'Ok') {
+          Navigator.of(context).pop();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(state.response),
+            backgroundColor: Colors.red,
+          ));
+        }
+      }
+    });
   }
 
   Widget formularioAsignarMesas(Size size) {
@@ -57,7 +98,7 @@ class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: size.width * 0.6,
+            maxWidth: size.width * 0.8,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -89,6 +130,34 @@ class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
                         body: Wrap(
                           alignment: WrapAlignment.center,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                    constraints: BoxConstraints(
+                                        maxWidth: size.width * 0.2),
+                                    prefixIcon: Icon(Icons.table_chart),
+                                    hintText: 'Tipo de Mesa'),
+                                items: listTipoDeMesa
+                                    .map((m) => DropdownMenuItem(
+                                          child: Text(m['name']),
+                                          value: m['value'],
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    idTipoMesa = value;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null || value == '') {
+                                    return 'El tipo de mesa es necesario';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
                             Padding(
                               padding: _padding,
                               child: TextFormField(
@@ -147,8 +216,8 @@ class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
                                     horizontal: 8, vertical: 15),
                                 child: Center(
                                   child: ElevatedButton(
-                                      onPressed: () {
-                                        _crearMesas();
+                                      onPressed: () async {
+                                        await _crearMesas();
                                       },
                                       child: Text('Crear')),
                                 ),
@@ -168,29 +237,6 @@ class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
   }
 
   Widget _buildFormMesas(Size size) {
-    final numMesas = int.parse(numeroDeMesas.text);
-    final numSilla = int.parse(numeroDeSillas.text);
-
-    List<Widget> listaWidgetSillas = [];
-
-    // for (var i = 0; i < int.parse(numeroDeSillas.text); i++) {
-    //   TextEditingController textEditCtrl = TextEditingController();
-    //   textEditCtrl.text = 'Silla $i';
-    //   listaWidgetSillas.add(Expanded(
-    //     child: Padding(
-    //       padding: const EdgeInsets.all(8.0),
-    //       child: TextFormField(
-    //         controller: textEditCtrl,
-    //         decoration: InputDecoration(
-    //             labelText: 'Silla $i',
-    //             constraints: BoxConstraints(),
-    //             border: OutlineInputBorder()),
-    //       ),
-    //     ),
-    //   ));
-    //   textEditcontrollers.add(textEditCtrl);
-    // }
-
     Widget listaWidgetsMesas = ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: size.width * 0.6,
@@ -198,28 +244,28 @@ class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
         child: Card(
             child: ListView.builder(
           shrinkWrap: true,
-          itemCount: numMesas,
+          itemCount: listaMesas.length,
           itemBuilder: (context, index) {
-            TextEditingController textEditCtrl =
-                TextEditingController(text: 'Mesa ${index + 1}');
-
             return ExpansionTile(
               title: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  controller: textEditCtrl,
+                  initialValue: listaMesas.elementAt(index).descripcion,
                   decoration: InputDecoration(
                       labelText: 'Nombre de la mesa',
                       border: OutlineInputBorder()),
+                  onChanged: (value) {
+                    listaMesas.elementAt(index).descripcion = value;
+                  },
                 ),
               ),
               children: List.generate(
-                  numSilla,
+                  listaMesas.elementAt(index).dimension,
                   (index) => Padding(
                         padding: EdgeInsets.all(10.0),
                         child: TextFormField(
                           decoration: InputDecoration(
-                              labelText: 'Pocision ${index + 1}',
+                              labelText: 'Silla ${index + 1}',
                               border: OutlineInputBorder()),
                         ),
                       )),
@@ -230,27 +276,25 @@ class _AsignarMesasDialogState extends State<AsignarMesasDialog> {
     return listaWidgetsMesas;
   }
 
-  _crearMesas() {
+  _crearMesas() async {
+    listaMesas.clear();
+    final numMesas = int.parse(numeroDeMesas.text);
+    final numSilla = int.parse(numeroDeSillas.text);
+
+    int idEvento = await SharedPreferencesT().getIdEvento();
+
+    setState(() {});
     if (_keyCrearMesas.currentState.validate()) {
-      List listmesas =
-          List.generate(int.parse(numeroDeMesas.text), (index) => index);
-      List listsillas =
-          List.generate(int.parse(numeroDeSillas.text), (index) => null);
-
-      listmesas.forEach((index) {
-        Map<String, dynamic> mesa = {};
-        mesa['nameofMesa'] = 'Mesa${index + 1}';
-        mesa['sillas'] = listsillas;
-        print(mesa['nameofMesa']);
-        listMesas.add(mesa);
-      });
-
-      listMesas.forEach((element) {
-        element.forEach((key, value) {
-          print('$key == $value');
-        });
-      });
-      setState(() {});
+      for (int i = 0; i < numMesas; i++) {
+        MesaModel mesa = MesaModel(
+          descripcion: 'Mesa ${i + 1}',
+          idTipoDeMesa: idTipoMesa,
+          numDeMesa: i + 1,
+          dimension: numSilla,
+          idEvento: idEvento,
+        );
+        listaMesas.add(mesa);
+      }
     } else {
       print('Los Campos son ncesarios');
     }

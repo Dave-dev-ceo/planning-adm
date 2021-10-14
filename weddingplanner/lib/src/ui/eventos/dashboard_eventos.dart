@@ -83,28 +83,33 @@ class _DashboardEventosState extends State<DashboardEventos> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: EdgeInsets.all(20),
         elevation: 10,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text(titulo),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Fecha Evento: ' + fevento),
-                  Text('Planeación de evento: Del ' + inicio + ' al ' + fin),
-                  Text('Número de Invitados: $numeroInivtados'),
-                  for (var i = 0; i < involucrados.length; i++)
-                    involucrados[0].tipoInvolucrado != 'Sin involucrado'
-                        ? Text(involucrados[i].tipoInvolucrado +
-                            ' : ' +
-                            involucrados[i].nombre)
-                        : Text('Sin involucrados'),
-                ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+                title: Text(titulo),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Fecha Evento: ' + fevento),
+                    Text('Planeación de evento: Del ' + inicio + ' al ' + fin),
+                    Text('Número de Invitados: $numeroInivtados'),
+                    for (var i = 0; i < involucrados.length; i++)
+                      involucrados[0].tipoInvolucrado != 'Sin involucrado'
+                          ? Text(involucrados[i].tipoInvolucrado +
+                              ' : ' +
+                              involucrados[i].nombre)
+                          : Text('Sin involucrados'),
+                  ],
+                ),
+                leading: Icon(Icons.event),
               ),
-              leading: Icon(Icons.event),
-            ),
-          ],
+              SizedBox(
+                height: 8.0,
+              )
+            ],
+          ),
         ),
       ),
       onTap: () async {

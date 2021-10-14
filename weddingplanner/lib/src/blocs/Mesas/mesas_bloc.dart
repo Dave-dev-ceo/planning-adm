@@ -3,29 +3,39 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:weddingplanner/src/logic/estatus_logic.dart';
-import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_logic.dart';
+import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesa_logic.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 
 part 'mesas_event.dart';
 part 'mesas_state.dart';
 
-class MesasAsignadasBloc
-    extends Bloc<MesasAsignadasEvent, MesasAsignadasState> {
+class MesasBloc extends Bloc<MesasEvent, MesasState> {
   final MesasAsignadasLogic logic;
-  MesasAsignadasBloc({@required this.logic}) : super(MesasInitial());
+  MesasBloc({@required this.logic}) : super(MesasInitial());
 
   @override
-  Stream<MesasAsignadasState> mapEventToState(
-      MesasAsignadasEvent event) async* {
-    if (event is MostrarMesasAsignadasEvent) {
-      yield LoadingMesasAsignadasState();
+  Stream<MesasState> mapEventToState(MesasEvent event) async* {
+    if (event is MostrarMesasEvent) {
+      yield LoadingMesasState();
       try {
-        List<MesasModel> mesas = await logic.getMesasAsignadas();
-        yield MostrarMesasAsignadasState(mesas);
+        List<MesaModel> mesas = await logic.getMesas();
+        yield MostrarMesasState(mesas);
       } on MesasAsignadasException {
-        yield ErrorMesasAsignadasState("Sin Mesas Asignadas");
+        yield ErrorMesasState("No se encontraron mesas");
       } on TokenException {
-        yield ErrorTokenMesasAsignadasState(message: 'Sesion Caducada');
+        yield ErrorTokenMesasState(message: 'Sesion Caducada');
+      }
+    } else if (event is CreateMesasEvent) {
+      try {
+        yield CreateMesasState();
+        String data = await logic.createMesas(event.mesas);
+        print('La Repues es $data');
+        if (data == 'Ok') {
+          add(MostrarMesasEvent());
+        }
+        yield CreatedMesasState(data);
+      } catch (e) {
+        yield CreatedMesasState(e);
       }
     }
   }

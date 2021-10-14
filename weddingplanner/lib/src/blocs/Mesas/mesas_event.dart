@@ -1,6 +1,14 @@
 part of 'mesas_bloc.dart';
 
 @immutable
-abstract class MesasAsignadasEvent {}
+abstract class MesasEvent {}
 
-class MostrarMesasAsignadasEvent extends MesasAsignadasEvent {}
+class MostrarMesasEvent extends MesasEvent {}
+
+class CreateMesasEvent extends MesasEvent {
+  final List<MesaModel> mesas;
+
+  CreateMesasEvent(this.mesas);
+
+  List<Object> get props => [mesas];
+}

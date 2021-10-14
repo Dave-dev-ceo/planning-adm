@@ -1,31 +1,43 @@
 part of 'mesas_bloc.dart';
 
 @immutable
-abstract class MesasAsignadasState {}
+abstract class MesasState {}
 
-class MesasInitial extends MesasAsignadasState {}
+class MesasInitial extends MesasState {}
 
-class LoadingMesasAsignadasState extends MesasAsignadasState {}
+class LoadingMesasState extends MesasState {}
 
-class MostrarMesasAsignadasState extends MesasAsignadasState {
-  final List<MesasModel> mesasAsignadas;
+class MostrarMesasState extends MesasState {
+  final List<MesaModel> listaMesas;
 
-  MostrarMesasAsignadasState(this.mesasAsignadas);
+  MostrarMesasState(this.listaMesas);
 
-  List<Object> get props => [mesasAsignadas];
+  List<Object> get props => [listaMesas];
 }
 
-class ErrorMesasAsignadasState extends MesasAsignadasState {
+class ErrorMesasState extends MesasState {
   final String message;
 
-  ErrorMesasAsignadasState(this.message);
+  ErrorMesasState(this.message);
   List<Object> get props => [message];
 }
 
-class ErrorTokenMesasAsignadasState extends MesasAsignadasState {
+class ErrorTokenMesasState extends MesasState {
   final String message;
 
-  ErrorTokenMesasAsignadasState({this.message});
+  ErrorTokenMesasState({this.message});
 
   List<Object> get props => [message];
 }
+
+class CreateMesasState extends MesasState {}
+
+class CreatedMesasState extends MesasState {
+  final String response;
+
+  CreatedMesasState(this.response);
+
+  String get props => response;
+}
+
+class ErrorCreateMesasState extends MesasState {}

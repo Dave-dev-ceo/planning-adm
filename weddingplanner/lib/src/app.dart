@@ -5,13 +5,15 @@ import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
+import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:weddingplanner/src/blocs/involucrados/involucrados_bloc.dart';
 import 'package:weddingplanner/src/blocs/pagos/pagos_bloc.dart';
 import 'package:weddingplanner/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 import 'package:weddingplanner/src/logic/add_contratos_logic.dart';
+import 'package:weddingplanner/src/logic/invitados_mesas_logic/invitados_mesa_logic.dart';
 import 'package:weddingplanner/src/logic/involucrados_logic.dart';
-import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_logic.dart';
+import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesa_logic.dart';
 import 'package:weddingplanner/src/logic/pagos_logic.dart';
 import 'package:weddingplanner/src/logic/proveedores_evento_logic.dart';
 import 'package:weddingplanner/src/logic/servicios_logic.dart';
@@ -215,9 +217,11 @@ class AppState extends StatelessWidget {
           create: (_) => PerfilBloc(logic: ConsultasPerfilLogic())),
       BlocProvider<PagosBloc>(
           create: (_) => PagosBloc(logic: ConsultasPagosLogic())),
-      BlocProvider<MesasAsignadasBloc>(
+      BlocProvider<MesasBloc>(
+          create: (_) => MesasBloc(logic: ServiceMesasAsignadasLogic())),
+      BlocProvider<InvitadosMesasBloc>(
           create: (_) =>
-              MesasAsignadasBloc(logic: ServiceMesasAsignadasLogic()))
+              InvitadosMesasBloc(logic: ServiceInvitadosMesasLogic()))
     ], child: MyApp());
   }
 }
