@@ -50,7 +50,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget buildListGrupos(AsyncSnapshot<ItemModelReporteGrupos> snapshot) {
-    double sizeHeight = 150;
+    double sizeHeight = 200;
     return Container(
         width: 400,
         //color: Colors.pink,
@@ -73,7 +73,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 style: TextStyle(fontSize: 20),
               ),
               subtitle: Container(
-                height: 55,
+                height: 60,
                 //color: Colors.purple,
                 child: ListView.builder(
                     itemCount: dataGrupos.results.length,
@@ -111,7 +111,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget buildList(AsyncSnapshot<ItemModelReporteInvitados> snapshot) {
-    double sizeHeight = 150;
+    double sizeHeight = 200;
     return Container(
         width: 400,
         //color: Colors.pink,
@@ -176,7 +176,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
       AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
     return Container(
         width: 400,
-        height: 150,
+        height: 200,
         child: miCardReportesInvitadosGenero(
             snapshot.data.masculino, snapshot.data.femenino));
   }
@@ -232,7 +232,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           eventosBloc.add(EvtBloc.FechtEventosEvent());
           return Container(
               width: 400,
-              height: 150,
+              height: 200,
               child: miCardReporteDetallesEvento(evento));
         } else if (state is EvtBloc.ErrorEventoPorIdState) {
           return Center(
@@ -242,7 +242,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           if (evento != null) {
             return Container(
                 width: 400,
-                height: 150,
+                height: 200,
                 child: miCardReporteDetallesEvento(evento));
           } else {
             return Center(child: CircularProgressIndicator());

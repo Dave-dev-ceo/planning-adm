@@ -97,7 +97,11 @@ class _HomeState extends State<Home> {
                   width: 250.0,
                 )),
               ),
-              leading: Container(child: Center(child: Text('PLANNER'))),
+              leading: Container(
+                  child: Center(
+                child: Text('PLANNER',
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+              )),
               leadingWidth: 100.0,
               actions: <Widget>[
                 Container(

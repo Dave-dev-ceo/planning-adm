@@ -110,7 +110,8 @@ class _InvitadosState extends State<Invitados> {
                         children: [
                           Text(
                             'CONFIGURACIÓN EVENTO',
-                            style: TextStyle(fontSize: 12.0),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 12.0),
                           ),
                           Text(
                             '${widget.detalleEvento['nEvento']}',
