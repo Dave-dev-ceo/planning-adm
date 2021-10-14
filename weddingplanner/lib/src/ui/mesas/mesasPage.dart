@@ -66,6 +66,8 @@ class _MesasPageState extends State<MesasPage> {
     );
   }
 
+  // ? Resumen de Mesas Asignadas
+
   Widget resumenMesasPage() {
     Widget WidgetBlocMesas = BlocBuilder<MesasBloc, MesasState>(
       builder: (context, state) {
@@ -106,6 +108,51 @@ class _MesasPageState extends State<MesasPage> {
       ],
     );
   }
+
+  Widget _gridMesasWidget(List<MesaModel> listaMesa) {
+    Widget gridOfListaMesas = GridView.builder(
+        itemCount: listaMesa.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 1.5,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(),
+            child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                margin: EdgeInsets.all(6.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Center(child: Text(listaMesa[index].descripcion)),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: listaMesa[index].dimension,
+                            itemBuilder: (BuildContext context, int i) {
+                              return TextFormField(
+                                enabled: false,
+                                decoration:
+                                    InputDecoration(labelText: 'Silla $i'),
+                                initialValue: 'Disponible',
+                              );
+                            }),
+                      )
+                    ],
+                  ),
+                )),
+          );
+        });
+    return gridOfListaMesas;
+  }
+
+  // ? Page Asiganer Mesas a Inivtados
 
   Widget asignarInvitadosMesasPage() {
     return Padding(
@@ -221,51 +268,6 @@ class _MesasPageState extends State<MesasPage> {
       ),
     );
   }
-
-  Widget _gridMesasWidget(List<MesaModel> listaMesa) {
-    Widget gridOfListaMesas = GridView.builder(
-        itemCount: listaMesa.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1.5,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(),
-            child: Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                margin: EdgeInsets.all(6.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Center(child: Text(listaMesa[index].descripcion)),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: listaMesa[index].dimension,
-                            itemBuilder: (BuildContext context, int i) {
-                              return TextFormField(
-                                enabled: false,
-                                decoration:
-                                    InputDecoration(labelText: 'Silla $i'),
-                                initialValue: 'Disponible',
-                              );
-                            }),
-                      )
-                    ],
-                  ),
-                )),
-          );
-        });
-    return gridOfListaMesas;
-  }
-
-  // ! Implementar Widget para el paso 2
 
   _buildListaMesas(List<MesaModel> listaDeMesas) {
     Widget dropMenuSelectMesas = Padding(
