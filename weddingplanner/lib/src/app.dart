@@ -13,7 +13,7 @@ import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos
 import 'package:weddingplanner/src/logic/add_contratos_logic.dart';
 import 'package:weddingplanner/src/logic/invitados_mesas_logic/invitados_mesa_logic.dart';
 import 'package:weddingplanner/src/logic/involucrados_logic.dart';
-import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesa_logic.dart';
+import 'package:weddingplanner/src/logic/mesas_logic/mesa_logic.dart';
 import 'package:weddingplanner/src/logic/pagos_logic.dart';
 import 'package:weddingplanner/src/logic/proveedores_evento_logic.dart';
 import 'package:weddingplanner/src/logic/servicios_logic.dart';

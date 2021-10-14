@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:weddingplanner/src/logic/estatus_logic.dart';
-import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesa_logic.dart';
+import 'package:weddingplanner/src/logic/mesas_logic/mesa_logic.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 
 part 'mesas_event.dart';
@@ -29,7 +29,6 @@ class MesasBloc extends Bloc<MesasEvent, MesasState> {
       try {
         yield CreateMesasState();
         String data = await logic.createMesas(event.mesas);
-        print('La Repues es $data');
         if (data == 'Ok') {
           add(MostrarMesasEvent());
         }

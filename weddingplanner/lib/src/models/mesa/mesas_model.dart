@@ -23,7 +23,7 @@ class MesaModel {
         idEvento: json['id_evento'],
         idTipoDeMesa: json['id_tipo_mesa'],
         estatus: json['estatus'],
-        dimension: json['dimencion'],
+        dimension: json['dimension'],
         numDeMesa: json['numero_mesa'],
       );
   Map<String, dynamic> toJson() => {
@@ -32,7 +32,7 @@ class MesaModel {
         'id_evento': idEvento,
         'id_tipo_mesa': idTipoDeMesa,
         'estatus': estatus,
-        'dimencion': dimension,
+        'dimension': dimension,
         'numero_mesa': numDeMesa,
       };
 }

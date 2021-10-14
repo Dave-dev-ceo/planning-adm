@@ -31,6 +31,11 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -150,7 +155,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                   });
                                 },
                                 validator: (value) {
-                                  if (value == null || value == '') {
+                                  if (value == null) {
                                     return 'El tipo de mesa es necesario';
                                   } else {
                                     return null;
@@ -170,6 +175,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
+                                keyboardType: TextInputType.number,
                                 validator: (value) {
                                   if (value == null || value == '') {
                                     return 'El número de mesas es requerido';
@@ -181,6 +187,11 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     }
                                   }
                                 },
+                                onChanged: (value) {
+                                  if (value != null || value != '') {
+                                    numeroDeMesas.text = value;
+                                  }
+                                },
                               ),
                             ),
                             Padding(
@@ -189,6 +200,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
+                                keyboardType: TextInputType.number,
                                 controller: numeroDeSillas,
                                 decoration: InputDecoration(
                                     constraints: BoxConstraints(
@@ -204,6 +216,11 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     } else {
                                       return null;
                                     }
+                                  }
+                                },
+                                onChanged: (value) {
+                                  if (value != null || value != '') {
+                                    numeroDeSillas.text = value;
                                   }
                                 },
                               ),
@@ -278,13 +295,13 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
 
   _crearMesas() async {
     listaMesas.clear();
-    final numMesas = int.parse(numeroDeMesas.text);
-    final numSilla = int.parse(numeroDeSillas.text);
 
     int idEvento = await SharedPreferencesT().getIdEvento();
 
     setState(() {});
     if (_keyCrearMesas.currentState.validate()) {
+      final numMesas = int.parse(numeroDeMesas.text);
+      final numSilla = int.parse(numeroDeSillas.text);
       for (int i = 0; i < numMesas; i++) {
         MesaModel mesa = MesaModel(
           descripcion: 'Mesa ${i + 1}',
