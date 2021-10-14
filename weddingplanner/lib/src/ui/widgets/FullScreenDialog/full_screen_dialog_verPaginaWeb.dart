@@ -51,9 +51,6 @@ class _FullScreenViewWEBState extends State<FullScreenViewWEB> {
           BlocBuilder<ViewArchivosBloc, ViewArchivosState>(
               builder: (context, state) {
             if (state is MostrarArchivoByIdState) {
-              state.detlistas.results.forEach((element) {
-                print('${element.archivo}');
-              });
               return ConstrainedBox(
                   constraints: BoxConstraints(
                     minWidth: size.width * 0.8,
@@ -81,30 +78,28 @@ class _FullScreenViewWEBState extends State<FullScreenViewWEB> {
       ),
     );
   }
-}
 
-Widget _vistaWeb(String url, double width) {
-  print(url);
+  Widget _vistaWeb(String url, double width) {
+    @override
+    IFrameElement _iframeElement = IFrameElement();
+    Widget _iframeWidget;
+    url = url.replaceFirst('watch?v=', 'embed/');
 
-  @override
-  IFrameElement _iframeElement = IFrameElement();
-  Widget _iframeWidget;
-  url = url.replaceFirst('watch?v=', 'embed/');
+    _iframeElement.src = url;
+    _iframeElement.style.border = 'none';
+    _iframeElement.style.height = '300';
+    _iframeElement.style.width = '700';
+    // ignore: undefined_prefixed_name
+    ul.platformViewRegistry.registerViewFactory(
+      'iframeElement',
+      (int viewId) => _iframeElement,
+    );
 
-  _iframeElement.src = url;
-  _iframeElement.style.border = 'none';
-  _iframeElement.style.height = '300';
-  _iframeElement.style.width = '700';
-  // ignore: undefined_prefixed_name
-  ul.platformViewRegistry.registerViewFactory(
-    'iframeElement',
-    (int viewId) => _iframeElement,
-  );
+    _iframeWidget = HtmlElementView(
+      key: UniqueKey(),
+      viewType: 'iframeElement',
+    );
 
-  _iframeWidget = HtmlElementView(
-    key: UniqueKey(),
-    viewType: 'iframeElement',
-  );
-
-  return _iframeWidget;
+    return _iframeWidget;
+  }
 }

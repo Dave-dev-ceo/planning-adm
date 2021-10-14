@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
+import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
+import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 
@@ -13,20 +15,30 @@ class MesasPage extends StatefulWidget {
 }
 
 class _MesasPageState extends State<MesasPage> {
+  final mesasAsignadasService = MesasAsignadasService();
   MesaModel mesaModelData;
   Size size;
   int indexNavBar = 0;
   int _isEnable = 1;
   bool _estado = false;
+  List<MesasAsignadasModel> listaMesasAsignadas;
   List<bool> checkeds = [];
+  int lastNumMesa;
 
   @override
   void initState() {
+    mesasAsignadasService.getMesasAsignadas();
     BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
     BlocProvider.of<InvitadosMesasBloc>(context)
         .add(MostrarInvitadosMesasEvent());
     super.initState();
   }
+
+  // @override
+  // void dispose() {
+  //   mesasAsignadasService.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +46,22 @@ class _MesasPageState extends State<MesasPage> {
     size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: _bottomNavigatorBarCustom(),
-      body: listWidget[indexNavBar],
+      body: StreamBuilder(
+        stream: mesasAsignadasService.mesasAsignadasStream,
+        builder: (context, AsyncSnapshot<List<MesasAsignadasModel>> snapshot) {
+          if (snapshot.hasData) {
+            listaMesasAsignadas = snapshot.data;
+            return listWidget[indexNavBar];
+          } else {
+            listaMesasAsignadas = [];
+            return listWidget[indexNavBar];
+          }
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed('/asignarMesas');
+          Navigator.of(context).pushNamed('/asignarMesas',
+              arguments: (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa);
         },
         child: Icon(Icons.add),
       ),
@@ -77,6 +101,7 @@ class _MesasPageState extends State<MesasPage> {
           );
         } else if (state is MostrarMesasState) {
           if (state.listaMesas.isNotEmpty && state.listaMesas != null) {
+            lastNumMesa = state.listaMesas.last.numDeMesa;
             return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: _gridMesasWidget(state.listaMesas));
@@ -117,6 +142,8 @@ class _MesasPageState extends State<MesasPage> {
           childAspectRatio: 1.5,
         ),
         itemBuilder: (BuildContext context, int index) {
+          final listaAsignados = listaMesasAsignadas
+              .where((m) => m.idMesa == listaMesa[index].idMesa);
           return ConstrainedBox(
             constraints: BoxConstraints(),
             child: Card(
@@ -136,11 +163,22 @@ class _MesasPageState extends State<MesasPage> {
                         child: ListView.builder(
                             itemCount: listaMesa[index].dimension,
                             itemBuilder: (BuildContext context, int i) {
+                              String temp = 'Disponible';
+                              if (listaMesasAsignadas.isNotEmpty) {
+                                final asigando = listaAsignados.firstWhere(
+                                  (a) => a.posicion == i + 1,
+                                  orElse: () => null,
+                                );
+                                if (asigando != null)
+                                  asigando.idAcompanante != 0
+                                      ? temp = asigando.acompanante
+                                      : temp = asigando.invitado;
+                              }
                               return TextFormField(
                                 enabled: false,
-                                decoration:
-                                    InputDecoration(labelText: 'Silla $i'),
-                                initialValue: 'Disponible',
+                                decoration: InputDecoration(
+                                    labelText: 'Silla ${i + 1}'),
+                                initialValue: temp,
                               );
                             }),
                       )

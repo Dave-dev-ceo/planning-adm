@@ -178,7 +178,10 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (context) => FullScreenViewWEB(data: args));
       case '/asignarMesas':
-        return MaterialPageRoute(builder: (context) => CrearMesasDialog());
+        return MaterialPageRoute(
+            builder: (context) => CrearMesasDialog(
+                  lastnumMesas: args,
+                ));
       default:
         return _errorRoute();
     }

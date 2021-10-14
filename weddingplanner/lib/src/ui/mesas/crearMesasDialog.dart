@@ -8,6 +8,9 @@ import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 
 class CrearMesasDialog extends StatefulWidget {
+  final int lastnumMesas;
+
+  const CrearMesasDialog({Key key, this.lastnumMesas = 1}) : super(key: key);
   @override
   _CrearMesasDialogState createState() => _CrearMesasDialogState();
 }
@@ -16,6 +19,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
   final _keyCrearMesas = GlobalKey<FormState>();
   final numeroDeMesas = TextEditingController();
   final numeroDeSillas = TextEditingController();
+  int _lastNumMesas;
   bool isExpanded = true;
   List<TextEditingController> textEditcontrollers = [];
   List<MesaModel> listaMesas = [];
@@ -32,6 +36,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
 
   @override
   void initState() {
+    _lastNumMesas = widget.lastnumMesas + 1;
     super.initState();
   }
 
@@ -187,11 +192,6 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     }
                                   }
                                 },
-                                onChanged: (value) {
-                                  if (value != null || value != '') {
-                                    numeroDeMesas.text = value;
-                                  }
-                                },
                               ),
                             ),
                             Padding(
@@ -216,11 +216,6 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     } else {
                                       return null;
                                     }
-                                  }
-                                },
-                                onChanged: (value) {
-                                  if (value != null || value != '') {
-                                    numeroDeSillas.text = value;
                                   }
                                 },
                               ),
@@ -263,29 +258,17 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
           shrinkWrap: true,
           itemCount: listaMesas.length,
           itemBuilder: (context, index) {
-            return ExpansionTile(
-              title: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  initialValue: listaMesas.elementAt(index).descripcion,
-                  decoration: InputDecoration(
-                      labelText: 'Nombre de la mesa',
-                      border: OutlineInputBorder()),
-                  onChanged: (value) {
-                    listaMesas.elementAt(index).descripcion = value;
-                  },
-                ),
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                initialValue: listaMesas.elementAt(index).descripcion,
+                decoration: InputDecoration(
+                    labelText: 'Nombre de la mesa',
+                    border: OutlineInputBorder()),
+                onChanged: (value) {
+                  listaMesas.elementAt(index).descripcion = value;
+                },
               ),
-              children: List.generate(
-                  listaMesas.elementAt(index).dimension,
-                  (index) => Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                              labelText: 'Silla ${index + 1}',
-                              border: OutlineInputBorder()),
-                        ),
-                      )),
             );
           },
         )));
@@ -304,9 +287,9 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
       final numSilla = int.parse(numeroDeSillas.text);
       for (int i = 0; i < numMesas; i++) {
         MesaModel mesa = MesaModel(
-          descripcion: 'Mesa ${i + 1}',
+          descripcion: 'Mesa ${_lastNumMesas + i}',
           idTipoDeMesa: idTipoMesa,
-          numDeMesa: i + 1,
+          numDeMesa: _lastNumMesas + i,
           dimension: numSilla,
           idEvento: idEvento,
         );

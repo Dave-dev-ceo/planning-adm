@@ -218,7 +218,7 @@ class AppState extends StatelessWidget {
       BlocProvider<PagosBloc>(
           create: (_) => PagosBloc(logic: ConsultasPagosLogic())),
       BlocProvider<MesasBloc>(
-          create: (_) => MesasBloc(logic: ServiceMesasAsignadasLogic())),
+          create: (_) => MesasBloc(logic: ServiceMesasLogic())),
       BlocProvider<InvitadosMesasBloc>(
           create: (_) =>
               InvitadosMesasBloc(logic: ServiceInvitadosMesasLogic()))

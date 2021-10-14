@@ -8,7 +8,7 @@ import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 import 'package:weddingplanner/src/resources/config_conection.dart';
 
-abstract class MesasAsignadasLogic {
+abstract class MesasLogic {
   Future<List<MesaModel>> getAsignadasMesas();
   Future<List<MesaModel>> getMesas();
   Future<String> createMesas(List<MesaModel> listaMesasToAdd);
@@ -18,7 +18,7 @@ class MesasAsignadasException implements Exception {}
 
 class MesasException implements Exception {}
 
-class ServiceMesasAsignadasLogic extends MesasAsignadasLogic {
+class ServiceMesasLogic extends MesasLogic {
   SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
   Client client = Client();

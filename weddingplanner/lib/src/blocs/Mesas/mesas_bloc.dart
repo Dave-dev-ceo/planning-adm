@@ -10,7 +10,7 @@ part 'mesas_event.dart';
 part 'mesas_state.dart';
 
 class MesasBloc extends Bloc<MesasEvent, MesasState> {
-  final MesasAsignadasLogic logic;
+  final MesasLogic logic;
   MesasBloc({@required this.logic}) : super(MesasInitial());
 
   @override
