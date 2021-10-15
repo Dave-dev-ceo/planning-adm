@@ -20,9 +20,11 @@ class _MesasPageState extends State<MesasPage> {
   Size size;
   int indexNavBar = 0;
   int _isEnable = 1;
-  bool _estado = false;
+  bool _estado = true;
   List<MesasAsignadasModel> listaMesasAsignadas;
-  List<bool> checkeds = [];
+  List<bool> checkedsInvitados = [];
+  List<bool> checkedsAsignados = [];
+  List<MesasAsignadasModel> listAsigandosToDelete = [];
   int lastNumMesa;
 
   @override
@@ -163,7 +165,7 @@ class _MesasPageState extends State<MesasPage> {
                         child: ListView.builder(
                             itemCount: listaMesa[index].dimension,
                             itemBuilder: (BuildContext context, int i) {
-                              String temp = 'Disponible';
+                              String temp = '';
                               if (listaMesasAsignadas.isNotEmpty) {
                                 final asigando = listaAsignados.firstWhere(
                                   (a) => a.posicion == i + 1,
@@ -211,7 +213,6 @@ class _MesasPageState extends State<MesasPage> {
               children: [
                 BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
                   builder: (context, state) {
-                    print(state);
                     if (state is LoadingInvitadoMesasState) {
                       return Align(
                         alignment: Alignment.center,
@@ -254,6 +255,19 @@ class _MesasPageState extends State<MesasPage> {
                       },
                 child: Text('Asignar'),
               ),
+              SizedBox(
+                height: 10.0,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  print('Quitando...');
+
+                  listAsigandosToDelete.forEach((asginado) {
+                    print(asginado.toJson());
+                  });
+                },
+                child: Text('Quitar'),
+              )
             ],
           ),
           SizedBox(
@@ -307,6 +321,39 @@ class _MesasPageState extends State<MesasPage> {
     );
   }
 
+  // Widget _buildListInvitadosConfirmador(
+  //     List<InvitadosConfirmadosModel> listaInvitados) {
+  //   if (checkedsInvitados.isEmpty) {
+  //     for (var i = 0; i < listaInvitados.length; i++) {
+  //       bool checked = false;
+  //       checkedsInvitados.add(checked);
+  //     }
+  //   }
+  //   return ListView.builder(
+  //       shrinkWrap: true,
+  //       itemCount: listaInvitados.length,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return ParentChildCheckbox(
+  //             parent: Text(
+  //               listaInvitados[index].nombre,
+  //               key: Key(listaInvitados[index].idInvitado.toString()),
+  //             ),
+  //             children:
+  //                 _buildListAcompanantes(listaInvitados[index].acompanantes));
+  //       });
+  // }
+
+  List<Text> _buildListAcompanantes(
+      List<AcompanantesConfirmadosModel> listAcompanante) {
+    List<Text> listaAcompanantes = [];
+    if (listAcompanante.length > 0) {
+      for (var i = 0; i < listAcompanante.length; i++) {
+        listaAcompanantes.add(Text(listAcompanante[i].nombre));
+      }
+    }
+    return listaAcompanantes;
+  }
+
   _buildListaMesas(List<MesaModel> listaDeMesas) {
     Widget dropMenuSelectMesas = Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -331,30 +378,62 @@ class _MesasPageState extends State<MesasPage> {
 
   Widget buildListInvitadosConfirmador(
       List<InvitadosConfirmadosModel> listaInvitados) {
-    if (checkeds.isEmpty) {
+    List<InvitadosConfirmadosModel> tempListaInvitados = [];
+    print('Entro metodo ever');
+    listaInvitados.forEach((elementInv) => {
+          listaMesasAsignadas.forEach((elementMesaAsig) {
+            if (elementInv.idInvitado != elementMesaAsig.idInvitado) {
+              tempListaInvitados.add(elementInv);
+            }
+          })
+        });
+
+    listaInvitados = tempListaInvitados;
+
+    if (checkedsInvitados.isEmpty) {
       for (var i = 0; i < listaInvitados.length; i++) {
         bool checked = false;
-        checkeds.add(checked);
+        checkedsInvitados.add(checked);
       }
     }
     return ListView.builder(
       shrinkWrap: true,
       itemCount: listaInvitados.length,
       itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          enabled: true,
+        List<Widget> widgetAcompanantes = [];
+
+        final acompanantes = listaInvitados[index].acompanantes;
+
+        for (var acompanante in acompanantes) {
+          Widget widgetAcompanante = Padding(
+              padding: EdgeInsets.only(left: 15.0),
+              child: ListTile(
+                leading: Checkbox(
+                  value: false,
+                  onChanged: (value) {},
+                ),
+                title: Text(
+                  acompanante.nombre,
+                  style: TextStyle(color: Colors.black),
+                ),
+              ));
+
+          widgetAcompanantes.add(widgetAcompanante);
+        }
+
+        return ExpansionTile(
+          initiallyExpanded: true,
           leading: Checkbox(
-              value: checkeds[index],
+              value: checkedsInvitados[index],
               onChanged: (value) {
                 setState(() {
-                  !checkeds[index]
-                      ? checkeds[index] = true
-                      : checkeds[index] = false;
+                  !checkedsInvitados[index]
+                      ? checkedsInvitados[index] = true
+                      : checkedsInvitados[index] = false;
                 });
 
                 _isEnable = 0;
-                checkeds.forEach((element) {
-                  print(element);
+                checkedsInvitados.forEach((element) {
                   if (element) {
                     _isEnable++;
                   }
@@ -370,25 +449,74 @@ class _MesasPageState extends State<MesasPage> {
                   });
                 }
               }),
-          title: Text(listaInvitados[index].nombre),
+          title: Text(
+            listaInvitados[index].nombre,
+            style: TextStyle(color: Colors.black),
+          ),
+          children: widgetAcompanantes,
         );
       },
     );
   }
 
   Widget formTableByMesa() {
+    print('Select mesa');
+    // listAsigandosToDelete.clear();
+    final listaAsignados =
+        listaMesasAsignadas.where((m) => m.idMesa == mesaModelData.idMesa);
     return Form(
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: mesaModelData.dimension,
         itemBuilder: (BuildContext context, int i) {
+          // * Asignar personas a sillas
+          String temp = '';
+          MesasAsignadasModel asignadotemp;
+
+          if (listaMesasAsignadas.isNotEmpty) {
+            final asigando = listaAsignados.firstWhere(
+              (a) => a.posicion == i + 1,
+              orElse: () => null,
+            );
+            if (asigando != null) {
+              asignadotemp = asigando;
+              asigando.idAcompanante != 0
+                  ? temp = asigando.acompanante
+                  : temp = asigando.invitado;
+            }
+          }
+          // * Asignar values to checkeds a Checkbox
+
+          bool checked = false;
+
+          checkedsAsignados.add(checked);
+
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Silla ${i + 1}',
-                  border: OutlineInputBorder(),
+              child: ListTile(
+                leading: Checkbox(
+                  value: checkedsAsignados[i],
+                  onChanged: (value) {
+                    setState(() {
+                      checkedsAsignados[i] = value;
+                    });
+
+                    if (checkedsAsignados[i]) {
+                      print(asignadotemp.posicion);
+                      listAsigandosToDelete.add(asignadotemp);
+                    } else if (!checkedsAsignados[i]) {
+                      //  listAsigandosToDelete.re
+                      // ! Ever quitar elemento de la lista listAsigandosToDelete.
+                    }
+                  },
+                ),
+                title: TextFormField(
+                  initialValue: temp,
+                  decoration: InputDecoration(
+                    labelText: 'Silla ${i + 1}',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
             ),

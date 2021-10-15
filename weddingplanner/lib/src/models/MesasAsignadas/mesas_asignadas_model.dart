@@ -10,6 +10,9 @@ class MesasAsignadasModel {
     this.acompanante,
     this.invitado,
     this.numMesa,
+    this.alimentacion,
+    this.alergias,
+    this.asistenciaEspecial,
   });
   String invitado;
   String acompanante;
@@ -21,19 +24,26 @@ class MesasAsignadasModel {
   int idPlanner;
   int posicion;
   int numMesa;
+  String alimentacion;
+  String alergias;
+  String asistenciaEspecial;
 
   factory MesasAsignadasModel.fromJson(Map<String, dynamic> json) =>
       MesasAsignadasModel(
-          idMesaAsignada: json['id_mesa_asignada'],
-          idAcompanante: json['id_acompanante'],
-          idEvento: json['id_evento'],
-          idInvitado: json['id_invitado'],
-          idMesa: json['id_mesa'],
-          idPlanner: json['id_planner'],
-          posicion: json['posicion'],
-          acompanante: json['acompanante'],
-          invitado: json['invitado'],
-          numMesa: json['numero_mesa']);
+        idMesaAsignada: json['id_mesa_asignada'],
+        idAcompanante: json['id_acompanante'],
+        idEvento: json['id_evento'],
+        idInvitado: json['id_invitado'],
+        idMesa: json['id_mesa'],
+        idPlanner: json['id_planner'],
+        posicion: json['posicion'],
+        acompanante: json['acompanante'],
+        invitado: json['invitado'],
+        numMesa: json['numero_mesa'],
+        alimentacion: json['alimentacion'],
+        alergias: json['alergias'],
+        asistenciaEspecial: json['asistencia_especial'],
+      );
 
   Map<String, dynamic> toJson() => {
         'id_mesa_asignada': idMesaAsignada,
@@ -45,6 +55,9 @@ class MesasAsignadasModel {
         'posicion': posicion,
         'acompanante': acompanante,
         'invitado': invitado,
-        'numero_mesa': numMesa
+        'numero_mesa': numMesa,
+        'alimentacion': alimentacion,
+        'alergias': alergias,
+        'asistencia_especial': asistenciaEspecial,
       };
 }
