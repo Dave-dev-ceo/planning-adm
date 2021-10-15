@@ -253,21 +253,20 @@ class _MesasPageState extends State<MesasPage> {
                     : () {
                         print('Asignando...');
                       },
-                child: Text('Asignar'),
+                child: Icon(Icons.arrow_forward),
               ),
               SizedBox(
                 height: 10.0,
               ),
               ElevatedButton(
-                onPressed: () {
-                  print('Quitando...');
+                  onPressed: () {
+                    print('Quitando...');
 
-                  listAsigandosToDelete.forEach((asginado) {
-                    print(asginado.toJson());
-                  });
-                },
-                child: Text('Quitar'),
-              )
+                    listAsigandosToDelete.forEach((asginado) {
+                      print(asginado.toJson());
+                    });
+                  },
+                  child: Icon(Icons.arrow_back))
             ],
           ),
           SizedBox(
@@ -506,8 +505,8 @@ class _MesasPageState extends State<MesasPage> {
                       print(asignadotemp.posicion);
                       listAsigandosToDelete.add(asignadotemp);
                     } else if (!checkedsAsignados[i]) {
-                      //  listAsigandosToDelete.re
                       // ! Ever quitar elemento de la lista listAsigandosToDelete.
+                      listAsigandosToDelete.remove(asignadotemp);
                     }
                   },
                 ),
