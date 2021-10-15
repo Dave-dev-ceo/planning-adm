@@ -8,8 +8,7 @@ class InvitadosConfirmadosModel {
       this.alimentacion,
       this.asistenciaEspecial,
       this.genero,
-      this.edad,
-      this.acompanantes});
+      this.edad});
 
   int idInvitado;
   int idAcompanante;
@@ -20,7 +19,6 @@ class InvitadosConfirmadosModel {
   String asistenciaEspecial;
   String genero;
   String edad;
-  List<AcompanantesConfirmadosModel> acompanantes;
 
   factory InvitadosConfirmadosModel.fromJson(Map<String, dynamic> json) =>
       InvitadosConfirmadosModel(
@@ -32,10 +30,7 @@ class InvitadosConfirmadosModel {
           alimentacion: json['alimentacion'],
           asistenciaEspecial: json['asistencia_especial'],
           genero: json['genero'],
-          edad: json['edad'],
-          acompanantes: List<AcompanantesConfirmadosModel>.from(
-              json['acompanantes']
-                  .map((e) => AcompanantesConfirmadosModel.fromJson(e))));
+          edad: json['edad']);
   Map<String, dynamic> toJson() => {
         'id_invitado': idInvitado,
         'id_acompanante': idAcompanante,
@@ -45,8 +40,7 @@ class InvitadosConfirmadosModel {
         'alimentacion': alimentacion,
         'asistencia_especial': asistenciaEspecial,
         'genero': genero,
-        'edad': edad,
-        'acompanantes': acompanantes
+        'edad': edad
       };
 }
 

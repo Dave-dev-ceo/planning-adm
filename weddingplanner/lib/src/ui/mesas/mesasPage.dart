@@ -25,6 +25,7 @@ class _MesasPageState extends State<MesasPage> {
   List<bool> checkedsInvitados = [];
   List<bool> checkedsAsignados = [];
   List<MesasAsignadasModel> listAsigandosToDelete = [];
+  List<MesasAsignadasModel> listDisponiblesToAdd = [];
   int lastNumMesa;
 
   @override
@@ -252,6 +253,10 @@ class _MesasPageState extends State<MesasPage> {
                     ? null
                     : () {
                         print('Asignando...');
+
+                        listDisponiblesToAdd.forEach((toAsigned) {
+                          print(toAsigned.toJson());
+                        });
                       },
                 child: Icon(Icons.arrow_forward),
               ),
@@ -381,7 +386,8 @@ class _MesasPageState extends State<MesasPage> {
     print('Entro metodo ever');
     listaInvitados.forEach((elementInv) => {
           listaMesasAsignadas.forEach((elementMesaAsig) {
-            if (elementInv.idInvitado != elementMesaAsig.idInvitado) {
+            if (elementInv.idAcompanante != elementMesaAsig.idAcompanante ||
+                elementInv.idInvitado != elementMesaAsig.idInvitado) {
               tempListaInvitados.add(elementInv);
             }
           })
@@ -399,60 +405,87 @@ class _MesasPageState extends State<MesasPage> {
       shrinkWrap: true,
       itemCount: listaInvitados.length,
       itemBuilder: (BuildContext context, int index) {
-        List<Widget> widgetAcompanantes = [];
+        MesasAsignadasModel asignadotemp = MesasAsignadasModel();
 
-        final acompanantes = listaInvitados[index].acompanantes;
+        asignadotemp.idAcompanante = listaInvitados[index].idAcompanante;
+        asignadotemp.idEvento = listaInvitados[index].idEvento;
+        asignadotemp.idInvitado = listaInvitados[index].idInvitado;
+        asignadotemp.alergias = listaInvitados[index].alergias;
+        asignadotemp.alimentacion = listaInvitados[index].alimentacion;
+        asignadotemp.asistenciaEspecial =
+            listaInvitados[index].asistenciaEspecial;
 
-        for (var acompanante in acompanantes) {
-          Widget widgetAcompanante = Padding(
-              padding: EdgeInsets.only(left: 15.0),
-              child: ListTile(
-                leading: Checkbox(
-                  value: false,
-                  onChanged: (value) {},
-                ),
-                title: Text(
-                  acompanante.nombre,
-                  style: TextStyle(color: Colors.black),
-                ),
-              ));
-
-          widgetAcompanantes.add(widgetAcompanante);
+        if (listaInvitados[index].idAcompanante != 0) {
+          asignadotemp.acompanante = listaInvitados[index].nombre;
+        } else {
+          asignadotemp.invitado = listaInvitados[index].nombre;
         }
+        // List<Widget> widgetAcompanantes = [];
 
-        return ExpansionTile(
-          initiallyExpanded: true,
-          leading: Checkbox(
-              value: checkedsInvitados[index],
-              onChanged: (value) {
-                setState(() {
-                  !checkedsInvitados[index]
-                      ? checkedsInvitados[index] = true
-                      : checkedsInvitados[index] = false;
-                });
+        // final acompanantes = listaInvitados[index].acompanantes;
 
-                _isEnable = 0;
-                checkedsInvitados.forEach((element) {
-                  if (element) {
-                    _isEnable++;
+        // for (var acompanante in acompanantes) {
+        //   Widget widgetAcompanante = Padding(
+        //       padding: EdgeInsets.only(left: 15.0),
+        //       child: ListTile(
+        //         leading: Checkbox(
+        //           value: false,
+        //           onChanged: (value) {},
+        //         ),
+        //         title: Text(
+        //           acompanante.nombre,
+        //           style: TextStyle(color: Colors.black),
+        //         ),
+        //       ));
+
+        //   widgetAcompanantes.add(widgetAcompanante);
+        // }
+
+        return ListTile(
+          leading: Padding(
+            padding: EdgeInsets.only(
+                left: (listaInvitados[index].idAcompanante != 0) ? 15 : 0),
+            child: Checkbox(
+                value: checkedsInvitados[index],
+                onChanged: (value) {
+                  setState(() {
+                    !checkedsInvitados[index]
+                        ? checkedsInvitados[index] = true
+                        : checkedsInvitados[index] = false;
+                  });
+
+                  _isEnable = 0;
+                  checkedsInvitados.forEach((element) {
+                    if (element) {
+                      _isEnable++;
+                    }
+                  });
+
+                  if (_isEnable == 0) {
+                    setState(() {
+                      _estado = false;
+                    });
+                  } else {
+                    setState(() {
+                      _estado = true;
+                    });
                   }
-                });
 
-                if (_isEnable == 0) {
-                  setState(() {
-                    _estado = false;
-                  });
-                } else {
-                  setState(() {
-                    _estado = true;
-                  });
-                }
-              }),
+                  if (checkedsInvitados[index]) {
+                    listDisponiblesToAdd.add(asignadotemp);
+                  } else if (!checkedsInvitados[index]) {
+                    print('==== Checked false ======');
+                    listDisponiblesToAdd
+                        .removeWhere((element) => element == asignadotemp);
+                  }
+                  // listDisponiblesToAdd
+                }),
+          ),
           title: Text(
             listaInvitados[index].nombre,
             style: TextStyle(color: Colors.black),
           ),
-          children: widgetAcompanantes,
+          // children: widgetAcompanantes,
         );
       },
     );
