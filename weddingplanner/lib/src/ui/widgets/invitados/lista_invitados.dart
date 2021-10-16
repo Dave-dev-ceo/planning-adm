@@ -572,7 +572,7 @@ class _DataSource extends DataTableSource {
       //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Image.asset('/whatsApp.png', height: 100.0, width: 150.0),
+          title: Image.asset('whatsApp.png', height: 100.0, width: 150.0),
           content: InkWell(
             child: Text(
               'Abrir WhatsApp',
