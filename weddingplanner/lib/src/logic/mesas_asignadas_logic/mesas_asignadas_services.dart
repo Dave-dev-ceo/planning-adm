@@ -54,4 +54,37 @@ class MesasAsignadasService {
 
     return _mesasAsignadas;
   }
+
+  Future<String> asignarPersonasMesas(
+      List<MesasAsignadasModel> listAsignarMesaModel) async {
+    String token = await _sharedPreferencesT.getToken();
+    int id_planner = await _sharedPreferencesT.getIdPlanner();
+    final url = confiC.url + confiC.puerto;
+
+    final data = {
+      'id_planner': id_planner,
+      'mesasAsignadas': listAsignarMesaModel.map((e) => e.toJson()).toList()
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final endpoint = 'wedding/EVENTOS/createMesasAsignadas';
+
+    final response = await http.post(Uri.parse(url + '/' + endpoint),
+        body: json.encode(data), headers: headers);
+
+    response.body;
+
+    if (response.statusCode == 200) {
+      await _sharedPreferencesT.setToken(json.decode(response.body)['token']);
+
+      return 'Ok';
+    } else {
+      return response.body;
+    }
+  }
 }

@@ -21,11 +21,13 @@ class _MesasPageState extends State<MesasPage> {
   int indexNavBar = 0;
   int _isEnable = 1;
   bool _estado = true;
-  List<MesasAsignadasModel> listaMesasAsignadas;
+  List<MesasAsignadasModel> listaMesasAsignadas = [];
   List<bool> checkedsInvitados = [];
   List<bool> checkedsAsignados = [];
   List<MesasAsignadasModel> listAsigandosToDelete = [];
   List<MesasAsignadasModel> listDisponiblesToAdd = [];
+  MesasAsignadasService asignarMesasService = MesasAsignadasService();
+  InvitadosMesasBloc invitadosBloc = InvitadosMesasBloc();
   int lastNumMesa;
 
   @override
@@ -195,6 +197,14 @@ class _MesasPageState extends State<MesasPage> {
 
   // ? Page Asiganer Mesas a Inivtados
 
+  _mostraMensaje(String msj, Color color) {
+    SnackBar snackBar = SnackBar(
+      content: Text(msj),
+      backgroundColor: color,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   Widget asignarInvitadosMesasPage() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -222,6 +232,9 @@ class _MesasPageState extends State<MesasPage> {
                     } else if (state is MostraListaInvitadosMesaState) {
                       if (state.listaInvitadoMesa.isNotEmpty ||
                           state.listaInvitadoMesa != null) {
+                        state.listaInvitadoMesa.forEach((element) {
+                          print(element.toJson());
+                        });
                         return Expanded(
                             child: buildListInvitadosConfirmador(
                                 state.listaInvitadoMesa));
@@ -251,12 +264,62 @@ class _MesasPageState extends State<MesasPage> {
               ElevatedButton(
                 onPressed: (!_estado)
                     ? null
-                    : () {
-                        print('Asignando...');
+                    : () async {
+                        try {
+                          int lastPosicion = 0;
+                          print('Antes de la validacion de la lista');
+                          print(listaMesasAsignadas.length);
+                          if (listaMesasAsignadas.length > 0) {
+                            print('Dentro de la validacion');
+                            final datosMesaAsginada = listaMesasAsignadas.where(
+                                (mesaAsignada) =>
+                                    mesaAsignada.idMesa ==
+                                    mesaModelData.idMesa);
 
-                        listDisponiblesToAdd.forEach((toAsigned) {
-                          print(toAsigned.toJson());
-                        });
+                            if (datosMesaAsginada.length > 0) {
+                              lastPosicion = datosMesaAsginada.last.posicion;
+                            }
+                          }
+
+                          if (mesaModelData == null ||
+                              listDisponiblesToAdd.isEmpty) {
+                            _mostraMensaje(
+                                'Selección una mesa y un invitado', Colors.red);
+                          } else {
+                            print(mesaModelData.dimension - lastPosicion);
+
+                            if (mesaModelData.dimension - lastPosicion <
+                                listDisponiblesToAdd.length) {
+                              _mostraMensaje(
+                                  'El número de invitados es mayor al numero de sillas',
+                                  Colors.red);
+                            } else {
+                              // Iteración de la posicion
+                              var conLastPosicion = lastPosicion;
+                              listDisponiblesToAdd.forEach((element) {
+                                element.posicion = ++conLastPosicion;
+                              });
+
+                              final data = await asignarMesasService
+                                  .asignarPersonasMesas(listDisponiblesToAdd);
+                              mesaModelData.dimension;
+                              if (data == 'Ok') {
+                                invitadosBloc.add(MostrarInvitadosMesasEvent());
+
+                                listaMesasAsignadas =
+                                    await mesasAsignadasService
+                                        .getMesasAsignadas();
+
+                                _mostraMensaje(
+                                    'Se agrego correctamente', Colors.green);
+                              } else {
+                                _mostraMensaje(data, Colors.red);
+                              }
+                            }
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
                       },
                 child: Icon(Icons.arrow_forward),
               ),
@@ -266,7 +329,6 @@ class _MesasPageState extends State<MesasPage> {
               ElevatedButton(
                   onPressed: () {
                     print('Quitando...');
-
                     listAsigandosToDelete.forEach((asginado) {
                       print(asginado.toJson());
                     });
@@ -382,19 +444,6 @@ class _MesasPageState extends State<MesasPage> {
 
   Widget buildListInvitadosConfirmador(
       List<InvitadosConfirmadosModel> listaInvitados) {
-    List<InvitadosConfirmadosModel> tempListaInvitados = [];
-    print('Entro metodo ever');
-    listaInvitados.forEach((elementInv) => {
-          listaMesasAsignadas.forEach((elementMesaAsig) {
-            if (elementInv.idAcompanante != elementMesaAsig.idAcompanante ||
-                elementInv.idInvitado != elementMesaAsig.idInvitado) {
-              tempListaInvitados.add(elementInv);
-            }
-          })
-        });
-
-    listaInvitados = tempListaInvitados;
-
     if (checkedsInvitados.isEmpty) {
       for (var i = 0; i < listaInvitados.length; i++) {
         bool checked = false;
@@ -407,13 +456,18 @@ class _MesasPageState extends State<MesasPage> {
       itemBuilder: (BuildContext context, int index) {
         MesasAsignadasModel asignadotemp = MesasAsignadasModel();
 
-        asignadotemp.idAcompanante = listaInvitados[index].idAcompanante;
+        if (listaInvitados[index].idAcompanante != 0) {
+          asignadotemp.idAcompanante = listaInvitados[index].idAcompanante;
+        }
         asignadotemp.idEvento = listaInvitados[index].idEvento;
         asignadotemp.idInvitado = listaInvitados[index].idInvitado;
         asignadotemp.alergias = listaInvitados[index].alergias;
         asignadotemp.alimentacion = listaInvitados[index].alimentacion;
         asignadotemp.asistenciaEspecial =
             listaInvitados[index].asistenciaEspecial;
+        if (mesaModelData != null) {
+          asignadotemp.idMesa = mesaModelData.idMesa;
+        }
 
         if (listaInvitados[index].idAcompanante != 0) {
           asignadotemp.acompanante = listaInvitados[index].nombre;
@@ -474,9 +528,9 @@ class _MesasPageState extends State<MesasPage> {
                   if (checkedsInvitados[index]) {
                     listDisponiblesToAdd.add(asignadotemp);
                   } else if (!checkedsInvitados[index]) {
-                    print('==== Checked false ======');
-                    listDisponiblesToAdd
-                        .removeWhere((element) => element == asignadotemp);
+                    listDisponiblesToAdd.removeWhere((element) =>
+                        element.idAcompanante == asignadotemp.idAcompanante &&
+                        element.idInvitado == asignadotemp.idInvitado);
                   }
                   // listDisponiblesToAdd
                 }),
@@ -534,8 +588,7 @@ class _MesasPageState extends State<MesasPage> {
                       checkedsAsignados[i] = value;
                     });
 
-                    if (checkedsAsignados[i]) {
-                      print(asignadotemp.posicion);
+                    if (checkedsAsignados[i] && mesaModelData != null) {
                       listAsigandosToDelete.add(asignadotemp);
                     } else if (!checkedsAsignados[i]) {
                       // ! Ever quitar elemento de la lista listAsigandosToDelete.
