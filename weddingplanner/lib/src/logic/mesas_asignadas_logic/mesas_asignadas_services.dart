@@ -77,11 +77,9 @@ class MesasAsignadasService {
     final response = await http.post(Uri.parse(url + '/' + endpoint),
         body: json.encode(data), headers: headers);
 
-    response.body;
-
     if (response.statusCode == 200) {
       await _sharedPreferencesT.setToken(json.decode(response.body)['token']);
-
+      mesasAsignadasSink(_mesasAsignadas);
       return 'Ok';
     } else {
       return response.body;

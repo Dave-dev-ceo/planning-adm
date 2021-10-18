@@ -1004,19 +1004,19 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                             ),
                             500.0,
                             100.0),
-                        formItemsDesign(
-                            Icons.tablet_rounded,
-                            Row(
-                              children: <Widget>[
-                                Text('Mesa'),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                _listaMesas(),
-                              ],
-                            ),
-                            500.0,
-                            100.0),
+                        // formItemsDesign(
+                        //     Icons.tablet_rounded,
+                        //     Row(
+                        //       children: <Widget>[
+                        //         Text('Mesa'),
+                        //         SizedBox(
+                        //           width: 15,
+                        //         ),
+                        //         _listaMesas(),
+                        //       ],
+                        //     ),
+                        //     500.0,
+                        //     100.0),
                       ],
                     ),
                     _base64qr != ''
