@@ -1,14 +1,18 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
 import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
-import 'package:weddingplanner/src/ui/contratos/new_contrato.dart';
+import 'package:weddingplanner/src/ui/widgets/expandable_fab/expandable_fab_widget.dart';
 
 class MesasPage extends StatefulWidget {
   @override
@@ -16,6 +20,12 @@ class MesasPage extends StatefulWidget {
 }
 
 class _MesasPageState extends State<MesasPage> {
+  // * Instacia del Screenshot Controller
+  ScreenshotController _screenshotController = ScreenshotController();
+
+  // * Se crea la variable donde se guardara
+  Uint8List capturedImage;
+
   final mesasAsignadasService = MesasAsignadasService();
   final asignarMesasService = MesasAsignadasService();
   InvitadosMesasBloc invitadosBloc;
@@ -54,32 +64,52 @@ class _MesasPageState extends State<MesasPage> {
     final listWidget = [resumenMesasPage(), asignarInvitadosMesasPage()];
     size = MediaQuery.of(context).size;
     return Scaffold(
-      bottomNavigationBar: _bottomNavigatorBarCustom(),
-      body: StreamBuilder(
-        stream: mesasAsignadasService.mesasAsignadasStream,
-        builder: (context, AsyncSnapshot<List<MesasAsignadasModel>> snapshot) {
-          if (snapshot.hasData) {
-            listaMesasAsignadas = snapshot.data;
-            return listWidget[indexNavBar];
-          } else {
-            listaMesasAsignadas = [];
-            return listWidget[indexNavBar];
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 3.0,
-        onPressed: () {
-          Navigator.of(context)
-              .pushNamed('/asignarMesas',
-                  arguments:
-                      (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
-              .then((value) => {
-                    lastNumMesa = value,
-                  });
-        },
-        child: Icon(Icons.add),
-      ),
+        bottomNavigationBar: _bottomNavigatorBarCustom(),
+        body: StreamBuilder(
+          stream: mesasAsignadasService.mesasAsignadasStream,
+          builder:
+              (context, AsyncSnapshot<List<MesasAsignadasModel>> snapshot) {
+            if (snapshot.hasData) {
+              listaMesasAsignadas = snapshot.data;
+              return listWidget[indexNavBar];
+            } else {
+              listaMesasAsignadas = [];
+              return listWidget[indexNavBar];
+            }
+          },
+        ),
+        floatingActionButton: _expandableButtonOptions());
+  }
+
+  Widget _expandableButtonOptions() {
+    return ExpandableFab(
+      distance: 100.0,
+      initialOpen: false,
+      children: [
+        ActionButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed('/asignarMesas',
+                      arguments:
+                          (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+                  .then((value) => {
+                        lastNumMesa = value,
+                      });
+            }),
+        ActionButton(
+          icon: Icon(Icons.download),
+          onPressed: () {
+            _screenshotController
+                .capture(delay: Duration(milliseconds: 10))
+                .then((capturedImage) async {
+              ShowCapturedWidget(context, capturedImage);
+            }).catchError((onError) {
+              print(onError);
+            });
+          },
+        )
+      ],
     );
   }
 
@@ -202,7 +232,8 @@ class _MesasPageState extends State<MesasPage> {
                 )),
           );
         });
-    return gridOfListaMesas;
+    return Screenshot(
+        controller: _screenshotController, child: gridOfListaMesas);
   }
 
   // ? Page Asignar Mesas a Invitados
@@ -357,7 +388,6 @@ class _MesasPageState extends State<MesasPage> {
                     for (var i = 0; i < listAsigandosToDelete.length; i++) {
                       if (listPosicionDisponible
                           .contains(listAsigandosToDelete[i].posicion)) {
-                        print('contiene el valor');
                       } else {
                         listPosicionDisponible
                             .add(listAsigandosToDelete[i].posicion);
@@ -396,12 +426,14 @@ class _MesasPageState extends State<MesasPage> {
     }
 
     if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
-      _mostraMensaje('Selección una mesa y un invitado', Colors.red);
+      _mostraMensaje(
+          'Seleccione la mesa y los invitados a asignar', Colors.red);
     } else {
       if (listToAsignarForAdd.length >
           (mesaModelData.dimension - listTemp.length)) {
         _mostraMensaje(
-            'El número de invitados es mayor al numero de sillas', Colors.red);
+            'El número de invitados es mayor al numero de sillas dsiponibles',
+            Colors.red);
       } else {
         for (var i = 0; i < listToAsignarForAdd.length; i++) {
           listToAsignarForAdd[i].posicion = listPosicionDisponible[i];
@@ -622,4 +654,31 @@ class _MesasPageState extends State<MesasPage> {
       ),
     );
   }
+}
+
+Future<dynamic> ShowCapturedWidget(
+    BuildContext context, Uint8List capturedImage) async {
+  final directory = (await getApplicationDocumentsDirectory())
+      .path; //from path_provide package
+  String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+
+  return showDialog(
+      useSafeArea: true,
+      context: context,
+      builder: (context) => SingleChildScrollView(
+            child: Column(children: [
+              Text("Captured widget screenshot"),
+              SizedBox(
+                height: 40,
+              ),
+              Center(
+                  child: capturedImage != null
+                      ? Image.memory(
+                          capturedImage,
+                          width: 1100,
+                          height: 900,
+                        )
+                      : Container()),
+            ]),
+          ));
 }
