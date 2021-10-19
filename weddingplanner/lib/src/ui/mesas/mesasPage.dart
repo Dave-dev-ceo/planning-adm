@@ -354,11 +354,14 @@ class _MesasPageState extends State<MesasPage> {
                     checkedsAsignados = [];
                     checkedsInvitados = [];
 
-                    listPosicionDisponible.clear();
-
                     for (var i = 0; i < listAsigandosToDelete.length; i++) {
-                      listPosicionDisponible
-                          .add(listAsigandosToDelete[i].posicion);
+                      if (listPosicionDisponible
+                          .contains(listAsigandosToDelete[i].posicion)) {
+                        print('contiene el valor');
+                      } else {
+                        listPosicionDisponible
+                            .add(listAsigandosToDelete[i].posicion);
+                      }
                     }
 
                     listPosicionDisponible.sort();
