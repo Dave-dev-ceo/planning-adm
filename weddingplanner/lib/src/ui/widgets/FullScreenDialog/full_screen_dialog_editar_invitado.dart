@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 import 'package:weddingplanner/src/blocs/blocs.dart';
+import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:weddingplanner/src/models/item_model-acompanante.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
@@ -1320,6 +1322,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     bool response = await api.updateInvitado(json, context);
 
     if (response) {
+      BlocProvider.of<InvitadosMesasBloc>(context)
+          .add(MostrarInvitadosMesasEvent());
       Navigator.of(context).pop();
 
       final snackBar = SnackBar(
