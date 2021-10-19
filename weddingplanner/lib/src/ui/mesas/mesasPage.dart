@@ -75,7 +75,6 @@ class _MesasPageState extends State<MesasPage> {
                   arguments:
                       (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
               .then((value) => {
-                    print(value),
                     lastNumMesa = value,
                   });
         },
@@ -352,23 +351,27 @@ class _MesasPageState extends State<MesasPage> {
               .getMesasAsignadas()
               .then((value) => setState(() {
                     listaMesasAsignadas = value;
+                    checkedsAsignados = [];
+                    checkedsInvitados = [];
+
+                    listPosicionDisponible.clear();
+
+                    for (var i = 0; i < listAsigandosToDelete.length; i++) {
+                      listPosicionDisponible
+                          .add(listAsigandosToDelete[i].posicion);
+                    }
+
+                    listPosicionDisponible.sort();
+
+                    listAsigandosToDelete.clear();
                   }));
-
-          setState(() {
-            checkedsAsignados = [];
-            checkedsInvitados = [];
-
-            listAsigandosToDelete.clear();
-          });
         } else {
-          setState(() {});
           _mostraMensaje('Ocurrio un error', Colors.red);
         }
       }
     } else {
       _mostraMensaje('Seleccione un mesa', Colors.red);
     }
-    setState(() {});
   }
 
   asignarMesas() async {
@@ -380,11 +383,6 @@ class _MesasPageState extends State<MesasPage> {
       datosMesaAsginada.forEach((element) {
         listPosicionDisponible.remove(element.posicion);
       });
-      print('disponible');
-
-      listPosicionDisponible.forEach((element) {
-        print(element);
-      });
 
       if (datosMesaAsginada.length > 0) {
         lastPosicion = datosMesaAsginada.last.posicion;
@@ -392,28 +390,23 @@ class _MesasPageState extends State<MesasPage> {
           listTemp.add(asignado.posicion);
         });
       }
-
-      print('Ocupados');
-      listTemp.forEach((element) {
-        print(element);
-      });
     }
-    print(listToAsignarForAdd.length);
-
-    print(listPosicionDisponible.length <=
-        (mesaModelData.dimension - listTemp.length));
 
     if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
       _mostraMensaje('Selección una mesa y un invitado', Colors.red);
     } else {
-      if (mesaModelData.dimension - lastPosicion < listToAsignarForAdd.length) {
+      if (listToAsignarForAdd.length >
+          (mesaModelData.dimension - listTemp.length)) {
         _mostraMensaje(
             'El número de invitados es mayor al numero de sillas', Colors.red);
       } else {
-        var conLastPosicion = lastPosicion;
-        listToAsignarForAdd.forEach((element) {
-          element.posicion = ++conLastPosicion;
-        });
+        for (var i = 0; i < listToAsignarForAdd.length; i++) {
+          listToAsignarForAdd[i].posicion = listPosicionDisponible[i];
+        }
+
+        listPosicionDisponible.forEach((element) {});
+
+        listToAsignarForAdd.forEach((asignado) {});
 
         final data =
             await asignarMesasService.asignarPersonasMesas(listToAsignarForAdd);
@@ -423,6 +416,9 @@ class _MesasPageState extends State<MesasPage> {
 
           mesasAsignadasService.getMesasAsignadas().then((value) {
             setState(() {
+              listAsigandosToDelete.forEach((element) {
+                listPosicionDisponible.remove(element.posicion);
+              });
               listToAsignarForAdd.clear();
               listaMesasAsignadas = value;
               checkedsInvitados = [];
@@ -430,7 +426,9 @@ class _MesasPageState extends State<MesasPage> {
           });
 
           _mostraMensaje('Se agrego correctamente', Colors.green);
-          setState(() {});
+          setState(() {
+            listToAsignarForAdd.clear();
+          });
         } else {
           _mostraMensaje(data, Colors.red);
         }
@@ -461,6 +459,10 @@ class _MesasPageState extends State<MesasPage> {
               .map((mesa) =>
                   DropdownMenuItem(value: mesa, child: Text(mesa.descripcion)))
               .toList(),
+          value: listaDeMesas.firstWhere(
+            (element) => element.idMesa == mesaModelData?.idMesa,
+            orElse: () => null,
+          ),
           onChanged: (value) {
             setState(() {
               listPosicionDisponible.clear();
