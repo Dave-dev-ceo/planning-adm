@@ -86,10 +86,13 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
     final mesaBloc = BlocProvider.of<MesasBloc>(context);
 
     await mesaBloc.add(CreateMesasEvent(listaMesas));
+
     mesaBloc.stream.listen((state) {
       if (state is CreatedMesasState) {
         if (state.response == 'Ok') {
-          Navigator.of(context).pop();
+          BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+          Navigator.of(context)
+              .pop(_lastNumMesas + (int.parse(numeroDeMesas.text) - 1));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(state.response),
@@ -289,7 +292,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
         MesaModel mesa = MesaModel(
           descripcion: 'Mesa ${_lastNumMesas + i}',
           idTipoDeMesa: idTipoMesa,
-          numDeMesa: _lastNumMesas + i,
+          numDeMesa: _lastNumMesas + 1,
           dimension: numSilla,
           idEvento: idEvento,
         );

@@ -8,6 +8,7 @@ import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_s
 import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
+import 'package:weddingplanner/src/ui/contratos/new_contrato.dart';
 
 class MesasPage extends StatefulWidget {
   @override
@@ -16,18 +17,19 @@ class MesasPage extends StatefulWidget {
 
 class _MesasPageState extends State<MesasPage> {
   final mesasAsignadasService = MesasAsignadasService();
-  MesaModel mesaModelData;
-  Size size;
-  int indexNavBar = 0;
-  int _isEnable = 1;
-  bool _estado = true;
+  final asignarMesasService = MesasAsignadasService();
+  InvitadosMesasBloc invitadosBloc;
   List<MesasAsignadasModel> listaMesasAsignadas = [];
-  List<bool> checkedsInvitados = [];
-  List<bool> checkedsAsignados = [];
   List<MesasAsignadasModel> listAsigandosToDelete = [];
   List<MesasAsignadasModel> listToAsignarForAdd = [];
-  MesasAsignadasService asignarMesasService = MesasAsignadasService();
-  InvitadosMesasBloc invitadosBloc;
+  List<bool> checkedsInvitados = [];
+  List<bool> checkedsAsignados = [];
+  List<int> listPosicionDisponible = [];
+  MesaModel mesaModelData;
+  Size size;
+  bool isEdit = true;
+  bool _isVisible = false;
+  int indexNavBar = 0;
   int lastNumMesa;
 
   @override
@@ -67,8 +69,14 @@ class _MesasPageState extends State<MesasPage> {
       floatingActionButton: FloatingActionButton(
         elevation: 3.0,
         onPressed: () {
-          Navigator.of(context).pushNamed('/asignarMesas',
-              arguments: (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa);
+          Navigator.of(context)
+              .pushNamed('/asignarMesas',
+                  arguments:
+                      (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+              .then((value) => {
+                    print(value),
+                    lastNumMesa = value,
+                  });
         },
         child: Icon(Icons.add),
       ),
@@ -197,7 +205,7 @@ class _MesasPageState extends State<MesasPage> {
     return gridOfListaMesas;
   }
 
-  // ? Page Asiganer Mesas a Inivtados
+  // ? Page Asignar Mesas a Invitados
 
   _mostraMensaje(String msj, Color color) {
     SnackBar snackBar = SnackBar(
@@ -261,19 +269,14 @@ class _MesasPageState extends State<MesasPage> {
           Column(
             children: [
               ElevatedButton(
-                onPressed: (!_estado) ? null : asignarMesas,
+                onPressed: asignarMesas,
                 child: Icon(Icons.arrow_forward),
               ),
               SizedBox(
                 height: 10.0,
               ),
               ElevatedButton(
-                  onPressed: () async {
-                    if (listAsigandosToDelete.length < 0) {
-                      _mostraMensaje('Seleccione un alguna opcioón de la lista',
-                          Colors.red);
-                    } else {}
-                  },
+                  onPressed: _deleteAsignadoToMesa,
                   child: Icon(Icons.arrow_back))
             ],
           ),
@@ -328,83 +331,111 @@ class _MesasPageState extends State<MesasPage> {
     );
   }
 
-  asignarMesas() async {
-    try {
-      int lastPosicion = 0;
-      print('Antes de la validacion de la lista');
-      print(listaMesasAsignadas.length);
-      if (listaMesasAsignadas.length > 0) {
-        print('Dentro de la validacion');
-        final datosMesaAsginada = listaMesasAsignadas.where(
-            (mesaAsignada) => mesaAsignada.idMesa == mesaModelData.idMesa);
+  _deleteAsignadoToMesa() async {
+    if (mesaModelData != null) {
+      if (listAsigandosToDelete.isEmpty) {
+        _mostraMensaje(
+          'Seleccione alguna opcion de la lista',
+          Colors.red,
+        );
+      } else {
+        final data = await mesasAsignadasService
+            .deleteAsignadoFromMesa(listAsigandosToDelete);
+        if (data == 'Ok') {
+          _mostraMensaje('Se agrego correctamente', Colors.green);
+          await invitadosBloc.add(MostrarInvitadosMesasEvent());
 
-        if (datosMesaAsginada.length > 0) {
-          lastPosicion = datosMesaAsginada.last.posicion;
+          await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+
+          mesasAsignadasService
+              .getMesasAsignadas()
+              .then((value) => setState(() {
+                    listaMesasAsignadas = value;
+                  }));
+
+          setState(() {
+            checkedsAsignados = [];
+            checkedsInvitados = [];
+
+            listAsigandosToDelete.clear();
+          });
+        } else {
+          setState(() {});
+          _mostraMensaje('Ocurrio un error', Colors.red);
         }
       }
+    } else {
+      _mostraMensaje('Seleccione un mesa', Colors.red);
+    }
+    setState(() {});
+  }
 
-      if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
-        _mostraMensaje('Selección una mesa y un invitado', Colors.red);
+  asignarMesas() async {
+    int lastPosicion = 0;
+    List<int> listTemp = [];
+    if (listaMesasAsignadas.length > 0 && mesaModelData != null) {
+      final datosMesaAsginada = listaMesasAsignadas
+          .where((mesaAsignada) => mesaAsignada.idMesa == mesaModelData.idMesa);
+      datosMesaAsginada.forEach((element) {
+        listPosicionDisponible.remove(element.posicion);
+      });
+      print('disponible');
+
+      listPosicionDisponible.forEach((element) {
+        print(element);
+      });
+
+      if (datosMesaAsginada.length > 0) {
+        lastPosicion = datosMesaAsginada.last.posicion;
+        datosMesaAsginada.forEach((asignado) {
+          listTemp.add(asignado.posicion);
+        });
+      }
+
+      print('Ocupados');
+      listTemp.forEach((element) {
+        print(element);
+      });
+    }
+    print(listToAsignarForAdd.length);
+
+    print(listPosicionDisponible.length <=
+        (mesaModelData.dimension - listTemp.length));
+
+    if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
+      _mostraMensaje('Selección una mesa y un invitado', Colors.red);
+    } else {
+      if (mesaModelData.dimension - lastPosicion < listToAsignarForAdd.length) {
+        _mostraMensaje(
+            'El número de invitados es mayor al numero de sillas', Colors.red);
       } else {
-        print(mesaModelData.dimension - lastPosicion);
+        var conLastPosicion = lastPosicion;
+        listToAsignarForAdd.forEach((element) {
+          element.posicion = ++conLastPosicion;
+        });
 
-        if (mesaModelData.dimension - lastPosicion <
-            listToAsignarForAdd.length) {
-          _mostraMensaje('El número de invitados es mayor al numero de sillas',
-              Colors.red);
-        } else {
-          // Iteración de la posicion
-          var conLastPosicion = lastPosicion;
-          listToAsignarForAdd.forEach((element) {
-            element.posicion = ++conLastPosicion;
+        final data =
+            await asignarMesasService.asignarPersonasMesas(listToAsignarForAdd);
+        mesaModelData.dimension;
+        if (data == 'Ok') {
+          await invitadosBloc.add(MostrarInvitadosMesasEvent());
+
+          mesasAsignadasService.getMesasAsignadas().then((value) {
+            setState(() {
+              listToAsignarForAdd.clear();
+              listaMesasAsignadas = value;
+              checkedsInvitados = [];
+            });
           });
 
-          final data = await asignarMesasService
-              .asignarPersonasMesas(listToAsignarForAdd);
-          mesaModelData.dimension;
-          if (data == 'Ok') {
-            await invitadosBloc.add(MostrarInvitadosMesasEvent());
-
-            mesasAsignadasService.getMesasAsignadas().then((value) {
-              setState(() {
-                listaMesasAsignadas = value;
-                checkedsInvitados = [];
-                listToAsignarForAdd.clear();
-              });
-            });
-
-            _mostraMensaje('Se agrego correctamente', Colors.green);
-            setState(() {});
-          } else {
-            _mostraMensaje(data, Colors.red);
-          }
+          _mostraMensaje('Se agrego correctamente', Colors.green);
+          setState(() {});
+        } else {
+          _mostraMensaje(data, Colors.red);
         }
       }
-    } catch (e) {
-      print(e);
     }
   }
-  // Widget _buildListInvitadosConfirmador(
-  //     List<InvitadosConfirmadosModel> listaInvitados) {
-  //   if (checkedsInvitados.isEmpty) {
-  //     for (var i = 0; i < listaInvitados.length; i++) {
-  //       bool checked = false;
-  //       checkedsInvitados.add(checked);
-  //     }
-  //   }
-  //   return ListView.builder(
-  //       shrinkWrap: true,
-  //       itemCount: listaInvitados.length,
-  //       itemBuilder: (BuildContext context, int index) {
-  //         return ParentChildCheckbox(
-  //             parent: Text(
-  //               listaInvitados[index].nombre,
-  //               key: Key(listaInvitados[index].idInvitado.toString()),
-  //             ),
-  //             children:
-  //                 _buildListAcompanantes(listaInvitados[index].acompanantes));
-  //       });
-  // }
 
   List<Text> _buildListAcompanantes(
       List<AcompanantesConfirmadosModel> listAcompanante) {
@@ -431,7 +462,15 @@ class _MesasPageState extends State<MesasPage> {
               .toList(),
           onChanged: (value) {
             setState(() {
+              listPosicionDisponible.clear();
+              checkedsAsignados = [];
               mesaModelData = value;
+              mesaModelData.numDeMesa;
+              listPosicionDisponible =
+                  List.generate(mesaModelData.dimension, (index) => index + 1);
+
+              isEdit = false;
+              _isVisible = true;
             });
           },
         ));
@@ -471,66 +510,36 @@ class _MesasPageState extends State<MesasPage> {
         } else {
           asignadotemp.invitado = listaInvitados[index].nombre;
         }
-        // List<Widget> widgetAcompanantes = [];
-
-        // final acompanantes = listaInvitados[index].acompanantes;
-
-        // for (var acompanante in acompanantes) {
-        //   Widget widgetAcompanante = Padding(
-        //       padding: EdgeInsets.only(left: 15.0),
-        //       child: ListTile(
-        //         leading: Checkbox(
-        //           value: false,
-        //           onChanged: (value) {},
-        //         ),
-        //         title: Text(
-        //           acompanante.nombre,
-        //           style: TextStyle(color: Colors.black),
-        //         ),
-        //       ));
-
-        //   widgetAcompanantes.add(widgetAcompanante);
-        // }
 
         return ListTile(
           leading: Padding(
             padding: EdgeInsets.only(
                 left: (listaInvitados[index].idAcompanante != 0) ? 15 : 0),
-            child: Checkbox(
-                value: checkedsInvitados[index],
-                onChanged: (value) {
-                  setState(() {
-                    !checkedsInvitados[index]
-                        ? checkedsInvitados[index] = true
-                        : checkedsInvitados[index] = false;
-                  });
+            child: AbsorbPointer(
+              absorbing: isEdit,
+              child: Visibility(
+                visible: _isVisible,
+                child: Checkbox(
+                    value: checkedsInvitados[index],
+                    onChanged: (value) {
+                      setState(() {
+                        !checkedsInvitados[index]
+                            ? checkedsInvitados[index] = true
+                            : checkedsInvitados[index] = false;
+                      });
 
-                  _isEnable = 0;
-                  checkedsInvitados.forEach((element) {
-                    if (element) {
-                      _isEnable++;
-                    }
-                  });
-
-                  if (_isEnable == 0) {
-                    setState(() {
-                      _estado = false;
-                    });
-                  } else {
-                    setState(() {
-                      _estado = true;
-                    });
-                  }
-
-                  if (checkedsInvitados[index]) {
-                    listToAsignarForAdd.add(asignadotemp);
-                  } else if (!checkedsInvitados[index]) {
-                    listToAsignarForAdd.removeWhere((element) =>
-                        element.idAcompanante == asignadotemp.idAcompanante &&
-                        element.idInvitado == asignadotemp.idInvitado);
-                  }
-                  // listDisponiblesToAdd
-                }),
+                      if (checkedsInvitados[index]) {
+                        listToAsignarForAdd.add(asignadotemp);
+                      } else if (!checkedsInvitados[index]) {
+                        listToAsignarForAdd.removeWhere((element) =>
+                            element.idAcompanante ==
+                                asignadotemp.idAcompanante &&
+                            element.idInvitado == asignadotemp.idInvitado);
+                      }
+                      // listDisponiblesToAdd
+                    }),
+              ),
+            ),
           ),
           title: Text(
             listaInvitados[index].nombre,
@@ -543,7 +552,6 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget formTableByMesa() {
-    print("AQUI");
     final listaAsignados =
         listaMesasAsignadas.where((m) => m.idMesa == mesaModelData.idMesa);
     return Form(
@@ -577,23 +585,27 @@ class _MesasPageState extends State<MesasPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
-                leading: Checkbox(
-                  value: checkedsAsignados[i],
-                  onChanged: (value) {
-                    setState(() {
-                      checkedsAsignados[i] = value;
-                    });
+                leading: temp == ''
+                    ? null
+                    : Checkbox(
+                        value: checkedsAsignados[i],
+                        onChanged: (value) {
+                          setState(() {
+                            checkedsAsignados[i] = value;
+                          });
 
-                    if (checkedsAsignados[i] && mesaModelData != null) {
-                      listAsigandosToDelete.add(asignadotemp);
-                    } else if (!checkedsAsignados[i]) {
-                      // ! Ever quitar elemento de la lista listAsigandosToDelete.
-                      listAsigandosToDelete.remove(asignadotemp);
-                    }
-                  },
+                          if (checkedsAsignados[i] && mesaModelData != null) {
+                            listAsigandosToDelete.add(asignadotemp);
+                          } else if (!checkedsAsignados[i]) {
+                            listAsigandosToDelete.remove(asignadotemp);
+                          }
+                        },
+                      ),
+                title: Padding(
+                  padding: EdgeInsets.only(left: temp == '' ? 14 : 0),
+                  child: Text(temp),
                 ),
-                title: Text('Silla ${i + 1}:'),
-                subtitle: Text(temp),
+                subtitle: Text('Silla ${i + 1}:'),
               ),
             ),
           );
@@ -601,64 +613,4 @@ class _MesasPageState extends State<MesasPage> {
       ),
     );
   }
-
-  // Widget _buildTableMesasAsignadas(List<MesasModel> listaMesas) {
-  //   return Align(
-  //     alignment: Alignment.topCenter,
-  //     child: ConstrainedBox(
-  //       constraints: BoxConstraints(
-  //         maxWidth: size.width * 0.6,
-  //       ),
-  //       child: Card(
-  //         child: ListView.builder(
-  //             shrinkWrap: true,
-  //             itemCount: listaMesas.length,
-  //             itemBuilder: (BuildContext context, int i) {
-  //               List<Asignados> asignados = listaMesas[i].asignados;
-
-  //               List<Widget> listWidgetAsignados = [];
-
-  //               for (var asignado in asignados) {
-  //                 Widget asignadoWidgetTemp = Padding(
-  //                   padding: const EdgeInsets.all(10.0),
-  //                   child: ListTile(
-  //                     title: Text(
-  //                       '${asignado.posicion}: ${asignado.asignado}',
-  //                       textAlign: TextAlign.left,
-  //                     ),
-  //                     trailing: Row(
-  //                       mainAxisSize: MainAxisSize.min,
-  //                       children: [
-  //                         IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-  //                         IconButton(onPressed: () {}, icon: Icon(Icons.delete))
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 );
-
-  //                 listWidgetAsignados.add(asignadoWidgetTemp);
-  //               }
-
-  //               return ExpansionTile(
-  //                 title: Padding(
-  //                   padding: const EdgeInsets.symmetric(
-  //                       horizontal: 5.0, vertical: 10.0),
-  //                   child: Center(
-  //                     child: Text(
-  //                       '${listaMesas[i].nombre}',
-  //                       style: TextStyle(
-  //                         fontSize: 20,
-  //                         color: Colors.black,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 children: listWidgetAsignados,
-  //               );
-  //             }),
-  //       ),
-  //     ),
-  //   );
-  // }
-
 }

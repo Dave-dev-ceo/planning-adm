@@ -55,6 +55,39 @@ class MesasAsignadasService {
     return _mesasAsignadas;
   }
 
+  Future<String> deleteAsignadoFromMesa(
+      List<MesasAsignadasModel> asignadosToDelete) async {
+    String token = await _sharedPreferencesT.getToken();
+    int id_planner = await _sharedPreferencesT.getIdPlanner();
+    final url = confiC.url + confiC.puerto;
+
+    final data = {
+      'id_planner': id_planner,
+      'asignadosToDelete':
+          asignadosToDelete.map((e) => e.idMesaAsignada).toList(),
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final endpoint = 'wedding/EVENTOS/deleteAsignadosOnMesas';
+
+    final response = await http.post(Uri.parse(url + '/' + endpoint),
+        body: json.encode(data), headers: headers);
+    print('Entra Aqui');
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      print('Entra aqui');
+      return 'Ok';
+    } else {
+      return 'Ocurrio un error';
+    }
+  }
+
   Future<String> asignarPersonasMesas(
       List<MesasAsignadasModel> listAsignarMesaModel) async {
     String token = await _sharedPreferencesT.getToken();
@@ -82,7 +115,7 @@ class MesasAsignadasService {
       mesasAsignadasSink(_mesasAsignadas);
       return 'Ok';
     } else {
-      return response.body;
+      return 'Ocurrio un error';
     }
   }
 }
