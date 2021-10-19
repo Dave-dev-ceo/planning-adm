@@ -44,7 +44,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.4.0
   transparent_image: ^2.0.0
   qr_code_scanner: ^0.5.1
-  path_provider: ^2.0.2
+  path_provider: ^2.0.5
   #fab_circular_menu: ^1.0.2
   flutter_speed_dial: ^4.2.0
   html_editor_enhanced: ^2.2.0
@@ -62,6 +62,7 @@ dependencies:
   mime_type: ^1.0.0
   # no quitar - sin esto falla
   flutter_colorpicker: ^0.5.0
+  screenshot: ^1.2.3
 
 dev_dependencies:
   flutter_test:
