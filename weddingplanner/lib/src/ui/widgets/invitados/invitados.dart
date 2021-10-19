@@ -260,7 +260,7 @@ class _InvitadosState extends State<Invitados> {
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
         tabs.add(
-            TabItem(titulo: 'Contratos', icono: Icons.description_outlined));
+            TabItem(titulo: 'Documentos', icono: Icons.description_outlined));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
