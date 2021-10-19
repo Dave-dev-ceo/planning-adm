@@ -475,6 +475,9 @@ class _MesasPageState extends State<MesasPage> {
               listPosicionDisponible =
                   List.generate(mesaModelData.dimension, (index) => index + 1);
 
+              checkedsInvitados = [];
+              listToAsignarForAdd.clear();
+
               isEdit = false;
               _isVisible = true;
             });
