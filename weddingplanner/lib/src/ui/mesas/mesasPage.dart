@@ -50,6 +50,7 @@ class _MesasPageState extends State<MesasPage> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
     final listWidget = [resumenMesasPage(), asignarInvitadosMesasPage()];
     size = MediaQuery.of(context).size;
     return Scaffold(

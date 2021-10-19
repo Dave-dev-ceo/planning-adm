@@ -115,6 +115,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   }
 
   Widget _listaAcompanantes() {
+    setState(() {});
     blocInvitado.fetchAllAcompanante(idInvitado, context);
     return StreamBuilder(
       stream: blocInvitado.allAcompanante,

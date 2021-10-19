@@ -4,12 +4,14 @@ import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
 import 'package:weddingplanner/src/blocs/blocs.dart';
+import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
@@ -286,7 +288,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
       heroTag: 'Opciones',
       backgroundColor: Colors.black,
       foregroundColor: Colors.black,
-      elevation: 8.0,
+      elevation: 12.0,
       shape: CircleBorder(),
 
       // orientation: SpeedDialOrientation.Up,
@@ -857,6 +859,8 @@ class _DataSource extends DataTableSource {
               child: Text('Confirmar'),
               onPressed: () async {
                 await _updateEstatus(idInvitado);
+                BlocProvider.of<InvitadosMesasBloc>(context)
+                    .add(MostrarInvitadosMesasEvent());
                 Navigator.of(context).pop();
               },
             ),
