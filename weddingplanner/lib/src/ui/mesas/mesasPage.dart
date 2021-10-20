@@ -1,11 +1,17 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:screenshot/screenshot.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
@@ -26,6 +32,10 @@ class _MesasPageState extends State<MesasPage> {
   // * Se crea la variable donde se guardara
   Uint8List capturedImage;
 
+  GlobalKey previewContainer = new GlobalKey();
+
+  Image _imageScreen;
+
   final mesasAsignadasService = MesasAsignadasService();
   final asignarMesasService = MesasAsignadasService();
   InvitadosMesasBloc invitadosBloc;
@@ -35,7 +45,9 @@ class _MesasPageState extends State<MesasPage> {
   List<bool> checkedsInvitados = [];
   List<bool> checkedsAsignados = [];
   List<int> listPosicionDisponible = [];
+  List<MesaModel> listaMesaFromDB = [];
   MesaModel mesaModelData;
+
   Size size;
   bool isEdit = true;
   bool _isVisible = false;
@@ -78,7 +90,8 @@ class _MesasPageState extends State<MesasPage> {
             }
           },
         ),
-        floatingActionButton: _expandableButtonOptions());
+        floatingActionButton:
+            indexNavBar == 0 ? _expandableButtonOptions() : _buttonAddMesas());
   }
 
   Widget _expandableButtonOptions() {
@@ -86,31 +99,94 @@ class _MesasPageState extends State<MesasPage> {
       distance: 100.0,
       initialOpen: false,
       children: [
-        ActionButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamed('/asignarMesas',
-                      arguments:
-                          (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
-                  .then((value) => {
-                        lastNumMesa = value,
-                      });
-            }),
+        _buttonAddMesas(),
         ActionButton(
           icon: Icon(Icons.download),
-          onPressed: () {
-            _screenshotController
-                .capture(delay: Duration(milliseconds: 10))
-                .then((capturedImage) async {
-              ShowCapturedWidget(context, capturedImage);
-            }).catchError((onError) {
-              print(onError);
-            });
+          onPressed: () async {
+            if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
+              final file = await _createPdfToMesa();
+              _showDialogPdf(file);
+            }
           },
         )
       ],
     );
+  }
+
+  FloatingActionButton _buttonAddMesas() {
+    return FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamed('/asignarMesas',
+                  arguments:
+                      (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+              .then((value) => {
+                    lastNumMesa = value,
+                  });
+        });
+  }
+
+  Future<Uint8List> _createPdfToMesa() async {
+    final pdf = pw.Document();
+    List<pw.Widget> listaGridChild = [];
+    List<pw.Widget> listaView = [];
+    List<pw.Widget> childrenRow = [];
+
+    for (int index = 0; index < listaMesaFromDB.length; index++) {
+      listaView = [];
+      final listaAsignados = listaMesasAsignadas
+          .where((m) => m.idMesa == listaMesaFromDB[index].idMesa)
+          .toList();
+      for (var i = 0; i < listaAsignados.length; i++) {
+        String temp = '';
+        final asigando = listaAsignados[i];
+        asigando.idAcompanante != 0
+            ? temp = asigando.acompanante
+            : temp = asigando.invitado;
+
+        pw.Widget listViewChild =
+            pw.Text(temp, style: pw.TextStyle(fontSize: 10.0));
+
+        listaView.add(listViewChild);
+      }
+
+      pw.Widget gridChild = pw.Container(
+        decoration: pw.BoxDecoration(boxShadow: [], border: pw.Border.all()),
+        padding: pw.EdgeInsets.all(8.0),
+        child: pw.Column(
+          children: [
+            pw.Center(
+              child: pw.Text(
+                listaMesaFromDB[index].descripcion,
+                style: pw.TextStyle(fontSize: 10),
+              ),
+            ),
+            pw.SizedBox(
+              height: 10.0,
+            ),
+            for (var item in listaView) item
+          ],
+        ),
+      );
+      listaGridChild.add(gridChild);
+    }
+    pdf.addPage(
+      pw.MultiPage(
+        build: (pw.Context context) => [
+          pw.GridView(
+            crossAxisCount: 3,
+            childAspectRatio: 1.0,
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+            direction: pw.Axis.vertical,
+            children: listaGridChild,
+          )
+        ],
+      ),
+    );
+
+    return await pdf.save();
   }
 
   BottomNavigationBar _bottomNavigatorBarCustom() {
@@ -138,6 +214,7 @@ class _MesasPageState extends State<MesasPage> {
   // ? Resumen de Mesas Asignadas
 
   Widget resumenMesasPage() {
+    setState(() {});
     Widget WidgetBlocMesas = BlocBuilder<MesasBloc, MesasState>(
       builder: (context, state) {
         if (state is LoadingMesasState) {
@@ -147,6 +224,7 @@ class _MesasPageState extends State<MesasPage> {
         } else if (state is MostrarMesasState) {
           if (state.listaMesas.isNotEmpty && state.listaMesas != null) {
             lastNumMesa = state.listaMesas.last.numDeMesa;
+            listaMesaFromDB = state.listaMesas;
             return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: _gridMesasWidget(state.listaMesas));
@@ -181,59 +259,73 @@ class _MesasPageState extends State<MesasPage> {
 
   Widget _gridMesasWidget(List<MesaModel> listaMesa) {
     Widget gridOfListaMesas = GridView.builder(
-        itemCount: listaMesa.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1.5,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          final listaAsignados = listaMesasAsignadas
-              .where((m) => m.idMesa == listaMesa[index].idMesa);
-          return ConstrainedBox(
-            constraints: BoxConstraints(),
-            child: Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                margin: EdgeInsets.all(6.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Center(child: Text(listaMesa[index].descripcion)),
-                      SizedBox(
-                        height: 10.0,
+      key: previewContainer,
+      itemCount: listaMesa.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 1.5,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        final listaAsignados = listaMesasAsignadas
+            .where((m) => m.idMesa == listaMesa[index].idMesa);
+        return ConstrainedBox(
+          constraints: BoxConstraints(),
+          child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              margin: EdgeInsets.all(6.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: ListTile(
+                        trailing: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.edit),
+                        ),
+                        title: TextFormField(
+                          enabled: false,
+                          decoration: InputDecoration(border: InputBorder.none),
+                          initialValue: listaMesa[index].descripcion,
+                          onChanged: (value) {},
+                        ),
                       ),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: listaMesa[index].dimension,
-                            itemBuilder: (BuildContext context, int i) {
-                              String temp = '';
-                              if (listaMesasAsignadas.isNotEmpty) {
-                                final asigando = listaAsignados.firstWhere(
-                                  (a) => a.posicion == i + 1,
-                                  orElse: () => null,
-                                );
-                                if (asigando != null)
-                                  asigando.idAcompanante != 0
-                                      ? temp = asigando.acompanante
-                                      : temp = asigando.invitado;
-                              }
-                              return TextFormField(
-                                enabled: false,
-                                decoration: InputDecoration(
-                                    labelText: 'Silla ${i + 1}'),
-                                initialValue: temp,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: listaMesa[index].dimension,
+                          itemBuilder: (BuildContext context, int i) {
+                            String temp = '';
+                            if (listaMesasAsignadas.isNotEmpty) {
+                              final asigando = listaAsignados.firstWhere(
+                                (a) => a.posicion == i + 1,
+                                orElse: () => null,
                               );
-                            }),
-                      )
-                    ],
-                  ),
-                )),
-          );
-        });
-    return Screenshot(
-        controller: _screenshotController, child: gridOfListaMesas);
+                              if (asigando != null)
+                                asigando.idAcompanante != 0
+                                    ? temp = asigando.acompanante
+                                    : temp = asigando.invitado;
+                            }
+                            return TextFormField(
+                              enabled: false,
+                              decoration:
+                                  InputDecoration(labelText: 'Silla ${i + 1}'),
+                              initialValue: temp,
+                            );
+                          }),
+                    )
+                  ],
+                ),
+              )),
+        );
+      },
+    );
+    return gridOfListaMesas;
   }
 
   // ? Page Asignar Mesas a Invitados
@@ -247,6 +339,7 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget asignarInvitadosMesasPage() {
+    setState(() {});
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Row(
@@ -307,8 +400,20 @@ class _MesasPageState extends State<MesasPage> {
                 height: 10.0,
               ),
               ElevatedButton(
-                  onPressed: _deleteAsignadoToMesa,
-                  child: Icon(Icons.arrow_back))
+                onPressed: _deleteAsignadoToMesa,
+                child: Icon(Icons.arrow_back),
+              ),
+              Spacer(),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 5.0,
+                ),
+                onPressed: _asignarAutoMesas,
+                child: Text('Asignar Auto.'),
+              ),
+              SizedBox(
+                height: 20.0,
+              )
             ],
           ),
           SizedBox(
@@ -329,6 +434,7 @@ class _MesasPageState extends State<MesasPage> {
                       } else if (state is MostrarMesasState) {
                         if (state.listaMesas != null ||
                             state.listaMesas.isNotEmpty) {
+                          listaMesaFromDB = state.listaMesas;
                           return _buildListaMesas(state.listaMesas);
                         } else {
                           return Align(
@@ -654,31 +760,33 @@ class _MesasPageState extends State<MesasPage> {
       ),
     );
   }
-}
 
-Future<dynamic> ShowCapturedWidget(
-    BuildContext context, Uint8List capturedImage) async {
-  final directory = (await getApplicationDocumentsDirectory())
-      .path; //from path_provide package
-  String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+  _asignarAutoMesas() async {
+    print('Asigando automatico los datos ');
+  }
 
-  return showDialog(
-      useSafeArea: true,
+  Future<Image> takeScreenShot() async {
+    RenderRepaintBoundary boundary =
+        previewContainer.currentContext.findRenderObject();
+    var image = await boundary.toImage();
+    ByteData bydata = await image.toByteData(format: ImageByteFormat.png);
+    Uint8List pngImage = bydata.buffer.asUint8List();
+    _imageScreen = Image.memory(pngImage.buffer.asUint8List());
+    return _imageScreen;
+  }
+
+  _showDialogPdf(Uint8List fileToView) {
+    return showDialog(
       context: context,
-      builder: (context) => SingleChildScrollView(
-            child: Column(children: [
-              Text("Captured widget screenshot"),
-              SizedBox(
-                height: 40,
-              ),
-              Center(
-                  child: capturedImage != null
-                      ? Image.memory(
-                          capturedImage,
-                          width: 1100,
-                          height: 900,
-                        )
-                      : Container()),
-            ]),
-          ));
+      builder: (context) => Scaffold(
+        appBar: AppBar(),
+        body: SfPdfViewer.memory(
+          fileToView,
+          pageLayoutMode: PdfPageLayoutMode.continuous,
+          pageSpacing: 10.0,
+          canShowPaginationDialog: true,
+        ),
+      ),
+    );
+  }
 }

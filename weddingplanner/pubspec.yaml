@@ -63,6 +63,7 @@ dependencies:
   # no quitar - sin esto falla
   flutter_colorpicker: ^0.5.0
   screenshot: ^1.2.3
+  pdf: ^3.6.0
 
 dev_dependencies:
   flutter_test:
