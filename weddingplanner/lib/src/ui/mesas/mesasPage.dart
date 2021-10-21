@@ -1,58 +1,55 @@
-import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
 import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
+import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
+
 import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
+import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
-import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
-import 'package:weddingplanner/src/ui/widgets/expandable_fab/expandable_fab_widget.dart';
 
 class MesasPage extends StatefulWidget {
+  const MesasPage({Key key, this.nameEvento}) : super(key: key);
+
   final String nameEvento;
 
-  const MesasPage({Key key, this.nameEvento}) : super(key: key);
   @override
   State<MesasPage> createState() => _MesasPageState();
 }
 
 class _MesasPageState extends State<MesasPage> {
-  // * Instacia del Screenshot Controller
-  ScreenshotController _screenshotController = ScreenshotController();
-
+  final asignarMesasService = MesasAsignadasService();
   // * Se crea la variable donde se guardara
   Uint8List capturedImage;
 
+  final mesasAsignadasService = MesasAsignadasService();
+
   GlobalKey previewContainer = new GlobalKey();
 
-  Image _imageScreen;
-
-  final mesasAsignadasService = MesasAsignadasService();
-  final asignarMesasService = MesasAsignadasService();
-  InvitadosMesasBloc invitadosBloc;
-  List<MesasAsignadasModel> listaMesasAsignadas = [];
+  List<bool> checkedsAsignados = [];
+  List<bool> checkedsInvitados = [];
+  List<InvitadosConfirmadosModel> _listaInvitadoDisponibles = [];
   List<MesasAsignadasModel> listAsigandosToDelete = [];
   List<MesasAsignadasModel> listToAsignarForAdd = [];
-  List<bool> checkedsInvitados = [];
-  List<bool> checkedsAsignados = [];
+  List<MesasAsignadasModel> listaMesasAsignadas = [];
   List<int> listPosicionDisponible = [];
   List<MesaModel> listaMesaFromDB = [];
-  MesaModel mesaModelData;
 
+  InvitadosMesasBloc invitadosBloc;
+  MesaModel mesaModelData;
   Size size;
   bool isEdit = true;
+  bool _enable;
   bool _isVisible = false;
   int indexNavBar = 0;
   int lastNumMesa;
@@ -66,12 +63,6 @@ class _MesasPageState extends State<MesasPage> {
         .add(MostrarInvitadosMesasEvent());
     super.initState();
   }
-
-  // @override
-  // void dispose() {
-  //   mesasAsignadasService.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -98,42 +89,60 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget _expandableButtonOptions() {
-    return ExpandableFab(
-      distance: 100.0,
-      initialOpen: false,
+    return SpeedDial(
+      activeForegroundColor: Colors.blueGrey,
+      icon: Icons.add,
+      activeIcon: Icons.close,
+      activeLabel: Text('Cerrar'),
+      animatedIconTheme: IconThemeData(size: 22.0),
+      curve: Curves.bounceIn,
+      animationSpeed: 200,
+      tooltip: 'Ver mas..',
+      elevation: 8.0,
+      shape: CircleBorder(),
       children: [
-        _buttonAddMesas(),
-        Tooltip(
-          message: 'Ver PDF',
-          child: ActionButton(
-            icon: Icon(Icons.article),
-            onPressed: () async {
-              if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
-                final file = await _createPdfToMesa();
-                _showDialogPdf(file);
-              }
-            },
-          ),
-        )
+        SpeedDialChild(
+          child: Icon(Icons.add),
+          label: 'Añadir Mesa',
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed('/asignarMesas',
+                    arguments:
+                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+                .then((value) => {
+                      lastNumMesa = value,
+                    });
+          },
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.download),
+          label: 'Descargar PDF',
+          onTap: () async {
+            if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
+              final file = await _createPdfToMesa();
+              _showDialogPdf(file);
+            } else {
+              _mostrarMensaje('No se encontraron datos', Colors.red);
+            }
+          },
+        ),
       ],
     );
   }
 
   Widget _buttonAddMesas() {
-    return Tooltip(
-      message: 'Añadir mesas',
-      child: ActionButton(
-        icon: Icon(Icons.add),
-        onPressed: () {
-          Navigator.of(context)
-              .pushNamed('/asignarMesas',
-                  arguments:
-                      (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
-              .then((value) => {
-                    lastNumMesa = value,
-                  });
-        },
-      ),
+    return FloatingActionButton(
+      tooltip: 'Agregar Mesa',
+      child: Icon(Icons.add),
+      onPressed: () {
+        Navigator.of(context)
+            .pushNamed('/asignarMesas',
+                arguments:
+                    (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+            .then((value) => {
+                  lastNumMesa = value,
+                });
+      },
     );
   }
 
@@ -329,9 +338,12 @@ class _MesasPageState extends State<MesasPage> {
                                 orElse: () => null,
                               );
                               if (asigando != null)
-                                asigando.idAcompanante != 0
-                                    ? temp = asigando.acompanante
-                                    : temp = asigando.invitado;
+                                print(asigando.idAcompanante != 0
+                                    ? asigando.acompanante
+                                    : asigando.invitado);
+                              asigando.idAcompanante != 0
+                                  ? temp = asigando.acompanante
+                                  : temp = asigando.invitado;
                             }
                             return TextFormField(
                               enabled: false,
@@ -351,14 +363,6 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   // ? Page Asignar Mesas a Invitados
-
-  _mostraMensaje(String msj, Color color) {
-    SnackBar snackBar = SnackBar(
-      content: Text(msj),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
 
   Widget asignarInvitadosMesasPage() {
     setState(() {});
@@ -386,8 +390,13 @@ class _MesasPageState extends State<MesasPage> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (state is MostraListaInvitadosMesaState) {
+                      state.listaInvitadoMesa.length > 0
+                          ? _enable = true
+                          : _enable = false;
                       if (state.listaInvitadoMesa.isNotEmpty ||
                           state.listaInvitadoMesa != null) {
+                        _listaInvitadoDisponibles = state.listaInvitadoMesa;
+
                         return Expanded(
                             child: buildListInvitadosConfirmador(
                                 state.listaInvitadoMesa));
@@ -493,7 +502,7 @@ class _MesasPageState extends State<MesasPage> {
   _deleteAsignadoToMesa() async {
     if (mesaModelData != null) {
       if (listAsigandosToDelete.isEmpty) {
-        _mostraMensaje(
+        _mostrarMensaje(
           'Seleccione alguna opcion de la lista',
           Colors.red,
         );
@@ -501,7 +510,7 @@ class _MesasPageState extends State<MesasPage> {
         final data = await mesasAsignadasService
             .deleteAsignadoFromMesa(listAsigandosToDelete);
         if (data == 'Ok') {
-          _mostraMensaje('Se agrego correctamente', Colors.green);
+          _mostrarMensaje('Se agrego correctamente', Colors.green);
           await invitadosBloc.add(MostrarInvitadosMesasEvent());
 
           await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
@@ -527,16 +536,15 @@ class _MesasPageState extends State<MesasPage> {
                     listAsigandosToDelete.clear();
                   }));
         } else {
-          _mostraMensaje('Ocurrio un error', Colors.red);
+          _mostrarMensaje('Ocurrio un error', Colors.red);
         }
       }
     } else {
-      _mostraMensaje('Seleccione un mesa', Colors.red);
+      _mostrarMensaje('Seleccione un mesa', Colors.red);
     }
   }
 
   asignarMesas() async {
-    int lastPosicion = 0;
     List<int> listTemp = [];
     if (listaMesasAsignadas.length > 0 && mesaModelData != null) {
       final datosMesaAsginada = listaMesasAsignadas
@@ -546,7 +554,6 @@ class _MesasPageState extends State<MesasPage> {
       });
 
       if (datosMesaAsginada.length > 0) {
-        lastPosicion = datosMesaAsginada.last.posicion;
         datosMesaAsginada.forEach((asignado) {
           listTemp.add(asignado.posicion);
         });
@@ -554,12 +561,12 @@ class _MesasPageState extends State<MesasPage> {
     }
 
     if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
-      _mostraMensaje(
+      _mostrarMensaje(
           'Seleccione la mesa y los invitados a asignar', Colors.red);
     } else {
       if (listToAsignarForAdd.length >
           (mesaModelData.dimension - listTemp.length)) {
-        _mostraMensaje(
+        _mostrarMensaje(
             'El número de invitados es mayor al numero de sillas dsiponibles',
             Colors.red);
       } else {
@@ -588,12 +595,12 @@ class _MesasPageState extends State<MesasPage> {
             });
           });
 
-          _mostraMensaje('Se agrego correctamente', Colors.green);
+          _mostrarMensaje('Se agrego correctamente', Colors.green);
           setState(() {
             listToAsignarForAdd.clear();
           });
         } else {
-          _mostraMensaje(data, Colors.red);
+          _mostrarMensaje(data, Colors.red);
         }
       }
     }
@@ -784,17 +791,73 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   _asignarAutoMesas() async {
-    print('Asigando automatico los datos ');
-  }
+    listToAsignarForAdd.clear();
+    List<MesasAsignadasModel> _listaMesasAsignadas = [...listaMesasAsignadas];
+    print(_listaInvitadoDisponibles.length);
+    if (listaMesaFromDB.isNotEmpty && _listaInvitadoDisponibles.isNotEmpty) {
+      for (var invitado in _listaInvitadoDisponibles) {
+        final mesaDisponible = listaMesaFromDB.firstWhere((mesa) {
+          final listaAsignado = _listaMesasAsignadas
+              .where((asignado) => asignado.idMesa == mesa.idMesa);
+          if (listaAsignado.length < mesa.dimension)
+            return true;
+          else
+            return false;
+        }, orElse: () => null);
+        if (mesaDisponible != null) {
+          final listaAsignado = _listaMesasAsignadas
+              .where((asignado) => asignado.idMesa == mesaDisponible.idMesa);
+          for (var i = 1; i <= mesaDisponible.dimension; i++) {
+            if (!listaAsignado.any((a) => a.posicion == i)) {
+              MesasAsignadasModel mesaAsigandoTemp = MesasAsignadasModel();
+              mesaAsigandoTemp.idMesa = mesaDisponible.idMesa;
+              mesaAsigandoTemp.idEvento = mesaDisponible.idEvento;
+              // * Compruebo que si es acompañante o invitado
+              // print('Compruebo que si es acompañante o invitado');
+              if (invitado.idAcompanante != 0) {
+                mesaAsigandoTemp.idAcompanante = invitado.idAcompanante;
+              } else {
+                mesaAsigandoTemp.idInvitado = invitado.idInvitado;
+              }
+              mesaAsigandoTemp.idPlanner =
+                  await SharedPreferencesT().getIdPlanner();
 
-  Future<Image> takeScreenShot() async {
-    RenderRepaintBoundary boundary =
-        previewContainer.currentContext.findRenderObject();
-    var image = await boundary.toImage();
-    ByteData bydata = await image.toByteData(format: ImageByteFormat.png);
-    Uint8List pngImage = bydata.buffer.asUint8List();
-    _imageScreen = Image.memory(pngImage.buffer.asUint8List());
-    return _imageScreen;
+              mesaAsigandoTemp.posicion = i;
+              listToAsignarForAdd.add(mesaAsigandoTemp);
+              _listaMesasAsignadas.add(mesaAsigandoTemp);
+              break;
+            }
+          }
+        } else {
+          break;
+        }
+      }
+      if (listToAsignarForAdd.isNotEmpty && listToAsignarForAdd.length > 0) {
+        final data =
+            await asignarMesasService.asignarPersonasMesas(listToAsignarForAdd);
+        if (data == 'Ok') {
+          await invitadosBloc.add(MostrarInvitadosMesasEvent());
+
+          mesasAsignadasService.getMesasAsignadas().then((value) {
+            setState(() {
+              listAsigandosToDelete.forEach((element) {
+                listPosicionDisponible.remove(element.posicion);
+              });
+              listToAsignarForAdd.clear();
+              listaMesasAsignadas = value;
+              checkedsInvitados = [];
+            });
+          });
+
+          _mostrarMensaje('Se agrego correctamente', Colors.green);
+          setState(() {
+            listToAsignarForAdd.clear();
+          });
+        } else {
+          _mostrarMensaje(data, Colors.red);
+        }
+      }
+    }
   }
 
   _showDialogPdf(Uint8List fileToView) {
@@ -812,5 +875,19 @@ class _MesasPageState extends State<MesasPage> {
         ),
       ),
     );
+  }
+
+  // @override
+  // void dispose() {
+  //   mesasAsignadasService.dispose();
+  //   super.dispose();
+  // }
+
+  _mostrarMensaje(String msj, Color color) {
+    SnackBar snackBar = SnackBar(
+      content: Text(msj),
+      backgroundColor: color,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
