@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +50,7 @@ class _FormRolState extends State<FormRol> {
   FormRolBloc rolFormBloc;
 
   ItemModelFormRol _formRoles;
+  List<Itemr> _data;
 
   _FormRolState(this.datos);
 
@@ -62,12 +65,14 @@ class _FormRolState extends State<FormRol> {
           .add(GetFormRolEvent(idRol0: datos['data'].result.id_rol.toString()));
     }
     _setInitialController();
+    setState(() {});
     super.initState();
+    _data = [];
   }
 
   @override
   Widget build(BuildContext context) {
-    print(datos);
+    setState(() {});
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocListener<RolBloc, RolState>(
@@ -199,12 +204,15 @@ class _FormRolState extends State<FormRol> {
         //         ))
         //     : SizedBox.shrink(),
         _formPermisos(),
+        SizedBox(
+          height: 20.0,
+        ),
         ElevatedButton(
           onPressed: () {
             _save(contextForm);
           },
           child: Text((datos['accion'] == 0 ? 'Crear' : 'Editar') + ' Rol',
-              style: TextStyle(fontSize: 18, color: Colors.white)),
+              style: TextStyle(fontSize: 18, color: Colors.black)),
           style: ElevatedButton.styleFrom(
             primary: hexToColor('#fdf4e5'), // background
             onPrimary: Colors.white, // foreground
@@ -227,27 +235,55 @@ class _FormRolState extends State<FormRol> {
   }
 
   _save(BuildContext contextSB) {
-    if (formKey.currentState.validate()) {
-      if (datos['accion'] == 0) {
+    try {
+      List<SeccionRol> _dataTemp = [];
+      _data.forEach((element) {
+        List _pantallasSeccion = [];
+        if (element.pantallas.length > 0) {
+          element.pantallas.forEach((elementPantallas) {
+            _pantallasSeccion.add({
+              'id_pantalla': elementPantallas.id_pantalla,
+              'clave_pantalla': elementPantallas.clave_pantalla,
+              'nombre_pantalla': elementPantallas.nombre_pantalla,
+              'selected': elementPantallas.seleccion
+            });
+          });
+        }
         Map<String, dynamic> jsonRol = {
-          '"clave_rol"': '"${claveCtrl.text}"',
-          '"nombre_rol"': '"${claveCtrl.text}"',
-          '"permisos"': _formRoles.toJsonStr()
+          'id_seccion': element.id_seccion,
+          'clave_seccion': element.clave_seccion,
+          'nombre_seccion': element.nombre_seccion,
+          'selected': element.selected,
+          'pantallas': _pantallasSeccion
         };
-        rolBloc.add(CrearRolEvent(jsonRol));
+        _dataTemp.add(SeccionRol(jsonRol));
+      });
+      ItemModelFormRol _formRolesTemp = new ItemModelFormRol(_dataTemp);
+      if (formKey.currentState.validate()) {
+        if (datos['accion'] == 0) {
+          Map<String, dynamic> jsonRol = {
+            '"clave_rol"': '"${claveCtrl.text}"',
+            '"nombre_rol"': '"${claveCtrl.text}"',
+            '"permisos"': _formRolesTemp.toJsonStr()
+          };
+          print(jsonRol);
+          rolBloc.add(CrearRolEvent(jsonRol));
+        } else {
+          Map<String, dynamic> jsonRol = {
+            '"id_rol"': datos['data'].result.id_rol,
+            '"clave_rol"': '"${claveCtrl.text}"',
+            '"nombre_rol"': '"${claveCtrl.text}"',
+            '"permisos"': _formRolesTemp.toJsonStr()
+          };
+          rolBloc.add(EditarRolEvent(jsonRol));
+        }
       } else {
-        Map<String, dynamic> jsonRol = {
-          '"id_rol"': datos['data'].result.id_rol,
-          '"clave_rol"': '"${claveCtrl.text}"',
-          '"nombre_rol"': '"${claveCtrl.text}"',
-          '"permisos"': _formRoles.toJsonStr()
-        };
-        rolBloc.add(EditarRolEvent(jsonRol));
+        ScaffoldMessenger.of(contextSB).showSnackBar(SnackBar(
+            content: Text(
+                'Ingrese todos los datos requeridos para ${datos['accion'] == 0 ? 'agregar' : 'editar'} rol')));
       }
-    } else {
-      ScaffoldMessenger.of(contextSB).showSnackBar(SnackBar(
-          content: Text(
-              'Ingrese todos los datos requeridos para ${datos['accion'] == 0 ? 'agregar' : 'editar'} rol')));
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -340,106 +376,118 @@ class _FormRolState extends State<FormRol> {
         } else if (state is LoadingMostrarFormRol) {
           return Center(child: CircularProgressIndicator());
         } else if (state is MostrarFormRol) {
-          if (_formRoles == null) {
-            _formRoles = state.form;
-            if (_formRoles.form != null) {
-              for (var seccion in _formRoles.form) {
-                List<Widget> pantallas = <Widget>[];
-                if (seccion.pantallas != null) {
-                  for (var pantalla in seccion.pantallas) {
-                    pantallas.add(CheckboxListTile(
-                      title: Text(pantalla.nombre_pantalla),
-                      value: pantalla.selected,
-                      onChanged: (bool value) {
-                        setState(() {
-                          pantalla.selected = value;
-                        });
-                      },
-                      secondary: Icon(Icons.preview),
-                    ));
-                  }
-                }
-                dataForm.add(
-                  formItemsDesign(
-                    Icons.view_module,
-                    Center(
-                      child: Column(
-                        children: [
-                          CheckboxListTile(
-                              title: Text(seccion.nombre_seccion),
-                              value: seccion.selected,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  seccion.selected = value;
-                                });
-                              }),
-                          Column(
-                              children: pantallas.length > 0
-                                  ? pantallas
-                                  : [SizedBox.shrink()])
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
-              return SingleChildScrollView(
-                child:
-                    formItemsDesign(Icons.settings, Column(children: dataForm)),
-              );
-            } else {
-              return Text('Error al obtener Form');
-            }
-          } else {
-            if (_formRoles.form != null) {
-              for (var seccion in _formRoles.form) {
-                List<Widget> pantallas = <Widget>[];
-                if (seccion.pantallas != null) {
-                  for (var pantalla in seccion.pantallas) {
-                    pantallas.add(CheckboxListTile(
-                      title: Text(pantalla.nombre_pantalla),
-                      value: pantalla.selected,
-                      onChanged: (bool value) {
-                        setState(() {
-                          pantalla.selected = value;
-                        });
-                      },
-                      secondary: Icon(Icons.preview),
-                    ));
-                  }
-                }
-                dataForm.add(
-                  formItemsDesign(
-                    Icons.view_module,
-                    Center(
-                      child: Column(
-                        children: [
-                          CheckboxListTile(
-                              title: Text(seccion.nombre_seccion),
-                              value: seccion.selected,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  seccion.selected = value;
-                                });
-                              }),
-                          Column(
-                              children: pantallas.length > 0
-                                  ? pantallas
-                                  : [SizedBox.shrink()])
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }
-              return SingleChildScrollView(
-                child:
-                    formItemsDesign(Icons.settings, Column(children: dataForm)),
-              );
-            } else {
-              return Text('Error al obtener Form');
-            }
+          _formRoles = null;
+          _formRoles = state.form;
+          if (state.form != null && _data.length == 0) {
+            state.form.form.forEach((element) {});
+            _data = _generateItems(state.form);
           }
+
+          //if (_formRoles == null) {
+          //_formRoles = state.form;
+          // if (_formRoles.form != null) {
+          // for (var seccion in _formRoles.form) {
+          //   List<Widget> pantallas = <Widget>[];
+          //   if (seccion.pantallas != null) {
+          //     for (var pantalla in seccion.pantallas) {
+          //       pantallas.add(CheckboxListTile(
+          //         title: Text(pantalla.nombre_pantalla),
+          //         value: pantalla.selected,
+          //         onChanged: (bool value) {
+          //           setState(() {
+          //             pantalla.selected = value;
+          //           });
+          //         },
+          //         secondary: Icon(Icons.preview),
+          //       ));
+          //     }
+          //   }
+          //   dataForm.add(
+          //     formItemsDesign(
+          //       Icons.view_module,
+          //       Center(
+          //         child: Column(
+          //           children: [
+          //             CheckboxListTile(
+          //                 title: Text(seccion.nombre_seccion),
+          //                 value: seccion.selected,
+          //                 onChanged: (bool value) {
+          //                   setState(() {
+          //                     seccion.selected = value;
+          //                   });
+          //                 }),
+          //             Column(
+          //                 children: pantallas.length > 0
+          //                     ? pantallas
+          //                     : [SizedBox.shrink()])
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   );
+          // }
+          // return Text('data');
+          if (_data.length > 0) {
+            return _listaBuild();
+          } else {
+            return Center(
+              child: Text('No hay datos.'),
+            );
+          }
+          //} else {
+          //return Text('Error al obtener Form');
+          //}
+          // } else {
+          // if (_formRoles.form != null) {
+          //   for (var seccion in _formRoles.form) {
+          //     List<Widget> pantallas = <Widget>[];
+          //     if (seccion.pantallas != null) {
+          //       for (var pantalla in seccion.pantallas) {
+          //         pantallas.add(CheckboxListTile(
+          //           title: Text(pantalla.nombre_pantalla),
+          //           value: pantalla.selected,
+          //           onChanged: (bool value) {
+          //             setState(() {
+          //               pantalla.selected = value;
+          //             });
+          //           },
+          //           secondary: Icon(Icons.preview),
+          //         ));
+          //       }
+          //     }
+          //     dataForm.add(
+          //       formItemsDesign(
+          //         Icons.view_module,
+          //         Center(
+          //           child: Column(
+          //             children: [
+          //               CheckboxListTile(
+          //                   title: Text(seccion.nombre_seccion),
+          //                   value: seccion.selected,
+          //                   onChanged: (bool value) {
+          //                     setState(() {
+          //                       seccion.selected = value;
+          //                     });
+          //                   }),
+          //               Column(
+          //                   children: pantallas.length > 0
+          //                       ? pantallas
+          //                       : [SizedBox.shrink()])
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     );
+          //   }
+          //   return SingleChildScrollView(
+          //     child:
+          //         formItemsDesign(Icons.settings, Column(children: dataForm)),
+          //   );
+          // } else {
+          //   return Text('Error al obtener Form');
+          // }
+          // return Text('Entro al else');
+          // }
         } else if (state is ErrorMostrarFormRol) {
           return Center(
             child: Text(state.message),
@@ -449,6 +497,119 @@ class _FormRolState extends State<FormRol> {
         }
       },
     );
+  }
+
+  Widget _listaBuild() {
+    int position = 0;
+    return Container(
+        child: ExpansionPanelList(
+      animationDuration: Duration(milliseconds: 500),
+      expansionCallback: (int index, bool isExpanded) {
+        setState(() {
+          _data[index].isExpanded = !isExpanded;
+          position = index;
+        });
+      },
+      children: _data.map<ExpansionPanel>((Itemr item) {
+        return ExpansionPanel(
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return ListTile(
+              leading: Icon(Icons.view_module),
+              title: Text(item.nombre_seccion),
+              trailing: Wrap(spacing: 12, children: <Widget>[
+                Checkbox(
+                    value: item.selected,
+                    onChanged: (value) {
+                      setState(() {
+                        item.selected = value;
+                        print(item.selected);
+                        if (item.selected) {
+                          item.pantallas.forEach((element) {
+                            element.seleccion = true;
+                          });
+                        } else {
+                          item.pantallas.forEach((element) {
+                            element.seleccion = false;
+                          });
+                        }
+                      });
+                    })
+              ]),
+            );
+          },
+          body: Column(children: _listPantallas(item.pantallas, item.posicion)),
+          isExpanded: item.isExpanded,
+        );
+      }).toList(),
+    ));
+  }
+
+  List<Widget> _listPantallas(
+      List<ItemPantalla> itemPantalla, int positionHeader) {
+    List<Widget> lista = [
+      Form(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: itemPantalla.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  leading: Icon(Icons.preview),
+                  trailing: Padding(
+                    padding: EdgeInsets.only(left: 15),
+                    child: Checkbox(
+                        value: itemPantalla[index].seleccion,
+                        onChanged: (value) {
+                          setState(() {
+                            print(positionHeader);
+                            itemPantalla[index].seleccion = value;
+
+                            if (itemPantalla[index].seleccion) {
+                              _data[positionHeader].selected = true;
+                            } else if (!itemPantalla[index].seleccion) {
+                              var boolPosition = false;
+                              itemPantalla.forEach((element) {
+                                if (element.seleccion) {
+                                  boolPosition = true;
+                                }
+                              });
+                              _data[positionHeader].selected = boolPosition;
+                            }
+                          });
+                        }),
+                  ),
+                  title: Text(itemPantalla[index].nombre_pantalla),
+                );
+              }),
+        ),
+      )
+    ];
+    // if (itemPantalla != null) {
+    //   for (var opt in itemPantalla) {
+    //     final tempWidget = ListTile(
+    //       title: Text(opt.nombre_pantalla),
+    //       leading: Checkbox(
+    //           value: opt.seleccion,
+    //           onChanged: (value) {
+    //             setState(() {
+    //               opt.seleccion = value;
+    //             });
+    //           }),
+    //       trailing: Wrap(spacing: 12, children: <Widget>[
+    //         Checkbox(
+    //             value: opt.seleccion,
+    //             onChanged: (value) {
+    //               setState(() {
+    //                 opt.seleccion = value;
+    //               });
+    //             })
+    //       ]),
+    //     );
+    //     lista.add(tempWidget);
+    //   }
+    // }
+    return lista;
   }
 
   _showDialogMsg(BuildContext contextT) {
@@ -473,5 +634,32 @@ class _FormRolState extends State<FormRol> {
         ),
       ],
     );
+  }
+
+  _generateItems(ItemModelFormRol data) {
+    List<Itemr> _dataTemp = [];
+    int posicionTemp = 0;
+    data.form.forEach((element) {
+      List<ItemPantalla> _pantallaTemp = [];
+      if (element.pantallas != null) {
+        element.pantallas.forEach((elementPant) {
+          _pantallaTemp.add(ItemPantalla(
+              clave_pantalla: elementPant.clave_pantalla,
+              id_pantalla: elementPant.id_pantalla,
+              nombre_pantalla: elementPant.nombre_pantalla,
+              seleccion: elementPant.selected));
+        });
+      }
+      _dataTemp.add(Itemr(
+          clave_seccion: element.clave_seccion,
+          id_seccion: element.id_seccion.toString(),
+          nombre_seccion: element.nombre_seccion,
+          selected: element.selected,
+          isExpanded: true,
+          pantallas: _pantallaTemp,
+          posicion: posicionTemp));
+      posicionTemp++;
+    });
+    return _dataTemp;
   }
 }

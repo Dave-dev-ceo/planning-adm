@@ -127,3 +127,34 @@ class _Rol {
 
   bool get editable => this._editable;
 }
+
+class Itemr {
+  Itemr(
+      {this.clave_seccion,
+      this.id_seccion,
+      this.nombre_seccion,
+      this.selected,
+      this.pantallas,
+      this.isExpanded = true,
+      this.posicion});
+
+  String clave_seccion;
+  String id_seccion;
+  String nombre_seccion;
+  bool selected;
+  List<ItemPantalla> pantallas;
+  bool isExpanded;
+  int posicion;
+}
+
+class ItemPantalla {
+  ItemPantalla(
+      {this.clave_pantalla,
+      this.id_pantalla,
+      this.nombre_pantalla,
+      this.seleccion});
+  String clave_pantalla;
+  int id_pantalla;
+  String nombre_pantalla;
+  bool seleccion;
+}
