@@ -326,7 +326,7 @@ class _InvitadosState extends State<Invitados> {
         temp.add(Pagos());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
-        temp.add(MesasPage());
+        temp.add(MesasPage(nameEvento: widget.detalleEvento['nEvento']));
       }
       return temp;
     } else {

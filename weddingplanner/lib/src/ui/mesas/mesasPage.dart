@@ -21,6 +21,9 @@ import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 import 'package:weddingplanner/src/ui/widgets/expandable_fab/expandable_fab_widget.dart';
 
 class MesasPage extends StatefulWidget {
+  final String nameEvento;
+
+  const MesasPage({Key key, this.nameEvento}) : super(key: key);
   @override
   State<MesasPage> createState() => _MesasPageState();
 }
@@ -100,22 +103,27 @@ class _MesasPageState extends State<MesasPage> {
       initialOpen: false,
       children: [
         _buttonAddMesas(),
-        ActionButton(
-          icon: Icon(Icons.download),
-          onPressed: () async {
-            if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
-              final file = await _createPdfToMesa();
-              _showDialogPdf(file);
-            }
-          },
+        Tooltip(
+          message: 'Ver PDF',
+          child: ActionButton(
+            icon: Icon(Icons.article),
+            onPressed: () async {
+              if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
+                final file = await _createPdfToMesa();
+                _showDialogPdf(file);
+              }
+            },
+          ),
         )
       ],
     );
   }
 
-  FloatingActionButton _buttonAddMesas() {
-    return FloatingActionButton(
-        child: Icon(Icons.add),
+  Widget _buttonAddMesas() {
+    return Tooltip(
+      message: 'Añadir mesas',
+      child: ActionButton(
+        icon: Icon(Icons.add),
         onPressed: () {
           Navigator.of(context)
               .pushNamed('/asignarMesas',
@@ -124,14 +132,15 @@ class _MesasPageState extends State<MesasPage> {
               .then((value) => {
                     lastNumMesa = value,
                   });
-        });
+        },
+      ),
+    );
   }
 
   Future<Uint8List> _createPdfToMesa() async {
     final pdf = pw.Document();
     List<pw.Widget> listaGridChild = [];
     List<pw.Widget> listaView = [];
-    List<pw.Widget> childrenRow = [];
 
     for (int index = 0; index < listaMesaFromDB.length; index++) {
       listaView = [];
@@ -151,8 +160,16 @@ class _MesasPageState extends State<MesasPage> {
         listaView.add(listViewChild);
       }
 
-      pw.Widget gridChild = pw.Container(
-        decoration: pw.BoxDecoration(boxShadow: [], border: pw.Border.all()),
+      pw.Widget gridChild = (pw.Container(
+        margin: const pw.EdgeInsets.only(bottom: 6.0),
+        decoration: pw.BoxDecoration(boxShadow: [
+          pw.BoxShadow(
+            color: PdfColors.grey,
+            offset: PdfPoint(0.0, 0.1),
+            spreadRadius: 5.0, //(x,y)
+            blurRadius: 6.0,
+          ),
+        ], border: pw.Border.all()),
         padding: pw.EdgeInsets.all(8.0),
         child: pw.Column(
           children: [
@@ -168,12 +185,17 @@ class _MesasPageState extends State<MesasPage> {
             for (var item in listaView) item
           ],
         ),
-      );
+      ));
       listaGridChild.add(gridChild);
     }
     pdf.addPage(
       pw.MultiPage(
         build: (pw.Context context) => [
+          pw.Center(
+            child: pw.Text('Evento: ${widget.nameEvento}',
+                style: pw.Theme.of(context).header4),
+          ),
+          pw.SizedBox(height: 15.0),
           pw.GridView(
             crossAxisCount: 3,
             childAspectRatio: 1.0,
@@ -779,7 +801,9 @@ class _MesasPageState extends State<MesasPage> {
     return showDialog(
       context: context,
       builder: (context) => Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text(widget.nameEvento),
+        ),
         body: SfPdfViewer.memory(
           fileToView,
           pageLayoutMode: PdfPageLayoutMode.continuous,
