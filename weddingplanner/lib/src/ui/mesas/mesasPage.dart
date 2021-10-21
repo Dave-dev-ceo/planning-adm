@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -357,9 +358,23 @@ class _MesasPageState extends State<MesasPage> {
         ],
       ),
     );
-    final output = await getTemporaryDirectory();
-    final file = File("${output.path}/example.pdf");
-    await file.writeAsBytes(await pdf.save());
+
+    final titulo = widget.nameEvento;
+
+    final bytes = await pdf.save();
+    final blob = html.Blob([bytes]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
+
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = 'Oficio:$titulo.pdf';
+    html.document.body.children.add(anchor);
+    anchor.click();
+    html.document.body.children.remove(anchor);
+    html.Url.revokeObjectUrl(url);
+    // final output = await getTemporaryDirectory();
+    // final file = File("${output.path}/example.pdf");
   }
   // ? Page Asignar Mesas a Invitados
 
