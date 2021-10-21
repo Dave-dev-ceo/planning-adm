@@ -210,7 +210,7 @@ class FormRolLogic implements RolFormLogic {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      return new ItemModelFormRol.fromJson(data['form']);
+      return new ItemModelFormRol.fromJson(data['result']);
     } else if (response.statusCode == 401) {
       throw TokenFormRolException();
     } else {

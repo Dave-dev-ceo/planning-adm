@@ -1,12 +1,12 @@
 class ItemModelFormRol {
-  List<_SeccionRol> _form;
+  List<SeccionRol> _form;
 
   ItemModelFormRol(this._form);
 
   ItemModelFormRol.fromJson(List<dynamic> parsedJson) {
-    List<_SeccionRol> temp = [];
+    List<SeccionRol> temp = [];
     for (int i = 0; i < parsedJson.length; i++) {
-      _SeccionRol result = _SeccionRol(parsedJson[i]);
+      SeccionRol result = SeccionRol(parsedJson[i]);
       temp.add(result);
     }
     _form = temp;
@@ -16,7 +16,7 @@ class ItemModelFormRol {
     return new ItemModelFormRol(_form);
   }
 
-  List<_SeccionRol> get form => _form;
+  List<SeccionRol> get form => _form;
 
   String toJsonStr() => _listToJson().toString();
 
@@ -29,31 +29,31 @@ class ItemModelFormRol {
   }
 }
 
-class _SeccionRol {
+class SeccionRol {
   int _idSeccion;
   String _claveSeccion;
   String _nombreSeccion;
   bool _selected;
-  List<_PantallaRol> _pantallasSeccion;
+  List<PantallaRol> _pantallasSeccion;
 
-  _SeccionRol(json) {
+  SeccionRol(json) {
     _idSeccion = int.parse(json['id_seccion']);
     _claveSeccion = json['clave_seccion'];
     _nombreSeccion = json['nombre_seccion'];
     _selected = json['selected'];
-    List<_PantallaRol> temp = [];
+    List<PantallaRol> temp = [];
     if (json['pantallas'].length == 0) {
       _pantallasSeccion = null;
     } else {
       for (int i = 0; i < json['pantallas'].length; i++) {
-        _PantallaRol result = _PantallaRol(json['pantallas'][i]);
+        PantallaRol result = PantallaRol(json['pantallas'][i]);
         temp.add(result);
       }
       _pantallasSeccion = temp;
     }
   }
 
-  _SeccionRol.fromModel(dataObj) {
+  SeccionRol.fromModel(dataObj) {
     _idSeccion = dataObj._id_seccion;
     _claveSeccion = dataObj._id_seccion;
     _nombreSeccion = dataObj._id_seccion;
@@ -99,26 +99,26 @@ class _SeccionRol {
 
   set selected(value) => this._selected = value;
 
-  List<_PantallaRol> get pantallas => this._pantallasSeccion;
+  List<PantallaRol> get pantallas => this._pantallasSeccion;
 }
 
-class _PantallaRol {
+class PantallaRol {
   int _idPantalla;
   String _clavePantalla;
   String _nombrePantalla;
   bool _selected;
 
-  _PantallaRol(result) {
-    if(result['id_pantalla'].runtimeType == String)
+  PantallaRol(result) {
+    if (result['id_pantalla'].runtimeType == String)
       _idPantalla = int.parse(result['id_pantalla']);
-    if(result['id_pantalla'].runtimeType == int)
+    if (result['id_pantalla'].runtimeType == int)
       _idPantalla = result['id_pantalla'];
     _clavePantalla = result['clave_pantalla'];
     _nombrePantalla = result['nombre_pantalla'];
     _selected = result['selected'];
   }
 
-  _PantallaRol.fromModel(dataObj) {
+  PantallaRol.fromModel(dataObj) {
     _idPantalla = dataObj._idPantalla;
     _clavePantalla = dataObj._clavePantalla;
     _nombrePantalla = dataObj._nombrePantalla;

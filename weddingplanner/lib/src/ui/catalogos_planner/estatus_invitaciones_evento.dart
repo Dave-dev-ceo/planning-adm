@@ -331,7 +331,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     estatusCtrlEdit.text = estatus;
     return showDialog<void>(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Editar estatus', textAlign: TextAlign.center),
