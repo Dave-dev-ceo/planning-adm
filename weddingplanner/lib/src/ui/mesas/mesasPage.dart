@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -119,8 +121,7 @@ class _MesasPageState extends State<MesasPage> {
           label: 'Descargar PDF',
           onTap: () async {
             if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
-              final file = await _createPdfToMesa();
-              _showDialogPdf(file);
+              await _createPdfToMesa();
             } else {
               _mostrarMensaje('No se encontraron datos', Colors.red);
             }
@@ -144,80 +145,6 @@ class _MesasPageState extends State<MesasPage> {
                 });
       },
     );
-  }
-
-  Future<Uint8List> _createPdfToMesa() async {
-    final pdf = pw.Document();
-    List<pw.Widget> listaGridChild = [];
-    List<pw.Widget> listaView = [];
-
-    for (int index = 0; index < listaMesaFromDB.length; index++) {
-      listaView = [];
-      final listaAsignados = listaMesasAsignadas
-          .where((m) => m.idMesa == listaMesaFromDB[index].idMesa)
-          .toList();
-      for (var i = 0; i < listaAsignados.length; i++) {
-        String temp = '';
-        final asigando = listaAsignados[i];
-        asigando.idAcompanante != 0
-            ? temp = asigando.acompanante
-            : temp = asigando.invitado;
-
-        pw.Widget listViewChild =
-            pw.Text(temp, style: pw.TextStyle(fontSize: 10.0));
-
-        listaView.add(listViewChild);
-      }
-
-      pw.Widget gridChild = (pw.Container(
-        margin: const pw.EdgeInsets.only(bottom: 6.0),
-        decoration: pw.BoxDecoration(boxShadow: [
-          pw.BoxShadow(
-            color: PdfColors.grey,
-            offset: PdfPoint(0.0, 0.1),
-            spreadRadius: 5.0, //(x,y)
-            blurRadius: 6.0,
-          ),
-        ], border: pw.Border.all()),
-        padding: pw.EdgeInsets.all(8.0),
-        child: pw.Column(
-          children: [
-            pw.Center(
-              child: pw.Text(
-                listaMesaFromDB[index].descripcion,
-                style: pw.TextStyle(fontSize: 10),
-              ),
-            ),
-            pw.SizedBox(
-              height: 10.0,
-            ),
-            for (var item in listaView) item
-          ],
-        ),
-      ));
-      listaGridChild.add(gridChild);
-    }
-    pdf.addPage(
-      pw.MultiPage(
-        build: (pw.Context context) => [
-          pw.Center(
-            child: pw.Text('Evento: ${widget.nameEvento}',
-                style: pw.Theme.of(context).header4),
-          ),
-          pw.SizedBox(height: 15.0),
-          pw.GridView(
-            crossAxisCount: 3,
-            childAspectRatio: 1.0,
-            crossAxisSpacing: 8.0,
-            mainAxisSpacing: 8.0,
-            direction: pw.Axis.vertical,
-            children: listaGridChild,
-          )
-        ],
-      ),
-    );
-
-    return await pdf.save();
   }
 
   BottomNavigationBar _bottomNavigatorBarCustom() {
@@ -359,6 +286,80 @@ class _MesasPageState extends State<MesasPage> {
     return gridOfListaMesas;
   }
 
+  Future<void> _createPdfToMesa() async {
+    final pdf = pw.Document();
+    List<pw.Widget> listaGridChild = [];
+    List<pw.Widget> listaView = [];
+
+    for (int index = 0; index < listaMesaFromDB.length; index++) {
+      listaView = [];
+      final listaAsignados = listaMesasAsignadas
+          .where((m) => m.idMesa == listaMesaFromDB[index].idMesa)
+          .toList();
+      for (var i = 0; i < listaAsignados.length; i++) {
+        String temp = '';
+        final asigando = listaAsignados[i];
+        asigando.idAcompanante != 0
+            ? temp = asigando.acompanante
+            : temp = asigando.invitado;
+
+        pw.Widget listViewChild =
+            pw.Text(temp, style: pw.TextStyle(fontSize: 10.0));
+
+        listaView.add(listViewChild);
+      }
+
+      pw.Widget gridChild = (pw.Container(
+        margin: const pw.EdgeInsets.only(bottom: 6.0),
+        decoration: pw.BoxDecoration(boxShadow: [
+          pw.BoxShadow(
+            color: PdfColors.grey,
+            offset: PdfPoint(0.0, 0.1),
+            spreadRadius: 5.0, //(x,y)
+            blurRadius: 6.0,
+          ),
+        ], border: pw.Border.all()),
+        padding: pw.EdgeInsets.all(8.0),
+        child: pw.Column(
+          children: [
+            pw.Center(
+              child: pw.Text(
+                listaMesaFromDB[index].descripcion,
+                style: pw.TextStyle(fontSize: 10),
+              ),
+            ),
+            pw.SizedBox(
+              height: 10.0,
+            ),
+            for (var item in listaView) item
+          ],
+        ),
+      ));
+      listaGridChild.add(gridChild);
+    }
+    pdf.addPage(
+      pw.MultiPage(
+        build: (pw.Context context) => [
+          pw.Center(
+            child: pw.Text('Evento: ${widget.nameEvento}',
+                style: pw.Theme.of(context).header4),
+          ),
+          pw.SizedBox(height: 15.0),
+          pw.GridView(
+            crossAxisCount: 3,
+            childAspectRatio: 1.0,
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+            direction: pw.Axis.vertical,
+            children: listaGridChild,
+          )
+        ],
+      ),
+    );
+    final output = await getTemporaryDirectory();
+    final file = File("${output.path}/example.pdf");
+    await file.writeAsBytes(await pdf.save());
+  }
   // ? Page Asignar Mesas a Invitados
 
   Widget asignarInvitadosMesasPage() {

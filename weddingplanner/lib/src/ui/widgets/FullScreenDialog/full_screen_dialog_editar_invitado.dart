@@ -1334,7 +1334,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           ),
           //color: Colors.red,
         ),
-        backgroundColor: Colors.green,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
@@ -1346,7 +1345,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           ),
           //color: Colors.red,
         ),
-        backgroundColor: Colors.red,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
