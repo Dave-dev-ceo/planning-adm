@@ -338,12 +338,9 @@ class _MesasPageState extends State<MesasPage> {
                                 orElse: () => null,
                               );
                               if (asigando != null)
-                                print(asigando.idAcompanante != 0
-                                    ? asigando.acompanante
-                                    : asigando.invitado);
-                              asigando.idAcompanante != 0
-                                  ? temp = asigando.acompanante
-                                  : temp = asigando.invitado;
+                                asigando.idAcompanante != 0
+                                    ? temp = asigando.acompanante
+                                    : temp = asigando.invitado;
                             }
                             return TextFormField(
                               enabled: false,
