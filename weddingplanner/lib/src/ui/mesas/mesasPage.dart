@@ -814,11 +814,11 @@ class _MesasPageState extends State<MesasPage> {
               mesaAsigandoTemp.idEvento = mesaDisponible.idEvento;
               // * Compruebo que si es acompañante o invitado
               // print('Compruebo que si es acompañante o invitado');
+              mesaAsigandoTemp.idInvitado = invitado.idInvitado;
               if (invitado.idAcompanante != 0) {
                 mesaAsigandoTemp.idAcompanante = invitado.idAcompanante;
-              } else {
-                mesaAsigandoTemp.idInvitado = invitado.idInvitado;
               }
+
               mesaAsigandoTemp.idPlanner =
                   await SharedPreferencesT().getIdPlanner();
 
