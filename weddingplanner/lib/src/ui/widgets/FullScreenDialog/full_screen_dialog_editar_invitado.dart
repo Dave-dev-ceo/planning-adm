@@ -187,11 +187,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     return AlertDialog(
       actions: [
         TextButton(
-          style: TextButton.styleFrom(
-              primary: Colors.red,
-              textStyle: TextStyle(
-                color: Colors.red,
-              )),
           onPressed: () {
             Navigator.pop(context, 'Cancelar');
           },
@@ -201,10 +196,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           ),
         ),
         TextButton(
-          style: TextButton.styleFrom(
-            primary: Colors.green,
-            textStyle: TextStyle(color: Colors.blue),
-          ),
           onPressed: () async {
             if (_mySelectionAEdad2 == 0) {
               acompanante.edad = 'A';
@@ -233,7 +224,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
             }
           },
           child: Text(
-            'Editar',
+            'Guardar',
             textAlign: TextAlign.right,
           ),
         )
@@ -1334,6 +1325,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           ),
           //color: Colors.red,
         ),
+        backgroundColor: Colors.green,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
@@ -1345,6 +1337,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           ),
           //color: Colors.red,
         ),
+        backgroundColor: Colors.red,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
