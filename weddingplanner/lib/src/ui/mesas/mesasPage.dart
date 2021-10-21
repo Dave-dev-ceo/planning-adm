@@ -121,6 +121,7 @@ class _MesasPageState extends State<MesasPage> {
           label: 'Descargar PDF',
           onTap: () async {
             if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
+              // * Descargar PDF
               await _createPdfToMesa();
             } else {
               _mostrarMensaje('No se encontraron datos', Colors.red);
