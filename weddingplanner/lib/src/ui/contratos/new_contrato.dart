@@ -47,7 +47,7 @@ class New_ContratoState extends State<NewContrato> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _myBloc(),
+      body: SingleChildScrollView(child: _myBloc()),
       bottomNavigationBar: _showNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: _showButton(),
@@ -184,6 +184,28 @@ class New_ContratoState extends State<NewContrato> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextButton.icon(
+                            icon: Icon(Icons.edit),
+                            label: Text('Editar'),
+                            onPressed: () {
+                              print('Editar');
+                              Navigator.pushNamed(context, '/editarContratos',
+                                  arguments: {
+                                    'archivo': contrato.archivo,
+                                    'id_contrato': contrato.idContrato
+                                  });
+                              setState(() {
+                                contratosBloc.add(ContratosSelect());
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(contrato.idMachote,
@@ -260,6 +282,28 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Ver'),
                             onPressed: () => _verOldFile(
                                 contrato.idMachote, contrato.archivo),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
+                            icon: Icon(Icons.edit),
+                            label: Text('Editar'),
+                            onPressed: () {
+                              print('Editar');
+                              Navigator.pushNamed(context, '/editarContratos',
+                                  arguments: {
+                                    'archivo': contrato.archivo,
+                                    'id_contrato': contrato.idContrato
+                                  });
+                              setState(() {
+                                contratosBloc.add(ContratosSelect());
+                              });
+                            },
                           )
                         ],
                       ),
@@ -354,6 +398,28 @@ class New_ContratoState extends State<NewContrato> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextButton.icon(
+                            icon: Icon(Icons.edit),
+                            label: Text('Editar'),
+                            onPressed: () {
+                              print('Editar');
+                              Navigator.pushNamed(context, '/editarContratos',
+                                  arguments: {
+                                    'archivo': contrato.archivo,
+                                    'id_contrato': contrato.idContrato
+                                  });
+                              setState(() {
+                                contratosBloc.add(ContratosSelect());
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(contrato.idMachote,
@@ -430,6 +496,28 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Ver'),
                             onPressed: () => _verOldFile(
                                 contrato.idMachote, contrato.archivo),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
+                            icon: Icon(Icons.edit),
+                            label: Text('Editar'),
+                            onPressed: () {
+                              print('Editar');
+                              Navigator.pushNamed(context, '/editarContratos',
+                                  arguments: {
+                                    'archivo': contrato.archivo,
+                                    'id_contrato': contrato.idContrato
+                                  });
+                              setState(() {
+                                contratosBloc.add(ContratosSelect());
+                              });
+                            },
                           )
                         ],
                       ),
