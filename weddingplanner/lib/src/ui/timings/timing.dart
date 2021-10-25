@@ -188,57 +188,63 @@ class _TimingState extends State<Timing> {
 
   Widget buildList2(ItemModelTimings listItemModelTimings) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Text('Cronograma'),
-          SizedBox(
-            height: 10.0,
-          ),
-          TextField(
-            decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.search,
-                ),
-                hintText: 'Buscar...'),
-            onChanged: (String value) async {
-              if (value.length > 2) {
-                List<dynamic> usrs = itemModelTimings.results
-                    .where((imu) => imu.nombre_timing
-                        .toLowerCase()
-                        .contains(value.toLowerCase()))
-                    .toList();
-                setState(() {
-                  filterTimings.results.clear();
-                  if (usrs.length > 0) {
-                    for (var usr in usrs) {
-                      filterTimings.results.add(usr);
-                    }
-                  } else {}
-                });
-              } else {
-                setState(
-                  () {
-                    filterTimings = itemModelTimings.copy();
-                  },
-                );
-              }
-            },
-          ),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: listItemModelTimings.results.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/addActividadesTiming',
-                        arguments:
-                            listItemModelTimings.results[index].id_timing);
-                  },
-                  title:
-                      Text(listItemModelTimings.results[index].nombre_timing),
-                );
-              })
-        ],
+      child: Card(
+        margin: EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Cronograma'),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.search,
+                  ),
+                  hintText: 'Buscar...'),
+              onChanged: (String value) async {
+                if (value.length > 2) {
+                  List<dynamic> usrs = itemModelTimings.results
+                      .where((imu) => imu.nombre_timing
+                          .toLowerCase()
+                          .contains(value.toLowerCase()))
+                      .toList();
+                  setState(() {
+                    filterTimings.results.clear();
+                    if (usrs.length > 0) {
+                      for (var usr in usrs) {
+                        filterTimings.results.add(usr);
+                      }
+                    } else {}
+                  });
+                } else {
+                  setState(
+                    () {
+                      filterTimings = itemModelTimings.copy();
+                    },
+                  );
+                }
+              },
+            ),
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: listItemModelTimings.results.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/addActividadesTiming',
+                          arguments:
+                              listItemModelTimings.results[index].id_timing);
+                    },
+                    title:
+                        Text(listItemModelTimings.results[index].nombre_timing),
+                  );
+                })
+          ],
+        ),
       ),
     );
   }
