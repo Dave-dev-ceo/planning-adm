@@ -12,6 +12,8 @@ class Timing extends StatefulWidget {
 
 class _TimingState extends State<Timing> {
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
+
+  final formState = GlobalKey<FormState>();
   TextEditingController timingCtrl = new TextEditingController();
   TimingsBloc timingBloc;
   ItemModelTimings itemModelTimings;
@@ -111,10 +113,23 @@ class _TimingState extends State<Timing> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextFormField(
-                        controller: timingCtrl,
-                        decoration: new InputDecoration(
-                          labelText: 'Cronograma',
+                      child: Form(
+                        key: formState,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 7.5),
+                          child: TextFormField(
+                            controller: timingCtrl,
+                            decoration: new InputDecoration(
+                              labelText: 'Cronograma',
+                            ),
+                            validator: (value) {
+                              if (value == null || value == '') {
+                                return 'Campo no debe ir vacio';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -139,9 +154,19 @@ class _TimingState extends State<Timing> {
                           ),
                         ),
                         onTap: () async {
-                          crt = true;
-                          timingBloc.add(
-                              CreateTimingsEvent({"timing": timingCtrl.text}));
+                          if (formState.currentState.validate()) {
+                            crt = true;
+                            timingBloc.add(CreateTimingsEvent(
+                                {"timing": timingCtrl.text}));
+                          } else {
+                            final snakcbar = SnackBar(
+                              content: Text('El Campo esta vacio'),
+                              backgroundColor: Colors.red,
+                              duration: Duration(milliseconds: 500),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snakcbar);
+                          }
                         },
                       ),
                     ),
@@ -152,7 +177,7 @@ class _TimingState extends State<Timing> {
           ),
           Center(
             child:
-                Container(height: 400.0, width: 600.0, child: buildList(model)
+                Container(height: 400.0, width: 600.0, child: buildList2(model)
                     //listaEstatusInvitaciones(context),
                     ),
           ),
@@ -161,7 +186,67 @@ class _TimingState extends State<Timing> {
     );
   }
 
+  Widget buildList2(ItemModelTimings listItemModelTimings) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Text('Cronograma'),
+          SizedBox(
+            height: 10.0,
+          ),
+          TextField(
+            decoration: InputDecoration(
+                prefixIcon: Icon(
+                  Icons.search,
+                ),
+                hintText: 'Buscar...'),
+            onChanged: (String value) async {
+              if (value.length > 2) {
+                List<dynamic> usrs = itemModelTimings.results
+                    .where((imu) => imu.nombre_timing
+                        .toLowerCase()
+                        .contains(value.toLowerCase()))
+                    .toList();
+                setState(() {
+                  filterTimings.results.clear();
+                  if (usrs.length > 0) {
+                    for (var usr in usrs) {
+                      filterTimings.results.add(usr);
+                    }
+                  } else {}
+                });
+              } else {
+                setState(
+                  () {
+                    filterTimings = itemModelTimings.copy();
+                  },
+                );
+              }
+            },
+          ),
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: listItemModelTimings.results.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/addActividadesTiming',
+                        arguments:
+                            listItemModelTimings.results[index].id_timing);
+                  },
+                  title:
+                      Text(listItemModelTimings.results[index].nombre_timing),
+                );
+              })
+        ],
+      ),
+    );
+  }
+
   Widget buildList(ItemModelTimings snapshot) {
+    snapshot.results.forEach((element) {
+      print(element.toString());
+    });
     return ListView(
       shrinkWrap: true,
       padding: const EdgeInsets.all(16),
