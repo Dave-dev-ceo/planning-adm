@@ -78,7 +78,7 @@ class _MesasPageState extends State<MesasPage> {
   @override
   Widget build(BuildContext context) {
     setState(() {});
-    final listWidget = [resumenMesasPage(), asignarInvitadosMesasPage()];
+    final listWidget = [asignarInvitadosMesasPage(), resumenMesasPage()];
     size = MediaQuery.of(context).size;
     return Scaffold(
         bottomNavigationBar: _bottomNavigatorBarCustom(),
@@ -96,7 +96,7 @@ class _MesasPageState extends State<MesasPage> {
           },
         ),
         floatingActionButton:
-            indexNavBar == 0 ? _expandableButtonOptions() : _buttonAddMesas());
+            indexNavBar == 1 ? _expandableButtonOptions() : _buttonAddMesas());
   }
 
   Widget _expandableButtonOptions() {
@@ -162,20 +162,19 @@ class _MesasPageState extends State<MesasPage> {
       currentIndex: indexNavBar,
       items: [
         BottomNavigationBarItem(
+            icon: Icon(Icons.post_add_sharp),
+            label: 'Asignar',
+            tooltip: 'Asignar Mesas'),
+        BottomNavigationBarItem(
             icon: Icon(Icons.grid_view_outlined),
             label: 'Mesas',
             tooltip: 'Resumen Mesas'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.post_add_sharp),
-            label: 'Asignar',
-            tooltip: 'Asignar Mesas')
       ],
       onTap: (int index) {
         setState(() {
           indexNavBar = index;
         });
       },
-      selectedItemColor: Color(0xFFfdd89b),
     );
   }
 

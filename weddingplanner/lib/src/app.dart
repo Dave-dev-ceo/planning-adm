@@ -112,18 +112,21 @@ class MyApp extends StatelessWidget {
       ],
       title: 'App',
       theme: ThemeData(
-          textSelectionTheme: TextSelectionThemeData(
-            cursorColor: Colors.black,
-            selectionColor: Colors.grey,
-          ),
-          primarySwatch: createMaterialColor(Color(0xFFfdf4e5)),
-          textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(primary: Colors.black)),
-          inputDecorationTheme: InputDecorationTheme(
-              floatingLabelStyle: TextStyle(color: Colors.black54)),
-          //backgroundColor: createMaterialColor(Color(0xD34444)),
-          scaffoldBackgroundColor: hexToColor('#FFF9F9'),
-          fontFamily: 'Comfortaa'),
+        bottomNavigationBarTheme:
+            BottomNavigationBarThemeData(selectedItemColor: Colors.black),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Colors.black,
+          selectionColor: Colors.grey,
+        ),
+        primarySwatch: createMaterialColor(Color(0xFFfdf4e5)),
+        textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(primary: Colors.black)),
+        inputDecorationTheme: InputDecorationTheme(
+            floatingLabelStyle: TextStyle(color: Colors.black54)),
+        //backgroundColor: createMaterialColor(Color(0xD34444)),
+        scaffoldBackgroundColor: hexToColor('#FFF9F9'),
+        fontFamily: 'Comfortaa',
+      ),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,

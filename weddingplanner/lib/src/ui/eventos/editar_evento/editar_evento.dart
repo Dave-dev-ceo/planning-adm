@@ -497,23 +497,7 @@ class _EditarEventoState extends State<EditarEvento> {
                               80.0),
                           onTap: () => _selectDateEvento(context),
                         ),
-                        formItemsDesign(
-                            Icons.people,
-                            TextFormField(
-                              controller: numbInvitadosCtrl,
-                              validator: (value) {
-                                if (value == null || value == '') {
-                                  return 'El número de invitados es requerido';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              decoration: InputDecoration(
-                                labelText: 'Número de Invitados aprox.',
-                              ),
-                            ),
-                            500,
-                            80)
+
                         /* Expanded(child: BlocBuilder<TiposEventosBloc, TiposEventosState>(
                           builder: (context, state) {
                             if (state is TiposEventosInitial) {

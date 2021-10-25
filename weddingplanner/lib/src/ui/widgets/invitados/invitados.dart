@@ -99,6 +99,13 @@ class _InvitadosState extends State<Invitados> {
         length: _pages,
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              tooltip: 'Inicio',
+              icon: Icon(Icons.home),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
             automaticallyImplyLeading: widget.detalleEvento['boton'],
             title: Center(
               child: Row(
@@ -230,17 +237,13 @@ class _InvitadosState extends State<Invitados> {
         tabs.add(TabItem(titulo: 'Resumen', icono: Icons.list));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
-        tabs.add(TabItem(titulo: 'Invitados', icono: Icons.people));
-        temp += 1;
-      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
         tabs.add(
             TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-        tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open));
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+        tabs.add(TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
@@ -248,6 +251,15 @@ class _InvitadosState extends State<Invitados> {
             titulo: 'Proveedores', icono: Icons.support_agent_outlined));
         temp += 1;
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+        tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.brush));
+        temp += 1;
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+        tabs.add(TabItem(titulo: 'Invitados', icono: Icons.people));
+        temp += 1;
+      }
+
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-IVT')) {
         tabs.add(TabItem(
             titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
@@ -271,10 +283,7 @@ class _InvitadosState extends State<Invitados> {
         tabs.add(TabItem(titulo: 'Listas', icono: Icons.list));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-        tabs.add(TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
-        temp += 1;
-      }
+
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
         tabs.add(TabItem(titulo: 'Mesas', icono: Icons.contact_mail_sharp));
         temp += 1;
@@ -296,6 +305,18 @@ class _InvitadosState extends State<Invitados> {
           WP_EVT_RES_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
         ));
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
+        temp.add(Planes());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+        temp.add(Pagos());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
+        temp.add(ProveedorEvento());
+      }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+        temp.add(AutorizacionLista());
+      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
         temp.add(ListaInvitados(
           idEvento: detalleEvento['idEvento'],
@@ -304,15 +325,7 @@ class _InvitadosState extends State<Invitados> {
           WP_EVT_INV_ENV: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
         ));
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-        temp.add(Planes());
-      }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-        temp.add(AutorizacionLista());
-      }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
-        temp.add(ProveedorEvento());
-      }
+
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
         temp.add(NewContrato());
       }
@@ -322,9 +335,7 @@ class _InvitadosState extends State<Invitados> {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Listas());
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-        temp.add(Pagos());
-      }
+
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
         temp.add(MesasPage(nameEvento: widget.detalleEvento['nEvento']));
       }

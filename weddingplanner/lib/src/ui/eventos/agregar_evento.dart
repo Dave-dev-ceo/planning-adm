@@ -430,24 +430,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                           80.0),
                       onTap: () => _selectDateEvento(context),
                     ),
-                    formItemsDesign(
-                        Icons.people,
-                        TextFormField(
-                            controller: numbInvitadosContrl,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            decoration: InputDecoration(
-                                labelText: 'Número de invitados aprox.'),
-                            validator: (value) {
-                              if (value == null || value == '') {
-                                return 'El numero de invitados es requerido';
-                              } else {
-                                return null;
-                              }
-                            }),
-                        450,
-                        80),
+
                     SizedBox(
                       height: 150.0,
                     )
@@ -509,22 +492,11 @@ class _AgregarEventoState extends State<AgregarEvento> {
                               TextFormField(
                                 controller: nombreCtrl,
                                 decoration: new InputDecoration(
-                                  labelText: 'Nombre',
+                                  labelText: 'Nombre Completo',
                                 ),
                                 validator: validateNombre,
                               ),
-                              450.0,
-                              80.0),
-                          formItemsDesign(
-                              Icons.person,
-                              TextFormField(
-                                controller: apellidoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Apellidos',
-                                ),
-                                validator: validateApellido,
-                              ),
-                              450.0,
+                              900.0,
                               80.0),
                         ],
                       ),

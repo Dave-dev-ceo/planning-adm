@@ -291,10 +291,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
                             evtt.results.elementAt(0).fechaFin,
                         style: TextStyle(fontSize: 12),
                       ),
-                      Text(
-                        'Número de inivtados: ${evtt.results.elementAt(0).numeroInivtados}',
-                        style: TextStyle(fontSize: 12),
-                      ),
                       for (var inv in evtt.results.elementAt(0).involucrados)
                         mostrarInvolucrado(inv),
                     ],

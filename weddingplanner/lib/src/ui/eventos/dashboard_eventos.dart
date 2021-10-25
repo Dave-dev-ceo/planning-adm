@@ -66,18 +66,18 @@ class _DashboardEventosState extends State<DashboardEventos> {
         itemCount: snapshot.results.length,
         itemBuilder: (BuildContext ctx, index) {
           return miCard(
-              snapshot.results.elementAt(index).idEvento,
-              snapshot.results.elementAt(index).tipoEvento,
-              snapshot.results.elementAt(index).fechaInicio,
-              snapshot.results.elementAt(index).fechaFin,
-              snapshot.results.elementAt(index).fechaEvento,
-              snapshot.results.elementAt(index).involucrados,
-              snapshot.results.elementAt(index).numeroInvitados);
+            snapshot.results.elementAt(index).idEvento,
+            snapshot.results.elementAt(index).tipoEvento,
+            snapshot.results.elementAt(index).fechaInicio,
+            snapshot.results.elementAt(index).fechaFin,
+            snapshot.results.elementAt(index).fechaEvento,
+            snapshot.results.elementAt(index).involucrados,
+          );
         });
   }
 
   miCard(int idEvento, String titulo, String inicio, String fin, String fevento,
-      List involucrados, int numeroInivtados) {
+      List involucrados) {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -94,7 +94,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
                   children: <Widget>[
                     Text('Fecha Evento: ' + fevento),
                     Text('Planeación de evento: Del ' + inicio + ' al ' + fin),
-                    Text('Número de Invitados: $numeroInivtados'),
                     for (var i = 0; i < involucrados.length; i++)
                       involucrados[0].tipoInvolucrado != 'Sin involucrado'
                           ? Text(involucrados[i].tipoInvolucrado +

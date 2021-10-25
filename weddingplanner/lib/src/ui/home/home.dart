@@ -198,15 +198,19 @@ class _HomeState extends State<Home> {
             TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
         temp += 1;
       }
-      if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
-        tabs.add(TabItem(
-            titulo: 'Estatus de invitaciones',
-            icono: Icons.card_membership_rounded));
-        temp += 1;
-      }
+      // if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
+      //   tabs.add(TabItem(
+      //       titulo: 'Estatus de invitaciones',
+      //       icono: Icons.card_membership_rounded));
+      //   temp += 1;
+      // }
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
         tabs.add(TabItem(
             titulo: 'Cronogramas', icono: Icons.hourglass_bottom_rounded));
+        temp += 1;
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
+        tabs.add(TabItem(titulo: 'Plantillas', icono: Icons.copy));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
@@ -229,10 +233,7 @@ class _HomeState extends State<Home> {
             TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
-      if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
-        tabs.add(TabItem(titulo: 'Plantillas', icono: Icons.copy));
-        temp += 1;
-      }
+
       if (secciones.hasAcceso(claveSeccion: 'WP-USR')) {
         tabs.add(TabItem(titulo: 'Usuarios', icono: Icons.people));
         temp += 1;
@@ -253,14 +254,17 @@ class _HomeState extends State<Home> {
                 permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT'),
             data: widget.data));
       }
-      if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
-        pan.add(ListaEstatusInvitaciones());
-      }
+      // if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
+      //   pan.add(ListaEstatusInvitaciones());
+      // }
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
         pan.add(Timing());
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
         pan.add(Construccion());
+      }
+      if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
+        pan.add(Machotes());
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
         pan.add(Proveedores());
@@ -271,9 +275,7 @@ class _HomeState extends State<Home> {
       if (secciones.hasAcceso(claveSeccion: 'WP-PRS')) {
         pan.add(Construccion());
       }
-      if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
-        pan.add(Machotes());
-      }
+
       if (secciones.hasAcceso(claveSeccion: 'WP-USR')) {
         pan.add(Usuarios());
       }
