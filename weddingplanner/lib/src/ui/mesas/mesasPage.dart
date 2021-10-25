@@ -1,14 +1,16 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-// * Comentar cuando se Utilice en Web
+// * Comentar cuando se Utilice en movil
 import 'dart:html' as html;
+
+// * Descomentar en movil
+// import 'package:path_provider/path_provider.dart';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -18,6 +20,7 @@ import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart'
 import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
 
 import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
+import 'package:weddingplanner/src/logic/mesas_logic/mesa_logic.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
@@ -38,11 +41,14 @@ class _MesasPageState extends State<MesasPage> {
   Uint8List capturedImage;
 
   final mesasAsignadasService = MesasAsignadasService();
+  final mesasLogic = ServiceMesasLogic();
 
   GlobalKey previewContainer = new GlobalKey();
 
   List<bool> checkedsAsignados = [];
   List<bool> checkedsInvitados = [];
+  List<bool> editTitleMesa = [];
+
   List<InvitadosConfirmadosModel> _listaInvitadoDisponibles = [];
   List<MesasAsignadasModel> listAsigandosToDelete = [];
   List<MesasAsignadasModel> listToAsignarForAdd = [];
@@ -228,6 +234,9 @@ class _MesasPageState extends State<MesasPage> {
         childAspectRatio: 1.5,
       ),
       itemBuilder: (BuildContext context, int index) {
+        editTitleMesa.add(false);
+        String nameCurrentMesa;
+        int idCurrentMesa;
         final listaAsignados = listaMesasAsignadas
             .where((m) => m.idMesa == listaMesa[index].idMesa);
         return ConstrainedBox(
@@ -244,14 +253,46 @@ class _MesasPageState extends State<MesasPage> {
                     Center(
                       child: ListTile(
                         trailing: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            setState(() {
+                              editTitleMesa[index]
+                                  ? editTitleMesa[index] = false
+                                  : editTitleMesa[index] = true;
+
+                              if (!editTitleMesa[index]) {
+                                idCurrentMesa = listaMesa[index].idMesa;
+                                if (nameCurrentMesa == null ||
+                                    nameCurrentMesa == '') {
+                                  nameCurrentMesa =
+                                      listaMesa[index].descripcion;
+                                }
+                                ;
+                                mesasLogic
+                                    .updateMesa(nameCurrentMesa, idCurrentMesa)
+                                    .then((value) {
+                                  if (value == 'Ok') {
+                                    BlocProvider.of<MesasBloc>(context)
+                                        .add(MostrarMesasEvent());
+                                    _mostrarMensaje(
+                                        'La mesa se edito correctamente',
+                                        Colors.green);
+                                  } else {
+                                    _mostrarMensaje(value, Colors.red);
+                                  }
+                                });
+                              }
+                            });
+                          },
+                          icon: Icon(
+                              !editTitleMesa[index] ? Icons.edit : Icons.save),
                         ),
                         title: TextFormField(
-                          enabled: false,
+                          enabled: editTitleMesa[index],
                           decoration: InputDecoration(border: InputBorder.none),
                           initialValue: listaMesa[index].descripcion,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            nameCurrentMesa = value;
+                          },
                         ),
                       ),
                     ),
@@ -816,7 +857,6 @@ class _MesasPageState extends State<MesasPage> {
   _asignarAutoMesas() async {
     listToAsignarForAdd.clear();
     List<MesasAsignadasModel> _listaMesasAsignadas = [...listaMesasAsignadas];
-    print(_listaInvitadoDisponibles.length);
     if (listaMesaFromDB.isNotEmpty && _listaInvitadoDisponibles.isNotEmpty) {
       for (var invitado in _listaInvitadoDisponibles) {
         final mesaDisponible = listaMesaFromDB.firstWhere((mesa) {

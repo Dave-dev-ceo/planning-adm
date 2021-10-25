@@ -123,7 +123,6 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                     setState(() {
                       if (index == 0) {
                         isExpanded = !isExpanded;
-                        print(isExpanded);
                       } else {}
                     });
                   },
@@ -298,8 +297,6 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
         );
         listaMesas.add(mesa);
       }
-    } else {
-      print('Los Campos son ncesarios');
-    }
+    } else {}
   }
 }

@@ -12,6 +12,7 @@ abstract class MesasLogic {
   Future<List<MesaModel>> getAsignadasMesas();
   Future<List<MesaModel>> getMesas();
   Future<String> createMesas(List<MesaModel> listaMesasToAdd);
+  Future<String> updateMesa(String nameMesa, int idMesa);
 }
 
 class MesasAsignadasException implements Exception {}
@@ -111,6 +112,32 @@ class ServiceMesasLogic extends MesasLogic {
       throw TokenException();
     } else {
       throw MesasException();
+    }
+  }
+
+  @override
+  Future<String> updateMesa(String nameMesa, int idMesa) async {
+    String token = await SharedPreferencesT().getToken();
+
+    final endpoint = 'wedding/MESAS/updateMesa';
+
+    final data = {'descripcion': nameMesa, 'idMesa': idMesa};
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final response = await client.post(
+        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        body: json.encode(data),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return 'Ocurrio un error';
     }
   }
 }

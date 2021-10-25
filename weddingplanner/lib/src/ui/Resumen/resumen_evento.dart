@@ -134,7 +134,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 style: TextStyle(fontSize: 20),
               ),
               subtitle: Container(
-                height: 55,
+                height: 70,
                 //color: Colors.purple,
                 child: ListView.builder(
                     itemCount: reporte.results.length,
