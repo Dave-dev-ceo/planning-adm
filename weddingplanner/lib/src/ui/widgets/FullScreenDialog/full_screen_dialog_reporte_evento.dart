@@ -126,7 +126,6 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
               child: Scaffold(
                 appBar: AppBar(
                   title: Text('Reporte de evento'),
-                  backgroundColor: hexToColor('#7030a0'),
                   actions: [],
                   automaticallyImplyLeading: true,
                   bottom: TabBar(
@@ -181,7 +180,6 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
             return Scaffold(
               appBar: AppBar(
                 title: Text('Reporte de evento'),
-                backgroundColor: hexToColor('#7030a0'),
                 actions: [],
                 automaticallyImplyLeading: true,
               ),
@@ -196,7 +194,6 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
           return Scaffold(
             appBar: AppBar(
               title: Text('Reporte de evento'),
-              backgroundColor: hexToColor('#7030a0'),
               actions: [],
               automaticallyImplyLeading: true,
             ),
@@ -210,7 +207,6 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
           return Scaffold(
             appBar: AppBar(
               title: Text('Reporte de evento'),
-              backgroundColor: hexToColor('#7030a0'),
               actions: [],
               automaticallyImplyLeading: true,
             ),

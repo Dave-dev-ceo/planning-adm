@@ -5,12 +5,15 @@ import 'package:weddingplanner/src/ui/eventos/editar_evento/editar_evento.dart';
 class FullScreenDialogEditEvento extends StatefulWidget {
   final Map<String, dynamic> evento;
 
-  const FullScreenDialogEditEvento({Key key, @required this.evento}) : super(key: key);
+  const FullScreenDialogEditEvento({Key key, @required this.evento})
+      : super(key: key);
   @override
-  _FullScreenDialogAddEventoState createState() => _FullScreenDialogAddEventoState(this.evento['evento']);
+  _FullScreenDialogAddEventoState createState() =>
+      _FullScreenDialogAddEventoState(this.evento['evento']);
 }
 
-class _FullScreenDialogAddEventoState extends State<FullScreenDialogEditEvento> {
+class _FullScreenDialogAddEventoState
+    extends State<FullScreenDialogEditEvento> {
   final ItemModelEvento evento;
   _FullScreenDialogAddEventoState(this.evento);
   @override
@@ -27,7 +30,6 @@ class _FullScreenDialogAddEventoState extends State<FullScreenDialogEditEvento> 
     return Scaffold(
         appBar: AppBar(
           title: Text('Editar Evento'),
-          //backgroundColor: hexToColor('#7030a0'),
           actions: [],
           automaticallyImplyLeading: true,
         ),

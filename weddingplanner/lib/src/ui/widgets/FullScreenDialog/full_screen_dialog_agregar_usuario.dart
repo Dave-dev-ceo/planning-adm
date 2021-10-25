@@ -3,12 +3,15 @@ import 'package:weddingplanner/src/ui/usuarios/form_usuario.dart';
 
 class FullScreenDialogAddUsuario extends StatefulWidget {
   final Map<String, dynamic> datos;
-  const FullScreenDialogAddUsuario({Key key, @required this.datos}) : super(key: key);
+  const FullScreenDialogAddUsuario({Key key, @required this.datos})
+      : super(key: key);
   @override
-  _FullScreenDialogAddUsuarioState createState() => _FullScreenDialogAddUsuarioState(this.datos);
+  _FullScreenDialogAddUsuarioState createState() =>
+      _FullScreenDialogAddUsuarioState(this.datos);
 }
 
-class _FullScreenDialogAddUsuarioState extends State<FullScreenDialogAddUsuario> {
+class _FullScreenDialogAddUsuarioState
+    extends State<FullScreenDialogAddUsuario> {
   final Map<String, dynamic> datos;
 
   _FullScreenDialogAddUsuarioState(this.datos);
@@ -25,8 +28,9 @@ class _FullScreenDialogAddUsuarioState extends State<FullScreenDialogAddUsuario>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(datos['accion'] == 0 ? 'Agregar Usuario' : 'Editar Datos de Usuario'),
-        //backgroundColor: hexToColor('#7030a0'),
+        title: Text(datos['accion'] == 0
+            ? 'Agregar Usuario'
+            : 'Editar Datos de Usuario'),
         actions: [],
         automaticallyImplyLeading: true,
       ),
