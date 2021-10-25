@@ -19,6 +19,8 @@ abstract class AddContratosLogic {
   Future<bool> borrarContratoEvento(int id);
   Future<String> fetchContratosPdf(Map<String, dynamic> data);
   Future<bool> updateContratoEvento(int id, String archivo);
+  Future<String> updateValContratos(Map<String, dynamic> data);
+  Future<String> fetchValContratos(String _machote);
 }
 
 class ConsultasAddContratosLogic extends AddContratosLogic {
@@ -60,7 +62,8 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
   }
 
   @override
-  Future<ItemModelAddContratos> selectContratosArchivoPlaner(int idMachote) async {
+  Future<ItemModelAddContratos> selectContratosArchivoPlaner(
+      int idMachote) async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
@@ -120,7 +123,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
   }
 
   @override
-  Future<ItemModelAddContratos> selectContratosEvento() async{
+  Future<ItemModelAddContratos> selectContratosEvento() async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -190,7 +193,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
-        Uri.parse(confiC.url+confiC.puerto+'/wedding/PDF/createPDF'),
+        Uri.parse(confiC.url + confiC.puerto + '/wedding/PDF/createPDF'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -213,10 +216,17 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ADDCONTRATOS/updateContratoEvento'),
-        body: {'id_planner':idPlanner.toString(),'id_contrato':id.toString(),'archivo':archivo},
-        headers: {HttpHeaders.authorizationHeader: token});
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ADDCONTRATOS/updateContratoEvento'),
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_contrato': id.toString(),
+          'archivo': archivo
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     // filtro
     if (response.statusCode == 200) {
@@ -227,6 +237,53 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
       throw TokenException();
     } else {
       throw AutorizacionException();
+    }
+  }
+
+  @override
+  Future<String> updateValContratos(Map<String, dynamic> data) async {
+    print('llego a login');
+    print(data);
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+    data['id_planner'] = idPlanner.toString();
+    data['id_contrato'] = data['id_contrato'].toString();
+    print(data);
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/PDF/updateValContratos'),
+        body: data,
+        headers: {HttpHeaders.authorizationHeader: token});
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      return data['data'];
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    }
+  }
+
+  @override
+  Future<String> fetchValContratos(String _machote) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    String token = await _sharedPreferences.getToken();
+
+    Map<String, dynamic> json = {
+      'id_planner': idPlanner.toString(),
+      'id_evento': idEvento.toString(),
+      'machote': _machote
+    };
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/PDF/generarValorEtiquetasContrato'),
+        body: json,
+        headers: {HttpHeaders.authorizationHeader: token});
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      return data['data'].toString();
+    } else if (response.statusCode == 401) {
+      throw TokenException();
     }
   }
 }

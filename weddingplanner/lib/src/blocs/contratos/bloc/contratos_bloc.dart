@@ -16,15 +16,33 @@ class ContratosDosBloc extends Bloc<ContratosEvent, ContratosState> {
   Stream<ContratosState> mapEventToState(
     ContratosEvent event,
   ) async* {
-    if(event is ContratosSelect) {
+    if (event is ContratosSelect) {
       yield ContratosLogging();
       try {
-        ItemModelAddContratos autorizacion = await logic.selectContratosEvento();
+        ItemModelAddContratos autorizacion =
+            await logic.selectContratosEvento();
         yield SelectContratoState(autorizacion);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en select');
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
+      }
+    } else if (event is UpdateValContratoEvent) {
+      try {
+        print('object---->');
+        print(event.data);
+        String valString = await logic.updateValContratos(event.data);
+        yield UpdateValContratoState(valString);
+        add(ContratosSelect());
+      } on Exception {
+        print('Error');
+      }
+    } else if (event is FectValContratoEvent) {
+      try {
+        String val = await logic.fetchValContratos(event.machote);
+        yield FectValContratoState(val);
+      } on Exception {
+        print('Error');
       }
     }
   }

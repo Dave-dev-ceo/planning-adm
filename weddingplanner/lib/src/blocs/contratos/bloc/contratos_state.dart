@@ -4,6 +4,7 @@ part of 'contratos_bloc.dart';
 abstract class ContratosState {}
 
 class ContratosInitial extends ContratosState {}
+
 class ContratosLogging extends ContratosState {}
 
 // estado - select
@@ -30,4 +31,16 @@ class AutorizacionTokenErrorState extends ContratosState {
   AutorizacionTokenErrorState(this.message);
 
   List<Object> get props => [message];
+}
+
+class UpdateValContratoState extends ContratosState {
+  final String contratos;
+  UpdateValContratoState(this.contratos);
+  String get props => contratos;
+}
+
+class FectValContratoState extends ContratosState {
+  final String valor;
+  FectValContratoState(this.valor);
+  String get props => valor;
 }

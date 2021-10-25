@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
-import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart' as verlitener;
+import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart'
+    as verlitener;
 
 class AddMachote extends StatefulWidget {
   final Map map;
@@ -174,7 +175,7 @@ class _AddMachoteState extends State<AddMachote> {
           ));
         }
       });
-      if(listContrato.length > 0) {
+      if (listContrato.length > 0) {
         return ListView(
           children: [
             Column(
@@ -195,7 +196,12 @@ class _AddMachoteState extends State<AddMachote> {
     if (titulo.isNotEmpty) {
       _mensaje('Contrato agregado.');
       setState(() {
-        itemModel.removeWhere((item) => item.idContrato == idContrato);
+        // itemModel.removeWhere((item) => item.idContrato == idContrato);
+        itemModel.forEach((element) {
+          if (element.idContrato == idContrato) {
+            element.valida = false;
+          }
+        });
       });
       addContratosBloc.add(AddContratosInsert({
         'id_machote': idContrato.toString(),
@@ -210,7 +216,8 @@ class _AddMachoteState extends State<AddMachote> {
 
   // evento - muestra pdf
   _verFile(String archivo) {
-    contratosBloc.add(verlitener.FechtContratosPdfViewEvent({'machote': archivo}));
+    contratosBloc
+        .add(verlitener.FechtContratosPdfViewEvent({'machote': archivo}));
   }
 
   // mensaje

@@ -24,6 +24,7 @@ import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialo
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_rol.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_usuario.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_detalle_lista.dart';
+import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_contranto.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_evento.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_invitado.dart';
 import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_plantilla.dart';
@@ -177,6 +178,9 @@ class RouteGenerator {
       case '/verWeb':
         return MaterialPageRoute(
             builder: (context) => FullScreenViewWEB(data: args));
+      case '/editarContratos':
+        return MaterialPageRoute(
+            builder: (context) => FullScreenDialogEditContrato(data: args));
       case '/asignarMesas':
         return MaterialPageRoute(
             builder: (context) => CrearMesasDialog(
