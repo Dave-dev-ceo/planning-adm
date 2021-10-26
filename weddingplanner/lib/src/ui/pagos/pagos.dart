@@ -89,7 +89,7 @@ class _PagosState extends State<Pagos> {
           Expanded(
               flex: 3,
               child: Text(
-                'Pagos',
+                'Presupuestos',
                 style: TextStyle(fontSize: 20.0),
               )),
         ],
@@ -267,6 +267,7 @@ class _PagosState extends State<Pagos> {
 
   _botonAction() {
     return FloatingActionButton(
+      tooltip: 'Agregar Presupuesto',
       child: Icon(Icons.add),
       onPressed: () => _agregarPago(),
     );

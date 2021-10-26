@@ -20,7 +20,7 @@ class _FormPagoState extends State<FormPago> {
   Map itemPago = Map();
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     pagosBloc = BlocProvider.of<PagosBloc>(context);
     pagosBloc.add(SelectFormPagosEvent());
@@ -35,9 +35,9 @@ class _FormPagoState extends State<FormPago> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Agregar Pagos'),
+          title: Text('Agregar Presupuestos'),
         ),
-         body: _myBloc(),
+        body: _myBloc(),
       ),
     );
   }
@@ -45,7 +45,7 @@ class _FormPagoState extends State<FormPago> {
   _myBloc() {
     return BlocListener<PagosBloc, PagosState>(
       listener: (context, state) {
-        if(state is PagosCreateState) {
+        if (state is PagosCreateState) {
           itemPago['cantidad'] = '';
           itemPago['concepto'] = '';
           itemPago['precio'] = '';
@@ -54,12 +54,16 @@ class _FormPagoState extends State<FormPago> {
       },
       child: BlocBuilder<PagosBloc, PagosState>(
         builder: (context, state) {
-          if(state is PagosInitial) {
-            return Center(child: CircularProgressIndicator(),);
-          } else if(state is PagosLogging) {
-            return Center(child: CircularProgressIndicator(),);
-          }  else if(state is PagosSelectFormState) {
-            if(bandera){
+          if (state is PagosInitial) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is PagosLogging) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is PagosSelectFormState) {
+            if (bandera) {
               itemPago['servicios'] = '0';
               itemPago['proveedores'] = '0';
               itemPago['cantidad'] = '';
@@ -69,14 +73,16 @@ class _FormPagoState extends State<FormPago> {
             }
             return _formPagos(state.proveedor, state.servicios);
           } else {
-            return Center(child: CircularProgressIndicator(),);
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),
     );
   }
 
-  _formPagos(proveedor,servicios) {
+  _formPagos(proveedor, servicios) {
     return Container(
       padding: EdgeInsets.all(16.0),
       color: Colors.white,
@@ -86,48 +92,56 @@ class _FormPagoState extends State<FormPago> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Agregar Pagos',style: TextStyle(fontSize: 20.0),)
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Agregar presupuestos',
+                style: TextStyle(fontSize: 20.0),
+              )),
+          SizedBox(
+            height: 64.0,
           ),
-          SizedBox(height: 64.0,),
           _selectServicios(servicios),
-          SizedBox(height: 32.0,),
+          SizedBox(
+            height: 32.0,
+          ),
           _selectProveedores(proveedor),
-          SizedBox(height: 32.0,),
+          SizedBox(
+            height: 32.0,
+          ),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['cantidad']}'),
-            decoration: InputDecoration(
-              hintText: 'Cantidad:'
-            ),
+            decoration: InputDecoration(hintText: 'Cantidad:'),
             keyboardType: TextInputType.number,
             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
             onChanged: (valor) {
               itemPago['cantidad'] = valor;
             },
           ),
-          SizedBox(height: 32.0,),
+          SizedBox(
+            height: 32.0,
+          ),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['concepto']}'),
-            decoration: InputDecoration(
-              hintText: 'Concepto:'
-            ),
+            decoration: InputDecoration(hintText: 'Concepto:'),
             onChanged: (valor) {
               itemPago['concepto'] = valor;
             },
           ),
-          SizedBox(height: 32.0,),
+          SizedBox(
+            height: 32.0,
+          ),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['precio']}'),
-            decoration: InputDecoration(
-              hintText: 'Precio Unitario:'
-            ),
+            decoration: InputDecoration(hintText: 'Precio Unitario:'),
             keyboardType: TextInputType.number,
             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
             onChanged: (valor) {
               itemPago['precio'] = valor;
             },
           ),
-          SizedBox(height: 32.0,),
+          SizedBox(
+            height: 32.0,
+          ),
           ElevatedButton(
             child: Icon(Icons.add),
             onPressed: () => _agregarPago(),
@@ -138,7 +152,7 @@ class _FormPagoState extends State<FormPago> {
   }
 
   _selectServicios(ItemModelPagos servicios) {
-    if(servicios.pagos.length > 0) {
+    if (servicios.pagos.length > 0) {
       List temp = servicios.pagos.map((item) {
         return DropdownMenuItem<String>(
           value: item.idServicio.toString(),
@@ -149,35 +163,32 @@ class _FormPagoState extends State<FormPago> {
         );
       }).toList();
 
-      temp.add(
-        DropdownMenuItem<String>(
-          value: '0',
-          child: Text(
-            'Servicios',
-            style: TextStyle(fontSize: 18),
-          ),
-        )
-      );
+      temp.add(DropdownMenuItem<String>(
+        value: '0',
+        child: Text(
+          'Servicios',
+          style: TextStyle(fontSize: 18),
+        ),
+      ));
 
       return Container(
         width: double.infinity,
         child: DropdownButton<String>(
-          value: itemPago['servicios'],
-          icon: const Icon(Icons.arrow_downward),
-          iconSize: 24,
-          elevation: 16,
-          style: const TextStyle(color: Colors.black),
-          underline: Container(
-            height: 2,
-            color: Colors.black,
-          ),
-          onChanged: (String newValue) {
-            setState(() {
-              itemPago['servicios'] = newValue;
-            });
-          },
-          items: temp
-        ),
+            value: itemPago['servicios'],
+            icon: const Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            style: const TextStyle(color: Colors.black),
+            underline: Container(
+              height: 2,
+              color: Colors.black,
+            ),
+            onChanged: (String newValue) {
+              setState(() {
+                itemPago['servicios'] = newValue;
+              });
+            },
+            items: temp),
       );
     } else {
       return SizedBox();
@@ -185,7 +196,7 @@ class _FormPagoState extends State<FormPago> {
   }
 
   _selectProveedores(ItemModelPagos proveedor) {
-    if(proveedor.pagos.length > 0) {
+    if (proveedor.pagos.length > 0) {
       List temp = proveedor.pagos.map((item) {
         return DropdownMenuItem<String>(
           value: item.idProveedor.toString(),
@@ -196,35 +207,32 @@ class _FormPagoState extends State<FormPago> {
         );
       }).toList();
 
-      temp.add(
-        DropdownMenuItem<String>(
-          value: '0',
-          child: Text(
-            'Proveedores',
-            style: TextStyle(fontSize: 18),
-          ),
-        )
-      );
+      temp.add(DropdownMenuItem<String>(
+        value: '0',
+        child: Text(
+          'Proveedores',
+          style: TextStyle(fontSize: 18),
+        ),
+      ));
 
       return Container(
         width: double.infinity,
         child: DropdownButton<String>(
-          value: itemPago['proveedores'],
-          icon: const Icon(Icons.arrow_downward),
-          iconSize: 24,
-          elevation: 16,
-          style: const TextStyle(color: Colors.black),
-          underline: Container(
-            height: 2,
-            color: Colors.black,
-          ),
-          onChanged: (String newValue) {
-            setState(() {
-              itemPago['proveedores'] = newValue;
-            });
-          },
-          items: temp
-        ),
+            value: itemPago['proveedores'],
+            icon: const Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            style: const TextStyle(color: Colors.black),
+            underline: Container(
+              height: 2,
+              color: Colors.black,
+            ),
+            onChanged: (String newValue) {
+              setState(() {
+                itemPago['proveedores'] = newValue;
+              });
+            },
+            items: temp),
       );
     } else {
       return SizedBox();
@@ -232,13 +240,11 @@ class _FormPagoState extends State<FormPago> {
   }
 
   _agregarPago() {
-    if(
-      itemPago['servicios'] == '0' ||
-      itemPago['proveedores'] == '0' ||
-      itemPago['cantidad'] == '' ||
-      itemPago['concepto'] == '' ||
-      itemPago['precio'] == ''
-    ) {
+    if (itemPago['servicios'] == '0' ||
+        itemPago['proveedores'] == '0' ||
+        itemPago['cantidad'] == '' ||
+        itemPago['concepto'] == '' ||
+        itemPago['precio'] == '') {
       _mensaje('Todos los campos son obligatorios.');
     } else {
       pagosBloc.add(CrearPagosEvent(itemPago));
@@ -248,10 +254,8 @@ class _FormPagoState extends State<FormPago> {
 
   // mensaje
   Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(txt),
-      )
-    );
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
   }
 }

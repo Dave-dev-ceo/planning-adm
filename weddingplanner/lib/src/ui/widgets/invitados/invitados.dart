@@ -242,6 +242,11 @@ class _InvitadosState extends State<Invitados> {
             TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
         temp += 1;
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
+        tabs.add(
+            TabItem(titulo: 'Documentos', icono: Icons.description_outlined));
+        temp += 1;
+      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         tabs.add(TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
         temp += 1;
@@ -270,11 +275,7 @@ class _InvitadosState extends State<Invitados> {
             TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
-        tabs.add(
-            TabItem(titulo: 'Documentos', icono: Icons.description_outlined));
-        temp += 1;
-      }
+
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
         tabs.add(TabItem(titulo: 'Asistencia', icono: Icons.accessibility));
         temp += 1;
@@ -308,6 +309,9 @@ class _InvitadosState extends State<Invitados> {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
         temp.add(Planes());
       }
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
+        temp.add(NewContrato());
+      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Pagos());
       }
@@ -326,9 +330,6 @@ class _InvitadosState extends State<Invitados> {
         ));
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
-        temp.add(NewContrato());
-      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
         temp.add(Asistencia());
       }

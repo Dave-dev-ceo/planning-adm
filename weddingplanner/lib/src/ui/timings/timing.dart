@@ -234,6 +234,15 @@ class _TimingState extends State<Timing> {
                 itemCount: listItemModelTimings.results.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
+                    trailing: IconButton(
+                      enableFeedback: true,
+                      hoverColor: Colors.white,
+                      onPressed: () {
+                        print(
+                            listItemModelTimings.results[index].idEventoTiming);
+                      },
+                      icon: Icon(Icons.delete),
+                    ),
                     onTap: () {
                       Navigator.of(context).pushNamed('/addActividadesTiming',
                           arguments:

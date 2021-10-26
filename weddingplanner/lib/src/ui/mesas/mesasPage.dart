@@ -233,6 +233,7 @@ class _MesasPageState extends State<MesasPage> {
         childAspectRatio: 1.5,
       ),
       itemBuilder: (BuildContext context, int index) {
+        print(listaMesa[index].tipoMesa);
         editTitleMesa.add(false);
         String nameCurrentMesa;
         int idCurrentMesa;
@@ -287,12 +288,17 @@ class _MesasPageState extends State<MesasPage> {
                         ),
                         title: TextFormField(
                           enabled: editTitleMesa[index],
-                          decoration: InputDecoration(border: InputBorder.none),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
                           initialValue: listaMesa[index].descripcion,
                           onChanged: (value) {
                             nameCurrentMesa = value;
                           },
                         ),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        subtitle: Text(listaMesa[index].tipoMesa),
                       ),
                     ),
                     SizedBox(
@@ -347,8 +353,15 @@ class _MesasPageState extends State<MesasPage> {
             ? temp = asigando.acompanante
             : temp = asigando.invitado;
 
-        pw.Widget listViewChild =
-            pw.Text(temp, style: pw.TextStyle(fontSize: 10.0));
+        pw.Widget listViewChild = pw.Align(
+          alignment: pw.Alignment.topLeft,
+          child: pw.Text(
+            temp,
+            style: pw.TextStyle(
+              fontSize: 10.0,
+            ),
+          ),
+        );
 
         listaView.add(listViewChild);
       }
@@ -528,7 +541,9 @@ class _MesasPageState extends State<MesasPage> {
                       } else if (state is MostrarMesasState) {
                         if (state.listaMesas != null ||
                             state.listaMesas.isNotEmpty) {
+                          lastNumMesa = state.listaMesas.last.numDeMesa;
                           listaMesaFromDB = state.listaMesas;
+
                           return _buildListaMesas(state.listaMesas);
                         } else {
                           return Align(

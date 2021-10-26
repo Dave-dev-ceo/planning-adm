@@ -9,6 +9,8 @@ class LoadingTimingsState extends TimingsState {}
 
 class CreateTimingsState extends TimingsState {}
 
+class DeleteTimingState extends TimingsState {}
+
 class CreateTimingsOkState extends TimingsState {}
 
 class ErrorCreateTimingsState extends TimingsState {

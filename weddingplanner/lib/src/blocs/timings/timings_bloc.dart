@@ -40,6 +40,8 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
       } on TokenException {
         yield ErrorTokenTimingsState("Error de validación de token");
       }
+    } else if (event is DeleteTimingEvent) {
+      yield DeleteTimingState();
     }
   }
 }

@@ -549,32 +549,19 @@ class _EditarEventoState extends State<EditarEvento> {
                 body: Container(
                   child: Column(
                     children: <Widget>[
-                      Wrap(
-                        children: <Widget>[
-                          formItemsDesign(
-                              Icons.person,
-                              TextFormField(
-                                controller: nombreCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Nombre',
-                                ),
-                                validator: validateNombre,
+                      Wrap(children: <Widget>[
+                        formItemsDesign(
+                            Icons.person,
+                            TextFormField(
+                              controller: nombreCtrl,
+                              decoration: new InputDecoration(
+                                labelText: 'Nombre Completo',
                               ),
-                              500.0,
-                              80.0),
-                          formItemsDesign(
-                              null,
-                              TextFormField(
-                                controller: apellidoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Apellidos',
-                                ),
-                                validator: validateApellido,
-                              ),
-                              500.0,
-                              80.0),
-                        ],
-                      ),
+                              validator: validateNombre,
+                            ),
+                            1000.0,
+                            80.0),
+                      ]),
                       Wrap(
                         children: <Widget>[
                           formItemsDesign(
