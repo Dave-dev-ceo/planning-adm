@@ -13,6 +13,7 @@ abstract class MesasLogic {
   Future<List<MesaModel>> getMesas();
   Future<String> createMesas(List<MesaModel> listaMesasToAdd);
   Future<String> updateMesa(String nameMesa, int idMesa);
+  Future<String> createLayout(String fileBase64, String extension);
 }
 
 class MesasAsignadasException implements Exception {}
@@ -133,6 +134,40 @@ class ServiceMesasLogic extends MesasLogic {
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);
+
+    if (response.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return 'Ocurrio un error';
+    }
+  }
+
+  @override
+  Future<String> createLayout(String fileBase64, String extension) async {
+    String token = await _sharedPreferences.getToken();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    final data = {
+      'idEvento': idEvento,
+      'file': fileBase64,
+      'mime': extension,
+    };
+
+    final endpoint = 'wedding//MESAS/uploadLayout';
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       return 'Ok';

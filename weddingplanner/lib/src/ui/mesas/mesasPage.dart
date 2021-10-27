@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:convert';
 
 // * Comentar cuando se Utilice en movil
 import 'dart:html' as html;
@@ -8,9 +9,12 @@ import 'dart:html' as html;
 // import 'package:path_provider/path_provider.dart';
 // import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -22,6 +26,7 @@ import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
 import 'package:weddingplanner/src/logic/mesas_logic/mesa_logic.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/models/mesa/layout_mesa_model.dart';
 import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
 import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
@@ -36,13 +41,11 @@ class MesasPage extends StatefulWidget {
 }
 
 class _MesasPageState extends State<MesasPage> {
-  final asignarMesasService = MesasAsignadasService();
   // * Se crea la variable donde se guardara
   Uint8List capturedImage;
 
   final mesasAsignadasService = MesasAsignadasService();
   final mesasLogic = ServiceMesasLogic();
-
   GlobalKey previewContainer = new GlobalKey();
 
   List<bool> checkedsAsignados = [];
@@ -55,6 +58,8 @@ class _MesasPageState extends State<MesasPage> {
   List<MesasAsignadasModel> listaMesasAsignadas = [];
   List<int> listPosicionDisponible = [];
   List<MesaModel> listaMesaFromDB = [];
+
+  PdfViewerController _pdfViewerController;
 
   InvitadosMesasBloc invitadosBloc;
   MesaModel mesaModelData;
@@ -69,6 +74,7 @@ class _MesasPageState extends State<MesasPage> {
   void initState() {
     invitadosBloc = BlocProvider.of<InvitadosMesasBloc>(context);
     mesasAsignadasService.getMesasAsignadas();
+    // mesasAsignadasService.getLayoutMesa();
     BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
     BlocProvider.of<InvitadosMesasBloc>(context)
         .add(MostrarInvitadosMesasEvent());
@@ -78,25 +84,105 @@ class _MesasPageState extends State<MesasPage> {
   @override
   Widget build(BuildContext context) {
     setState(() {});
-    final listWidget = [asignarInvitadosMesasPage(), resumenMesasPage()];
+    final listWidget = [
+      asignarInvitadosMesasPage(),
+      resumenMesasPage(),
+      layoutMesa()
+    ];
     size = MediaQuery.of(context).size;
     return Scaffold(
-        bottomNavigationBar: _bottomNavigatorBarCustom(),
-        body: StreamBuilder(
-          stream: mesasAsignadasService.mesasAsignadasStream,
-          builder:
-              (context, AsyncSnapshot<List<MesasAsignadasModel>> snapshot) {
-            if (snapshot.hasData) {
-              listaMesasAsignadas = snapshot.data;
-              return listWidget[indexNavBar];
-            } else {
-              listaMesasAsignadas = [];
-              return listWidget[indexNavBar];
-            }
+      bottomNavigationBar: _bottomNavigatorBarCustom(),
+      body: StreamBuilder(
+        stream: mesasAsignadasService.mesasAsignadasStream,
+        builder: (context, AsyncSnapshot<List<MesasAsignadasModel>> snapshot) {
+          if (snapshot.hasData) {
+            listaMesasAsignadas = snapshot.data;
+            return listWidget[indexNavBar];
+          } else {
+            listaMesasAsignadas = [];
+            return listWidget[indexNavBar];
+          }
+        },
+      ),
+      floatingActionButton: buttonByPage(),
+    );
+  }
+
+  Widget buttonByPage() {
+    switch (indexNavBar) {
+      case 0:
+        return _buttonAddMesas();
+        break;
+      case 1:
+        return _expandableButtonOptions();
+        break;
+      default:
+        return _buttonUpdateLayout();
+        break;
+    }
+  }
+
+  Widget _buttonUpdateLayout() {
+    return SpeedDial(
+      activeForegroundColor: Colors.blueGrey,
+      icon: Icons.add,
+      activeIcon: Icons.close,
+      activeLabel: Text('Cerrar'),
+      animatedIconTheme: IconThemeData(size: 22.0),
+      curve: Curves.bounceIn,
+      animationSpeed: 200,
+      tooltip: 'Ver mas..',
+      elevation: 8.0,
+      shape: CircleBorder(),
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.add),
+          label: 'Añadir Mesa',
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed('/asignarMesas',
+                    arguments:
+                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+                .then((value) => {
+                      lastNumMesa = value,
+                    });
           },
         ),
-        floatingActionButton:
-            indexNavBar == 1 ? _expandableButtonOptions() : _buttonAddMesas());
+        SpeedDialChild(
+          child: Icon(Icons.upload),
+          label: 'Subir Archivo',
+          onTap: () async {
+            const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
+
+            FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowedExtensions: extensiones,
+              allowMultiple: false,
+            );
+
+            if (pickedFile != null) {
+              final bytes = pickedFile.files.first.bytes;
+              String _extension = pickedFile.files.first.extension;
+
+              String file64 = base64Encode(bytes);
+
+              mesasLogic.createLayout(file64, _extension).then((value) => {
+                    if (value == 'Ok')
+                      {
+                        setState(() {
+                          mesasAsignadasService.getLayoutMesa();
+                        }),
+                        _mostrarMensaje(
+                            'Se subio correctamente el layout', Colors.green)
+                      }
+                    else
+                      {_mostrarMensaje(value, Colors.red)}
+                  });
+            } else {}
+          },
+        ),
+      ],
+    );
   }
 
   Widget _expandableButtonOptions() {
@@ -169,6 +255,12 @@ class _MesasPageState extends State<MesasPage> {
             icon: Icon(Icons.grid_view_outlined),
             label: 'Mesas',
             tooltip: 'Resumen Mesas'),
+        BottomNavigationBarItem(
+            icon: Icon(
+              Icons.layers_outlined,
+            ),
+            label: 'Layout Mesa',
+            tooltip: 'Layout Mesa')
       ],
       onTap: (int index) {
         setState(() {
@@ -233,7 +325,6 @@ class _MesasPageState extends State<MesasPage> {
         childAspectRatio: 1.5,
       ),
       itemBuilder: (BuildContext context, int index) {
-        print(listaMesa[index].tipoMesa);
         editTitleMesa.add(false);
         String nameCurrentMesa;
         int idCurrentMesa;
@@ -539,34 +630,52 @@ class _MesasPageState extends State<MesasPage> {
                           child: CircularProgressIndicator(),
                         );
                       } else if (state is MostrarMesasState) {
-                        if (state.listaMesas != null ||
-                            state.listaMesas.isNotEmpty) {
+                        if (state.listaMesas != null) {
                           lastNumMesa = state.listaMesas.last.numDeMesa;
                           listaMesaFromDB = state.listaMesas;
 
-                          return _buildListaMesas(state.listaMesas);
+                          if (state.listaMesas.length > 0) {
+                            return _buildListaMesas(state.listaMesas);
+                          } else {
+                            return Expanded(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'No se encontraron datos',
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                              ),
+                            );
+                          }
                         } else {
-                          return Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'No se encontraron datos',
-                              style: Theme.of(context).textTheme.headline6,
+                          return Expanded(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'No se encontraron datos',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
                             ),
                           );
                         }
                       } else if (state is ErrorMesasState) {
-                        return Container(
-                          child: Center(child: Text(state.message)),
+                        return Expanded(
+                          child: Container(
+                            child: Center(child: Text(state.message)),
+                          ),
                         );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        print('Entre else MostrasMesas State');
+
+                        return Center(child: Text('No se encontraron mesas'));
                       }
                     },
                   ),
-                  Divider(),
-                  SizedBox(
-                    height: 10.0,
-                  ),
+                  if (mesaModelData != null) Divider(),
+                  if (mesaModelData != null)
+                    SizedBox(
+                      height: 10.0,
+                    ),
                   if (mesaModelData != null) Expanded(child: formTableByMesa())
                 ],
               ),
@@ -656,8 +765,8 @@ class _MesasPageState extends State<MesasPage> {
 
         listToAsignarForAdd.forEach((asignado) {});
 
-        final data =
-            await asignarMesasService.asignarPersonasMesas(listToAsignarForAdd);
+        final data = await mesasAsignadasService
+            .asignarPersonasMesas(listToAsignarForAdd);
         mesaModelData.dimension;
         if (data == 'Ok') {
           await invitadosBloc.add(MostrarInvitadosMesasEvent());
@@ -910,8 +1019,8 @@ class _MesasPageState extends State<MesasPage> {
         }
       }
       if (listToAsignarForAdd.isNotEmpty && listToAsignarForAdd.length > 0) {
-        final data =
-            await asignarMesasService.asignarPersonasMesas(listToAsignarForAdd);
+        final data = await mesasAsignadasService
+            .asignarPersonasMesas(listToAsignarForAdd);
         if (data == 'Ok') {
           await invitadosBloc.add(MostrarInvitadosMesasEvent());
 
@@ -937,28 +1046,77 @@ class _MesasPageState extends State<MesasPage> {
     }
   }
 
-  _showDialogPdf(Uint8List fileToView) {
-    return showDialog(
-      context: context,
-      builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.nameEvento),
-        ),
-        body: SfPdfViewer.memory(
-          fileToView,
-          pageLayoutMode: PdfPageLayoutMode.continuous,
-          pageSpacing: 10.0,
-          canShowPaginationDialog: true,
-        ),
+  // * Layout Mesas Page
+
+  Widget layoutMesa() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          FutureBuilder(
+            future: mesasAsignadasService.getLayoutMesa(),
+            builder: (BuildContext context,
+                AsyncSnapshot<LayoutMesaModel> snapshot) {
+              print(snapshot.data);
+              if (snapshot.hasData) {
+                if (snapshot.data.file != null) {
+                  return _viewFile(snapshot.data);
+                } else {
+                  return Align(
+                    alignment: Alignment.center,
+                    child: Center(
+                      child: Text('No se encontraron datos'),
+                    ),
+                  );
+                }
+              } else {
+                return Align(
+                  alignment: Alignment.center,
+                  child: Center(
+                    child: Text('No se encontraron datos'),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }
 
-  // @override
-  // void dispose() {
-  //   mesasAsignadasService.dispose();
-  //   super.dispose();
-  // }
+  Widget _viewFile(LayoutMesaModel layoutMesa) {
+    print('Entre');
+    if (layoutMesa.mime == 'pdf') {
+      final bytes = base64Decode(layoutMesa.file);
+      return Center(
+        child: Container(
+          width: 500.0,
+          height: MediaQuery.of(context).size.height,
+          child: SfPdfViewer.memory(
+            bytes,
+            controller: _pdfViewerController,
+            canShowScrollStatus: true,
+            interactionMode: PdfInteractionMode.pan,
+          ),
+        ),
+      );
+    } else {
+      final bytes = base64Decode(layoutMesa.file);
+      final image = MemoryImage(bytes);
+      return Center(
+        child: Container(
+          width: 500.0,
+          height: MediaQuery.of(context).size.height,
+          child: ClipRect(
+            child: PhotoView(
+              tightMode: true,
+              backgroundDecoration: BoxDecoration(color: Colors.white),
+              imageProvider: image,
+            ),
+          ),
+        ),
+      );
+    }
+  }
 
   _mostrarMensaje(String msj, Color color) {
     SnackBar snackBar = SnackBar(

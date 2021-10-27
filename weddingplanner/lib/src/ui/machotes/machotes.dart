@@ -13,13 +13,19 @@ class Machotes extends StatefulWidget {
 class _MachotesState extends State<Machotes> {
   MachotesBloc machotesBloc;
   ItemModelMachotes itemModelMC;
-  List<Map<String,String>> radioB = [{"nombre":"Contratos","clave":"CT"},{"nombre":"Recibos","clave":"RC"},{"nombre":"Pagos","clave":"PG"},{"nombre":"Minutas","clave":"MT"}];
+  List<Map<String, String>> radioB = [
+    {"nombre": "Contratos", "clave": "CT"},
+    {"nombre": "Recibos", "clave": "RC"},
+    {"nombre": "Pagos", "clave": "PG"},
+    {"nombre": "Minutas", "clave": "MT"},
+    {"nombre": "Oden de pago", "clave": "OP"},
+  ];
   TextEditingController descripcionMachote;
   GlobalKey<FormState> keyForm;
   int _grupoRadio = 0;
   String _clave = "CT";
   int _selectedIndex = 0;
-  
+
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
@@ -32,16 +38,20 @@ class _MachotesState extends State<Machotes> {
   _goEdit(BuildContext contx) async {
     if (keyForm.currentState.validate()) {
       Navigator.of(contx).pop();
-      Navigator.of(context)
-          .pushNamed('/addMachote', arguments: [descripcionMachote.text, _clave]);
+      Navigator.of(context).pushNamed('/addMachote',
+          arguments: [descripcionMachote.text, _clave]);
     }
   }
 
   _contectCont(ItemModelMachotes itemMC, int element) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context)
-          .pushNamed('/editPlantilla', arguments: [itemMC.results.elementAt(element).descripcion, itemMC.results.elementAt(element).clave,itemMC.results.elementAt(element).machote, itemMC.results.elementAt(element).idMachote.toString()]);
+        Navigator.of(context).pushNamed('/editPlantilla', arguments: [
+          itemMC.results.elementAt(element).descripcion,
+          itemMC.results.elementAt(element).clave,
+          itemMC.results.elementAt(element).machote,
+          itemMC.results.elementAt(element).idMachote.toString()
+        ]);
         //print(itemModelMC.results.elementAt(element).machote);
       },
       child: Card(
@@ -52,12 +62,15 @@ class _MachotesState extends State<Machotes> {
           children: <Widget>[
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Container(alignment: Alignment.topLeft,
+              title: Container(
+                alignment: Alignment.topLeft,
                 height: 25,
                 width: double.infinity,
                 child: FittedBox(
-                                child: Text(itemMC.results.elementAt(element).descripcion,
-                    style: TextStyle(fontSize: 20),textAlign: TextAlign.left,
+                  child: Text(
+                    itemMC.results.elementAt(element).descripcion,
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.left,
                   ),
                 ),
               ),
@@ -75,55 +88,63 @@ class _MachotesState extends State<Machotes> {
   }
 
   _constructorLista(ItemModelMachotes modelMC) {
-    return IndexedStack(
-          index: _selectedIndex,
-          children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < modelMC.results.length; i++)
-                    if(modelMC.results.elementAt(i).clave == 'CT')
-                      _contectCont(modelMC, i)
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < modelMC.results.length; i++)
-                    if(modelMC.results.elementAt(i).clave == 'RC')
-                      _contectCont(modelMC, i)
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < modelMC.results.length; i++)
-                    if(modelMC.results.elementAt(i).clave == 'PG')
-                      _contectCont(modelMC, i)
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < modelMC.results.length; i++)
-                    if(modelMC.results.elementAt(i).clave == 'MT')
-                      _contectCont(modelMC, i)
-                ],
-              ),
-            ),
-          ]
-    );
+    return IndexedStack(index: _selectedIndex, children: [
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'CT')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'RC')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'PG')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'MT')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'OP')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+    ]);
   }
 
   String validateDescripcion(String value) {
@@ -145,35 +166,35 @@ class _MachotesState extends State<Machotes> {
         return AlertDialog(
           title: Text('Crear plantilla', textAlign: TextAlign.center),
           content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState){
+            builder: (BuildContext context, StateSetter setState) {
               return Form(
                 key: keyForm,
                 child: SingleChildScrollView(
                   child: ListBody(
                     children: [
                       Column(
-                        children: <Widget>[  
-                          for(int i = 0;i < radioB.length; i++)
-                          ListTile(
-                            title: Text(
-                              radioB.elementAt(i)['nombre'],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(color: Colors.black),
+                        children: <Widget>[
+                          for (int i = 0; i < radioB.length; i++)
+                            ListTile(
+                              title: Text(
+                                radioB.elementAt(i)['nombre'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(color: Colors.black),
+                              ),
+                              leading: Radio(
+                                value: i,
+                                groupValue: _grupoRadio,
+                                activeColor: Color(0xFF6200EE),
+                                onChanged: (int value) {
+                                  setState(() {
+                                    _grupoRadio = value;
+                                    _clave = radioB.elementAt(i)['clave'];
+                                  });
+                                },
+                              ),
                             ),
-                            leading: Radio(
-                              value: i,
-                              groupValue: _grupoRadio,
-                              activeColor: Color(0xFF6200EE),
-                              onChanged: (int value) {
-                                      setState(() {
-                                        _grupoRadio = value;
-                                        _clave = radioB.elementAt(i)['clave'];
-                                      });
-                                    },
-                            ),
-                          ),  
                         ],
                       ),
                       TextFormField(
@@ -243,7 +264,7 @@ class _MachotesState extends State<Machotes> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, 
+        type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.gavel),
@@ -260,6 +281,10 @@ class _MachotesState extends State<Machotes> {
           BottomNavigationBarItem(
             icon: Icon(Icons.request_page),
             label: 'Minutas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt_outlined),
+            label: 'Orden de pago',
           ),
         ],
         currentIndex: _selectedIndex,

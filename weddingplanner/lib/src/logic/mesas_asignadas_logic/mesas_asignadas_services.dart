@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:weddingplanner/src/models/mesa/layout_mesa_model.dart';
 import 'package:weddingplanner/src/resources/config_conection.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,6 +13,7 @@ class MesasAsignadasService {
   ConfigConection confiC = ConfigConection();
 
   List<MesasAsignadasModel> _mesasAsignadas = [];
+  LayoutMesaModel _layoutMesa;
 
   final _mesasAsignadasStreamController =
       StreamController<List<MesasAsignadasModel>>.broadcast();
@@ -22,8 +24,50 @@ class MesasAsignadasService {
   Stream<List<MesasAsignadasModel>> get mesasAsignadasStream =>
       _mesasAsignadasStreamController.stream;
 
+  final _layoutMesaStreamController =
+      StreamController<LayoutMesaModel>.broadcast();
+
+  Function(LayoutMesaModel) get layoutMesaSink =>
+      _layoutMesaStreamController.sink.add;
+
+  Stream<LayoutMesaModel> get layoutMesaStream =>
+      _layoutMesaStreamController.stream;
+
   void dispose() {
     _mesasAsignadasStreamController?.close();
+    _layoutMesaStreamController?.close();
+  }
+
+  Future<LayoutMesaModel> getLayoutMesa() async {
+    String token = await _sharedPreferencesT.getToken();
+    int idEvento = await _sharedPreferencesT.getIdEvento();
+
+    final data = {
+      'idEvento': idEvento,
+    };
+
+    final endpoint = 'wedding/MESAS/getLayoutMesa';
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final response = await http.post(
+        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        body: json.encode(data),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      final layoutMesa = LayoutMesaModel.fromJson(json.decode(response.body));
+
+      _layoutMesa = layoutMesa;
+      layoutMesaSink(_layoutMesa);
+      return _layoutMesa;
+    } else {
+      return null;
+    }
   }
 
   Future<List<MesasAsignadasModel>> getMesasAsignadas() async {
@@ -77,8 +121,6 @@ class MesasAsignadasService {
 
     final response = await http.post(Uri.parse(url + '/' + endpoint),
         body: json.encode(data), headers: headers);
-    print('Entra Aqui');
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
       print('Entra aqui');
@@ -113,6 +155,7 @@ class MesasAsignadasService {
     if (response.statusCode == 200) {
       await _sharedPreferencesT.setToken(json.decode(response.body)['token']);
       mesasAsignadasSink(_mesasAsignadas);
+
       return 'Ok';
     } else {
       return 'Ocurrio un error';

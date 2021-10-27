@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_etiquetas.dart';
@@ -10,7 +11,8 @@ import 'package:weddingplanner/src/models/item_model_machotes.dart';
 class AgregarMachote extends StatefulWidget {
   final String descripcionMachote;
   final String claveMachote;
-  const AgregarMachote({Key key, this.descripcionMachote,this.claveMachote}) : super(key: key);
+  const AgregarMachote({Key key, this.descripcionMachote, this.claveMachote})
+      : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => AgregarMachote(),
       );
@@ -27,7 +29,7 @@ class _AgregarMachoteState extends State<AgregarMachote> {
   MachotesBloc machotesBloc;
   ItemModelEtiquetas itemModelET;
   ItemModelMachotes itemModelMC;
-  
+
   HtmlEditorController controller = new HtmlEditorController();
 
   _AgregarMachoteState(this.descripcionMachote, this.claveMachote);
@@ -128,31 +130,41 @@ class _AgregarMachoteState extends State<AgregarMachote> {
                         border: Border.all(color: Colors.black, width: 1)),
                   ),
                 ),
+              ),
+              TextButton(
+                onPressed: () {
+                  print('asdas');
+                },
+                child: Text('dasd'),
               )
             ],
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        onPressed: () async {
-          String txt = await controller.getText();
-          machotesBloc.add(CreateMachotesEvent(
-              {"descripcion": descripcionMachote, "machote": txt, "clave": claveMachote},
-              itemModelMC));
-          Navigator.of(context).pop();
-          //await _showMyDialogGuardar(context);
+      floatingActionButton: PointerInterceptor(
+        child: FloatingActionButton(
+          child: Icon(Icons.save),
+          onPressed: () async {
+            String txt = await controller.getText();
+            machotesBloc.add(CreateMachotesEvent({
+              "descripcion": descripcionMachote,
+              "machote": txt,
+              "clave": claveMachote
+            }, itemModelMC));
+            Navigator.of(context).pop();
+            //await _showMyDialogGuardar(context);
 
-          //final txt = await controller.getText();
-          /*int i = 0;
-          String res;
-          while (i < datas.length) {
-            res =i==0?txt.replaceAll(datas.elementAt(i), dataInfo.elementAt(i)):res.replaceAll(datas.elementAt(i), dataInfo.elementAt(i));
-            i++;
-          }*/
-          //print(txt);
-        },
+            //final txt = await controller.getText();
+            /*int i = 0;
+            String res;
+            while (i < datas.length) {
+              res =i==0?txt.replaceAll(datas.elementAt(i), dataInfo.elementAt(i)):res.replaceAll(datas.elementAt(i), dataInfo.elementAt(i));
+              i++;
+            }*/
+            //print(txt);
+          },
+        ),
       ),
     );
   }
