@@ -144,8 +144,10 @@ class New_ContratoState extends State<NewContrato> {
         return _recibosItem();
       case 2:
         return _pagosItem();
-      default:
+      case 3:
         return _minutasItem();
+      default:
+        return _ordenPagos();
     }
   }
 
@@ -471,6 +473,113 @@ class New_ContratoState extends State<NewContrato> {
     return item;
   }
 
+  _ordenPagos() {
+    List<Widget> item = [];
+    if (itemModel.length != 0) {
+      itemModel.forEach((contrato) {
+        if (contrato.clave == 'OP') {
+          item.add(Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: EdgeInsets.all(20),
+            elevation: 10,
+            child: ListTile(
+                contentPadding: EdgeInsets.all(20.0),
+                leading: Icon(Icons.gavel),
+                title: Text(contrato.description),
+                subtitle: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
+                            icon: Icon(Icons.remove_red_eye_rounded),
+                            label: Text('Ver'),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote, contrato.archivo),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
+                            icon: Icon(Icons.edit),
+                            label: Text('Editar'),
+                            onPressed: () {
+                              print('Editar');
+                              Navigator.pushNamed(context, '/editarContratos',
+                                  arguments: {
+                                    'archivo': contrato.archivo,
+                                    'id_contrato': contrato.idContrato
+                                  });
+                              setState(() {
+                                contratosBloc.add(ContratosSelect());
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
+                            icon: Icon(Icons.cloud_download_outlined),
+                            label: Text('Descargar archivo'),
+                            onPressed: () => _crearPDF(contrato.idMachote,
+                                contrato.archivo, contrato.description),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton.icon(
+                            icon: Icon(Icons.cloud_upload_outlined),
+                            label: Text('Subir archivo'),
+                            onPressed: () => _uploadFile(contrato.idContrato),
+                          )
+                        ],
+                      ),
+                    ),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.remove_red_eye_rounded),
+                                  label: Text('Ver archivo subido'),
+                                  onPressed: () =>
+                                      _verNewFile(contrato.original),
+                                )
+                              ],
+                            ),
+                          )
+                        : SizedBox()
+                  ],
+                ),
+                trailing: GestureDetector(
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
+                  onTap: () => _borrarContratos(contrato.idContrato),
+                )),
+          ));
+        }
+      });
+    }
+    return item;
+  }
+
   _minutasItem() {
     List<Widget> item = [];
     if (itemModel.length != 0) {
@@ -599,6 +708,10 @@ class New_ContratoState extends State<NewContrato> {
           icon: Icon(Icons.receipt),
           label: 'Minutas',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.list_alt),
+          label: 'Orden de pago',
+        ),
       ],
       currentIndex: _selectedIndex,
       onTap: (index) => setState(() => _selectedIndex = index),
@@ -648,8 +761,11 @@ class New_ContratoState extends State<NewContrato> {
       case 2:
         _createContrato('PG');
         break;
-      default:
+      case 3:
         _createContrato('MT');
+        break;
+      default:
+        _createContrato('OP');
         break;
     }
   }
@@ -668,9 +784,13 @@ class New_ContratoState extends State<NewContrato> {
         Navigator.pushNamed(context, '/addContratos',
             arguments: {'clave': 'PG'});
         break;
-      default:
+      case 3:
         Navigator.pushNamed(context, '/addContratos',
             arguments: {'clave': 'MT'});
+        break;
+      default:
+        Navigator.pushNamed(context, '/addContratos',
+            arguments: {'clave': 'OP'});
         break;
     }
   }
