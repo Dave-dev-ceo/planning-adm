@@ -153,7 +153,7 @@ class ServiceMesasLogic extends MesasLogic {
       'mime': extension,
     };
 
-    final endpoint = 'wedding//MESAS/uploadLayout';
+    final endpoint = 'wedding/MESAS/uploadLayout';
 
     final headers = {
       HttpHeaders.authorizationHeader: token,
