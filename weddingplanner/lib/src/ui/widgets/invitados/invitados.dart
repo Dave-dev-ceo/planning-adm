@@ -116,7 +116,7 @@ class _InvitadosState extends State<Invitados> {
                       child: Column(
                         children: [
                           Text(
-                            'CONFIGURACIÓN EVENTO',
+                            'EVENTO',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 12.0),
                           ),
