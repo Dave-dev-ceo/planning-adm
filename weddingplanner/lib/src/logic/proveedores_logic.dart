@@ -11,6 +11,8 @@ abstract class LogicProveedores {
   Future<ItemModelServicioByProv> fetchServicioByProv();
   Future<int> createProveedor(Map<String, dynamic> data);
   Future<int> deleteServicioProv(int idServcio);
+  Future<String> updateProveedor(ItemProveedor proveedor);
+  Future<String> deleteProveedor(int idProveedor);
 }
 
 class ProveedoresException implements Exception {}
@@ -137,6 +139,78 @@ class FetchProveedoresLogic extends LogicProveedores {
       throw TokenException();
     } else {
       throw ProveedoresException();
+    }
+  }
+
+  @override
+  Future<String> updateProveedor(ItemProveedor proveedor) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
+    if (proveedor.estatus == 'Activo') {
+      proveedor.estatus = 'A';
+    } else {
+      proveedor.estatus = 'I';
+    }
+
+    final endpoint = '/wedding/PROVEEDORES/updateProveedorAdmin';
+
+    final body = {
+      'idPlanner': idPlanner,
+      'idUsuario': idUsuario,
+      'idProveedor': proveedor.id_proveedor,
+      'nombre': proveedor.nombre,
+      'descripcion': proveedor.descripcion,
+      'estatus': proveedor.estatus,
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final response = await client.post(
+      Uri.parse(configC.url + configC.puerto + endpoint),
+      body: json.encode(body),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      await _sharedPreferences.setToken(json.decode(response.body)['token']);
+      return 'Ok';
+    } else {
+      print(response.body);
+      return response.body;
+    }
+  }
+
+  @override
+  Future<String> deleteProveedor(int idProveedor) async {
+    String token = await _sharedPreferences.getToken();
+    String idPlanner = await _sharedPreferences.getIdPlanner();
+
+    const endpoint = '';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {'idPlanner': idPlanner, 'idProveedor': idProveedor};
+
+    final resp = await client.post(
+      Uri.parse(configC.url + configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return resp.body;
     }
   }
 }

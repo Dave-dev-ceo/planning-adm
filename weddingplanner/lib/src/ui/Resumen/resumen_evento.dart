@@ -40,58 +40,11 @@ class _ResumenEventoState extends State<ResumenEvento> {
       stream: blocInvitados.reporteGrupos,
       builder: (context, AsyncSnapshot<ItemModelReporteGrupos> snapshot) {
         if (snapshot.hasData) {
-          return buildListGrupos(snapshot);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
         return Center(child: CircularProgressIndicator());
       },
-    );
-  }
-
-  Widget buildListGrupos(AsyncSnapshot<ItemModelReporteGrupos> snapshot) {
-    double sizeHeight = 200;
-    return Container(
-        width: 400,
-        //color: Colors.pink,
-        height: sizeHeight,
-        child: miCardReportesGrupos(snapshot.data));
-  }
-
-  miCardReportesGrupos(ItemModelReporteGrupos dataGrupos) {
-    return GestureDetector(
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(20),
-        elevation: 10,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text(
-                'Relación',
-                style: TextStyle(fontSize: 20),
-              ),
-              subtitle: Container(
-                height: 60,
-                //color: Colors.purple,
-                child: ListView.builder(
-                    itemCount: dataGrupos.results.length,
-                    itemBuilder: (_, int index) {
-                      return Text(dataGrupos.results.elementAt(index).grupo +
-                          ': ' +
-                          dataGrupos.results
-                              .elementAt(index)
-                              .cantidad
-                              .toString());
-                    }),
-              ),
-              leading: Icon(Icons.event),
-            ),
-          ],
-        ),
-      ),
-      onTap: () {},
     );
   }
 
@@ -153,69 +106,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
         Navigator.of(context)
             .pushNamed('/reporteEvento', arguments: "asistencia");
       },
-    );
-  }
-
-  reporteInvitadosGenero() {
-    blocInvitados.fetchAllReporteInvitadosGenero(context);
-    return StreamBuilder(
-      stream: blocInvitados.reporteInvitadosGenero,
-      builder:
-          (context, AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
-        if (snapshot.hasData) {
-          return buildListGenero(snapshot);
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return Center(child: CircularProgressIndicator());
-      },
-    );
-  }
-
-  Widget buildListGenero(
-      AsyncSnapshot<ItemModelReporteInvitadosGenero> snapshot) {
-    return Container(
-        width: 400,
-        height: 200,
-        child: miCardReportesInvitadosGenero(
-            snapshot.data.masculino, snapshot.data.femenino));
-  }
-
-  miCardReportesInvitadosGenero(String hombre, String mujer) {
-    return GestureDetector(
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(20),
-        elevation: 10,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text(
-                'Genero',
-                style: TextStyle(fontSize: 20),
-              ),
-              subtitle: Wrap(
-                spacing: 10,
-                runSpacing: 7,
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Masculino: ' + hombre,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  Text(
-                    'Femenino: ' + mujer,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
-              ),
-              leading: Icon(Icons.event),
-            ),
-          ],
-        ),
-      ),
-      onTap: () {},
     );
   }
 
@@ -336,8 +226,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 //child:
                 reporteEvento(),
                 reporteInvitados(),
-                reporteInvitadosGenero(),
-                reporteGrupos(),
+
                 //),
               ],
             ),

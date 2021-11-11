@@ -637,37 +637,29 @@ class _MesasPageState extends State<MesasPage> {
                           if (state.listaMesas.length > 0) {
                             return _buildListaMesas(state.listaMesas);
                           } else {
-                            return Expanded(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'No se encontraron datos',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              ),
-                            );
-                          }
-                        } else {
-                          return Expanded(
-                            child: Align(
+                            return Align(
                               alignment: Alignment.center,
                               child: Text(
                                 'No se encontraron datos',
                                 style: Theme.of(context).textTheme.headline6,
                               ),
+                            );
+                          }
+                        } else {
+                          return Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'No se encontraron datos',
+                              style: Theme.of(context).textTheme.headline6,
                             ),
                           );
                         }
                       } else if (state is ErrorMesasState) {
-                        return Expanded(
-                          child: Container(
-                            child: Center(child: Text(state.message)),
-                          ),
+                        return Container(
+                          child: Center(child: Text(state.message)),
                         );
                       } else {
-                        print('Entre else MostrasMesas State');
-
-                        return Center(child: Text('No se encontraron mesas'));
+                        return Container();
                       }
                     },
                   ),
@@ -1056,7 +1048,6 @@ class _MesasPageState extends State<MesasPage> {
             future: mesasAsignadasService.getLayoutMesa(),
             builder: (BuildContext context,
                 AsyncSnapshot<LayoutMesaModel> snapshot) {
-              print(snapshot.data);
               if (snapshot.hasData) {
                 if (snapshot.data.file != null) {
                   return _viewFile(snapshot.data);
@@ -1084,7 +1075,6 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget _viewFile(LayoutMesaModel layoutMesa) {
-    print('Entre');
     if (layoutMesa.mime == 'pdf') {
       final bytes = base64Decode(layoutMesa.file);
       return Center(

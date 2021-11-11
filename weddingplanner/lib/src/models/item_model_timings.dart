@@ -40,13 +40,15 @@ class _Result {
   int _idTiming;
   String _nombreTiming;
   int _idEventoTiming;
+  String _estatus;
   DateTime _fechaInicio;
 
   _Result(result) {
     _idTiming = result['id_tipo_timing'];
     _nombreTiming = result['nombre_timing'];
     _idEventoTiming = result['id_evento_timing'];
-    if(result['fecha_inicio'] != null)
+    _estatus = result['estatus'];
+    if (result['fecha_inicio'] != null)
       _fechaInicio = DateTime.parse(result['fecha_inicio']);
   }
 
@@ -55,15 +57,18 @@ class _Result {
     _nombreTiming = dataObj._nombreTiming;
     _idEventoTiming = dataObj._idEventoTiming;
     _fechaInicio = dataObj._fechaInicio;
+    _estatus = dataObj._estatus;
   }
 
   int get id_timing => this._idTiming;
   String get nombre_timing => this._nombreTiming;
   int get idEventoTiming => this._idEventoTiming;
   DateTime get fechaInicio => this._fechaInicio;
+  String get estatus => this._estatus;
 
   set id_timing(int value) => this._idTiming = value;
   set nombre_timing(value) => this._nombreTiming = value;
   set idEventoTiming(int value) => this._idEventoTiming = value;
+  set estatus(String value) => this._estatus = value;
   set fechaInicio(DateTime value) => this._fechaInicio = value;
 }

@@ -53,6 +53,14 @@ class ProveedorBloc extends Bloc<ProveedorEvent, ProveedorState> {
           add(FechtSevicioByProveedorEvent());
         }
       } catch (e) {}
+    } else if (event is UpdateProveedor) {
+      try {
+        final response = await logic.updateProveedor(event.proveedor);
+        if (response == 'Ok') {
+          add(FechtProveedorEvent());
+          add(FechtSevicioByProveedorEvent());
+        }
+      } catch (e) {}
     }
   }
 }

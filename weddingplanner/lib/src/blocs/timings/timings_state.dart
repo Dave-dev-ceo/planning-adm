@@ -9,7 +9,12 @@ class LoadingTimingsState extends TimingsState {}
 
 class CreateTimingsState extends TimingsState {}
 
-class DeleteTimingState extends TimingsState {}
+class UpdateTimingState extends TimingsState {
+  final String message;
+
+  UpdateTimingState(this.message);
+  String get props => message;
+}
 
 class CreateTimingsOkState extends TimingsState {}
 

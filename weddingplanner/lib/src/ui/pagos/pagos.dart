@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:weddingplanner/src/blocs/pagos/pagos_bloc.dart';
@@ -158,11 +159,20 @@ class _PagosState extends State<Pagos> {
   _crearLista(ItemModelPagos itemPago) {
     List<List<DataCell>> pagosList = [];
     if (itemPago.pagos.length > 0) {
+      NumberFormat f = new NumberFormat("#,##0.00", "en_US");
       var total = 0;
       var saldo = 0;
+      String saldotemp = '';
+      String totaltemp = '';
       itemPago.pagos.forEach((element) {
         total += element.total;
         saldo += element.saldo;
+        saldotemp = f.format(saldo);
+        totaltemp = f.format(total);
+        String precioUnitario = f.format(element.precioUnitario);
+        String totalPago = f.format(element.total);
+        String anticipo = f.format(element.anticipo);
+        String saldoPago = f.format(element.saldo);
         List<DataCell> pagosListTemp = [
           DataCell(
               Center(
@@ -185,13 +195,13 @@ class _PagosState extends State<Pagos> {
           DataCell(
               Align(
                   alignment: Alignment.centerRight,
-                  child: Text('\$${element.precioUnitario}.00')),
+                  child: Text('\$$precioUnitario')),
               onTap: () => _editarPago(element.idConcepto)),
           DataCell(
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  '\$${element.total}.00',
+                  '\$$totalPago',
                   textAlign: TextAlign.right,
                 ),
               ),
@@ -201,15 +211,14 @@ class _PagosState extends State<Pagos> {
                   alignment: Alignment.centerRight,
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text('\$${element.anticipo}.00',
-                        textAlign: TextAlign.right),
+                    child: Text('\$$anticipo', textAlign: TextAlign.right),
                   )),
               onTap: () => _editarPago(element.idConcepto)),
           DataCell(
               Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    '\$${element.saldo}.00',
+                    '\$$saldoPago',
                   )),
               onTap: () => _editarPago(element.idConcepto)),
         ];
@@ -232,7 +241,7 @@ class _PagosState extends State<Pagos> {
           Center(
             child: Align(
                 alignment: Alignment.centerRight,
-                child: Text('\$${total}.00', style: _boldStyle)),
+                child: Text('\$$totaltemp', style: _boldStyle)),
           ),
         ),
         DataCell(
@@ -242,7 +251,7 @@ class _PagosState extends State<Pagos> {
           Center(
             child: Align(
                 alignment: Alignment.centerRight,
-                child: Text('\$${saldo}.00', style: _boldStyle)),
+                child: Text('\$$saldotemp', style: _boldStyle)),
           ),
         ),
       ];

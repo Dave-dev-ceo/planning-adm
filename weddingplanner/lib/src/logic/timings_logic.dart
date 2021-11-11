@@ -10,7 +10,8 @@ import 'package:weddingplanner/src/resources/config_conection.dart';
 abstract class TimingsLogic {
   Future<ItemModelTimings> fetchTimingsPorPlanner();
   Future<int> createTiming(Map<String, dynamic> dataTiming);
-  Future<void> deleteTiming(idTiming);
+  Future<String> updateTiming(int idTiming, String name, String estatus);
+  Future<String> downloadPDFTiming();
 }
 
 class ListaTimingsException implements Exception {}
@@ -74,32 +75,66 @@ class FetchListaTimingsLogic extends TimingsLogic {
   }
 
   @override
-  Future<void> deleteTiming(idTiming) async {
+  Future<String> updateTiming(int idTiming, String name, String estatus) async {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
 
-    final endpoint = 'wedding/';
+    final endpoint = '/wedding/TIMINGS/updateTimings';
 
     final data = {
       'idTiming': idTiming,
+      'nombre': name,
+      'estatus': estatus,
       'idPlanner': idPlanner,
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
       'Content-type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token,
     };
 
     final response = await client.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
-        body: json.encode(data),
-        headers: headers);
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
 
-    if (response == 4000) {
-      throw TokenException();
+    if (response.statusCode == 200) {
+      return 'Ok';
     } else {
-      throw CreateTimingException();
+      return response.body;
+    }
+  }
+
+  @override
+  Future<String> downloadPDFTiming() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+
+    final endpoint = '/wedding/TIMINGS/downloadPDFTiming';
+
+    final data = {
+      'idPlanner': idPlanner,
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token,
+    };
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      // await _sharedPreferences.setToken(json.decode(response.body)['token']);
+
+      return json.decode(response.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }

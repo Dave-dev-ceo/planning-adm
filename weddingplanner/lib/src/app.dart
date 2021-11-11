@@ -52,7 +52,6 @@ import 'package:weddingplanner/src/logic/roles_logic.dart';
 import 'package:weddingplanner/src/logic/timings_logic.dart';
 import 'package:weddingplanner/src/logic/tipos_eventos_logic.dart';
 import 'package:weddingplanner/src/resources/route_generator.dart';
-import 'package:weddingplanner/src/ui/widgets/showDialog/alertDialog.dart';
 import 'blocs/paises/paises_bloc.dart';
 import 'blocs/perfil/perfil_bloc.dart';
 import 'blocs/usuarios/usuario/usuario_bloc.dart';

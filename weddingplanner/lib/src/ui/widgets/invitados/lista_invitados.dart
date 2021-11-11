@@ -15,10 +15,13 @@ import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart'
 import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_grupos.dart';
 import 'package:weddingplanner/src/resources/api_provider.dart';
+import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
+import 'package:weddingplanner/src/ui/mesas/mesasPage.dart';
 import '../../../models/item_model_invitados.dart';
 
 class ListaInvitados extends StatefulWidget {
   final int idEvento;
+  final String nameEvento;
   final bool WP_EVT_INV_CRT;
   final bool WP_EVT_INV_EDT;
   final bool WP_EVT_INV_ENV;
@@ -28,7 +31,8 @@ class ListaInvitados extends StatefulWidget {
       this.idEvento,
       this.WP_EVT_INV_CRT,
       this.WP_EVT_INV_EDT,
-      this.WP_EVT_INV_ENV})
+      this.WP_EVT_INV_ENV,
+      this.nameEvento})
       : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => ListaInvitados(),
@@ -42,6 +46,8 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   ApiProvider api = new ApiProvider();
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   final int idEvento;
+
+  int currentIndex = 0;
 
   final bool WP_EVT_INV_CRT;
   final bool WP_EVT_INV_EDT;
@@ -166,67 +172,6 @@ class _ListaInvitadosState extends State<ListaInvitados> {
     } else {
       print('El file is null');
     }
-    //   }
-    // }
-    // for (var table in excel.tables.keys) {
-    //   print(table); //sheet Name
-    //   print(excel.tables[table].maxCols);
-    //   print(excel.tables[table].maxRows);
-    //   dynamic xx = excel.tables[table].rows;
-    //   if (xx[0][0] == "NOMBRE" &&
-    //       xx[0][1] == "EMAIL" &&
-    //       xx[0][2] == "TELÉFONO") {
-    //     for (var i = 1; i < xx.length; i++) {
-    //       Map<String, String> json = {
-    //         "nombre": xx[i][0],
-    //         "telefono": xx[i][2].toString(),
-    //         "email": xx[i][1],
-    //         "id_evento": idEvento.toString()
-    //       };
-    //       bool response = await api.createInvitados(json, context);
-    //       if (response) {
-    //       } else {
-    //         bandera = false;
-    //       }
-    //     }
-    //     if (bandera) {
-    //       final snackBar = SnackBar(
-    //         content: Container(
-    //           height: 30,
-    //           child: Center(
-    //             child: Text('Se importo el archivo con éxito'),
-    //           ),
-    //           //color: Colors.red,
-    //         ),
-    //         backgroundColor: Colors.green,
-    //       );
-    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //     } else {
-    //       final snackBar = SnackBar(
-    //         content: Container(
-    //           height: 30,
-    //           child: Center(
-    //             child: Text('Error: No se pudo realizar el registro'),
-    //           ),
-    //           //color: Colors.red,
-    //         ),
-    //         backgroundColor: Colors.red,
-    //       );
-    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //     }
-    //   } else {
-    //     final snackBar = SnackBar(
-    //       content: Container(
-    //         height: 30,
-    //         child: Center(
-    //           child: Text('Estructura incorrecta'),
-    //         ),
-    //         //color: Colors.red,
-    //       ),
-    //       backgroundColor: Colors.red,
-    //     );
-    //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //   }
   }
 
   Future<PermissionStatus> _getPermission() async {
@@ -416,12 +361,39 @@ class _ListaInvitadosState extends State<ListaInvitados> {
 
   @override
   Widget build(BuildContext context) {
+    final listWidget = [
+      listaInvitados(context),
+      Asistencia(),
+      MesasPage(nameEvento: widget.nameEvento),
+    ];
+
     double pHz = MediaQuery.of(context).size.width;
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Lista Inivtados',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.accessibility),
+            label: 'Asistencia',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_mail_sharp),
+            label: 'Mesas',
+          ),
+        ],
+        onTap: (i) {
+          setState(() {
+            currentIndex = i;
+          });
+        },
+      ),
       body: Container(
         width: double.infinity,
         child: Center(
-          child: listaInvitados(context),
+          child: listWidget[currentIndex],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

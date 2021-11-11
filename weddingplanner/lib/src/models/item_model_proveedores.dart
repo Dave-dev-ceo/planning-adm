@@ -1,3 +1,4 @@
+import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
 import 'package:weddingplanner/src/models/item_model_servicios.dart';
 
 class ItemModelProveedores {
@@ -19,26 +20,31 @@ class ProveedoresModel {
   int _id_proveedor;
   String _nombre;
   String _descripcion;
+  String _estatus;
 
   ProveedoresModel(datos) {
     _id_proveedor = datos['id_proveedor'];
     _nombre = datos['nombre'];
     _descripcion = datos['descripcion'];
+    _estatus = datos['estatus'];
   }
   int get id_proveedor => _id_proveedor;
   String get nombre => _nombre;
   String get descripcion => _descripcion;
+  String get estatus => _estatus;
 }
 
 class ItemProveedor {
-  ItemProveedor(
-      {this.id_proveedor,
-      this.nombre,
-      this.descripcion,
-      this.servicio,
-      this.isExpanded = false,
-      this.seleccion,
-      this.observacion});
+  ItemProveedor({
+    this.id_proveedor,
+    this.nombre,
+    this.descripcion,
+    this.servicio,
+    this.isExpanded = false,
+    this.seleccion,
+    this.observacion,
+    this.estatus,
+  });
   int id_proveedor;
   String nombre;
   String descripcion;
@@ -46,6 +52,7 @@ class ItemProveedor {
   bool isExpanded;
   bool seleccion;
   String observacion;
+  String estatus;
 }
 
 class ItemProveedorServicio {

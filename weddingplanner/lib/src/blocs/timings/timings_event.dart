@@ -13,8 +13,11 @@ class CreateTimingsEvent extends TimingsEvent {
   List<Object> get props => [data];
 }
 
-class DeleteTimingEvent extends TimingsEvent {
+class UpdateTimingEvent extends TimingsEvent {
   final int idTiming;
+  final String nombre;
+  final String estatus;
 
-  DeleteTimingEvent(this.idTiming);
+  UpdateTimingEvent(this.idTiming, this.nombre, this.estatus);
+  List<Object> get props => [idTiming, nombre, estatus];
 }

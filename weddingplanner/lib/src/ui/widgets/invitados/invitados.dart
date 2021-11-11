@@ -6,8 +6,6 @@ import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_preferences.dart';
 import 'package:weddingplanner/src/models/model_perfilado.dart';
 import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
-import 'package:weddingplanner/src/ui/construccion/construccion.dart';
-import 'package:weddingplanner/src/ui/contratos/contrato.dart';
 import 'package:weddingplanner/src/ui/Listas/listas.dart';
 import 'package:weddingplanner/src/ui/contratos/new_contrato.dart';
 import 'package:weddingplanner/src/ui/mesas/mesasPage.dart';
@@ -17,7 +15,6 @@ import 'package:weddingplanner/src/ui/proveedores_evento/proveedores_evento.dart
 import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
 import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
-import 'package:weddingplanner/src/ui/timing_evento/timings_eventos.dart';
 import 'package:weddingplanner/src/ui/autorizacion/lista_autorizacion.dart';
 
 class Invitados extends StatefulWidget {
@@ -116,7 +113,7 @@ class _InvitadosState extends State<Invitados> {
                       child: Column(
                         children: [
                           Text(
-                            'EVENTO',
+                            'CONFIGURACIÓN EVENTO',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 12.0),
                           ),
@@ -323,11 +320,14 @@ class _InvitadosState extends State<Invitados> {
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
         temp.add(ListaInvitados(
-          idEvento: detalleEvento['idEvento'],
-          WP_EVT_INV_CRT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-          WP_EVT_INV_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-          WP_EVT_INV_ENV: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-        ));
+            idEvento: detalleEvento['idEvento'],
+            WP_EVT_INV_CRT:
+                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+            WP_EVT_INV_EDT:
+                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+            WP_EVT_INV_ENV:
+                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+            nameEvento: widget.detalleEvento['nEvento']));
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {

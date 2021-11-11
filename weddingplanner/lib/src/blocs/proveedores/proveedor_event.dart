@@ -19,3 +19,9 @@ class DeleteServicioProvEvent extends ProveedorEvent {
   DeleteServicioProvEvent(this.idServicio);
   List<Object> get props => [idServicio];
 }
+
+class UpdateProveedor extends ProveedorEvent {
+  final ItemProveedor proveedor;
+
+  UpdateProveedor(this.proveedor);
+}

@@ -1,6 +1,13 @@
+import 'dart:convert';
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:responsive_grid/responsive_grid.dart';
+
 import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
+import 'package:weddingplanner/src/logic/timings_logic.dart';
 import 'package:weddingplanner/src/models/item_model_timings.dart';
 
 class Timing extends StatefulWidget {
@@ -18,6 +25,7 @@ class _TimingState extends State<Timing> {
   TimingsBloc timingBloc;
   ItemModelTimings itemModelTimings;
   ItemModelTimings filterTimings;
+  FetchListaTimingsLogic timingsLogic = FetchListaTimingsLogic();
   bool bandera = false;
   List<bool> sort = [false, false, false, false];
   int _sortColumnIndex = 0;
@@ -50,7 +58,6 @@ class _TimingState extends State<Timing> {
                 if (crt) {
                   itemModelTimings = state.usuarios;
                   filterTimings = itemModelTimings; //.copy()
-                  crt = false;
                 }
                 return _constructorTable(filterTimings);
               } else if (state is ErrorMostrarTimingsState) {
@@ -65,17 +72,62 @@ class _TimingState extends State<Timing> {
           ),
         ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      // floatingActionButton: FloatingActionButton(
-      //   heroTag: null,
-      //   child: Icon(Icons.add),
-      //   onPressed: () {
-      //     setState(() {
-      //       bandera = !bandera;
-      //     });
-      //   },
-      // ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        heroTag: '',
+        child: Icon(Icons.file_download_sharp),
+        onPressed: () async {
+          print('Entre');
+          await buildPDFDownload();
+          print('Sali');
+        },
+      ),
     );
+  }
+
+  void buildPDFDownload() async {
+    final data = await timingsLogic.downloadPDFTiming();
+
+    if (data != null) {
+      String titulo = 'Cronogramas';
+      final date = DateTime.now();
+
+      final bytes = base64Decode(data);
+      final blob = html.Blob([bytes]);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+
+      final anchor = html.document.createElement('a') as html.AnchorElement
+        ..href = url
+        ..style.display = 'none'
+        ..download = '$titulo-$date.pdf';
+      html.document.body.children.add(anchor);
+      anchor.click();
+      html.document.body.children.remove(anchor);
+      html.Url.revokeObjectUrl(url);
+    }
+
+    // final pdf = pw.Document();
+
+    // List<pw.Widget> listaView = [];
+
+    // for (var timing in itemModelTimings.results) {
+    //   pw.Widget listaViewChild = pw.Padding(
+    //       padding: const pw.EdgeInsets.all(4.0),
+    //       child: pw.Text(timing.nombre_timing));
+    //   listaView.add(listaViewChild);
+    // }
+
+    // pdf.addPage(
+    //   pw.MultiPage(
+    //     build: (pw.Context context) => [
+    //       pw.Center(),
+    //       pw.SizedBox(
+    //         height: 10.0,
+    //       ),
+    //       pw.ListView(children: listaView)
+    //     ],
+    //   ),
+    // );
   }
 
   Color hexToColor(String code) {
@@ -237,11 +289,25 @@ class _TimingState extends State<Timing> {
                     trailing: IconButton(
                       enableFeedback: true,
                       hoverColor: Colors.white,
-                      onPressed: () {
-                        print(
-                            listItemModelTimings.results[index].idEventoTiming);
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => EditTimingDialog(
+                            name: listItemModelTimings
+                                .results[index].nombre_timing,
+                            idCronograma:
+                                listItemModelTimings.results[index].id_timing,
+                            estatus:
+                                listItemModelTimings.results[index].estatus,
+                          ),
+                        );
+                        await timingBloc.add(FetchTimingsPorPlannerEvent());
+                        setState(() {});
                       },
-                      icon: Icon(Icons.delete),
+                      icon: Icon(
+                        Icons.info,
+                        size: 14.0,
+                      ),
                     ),
                     onTap: () {
                       Navigator.of(context).pushNamed('/addActividadesTiming',
@@ -412,4 +478,125 @@ class _DataSource extends DataTableSource {
 
   @override
   int get selectedRowCount => _selectedCount;
+}
+
+class EditTimingDialog extends StatefulWidget {
+  final String name;
+  final int idCronograma;
+  final String estatus;
+  EditTimingDialog({Key key, this.name, this.idCronograma, this.estatus})
+      : super(key: key);
+
+  @override
+  _EditTimingDialogState createState() => _EditTimingDialogState();
+}
+
+class _EditTimingDialogState extends State<EditTimingDialog> {
+  String name;
+  String estatus;
+  int idCronograma;
+  bool _isActivo;
+  TimingsBloc timingsBloc;
+  @override
+  void initState() {
+    timingsBloc = BlocProvider.of<TimingsBloc>(context);
+    estatus = widget.estatus;
+    name = widget.name;
+    idCronograma = widget.idCronograma;
+    if (widget.estatus == 'A') {
+      _isActivo = true;
+    } else {
+      _isActivo = false;
+    }
+    super.initState();
+  }
+
+  final keyFormCrono = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return AlertDialog(
+      title: Center(child: Text('Editar Crononograma')),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: size.height * 0.6,
+          maxWidth: size.width * 0.5,
+          minWidth: size.width * 0.4,
+        ),
+        child: Column(
+          children: [
+            Form(
+              key: keyFormCrono,
+              child: ResponsiveGridRow(
+                children: [
+                  ResponsiveGridCol(
+                    md: 12,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        initialValue: name,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Nombre del cronograma',
+                        ),
+                        validator: (value) {
+                          if (value != null && value != '') {
+                            return null;
+                          } else {
+                            return 'El campo es requerido';
+                          }
+                        },
+                        onChanged: (value) {
+                          name = value;
+                        },
+                      ),
+                    ),
+                  ),
+                  ResponsiveGridCol(
+                    md: 12,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CheckboxListTile(
+                        value: _isActivo,
+                        onChanged: (value) {
+                          setState(() {
+                            _isActivo ? _isActivo = false : _isActivo = true;
+                            _isActivo ? estatus = 'A' : estatus = 'I';
+                          });
+                        },
+                        title: Text(_isActivo ? 'Activo' : 'Inactivo'),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+          child: Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () async {
+            if (keyFormCrono.currentState.validate()) {
+              await timingsBloc
+                  .add(UpdateTimingEvent(idCronograma, name, estatus));
+
+              await timingsBloc.add(FetchTimingsPorPlannerEvent());
+
+              Navigator.of(context).pop(true);
+            } else {
+              print('Incorrecto');
+            }
+          },
+          child: Text('Aceptar'),
+        )
+      ],
+    );
+  }
 }
