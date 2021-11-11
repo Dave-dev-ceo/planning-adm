@@ -1,12 +1,23 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Flutter",
-            "program": "lib/main.dart",
-            "cwd": "weddingplanner",
-            "request": "launch",
-            "type": "dart"
-        }
-    ]
+	"folders": [
+		{
+			"path": "/home/apps/Wedding/WeddingPlanner"
+		},
+		{
+			"path": "../../../../../apps/Wedding/WeddingPlanner_svr"
+		}
+	],
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			
+
+			{
+				"name": "Wedding",
+				"request": "launch",
+				"type": "dart",
+				"args": ["--web-renderer","html"]
+			}
+		]
+	}
 }
