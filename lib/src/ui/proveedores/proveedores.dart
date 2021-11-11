@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:weddingplanner/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:weddingplanner/src/models/item_model_proveedores.dart';
@@ -38,13 +39,14 @@ class _ProveedoresState extends State<Proveedores> {
         children: [_listaProveedore(), Servicios()],
       )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: expasionFabButton(),
+      /* FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
           Navigator.of(context).pushNamed('/agregarProveedores',
               arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
-        },
-      ),
+        }, 
+      ),*/
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -59,6 +61,27 @@ class _ProveedoresState extends State<Proveedores> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+    );
+  }
+
+  Widget expasionFabButton() {
+    return SpeedDial(
+      child: Icon(Icons.more_vert_outlined),
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.download),
+          label: 'Descargar PDF',
+          onTap: () {},
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.add),
+          label: 'Añadir Proverdor',
+          onTap: () async {
+            Navigator.of(context).pushNamed('/agregarProveedores',
+                arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
+          },
+        ),
+      ],
     );
   }
 

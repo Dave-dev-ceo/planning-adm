@@ -13,6 +13,7 @@ abstract class LogicProveedores {
   Future<int> deleteServicioProv(int idServcio);
   Future<String> updateProveedor(ItemProveedor proveedor);
   Future<String> deleteProveedor(int idProveedor);
+  Future<String> downloadPDFProveedor();
 }
 
 class ProveedoresException implements Exception {}
@@ -211,6 +212,36 @@ class FetchProveedoresLogic extends LogicProveedores {
       return 'Ok';
     } else {
       return resp.body;
+    }
+  }
+
+  @override
+  Future<String> downloadPDFProveedor() async {
+    String token = await _sharedPreferences.getToken();
+    String idPlanner = await _sharedPreferences.getIdPlanner();
+
+    const endpoint = '/PROVEEDORES/downloadPDFProveedor';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+    };
+
+    final resp = await client.post(
+      Uri.parse(configC.url + configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }

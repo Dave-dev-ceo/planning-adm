@@ -129,7 +129,6 @@ class FetchListaTimingsLogic extends TimingsLogic {
       headers: headers,
     );
     if (response.statusCode == 200) {
-      print(response.body);
       // await _sharedPreferences.setToken(json.decode(response.body)['token']);
 
       return json.decode(response.body)['pdf'];
