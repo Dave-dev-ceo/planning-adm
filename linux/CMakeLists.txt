@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "weddingplanner")
-set(APPLICATION_ID "com.example.weddingplanner")
+set(BINARY_NAME "Planning")
+set(APPLICATION_ID "com.grupotum.planning")
 
 cmake_policy(SET CMP0063 NEW)
 
