@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,12 +10,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
-import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
-import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_contratos.dart';
-import 'package:weddingplanner/src/models/item_model_eventos.dart';
-import 'package:weddingplanner/src/models/item_model_machotes.dart';
+import 'package:planning/src/blocs/contratos/contratos_bloc.dart';
+import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
+import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
+import 'package:planning/src/models/item_model_contratos.dart';
+import 'package:planning/src/models/item_model_eventos.dart';
+import 'package:planning/src/models/item_model_machotes.dart';
 
 class AgregarContratoMobile extends StatefulWidget {
   const AgregarContratoMobile({Key key}) : super(key: key);
@@ -70,23 +69,24 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
     final message = await OpenFile.open(file.path);
     print(message);
   }
-  _dialogMSG(String title){
+
+  _dialogMSG(String title) {
     Widget child = CircularProgressIndicator();
     showDialog(
-      context: context,
-      //barrierDismissible: false,
-      builder: (BuildContext context) {
-        _ingresando = context;
-        return AlertDialog(
-          title: Text(
-            title,
-            textAlign: TextAlign.center,
-          ),
-          content: child,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(32.0))),
-        );
-      });
+        context: context,
+        //barrierDismissible: false,
+        builder: (BuildContext context) {
+          _ingresando = context;
+          return AlertDialog(
+            title: Text(
+              title,
+              textAlign: TextAlign.center,
+            ),
+            content: child,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          );
+        });
   }
 
   _contectCont(ItemModelMachotes itemMC, int element) {
@@ -106,14 +106,15 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
         children: <Widget>[
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-            title: Container(alignment: Alignment.topLeft,
+            title: Container(
+                alignment: Alignment.topLeft,
                 height: 25,
                 width: double.infinity,
                 child: FittedBox(
-                  child: Text(
-              itemModelMC.results.elementAt(element).descripcion,
-              style: TextStyle(fontSize: 20),
-            ))),
+                    child: Text(
+                  itemModelMC.results.elementAt(element).descripcion,
+                  style: TextStyle(fontSize: 20),
+                ))),
             subtitle: Container(
                 height: 80,
                 //color: Colors.purple,
@@ -125,8 +126,13 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
                           padding: const EdgeInsets.fromLTRB(0, 8.0, 8.0, 8.0),
                           child: TextButton.icon(
                               onPressed: () {
-                                nombreDocumento = itemMC.results.elementAt(element).descripcion;
-                                contratosBloc.add(FechtContratosPdfEvent({"machote": itemMC.results.elementAt(element).machote}));
+                                nombreDocumento = itemMC.results
+                                    .elementAt(element)
+                                    .descripcion;
+                                contratosBloc.add(FechtContratosPdfEvent({
+                                  "machote":
+                                      itemMC.results.elementAt(element).machote
+                                }));
                               },
                               icon: Icon(Icons.cloud_download_outlined),
                               label: Text('Descargar')),
@@ -135,8 +141,13 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton.icon(
                               onPressed: () {
-                                nombreDocumento = itemMC.results.elementAt(element).descripcion;
-                                contratosBloc.add(FechtContratosPdfViewEvent({"machote": itemMC.results.elementAt(element).machote}));
+                                nombreDocumento = itemMC.results
+                                    .elementAt(element)
+                                    .descripcion;
+                                contratosBloc.add(FechtContratosPdfViewEvent({
+                                  "machote":
+                                      itemMC.results.elementAt(element).machote
+                                }));
                               },
                               icon: Icon(Icons.remove_red_eye_rounded),
                               label: Text('Ver')),
@@ -154,44 +165,41 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   }
 
   _constructorLista(ItemModelMachotes modelMC) {
-    return IndexedStack(
-          index: _selectedIndex,
-          children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < modelMC.results.length; i++)
-                    if(modelMC.results.elementAt(i).clave == 'CT')
-                      _contectCont(modelMC, i)
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < modelMC.results.length; i++)
-                    if(modelMC.results.elementAt(i).clave == 'RC')
-                      _contectCont(modelMC, i)
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < modelMC.results.length; i++)
-                    if(modelMC.results.elementAt(i).clave == 'PG')
-                      _contectCont(modelMC, i)
-                ],
-              ),
-            ),
-          ]
-    );
+    return IndexedStack(index: _selectedIndex, children: [
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'CT')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'RC')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'PG')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      ),
+    ]);
   }
 
   @override
@@ -201,22 +209,21 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
         child: BlocListener<ContratosBloc, ContratosState>(
           listener: (context, state) {
             if (state is LoadingContratosPdfState) {
-            return _dialogMSG('Descargando contrato');
-          } else if (state is MostrarContratosPdfState) {
-            Navigator.pop(_ingresando);
-            _createPDF(state.contratos);  
-          }else if(state is LoadingContratosPdfViewState){
-            return _dialogMSG('Espere un momento');
-          } else if(state is MostrarContratosPdfViewState){
-            Navigator.pop(_ingresando);
-            Navigator.pushNamed(context, '/viewContrato',arguments: state.contratos);
-          }
-          else {
-            if(_ingresando != null){
+              return _dialogMSG('Descargando contrato');
+            } else if (state is MostrarContratosPdfState) {
               Navigator.pop(_ingresando);
+              _createPDF(state.contratos);
+            } else if (state is LoadingContratosPdfViewState) {
+              return _dialogMSG('Espere un momento');
+            } else if (state is MostrarContratosPdfViewState) {
+              Navigator.pop(_ingresando);
+              Navigator.pushNamed(context, '/viewContrato',
+                  arguments: state.contratos);
+            } else {
+              if (_ingresando != null) {
+                Navigator.pop(_ingresando);
+              }
             }
-            
-          }
           },
           child: BlocBuilder<MachotesBloc, MachotesState>(
             builder: (context, state) {
@@ -263,5 +270,6 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
       _selectedIndex = index;
     });
   }
+
   int _selectedIndex = 0;
 }

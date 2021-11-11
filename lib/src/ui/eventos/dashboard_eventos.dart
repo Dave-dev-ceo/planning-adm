@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,10 +7,10 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
-import 'package:weddingplanner/src/logic/permisos_logic.dart';
-import 'package:weddingplanner/src/models/item_model_eventos.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
+import 'package:planning/src/logic/permisos_logic.dart';
+import 'package:planning/src/models/item_model_eventos.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 
 class DashboardEventos extends StatefulWidget {
   final bool WP_EVT_CRT;

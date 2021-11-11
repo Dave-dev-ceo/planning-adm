@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:weddingplanner/src/models/item_model_archivo_serv_prod.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_proveedores.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_proveedores.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class LogicProveedores {
   Future<ItemModelProveedores> fetchProveedor();

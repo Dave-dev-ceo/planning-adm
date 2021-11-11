@@ -1,5 +1,5 @@
-import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
-import 'package:weddingplanner/src/models/item_model_servicios.dart';
+import 'package:planning/src/models/item_model_estatus_invitado.dart';
+import 'package:planning/src/models/item_model_servicios.dart';
 
 class ItemModelProveedores {
   List<ProveedoresModel> _results = [];

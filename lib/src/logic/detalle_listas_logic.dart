@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-import 'package:weddingplanner/src/logic/listas_logic.dart';
-import 'package:weddingplanner/src/models/item_model_detalle_listas.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/logic/listas_logic.dart';
+import 'package:planning/src/models/item_model_detalle_listas.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class DetallesListasLogic {
   Future<ItemModelDetalleListas> fetchDetalleListas(int idLista);

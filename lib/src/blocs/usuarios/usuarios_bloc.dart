@@ -3,8 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import 'package:weddingplanner/src/logic/usuarios.logic.dart';
-import 'package:weddingplanner/src/models/item_model_usuarios.dart';
+import 'package:planning/src/logic/usuarios.logic.dart';
+import 'package:planning/src/models/item_model_usuarios.dart';
 
 part 'usuarios_event.dart';
 part 'usuarios_state.dart';

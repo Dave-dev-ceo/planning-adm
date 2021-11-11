@@ -2,20 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/model_perfilado.dart';
-import 'package:weddingplanner/src/ui/Resumen/resumen_evento.dart';
-import 'package:weddingplanner/src/ui/Listas/listas.dart';
-import 'package:weddingplanner/src/ui/contratos/new_contrato.dart';
-import 'package:weddingplanner/src/ui/mesas/mesasPage.dart';
-import 'package:weddingplanner/src/ui/pagos/pagos.dart';
-import 'package:weddingplanner/src/ui/planes/planes.dart';
-import 'package:weddingplanner/src/ui/proveedores_evento/proveedores_evento.dart';
-import 'package:weddingplanner/src/ui/widgets/invitados/lista_invitados.dart';
-import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
-import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
-import 'package:weddingplanner/src/ui/autorizacion/lista_autorizacion.dart';
+import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/model_perfilado.dart';
+import 'package:planning/src/ui/Resumen/resumen_evento.dart';
+import 'package:planning/src/ui/Listas/listas.dart';
+import 'package:planning/src/ui/contratos/new_contrato.dart';
+import 'package:planning/src/ui/mesas/mesasPage.dart';
+import 'package:planning/src/ui/pagos/pagos.dart';
+import 'package:planning/src/ui/planes/planes.dart';
+import 'package:planning/src/ui/proveedores_evento/proveedores_evento.dart';
+import 'package:planning/src/ui/widgets/invitados/lista_invitados.dart';
+import 'package:planning/src/ui/widgets/tab/tab_item.dart';
+import 'package:planning/src/ui/asistencia/asistencia.dart';
+import 'package:planning/src/ui/autorizacion/lista_autorizacion.dart';
 
 class Invitados extends StatefulWidget {
   //static const routeName = '/eventos';

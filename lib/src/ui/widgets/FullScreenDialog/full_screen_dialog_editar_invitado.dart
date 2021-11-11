@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
-import 'package:weddingplanner/src/blocs/blocs.dart';
-import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
-import 'package:weddingplanner/src/models/item_model-acompanante.dart';
-import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
-import 'package:weddingplanner/src/models/item_model_grupos.dart';
-import 'package:weddingplanner/src/models/item_model_invitado.dart';
-import 'package:weddingplanner/src/models/item_model_mesas.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/resources/my_flutter_app_icons.dart';
-import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/blocs/blocs.dart';
+import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
+import 'package:planning/src/models/item_model-acompanante.dart';
+import 'package:planning/src/models/item_model_estatus_invitado.dart';
+import 'package:planning/src/models/item_model_grupos.dart';
+import 'package:planning/src/models/item_model_invitado.dart';
+import 'package:planning/src/models/item_model_mesas.dart';
+import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/resources/my_flutter_app_icons.dart';
+import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 
 class FullScreenDialogEdit extends StatefulWidget {

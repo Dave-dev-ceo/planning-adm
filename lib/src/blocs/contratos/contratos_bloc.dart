@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/contratos_logic.dart';
-import 'package:weddingplanner/src/models/item_model_contratos.dart';
+import 'package:planning/src/logic/contratos_logic.dart';
+import 'package:planning/src/models/item_model_contratos.dart';
 
 part 'contratos_event.dart';
 part 'contratos_state.dart';
@@ -82,9 +82,9 @@ class ContratosBloc extends Bloc<ContratosEvent, ContratosState> {
       yield LoadingUploadFileState();
       try {
         Map<String, dynamic> data = {
-          'id_machote':event.id,
-          'archivo':event.file,
-          'descripcion':event.name
+          'id_machote': event.id,
+          'archivo': event.file,
+          'descripcion': event.name
         };
 
         bool contrato = await logic.updateFile(data);
@@ -97,10 +97,7 @@ class ContratosBloc extends Bloc<ContratosEvent, ContratosState> {
     } else if (event is SeeUploadFileEvent) {
       yield LoadingSeeUploadFileState();
       try {
-
-        Map<String, dynamic> data = {
-          'id_machote':event.id.toString()
-        };
+        Map<String, dynamic> data = {'id_machote': event.id.toString()};
 
         String contrato = await logic.seeUploadFile(data);
         yield MostrarUploadPdfViewState(contrato);

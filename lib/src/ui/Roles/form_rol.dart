@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/roles/formRol/formRol_bloc.dart';
-import 'package:weddingplanner/src/blocs/roles/rol/rol_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/model_form.dart';
-import 'package:weddingplanner/src/models/model_roles.dart';
+import 'package:planning/src/blocs/roles/formRol/formRol_bloc.dart';
+import 'package:planning/src/blocs/roles/rol/rol_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/model_form.dart';
+import 'package:planning/src/models/model_roles.dart';
 
 class FormRol extends StatefulWidget {
   final Map<String, dynamic> datos;

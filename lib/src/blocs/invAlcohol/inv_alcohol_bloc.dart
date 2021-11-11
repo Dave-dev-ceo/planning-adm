@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/inv_alcohol_logic.dart';
-import 'package:weddingplanner/src/models/item_model_inventario_alcohol.dart';
-import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
+import 'package:planning/src/logic/inv_alcohol_logic.dart';
+import 'package:planning/src/models/item_model_inventario_alcohol.dart';
+import 'package:planning/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
 
 part 'inv_alcohol_event.dart';
 part 'inv_alcohol_state.dart';

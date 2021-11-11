@@ -1,4 +1,4 @@
-# weddingplanner
+# Planning
 
 A new Flutter project.
 

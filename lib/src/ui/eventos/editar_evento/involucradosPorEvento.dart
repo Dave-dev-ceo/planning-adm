@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/involucrados/involucrados_bloc.dart';
+import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
 
 class InvolucradosPorEvento extends StatefulWidget {
   const InvolucradosPorEvento({Key key}) : super(key: key);
@@ -15,12 +15,8 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
 
   // variables class
   bool saveShow = false;
-  Involucrado item = Involucrado(
-    idInvolucrado: 0,
-    nombre: '',
-    email: '',
-    telefono: ''
-  );
+  Involucrado item =
+      Involucrado(idInvolucrado: 0, nombre: '', email: '', telefono: '');
 
   @override
   void initState() {
@@ -31,48 +27,48 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<InvolucradosBloc,InvolucradosState>(
+    return BlocBuilder<InvolucradosBloc, InvolucradosState>(
       builder: (context, state) {
-        if(state is InvolucradosInitial) {
-          return Center(child: CircularProgressIndicator(),);
-        } else if(state is InvolucradosLogging) {
-          return Center(child: CircularProgressIndicator(),);
-        } else if(state is InvolucradosSelect) {
-          if(state.autorizacion.contrato.length > 0) {
+        if (state is InvolucradosInitial) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is InvolucradosLogging) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is InvolucradosSelect) {
+          if (state.autorizacion.contrato.length > 0) {
             item = Involucrado(
-              idInvolucrado:state.autorizacion.contrato[0].idInvolucrado,
-              nombre:state.autorizacion.contrato[0].nombreCompleto,
-              email:state.autorizacion.contrato[0].email,
-              telefono:state.autorizacion.contrato[0].telefono
-            );
+                idInvolucrado: state.autorizacion.contrato[0].idInvolucrado,
+                nombre: state.autorizacion.contrato[0].nombreCompleto,
+                email: state.autorizacion.contrato[0].email,
+                telefono: state.autorizacion.contrato[0].telefono);
           } else {
             item = Involucrado(
-              idInvolucrado:0,
-              nombre:'',
-              email:'',
-              telefono:''
-            );
+                idInvolucrado: 0, nombre: '', email: '', telefono: '');
           }
           return viewForm();
-        } else if(state is InvolucradosInsert) {
-          if(state.autorizacion.contrato.length > 0) {
+        } else if (state is InvolucradosInsert) {
+          if (state.autorizacion.contrato.length > 0) {
             item = Involucrado(
-              idInvolucrado:state.autorizacion.contrato[0].idInvolucrado,
-              nombre:state.autorizacion.contrato[0].nombreCompleto,
-              email:state.autorizacion.contrato[0].email,
-              telefono:state.autorizacion.contrato[0].telefono
-            );
+                idInvolucrado: state.autorizacion.contrato[0].idInvolucrado,
+                nombre: state.autorizacion.contrato[0].nombreCompleto,
+                email: state.autorizacion.contrato[0].email,
+                telefono: state.autorizacion.contrato[0].telefono);
           }
           return viewForm();
         } else {
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );
   }
 
   Widget viewForm() {
-    return  Container(
+    return Container(
       child: Column(
         children: <Widget>[
           formItemsDesign(
@@ -114,13 +110,17 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
               ),
               500.0,
               80.0),
-          SizedBox(height: 30.0,),
+          SizedBox(
+            height: 30.0,
+          ),
           IconButton(
             icon: Icon(Icons.save),
             color: Colors.black,
             onPressed: () => validaTodo(),
           ),
-          SizedBox(height: 30.0,),
+          SizedBox(
+            height: 30.0,
+          ),
         ],
       ),
     );
@@ -130,7 +130,11 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 3),
       child: Container(
-        child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), elevation: 10, child: ListTile(leading: Icon(icon), title: item)),
+        child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            elevation: 10,
+            child: ListTile(leading: Icon(icon), title: item)),
         width: large,
         height: ancho,
       ),
@@ -172,14 +176,16 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
   }
 
   validaTodo() {
-    if(validateNombre(item.nombre) && validateCorreo(item.email) && validateTelefono(item.telefono)) {
+    if (validateNombre(item.nombre) &&
+        validateCorreo(item.email) &&
+        validateTelefono(item.telefono)) {
       involucradosBloc.add(InsertInvolucrado(item));
       _mensaje('Involucrado actualizado.');
-    } else if(!validateNombre(item.nombre)) {
+    } else if (!validateNombre(item.nombre)) {
       _mensaje('Inserta un nombre valido.');
-    } else if(!validateTelefono(item.telefono)) {
+    } else if (!validateTelefono(item.telefono)) {
       _mensaje('Inserta un telefono valido.');
-    } else if(!validateCorreo(item.email)) {
+    } else if (!validateCorreo(item.email)) {
       _mensaje('Inserta un correo electronico valido.');
     } else {
       _mensaje('Inserta valores validos.');
@@ -188,11 +194,9 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
 
   // mensaje
   Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(txt),
-      )
-    );
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
   }
 }
 
@@ -202,18 +206,13 @@ class Involucrado {
   String email;
   String telefono;
 
-  Involucrado({
-    this.idInvolucrado,
-    this.nombre,
-    this.email,
-    this.telefono
-  });
+  Involucrado({this.idInvolucrado, this.nombre, this.email, this.telefono});
 
   // solucion al enviar objetos al servidor
-  Map<String, dynamic> toJson() =>{
-    'id_involucrado':idInvolucrado,
-    'nombre_completo':nombre,
-    'email':email,
-    'telefono':telefono,
-  };
+  Map<String, dynamic> toJson() => {
+        'id_involucrado': idInvolucrado,
+        'nombre_completo': nombre,
+        'email': email,
+        'telefono': telefono,
+      };
 }

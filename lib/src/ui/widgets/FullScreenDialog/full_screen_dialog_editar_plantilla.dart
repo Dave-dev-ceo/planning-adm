@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/machotes/editar_plantillas.dart';
+import 'package:planning/src/ui/machotes/editar_plantillas.dart';
 
 class FullScreenDialogEditPlantilla extends StatefulWidget {
   final List<String> dataPlantilla;

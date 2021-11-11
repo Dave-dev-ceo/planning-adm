@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/mesa/layout_mesa_model.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/mesa/layout_mesa_model.dart';
+import 'package:planning/src/resources/config_conection.dart';
 import 'package:http/http.dart' as http;
 
 class MesasAsignadasService {

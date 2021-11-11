@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_servicios.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_servicios.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class ServiciosLogic {
   Future<ItemModuleServicios> fetchServicios();

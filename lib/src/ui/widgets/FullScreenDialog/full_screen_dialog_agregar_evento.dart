@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/eventos/agregar_evento.dart';
+import 'package:planning/src/ui/eventos/agregar_evento.dart';
 
 class FullScreenDialogAddEvento extends StatefulWidget {
   const FullScreenDialogAddEvento({Key key}) : super(key: key);

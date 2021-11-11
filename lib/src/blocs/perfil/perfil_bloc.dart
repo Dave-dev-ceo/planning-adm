@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/perfil_logic.dart';
-import 'package:weddingplanner/src/models/item_model_perfil.dart';
+import 'package:planning/src/logic/perfil_logic.dart';
+import 'package:planning/src/models/item_model_perfil.dart';
 
 part 'perfil_event.dart';
 part 'perfil_state.dart';
@@ -16,7 +16,7 @@ class PerfilBloc extends Bloc<PerfilEvent, PerfilState> {
   Stream<PerfilState> mapEventToState(
     PerfilEvent event,
   ) async* {
-    if(event is SelectPerfilEvent) {
+    if (event is SelectPerfilEvent) {
       yield PerfilLogging();
 
       try {
@@ -27,8 +27,7 @@ class PerfilBloc extends Bloc<PerfilEvent, PerfilState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-
-    } else if(event is InsertPerfilEvent) {
+    } else if (event is InsertPerfilEvent) {
       yield PerfilLogging();
 
       try {
@@ -40,7 +39,6 @@ class PerfilBloc extends Bloc<PerfilEvent, PerfilState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-
     }
   }
 }

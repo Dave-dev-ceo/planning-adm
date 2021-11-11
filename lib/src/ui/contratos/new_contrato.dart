@@ -1,6 +1,6 @@
 // imports flutter/dart
 import 'dart:convert';
-// import 'dart:html';
+// import 'package:universal_html/html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -12,8 +12,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 // imports from wedding
-import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
-import 'package:weddingplanner/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
+import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
+import 'package:planning/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
 
 class NewContrato extends StatefulWidget {
   NewContrato({Key key}) : super(key: key);

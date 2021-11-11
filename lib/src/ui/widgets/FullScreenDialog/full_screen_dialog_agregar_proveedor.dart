@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/proveedores/proveedor_bloc.dart';
-import 'package:weddingplanner/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_proveedores.dart';
-import 'package:weddingplanner/src/models/item_model_servicios.dart';
-import 'package:weddingplanner/src/ui/widgets/text_form_filed/text_form_filed.dart';
+import 'package:planning/src/blocs/proveedores/proveedor_bloc.dart';
+import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_proveedores.dart';
+import 'package:planning/src/models/item_model_servicios.dart';
+import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class FullScreenDialogAgregarProveedorEvent extends StatefulWidget {

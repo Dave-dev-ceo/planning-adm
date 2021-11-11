@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/models/item_model-acompanante.dart';
-import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
-import 'package:weddingplanner/src/models/item_model_eventos.dart';
-import 'package:weddingplanner/src/models/item_model_grupos.dart';
-import 'package:weddingplanner/src/models/item_model_invitado.dart';
-import 'package:weddingplanner/src/models/item_model_mesas.dart';
-import 'package:weddingplanner/src/models/item_model_prueba.dart';
-import 'package:weddingplanner/src/models/item_model_reporte_evento.dart';
-import 'package:weddingplanner/src/models/item_model_reporte_genero.dart';
-import 'package:weddingplanner/src/models/item_model_reporte_grupos.dart';
-import 'package:weddingplanner/src/models/item_model_reporte_invitados.dart';
+import 'package:planning/src/models/item_model-acompanante.dart';
+import 'package:planning/src/models/item_model_estatus_invitado.dart';
+import 'package:planning/src/models/item_model_eventos.dart';
+import 'package:planning/src/models/item_model_grupos.dart';
+import 'package:planning/src/models/item_model_invitado.dart';
+import 'package:planning/src/models/item_model_mesas.dart';
+import 'package:planning/src/models/item_model_prueba.dart';
+import 'package:planning/src/models/item_model_reporte_evento.dart';
+import 'package:planning/src/models/item_model_reporte_genero.dart';
+import 'package:planning/src/models/item_model_reporte_grupos.dart';
+import 'package:planning/src/models/item_model_reporte_invitados.dart';
 
 import 'api_provider.dart';
 import '../models/item_model_invitados.dart';

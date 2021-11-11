@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:excel/excel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
+import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 
-import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 
 //import 'package:path/path.dart';
 class CargarExcel extends StatefulWidget {

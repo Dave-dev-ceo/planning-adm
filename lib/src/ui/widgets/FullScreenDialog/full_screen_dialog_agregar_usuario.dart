@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/usuarios/form_usuario.dart';
+import 'package:planning/src/ui/usuarios/form_usuario.dart';
 
 class FullScreenDialogAddUsuario extends StatefulWidget {
   final Map<String, dynamic> datos;

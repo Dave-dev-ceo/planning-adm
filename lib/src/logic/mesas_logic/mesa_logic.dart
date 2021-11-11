@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:http/http.dart' show Client;
 
-import 'package:weddingplanner/src/logic/estatus_logic.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/logic/estatus_logic.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/mesa/mesas_model.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class MesasLogic {
   Future<List<MesaModel>> getAsignadasMesas();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/machotes/agregar_machotes.dart';
+import 'package:planning/src/ui/machotes/agregar_machotes.dart';
 
 class FullScreenDialogAddMachote extends StatefulWidget {
   final List<String> dataMachote;

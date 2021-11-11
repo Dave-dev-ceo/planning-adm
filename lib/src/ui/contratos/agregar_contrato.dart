@@ -1,16 +1,16 @@
 import 'dart:convert';
-// import 'dart:html';
+// import 'package:universal_html/html.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart';
-// import 'package:weddingplanner/src/blocs/eventos/eventos_bloc.dart';
-import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_contratos.dart';
-import 'package:weddingplanner/src/models/item_model_eventos.dart';
-import 'package:weddingplanner/src/models/item_model_machotes.dart';
+import 'package:planning/src/blocs/contratos/contratos_bloc.dart';
+// import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
+import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
+import 'package:planning/src/models/item_model_contratos.dart';
+import 'package:planning/src/models/item_model_eventos.dart';
+import 'package:planning/src/models/item_model_machotes.dart';
 
 // upload files
 import 'package:file_picker/file_picker.dart';
@@ -59,13 +59,13 @@ class _AgregarContratoState extends State<AgregarContrato> {
     //Dispose the document
     document.dispose();
     //Download the output file
-    if(kIsWeb){
+    if (kIsWeb) {
       // AnchorElement(
       //   href:
       //       "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
       // ..setAttribute("download", nombreDocumento + ".pdf")
       // ..click();
-    }else{
+    } else {
       print("gogogogogo");
     }
   }
@@ -156,7 +156,9 @@ class _AgregarContratoState extends State<AgregarContrato> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton.icon(
                               onPressed: () {
-                                _addFilesView(itemModelMC.results.elementAt(element).idMachote);
+                                _addFilesView(itemModelMC.results
+                                    .elementAt(element)
+                                    .idMachote);
                               },
                               icon: Icon(Icons.cloud_upload_outlined),
                               label: Text('Subir')),
@@ -165,7 +167,10 @@ class _AgregarContratoState extends State<AgregarContrato> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextButton.icon(
                               onPressed: () {
-                                contratosBloc.add(SeeUploadFileEvent(itemModelMC.results.elementAt(element).idMachote));
+                                contratosBloc.add(SeeUploadFileEvent(itemModelMC
+                                    .results
+                                    .elementAt(element)
+                                    .idMachote));
                               },
                               icon: Icon(Icons.remove_red_eye_rounded),
                               label: Text('Archivo subido')),
@@ -250,8 +255,8 @@ class _AgregarContratoState extends State<AgregarContrato> {
                   arguments: state.contratos);
             } else if (state is LoadingSeeUploadFileState) {
               return _dialogMSG('Espere un momento');
-            }  else if (state is MostrarUploadPdfViewState) {
-              if(state.contratos.length > 1) {
+            } else if (state is MostrarUploadPdfViewState) {
+              if (state.contratos.length > 1) {
                 Navigator.pop(_ingresando);
                 Navigator.pushNamed(context, '/viewContrato',
                     arguments: state.contratos);
@@ -287,7 +292,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, 
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.gavel),
@@ -330,17 +335,14 @@ class _AgregarContratoState extends State<AgregarContrato> {
       allowMultiple: false,
     );
 
-    contratosBloc.add(UploadFileEvent(id,base64.encode(pickedFile.files[0].bytes),pickedFile.files[0].name));
-
+    contratosBloc.add(UploadFileEvent(id,
+        base64.encode(pickedFile.files[0].bytes), pickedFile.files[0].name));
   }
 
   // mensaje
   Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(txt),
-      )
-    );
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
   }
-
 }

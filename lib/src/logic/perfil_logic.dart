@@ -4,9 +4,9 @@ import 'dart:io';
 import 'dart:convert';
 
 // imports from wedding
-import 'package:weddingplanner/src/resources/config_conection.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_perfil.dart';
+import 'package:planning/src/resources/config_conection.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_perfil.dart';
 
 // clase abstracta con los metodos
 abstract class PerfilLogic {
@@ -31,33 +31,29 @@ class ConsultasPerfilLogic extends PerfilLogic {
 
     // map
     Map data = {
-      'id_usuario':idUsuario.toString(),
-      'id_involucrado':idInvolucrado.toString()
+      'id_usuario': idUsuario.toString(),
+      'id_involucrado': idInvolucrado.toString()
     };
 
     // pedido al servidor
     final response = await client.post(
-      Uri.parse(
-        confiC.url + 
-        confiC.puerto +
-        '/wedding/PERFIL/selectPerfil'
-      ),
-      body: {'id_planner':idPlanner.toString(),'perfil':jsonEncode(data)},
-      // body: data,
-      headers: {HttpHeaders.authorizationHeader:token}
-    );
+        Uri.parse(confiC.url + confiC.puerto + '/wedding/PERFIL/selectPerfil'),
+        body: {'id_planner': idPlanner.toString(), 'perfil': jsonEncode(data)},
+        // body: data,
+        headers: {HttpHeaders.authorizationHeader: token});
 
     // filtro
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      await _sharedPreferences.setImagen(data['data'][0]['imagen'] == null ? '':data['data'][0]['imagen']);
+      await _sharedPreferences.setImagen(
+          data['data'][0]['imagen'] == null ? '' : data['data'][0]['imagen']);
       return ItemModelPerfil.fromJson(data['data']);
-    } else if(response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
       throw AutorizacionException();
-    } 
+    }
   }
 
   @override
@@ -70,36 +66,32 @@ class ConsultasPerfilLogic extends PerfilLogic {
 
     // map
     Map data = {
-      'id_usuario':idUsuario.toString(),
-      'id_involucrado':idInvolucrado.toString(),
-      'data':perfil
+      'id_usuario': idUsuario.toString(),
+      'id_involucrado': idInvolucrado.toString(),
+      'data': perfil
     };
 
     // pedido al servidor
     final response = await client.post(
-      Uri.parse(
-        confiC.url + 
-        confiC.puerto +
-        '/wedding/PERFIL/insertPerfil'
-      ),
-      body: {'id_planner':idPlanner.toString(),'perfil':jsonEncode(data)},
-      // body: data,
-      headers: {HttpHeaders.authorizationHeader:token}
-    );
+        Uri.parse(confiC.url + confiC.puerto + '/wedding/PERFIL/insertPerfil'),
+        body: {'id_planner': idPlanner.toString(), 'perfil': jsonEncode(data)},
+        // body: data,
+        headers: {HttpHeaders.authorizationHeader: token});
 
     // filtro
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
       return true;
-    } else if(response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
       throw AutorizacionException();
-    } 
+    }
   }
 }
 
 // clases para manejar errores
 class AutorizacionException implements Exception {}
+
 class TokenException implements Exception {}

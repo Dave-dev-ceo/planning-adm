@@ -1,14 +1,14 @@
 import 'dart:convert';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:responsive_grid/responsive_grid.dart';
 
-import 'package:weddingplanner/src/blocs/timings/timings_bloc.dart';
-import 'package:weddingplanner/src/logic/timings_logic.dart';
-import 'package:weddingplanner/src/models/item_model_timings.dart';
+import 'package:planning/src/blocs/timings/timings_bloc.dart';
+import 'package:planning/src/logic/timings_logic.dart';
+import 'package:planning/src/models/item_model_timings.dart';
 
 class Timing extends StatefulWidget {
   const Timing({Key key}) : super(key: key);

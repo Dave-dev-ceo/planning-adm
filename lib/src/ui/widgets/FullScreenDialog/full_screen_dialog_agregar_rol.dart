@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/Roles/form_rol.dart';
+import 'package:planning/src/ui/Roles/form_rol.dart';
 
 class FullScreenDialogAddRol extends StatefulWidget {
   final Map<String, dynamic> datos;

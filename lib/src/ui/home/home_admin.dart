@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/administrador/planners.dart';
-import 'package:weddingplanner/src/ui/construccion/construccion.dart';
+import 'package:planning/src/ui/administrador/planners.dart';
+import 'package:planning/src/ui/construccion/construccion.dart';
 
 class HomeAdmin extends StatefulWidget {
   //static const routeName = '/eventos';

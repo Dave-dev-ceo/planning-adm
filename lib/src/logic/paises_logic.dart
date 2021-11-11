@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' show Client;
-import 'package:weddingplanner/src/models/item_model_paises.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/models/item_model_paises.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class ListaPaisesLogic {
   Future<ItemModelPaises> fetchPaises();
@@ -16,8 +16,8 @@ class FetchListaPaisesLogic extends ListaPaisesLogic {
 
   @override
   Future<ItemModelPaises> fetchPaises() async {
-    final response = await client
-        .get(Uri.parse(confiC.url+confiC.puerto+'/wedding/PAISES/obtenerPaises/'));
+    final response = await client.get(Uri.parse(
+        confiC.url + confiC.puerto + '/wedding/PAISES/obtenerPaises/'));
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

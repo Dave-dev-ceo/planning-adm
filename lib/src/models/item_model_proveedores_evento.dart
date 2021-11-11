@@ -1,4 +1,4 @@
-import 'package:weddingplanner/src/models/item_model_proveedores.dart';
+import 'package:planning/src/models/item_model_proveedores.dart';
 
 class ItemModelProveedoresEvento {
   List<ProveedoresEvento> _results = [];

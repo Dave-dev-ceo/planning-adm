@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:weddingplanner/src/ui/widgets/showDialog/alertDialog.dart';
+import 'package:planning/src/ui/widgets/showDialog/alertDialog.dart';
 
 class ScannerQrInvitado extends StatefulWidget {
   const ScannerQrInvitado({Key key}) : super(key: key);
@@ -28,7 +28,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
 
   Future<void> _showDialog(String datos) async {
     return await showDialog(
-      barrierDismissible: false,
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return Container(
@@ -81,7 +81,8 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                             child: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data ? "Encendido" : "Apagado"}');
+                                return Text(
+                                    'Flash: ${snapshot.data ? "Encendido" : "Apagado"}');
                               },
                             )),
                       ),
@@ -96,7 +97,8 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                               future: controller?.getCameraInfo(),
                               builder: (context, snapshot) {
                                 if (snapshot.data != null) {
-                                  return Text('Cambiar a camara ${describeEnum(snapshot.data) == "back" ? "Delantera" : "Trasera"}');
+                                  return Text(
+                                      'Cambiar a camara ${describeEnum(snapshot.data) == "back" ? "Delantera" : "Trasera"}');
                                 } else {
                                   return Text('loading');
                                 }
@@ -140,13 +142,21 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
 
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400) ? 150.0 : 300.0;
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
+            MediaQuery.of(context).size.height < 400)
+        ? 150.0
+        : 300.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(borderColor: Colors.red[700], borderRadius: 10, borderLength: 30, borderWidth: 10, cutOutSize: scanArea),
+      overlay: QrScannerOverlayShape(
+          borderColor: Colors.red[700],
+          borderRadius: 10,
+          borderLength: 30,
+          borderWidth: 10,
+          cutOutSize: scanArea),
     );
   }
 

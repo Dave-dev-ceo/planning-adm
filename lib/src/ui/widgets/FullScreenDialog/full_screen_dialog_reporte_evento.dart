@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
-import 'package:weddingplanner/src/models/item_model_grupos.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/eventos/reporte_evento.dart';
+import 'package:planning/src/models/item_model_estatus_invitado.dart';
+import 'package:planning/src/models/item_model_grupos.dart';
+import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/eventos/reporte_evento.dart';
 
 class FullScreenDialogReporte extends StatefulWidget {
   final String reporte;

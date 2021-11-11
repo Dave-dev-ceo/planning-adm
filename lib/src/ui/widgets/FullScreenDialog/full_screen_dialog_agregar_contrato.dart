@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:weddingplanner/src/ui/contratos/agregar_contrato.dart';
+//import 'package:planning/src/ui/contratos/agregar_contrato.dart';
 
 class FullScreenDialogAddContrato extends StatefulWidget {
   const FullScreenDialogAddContrato({Key key}) : super(key: key);

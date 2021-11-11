@@ -5,14 +5,14 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 
 // wedding
-import 'package:weddingplanner/src/ui/widgets/text_form_filed/text_form_filed.dart';
+import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/autorizacion/autorizacion_bloc.dart';
+import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
 
 // model
-import 'package:weddingplanner/src/models/item_model_autorizacion.dart';
+import 'package:planning/src/models/item_model_autorizacion.dart';
 
 class AutorizacionLista extends StatefulWidget {
   AutorizacionLista({Key key}) : super(key: key);
@@ -54,16 +54,20 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     return BlocBuilder<AutorizacionBloc, AutorizacionState>(
       builder: (context, state) {
         // state ini
-        if(state is AutorizacionInitialState)
-          return Center(child: CircularProgressIndicator(),);
+        if (state is AutorizacionInitialState)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         // state log
-        else if(state is AutorizacionLodingState)
-          return Center(child: CircularProgressIndicator(),);
-        else if(state is AutorizacionSelectState) {
-          if(state.autorizacion != null) {
-            if(itemModelAutorizacion != state.autorizacion) {
+        else if (state is AutorizacionLodingState)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        else if (state is AutorizacionSelectState) {
+          if (state.autorizacion != null) {
+            if (itemModelAutorizacion != state.autorizacion) {
               itemModelAutorizacion = state.autorizacion;
-              if(itemModelAutorizacion != null) {
+              if (itemModelAutorizacion != null) {
                 _listAutorizacion = _copyModel(itemModelAutorizacion);
               }
             }
@@ -71,9 +75,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
           } else {
             return Center(child: Text('Sin datos'));
           }
-        }
-        else if(state is AutorizacionCreateState) {
-
+        } else if (state is AutorizacionCreateState) {
           // limpiamos variables
           _autorizacion['descripcion'] = '';
           _archivos.clear();
@@ -84,14 +86,16 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
         }
         // not knowing
         else
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+            child: CircularProgressIndicator(),
+          );
       },
     );
   }
 
   // stickyheader
   _crearStickyHeader(ItemModelAutorizacion item) {
-    return  Container(
+    return Container(
       padding: EdgeInsets.all(20.0),
       color: Colors.white,
       child: ListView(
@@ -121,7 +125,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     );
   }
 
-  // header 
+  // header
   _header(String txt, double padding) {
     return Container(
       padding: EdgeInsets.all(padding),
@@ -132,7 +136,10 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(txt, style: TextStyle(fontSize: 20.0),),
+          Text(
+            txt,
+            style: TextStyle(fontSize: 20.0),
+          ),
         ],
       ),
     );
@@ -156,11 +163,15 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
                 large: 400.0,
                 ancho: 80.0,
                 item: TextFormField(
-                  controller: TextEditingController(text: _autorizacion['descripcion'] == null ? '':_autorizacion['descripcion']),
+                  controller: TextEditingController(
+                      text: _autorizacion['descripcion'] == null
+                          ? ''
+                          : _autorizacion['descripcion']),
                   decoration: InputDecoration(
-                    labelText: 'Descripción',
-                    errorText: validaDescripcion ? null:'La descripción no puede estar vacia.'
-                  ),
+                      labelText: 'Descripción',
+                      errorText: validaDescripcion
+                          ? null
+                          : 'La descripción no puede estar vacia.'),
                   onChanged: (valor) {
                     _autorizacion['descripcion'] = valor;
                   },
@@ -170,14 +181,14 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
                 padding: EdgeInsets.symmetric(vertical: 3),
                 child: Container(
                   child: Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    elevation: 10,
-                    child: ListTile(
-                      leading: Icon(Icons.photo_library), 
-                      title: Text('Selecciona una foto'),
-                      onTap: () => _addFilesView(),
-                    )
-                  ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      elevation: 10,
+                      child: ListTile(
+                        leading: Icon(Icons.photo_library),
+                        title: Text('Selecciona una foto'),
+                        onTap: () => _addFilesView(),
+                      )),
                   width: 400.0,
                   height: 80.0,
                 ),
@@ -197,26 +208,24 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
 
     // ciclo para conseguir los archivos
     _archivos.forEach((archivo) {
-      temp.add(
-        Padding(
-          padding: EdgeInsets.only(right: 100.0, left: 100.0),
-          child: ListTile(
-            leading: Icon(Icons.image), 
-            title: Text('${archivo.nombre}'),
-            trailing: GestureDetector(
-              child: Icon(Icons.delete),
-              onTap: () => _removeFilesView(archivo.idEvidencia),
-            ),
+      temp.add(Padding(
+        padding: EdgeInsets.only(right: 100.0, left: 100.0),
+        child: ListTile(
+          leading: Icon(Icons.image),
+          title: Text('${archivo.nombre}'),
+          trailing: GestureDetector(
+            child: Icon(Icons.delete),
+            onTap: () => _removeFilesView(archivo.idEvidencia),
           ),
-        )
-      );
+        ),
+      ));
     });
 
     Column archivos = Column(
       children: temp,
     );
 
-    return temp.length > 0 ? archivos:SizedBox();
+    return temp.length > 0 ? archivos : SizedBox();
   }
 
   // boton para agregar autorizacion
@@ -224,32 +233,29 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
       child: Container(
-        decoration: const ShapeDecoration(
-          color: Colors.black,
-          shape: CircleBorder(),
-        ),
-        child: Ink(
           decoration: const ShapeDecoration(
             color: Colors.black,
             shape: CircleBorder(),
           ),
-          child: IconButton(
-            icon: Icon(Icons.save),
-            color: Colors.white,
-            onPressed: () => _addAutorizacion(),
-          ),
-        )
-      ),
+          child: Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.black,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.save),
+              color: Colors.white,
+              onPressed: () => _addAutorizacion(),
+            ),
+          )),
     );
   }
 
   // mensaje
   Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(txt),
-      )
-    );
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
   }
 
   // creamos lista con la copia del model
@@ -257,14 +263,12 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     List<Autorizacion> temp = [];
 
     item.autorizacion.forEach((autorizacion) {
-      temp.add(
-        Autorizacion(
-          idAutorizacion: autorizacion.idAutorizacion,
-          descripcion: autorizacion.descripcionAutorizacion,
-          validacion: true,
-          comentario: autorizacion.comentario,
-        )
-      );
+      temp.add(Autorizacion(
+        idAutorizacion: autorizacion.idAutorizacion,
+        descripcion: autorizacion.descripcionAutorizacion,
+        validacion: true,
+        comentario: autorizacion.comentario,
+      ));
     });
 
     return temp;
@@ -274,61 +278,59 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
   _listaAutorizaciones(ItemModelAutorizacion item) {
     List<ListTile> temp = [];
 
-    if(!_listAutorizacion.isEmpty)
+    if (!_listAutorizacion.isEmpty)
       _listAutorizacion.forEach((autorizacion) {
-        temp.add(
-          ListTile(
-            leading: Icon(Icons.apps_outlined ),
-            title: Row(
-              children: [
-                Expanded(
-                  flex: 9,
-                  child: autorizacion.validacion ? GestureDetector(
-                    child: Text('${autorizacion.descripcion}'),
-                    onTap: () => _showImagenes(autorizacion.idAutorizacion, autorizacion.descripcion),
-                  ):TextFormField(
-                    controller: TextEditingController(text: '${autorizacion.descripcion}'),
-                    decoration: InputDecoration(
-                      labelText: 'Descripción'
-                    ),
-                    onChanged: (valor) {
-                      autorizacion.descripcion = valor;
-                    },
-                  ),
-                ),
-                Expanded(
+        temp.add(ListTile(
+          leading: Icon(Icons.apps_outlined),
+          title: Row(
+            children: [
+              Expanded(
+                flex: 9,
+                child: autorizacion.validacion
+                    ? GestureDetector(
+                        child: Text('${autorizacion.descripcion}'),
+                        onTap: () => _showImagenes(autorizacion.idAutorizacion,
+                            autorizacion.descripcion),
+                      )
+                    : TextFormField(
+                        controller: TextEditingController(
+                            text: '${autorizacion.descripcion}'),
+                        decoration: InputDecoration(labelText: 'Descripción'),
+                        onChanged: (valor) {
+                          autorizacion.descripcion = valor;
+                        },
+                      ),
+              ),
+              Expanded(
                   flex: 1,
                   child: GestureDetector(
                     child: Icon(Icons.edit),
                     onTap: () => _editAutorizacion(autorizacion.idAutorizacion),
-                  )
-                ),
-                Expanded(
+                  )),
+              Expanded(
                   flex: 1,
                   child: GestureDetector(
                     child: Icon(Icons.delete),
-                    onTap: () => _deleteAutorizacion(autorizacion.idAutorizacion),
-                  )
+                    onTap: () =>
+                        _deleteAutorizacion(autorizacion.idAutorizacion),
+                  )),
+            ],
+          ),
+          subtitle: autorizacion.validacion
+              ? GestureDetector(child: Text('${autorizacion.comentario}'))
+              : TextFormField(
+                  controller:
+                      TextEditingController(text: '${autorizacion.comentario}'),
+                  decoration: InputDecoration(labelText: 'Comentario'),
+                  onChanged: (valor) {
+                    autorizacion.comentario = valor;
+                  },
                 ),
-              ],
-            ),
-            subtitle: autorizacion.validacion ? GestureDetector(
-              child: Text('${autorizacion.comentario}')
-            ):TextFormField(
-              controller: TextEditingController(text: '${autorizacion.comentario}'),
-              decoration: InputDecoration(
-                labelText: 'Comentario'
-              ),
-              onChanged: (valor) {
-                autorizacion.comentario = valor;
-              },
-            ),
-            trailing: null,
-          )
-        );
+          trailing: null,
+        ));
       });
 
-    if(item.autorizacion.isEmpty)
+    if (item.autorizacion.isEmpty)
       return Center(
         child: Container(
           padding: EdgeInsets.only(top: 40.0),
@@ -339,9 +341,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
       return Container(
         color: Colors.white,
         padding: EdgeInsets.only(top: 30.0),
-        child: Column(
-          children: temp
-        ),
+        child: Column(children: temp),
       );
   }
 
@@ -349,7 +349,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
 
   // add files
   _addFilesView() async {
-    const extensiones = ['jpg','png','jpeg'];
+    const extensiones = ['jpg', 'png', 'jpeg'];
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -359,14 +359,11 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
 
     pickedFile.files.forEach((archivo) {
       setState(() {
-        _archivos.add(
-          Evidencia(
+        _archivos.add(Evidencia(
             idEvidencia: _archivos.length + 1,
             archivo: base64.encode(archivo.bytes),
             nombre: '${archivo.name}',
-            tipo: archivo.extension
-          )
-        );
+            tipo: archivo.extension));
       });
     });
   }
@@ -378,20 +375,20 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     });
   }
 
-  // guardar autorizacion  
+  // guardar autorizacion
   _addAutorizacion() {
     RegExp exp = RegExp(r"(\w+)");
     setState(() {
-      if(_autorizacion['descripcion'] != null) {
-        Iterable<RegExpMatch> matches = exp.allMatches(_autorizacion['descripcion']);
-        if(matches.isEmpty)
+      if (_autorizacion['descripcion'] != null) {
+        Iterable<RegExpMatch> matches =
+            exp.allMatches(_autorizacion['descripcion']);
+        if (matches.isEmpty)
           validaDescripcion = false;
         else {
           validaDescripcion = true;
           _sendAutorizacion();
         }
-      }
-      else
+      } else
         validaDescripcion = false;
     });
   }
@@ -405,22 +402,20 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
 
   // vamos a la vista con las imagenes
   void _showImagenes(int idAutorizacion, String txt) {
-    Map send = {
-      'id':idAutorizacion,
-      'name': txt
-    };
+    Map send = {'id': idAutorizacion, 'name': txt};
     Navigator.of(context).pushNamed('/galeriaEvidencia', arguments: send);
   }
 
   void _editAutorizacion(int idAutorizacion) {
     _listAutorizacion.forEach((autorizacion) {
-      if(idAutorizacion == autorizacion.idAutorizacion) {
+      if (idAutorizacion == autorizacion.idAutorizacion) {
         setState(() {
           autorizacion.validacion = !autorizacion.validacion;
         });
 
-        if(autorizacion.validacion) {
-          autorizacionBloc.add(UpdateAutorizacionEvent(idAutorizacion,autorizacion.descripcion,autorizacion.comentario));
+        if (autorizacion.validacion) {
+          autorizacionBloc.add(UpdateAutorizacionEvent(idAutorizacion,
+              autorizacion.descripcion, autorizacion.comentario));
           _mensaje('Autorizacion actualizada.');
         }
       }
@@ -431,7 +426,6 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     autorizacionBloc.add(DeleteAutorizacionEvent(idAutorizacion));
     _mensaje('Autorizacion eliminada.');
   }
-  
 }
 
 class Autorizacion {
@@ -446,7 +440,6 @@ class Autorizacion {
     this.validacion,
     this.comentario,
   });
-
 }
 
 class Evidencia {
@@ -455,19 +448,13 @@ class Evidencia {
   String nombre;
   String tipo;
 
-  Evidencia({
-    this.idEvidencia,
-    this.archivo,
-    this.nombre,
-    this.tipo
-  });
+  Evidencia({this.idEvidencia, this.archivo, this.nombre, this.tipo});
 
   // solucion al enviar objetos al servidor
-  Map<String, dynamic> toJson() =>{
-    'id_evidencia':idEvidencia,
-    'archivo':archivo,
-    'nombre':nombre,
-    'tipo':tipo,
-  };
+  Map<String, dynamic> toJson() => {
+        'id_evidencia': idEvidencia,
+        'archivo': archivo,
+        'nombre': nombre,
+        'tipo': tipo,
+      };
 }
-

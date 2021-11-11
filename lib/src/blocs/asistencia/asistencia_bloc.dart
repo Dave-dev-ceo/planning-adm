@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import 'package:weddingplanner/src/logic/asistencia_logic.dart';
-import 'package:weddingplanner/src/models/item_model_asistencia.dart';
+import 'package:planning/src/logic/asistencia_logic.dart';
+import 'package:planning/src/models/item_model_asistencia.dart';
 
 part 'asistencia_event.dart';
 part 'asistencia_state.dart';
@@ -30,8 +30,9 @@ class AsistenciaBloc extends Bloc<AsistenciaEvent, AsistenciaState> {
       }
     }
     // mejorar
-    else if(event is SaveAsistenciaEvent){
-      int response = await logic.saveAsistencia(event.idInvitado, event.asistencia);
+    else if (event is SaveAsistenciaEvent) {
+      int response =
+          await logic.saveAsistencia(event.idInvitado, event.asistencia);
       // yield SavedAsistenciaState(response);
       ItemModelAsistencia usuarios = await logic.fetchAsistenciaPorPlanner();
       yield MostrarAsistenciaState(usuarios);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/Listas/detalleListas.dart';
+import 'package:planning/src/ui/Listas/detalleListas.dart';
 
 class FullScreenDialogDetalleListasEvent extends StatefulWidget {
   final Map<String, dynamic> lista;

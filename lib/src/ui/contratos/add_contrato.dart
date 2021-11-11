@@ -1,10 +1,9 @@
 // imports flutter/dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/contratos/bloc/add_contratos_bloc.dart';
-import 'package:weddingplanner/src/blocs/contratos/bloc/contratos_bloc.dart';
-import 'package:weddingplanner/src/blocs/contratos/contratos_bloc.dart'
-    as verlitener;
+import 'package:planning/src/blocs/contratos/bloc/add_contratos_bloc.dart';
+import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
+import 'package:planning/src/blocs/contratos/contratos_bloc.dart' as verlitener;
 
 class AddMachote extends StatefulWidget {
   final Map map;

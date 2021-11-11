@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_machotes.dart';
+import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
+import 'package:planning/src/models/item_model_machotes.dart';
 
 class Machotes extends StatefulWidget {
   const Machotes({Key key}) : super(key: key);

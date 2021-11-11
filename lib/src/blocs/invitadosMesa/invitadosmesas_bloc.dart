@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/invitados_mesas_logic/invitados_mesa_logic.dart';
-import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
+import 'package:planning/src/logic/invitados_mesas_logic/invitados_mesa_logic.dart';
+import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
 
 part 'invitadosmesas_event.dart';
 part 'invitadosmesas_state.dart';

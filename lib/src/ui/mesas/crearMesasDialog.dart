@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
+import 'package:planning/src/blocs/Mesas/mesas_bloc.dart';
 
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/mesa/mesas_model.dart';
 
 class CrearMesasDialog extends StatefulWidget {
   final int lastnumMesas;

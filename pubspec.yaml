@@ -1,5 +1,5 @@
-name: weddingplanner
-description: A new Flutter project.
+name: planning
+description: Planificación de Eventos.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -18,16 +18,16 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  http: 
+  http:
   rxdart: ^0.27.1
-  excel: 
+  excel:
   responsive_builder: ^0.4.1
   contacts_service:
   permission_handler: ^8.1.4+2
@@ -58,7 +58,7 @@ dependencies:
   table_calendar: ^3.0.1
   multi_select_flutter: ^4.0.0
   file_picker: ^3.0.4
-  syncfusion_flutter_pdfviewer: ^19.2.51-beta  
+  syncfusion_flutter_pdfviewer: ^19.2.51-beta
   mime_type: ^1.0.0
   # no quitar - sin esto falla
   flutter_colorpicker: ^0.5.0
@@ -67,6 +67,8 @@ dependencies:
   webview_flutter: ^2.1.1
   pointer_interceptor: ^0.9.0+1
   responsive_grid: ^2.0.0
+  universal_html: ^2.0.8
+  universal_ui: ^0.0.8
 
 dev_dependencies:
   flutter_test:
@@ -77,7 +79,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -85,17 +86,17 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/
+    - assets/
 
   fonts:
-    - family:  MyFlutterApp
+    - family: MyFlutterApp
       fonts:
-       - asset: fonts/MyFlutterApp.ttf
+        - asset: fonts/MyFlutterApp.ttf
 
     - family: Dancing
       fonts:
         - asset: fonts/DancingScript-Medium.ttf
-    
+
     - family: Comfortaa
       fonts:
         - asset: fonts/Comfortaa-Regular.ttf

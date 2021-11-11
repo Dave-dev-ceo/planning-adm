@@ -2,16 +2,18 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/actividades_timing_logic.dart';
-import 'package:weddingplanner/src/models/item_model_actividades_timings.dart';
-import 'package:weddingplanner/src/models/item_model_timings.dart';
+import 'package:planning/src/logic/actividades_timing_logic.dart';
+import 'package:planning/src/models/item_model_actividades_timings.dart';
+import 'package:planning/src/models/item_model_timings.dart';
 
 part 'actividadestiming_event.dart';
 part 'actividadestiming_state.dart';
 
-class ActividadestimingBloc extends Bloc<ActividadestimingEvent, ActividadestimingState> {
+class ActividadestimingBloc
+    extends Bloc<ActividadestimingEvent, ActividadestimingState> {
   final ActividadesTimingsLogic logic;
-  ActividadestimingBloc({@required this.logic}) : super(ActividadestimingInitial());
+  ActividadestimingBloc({@required this.logic})
+      : super(ActividadestimingInitial());
 
   @override
   Stream<ActividadestimingState> mapEventToState(
@@ -20,7 +22,8 @@ class ActividadestimingBloc extends Bloc<ActividadestimingEvent, Actividadestimi
     if (event is FetchActividadesTimingsPorPlannerEvent) {
       yield LoadingActividadesTimingsState();
       try {
-        ItemModelActividadesTimings usuarios = await logic.fetchActividadesTimingsPorPlanner(event.idTiming);
+        ItemModelActividadesTimings usuarios =
+            await logic.fetchActividadesTimingsPorPlanner(event.idTiming);
         yield MostrarActividadesTimingsState(usuarios);
       } on ListaActividadesTimingsException {
         yield ErrorMostrarActividadesTimingsState("Sin Actividades");
@@ -30,7 +33,8 @@ class ActividadestimingBloc extends Bloc<ActividadestimingEvent, Actividadestimi
     } else if (event is CreateActividadesTimingsEvent) {
       try {
         yield CreateActividadesTimingsState();
-        int data = await logic.createActividadesTiming(event.data,event.idTiming);
+        int data =
+            await logic.createActividadesTiming(event.data, event.idTiming);
         if (data == 0) {
           add(FetchActividadesTimingsPorPlannerEvent(event.idTiming));
         }
@@ -44,7 +48,8 @@ class ActividadestimingBloc extends Bloc<ActividadestimingEvent, Actividadestimi
     } else if (event is DeleteActividadesTimingsEvent) {
       try {
         yield DeleteActividadesTimingsState();
-        int data = await logic.deleteActividadesTiming(event.idActividadTiming,event.idTiming);
+        int data = await logic.deleteActividadesTiming(
+            event.idActividadTiming, event.idTiming);
         if (data == 0) {
           add(FetchActividadesTimingsPorPlannerEvent(event.idTiming));
         }
@@ -82,9 +87,9 @@ class ActividadestimingBloc extends Bloc<ActividadestimingEvent, Actividadestimi
     //         if(eventoTarea.id_timing == plannerActividad.idTipoTimig) {
     //           Map<String,dynamic> eventoActividades = {
     //             'id_evento_timing':eventoTarea.idEventoTiming.toString(),
-    //             'nombre':plannerActividad.nombreActividad, 
-    //             'descripcion':plannerActividad.descripcion, 
-    //             'visible_involucrados':plannerActividad.visibleInvolucrados.toString(), 
+    //             'nombre':plannerActividad.nombreActividad,
+    //             'descripcion':plannerActividad.descripcion,
+    //             'visible_involucrados':plannerActividad.visibleInvolucrados.toString(),
     //             'dias':plannerActividad.dias,
     //             'id_tipo_timing' : plannerActividad.idTipoTimig.toString(),
     //             'fecha_inicio_actividad': eventoTarea.fechaInicio.toString(),

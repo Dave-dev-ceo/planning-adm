@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_detalle_listas.dart';
-import 'package:weddingplanner/src/models/item_model_listas.dart';
-import 'package:weddingplanner/src/ui/widgets/text_form_filed/text_form_filed.dart';
+import 'package:planning/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
+import 'package:planning/src/models/item_model_detalle_listas.dart';
+import 'package:planning/src/models/item_model_listas.dart';
+import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
 class DetalleListas extends StatefulWidget {
   final Map<String, dynamic> lista;
