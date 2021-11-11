@@ -6,10 +6,10 @@ import 'package:file_picker/file_picker.dart';
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:weddingplanner/src/blocs/autorizacion/autorizacion_bloc.dart';
+import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
 
 // model
-import 'package:weddingplanner/src/models/item_model_autorizacion.dart';
+import 'package:planning/src/models/item_model_autorizacion.dart';
 
 class GaleriaEvidencia extends StatefulWidget {
   final Map map;
@@ -62,19 +62,22 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
     return BlocBuilder<AutorizacionBloc, AutorizacionState>(
       builder: (context, state) {
         // state ini
-        if(state is AutorizacionInitialState)
-          return Center(child: CircularProgressIndicator(),);
+        if (state is AutorizacionInitialState)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         // state log
-        else if(state is AutorizacionLodingState)
-          return Center(child: CircularProgressIndicator(),);
-        else if(state is SelectEvidenciaState) {
-          if(state.evidencia != null) {
-            if(itemModelAutorizacion != state.evidencia) {
+        else if (state is AutorizacionLodingState)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        else if (state is SelectEvidenciaState) {
+          if (state.evidencia != null) {
+            if (itemModelAutorizacion != state.evidencia) {
               itemModelAutorizacion = state.evidencia;
-              if(itemModelAutorizacion != null) {
+              if (itemModelAutorizacion != null) {
                 _listaEvidencia = _copyModel(itemModelAutorizacion);
               }
-
             }
             return _crearGaleria(itemModelAutorizacion);
           } else {
@@ -83,7 +86,9 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
         }
         // not knowing
         else
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+            child: CircularProgressIndicator(),
+          );
       },
     );
   }
@@ -109,79 +114,85 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
       final bytes = base64Decode(evidencia.archivo);
       final image = MemoryImage(bytes);
 
-      temp.add(
-        GridTile(
-          header: Material(
-            color: Colors.transparent,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
+      temp.add(GridTile(
+        header: Material(
+          color: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: GridTileBar(
+            backgroundColor: Colors.black45,
+            title: Row(
+              children: [
+                Expanded(
+                  flex: 9,
+                  child: evidencia.valida
+                      ? Text('${evidencia.nombre}')
+                      : TextFormField(
+                          controller: TextEditingController(
+                              text: '${evidencia.nombre}'),
+                          decoration: InputDecoration(
+                            hintText: 'Descripción',
+                          ),
+                          onChanged: (valor) {
+                            evidencia.nombre = valor;
+                          },
+                        ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: evidencia.valida
+                      ? GestureDetector(
+                          child: Icon(Icons.edit),
+                          onTap: () {
+                            setState(() {
+                              evidencia.valida = !evidencia.valida;
+                            });
+                          },
+                        )
+                      : GestureDetector(
+                          child: Icon(Icons.save),
+                          onTap: () {
+                            setState(() {
+                              evidencia.valida = !evidencia.valida;
+                            });
+                            autorizacionBloc.add(UpdateEvidenciaEvent(
+                                evidencia.idEvidencia,
+                                widget.map['id'],
+                                evidencia.nombre));
+                          },
+                        ),
+                ),
+              ],
             ),
-            clipBehavior: Clip.antiAlias,
-            child: GridTileBar(
-              backgroundColor: Colors.black45,  
-              title: Row(
-                children: [
-                  Expanded(
-                    flex: 9,
-                    child: evidencia.valida ? Text('${evidencia.nombre}'):TextFormField(
-                      controller: TextEditingController(text: '${evidencia.nombre}'),
-                      decoration: InputDecoration(
-                        hintText: 'Descripción',
-                      ),
-                      onChanged: (valor) {
-                        evidencia.nombre = valor;
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: evidencia.valida ? GestureDetector(
-                      child: Icon(Icons.edit),
-                      onTap: () {
-                        setState(() {
-                          evidencia.valida = !evidencia.valida;
-                        });
-                      },
-                    ):GestureDetector(
-                      child: Icon(Icons.save),
-                      onTap: () {
-                        setState(() {
-                          evidencia.valida = !evidencia.valida;
-                        });
-                        autorizacionBloc.add(UpdateEvidenciaEvent(evidencia.idEvidencia, widget.map['id'], evidencia.nombre));
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              // subtitle: GestureDetector(
-              //   child: Icon(Icons.edit),
-              //   onTap: () {print('editar');},
-              // ),
+            // subtitle: GestureDetector(
+            //   child: Icon(Icons.edit),
+            //   onTap: () {print('editar');},
+            // ),
+          ),
+        ),
+        footer: Material(
+          color: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: GridTileBar(
+            backgroundColor: Colors.black45,
+            // title: _GridTitleText(photo.title),
+            subtitle: GestureDetector(
+              child: Icon(Icons.delete),
+              onTap: () => _borrarImage(evidencia.idEvidencia),
             ),
           ),
-          footer: Material(
-            color: Colors.transparent,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: GridTileBar(
-              backgroundColor: Colors.black45,  
-              // title: _GridTitleText(photo.title),
-              subtitle: GestureDetector(
-                child: Icon(Icons.delete),
-                onTap: () => _borrarImage(evidencia.idEvidencia),
-              ),
-            ),
-          ),
-          child:  PhotoView(
-            tightMode: true,
-            backgroundDecoration: BoxDecoration(color: Colors.white),
-            imageProvider: image,
-          ),
-        )
-      );
+        ),
+        child: PhotoView(
+          tightMode: true,
+          backgroundDecoration: BoxDecoration(color: Colors.white),
+          imageProvider: image,
+        ),
+      ));
     });
 
     return temp;
@@ -189,11 +200,9 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
 
   // mensaje
   Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(txt),
-      )
-    );
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
   }
 
   /** EVENTOS **/
@@ -204,7 +213,7 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
     List<Evidencia> temp = [];
     Map mapTemp = Map();
 
-    const extensiones = ['jpg','png','jpeg'];
+    const extensiones = ['jpg', 'png', 'jpeg'];
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -213,30 +222,23 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
     );
 
     pickedFile.files.forEach((archivo) {
-      temp.add(
-        Evidencia(
+      temp.add(Evidencia(
           idEvidencia: temp.length + 1,
           archivo: base64.encode(archivo.bytes),
           nombre: '${archivo.name}',
-          tipo: archivo.extension
-        )
-      );
+          tipo: archivo.extension));
     });
 
-    if(temp.length > 0) {
-      mapTemp = {
-        'id_autorizacion':widget.map['id'],
-        'lista':temp
-      };
+    if (temp.length > 0) {
+      mapTemp = {'id_autorizacion': widget.map['id'], 'lista': temp};
       autorizacionBloc.add(CrearImagenEvent(mapTemp));
       _mensaje('Imagen agregada.');
     }
-    
   }
 
   // delete image
   _borrarImage(int idEvidencia) {
-    autorizacionBloc.add(DeleteEvidenciaEvent(idEvidencia,widget.map['id']));
+    autorizacionBloc.add(DeleteEvidenciaEvent(idEvidencia, widget.map['id']));
     _mensaje('Imagen borrada.');
   }
 
@@ -244,14 +246,12 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
     List<Evidencia> temp = [];
 
     item.autorizacion.forEach((evidencia) {
-      temp.add(
-        Evidencia(
-          idEvidencia: evidencia.idEvidencia,
-          nombre: evidencia.nombre,
-          archivo: evidencia.archivo,
-          valida: true,
-        )
-      );
+      temp.add(Evidencia(
+        idEvidencia: evidencia.idEvidencia,
+        nombre: evidencia.nombre,
+        archivo: evidencia.archivo,
+        valida: true,
+      ));
     });
 
     return temp;
@@ -274,10 +274,10 @@ class Evidencia {
   });
 
   // solucion al enviar objetos al servidor
-  Map<String, dynamic> toJson() =>{
-    'id_evidencia':idEvidencia,
-    'archivo':archivo,
-    'nombre':nombre,
-    'tipo':tipo,
-  };
+  Map<String, dynamic> toJson() => {
+        'id_evidencia': idEvidencia,
+        'archivo': archivo,
+        'nombre': nombre,
+        'tipo': tipo,
+      };
 }

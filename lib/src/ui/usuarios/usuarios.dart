@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/usuarios/usuarios_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_usuarios.dart';
-import 'package:weddingplanner/src/ui/Roles/roles.dart';
+import 'package:planning/src/blocs/usuarios/usuarios_bloc.dart';
+import 'package:planning/src/models/item_model_usuarios.dart';
+import 'package:planning/src/ui/Roles/roles.dart';
 
 class Usuarios extends StatefulWidget {
   const Usuarios({Key key}) : super(key: key);

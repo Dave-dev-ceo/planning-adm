@@ -10,13 +10,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
-import 'package:weddingplanner/src/blocs/blocs.dart';
-import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_estatus_invitado.dart';
-import 'package:weddingplanner/src/models/item_model_grupos.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
-import 'package:weddingplanner/src/ui/mesas/mesasPage.dart';
+import 'package:planning/src/blocs/blocs.dart';
+import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
+import 'package:planning/src/models/item_model_estatus_invitado.dart';
+import 'package:planning/src/models/item_model_grupos.dart';
+import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/asistencia/asistencia.dart';
+import 'package:planning/src/ui/mesas/mesasPage.dart';
 import '../../../models/item_model_invitados.dart';
 
 class ListaInvitados extends StatefulWidget {

@@ -1,12 +1,11 @@
-
 // imports flutter/dart
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' show Client;
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_involucrados.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_involucrados.dart';
 
 abstract class Involucrados {
   Future<ItemModelInvolucrados> selectInvolucrado();
@@ -60,12 +59,13 @@ class ConsultasInvolucradosLogic extends Involucrados {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/INVOLUCRADOS/insertInvolucrados'),
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/INVOLUCRADOS/insertInvolucrados'),
         body: {
-          'id_evento':idEvento.toString(),
-          'id_planner':idPlanner.toString(),
-          'involucrado':jsonEncode(involucrado)
+          'id_evento': idEvento.toString(),
+          'id_planner': idPlanner.toString(),
+          'involucrado': jsonEncode(involucrado)
         },
         headers: {
           HttpHeaders.authorizationHeader: token

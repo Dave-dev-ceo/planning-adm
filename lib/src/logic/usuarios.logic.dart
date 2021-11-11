@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_usuarios.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_usuarios.dart';
 import 'package:http/http.dart' show Client;
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class UsuariosLogic {
   Future<ItemModelUsuarios> fetchUsuariosPorPlanner();
@@ -39,8 +39,12 @@ class FetchListaUsuariosLogic extends UsuariosLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(Uri.parse(confiC.url + confiC.puerto + '/wedding/USUARIOS/obtenerUsuariosPorPlanner'),
-        body: {'id_planner': idPlanner.toString()}, headers: {HttpHeaders.authorizationHeader: token});
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/USUARIOS/obtenerUsuariosPorPlanner'),
+        body: {'id_planner': idPlanner.toString()},
+        headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -62,14 +66,24 @@ class UsuarioCrud extends UsuarioLogic {
 
   Client client = Client();
   @override
-  Future<ItemModelUsuario> crearUsuario(Map<String, dynamic> dataUsuario) async {
+  Future<ItemModelUsuario> crearUsuario(
+      Map<String, dynamic> dataUsuario) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(Uri.parse(confiC.url + confiC.puerto + '/wedding/USUARIOS/crearUsuarioParaPlanner'),
-        body: {'id_planner': idPlanner.toString(), 'id_usuario': idUsuario.toString(), 'usuario': jsonEncode(dataUsuario)},
-        headers: {HttpHeaders.authorizationHeader: token});
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/USUARIOS/crearUsuarioParaPlanner'),
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_usuario': idUsuario.toString(),
+          'usuario': jsonEncode(dataUsuario)
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 201) {
       // If the call to the server was successful, parse the JSON
@@ -84,14 +98,24 @@ class UsuarioCrud extends UsuarioLogic {
   }
 
   @override
-  Future<ItemModelUsuario> editarUsuario(Map<String, dynamic> dataUsuario) async {
+  Future<ItemModelUsuario> editarUsuario(
+      Map<String, dynamic> dataUsuario) async {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(Uri.parse(confiC.url + confiC.puerto + '/wedding/USUARIOS/editarUsuarioParaPlanner'),
-        body: {'id_planner': idPlanner.toString(), 'id_usuario': idUsuario.toString(), 'usuario': jsonEncode(dataUsuario)},
-        headers: {HttpHeaders.authorizationHeader: token});
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/USUARIOS/editarUsuarioParaPlanner'),
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_usuario': idUsuario.toString(),
+          'usuario': jsonEncode(dataUsuario)
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 201) {
       // If the call to the server was successful, parse the JSON
@@ -109,8 +133,11 @@ class UsuarioCrud extends UsuarioLogic {
   Future<bool> eliminarUsuario(String idUsuario) async {
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(Uri.parse(confiC.url + confiC.puerto + '/wedding/USUARIOS/eliminarUsuario'),
-        body: {'id_usuario': idUsuario.toString()}, headers: {HttpHeaders.authorizationHeader: token});
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/USUARIOS/eliminarUsuario'),
+        body: {'id_usuario': idUsuario.toString()},
+        headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

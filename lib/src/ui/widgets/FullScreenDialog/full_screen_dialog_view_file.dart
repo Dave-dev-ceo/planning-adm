@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
+import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 
 class FullScreenDialogViewFileEvent extends StatefulWidget {
   final Map<String, dynamic> archivo;

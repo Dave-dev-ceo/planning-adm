@@ -1,18 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:weddingplanner/src/models/item_model_actividades_timings.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_actividades_timings.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:http/http.dart' show Client;
-import 'package:weddingplanner/src/models/item_model_timings.dart';
+import 'package:planning/src/models/item_model_timings.dart';
 
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class ActividadesTimingsLogic {
-  Future<ItemModelActividadesTimings> fetchActividadesTimingsPorPlanner(int idTiming);
-  Future<int> createActividadesTiming(Map<String, dynamic> dataTiming, int idTiming);
+  Future<ItemModelActividadesTimings> fetchActividadesTimingsPorPlanner(
+      int idTiming);
+  Future<int> createActividadesTiming(
+      Map<String, dynamic> dataTiming, int idTiming);
   Future<int> deleteActividadesTiming(int idActividadTiming, int idTiming);
-  
+
   Future<ItemModelActividadesTimings> fetchActividadesTimingsIdPorPlanner();
   Future<ItemModelTimings> fetchTimingsPorPlanner();
   Future<int> createTiming(Map<String, dynamic> dataTiming);
@@ -22,14 +24,20 @@ abstract class ActividadesTimingsLogic {
   Future<ItemModelActividadesTimings> fetchActividadesEvento();
   Future<ItemModelTimings> fetchNoInEvento();
   Future<ItemModelActividadesTimings> fetchNoInEventoActividades();
-  Future<int> updateEventoActividades(int idActividad, bool addActividad, DateTime addDate);
-  Future<int> creatActividadInEvent(Map<String, dynamic> dataActividad, int idTarea);
+  Future<int> updateEventoActividades(
+      int idActividad, bool addActividad, DateTime addDate);
+  Future<int> creatActividadInEvent(
+      Map<String, dynamic> dataActividad, int idTarea);
 }
 
 class ListaActividadesTimingsException implements Exception {}
+
 class TokenException implements Exception {}
+
 class CreateActividadesTimingException implements Exception {}
+
 class DeleteActividadesTimingException implements Exception {}
+
 class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
 
@@ -37,7 +45,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   Client client = Client();
 
   @override
-  Future<ItemModelActividadesTimings> fetchActividadesTimingsPorPlanner(int idTiming) async {
+  Future<ItemModelActividadesTimings> fetchActividadesTimingsPorPlanner(
+      int idTiming) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
@@ -45,8 +54,13 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsPorPlanner'),
-        body: {'id_planner': idPlanner.toString(),'id_tipo_timing':idTiming.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_tipo_timing': idTiming.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -61,8 +75,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   }
 
   @override
-  Future<int> createActividadesTiming(Map<String, dynamic> dataTiming, int idTiming) async{
-
+  Future<int> createActividadesTiming(
+      Map<String, dynamic> dataTiming, int idTiming) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
@@ -70,8 +84,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
     final response = await client.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ACTIVIDADESTIMINGS/createActividadesTimings'),
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ACTIVIDADESTIMINGS/createActividadesTimings'),
         body: dataTiming,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -87,17 +102,25 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   }
 
   @override
-  Future<int> deleteActividadesTiming(int idActividadTiming, int idTiming) async{
-    
+  Future<int> deleteActividadesTiming(
+      int idActividadTiming, int idTiming) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
-    
+
     final response = await client.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ACTIVIDADESTIMINGS/deleteActividadesTimings'),
-        body: {"id_planner":idPlanner.toString(),"id_usuario":idUsuario.toString(),"id_actividad_timing":idActividadTiming.toString(),"id_tipo_timing":idTiming.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ACTIVIDADESTIMINGS/deleteActividadesTimings'),
+        body: {
+          "id_planner": idPlanner.toString(),
+          "id_usuario": idUsuario.toString(),
+          "id_actividad_timing": idActividadTiming.toString(),
+          "id_tipo_timing": idTiming.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -111,7 +134,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   }
 
   @override
-  Future<ItemModelActividadesTimings> fetchActividadesTimingsIdPorPlanner() async {
+  Future<ItemModelActividadesTimings>
+      fetchActividadesTimingsIdPorPlanner() async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
@@ -120,8 +144,13 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsIdPorPlanner'),
-        body: {'id_planner': idPlanner.toString(), 'id_evento':idEvento.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_evento': idEvento.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -160,8 +189,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   }
 
   @override
-  Future<int> createTiming(Map<String, dynamic> dataTiming) async{
-
+  Future<int> createTiming(Map<String, dynamic> dataTiming) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
@@ -170,8 +198,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
     final response = await client.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ACTIVIDADESTIMINGS/createTimings'),
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ACTIVIDADESTIMINGS/createTimings'),
         body: dataTiming,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -196,8 +225,13 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/TIMINGS/obtenerTimingsEvento'),
-        body: {'id_planner': idPlanner.toString(), 'id_evento':idEvento.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_evento': idEvento.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -236,8 +270,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   }
 
   @override
-  Future<int> createActividadesEvento(Map<String, dynamic> dataTiming) async{
-
+  Future<int> createActividadesEvento(Map<String, dynamic> dataTiming) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
@@ -246,8 +279,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
     final response = await client.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ACTIVIDADESTIMINGS/createActividadesEvento'),
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ACTIVIDADESTIMINGS/createActividadesEvento'),
         body: dataTiming,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -272,8 +306,13 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesEventoPorEvento'),
-        body: {'id_planner': idPlanner.toString(),'id_evento':idEvento.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_evento': idEvento.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -297,8 +336,13 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerNoInEvento'),
-        body: {'id_planner': idPlanner.toString(),'id_evento':idEvento.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_evento': idEvento.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -322,8 +366,13 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerNoInEventoActividades'),
-        body: {'id_planner': idPlanner.toString(),'id_evento':idEvento.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        body: {
+          'id_planner': idPlanner.toString(),
+          'id_evento': idEvento.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -337,16 +386,25 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     }
   }
 
-  Future<int> updateEventoActividades(int idActividad, bool addActividad, DateTime addDate) async {
+  Future<int> updateEventoActividades(
+      int idActividad, bool addActividad, DateTime addDate) async {
     //aqui
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    
+
     final response = await client.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ACTIVIDADESTIMINGS/actulizarTimingsEvent'),
-        body: {"id_planner":idPlanner.toString(),"id_actividad":idActividad.toString(),"agregar_actividad":addActividad.toString(),"fecha_actividad":addDate.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ACTIVIDADESTIMINGS/actulizarTimingsEvent'),
+        body: {
+          "id_planner": idPlanner.toString(),
+          "id_actividad": idActividad.toString(),
+          "agregar_actividad": addActividad.toString(),
+          "fecha_actividad": addDate.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -360,7 +418,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   }
 
   @override
-  Future<int> creatActividadInEvent(Map<String, dynamic> dataActividad, int idTarea) async {
+  Future<int> creatActividadInEvent(
+      Map<String, dynamic> dataActividad, int idTarea) async {
     // implement creatActividadInEvent
 
     //aqui
@@ -377,20 +436,18 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
     // send data
     final response = await client.post(
-      Uri.parse(
-        confiC.url + 
-        confiC.puerto + 
-        '/wedding/ACTIVIDADESTIMINGS/createActividadesEnEvento'
-      ),
-      body: dataActividad,
-      headers: {HttpHeaders.authorizationHeader: token}
-    );
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ACTIVIDADESTIMINGS/createActividadesEnEvento'),
+        body: dataActividad,
+        headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
       // data
-      ItemModelActividadesTimings id = ItemModelActividadesTimings.fromJsonEvento(data['data']);
+      ItemModelActividadesTimings id =
+          ItemModelActividadesTimings.fromJsonEvento(data['data']);
       return id.results[0].idEventoActividad;
     } else if (response.statusCode == 401) {
       throw TokenException();
@@ -398,5 +455,4 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
       throw CreateActividadesTimingException();
     }
   }
-
 }

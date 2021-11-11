@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/permisos_logic.dart';
-import 'package:weddingplanner/src/models/model_perfilado.dart';
+import 'package:planning/src/logic/permisos_logic.dart';
+import 'package:planning/src/models/model_perfilado.dart';
 
 part 'permisos_event.dart';
 part 'permisos_state.dart';

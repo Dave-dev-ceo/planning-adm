@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
-import 'package:weddingplanner/src/blocs/roles/roles_bloc.dart';
-import 'package:weddingplanner/src/blocs/usuarios/usuario/usuario_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_usuarios.dart';
-import 'package:weddingplanner/src/models/model_roles.dart';
+import 'package:planning/src/blocs/roles/roles_bloc.dart';
+import 'package:planning/src/blocs/usuarios/usuario/usuario_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_usuarios.dart';
+import 'package:planning/src/models/model_roles.dart';
 
 class FormUsuario extends StatefulWidget {
   final Map<String, dynamic> datos;

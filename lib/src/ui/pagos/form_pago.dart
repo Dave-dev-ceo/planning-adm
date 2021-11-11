@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/pagos/pagos_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_pagos.dart';
+import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
+import 'package:planning/src/models/item_model_pagos.dart';
 import 'package:flutter/services.dart';
 
 class FormPago extends StatefulWidget {

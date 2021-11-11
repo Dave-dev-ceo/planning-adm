@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/paises/paises_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_paises.dart';
-import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/blocs/paises/paises_bloc.dart';
+import 'package:planning/src/models/item_model_paises.dart';
+import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 
 class AgregarPlanners extends StatefulWidget {
   const AgregarPlanners({Key key}) : super(key: key);

@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/eventos_logic.dart';
-import 'package:weddingplanner/src/models/item_model_evento.dart';
-import 'package:weddingplanner/src/models/item_model_eventos.dart';
+import 'package:planning/src/logic/eventos_logic.dart';
+import 'package:planning/src/models/item_model_evento.dart';
+import 'package:planning/src/models/item_model_eventos.dart';
 
 part 'eventos_event.dart';
 part 'eventos_state.dart';

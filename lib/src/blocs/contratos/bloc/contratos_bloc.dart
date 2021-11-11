@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/add_contratos_logic.dart';
-import 'package:weddingplanner/src/models/item_model_add_contratos.dart';
+import 'package:planning/src/logic/add_contratos_logic.dart';
+import 'package:planning/src/models/item_model_add_contratos.dart';
 
 part 'contratos_event.dart';
 part 'contratos_state.dart';

@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/estatus_logic.dart';
-import 'package:weddingplanner/src/logic/mesas_logic/mesa_logic.dart';
-import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
+import 'package:planning/src/logic/estatus_logic.dart';
+import 'package:planning/src/logic/mesas_logic/mesa_logic.dart';
+import 'package:planning/src/models/mesa/mesas_model.dart';
 
 part 'mesas_event.dart';
 part 'mesas_state.dart';

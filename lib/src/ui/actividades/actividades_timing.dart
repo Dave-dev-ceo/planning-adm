@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_actividades_timings.dart';
-import 'package:weddingplanner/src/ui/widgets/text_form_filed/text_form_filed.dart';
+import 'package:planning/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
+import 'package:planning/src/models/item_model_actividades_timings.dart';
+import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
 class AgregarActividades extends StatefulWidget {
   final int idTiming;

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/servicios_logic.dart';
-import 'package:weddingplanner/src/models/item_model_servicios.dart';
+import 'package:planning/src/logic/servicios_logic.dart';
+import 'package:planning/src/models/item_model_servicios.dart';
 
 part 'servicios_bloc_dart_event.dart';
 part 'servicios_bloc_dart_state.dart';

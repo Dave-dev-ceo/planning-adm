@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:multi_select_item/multi_select_item.dart';
-import 'package:weddingplanner/src/blocs/grupos_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_grupos.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/blocs/grupos_bloc.dart';
+import 'package:planning/src/models/item_model_grupos.dart';
+import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 
 class FullScreenDialog extends StatefulWidget {
   final int id;

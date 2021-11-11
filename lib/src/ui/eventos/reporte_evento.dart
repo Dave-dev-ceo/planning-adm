@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/blocs/blocs.dart';
-import 'package:weddingplanner/src/models/item_model_reporte_evento.dart';
+import 'package:planning/src/blocs/blocs.dart';
+import 'package:planning/src/models/item_model_reporte_evento.dart';
 
 class ReporteEvento extends StatefulWidget {
   final String dataView;

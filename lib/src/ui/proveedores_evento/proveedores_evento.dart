@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/item_model_proveedores.dart';
-import 'package:weddingplanner/src/models/item_model_proveedores_evento.dart';
+import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/item_model_proveedores.dart';
+import 'package:planning/src/models/item_model_proveedores_evento.dart';
 
 class ProveedorEvento extends StatefulWidget {
   const ProveedorEvento({Key key}) : super(key: key);

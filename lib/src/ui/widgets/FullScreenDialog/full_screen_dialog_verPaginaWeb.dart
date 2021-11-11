@@ -1,10 +1,10 @@
 // * Comentar el mobile
-import 'dart:html';
-import 'dart:ui' as ul;
-
+import 'package:universal_html/html.dart' hide Text;
+// import 'dart:ui' as ui;
+import 'package:universal_ui/universal_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
+import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 
 class FullScreenViewWEB extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -91,7 +91,7 @@ class _FullScreenViewWEBState extends State<FullScreenViewWEB> {
     _iframeElement.style.height = '300';
     _iframeElement.style.width = '700';
     // ignore: undefined_prefixed_name
-    ul.platformViewRegistry.registerViewFactory(
+    ui.platformViewRegistry.registerViewFactory(
       'iframeElement',
       (int viewId) => _iframeElement,
     );
@@ -113,7 +113,7 @@ class _FullScreenViewWEBState extends State<FullScreenViewWEB> {
 // import 'dart:io';
 
 // import 'package:webview_flutter/webview_flutter.dart';
-// import 'package:weddingplanner/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
+// import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 
 // class FullScreenViewWEB extends StatefulWidget {
 //   final Map<String, dynamic> data;

@@ -2,10 +2,10 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:http/http.dart' show Client;
-import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
+import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
 
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class InvitadosConfirmadosLogic {
   Future<List<InvitadosConfirmadosModel>> getInvitadosConfirmados();

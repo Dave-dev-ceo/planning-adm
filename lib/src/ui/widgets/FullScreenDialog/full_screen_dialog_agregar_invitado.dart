@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
-import 'package:weddingplanner/src/ui/widgets/invitados/agregar_invitado.dart';
+import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/widgets/invitados/agregar_invitado.dart';
 
 class FullScreenDialogAdd extends StatefulWidget {
   final int id;

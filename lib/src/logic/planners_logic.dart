@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
-import 'package:weddingplanner/src/models/item_model_planners.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/models/item_model_planners.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class ListaPlannersLogic {
   Future<ItemModelPlanners> fetchPrueba();

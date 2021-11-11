@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/asistencia/asistencia_bloc.dart';
+import 'package:planning/src/blocs/asistencia/asistencia_bloc.dart';
 
-import 'package:weddingplanner/src/ui/asistencia/asistencia.dart';
+import 'package:planning/src/ui/asistencia/asistencia.dart';
 
 class DialogAlert extends StatefulWidget {
   final String dataInfo;
@@ -52,27 +52,51 @@ class _DialogAlertState extends State<DialogAlert> {
         child: ListBody(
           children: [
             Padding(
-              child: Center(child: Text('Evento: ' + (lista.elementAt(6) != 'null' ? lista.elementAt(6) : 'Sin evento asignado'))),
+              child: Center(
+                  child: Text('Evento: ' +
+                      (lista.elementAt(6) != 'null'
+                          ? lista.elementAt(6)
+                          : 'Sin evento asignado'))),
               padding: EdgeInsets.all(10),
             ),
             Padding(
-              child: Center(child: Text('Nombre: ' + (lista.elementAt(1) != 'null' ? lista.elementAt(1) : 'Sin nombre'))),
+              child: Center(
+                  child: Text('Nombre: ' +
+                      (lista.elementAt(1) != 'null'
+                          ? lista.elementAt(1)
+                          : 'Sin nombre'))),
               padding: EdgeInsets.all(10),
             ),
             Padding(
-              child: Center(child: Text('Grupo: ' + (lista.elementAt(4) != 'null' ? lista.elementAt(4) : 'Sin grupo'))),
+              child: Center(
+                  child: Text('Grupo: ' +
+                      (lista.elementAt(4) != 'null'
+                          ? lista.elementAt(4)
+                          : 'Sin grupo'))),
               padding: EdgeInsets.all(10),
             ),
             Padding(
-              child: Center(child: Text('Mesa: ' + (lista.elementAt(5) != 'null' ? lista.elementAt(5) : 'Sin mesa'))),
+              child: Center(
+                  child: Text('Mesa: ' +
+                      (lista.elementAt(5) != 'null'
+                          ? lista.elementAt(5)
+                          : 'Sin mesa'))),
               padding: EdgeInsets.all(10),
             ),
             Padding(
-              child: Center(child: Text('Email: ' + (lista.elementAt(3) != 'null' ? lista.elementAt(3) : 'Sin email'))),
+              child: Center(
+                  child: Text('Email: ' +
+                      (lista.elementAt(3) != 'null'
+                          ? lista.elementAt(3)
+                          : 'Sin email'))),
               padding: EdgeInsets.all(10),
             ),
             Padding(
-              child: Center(child: Text('Teléfono: ' + (lista.elementAt(2) != 'null' ? lista.elementAt(2) : 'Sin teléfono'))),
+              child: Center(
+                  child: Text('Teléfono: ' +
+                      (lista.elementAt(2) != 'null'
+                          ? lista.elementAt(2)
+                          : 'Sin teléfono'))),
               padding: EdgeInsets.all(10),
             ),
           ],
@@ -88,13 +112,22 @@ class _DialogAlertState extends State<DialogAlert> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, false), child: Text('Cancelar'))),
-        Expanded(flex: 5,child: TextButton(onPressed: () => _guardarAsistencia(int.parse(lista.elementAt(0)),lista.elementAt(1),true), child: Text('Aceptar'))),
+        Expanded(
+            flex: 5,
+            child: TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('Cancelar'))),
+        Expanded(
+            flex: 5,
+            child: TextButton(
+                onPressed: () => _guardarAsistencia(
+                    int.parse(lista.elementAt(0)), lista.elementAt(1), true),
+                child: Text('Aceptar'))),
       ],
     );
   }
 
-  _guardarAsistencia(int idInvitado,String nombre,bool asistenciaValor) {
+  _guardarAsistencia(int idInvitado, String nombre, bool asistenciaValor) {
     // print('id: $idInvitado \nvalor: $asistenciaValor');
     // BlocProvider - cargamos el evento
     AsistenciaBloc asistenciaBloc;
@@ -102,23 +135,29 @@ class _DialogAlertState extends State<DialogAlert> {
     asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
     Navigator.pop(context, true);
     showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('¡Bienvenido!'),
-          content: SingleChildScrollView(
-            child: ListBody(
-            children: [
-              Center(child: Text('${lista.elementAt(1)} estás en el evento ${lista.elementAt(6)}')),
-              Center(child: Text('Gracias por asistir.')),
-            ],
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('¡Bienvenido!'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Center(
+                      child: Text(
+                          '${lista.elementAt(1)} estás en el evento ${lista.elementAt(6)}')),
+                  Center(child: Text('Gracias por asistir.')),
+                ],
+              ),
             ),
-          ),
-          actions: [
-            Expanded(flex: 5,child: TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Ok'))),
-          ],
-        );
-    });
+            actions: [
+              Expanded(
+                  flex: 5,
+                  child: TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('Ok'))),
+            ],
+          );
+        });
   }
 }

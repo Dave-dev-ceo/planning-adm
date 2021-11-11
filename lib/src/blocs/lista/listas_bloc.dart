@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/logic/listas_logic.dart';
+import 'package:planning/src/logic/listas_logic.dart';
 
-import 'package:weddingplanner/src/models/item_model_listas.dart';
+import 'package:planning/src/models/item_model_listas.dart';
 
 part 'listas_event.dart';
 part 'listas_state.dart';

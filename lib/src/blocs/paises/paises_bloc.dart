@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/paises_logic.dart';
-import 'package:weddingplanner/src/models/item_model_paises.dart';
+import 'package:planning/src/logic/paises_logic.dart';
+import 'package:planning/src/models/item_model_paises.dart';
 
 part 'paises_event.dart';
 part 'paises_state.dart';
@@ -16,18 +16,14 @@ class PaisesBloc extends Bloc<PaisesEvent, PaisesState> {
   Stream<PaisesState> mapEventToState(
     PaisesEvent event,
   ) async* {
-    if(event is FechtPaisesEvent){
+    if (event is FechtPaisesEvent) {
       yield LoadingPaisesState();
 
       try {
-        
         ItemModelPaises paises = await logic.fetchPaises();
         yield MostrarPaisesState(paises);
-
-      }on ListaPaisesException{
-        
+      } on ListaPaisesException {
         yield ErrorListaPaisesState("Sin paises");
-      
       }
     }
   }

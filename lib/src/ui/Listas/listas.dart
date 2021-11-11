@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/lista/listas_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_listas.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
+import 'package:planning/src/blocs/lista/listas_bloc.dart';
+import 'package:planning/src/models/item_model_listas.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 
 class Listas extends StatefulWidget {
   const Listas({Key key}) : super(key: key);
@@ -70,7 +70,8 @@ class _ListaState extends State<Listas> {
                     ),
                   ),
                 ),
-                floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.endFloat,
                 floatingActionButton: FloatingActionButton(
                   child: Icon(Icons.add),
                   onPressed: () async {

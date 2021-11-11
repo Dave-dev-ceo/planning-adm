@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/models/item_model_publicaciones.dart';
+import 'package:planning/src/models/item_model_publicaciones.dart';
 
 class AdminLanding extends StatefulWidget {
-  const AdminLanding({ Key key }) : super(key: key);
+  const AdminLanding({Key key}) : super(key: key);
 
   @override
   _AdminLandingState createState() => _AdminLandingState();
@@ -15,10 +15,8 @@ class _AdminLandingState extends State<AdminLanding> {
       body: Container(),
     );
   }
- 
-  
+
   Widget buildList(ItemModelPublicaciones snapshot) {
-    
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -38,8 +36,8 @@ class _AdminLandingState extends State<AdminLanding> {
       ],
     );
   }
-
 }
+
 class _Row {
   _Row(
     this.valueId,
@@ -63,8 +61,8 @@ class _DataSource extends DataTableSource {
   _DataSource(context, BuildContext cont) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
-      _rows.add(_Row(context[i].idPlanner, context[i].empresa, context[i].correo,
-          context[i].telefono, context[i].pais));
+      _rows.add(_Row(context[i].idPlanner, context[i].empresa,
+          context[i].correo, context[i].telefono, context[i].pais));
     }
     //_cont = cont;
   }

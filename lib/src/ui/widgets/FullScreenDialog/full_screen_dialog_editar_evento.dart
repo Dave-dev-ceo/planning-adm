@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/models/item_model_evento.dart';
-import 'package:weddingplanner/src/ui/eventos/editar_evento/editar_evento.dart';
+import 'package:planning/src/models/item_model_evento.dart';
+import 'package:planning/src/ui/eventos/editar_evento/editar_evento.dart';
 
 class FullScreenDialogEditEvento extends StatefulWidget {
   final Map<String, dynamic> evento;

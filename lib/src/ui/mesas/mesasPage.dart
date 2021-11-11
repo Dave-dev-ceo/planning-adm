@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'dart:convert';
 
 // * Comentar cuando se Utilice en movil
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html hide Text;
 
 // * Descomentar en movil
 // import 'package:path_provider/path_provider.dart';
@@ -20,16 +20,16 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:weddingplanner/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
-import 'package:weddingplanner/src/blocs/Mesas/mesas_bloc.dart';
+import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
+import 'package:planning/src/blocs/Mesas/mesas_bloc.dart';
 
-import 'package:weddingplanner/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
-import 'package:weddingplanner/src/logic/mesas_logic/mesa_logic.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/mesa/layout_mesa_model.dart';
-import 'package:weddingplanner/src/models/mesa/mesas_model.dart';
-import 'package:weddingplanner/src/models/MesasAsignadas/mesas_asignadas_model.dart';
-import 'package:weddingplanner/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
+import 'package:planning/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
+import 'package:planning/src/logic/mesas_logic/mesa_logic.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/mesa/layout_mesa_model.dart';
+import 'package:planning/src/models/mesa/mesas_model.dart';
+import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
+import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
 
 class MesasPage extends StatefulWidget {
   const MesasPage({Key key, this.nameEvento}) : super(key: key);

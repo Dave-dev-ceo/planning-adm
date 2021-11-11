@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/permisos/permisos_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/models/model_perfilado.dart';
-import 'package:weddingplanner/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
-import 'package:weddingplanner/src/ui/construccion/construccion.dart';
-import 'package:weddingplanner/src/ui/eventos/dashboard_eventos.dart';
-import 'package:weddingplanner/src/ui/machotes/machotes.dart';
-import 'package:weddingplanner/src/ui/proveedores/proveedores.dart';
-import 'package:weddingplanner/src/ui/timings/timing.dart';
-import 'package:weddingplanner/src/ui/usuarios/usuarios.dart';
-import 'package:weddingplanner/src/ui/widgets/tab/tab_item.dart';
+import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/model_perfilado.dart';
+import 'package:planning/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
+import 'package:planning/src/ui/construccion/construccion.dart';
+import 'package:planning/src/ui/eventos/dashboard_eventos.dart';
+import 'package:planning/src/ui/machotes/machotes.dart';
+import 'package:planning/src/ui/proveedores/proveedores.dart';
+import 'package:planning/src/ui/timings/timing.dart';
+import 'package:planning/src/ui/usuarios/usuarios.dart';
+import 'package:planning/src/ui/widgets/tab/tab_item.dart';
 
 class Home extends StatefulWidget {
   //static const routeName = '/eventos';

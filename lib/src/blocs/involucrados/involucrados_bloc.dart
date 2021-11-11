@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/involucrados_logic.dart';
-import 'package:weddingplanner/src/models/item_model_involucrados.dart';
+import 'package:planning/src/logic/involucrados_logic.dart';
+import 'package:planning/src/models/item_model_involucrados.dart';
 
 part 'involucrados_event.dart';
 part 'involucrados_state.dart';
@@ -16,7 +16,7 @@ class InvolucradosBloc extends Bloc<InvolucradosEvent, InvolucradosState> {
   Stream<InvolucradosState> mapEventToState(
     InvolucradosEvent event,
   ) async* {
-    if(event is SelectInvolucrado) {
+    if (event is SelectInvolucrado) {
       yield InvolucradosLogging();
 
       try {
@@ -27,8 +27,7 @@ class InvolucradosBloc extends Bloc<InvolucradosEvent, InvolucradosState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-
-    } else if(event is InsertInvolucrado) {
+    } else if (event is InsertInvolucrado) {
       yield InvolucradosLogging();
 
       try {
@@ -40,7 +39,6 @@ class InvolucradosBloc extends Bloc<InvolucradosEvent, InvolucradosState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-
     }
   }
 }

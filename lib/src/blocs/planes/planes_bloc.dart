@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import 'package:weddingplanner/src/logic/planes_logic.dart';
-import 'package:weddingplanner/src/models/item_model_planes.dart';
+import 'package:planning/src/logic/planes_logic.dart';
+import 'package:planning/src/models/item_model_planes.dart';
 
 part 'planes_event.dart';
 part 'planes_state.dart';
@@ -17,7 +17,7 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
   Stream<PlanesState> mapEventToState(
     PlanesEvent event,
   ) async* {
-    if(event is SelectPlanesEvent) {
+    if (event is SelectPlanesEvent) {
       yield LodingPlanesState();
       try {
         ItemModelPlanes planes = await logic.selectPlanesPlanner();
@@ -27,7 +27,7 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       } on TokenException {
         yield ErrorTokenPlanesState('Sin Token');
       }
-    } else if(event is CreatePlanesEvent) {
+    } else if (event is CreatePlanesEvent) {
       try {
         bool data = await logic.crearTareasEventoLista(event.planesPlanner);
         yield CreatePlanesState(data);
@@ -36,25 +36,26 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       } on TokenException {
         yield ErrorTokenPlanesState('Sin Token');
       }
-    } else if(event is SelectPlanesEventoEvent) {
+    } else if (event is SelectPlanesEventoEvent) {
       yield LodingPlanesState();
       try {
         ItemModelPlanes full = await logic.selectPlanesEvento('');
         ItemModelPlanes planes = await logic.selectPlanesEvento(event.myQuery);
-        yield SelectEventoState(planes,full);
+        yield SelectEventoState(planes, full);
       } on ListaPlanesException {
         yield ErrorMostrarPlanesState('Sin Planes');
       } on TokenException {
         yield ErrorTokenPlanesState('Sin Token');
       }
-    } else if(event is UpdatePlanesEventoEvent) {
+    } else if (event is UpdatePlanesEventoEvent) {
       yield LodingPlanesState();
-      try{
+      try {
         // funcional pero no es correcto
         await logic.updateActividadEvento(event.actividades);
         ItemModelPlanes full = await logic.selectPlanesEvento('');
-        ItemModelPlanes planes = await logic.selectPlanesEvento(event.querySelect);
-        yield SelectEventoState(planes,full);
+        ItemModelPlanes planes =
+            await logic.selectPlanesEvento(event.querySelect);
+        yield SelectEventoState(planes, full);
       } on ListaPlanesException {
         yield ErrorMostrarPlanesState('No Update');
       } on TokenException {
@@ -62,25 +63,27 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       }
     } else if (event is CreateUnaPlanesEvent) {
       yield LodingPlanesState();
-      try{
+      try {
         // funcional pero no es correcto
         await logic.createActividadEvento(event.actividad, event.idTarea);
         ItemModelPlanes full = await logic.selectPlanesEvento('');
-        ItemModelPlanes planes = await logic.selectPlanesEvento(event.querySelect);
-        yield SelectEventoState(planes,full);
+        ItemModelPlanes planes =
+            await logic.selectPlanesEvento(event.querySelect);
+        yield SelectEventoState(planes, full);
       } on ListaPlanesException {
         yield ErrorMostrarPlanesState('No Add');
       } on TokenException {
         yield ErrorTokenPlanesState('Sin Token');
       }
-    } else if(event is DeleteAnActividadEvent) {
+    } else if (event is DeleteAnActividadEvent) {
       yield LodingPlanesState();
-      try{
+      try {
         // funcional pero no es correcto
         await logic.deleteActividadEvento(event.idActividad);
         ItemModelPlanes full = await logic.selectPlanesEvento('');
-        ItemModelPlanes planes = await logic.selectPlanesEvento(event.querySelect);
-        yield SelectEventoState(planes,full);
+        ItemModelPlanes planes =
+            await logic.selectPlanesEvento(event.querySelect);
+        yield SelectEventoState(planes, full);
       } on ListaPlanesException {
         yield ErrorMostrarPlanesState('No Add');
       } on TokenException {

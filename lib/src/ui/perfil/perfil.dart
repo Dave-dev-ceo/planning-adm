@@ -5,10 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 
-import 'package:weddingplanner/src/blocs/perfil/perfil_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_perfil.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/ui/widgets/text_form_filed/password_wplanner.dart';
+import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
+import 'package:planning/src/models/item_model_perfil.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 
 class Perfil extends StatefulWidget {
   Perfil({Key key}) : super(key: key);
@@ -42,58 +42,64 @@ class _PerfilState extends State<Perfil> {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Perfil de usuario'),
-        ),
-        body: BlocBuilder<PerfilBloc,PerfilState>(
-          builder: (context, state) {
-            if(state is PerfilInitial) {
-              return Center(child: CircularProgressIndicator(),);
-            } else if(state is PerfilLogging) {
-              return Center(child: CircularProgressIndicator(),);
-            } else if(state is PerfilSelect) {
-              if (state.perfil != null) {
-                if (item != state.perfil) {
-                  item = state.perfil;
-                  if (item != null) {
-                    perfil = _Perfil(
-                      names: state.perfil.perfil[0].nombreCompleto,
-                      phone: state.perfil.perfil[0].telefono,
-                      email: state.perfil.perfil[0].correo,
-                      clave: '',
-                      repit: '',
-                      image: state.perfil.perfil[0].imagen,
-                    );
+          appBar: AppBar(
+            title: Text('Perfil de usuario'),
+          ),
+          body: BlocBuilder<PerfilBloc, PerfilState>(
+            builder: (context, state) {
+              if (state is PerfilInitial) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is PerfilLogging) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is PerfilSelect) {
+                if (state.perfil != null) {
+                  if (item != state.perfil) {
+                    item = state.perfil;
+                    if (item != null) {
+                      perfil = _Perfil(
+                        names: state.perfil.perfil[0].nombreCompleto,
+                        phone: state.perfil.perfil[0].telefono,
+                        email: state.perfil.perfil[0].correo,
+                        clave: '',
+                        repit: '',
+                        image: state.perfil.perfil[0].imagen,
+                      );
+                    }
                   }
+                } else {
+                  perfilBloc.add(SelectPerfilEvent());
+                  return Center(child: CircularProgressIndicator());
                 }
+                if (perfil != null) {
+                  return _showPerfil();
+                } else {
+                  return Center(child: Text('Sin datos'));
+                }
+              } else if (state is PerfilUpdate) {
+                if (state.perfil.perfil != null) {
+                  perfil = _Perfil(
+                    names: state.perfil.perfil[0].nombreCompleto,
+                    phone: state.perfil.perfil[0].telefono,
+                    email: state.perfil.perfil[0].correo,
+                    clave: '',
+                    repit: '',
+                    image: state.perfil.perfil[0].imagen,
+                  );
+                }
+                return _showPerfil();
               } else {
-                perfilBloc.add(SelectPerfilEvent());
-                return Center(child: CircularProgressIndicator());
-              }
-              if (perfil != null) {
-                return _showPerfil( );
-              } else {
-                return Center(child: Text('Sin datos'));
-              }
-            } else if(state is PerfilUpdate) {
-              if(state.perfil.perfil != null) {
-                perfil = _Perfil(
-                  names: state.perfil.perfil[0].nombreCompleto,
-                  phone: state.perfil.perfil[0].telefono,
-                  email: state.perfil.perfil[0].correo,
-                  clave: '',
-                  repit: '',
-                  image: state.perfil.perfil[0].imagen,
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
               }
-              return _showPerfil();
-            } else {
-              return Center(child: CircularProgressIndicator(),);
-            }
-          },
-        )
-        //_showPerfil(),
-      ),
+            },
+          )
+          //_showPerfil(),
+          ),
     );
   }
 
@@ -191,17 +197,19 @@ class _PerfilState extends State<Perfil> {
                     autoFocus: false,
                     hasFloatingPlaceholder: true,
                     prefixIcon: Icon(Icons.password),
-                    suffixIcon: Icon(Icons.remove_red_eye,color: Colors.grey,),
+                    suffixIcon: Icon(
+                      Icons.remove_red_eye,
+                      color: Colors.grey,
+                    ),
                     color: Colors.black,
                     iconColor: Colors.grey,
                     iconColorSelect: Colors.black,
                     border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Colors.black)),
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(color: Colors.black)
-                    ),
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(color: Colors.black)),
                     validador: (value) {
                       if (!_validaPsw(value)) {
                         return 'Campo requerido con una minuscula, una mayúscula, un número, un simbolo y un minimo de 8 caracteres.';
@@ -220,21 +228,23 @@ class _PerfilState extends State<Perfil> {
                     autoFocus: false,
                     hasFloatingPlaceholder: true,
                     prefixIcon: Icon(Icons.password),
-                    suffixIcon: Icon(Icons.remove_red_eye,color: Colors.grey,),
+                    suffixIcon: Icon(
+                      Icons.remove_red_eye,
+                      color: Colors.grey,
+                    ),
                     color: Colors.black,
                     iconColor: Colors.grey,
                     iconColorSelect: Colors.black,
                     border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Colors.black)),
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(color: Colors.black)),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(color: Colors.black)
-                    ),
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(color: Colors.black)),
                     validador: (value) {
                       if (value != perfil.clave) {
                         return 'Debe coincidir con la contraseña.';
-                      }  else if(value.isEmpty) {
+                      } else if (value.isEmpty) {
                         return 'Campo requerido.';
                       }
                       return null;
@@ -249,19 +259,20 @@ class _PerfilState extends State<Perfil> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Flexible(
-                        child: Container(
-                          height: 100.0,
-                          width: 100.0,
-                          color: Colors.black,
-                          child: perfil.image == null ?
-                            Image.asset('assets/user.png')
-                            :PhotoView(
-                              tightMode: true,
-                              backgroundDecoration: BoxDecoration(color: Colors.white),
-                              imageProvider: MemoryImage(base64Decode(perfil.image)),
-                            ),
-                        )
-                      ),
+                          child: Container(
+                        height: 100.0,
+                        width: 100.0,
+                        color: Colors.black,
+                        child: perfil.image == null
+                            ? Image.asset('assets/user.png')
+                            : PhotoView(
+                                tightMode: true,
+                                backgroundDecoration:
+                                    BoxDecoration(color: Colors.white),
+                                imageProvider:
+                                    MemoryImage(base64Decode(perfil.image)),
+                              ),
+                      )),
                       Padding(
                         padding: EdgeInsets.all(20.0),
                         child: ElevatedButton(
@@ -278,18 +289,19 @@ class _PerfilState extends State<Perfil> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: new ElevatedButton(
-                    child: const Text('Guardar'),
-                    onPressed: () {
-                      // It returns true if the form is valid, otherwise returns false
-                      if (_formKey.currentState.validate()) {
-                        // If the form is valid, display a Snackbar.
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Guardando cambios.')));
-                        _guardarPerfil();
-                      }
-                    },
-                )),
+                    padding: const EdgeInsets.all(8.0),
+                    child: new ElevatedButton(
+                      child: const Text('Guardar'),
+                      onPressed: () {
+                        // It returns true if the form is valid, otherwise returns false
+                        if (_formKey.currentState.validate()) {
+                          // If the form is valid, display a Snackbar.
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Guardando cambios.')));
+                          _guardarPerfil();
+                        }
+                      },
+                    )),
               ],
             ),
           ],
@@ -300,7 +312,7 @@ class _PerfilState extends State<Perfil> {
 
   // add image
   _addImage() async {
-    const extensiones = ['jpg','png','jpeg'];
+    const extensiones = ['jpg', 'png', 'jpeg'];
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -308,8 +320,8 @@ class _PerfilState extends State<Perfil> {
       allowMultiple: false,
     );
 
-    pickedFile.files.forEach((archivo) => setState(() => perfil.image = base64.encode(archivo.bytes)));
-
+    pickedFile.files.forEach((archivo) =>
+        setState(() => perfil.image = base64.encode(archivo.bytes)));
   }
 
   // ini validaciones
@@ -336,7 +348,8 @@ class _PerfilState extends State<Perfil> {
     if (validaNumeros.hasMatch(txt)) numeros = true;
     if (validaSimbolos.hasMatch(txt)) simbolos = true;
 
-    if (txt.length > 7 && mayusculas && minusculas && numeros && simbolos) temp = true;
+    if (txt.length > 7 && mayusculas && minusculas && numeros && simbolos)
+      temp = true;
 
     return temp;
   }
@@ -381,21 +394,24 @@ class _PerfilState extends State<Perfil> {
     String titulo = await _sharedPreferences.getEventoNombre();
     String image = await _sharedPreferences.getImagen();
 
-    Map data = {
-      'name':perfil.names,
-      'imag':image
-    };
+    Map data = {'name': perfil.names, 'imag': image};
 
     if (sesion) {
-      if(involucrado == null) {
+      if (involucrado == null) {
         Navigator.pushNamed(context, '/home', arguments: data);
       } else {
-        Navigator.pushNamed(context, '/eventos', arguments: {'idEvento': idEvento, 'nEvento':titulo, 'nombre':perfil.names,'boton':false,'imag':image});
+        Navigator.pushNamed(context, '/eventos', arguments: {
+          'idEvento': idEvento,
+          'nEvento': titulo,
+          'nombre': perfil.names,
+          'boton': false,
+          'imag': image
+        });
       }
     }
   }
-
 }
+
 class _Perfil {
   String names;
   String email;
@@ -404,21 +420,15 @@ class _Perfil {
   String repit;
   String image;
 
-  _Perfil({
-    this.names,
-    this.email,
-    this.phone,
-    this.clave,
-    this.repit,
-    this.image
-  });
+  _Perfil(
+      {this.names, this.email, this.phone, this.clave, this.repit, this.image});
 
   // solucion al enviar objetos al servidor
-  Map<String, dynamic> toJson() =>{
-    'names':names,
-    'email':email,
-    'phone':phone,
-    'clave':clave,
-    'image':image
-  };
+  Map<String, dynamic> toJson() => {
+        'names': names,
+        'email': email,
+        'phone': phone,
+        'clave': clave,
+        'image': image
+      };
 }

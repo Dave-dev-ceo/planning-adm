@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/machotes_logic.dart';
-import 'package:weddingplanner/src/models/item_model_machotes.dart';
+import 'package:planning/src/logic/machotes_logic.dart';
+import 'package:planning/src/models/item_model_machotes.dart';
 
 part 'machotes_event.dart';
 part 'machotes_state.dart';

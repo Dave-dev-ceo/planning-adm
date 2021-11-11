@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weddingplanner/src/ui/planners/agregar_planner.dart';
+import 'package:planning/src/ui/planners/agregar_planner.dart';
 
 class FullScreenDialogAddPlanners extends StatefulWidget {
   const FullScreenDialogAddPlanners({Key key}) : super(key: key);

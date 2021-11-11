@@ -4,10 +4,10 @@ import 'package:sticky_headers/sticky_headers.dart';
 
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/asistencia/asistencia_bloc.dart';
+import 'package:planning/src/blocs/asistencia/asistencia_bloc.dart';
 
 // model
-import 'package:weddingplanner/src/models/item_model_asistencia.dart';
+import 'package:planning/src/models/item_model_asistencia.dart';
 
 class Asistencia extends StatefulWidget {
   Asistencia({Key key}) : super(key: key);

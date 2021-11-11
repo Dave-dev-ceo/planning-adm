@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/etiquetas/etiquetas_bloc.dart';
-import 'package:weddingplanner/src/blocs/machotes/machotes_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_etiquetas.dart';
-import 'package:weddingplanner/src/models/item_model_machotes.dart';
+import 'package:planning/src/blocs/etiquetas/etiquetas_bloc.dart';
+import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
+import 'package:planning/src/models/item_model_etiquetas.dart';
+import 'package:planning/src/models/item_model_machotes.dart';
 // flutter run -d chrome --web-renderer html --profile
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:html_editor_enhanced/utils/options.dart';
@@ -15,14 +15,20 @@ class EditarPlantillas extends StatefulWidget {
   final String clavePlantilla;
   final String plantilla;
   final String idMachote;
-  const EditarPlantillas({Key key, this.descripcionPlantilla,this.clavePlantilla, this.plantilla, this.idMachote}) : super(key: key);
+  const EditarPlantillas(
+      {Key key,
+      this.descripcionPlantilla,
+      this.clavePlantilla,
+      this.plantilla,
+      this.idMachote})
+      : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => EditarPlantillas(),
       );
 
   @override
-  _EditarPlantillasState createState() =>
-      _EditarPlantillasState(descripcionPlantilla, clavePlantilla, plantilla, idMachote);
+  _EditarPlantillasState createState() => _EditarPlantillasState(
+      descripcionPlantilla, clavePlantilla, plantilla, idMachote);
 }
 
 class _EditarPlantillasState extends State<EditarPlantillas> {
@@ -37,7 +43,8 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
 
   HtmlEditorController _controller = HtmlEditorController();
 
-  _EditarPlantillasState(this.descripcionPlantilla, this.clavePlantilla, this.plantilla, this.idMachote);
+  _EditarPlantillasState(this.descripcionPlantilla, this.clavePlantilla,
+      this.plantilla, this.idMachote);
 
   @override
   void initState() {
@@ -126,17 +133,14 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
                 thickness: 5,
               ),
               Container(
-                child: HtmlEditor(
-                    controller: _controller, //required
-                    htmlEditorOptions: HtmlEditorOptions(
-                      hint: "Escribe aquí...",
-                      initialText: plantilla
-                    ),   
-                    otherOptions: OtherOptions(
-                      height: 400,
-                    ),
-                )
-              )
+                  child: HtmlEditor(
+                controller: _controller, //required
+                htmlEditorOptions: HtmlEditorOptions(
+                    hint: "Escribe aquí...", initialText: plantilla),
+                otherOptions: OtherOptions(
+                  height: 400,
+                ),
+              ))
             ],
           ),
         ),
@@ -145,9 +149,12 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
         child: Icon(Icons.save),
         onPressed: () async {
           String txt = await _controller.getText();
-          machotesBloc.add(UpdateMachotesEvent(
-              {"descripcion": descripcionPlantilla, "machote": txt, "clave":clavePlantilla,"id_machote" : idMachote},
-              itemModelMC));
+          machotesBloc.add(UpdateMachotesEvent({
+            "descripcion": descripcionPlantilla,
+            "machote": txt,
+            "clave": clavePlantilla,
+            "id_machote": idMachote
+          }, itemModelMC));
           Navigator.of(context).pop();
           //await _showMyDialogGuardar(context);
 

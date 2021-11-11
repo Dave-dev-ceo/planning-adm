@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/archivos_proveedores_logic.dart';
-import 'package:weddingplanner/src/models/item_model_archivo_serv_prod.dart';
-import 'package:weddingplanner/src/models/item_model_proveedores.dart';
+import 'package:planning/src/logic/archivos_proveedores_logic.dart';
+import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
+import 'package:planning/src/models/item_model_proveedores.dart';
 
 part 'archivo_proveedor_event.dart';
 part 'archivo_proveedor_state.dart';

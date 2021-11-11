@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_servicios.dart';
+import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
+import 'package:planning/src/models/item_model_servicios.dart';
 
 class Servicios extends StatefulWidget {
   const Servicios({Key key}) : super(key: key);

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:weddingplanner/src/logic/roles_logic.dart';
-import 'package:weddingplanner/src/models/model_roles.dart';
+import 'package:planning/src/logic/roles_logic.dart';
+import 'package:planning/src/models/model_roles.dart';
 
 part 'roles_event.dart';
 part 'roles_state.dart';

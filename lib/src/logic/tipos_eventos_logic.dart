@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' show Client;
-import 'package:weddingplanner/src/models/item_model_tipo_evento.dart';
-import 'package:weddingplanner/src/resources/config_conection.dart';
+import 'package:planning/src/models/item_model_tipo_evento.dart';
+import 'package:planning/src/resources/config_conection.dart';
 
 abstract class ListaTiposEventosLogic {
   Future<ItemModelTipoEvento> fetchTiposEventos();
@@ -16,8 +16,9 @@ class FetchListaTiposEventosLogic extends ListaTiposEventosLogic {
 
   @override
   Future<ItemModelTipoEvento> fetchTiposEventos() async {
-    final response = await client
-        .get(Uri.parse(confiC.url+confiC.puerto+'/wedding/TIPOSEVENTOS/obtenerTiposEventos'));
+    final response = await client.get(Uri.parse(confiC.url +
+        confiC.puerto +
+        '/wedding/TIPOSEVENTOS/obtenerTiposEventos'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);

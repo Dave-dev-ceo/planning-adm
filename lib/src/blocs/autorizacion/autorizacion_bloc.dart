@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import 'package:weddingplanner/src/logic/autorizacion_logic.dart';
-import 'package:weddingplanner/src/models/item_model_autorizacion.dart';
+import 'package:planning/src/logic/autorizacion_logic.dart';
+import 'package:planning/src/models/item_model_autorizacion.dart';
 
 part 'autorizacion_event.dart';
 part 'autorizacion_state.dart';
@@ -17,7 +17,7 @@ class AutorizacionBloc extends Bloc<AutorizacionEvent, AutorizacionState> {
   Stream<AutorizacionState> mapEventToState(
     AutorizacionEvent event,
   ) async* {
-    if(event is SelectAutorizacionEvent) {
+    if (event is SelectAutorizacionEvent) {
       yield AutorizacionLodingState();
       try {
         ItemModelAutorizacion autorizacion = await logic.selectAutorizacion();
@@ -27,7 +27,7 @@ class AutorizacionBloc extends Bloc<AutorizacionEvent, AutorizacionState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } else if(event is CrearAutorizacionEvent) {
+    } else if (event is CrearAutorizacionEvent) {
       yield AutorizacionLodingState();
       try {
         await logic.createAutorizacion(event.data);
@@ -38,20 +38,22 @@ class AutorizacionBloc extends Bloc<AutorizacionEvent, AutorizacionState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } else if(event is SelectEvidenciaEvent) {
+    } else if (event is SelectEvidenciaEvent) {
       yield AutorizacionLodingState();
       try {
-        ItemModelAutorizacion autorizacion = await logic.selectEvidencia(event.id);
+        ItemModelAutorizacion autorizacion =
+            await logic.selectEvidencia(event.id);
         yield SelectEvidenciaState(autorizacion);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en select id');
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } else if(event is UpdateAutorizacionEvent) {
+    } else if (event is UpdateAutorizacionEvent) {
       yield AutorizacionLodingState();
       try {
-        await logic.updateAutorizacion(event.id, event.descripcion, event.comentario);
+        await logic.updateAutorizacion(
+            event.id, event.descripcion, event.comentario);
         ItemModelAutorizacion autorizacion = await logic.selectAutorizacion();
         yield AutorizacionSelectState(autorizacion);
       } on AutorizacionException {
@@ -59,7 +61,7 @@ class AutorizacionBloc extends Bloc<AutorizacionEvent, AutorizacionState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } else if(event is DeleteAutorizacionEvent) {
+    } else if (event is DeleteAutorizacionEvent) {
       yield AutorizacionLodingState();
       try {
         await logic.deleteAutorizacion(event.id);
@@ -70,39 +72,42 @@ class AutorizacionBloc extends Bloc<AutorizacionEvent, AutorizacionState> {
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } else if(event is DeleteEvidenciaEvent) {
+    } else if (event is DeleteEvidenciaEvent) {
       yield AutorizacionLodingState();
       try {
         await logic.deleteImage(event.id);
-        ItemModelAutorizacion autorizacion = await logic.selectEvidencia(event.autorizacion);
+        ItemModelAutorizacion autorizacion =
+            await logic.selectEvidencia(event.autorizacion);
         yield SelectEvidenciaState(autorizacion);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en imagen id');
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } else if(event is CrearImagenEvent) {
+    } else if (event is CrearImagenEvent) {
       yield AutorizacionLodingState();
       try {
         await logic.addImage(event.data);
-        ItemModelAutorizacion autorizacion = await logic.selectEvidencia(event.data['id_autorizacion']);
+        ItemModelAutorizacion autorizacion =
+            await logic.selectEvidencia(event.data['id_autorizacion']);
         yield SelectEvidenciaState(autorizacion);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en imagen id');
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } else if(event is UpdateEvidenciaEvent) {
+    } else if (event is UpdateEvidenciaEvent) {
       yield AutorizacionLodingState();
       try {
         await logic.updateImage(event.idEvidencia, event.descripcion);
-        ItemModelAutorizacion autorizacion = await logic.selectEvidencia(event.idAutorizacion);
+        ItemModelAutorizacion autorizacion =
+            await logic.selectEvidencia(event.idAutorizacion);
         yield SelectEvidenciaState(autorizacion);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en update evidencia');
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
       }
-    } 
+    }
   }
 }

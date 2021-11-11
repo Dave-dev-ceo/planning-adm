@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weddingplanner/src/blocs/login/login_bloc.dart';
-import 'package:weddingplanner/src/models/item_model_preferences.dart';
-import 'package:weddingplanner/src/resources/api_provider.dart';
+import 'package:planning/src/blocs/login/login_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/resources/api_provider.dart';
 
 // Padilla
-import 'package:weddingplanner/src/ui/widgets/text_form_filed/password_wplanner.dart';
+import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
