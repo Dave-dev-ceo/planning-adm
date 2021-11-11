@@ -3,7 +3,6 @@ import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:responsive_grid/responsive_grid.dart';
 
 import 'package:planning/src/blocs/timings/timings_bloc.dart';
@@ -105,29 +104,6 @@ class _TimingState extends State<Timing> {
       html.document.body.children.remove(anchor);
       html.Url.revokeObjectUrl(url);
     }
-
-    // final pdf = pw.Document();
-
-    // List<pw.Widget> listaView = [];
-
-    // for (var timing in itemModelTimings.results) {
-    //   pw.Widget listaViewChild = pw.Padding(
-    //       padding: const pw.EdgeInsets.all(4.0),
-    //       child: pw.Text(timing.nombre_timing));
-    //   listaView.add(listaViewChild);
-    // }
-
-    // pdf.addPage(
-    //   pw.MultiPage(
-    //     build: (pw.Context context) => [
-    //       pw.Center(),
-    //       pw.SizedBox(
-    //         height: 10.0,
-    //       ),
-    //       pw.ListView(children: listaView)
-    //     ],
-    //   ),
-    // );
   }
 
   Color hexToColor(String code) {

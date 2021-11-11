@@ -65,9 +65,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
       //       "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
       // ..setAttribute("download", nombreDocumento + ".pdf")
       // ..click();
-    } else {
-      print("gogogogogo");
-    }
+    } else {}
   }
 
   _dialogMSG(String title) {

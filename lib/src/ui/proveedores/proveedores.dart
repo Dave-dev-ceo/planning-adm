@@ -1,3 +1,5 @@
+import 'package:universal_html/html.dart' as html hide Text;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -71,11 +73,11 @@ class _ProveedoresState extends State<Proveedores> {
         SpeedDialChild(
           child: Icon(Icons.download),
           label: 'Descargar PDF',
-          onTap: () {},
+          onTap: () async {},
         ),
         SpeedDialChild(
           child: Icon(Icons.add),
-          label: 'Añadir Proverdor',
+          label: 'Añadir Proveedor',
           onTap: () async {
             Navigator.of(context).pushNamed('/agregarProveedores',
                 arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
@@ -377,7 +379,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
               await proveedorBloc.add(FechtProveedorEvent());
               await proveedorBloc.add(FechtSevicioByProveedorEvent());
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Se ha editado correctamente el inivtado'),
+                content: Text('Se ha editado correctamente el invitado'),
                 backgroundColor: Colors.green,
               ));
               Navigator.of(context).pop();
