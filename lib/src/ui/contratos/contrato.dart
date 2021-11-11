@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/contratos/contratos_bloc.dart';
 import 'package:planning/src/models/item_model_contratos.dart';
 import 'package:planning/src/ui/contratos/agregar_contrato.dart';
-/////////////////////////////////////descomentar siguiente linea para generar apk y comentar la de arriba
 import 'package:planning/src/ui/contratos/agregar_contrato_mobile.dart';
 
 class Contratos extends StatefulWidget {
@@ -81,9 +80,8 @@ class _ContratosState extends State<Contratos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //body: AgregarContrato(),
+      body: kIsWeb ? AgregarContrato() : AgregarContratoMobile(),
       //  //  //  //  //  //  //// Descomentar siguiente linea para generar apk y comentar la de arriba //  //  //  //  //  //  ////  //  //  //  //  //  //  ////
-      body: AgregarContratoMobile(),
       /*Container(
         child: BlocBuilder<ContratosBloc, ContratosState>(
           builder: (context, state) {
