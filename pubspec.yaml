@@ -25,7 +25,7 @@ dependencies:
   open_file: ^3.2.1
   flutter_login:
   material_segmented_control:
-  flutter_bloc: ^7.0.0
+  flutter_bloc: ^7.3.3
   equatable:
   shared_preferences: ^2.0.5
   native_pdf_view: ^4.0.1
