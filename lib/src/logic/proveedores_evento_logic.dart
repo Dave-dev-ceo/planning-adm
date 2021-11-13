@@ -9,6 +9,7 @@ abstract class LogicProveedoresEvento {
   Future<ItemModelProveedoresEvento> fetchProveedorEvento();
   Future<int> createProveedorEvento(Map<String, dynamic> data);
   updateProveedorEvento(Map data);
+  Future<String> downloadPDFProveedoresEvento();
 }
 
 class ProveedoresException implements Exception {}
@@ -143,6 +144,38 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
       throw TokenException();
     } else {
       throw ProveedoresException();
+    }
+  }
+
+  @override
+  Future<String> downloadPDFProveedoresEvento() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PROVEEDORES/downloadPDFProveedoresEvento';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+    };
+
+    final resp = await client.post(
+      Uri.parse(configC.url + configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }

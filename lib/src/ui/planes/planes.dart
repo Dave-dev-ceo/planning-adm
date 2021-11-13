@@ -1,6 +1,8 @@
 // import flutter/dart
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
+import 'package:planning/src/logic/planes_logic.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:flutter/services.dart';
 
@@ -10,6 +12,9 @@ import 'package:planning/src/blocs/planes/planes_bloc.dart';
 
 // model
 import 'package:planning/src/models/item_model_planes.dart';
+
+// utils
+import 'package:planning/src/utils/utils.dart' as utils;
 
 // our
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
@@ -27,6 +32,9 @@ class _PlanesState extends State<Planes> {
 
   // variable model
   ItemModelPlanes _itemModel;
+
+  //logic
+  ConsultasPlanesLogic planesLogic = ConsultasPlanesLogic();
 
   // variables class
   List<TareaPlanner> _listTare;
@@ -762,10 +770,27 @@ class _PlanesState extends State<Planes> {
   }
 
   // boton flotante
-  FloatingActionButton _botonFlotante() {
-    return FloatingActionButton(
-      child: Icon(Icons.calendar_today),
-      onPressed: () => _saveActividades(),
+  Widget _botonFlotante() {
+    return SpeedDial(
+      icon: Icons.more_vert,
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.calendar_today),
+          onTap: () => _saveActividades(),
+          label: 'Ver calendario',
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.download),
+          onTap: () async {
+            final data = await planesLogic.donwloadPDFPlanesEvento();
+
+            if (data != null) {
+              utils.buildPDFDownload(data, 'Actividades_Evento');
+            }
+          },
+          label: 'Descargar PDF',
+        )
+      ],
     );
   }
 

@@ -14,6 +14,7 @@ abstract class UsuarioLogic {
   Future<ItemModelUsuario> crearUsuario(Map<String, dynamic> dataUsuario);
   Future<ItemModelUsuario> editarUsuario(Map<String, dynamic> dataUsuario);
   Future<bool> eliminarUsuario(String idUsuario);
+  Future<String> downloadPdfUsuarios();
 }
 
 class ListaUsuariosException implements Exception {}
@@ -148,6 +149,36 @@ class UsuarioCrud extends UsuarioLogic {
       return null;
     } else {
       throw EliminarUsuarioException();
+    }
+  }
+
+  @override
+  Future<String> downloadPdfUsuarios() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+
+    const endpoint = '/wedding/USUARIOS/downloadPdfUsuarios';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }

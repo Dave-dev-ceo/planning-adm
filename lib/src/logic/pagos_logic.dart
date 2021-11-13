@@ -18,6 +18,7 @@ abstract class PagosLogic {
   Future<ItemModelPagos> selectProveedor();
   Future<ItemModelPagos> selectServicios();
   Future<ItemModelPagos> selectPagosId(int id);
+  Future<String> downlooadPagosEvento();
 }
 
 // consultas
@@ -209,6 +210,38 @@ class ConsultasPagosLogic extends PagosLogic {
       throw TokenException();
     } else {
       throw AutorizacionException();
+    }
+  }
+
+  @override
+  Future<String> downlooadPagosEvento() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PAGOS/downlooadPagosEvento';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }

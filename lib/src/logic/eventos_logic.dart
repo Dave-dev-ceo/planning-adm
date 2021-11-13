@@ -11,6 +11,7 @@ abstract class ListaEventosLogic {
   Future<int> createEventos(Map<String, dynamic> dataEvento);
   Future<int> EditarEvento(Map<String, dynamic> dataEvento);
   Future<ItemModelEvento> fetchEventoPorId(String id_evento);
+  Future<String> donwloadPDFEvento();
 }
 
 class ListaEventosException implements Exception {}
@@ -125,6 +126,38 @@ class FetchListaEventosLogic extends ListaEventosLogic {
       throw TokenException();
     } else {
       throw EditarEventoException();
+    }
+  }
+
+  @override
+  Future<String> donwloadPDFEvento() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/EVENTOS/donwloadPDFEvento';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }

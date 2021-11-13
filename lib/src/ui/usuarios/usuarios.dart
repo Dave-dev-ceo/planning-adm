@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:planning/src/blocs/usuarios/usuarios_bloc.dart';
+import 'package:planning/src/logic/usuarios.logic.dart';
 import 'package:planning/src/models/item_model_usuarios.dart';
 import 'package:planning/src/ui/Roles/roles.dart';
+import 'package:planning/src/utils/utils.dart';
 
 class Usuarios extends StatefulWidget {
   const Usuarios({Key key}) : super(key: key);
@@ -19,6 +22,7 @@ class _UsuariosState extends State<Usuarios> {
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   ItemModelUsuarios itemModelUsuarios;
   ItemModelUsuarios filterUsuarios;
+  UsuarioCrud usuariosLogic = UsuarioCrud();
   bool bandera = false;
   List<bool> sort = [false, false, false, false];
   int _sortColumnIndex = 0;
@@ -83,17 +87,7 @@ class _UsuariosState extends State<Usuarios> {
       body: Container(
           width: double.infinity,
           child: IndexedStack(index: _selectedIndex, children: footerTabs)),
-      floatingActionButton: _selectedIndex == 0
-          ? FloatingActionButton(
-              heroTag: null,
-              child: Icon(Icons.add),
-              onPressed: () {
-                setState(() {
-                  mostrarForm(context, 0, null);
-                });
-              },
-            )
-          : null,
+      floatingActionButton: _selectedIndex == 0 ? _expasibleFab() : null,
       floatingActionButtonLocation:
           _selectedIndex == 0 ? FloatingActionButtonLocation.endFloat : null,
       bottomNavigationBar: BottomNavigationBar(
@@ -110,6 +104,34 @@ class _UsuariosState extends State<Usuarios> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+    );
+  }
+
+  Widget _expasibleFab() {
+    return SpeedDial(
+      icon: Icons.more_vert,
+      children: [
+        SpeedDialChild(
+          label: 'Descargar PDF',
+          onTap: () async {
+            final data = await usuariosLogic.downloadPdfUsuarios();
+
+            if (data != null) {
+              buildPDFDownload(data, 'Usuarios');
+            }
+          },
+          child: Icon(Icons.download),
+        ),
+        SpeedDialChild(
+          label: 'Añadir Usuario',
+          child: Icon(Icons.add),
+          onTap: () {
+            setState(() {
+              mostrarForm(context, 0, null);
+            });
+          },
+        ),
+      ],
     );
   }
 
@@ -277,6 +299,7 @@ class _UsuariosState extends State<Usuarios> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      print(_selectedIndex);
     });
   }
 

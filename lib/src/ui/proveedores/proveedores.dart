@@ -1,3 +1,5 @@
+import 'package:planning/src/logic/proveedores_logic.dart';
+import 'package:planning/src/utils/utils.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
@@ -21,6 +23,7 @@ class Proveedores extends StatefulWidget {
 class _ProveedoresState extends State<Proveedores> {
   ProveedorBloc proveedorBloc;
   ItemModelProveedores itemModelProv;
+  FetchProveedoresLogic proveedoresLogic = FetchProveedoresLogic();
 
   List<ItemProveedor> _data = [];
 
@@ -73,7 +76,12 @@ class _ProveedoresState extends State<Proveedores> {
         SpeedDialChild(
           child: Icon(Icons.download),
           label: 'Descargar PDF',
-          onTap: () async {},
+          onTap: () async {
+            final data = await proveedoresLogic.downloadPDFProveedor();
+            if (data != null) {
+              await buildPDFDownload(data, 'Proveedores');
+            }
+          },
         ),
         SpeedDialChild(
           child: Icon(Icons.add),

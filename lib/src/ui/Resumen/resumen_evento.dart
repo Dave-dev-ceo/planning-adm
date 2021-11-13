@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart' as EvtBloc;
+import 'package:planning/src/logic/eventos_logic.dart';
 import 'package:planning/src/models/item_model_evento.dart';
 
 import 'package:planning/src/models/item_model_reporte_genero.dart';
 import 'package:planning/src/models/item_model_reporte_grupos.dart';
 import 'package:planning/src/models/item_model_reporte_invitados.dart';
+import 'package:planning/src/utils/utils.dart';
 
 class ResumenEvento extends StatefulWidget {
   final Map<dynamic, dynamic> detalleEvento;
@@ -24,6 +26,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   final Map<dynamic, dynamic> detalleEvento;
   final bool WP_EVT_RES_EDT;
   EvtBloc.EventosBloc eventosBloc;
+  FetchListaEventosLogic eventoLogic = FetchListaEventosLogic();
 
   @override
   void initState() {
@@ -214,24 +217,37 @@ class _ResumenEventoState extends State<ResumenEvento> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Center(
-            child: Wrap(
-              spacing: 10.0,
-              runSpacing: 20.0,
-              children: [
-                //Expanded(
-                //child:
-                reporteEvento(),
-                reporteInvitados(),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: Wrap(
+                spacing: 10.0,
+                runSpacing: 20.0,
+                children: [
+                  //Expanded(
+                  //child:
+                  reporteEvento(),
+                  reporteInvitados(),
 
-                //),
-              ],
-            ),
-          )
-        ],
+                  //),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.download),
+        onPressed: () async {
+          final data = await eventoLogic.donwloadPDFEvento();
+
+          if (data != null) {
+            buildPDFDownload(data, 'Resumen_Evento');
+          }
+        },
+        tooltip: 'Descargar PDF',
       ),
     );
   }

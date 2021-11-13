@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:planning/src/utils/utils.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
@@ -76,34 +77,14 @@ class _TimingState extends State<Timing> {
         heroTag: '',
         child: Icon(Icons.file_download_sharp),
         onPressed: () async {
-          print('Entre');
-          await buildPDFDownload();
-          print('Sali');
+          final data = await timingsLogic.downloadPDFTiming();
+
+          if (data != null) {
+            await buildPDFDownload(data, 'Cronogramas');
+          }
         },
       ),
     );
-  }
-
-  void buildPDFDownload() async {
-    final data = await timingsLogic.downloadPDFTiming();
-
-    if (data != null) {
-      String titulo = 'Cronogramas';
-      final date = DateTime.now();
-
-      final bytes = base64Decode(data);
-      final blob = html.Blob([bytes]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-
-      final anchor = html.document.createElement('a') as html.AnchorElement
-        ..href = url
-        ..style.display = 'none'
-        ..download = '$titulo-$date.pdf';
-      html.document.body.children.add(anchor);
-      anchor.click();
-      html.document.body.children.remove(anchor);
-      html.Url.revokeObjectUrl(url);
-    }
   }
 
   Color hexToColor(String code) {

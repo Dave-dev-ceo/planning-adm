@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
+import 'package:planning/src/logic/proveedores_evento_logic.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/models/item_model_proveedores_evento.dart';
+import 'package:planning/src/utils/utils.dart';
 
 class ProveedorEvento extends StatefulWidget {
   const ProveedorEvento({Key key}) : super(key: key);
@@ -28,6 +30,10 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   // plan b
   Map servicios = Map();
 
+  // logic
+  FetchProveedoresEventoLogic proveedoresEventoLogic =
+      FetchProveedoresEventoLogic();
+
   void getValues() async {
     checkInvolucrado = await _sharedPreferences.getIdInvolucrado();
   }
@@ -44,48 +50,72 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   Widget build(BuildContext context) {
     if (checkInvolucrado == null) {
       return Scaffold(
-          body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(15),
-          child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
-              builder: (context, state) {
-            if (state is MostrarProveedorEventoState) {
-              if (state.detlistas != null && _dataPrvEv.length == 0) {
-                state.detlistas.results.forEach((element) {
-                  // print(element.idPlanner);
-                });
-                _dataPrvEv = _createDataListProvEvt(state.detlistas);
+        body: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(15),
+            child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
+                builder: (context, state) {
+              if (state is MostrarProveedorEventoState) {
+                if (state.detlistas != null && _dataPrvEv.length == 0) {
+                  state.detlistas.results.forEach((element) {
+                    // print(element.idPlanner);
+                  });
+                  _dataPrvEv = _createDataListProvEvt(state.detlistas);
+                }
+                return _listaBuild();
+              } else {
+                return Center(child: CircularProgressIndicator());
               }
-              return _listaBuild();
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+            }),
+          ),
         ),
-      ));
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.download),
+          onPressed: () async {
+            final data =
+                await proveedoresEventoLogic.downloadPDFProveedoresEvento();
+            if (data != null) {
+              buildPDFDownload(data, 'Proveedores-Evento');
+            }
+          },
+          tooltip: 'Descargar PDF',
+        ),
+      );
     } else {
       return Scaffold(
-          body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(15),
-          child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
-              builder: (context, state) {
-            if (state is MostrarProveedorEventoState) {
-              if (state.detlistas != null && _dataPrvEv.length == 0) {
-                state.detlistas.results.forEach((element) {
-                  // print(element.idPlanner);
-                });
-                _dataPrvEv = _createDataListProvEvt(state.detlistas);
+        body: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(15),
+            child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
+                builder: (context, state) {
+              if (state is MostrarProveedorEventoState) {
+                if (state.detlistas != null && _dataPrvEv.length == 0) {
+                  state.detlistas.results.forEach((element) {
+                    // print(element.idPlanner);
+                  });
+                  _dataPrvEv = _createDataListProvEvt(state.detlistas);
+                }
+                return _listaInvolucrado();
+              } else {
+                return Center(child: CircularProgressIndicator());
               }
-              return _listaInvolucrado();
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+            }),
+          ),
         ),
-      ));
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.download),
+          onPressed: () async {
+            final data =
+                await proveedoresEventoLogic.downloadPDFProveedoresEvento();
+            if (data != null) {
+              buildPDFDownload(data, 'Proveedores-Evento');
+            }
+          },
+          tooltip: 'Descargar PDF',
+        ),
+      );
     }
   }
 

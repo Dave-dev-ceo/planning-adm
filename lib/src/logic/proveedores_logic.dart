@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/resources/config_conection.dart';
@@ -218,9 +217,9 @@ class FetchProveedoresLogic extends LogicProveedores {
   @override
   Future<String> downloadPDFProveedor() async {
     String token = await _sharedPreferences.getToken();
-    String idPlanner = await _sharedPreferences.getIdPlanner();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
 
-    const endpoint = '/PROVEEDORES/downloadPDFProveedor';
+    const endpoint = '/wedding/PROVEEDORES/downloadPDFProveedor';
 
     final headers = {
       'Content-Type': 'application/json',

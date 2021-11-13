@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/logic/pagos_logic.dart';
+import 'package:planning/src/utils/utils.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
@@ -18,6 +21,9 @@ class _PagosState extends State<Pagos> {
 
   // vaiables modelo
   ItemModelPagos itemPago;
+
+  // logic
+  ConsultasPagosLogic pagosLogic = ConsultasPagosLogic();
 
   // styles
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
@@ -274,11 +280,28 @@ class _PagosState extends State<Pagos> {
     return pagosList;
   }
 
-  _botonAction() {
-    return FloatingActionButton(
-      tooltip: 'Agregar Presupuesto',
-      child: Icon(Icons.add),
-      onPressed: () => _agregarPago(),
+  Widget _botonAction() {
+    return SpeedDial(
+      icon: Icons.more_vert,
+      children: [
+        SpeedDialChild(
+          label: 'Agregar Presupuesto',
+          child: Icon(Icons.add),
+          onTap: () => _agregarPago(),
+        ),
+        SpeedDialChild(
+          label: 'Descargar PDF',
+          child: Icon(Icons.download),
+          onTap: () async {
+            print('Entre');
+            final data = await pagosLogic.downlooadPagosEvento();
+            print('Sali');
+            if (data != null) {
+              buildPDFDownload(data, 'Pagos-Evento');
+            }
+          },
+        )
+      ],
     );
   }
 

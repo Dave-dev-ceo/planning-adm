@@ -20,6 +20,7 @@ abstract class PlanesLogic {
   Future<bool> updateTareaEvento(Map<String, dynamic> tareaEvento);
   Future<bool> updateActividadEvento(List<dynamic> listaPlanner);
   Future<bool> deleteActividadEvento(int idActividad);
+  Future<String> donwloadPDFPlanesEvento();
 }
 
 class ConsultasPlanesLogic extends PlanesLogic {
@@ -296,6 +297,35 @@ class ConsultasPlanesLogic extends PlanesLogic {
     } else {
       // error
       throw ListaPlanesException();
+    }
+  }
+
+  @override
+  Future<String> donwloadPDFPlanesEvento() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PLANES/donwloadPDFPlanesEvento';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }
