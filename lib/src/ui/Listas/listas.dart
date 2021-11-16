@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:planning/src/blocs/lista/listas_bloc.dart';
+import 'package:planning/src/logic/listas_logic.dart';
 import 'package:planning/src/models/item_model_listas.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/utils/utils.dart';
 
 class Listas extends StatefulWidget {
   const Listas({Key key}) : super(key: key);
@@ -15,6 +18,7 @@ class Listas extends StatefulWidget {
 
 class _ListaState extends State<Listas> {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final listaLogic = FetchListaLogic();
   // Id del Planner.
   int idPlanner;
   ListasBloc listasBloc;
@@ -44,51 +48,36 @@ class _ListaState extends State<Listas> {
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-                body: SingleChildScrollView(
-                  child: BlocListener<ListasBloc, ListasState>(
-                    listener: (context, state) {
-                      if (state is ErrorTokenListaState) {
-                        return _showDialogMsg(context);
-                      } else if (state is ErrorCreateListasrState) {
-                        print(state.message);
-                      } else if (state is ErrorCreateListasrState) {
-                        print(state.message);
-                      }
-                    },
-                    child: BlocBuilder<ListasBloc, ListasState>(
-                      builder: (context, state) {
-                        if (state is LoadingListasState) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (state is MostrarListasState) {
-                          return getLista(state.listas);
-                        } else if (state is ErrorCreateListasrState) {
-                          return Center(child: Text(state.message));
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.endFloat,
-                floatingActionButton: FloatingActionButton(
-                  child: Icon(Icons.add),
-                  onPressed: () async {
-                    final result = await Navigator.of(context)
-                        .pushNamed('/detalleListas', arguments: {
-                      'id_lista': null,
-                      'nombre': '',
-                      'descripcion': ''
-                    });
-                    if (result == null ||
-                        result == "" ||
-                        result == false ||
-                        result == 0) {
-                      listasBloc.add(FechtListasEvent());
+              body: SingleChildScrollView(
+                child: BlocListener<ListasBloc, ListasState>(
+                  listener: (context, state) {
+                    if (state is ErrorTokenListaState) {
+                      return _showDialogMsg(context);
+                    } else if (state is ErrorCreateListasrState) {
+                      print(state.message);
+                    } else if (state is ErrorCreateListasrState) {
+                      print(state.message);
                     }
                   },
-                ));
+                  child: BlocBuilder<ListasBloc, ListasState>(
+                    builder: (context, state) {
+                      if (state is LoadingListasState) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (state is MostrarListasState) {
+                        return getLista(state.listas);
+                      } else if (state is ErrorCreateListasrState) {
+                        return Center(child: Text(state.message));
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
+              floatingActionButton: expasionFab(),
+            );
           } else if (snapshot.hasError) {
             return Scaffold(
               body: Container(
@@ -107,6 +96,39 @@ class _ListaState extends State<Listas> {
             );
           }
         });
+  }
+
+  Widget expasionFab() {
+    return SpeedDial(
+      icon: Icons.more_vert_outlined,
+      children: [
+        SpeedDialChild(
+          label: 'Detalle de la lista',
+          child: Icon(Icons.add),
+          onTap: () async {
+            final result = await Navigator.of(context).pushNamed(
+                '/detalleListas',
+                arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
+            if (result == null ||
+                result == "" ||
+                result == false ||
+                result == 0) {
+              listasBloc.add(FechtListasEvent());
+            }
+          },
+        ),
+        SpeedDialChild(
+            label: 'Descargar PDF',
+            child: Icon(Icons.download),
+            onTap: () async {
+              final data = await listaLogic.downloadPDFListas();
+
+              if (data != null) {
+                buildPDFDownload(data, 'listas');
+              }
+            })
+      ],
+    );
   }
 
   Widget getLista(ItemModelListas model) {

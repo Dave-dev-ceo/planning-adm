@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:planning/src/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart' show ByteData, rootBundle;
 
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
@@ -297,6 +297,18 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         onTap: () => _viewContact(),
         onLongPress: () => print('THIRD CHILD LONG PRESS'),
       ));
+      temp.add(SpeedDialChild(
+        foregroundColor: Colors.black,
+        child: Tooltip(
+          child: Icon(Icons.download),
+          message: "Descargar PDF",
+        ),
+        backgroundColor: hexToColor("#fdf4e5"),
+        //label: 'Importar contactos',
+        //labelStyle: TextStyle(fontSize: 14.0),
+        onTap: downloadPDFListaInvitados,
+        onLongPress: () => print('FOUR CHILD LONG PRESS'),
+      ));
     }
     if (WP_EVT_INV_ENV) {
       temp.add(SpeedDialChild(
@@ -397,7 +409,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: buildSpeedDial(pHz),
+      floatingActionButton: currentIndex == 0 ? buildSpeedDial(pHz) : null,
       /*floatingActionButton: FloatingActionButton(
         onPressed: () async{
           //Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
@@ -454,6 +466,14 @@ class _ListaInvitadosState extends State<ListaInvitados> {
         ),
       ],
     );
+  }
+
+  void downloadPDFListaInvitados() async {
+    final data = await api.downloadPDFInvitados();
+
+    if (data != null) {
+      buildPDFDownload(data, 'Lista-Invitados');
+    }
   }
 }
 

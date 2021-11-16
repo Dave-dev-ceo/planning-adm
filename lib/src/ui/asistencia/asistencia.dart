@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:planning/src/logic/asistencia_logic.dart';
+import 'package:planning/src/utils/utils.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
 // bloc
@@ -19,6 +21,7 @@ class Asistencia extends StatefulWidget {
 class _AsistenciaState extends State<Asistencia> {
   // variables bloc
   AsistenciaBloc asistenciaBloc;
+  final asistenciaLogic = FetchListaAsistenciaLogic();
 
   // variables model
   ItemModelAsistencia itemModelAsistencia;
@@ -244,8 +247,7 @@ class _AsistenciaState extends State<Asistencia> {
   // boton flotante
   SpeedDial _crearBotonFlotante(double pHz) {
     return SpeedDial(
-      icon: Icons.qr_code_outlined,
-      activeIcon: Icons.qr_code_outlined,
+      icon: Icons.more_vert_outlined,
       buttonSize: 56.0,
       visible: true,
       closeManually: false,
@@ -264,9 +266,25 @@ class _AsistenciaState extends State<Asistencia> {
         end: Alignment.bottomCenter,
         colors: [hexToColor("#fdf4e5"), hexToColor("#fdf4e5")],
       ),
-      onPress: () async {
-        final result = await Navigator.of(context).pushNamed('/lectorQr');
-      },
+      children: [
+        SpeedDialChild(
+            onTap: () async {
+              final result = await Navigator.of(context).pushNamed('/lectorQr');
+            },
+            child: Icon(Icons.qr_code_outlined),
+            label: 'Codigo QR'),
+        SpeedDialChild(
+          child: Icon(Icons.download),
+          onTap: () async {
+            final data = await asistenciaLogic.downloadPDFAsistencia();
+
+            if (data != null) {
+              buildPDFDownload(data, 'asistencia');
+            }
+          },
+          label: 'Descargar PDf',
+        )
+      ],
     );
   }
 }

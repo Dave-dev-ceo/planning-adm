@@ -14,6 +14,7 @@ abstract class DetallesListasLogic {
   Future<int> editarDetalleLista(Map<String, dynamic> data);
   Future<int> createLista(Map<String, dynamic> data);
   Future<int> editarLista(Map<String, dynamic> data);
+  Future<String> downloadPDFDetalleLista(int idLista);
 }
 
 class DetalleListasException implements Exception {}
@@ -199,6 +200,39 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
       } else {
         throw CreateDetalleListasException();
       }
+    }
+  }
+
+  @override
+  Future<String> downloadPDFDetalleLista(int idLista) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/LISTAS/downloadPDFDetalleLista';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+      'idLista': idLista,
+    };
+
+    final resp = await client.post(
+      Uri.parse(configC.url + configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }

@@ -788,4 +788,33 @@ class ApiProvider {
       return false;
     }
   }
+
+  Future<String> downloadPDFInvitados() async {
+    String token = await _sharedPreferences.getToken();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+
+    final endpoint = '/wedding/INVITADOS/downloadPDFInvitados';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token,
+    };
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['pdf'];
+    } else {
+      return null;
+    }
+  }
 }

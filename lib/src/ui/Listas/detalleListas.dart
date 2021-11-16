@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
+import 'package:planning/src/logic/detalle_listas_logic.dart';
 import 'package:planning/src/models/item_model_detalle_listas.dart';
 import 'package:planning/src/models/item_model_listas.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
+import 'package:planning/src/utils/utils.dart';
 
 class DetalleListas extends StatefulWidget {
   final Map<String, dynamic> lista;
@@ -32,6 +34,8 @@ class _DetalleListasState extends State<DetalleListas> {
 
   DetalleListasBloc detalleListasBloc;
   _DetalleListasState(this.listas) {}
+
+  final listaLogic = FetchDetalleListaLogic();
 
   @override
   void initState() {
@@ -69,6 +73,17 @@ class _DetalleListasState extends State<DetalleListas> {
             return Text('');
           }
         }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.download),
+        onPressed: () async {
+          final data = await listaLogic
+              .downloadPDFDetalleLista(widget.lista['id_lista']);
+
+          if (data != null) {
+            buildPDFDownload(data, 'detalles-lista');
+          }
+        },
       ),
     );
   }

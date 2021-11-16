@@ -10,6 +10,7 @@ import 'package:planning/src/models/item_model_asistencia.dart';
 abstract class AsistenciaLogic {
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner();
   Future<int> saveAsistencia(int idInvitado, bool asistencia);
+  Future<String> downloadPDFAsistencia();
 }
 
 class ListaAsistenciaException implements Exception {}
@@ -69,5 +70,37 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
           HttpHeaders.authorizationHeader: token
         });
     return 0;
+  }
+
+  @override
+  Future<String> downloadPDFAsistencia() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/ASISTENCIA/downloadPDFAsistencia';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
+    }
   }
 }

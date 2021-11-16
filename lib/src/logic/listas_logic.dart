@@ -9,6 +9,7 @@ import 'package:planning/src/resources/config_conection.dart';
 abstract class ListasLogic {
   Future<ItemModelListas> fetchListas();
   Future<int> deleteActividadesRecibir(int idActividad);
+  Future<String> downloadPDFListas();
   // Future<ItemModelArticulosRecibir> fetchArticulosRecibirIdPlanner();
 }
 
@@ -78,6 +79,38 @@ class FetchListaLogic extends ListasLogic {
       throw TokenException();
     } else {
       throw CreateListasException();
+    }
+  }
+
+  @override
+  Future<String> downloadPDFListas() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/LISTAS/downloadPDFListas';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+    };
+
+    final resp = await client.post(
+      Uri.parse(configC.url + configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
     }
   }
 }
