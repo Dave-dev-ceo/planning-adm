@@ -32,6 +32,7 @@ class _InvitadosState extends State<Invitados> {
   int _pageIndex = 0;
   int _pages = 0;
   PermisosBloc permisosBloc;
+  ItemModelPerfil permisoPantallas;
 
   _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
@@ -72,6 +73,7 @@ class _InvitadosState extends State<Invitados> {
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (state is PermisosOk) {
+            permisoPantallas = state.permisos;
             List<TabItem> tabs = obtenerTabsPantallas(state.permisos
                 .pantallas); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
             List<Widget> pantallas = obtenerPantallasContent(state.permisos
@@ -182,11 +184,27 @@ class _InvitadosState extends State<Invitados> {
             ],
             bottom: TabBar(
                 onTap: (int index) {
-                  setState(
-                    () {
-                      _pageIndex = index;
-                    },
-                  );
+                  if (index == 6) {
+                    final size = MediaQuery.of(context).size;
+                    showDialog(
+                        context: context,
+                        builder: (context) => ListaInvitados(
+                              idEvento: detalleEvento['idEvento'],
+                              WP_EVT_INV_CRT: permisoPantallas.pantallas
+                                  .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+                              WP_EVT_INV_EDT: permisoPantallas.pantallas
+                                  .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+                              WP_EVT_INV_ENV: permisoPantallas.pantallas
+                                  .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+                              nameEvento: widget.detalleEvento['nEvento'],
+                            ));
+                  } else {
+                    setState(
+                      () {
+                        _pageIndex = index;
+                      },
+                    );
+                  }
                 },
                 indicatorColor: Colors.black,
                 isScrollable: true,
@@ -273,19 +291,11 @@ class _InvitadosState extends State<Invitados> {
         temp += 1;
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
-        tabs.add(TabItem(titulo: 'Asistencia', icono: Icons.accessibility));
-        temp += 1;
-      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         tabs.add(TabItem(titulo: 'Listas', icono: Icons.list));
         temp += 1;
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
-        tabs.add(TabItem(titulo: 'Mesas', icono: Icons.contact_mail_sharp));
-        temp += 1;
-      }
       _pages = temp;
       return tabs;
     } else {
@@ -330,16 +340,10 @@ class _InvitadosState extends State<Invitados> {
             nameEvento: widget.detalleEvento['nEvento']));
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
-        temp.add(Asistencia());
-      }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Listas());
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
-        temp.add(MesasPage(nameEvento: widget.detalleEvento['nEvento']));
-      }
       return temp;
     } else {
       return [

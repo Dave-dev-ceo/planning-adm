@@ -42,12 +42,14 @@ class ListaInvitados extends StatefulWidget {
       idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV);
 }
 
-class _ListaInvitadosState extends State<ListaInvitados> {
+class _ListaInvitadosState extends State<ListaInvitados>
+    with TickerProviderStateMixin {
   ApiProvider api = new ApiProvider();
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
   final int idEvento;
 
   int currentIndex = 0;
+  TabController _controller;
 
   final bool WP_EVT_INV_CRT;
   final bool WP_EVT_INV_EDT;
@@ -56,6 +58,17 @@ class _ListaInvitadosState extends State<ListaInvitados> {
   bool dialVisible = true;
 
   BuildContext _dialogContext;
+
+  @override
+  void initState() {
+    _controller = TabController(length: 3, vsync: this);
+    _controller.addListener(() {
+      setState(() {
+        currentIndex = _controller.index;
+      });
+    });
+    super.initState();
+  }
 
   _ListaInvitadosState(this.idEvento, this.WP_EVT_INV_CRT, this.WP_EVT_INV_EDT,
       this.WP_EVT_INV_ENV);
@@ -373,7 +386,7 @@ class _ListaInvitadosState extends State<ListaInvitados> {
 
   @override
   Widget build(BuildContext context) {
-    final listWidget = [
+    final List<Widget> listWidget = [
       listaInvitados(context),
       Asistencia(),
       MesasPage(nameEvento: widget.nameEvento),
@@ -381,32 +394,31 @@ class _ListaInvitadosState extends State<ListaInvitados> {
 
     double pHz = MediaQuery.of(context).size.width;
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Lista Inivtados',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility),
-            label: 'Asistencia',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.contact_mail_sharp),
-            label: 'Mesas',
-          ),
-        ],
-        onTap: (i) {
-          setState(() {
-            currentIndex = i;
-          });
-        },
-      ),
-      body: Container(
-        width: double.infinity,
-        child: Center(
-          child: listWidget[currentIndex],
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Invitados'),
+        bottom: TabBar(
+          controller: _controller,
+          tabs: [
+            Tab(
+              icon: Icon(Icons.people),
+              text: 'Lista de Invitados',
+            ),
+            Tab(
+              icon: Icon(Icons.accessibility),
+              text: 'Asistencia',
+            ),
+            Tab(
+              icon: Icon(Icons.contact_mail_sharp),
+              text: 'Mesas',
+            ),
+          ],
         ),
+      ),
+
+      body: TabBarView(
+        controller: _controller,
+        children: listWidget,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: currentIndex == 0 ? buildSpeedDial(pHz) : null,
