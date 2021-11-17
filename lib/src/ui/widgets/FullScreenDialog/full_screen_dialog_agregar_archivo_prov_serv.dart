@@ -10,6 +10,7 @@ import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
   final Map<String, dynamic> provsrv;
@@ -369,13 +370,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
               // opt.tipoMime.toString() + opt.archivo.toString()
               onPressed: () {
                 opt.tipoMime == 'url'
-                    ? Navigator.of(context).pushNamed(
-                        '/verWeb',
-                        arguments: {
-                          'nombre': opt.nombre,
-                          'id_archivo': opt.idArchivo
-                        },
-                      )
+                    ? _launchInBrowser(opt.archivo)
                     : Navigator.of(context).pushNamed('/viewArchivo',
                         arguments: {
                             'nombre': opt.nombre,
@@ -391,6 +386,19 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       lista.add(tempWidget);
     }
     return lista;
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   _eliminarArchivoLista(int idArchivo, int idProveedor, int idServicio) {
