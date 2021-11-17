@@ -1,5 +1,6 @@
 // imports from flutter/dart
 import 'package:http/http.dart' show Client;
+import 'package:planning/src/models/perfil/perfil_planner_model.dart';
 import 'dart:io';
 import 'dart:convert';
 
@@ -12,6 +13,7 @@ import 'package:planning/src/models/item_model_perfil.dart';
 abstract class PerfilLogic {
   Future<ItemModelPerfil> selectPerfil();
   Future<bool> insertPerfil(Object perfil);
+  Future<PerfilPlannerModel> getPerfilPlanner();
 }
 
 // class exiende - van las consultas
@@ -87,6 +89,36 @@ class ConsultasPerfilLogic extends PerfilLogic {
       throw TokenException();
     } else {
       throw AutorizacionException();
+    }
+  }
+
+  @override
+  Future<PerfilPlannerModel> getPerfilPlanner() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+
+    const endpoint = '/wedding/PLANNER/obtenerPerfilPlanner';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return PerfilPlannerModel.fromJson(json.decode(resp.body));
+    } else {
+      return null;
     }
   }
 }

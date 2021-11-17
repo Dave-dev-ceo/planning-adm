@@ -8,6 +8,7 @@ import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/models/item_model_perfil.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/models/perfil/perfil_planner_model.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 
 class Perfil extends StatefulWidget {
@@ -25,6 +26,8 @@ class _PerfilState extends State<Perfil> {
   // variables de la classe
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   final _formKey = GlobalKey<FormState>();
+  final _formPlannerKey = GlobalKey<FormState>();
+
   _Perfil perfil;
 
   @override
@@ -32,6 +35,7 @@ class _PerfilState extends State<Perfil> {
     super.initState();
     perfilBloc = BlocProvider.of<PerfilBloc>(context);
     perfilBloc.add(SelectPerfilEvent());
+    perfilBloc.add(PerfilPlannerEvent());
   }
 
   @override
@@ -91,6 +95,8 @@ class _PerfilState extends State<Perfil> {
                   );
                 }
                 return _showPerfil();
+              } else if (state is PerfilPlannerState) {
+                return buildPerfilPlanner(state.perfilPlanner);
               } else {
                 return Center(
                   child: CircularProgressIndicator(),
@@ -100,6 +106,247 @@ class _PerfilState extends State<Perfil> {
           )
           //_showPerfil(),
           ),
+    );
+  }
+
+  Widget buildPerfilPlanner(PerfilPlannerModel perfil) {
+    String clave = '';
+    return Form(
+      key: _formPlannerKey,
+      child: Container(
+        color: Colors.white,
+        child: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    initialValue: perfil.nombreCompleto,
+                    decoration: InputDecoration(
+                      hintText: 'Nombre Completo',
+                      labelText: 'Nombre',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      perfil.nombreCompleto = value;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty && value.length < 7) {
+                        return 'Campo requerido con 8 caracteres.';
+                      } else {
+                        return null;
+                      }
+                    },
+                    maxLength: 50,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    initialValue: perfil.correo,
+                    maxLength: 250,
+                    decoration: InputDecoration(
+                      hintText: 'Correo electrónico',
+                      labelText: 'Correo electrónico',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      perfil.correo = value;
+                    },
+                    validator: (value) {
+                      if (_validaEmail(value)) {
+                        return null;
+                      } else {
+                        return 'Es nesesario correo electrónico valido.';
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    initialValue: perfil.telefono,
+                    maxLength: 250,
+                    decoration: InputDecoration(
+                      hintText: 'Teléfono',
+                      labelText: 'Teléfono',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      perfil.telefono = value;
+                    },
+                    validator: (value) {
+                      if (value != null && value != '') {
+                        return null;
+                      } else {
+                        return 'Es nesesario correo electrónico valido.';
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    initialValue: perfil.nombreDeLaEmpresa,
+                    maxLength: 250,
+                    decoration: InputDecoration(
+                      hintText: 'Nombre de la empresa',
+                      labelText: 'Nombre de la empresa',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      perfil.nombreDeLaEmpresa = value;
+                    },
+                    validator: (value) {
+                      if (value != null && value != '') {
+                        return null;
+                      } else {
+                        return 'Es nesesario correo electrónico valido.';
+                      }
+                    },
+                  ),
+                ),
+                // Padding(
+                //   padding: EdgeInsets.all(8.0),
+                //   child: PasswordWplanner(
+                //     controller: TextEditingController(text: perfil.contrasena),
+                //     inputStyle: TextStyle(color: Colors.black),
+                //     hintStyle: TextStyle(color: Colors.grey),
+                //     autoFocus: false,
+                //     hasFloatingPlaceholder: true,
+                //     prefixIcon: Icon(Icons.password),
+                //     suffixIcon: Icon(
+                //       Icons.remove_red_eye,
+                //       color: Colors.grey,
+                //     ),
+                //     color: Colors.black,
+                //     iconColor: Colors.grey,
+                //     iconColorSelect: Colors.black,
+                //     border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(25.0),
+                //         borderSide: BorderSide(color: Colors.black)),
+                //     focusedBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(25.0),
+                //         borderSide: BorderSide(color: Colors.black)),
+                //     validador: (value) {
+                //       if (!_validaPsw(value)) {
+                //         return 'Campo requerido con una minuscula, una mayúscula, un número, un simbolo y un minimo de 8 caracteres.';
+                //       }
+                //       return null;
+                //     },
+                //     onChanged: (valor) => perfil.contrasena = valor,
+                //   ),
+                // ),
+                // Padding(
+                //   padding: EdgeInsets.all(8.0),
+                //   child: PasswordWplanner(
+                //     controller: TextEditingController(text: '${clave}'),
+                //     inputStyle: TextStyle(color: Colors.black),
+                //     hintStyle: TextStyle(color: Colors.grey),
+                //     autoFocus: false,
+                //     hasFloatingPlaceholder: true,
+                //     prefixIcon: Icon(Icons.password),
+                //     suffixIcon: Icon(
+                //       Icons.remove_red_eye,
+                //       color: Colors.grey,
+                //     ),
+                //     color: Colors.black,
+                //     iconColor: Colors.grey,
+                //     iconColorSelect: Colors.black,
+                //     border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(25.0),
+                //         borderSide: BorderSide(color: Colors.black)),
+                //     focusedBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(25.0),
+                //         borderSide: BorderSide(color: Colors.black)),
+                //     validador: (value) {
+                //       if (value != clave) {
+                //         return 'Debe coincidir con la contraseña.';
+                //       } else if (value.isEmpty) {
+                //         return 'Campo requerido.';
+                //       }
+                //       return null;
+                //     },
+                //     onChanged: (valor) => clave = valor,
+                //   ),
+                // ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                          child: Container(
+                        height: 100.0,
+                        width: 100.0,
+                        color: Colors.black,
+                        child: perfil.logo == null
+                            ? Image.asset('assets/user.png')
+                            : PhotoView(
+                                tightMode: true,
+                                backgroundDecoration:
+                                    BoxDecoration(color: Colors.white),
+                                imageProvider:
+                                    MemoryImage(base64Decode(perfil.logo)),
+                              ),
+                      )),
+                      Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          child: Text('Agregar imagen'),
+                          onPressed: () => _addImage(),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    child: const Text('Guardar'),
+                    onPressed: () {
+                      if (_formPlannerKey.currentState.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Se ha editado Correctamente'),
+                          backgroundColor: Colors.green,
+                        ));
+                      }
+                    },
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 

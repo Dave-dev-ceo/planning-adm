@@ -4,6 +4,7 @@ part of 'perfil_bloc.dart';
 abstract class PerfilState {}
 
 class PerfilInitial extends PerfilState {}
+
 class PerfilLogging extends PerfilState {}
 
 // estados - consultas
@@ -38,4 +39,10 @@ class AutorizacionTokenErrorState extends PerfilState {
   AutorizacionTokenErrorState(this.message);
 
   List<Object> get props => [message];
+}
+
+class PerfilPlannerState extends PerfilState {
+  final PerfilPlannerModel perfilPlanner;
+
+  PerfilPlannerState(this.perfilPlanner);
 }
