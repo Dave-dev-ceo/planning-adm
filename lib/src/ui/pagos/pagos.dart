@@ -285,7 +285,7 @@ class _PagosState extends State<Pagos> {
       icon: Icons.more_vert,
       children: [
         SpeedDialChild(
-          label: 'Agregar Presupuesto',
+          label: 'Agregar presupuesto',
           child: Icon(Icons.add),
           onTap: () => _agregarPago(),
         ),

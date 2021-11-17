@@ -152,7 +152,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                 onPressed: () => showDialog<void>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Eliminar Acompañante'),
+                          title: const Text('Eliminar acompañante'),
                           actions: [
                             TextButton(
                                 onPressed: () {
@@ -242,7 +242,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Text(
-                    'Editar Acompañante',
+                    'Editar acompañante',
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
@@ -358,7 +358,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           acompanante.asistenciaEspecial = value;
                         },
                         decoration:
-                            InputDecoration(labelText: 'Asistencia Especial'),
+                            InputDecoration(labelText: 'Asistencia especial'),
                       ),
                     ),
                     400,
@@ -866,7 +866,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    labelText: 'Número de Invitados'),
+                                    labelText: 'Número de invitados'),
                                 controller: _numberGuestsController,
                               ),
                               trailing: Row(
@@ -1149,7 +1149,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                   ],
                                   controller: asisEspAcompContrl,
                                   decoration: InputDecoration(
-                                      labelText: 'Asistencia Especial'),
+                                      labelText: 'Asistencia especial'),
                                 ),
                               ),
                               500,
@@ -1169,10 +1169,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                             icon: const Icon(Icons.add),
                             color: Colors.white,
                             onPressed: () async {
-                              print('Vamos a agregar acom');
-                              print(nombreAcompananteCtrl.text);
-                              print(_mySelectionAEdad);
-                              print(_mySelectionAGenero);
 //
 //                                  if(_numAcomp > 0 && _numAcomp ){
                               String edad = '';
@@ -1359,7 +1355,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Editar Invitado'),
+          title: Text('Editar invitado'),
           automaticallyImplyLeading: true,
           backgroundColor: hexToColor('#fdf4e5'),
         ),

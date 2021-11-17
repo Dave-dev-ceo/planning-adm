@@ -50,7 +50,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       },
       child: new Scaffold(
         appBar: new AppBar(
-          title: Text('Lista De Planes'),
+          title: Text('Lista de planes'),
         ),
         body: _buildBloc(),
       ),

@@ -137,7 +137,7 @@ class _MesasPageState extends State<MesasPage> {
       children: [
         SpeedDialChild(
           child: Icon(Icons.add),
-          label: 'Añadir Mesa',
+          label: 'Añadir mesa',
           onTap: () {
             Navigator.of(context)
                 .pushNamed('/asignarMesas',
@@ -150,7 +150,7 @@ class _MesasPageState extends State<MesasPage> {
         ),
         SpeedDialChild(
           child: Icon(Icons.upload),
-          label: 'Subir Archivo',
+          label: 'Subir archivo',
           onTap: () async {
             const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
@@ -200,7 +200,7 @@ class _MesasPageState extends State<MesasPage> {
       children: [
         SpeedDialChild(
           child: Icon(Icons.add),
-          label: 'Añadir Mesa',
+          label: 'Añadir mesa',
           onTap: () {
             Navigator.of(context)
                 .pushNamed('/asignarMesas',
@@ -229,7 +229,7 @@ class _MesasPageState extends State<MesasPage> {
 
   Widget _buttonAddMesas() {
     return FloatingActionButton(
-      tooltip: 'Agregar Mesa',
+      tooltip: 'Agregar mesa',
       child: Icon(Icons.add),
       onPressed: () {
         Navigator.of(context)
@@ -250,17 +250,17 @@ class _MesasPageState extends State<MesasPage> {
         BottomNavigationBarItem(
             icon: Icon(Icons.post_add_sharp),
             label: 'Asignar',
-            tooltip: 'Asignar Mesas'),
+            tooltip: 'Asignar mesas'),
         BottomNavigationBarItem(
             icon: Icon(Icons.grid_view_outlined),
             label: 'Mesas',
-            tooltip: 'Resumen Mesas'),
+            tooltip: 'Resumen mesas'),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.layers_outlined,
             ),
-            label: 'Layout Mesa',
-            tooltip: 'Layout Mesa')
+            label: 'Layout',
+            tooltip: 'Layout mesa')
       ],
       onTap: (int index) {
         setState(() {
@@ -529,7 +529,6 @@ class _MesasPageState extends State<MesasPage> {
     // final file = File("${output.path}/$titulo.pdf");
     // await file.writeAsBytes(await pdf.save());
   }
-  // ? Page Asignar Mesas a Invitados
 
   Widget asignarInvitadosMesasPage() {
     setState(() {});
@@ -573,7 +572,7 @@ class _MesasPageState extends State<MesasPage> {
                       child: buildListInvitadosConfirmador(
                           state.listaInvitadoMesa));
                 } else {
-                  return Text('No Se Encontraron Datos');
+                  return Text('No se encontraron datos');
                 }
               } else if (state is ErrorInvitadoMesaState) {
                 return Center(
@@ -610,7 +609,7 @@ class _MesasPageState extends State<MesasPage> {
                 elevation: 5.0,
               ),
               onPressed: _asignarAutoMesas,
-              child: Text('Asignar Auto.'),
+              child: Text('Asignar auto.'),
             ),
             SizedBox(
               width: 8.0,
@@ -713,7 +712,7 @@ class _MesasPageState extends State<MesasPage> {
                               child: buildListInvitadosConfirmador(
                                   state.listaInvitadoMesa));
                         } else {
-                          return Text('No Se Encontraron Datos');
+                          return Text('No se encontraron datos');
                         }
                       } else if (state is ErrorInvitadoMesaState) {
                         return Center(
@@ -752,7 +751,7 @@ class _MesasPageState extends State<MesasPage> {
                     elevation: 5.0,
                   ),
                   onPressed: _asignarAutoMesas,
-                  child: Text('Asignar Auto.'),
+                  child: Text('Asignar auto.'),
                 ),
                 SizedBox(
                   height: 20.0,
@@ -888,12 +887,12 @@ class _MesasPageState extends State<MesasPage> {
 
     if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
       _mostrarMensaje(
-          'Seleccione la mesa y los invitados a asignar', Colors.red);
+          'Seleccione la mesa y los invitados ha asignar', Colors.red);
     } else {
       if (listToAsignarForAdd.length >
           (mesaModelData.dimension - listTemp.length)) {
         _mostrarMensaje(
-            'El número de invitados es mayor al numero de sillas dsiponibles',
+            'El número de invitados es mayor al numero de sillas disponibles',
             Colors.red);
       } else {
         for (var i = 0; i < listToAsignarForAdd.length; i++) {

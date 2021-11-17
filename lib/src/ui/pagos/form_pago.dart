@@ -35,7 +35,7 @@ class _FormPagoState extends State<FormPago> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Agregar Presupuestos'),
+          title: Text('Agregar presupuestos'),
         ),
         body: _myBloc(),
       ),
@@ -132,7 +132,7 @@ class _FormPagoState extends State<FormPago> {
           ),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['precio']}'),
-            decoration: InputDecoration(hintText: 'Precio Unitario:'),
+            decoration: InputDecoration(hintText: 'Precio unitario:'),
             keyboardType: TextInputType.number,
             inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
             onChanged: (valor) {

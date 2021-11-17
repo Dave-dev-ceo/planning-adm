@@ -48,7 +48,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
         centerTitle: true,
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Text('Asignar Mesas a los invitados'),
+          child: Text('Asignar mesas a los invitados'),
         ),
       ),
       body: SingleChildScrollView(
@@ -133,7 +133,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Crear Mesas',
+                                'Crear mesas',
                                 style: Theme.of(context).textTheme.headline4,
                               ),
                             ),
@@ -149,7 +149,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     constraints: BoxConstraints(
                                         maxWidth: size.width * 0.2),
                                     prefixIcon: Icon(Icons.table_chart),
-                                    hintText: 'Tipo de Mesa'),
+                                    hintText: 'Tipo de mesa'),
                                 items: listTipoDeMesa
                                     .map((m) => DropdownMenuItem(
                                           child: Text(m['name']),
@@ -177,7 +177,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                 decoration: InputDecoration(
                                     constraints: BoxConstraints(
                                         maxWidth: size.width * 0.2),
-                                    labelText: 'Número de Mesas',
+                                    labelText: 'Número de mesas',
                                     border: OutlineInputBorder()),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,

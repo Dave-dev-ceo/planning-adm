@@ -54,7 +54,7 @@ class _DetalleListasState extends State<DetalleListas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detallado de Lista'),
+        title: Text('Detallado de lista'),
         actions: [],
         automaticallyImplyLeading: true,
       ),
