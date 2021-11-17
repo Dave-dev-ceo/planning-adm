@@ -29,8 +29,8 @@ class _FullScreenDialogAddUsuarioState
     return Scaffold(
       appBar: AppBar(
         title: Text(datos['accion'] == 0
-            ? 'Agregar Usuario'
-            : 'Editar Datos de Usuario'),
+            ? 'Agregar usuario'
+            : 'Editar datos de usuario'),
         actions: [],
         automaticallyImplyLeading: true,
       ),

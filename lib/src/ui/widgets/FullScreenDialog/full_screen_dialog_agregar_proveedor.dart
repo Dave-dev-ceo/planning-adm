@@ -46,7 +46,7 @@ class _FullScreenDialogAgregarProveedorEvent
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Proveedor'),
+        title: Text('Agregar proveedor'),
         actions: [],
         automaticallyImplyLeading: true,
       ),

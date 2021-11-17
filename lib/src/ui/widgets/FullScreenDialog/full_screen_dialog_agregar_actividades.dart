@@ -29,7 +29,7 @@ class _FullScreenDialogAddActividadesState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Actividades'),
+        title: Text('Agregar actividades'),
         actions: [],
         automaticallyImplyLeading: true,
       ),

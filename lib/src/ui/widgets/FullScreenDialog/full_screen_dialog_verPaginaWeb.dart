@@ -35,7 +35,7 @@ class _FullScreenViewWEBState extends State<FullScreenViewWEB> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('View Pagina Web'),
+        title: Text('View pagina web'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

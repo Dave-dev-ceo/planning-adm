@@ -147,7 +147,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
             content: Container(
               height: 30,
               child: Center(
-                child: Text('Estructura del Excel es incorrecta.'),
+                child: Text('Estructura del excel es incorrecta.'),
               ),
               //color: Colors.red,
             ),

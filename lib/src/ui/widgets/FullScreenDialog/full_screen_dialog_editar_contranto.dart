@@ -51,7 +51,7 @@ class _FullScreenDialogEditContratoState
     setState(() {});
     return Scaffold(
         appBar: AppBar(
-          title: Text('Editar Contrato'),
+          title: Text('Editar contrato'),
           backgroundColor: hexToColor('#fdf4e5'),
           actions: [],
           automaticallyImplyLeading: true,

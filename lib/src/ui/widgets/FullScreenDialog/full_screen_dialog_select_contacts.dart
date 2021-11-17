@@ -301,7 +301,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       appBar: AppBar(
         title: Text((controller.selectedIndexes.length > 0
             ? 'Seleccionados ${controller.selectedIndexes.length}'
-            : 'Seleccionar Contactos')),
+            : 'Seleccionar contactos')),
         actions: (controller.isSelecting)
             ? <Widget>[
                 IconButton(

@@ -26,7 +26,7 @@ class _FullScreenDialogAddPlannersState
     //child:
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Planner'),
+        title: Text('Agregar planner'),
         backgroundColor: hexToColor('#fdf4e5'),
         actions: [],
         automaticallyImplyLeading: true,

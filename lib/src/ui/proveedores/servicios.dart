@@ -198,7 +198,7 @@ class _ServiciosState extends State<Servicios> {
     print(item);
     nombreEditCtrl.text = item.nombre.toString();
     return AlertDialog(
-      title: const Text('Editar Servicio'),
+      title: const Text('Editar servicio'),
       content: Container(
         width: 200.0,
         height: 130.0,
@@ -207,7 +207,7 @@ class _ServiciosState extends State<Servicios> {
             TextFormField(
               controller: nombreEditCtrl,
               decoration: new InputDecoration(
-                labelText: 'Cantidad',
+                labelText: 'Nombre',
               ),
             ),
           ],
