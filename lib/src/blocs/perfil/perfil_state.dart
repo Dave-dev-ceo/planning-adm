@@ -46,3 +46,9 @@ class PerfilPlannerState extends PerfilState {
 
   PerfilPlannerState(this.perfilPlanner);
 }
+
+class PerfilPlannerEditadoState extends PerfilState {
+  final String message;
+
+  PerfilPlannerEditadoState(this.message);
+}

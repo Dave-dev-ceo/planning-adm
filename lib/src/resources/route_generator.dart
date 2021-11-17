@@ -12,6 +12,7 @@ import 'package:planning/src/ui/mesas/crearMesasDialog.dart';
 import 'package:planning/src/ui/pagos/edit_pago.dart';
 import 'package:planning/src/ui/pagos/form_pago.dart';
 import 'package:planning/src/ui/perfil/perfil.dart';
+import 'package:planning/src/ui/perfil/perfil_planner_page.dart';
 import 'package:planning/src/ui/planes/agregar_planes.dart';
 import 'package:planning/src/ui/planes/calendario.dart';
 import 'package:planning/src/ui/scannerQr/scannerQr.dart';
@@ -186,6 +187,8 @@ class RouteGenerator {
             builder: (context) => CrearMesasDialog(
                   lastnumMesas: args,
                 ));
+      case '/perfilPlanner':
+        return MaterialPageRoute(builder: (context) => PerfilPlannerPage());
       default:
         return _errorRoute();
     }

@@ -14,6 +14,7 @@ abstract class PerfilLogic {
   Future<ItemModelPerfil> selectPerfil();
   Future<bool> insertPerfil(Object perfil);
   Future<PerfilPlannerModel> getPerfilPlanner();
+  Future<String> editPerfilPlanner(PerfilPlannerModel perfilPlanner);
 }
 
 // class exiende - van las consultas
@@ -119,6 +120,44 @@ class ConsultasPerfilLogic extends PerfilLogic {
       return PerfilPlannerModel.fromJson(json.decode(resp.body));
     } else {
       return null;
+    }
+  }
+
+  @override
+  Future<String> editPerfilPlanner(PerfilPlannerModel perfilPlanner) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
+    const endpoint = '/wedding/PLANNER/editarPerfilPlanner';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'nombreCompleto': perfilPlanner.nombreCompleto,
+      'correo': perfilPlanner.correo,
+      'telefono': perfilPlanner.telefono,
+      'nombreEmpresa': perfilPlanner.nombreDeLaEmpresa,
+      'logo': perfilPlanner.logo,
+      'direccion': perfilPlanner.direccion,
+      'idUsuario': idUsuario,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return resp.body;
     }
   }
 }

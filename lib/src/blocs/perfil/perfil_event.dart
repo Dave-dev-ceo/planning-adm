@@ -17,3 +17,9 @@ class InsertPerfilEvent extends PerfilEvent {
 class PerfilPlannerEvent extends PerfilEvent {
   PerfilPlannerEvent();
 }
+
+class EditPerfilPlannerEvent extends PerfilEvent {
+  final PerfilPlannerModel perfilplanner;
+
+  EditPerfilPlannerEvent(this.perfilplanner);
+}

@@ -163,9 +163,7 @@ class _InvitadosState extends State<Invitados> {
                           value: 1,
                           child: Text("Perfil"),
                         ),
-                        PopupMenuItem(
-                            value: 2,
-                            child: Text("${widget.detalleEvento['nombre']}")),
+                        PopupMenuItem(value: 2, child: Text("Planner")),
                         PopupMenuItem(
                           value: 3,
                           child: Text("Cerrar sesión"),
@@ -174,6 +172,8 @@ class _InvitadosState extends State<Invitados> {
                       onSelected: (valor) {
                         if (valor == 1) {
                           Navigator.pushNamed(context, '/perfil');
+                        } else if (valor == 2) {
+                          Navigator.of(context).pushNamed('/perfilPlanner');
                         } else if (valor == 3) {
                           _sharedPreferences.clear();
                           Navigator.pushNamed(context, '/');
