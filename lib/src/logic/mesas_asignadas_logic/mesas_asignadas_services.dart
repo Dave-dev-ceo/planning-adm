@@ -161,4 +161,31 @@ class MesasAsignadasService {
       return 'Ocurrio un error';
     }
   }
+
+  Future<String> getLogoPlanner() async {
+    String token = await _sharedPreferencesT.getToken();
+    int id_planner = await _sharedPreferencesT.getIdPlanner();
+    final url = confiC.url + confiC.puerto;
+
+    final data = {
+      'idPlanner': id_planner,
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final endpoint = 'wedding/PLANNER/getLogoPlanner';
+
+    final response = await http.post(Uri.parse(url + '/' + endpoint),
+        body: json.encode(data), headers: headers);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['logo'];
+    } else {
+      return null;
+    }
+  }
 }

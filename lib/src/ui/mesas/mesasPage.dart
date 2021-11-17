@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 // * Comentar cuando se Utilice en movil
 import 'package:universal_html/html.dart' as html hide Text;
 
@@ -428,6 +430,8 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Future<void> _createPdfToMesa() async {
+    final logo = await mesasAsignadasService.getLogoPlanner();
+
     final pdf = pw.Document();
     List<pw.Widget> listaGridChild = [];
     List<pw.Widget> listaView = [];
@@ -476,6 +480,12 @@ class _MesasPageState extends State<MesasPage> {
                 style: pw.TextStyle(fontSize: 10),
               ),
             ),
+            pw.Center(
+              child: pw.Text(
+                listaMesaFromDB[index].tipoMesa,
+                style: pw.TextStyle(fontSize: 10),
+              ),
+            ),
             pw.SizedBox(
               height: 10.0,
             ),
@@ -485,13 +495,33 @@ class _MesasPageState extends State<MesasPage> {
       ));
       listaGridChild.add(gridChild);
     }
+    var imageWidget;
+    if (logo != null) {
+      Uint8List image = base64Decode(logo);
+      imageWidget = pw.MemoryImage(image);
+    }
+
+    var now = DateTime.now();
+
+    String fecha = DateFormat.yMMMd().format(now);
+
     pdf.addPage(
       pw.MultiPage(
         build: (pw.Context context) => [
-          pw.Center(
-            child: pw.Text('Evento: ${widget.nameEvento}',
-                style: pw.Theme.of(context).header4),
-          ),
+          pw.Row(children: [
+            if (logo != null)
+              pw.ConstrainedBox(
+                constraints: pw.BoxConstraints(maxWidth: 50.0, minWidth: 40.0),
+                child: pw.Image(imageWidget),
+              ),
+            pw.Spacer(),
+            pw.Center(
+              child: pw.Text('Evento: ${widget.nameEvento}',
+                  style: pw.Theme.of(context).header4),
+            ),
+            pw.Spacer(),
+            pw.Text(fecha)
+          ]),
           pw.SizedBox(height: 15.0),
           pw.GridView(
             crossAxisCount: 3,
