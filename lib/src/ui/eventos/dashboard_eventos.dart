@@ -97,7 +97,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Fecha Evento: ' + fevento),
+                    Text('Fecha evento: ' + fevento),
                     Text('Planeación de evento del: ' + inicio + ' al ' + fin),
                     for (var i = 0; i < involucrados.length; i++)
                       involucrados[0].tipoInvolucrado != 'Sin involucrado'
@@ -232,7 +232,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
 
     for (var evento in eventos.results) {
       // pw.Widget listaViewChild = pw.Column(children: [
-      //   pw.Text('Fecha Evento: ${evento.fechaEvento}'),
+      //   pw.Text('Fecha evento: ${evento.fechaEvento}'),
       //   pw.Text(
       //       'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
       //   for (var i = 0; i < evento.involucrados.length; i++)
@@ -265,7 +265,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
           pw.SizedBox(
             height: 10.0,
           ),
-          pw.Text('Fecha Evento: ${evento.fechaEvento}'),
+          pw.Text('Fecha evento: ${evento.fechaEvento}'),
           pw.Text(
               'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
           for (var i = 0; i < evento.involucrados.length; i++)

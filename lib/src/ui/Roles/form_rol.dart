@@ -172,11 +172,11 @@ class _FormRolState extends State<FormRol> {
   Widget formUI(BuildContext contextForm) {
     return Column(
       children: <Widget>[
-        agregarInput(Icons.tag, TextInputType.name, claveCtrl, 'Clave de Rol',
+        agregarInput(Icons.tag, TextInputType.name, claveCtrl, 'Clave de rol',
             validateClave, null, datos['accion'] == 0,
             maxL: 15),
         agregarInput(Icons.phone, TextInputType.name, nombreCtrl,
-            'Nombre de Rol', validateNombre, null, true,
+            'Nombre de rol', validateNombre, null, true,
             maxL: 75),
         // datos['accion'] == 1
         //     ? formItemsDesign(
@@ -211,7 +211,7 @@ class _FormRolState extends State<FormRol> {
           onPressed: () {
             _save(contextForm);
           },
-          child: Text((datos['accion'] == 0 ? 'Crear' : 'Editar') + ' Rol',
+          child: Text((datos['accion'] == 0 ? 'Crear' : 'Editar') + ' rol',
               style: TextStyle(fontSize: 18, color: Colors.black)),
           style: ElevatedButton.styleFrom(
             primary: hexToColor('#fdf4e5'), // background
@@ -365,7 +365,7 @@ class _FormRolState extends State<FormRol> {
   }
 
   _formPermisos() {
-    List<Widget> dataForm = <Widget>[Text('Permisos del Rol:')];
+    List<Widget> dataForm = <Widget>[Text('Permisos del rol:')];
     return BlocBuilder<FormRolBloc, FormRolState>(
       builder: (context, state) {
         if (state is FormRolInitial) {

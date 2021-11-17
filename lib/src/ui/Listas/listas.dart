@@ -103,7 +103,7 @@ class _ListaState extends State<Listas> {
       icon: Icons.more_vert_outlined,
       children: [
         SpeedDialChild(
-          label: 'Detalle de la lista',
+          label: 'Crear lista',
           child: Icon(Icons.add),
           onTap: () async {
             final result = await Navigator.of(context).pushNamed(

@@ -29,7 +29,7 @@ class _FullScreenDialogAddEventoState
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Editar Evento'),
+          title: Text('Editar evento'),
           actions: [],
           automaticallyImplyLeading: true,
         ),

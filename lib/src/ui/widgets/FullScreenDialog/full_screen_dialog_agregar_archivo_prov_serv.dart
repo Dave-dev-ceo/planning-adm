@@ -79,7 +79,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                 item: TextFormField(
                                   controller: descripcionCtrl,
                                   decoration: new InputDecoration(
-                                    labelText: 'Descripción Archivo',
+                                    labelText: 'Descripción archivo',
                                   ),
                                 ),
                                 large: 400.0,
@@ -126,7 +126,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                       headerBuilder: (BuildContext context, bool _isExpanded) {
                         return Center(
                           child: Text(
-                            'Agregar Link',
+                            'Agregar link',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 23),
                           ),
@@ -192,7 +192,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                           }
                                         },
                                         decoration: new InputDecoration(
-                                          labelText: 'Url o Dirección Web',
+                                          labelText: 'Url o Dirección web',
                                         ),
                                       ),
                                       large: 400.0,

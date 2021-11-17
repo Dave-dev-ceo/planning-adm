@@ -394,7 +394,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                           TextFormField(
                             controller: fechaInicioCtrl,
                             decoration: new InputDecoration(
-                              labelText: 'Fecha Inicio',
+                              labelText: 'Fecha inicio',
                             ),
                             validator: validateFechaInicio,
                           ),
@@ -408,7 +408,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                           TextFormField(
                             controller: fechaFinCtrl,
                             decoration: new InputDecoration(
-                              labelText: 'Fecha Fin',
+                              labelText: 'Fecha fin',
                             ),
                             validator: validateFechaFin,
                           ),
@@ -422,7 +422,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                           TextFormField(
                             controller: fechaEventoCtrl,
                             decoration: new InputDecoration(
-                              labelText: 'Fecha Evento',
+                              labelText: 'Fecha evento',
                             ),
                             validator: validateFechaEvento,
                           ),
@@ -492,7 +492,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                               TextFormField(
                                 controller: nombreCtrl,
                                 decoration: new InputDecoration(
-                                  labelText: 'Nombre Completo',
+                                  labelText: 'Nombre completo',
                                 ),
                                 validator: validateNombre,
                               ),
@@ -529,7 +529,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                       Wrap(
                         children: <Widget>[
                           formItemsDesign(
-                              Icons.home_filled,
+                              Icons.home,
                               TextFormField(
                                 controller: direccionCtrl,
                                 decoration: new InputDecoration(
@@ -540,7 +540,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                               450.0,
                               80.0),
                           formItemsDesign(
-                              Icons.map_outlined,
+                              Icons.map,
                               TextFormField(
                                 controller: estadoCtrl,
                                 decoration: new InputDecoration(
@@ -565,7 +565,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
         ),
         GestureDetector(
             onTap: () {
-              print('Click Guardar');
+              print('Click guardar');
               _save();
             },
             child: CallToAction('Guardar'))

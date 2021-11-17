@@ -22,7 +22,7 @@ class _FullScreenDialogAddEventoState extends State<FullScreenDialogAddEvento> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Evento'),
+        title: Text('Agregar evento'),
         actions: [],
         automaticallyImplyLeading: true,
       ),

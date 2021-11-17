@@ -85,7 +85,7 @@ class _ProveedoresState extends State<Proveedores> {
         ),
         SpeedDialChild(
           child: Icon(Icons.add),
-          label: 'Añadir Proveedor',
+          label: 'Añadir proveedor',
           onTap: () async {
             Navigator.of(context).pushNamed('/agregarProveedores',
                 arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
@@ -155,9 +155,9 @@ class _ProveedoresState extends State<Proveedores> {
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(
               leading: IconButton(
-                tooltip: 'Info',
+                tooltip: 'Editar',
                 icon: Icon(
-                  Icons.info,
+                  Icons.edit,
                   size: 14.0,
                 ),
                 onPressed: () async {
@@ -288,7 +288,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return AlertDialog(
-      title: Center(child: Text('Editar Proveedor')),
+      title: Center(child: Text('Editar proveedor')),
       elevation: 1.0,
       content: ConstrainedBox(
         constraints: BoxConstraints(
@@ -321,7 +321,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                         initialValue: widget.proveedor.nombre,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: 'Nombre Proveedor'),
+                            labelText: 'Nombre proveedor'),
                       ),
                     ),
                   ),

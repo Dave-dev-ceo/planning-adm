@@ -184,7 +184,7 @@ class _FormUsuarioState extends State<FormUsuario> {
                 Icons.lock,
                 TextInputType.visiblePassword,
                 confirmPwdCtrl,
-                'Confirmar Contraseña',
+                'Confirmar contraseña',
                 validateConfirmPwd,
                 null,
                 obscureT: true,
@@ -219,7 +219,7 @@ class _FormUsuarioState extends State<FormUsuario> {
             Icons.group,
             Row(
               children: <Widget>[
-                Text('Rol a Asignar'),
+                Text('Rol a asignar'),
                 SizedBox(
                   width: 15,
                 ),
@@ -230,7 +230,7 @@ class _FormUsuarioState extends State<FormUsuario> {
           onPressed: () {
             _save(contextForm);
           },
-          child: Text(datos['accion'] == 0 ? 'Crear Usuario' : 'Editar Usuario',
+          child: Text(datos['accion'] == 0 ? 'Crear usuario' : 'Editar usuario',
               style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
             primary: hexToColor('#000000'), // background

@@ -56,7 +56,7 @@ class ErrorCreateEventosState extends EventosState {
   List<Object> get props => [message];
 }
 
-// Editar Evento
+// Editar evento
 class EditarEventosState extends EventosState {}
 
 class EditarEventosOkState extends EventosState {}

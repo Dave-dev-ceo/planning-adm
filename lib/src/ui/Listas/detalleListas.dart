@@ -54,7 +54,7 @@ class _DetalleListasState extends State<DetalleListas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detallado de Listas'),
+        title: Text('Detallado de Lista'),
         actions: [],
         automaticallyImplyLeading: true,
       ),
@@ -96,7 +96,7 @@ class _DetalleListasState extends State<DetalleListas> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: <Widget>[
-          Text('Listas',
+          Text('Lista',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 24)),
@@ -305,7 +305,7 @@ class _DetalleListasState extends State<DetalleListas> {
     // Creación de lista de Widget.
     List<Widget> lista = new List<Widget>();
     // Se agrega el titulo del card
-    final titulo = Text('Detalles de Listas',
+    final titulo = Text('Detalles de lista',
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 24));

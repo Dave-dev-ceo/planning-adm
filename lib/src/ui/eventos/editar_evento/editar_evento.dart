@@ -457,7 +457,7 @@ class _EditarEventoState extends State<EditarEvento> {
                               TextFormField(
                                 controller: fechaInicioCtrl,
                                 decoration: new InputDecoration(
-                                  labelText: 'Fecha Inicio',
+                                  labelText: 'Fecha inicio',
                                 ),
                                 validator: validateFechaInicio,
                               ),
@@ -471,7 +471,7 @@ class _EditarEventoState extends State<EditarEvento> {
                               TextFormField(
                                 controller: fechaFinCtrl,
                                 decoration: new InputDecoration(
-                                  labelText: 'Fecha Fin',
+                                  labelText: 'Fecha fin',
                                 ),
                                 validator: validateFechaFin,
                               ),
@@ -489,7 +489,7 @@ class _EditarEventoState extends State<EditarEvento> {
                               TextFormField(
                                 controller: fechaEventoCtrl,
                                 decoration: new InputDecoration(
-                                  labelText: 'Fecha Evento',
+                                  labelText: 'Fecha evento',
                                 ),
                                 validator: validateFechaEvento,
                               ),
@@ -555,7 +555,7 @@ class _EditarEventoState extends State<EditarEvento> {
                             TextFormField(
                               controller: nombreCtrl,
                               decoration: new InputDecoration(
-                                labelText: 'Nombre Completo',
+                                labelText: 'Nombre completo',
                               ),
                               validator: validateNombre,
                             ),
@@ -591,7 +591,7 @@ class _EditarEventoState extends State<EditarEvento> {
                       Wrap(
                         children: <Widget>[
                           formItemsDesign(
-                              null,
+                              Icons.home,
                               TextFormField(
                                 controller: direccionCtrl,
                                 decoration: new InputDecoration(
@@ -602,7 +602,7 @@ class _EditarEventoState extends State<EditarEvento> {
                               500.0,
                               80.0),
                           formItemsDesign(
-                              null,
+                              Icons.map,
                               TextFormField(
                                 controller: estadoCtrl,
                                 decoration: new InputDecoration(

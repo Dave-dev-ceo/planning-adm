@@ -53,7 +53,7 @@ class _ServiciosState extends State<Servicios> {
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w100,
-                                color: Colors.white),
+                                color: Colors.black),
                           ),
                         ),
                         decoration: BoxDecoration(

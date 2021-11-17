@@ -28,7 +28,7 @@ class _FullScreenDialogAddRolState extends State<FullScreenDialogAddRol> {
     return Scaffold(
       appBar: AppBar(
         title:
-            Text(datos['accion'] == 0 ? 'Agregar Rol' : 'Editar Datos de Rol'),
+            Text(datos['accion'] == 0 ? 'Agregar rol' : 'Editar datos de rol'),
         actions: [],
         automaticallyImplyLeading: true,
       ),

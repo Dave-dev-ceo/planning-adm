@@ -154,7 +154,7 @@ class _RolesState extends State<Roles> {
           showCheckboxColumn: bandera,
           columns: [
             DataColumn(
-                label: Text('Clave Rol'),
+                label: Text('Clave'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
                     snapshot.roles.length > 0
@@ -164,7 +164,7 @@ class _RolesState extends State<Roles> {
                   });
                 }),
             DataColumn(
-                label: Text('Nombre Rol'),
+                label: Text('Nombre'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
                     snapshot.roles.length > 0
@@ -214,7 +214,7 @@ Future<bool> mostrarForm(formContext, accion, usr) async {
   if (rol != null) {
     ScaffoldMessenger.of(formContext).showSnackBar(SnackBar(
       content: Text(
-          '${rol.result.nombre_rol} ${accion == 0 ? 'Agregado a Roles' : 'editado'}'),
+          '${rol.result.nombre_rol} ${accion == 0 ? 'Agregado a roles' : 'editado'}'),
       onVisible: () {
         rolesBloc.add(ObtenerRolesPlannerEvent());
         crt = true;

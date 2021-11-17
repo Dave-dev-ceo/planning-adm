@@ -32,7 +32,7 @@ class _FullScreenDialogAddMachoteState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Plantilla'),
+        title: Text('Agregar plantilla'),
         backgroundColor: hexToColor('#fdf4e5'),
         actions: [],
         automaticallyImplyLeading: true,

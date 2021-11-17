@@ -262,7 +262,7 @@ class _TimingState extends State<Timing> {
                         setState(() {});
                       },
                       icon: Icon(
-                        Icons.info,
+                        Icons.edit,
                         size: 14.0,
                       ),
                     ),
@@ -473,7 +473,7 @@ class _EditTimingDialogState extends State<EditTimingDialog> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return AlertDialog(
-      title: Center(child: Text('Editar Crononograma')),
+      title: Center(child: Text('Editar cronograma')),
       content: ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: size.height * 0.6,
