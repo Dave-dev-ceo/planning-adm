@@ -100,7 +100,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
                         primary: Colors.blue,
                         textStyle: TextStyle(fontSize: 13.0)),
                     onPressed: () async {
-                      ByteData bytes = await rootBundle.load("Plantilla.xlsx");
+                      ByteData bytes =
+                          await rootBundle.load("assets/Plantilla.xlsx");
                       ;
                       final blob = html.Blob([bytes]);
                       final url = html.Url.createObjectUrlFromBlob(blob);
