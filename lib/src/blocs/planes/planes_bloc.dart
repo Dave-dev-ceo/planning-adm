@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import 'package:planning/src/logic/planes_logic.dart';
+import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_planes.dart';
 
 part 'planes_event.dart';
@@ -88,6 +89,18 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
         yield ErrorMostrarPlanesState('No Add');
       } on TokenException {
         yield ErrorTokenPlanesState('Sin Token');
+      }
+    } else if (event is GetAllPlannesEvent) {
+      yield LoadingAllPlanesState();
+
+      try {
+        final listPlannes = await logic.getAllPlannes();
+
+        print('Estatus de la lista desde el bloc');
+        print(listPlannes);
+        yield GetAllPlanesState(listPlannes);
+      } on ListaPlanesException {
+        yield ErrorMostrarPlanesState('Sin Planes');
       }
     }
   }

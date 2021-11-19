@@ -32,11 +32,19 @@ class SelectEventoState extends PlanesState {
   final ItemModelPlanes planes;
   final ItemModelPlanes full;
 
-  SelectEventoState(this.planes,this.full);
+  SelectEventoState(this.planes, this.full);
 
   ItemModelPlanes get props => planes;
   ItemModelPlanes get prop => full;
 }
+
+class GetAllPlanesState extends PlanesState {
+  final List<PlannesModel> plannes;
+
+  GetAllPlanesState(this.plannes);
+}
+
+class LoadingAllPlanesState extends PlanesState {}
 
 // estado - errores
 class ErrorMostrarPlanesState extends PlanesState {

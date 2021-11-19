@@ -20,7 +20,7 @@ class CreatePlanesEvent extends PlanesEvent {
 // evento - select - todo evento
 class SelectPlanesEventoEvent extends PlanesEvent {
   final String myQuery;
-  
+
   SelectPlanesEventoEvent(this.myQuery);
 
   String get props => myQuery;
@@ -56,7 +56,9 @@ class DeleteAnActividadEvent extends PlanesEvent {
   final String querySelect;
 
   DeleteAnActividadEvent(this.idActividad, this.querySelect);
-  
+
   int get prop => idActividad;
   String get pro => querySelect;
 }
+
+class GetAllPlannesEvent extends PlanesEvent {}

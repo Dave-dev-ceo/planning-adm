@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' show Client;
+import 'package:planning/src/models/Planes/planes_model.dart';
 
 // imports from wedding
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -21,6 +22,7 @@ abstract class PlanesLogic {
   Future<bool> updateActividadEvento(List<dynamic> listaPlanner);
   Future<bool> deleteActividadEvento(int idActividad);
   Future<String> donwloadPDFPlanesEvento();
+  Future<List<PlannesModel>> getAllPlannes();
 }
 
 class ConsultasPlanesLogic extends PlanesLogic {
@@ -324,6 +326,40 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
     if (resp.statusCode == 200) {
       return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<List<PlannesModel>> getAllPlannes() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PLANES/getAllPlanes';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      List<PlannesModel> listaPlannes = List<PlannesModel>.from(
+                  json.decode(resp.body).map((e) => PlannesModel.fromJson(e)))
+              .toList() ??
+          [];
+
+      return listaPlannes;
     } else {
       return null;
     }

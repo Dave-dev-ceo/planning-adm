@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' show Client;
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
@@ -6,6 +7,8 @@ import 'package:planning/src/resources/config_conection.dart';
 abstract class LoginLogic {
   Future<Map<dynamic, dynamic>> login(String correo, String password);
   Future<String> logout();
+  Future<String> getPassword();
+  Future<String> changePassword(String newPassword);
 }
 
 class LoginException implements Exception {}
@@ -76,6 +79,67 @@ class BackendLoginLogic implements LoginLogic {
   @override
   Future<String> logout() {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<String> getPassword() async {
+    String token = await _sharedPreferences.getToken();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
+    const endpoint = '/wedding/ACCESO/getPassWord';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idUsuario': idUsuario,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return json.decode(resp.body)['contrasena'];
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<String> changePassword(String newPassword) async {
+    String token = await _sharedPreferences.getToken();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
+    const endpoint = '/wedding/ACCESO/changePassword';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idUsuario': idUsuario,
+      'contrasena': newPassword,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return resp.body;
+    }
   }
 }
 

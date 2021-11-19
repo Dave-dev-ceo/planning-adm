@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart' as EvtBloc;
+import 'package:planning/src/blocs/planes/planes_bloc.dart';
 import 'package:planning/src/logic/eventos_logic.dart';
+import 'package:planning/src/logic/planes_logic.dart';
+import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_evento.dart';
 
 import 'package:planning/src/models/item_model_reporte_genero.dart';
@@ -14,7 +19,6 @@ import 'package:planning/src/utils/utils.dart';
 class ResumenEvento extends StatefulWidget {
   final Map<dynamic, dynamic> detalleEvento;
   final bool WP_EVT_RES_EDT;
-
   const ResumenEvento({Key key, this.detalleEvento, this.WP_EVT_RES_EDT})
       : super(key: key);
   @override
@@ -27,13 +31,30 @@ class _ResumenEventoState extends State<ResumenEvento> {
   final bool WP_EVT_RES_EDT;
   EvtBloc.EventosBloc eventosBloc;
   FetchListaEventosLogic eventoLogic = FetchListaEventosLogic();
+  ConsultasPlanesLogic _planesLogic = ConsultasPlanesLogic();
+
+  Timer _timer;
 
   @override
   void initState() {
     eventosBloc = BlocProvider.of<EvtBloc.EventosBloc>(context);
     eventosBloc.add(
         EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // _timer.cancel();
+  }
+
+  Duration startTimer(Duration fechaEventoTime, String fechaEvento) {
+    _timer = Timer(Duration(seconds: 1), () {
+      fechaEventoTime = DateTime.parse(fechaEvento).difference(DateTime.now());
+    });
+    return fechaEventoTime;
   }
 
   _ResumenEventoState(this.detalleEvento, this.WP_EVT_RES_EDT);
@@ -145,6 +166,80 @@ class _ResumenEventoState extends State<ResumenEvento> {
     );
   }
 
+  ItemModelEvento eventoFecha;
+
+  Widget fechaData() {
+    return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
+      builder: (context, state) {
+        //print(state);
+        if (state is EvtBloc.LoadingEventoPorIdState) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is EvtBloc.MostrarEventoPorIdState) {
+          eventoFecha = state.evento;
+          eventosBloc.add(EvtBloc.FechtEventosEvent());
+          return Container(
+              width: 400, height: 200, child: miCardContadorFecha(eventoFecha));
+        } else if (state is EvtBloc.ErrorEventoPorIdState) {
+          return Center(
+            child: Text(state.message),
+          );
+        } else {
+          if (eventoFecha != null) {
+            return Container(
+                width: 400,
+                height: 200,
+                child: miCardContadorFecha(eventoFecha));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      },
+    );
+  }
+
+  miCardContadorFecha(ItemModelEvento evento) {
+    String fechaEvento = evento.results.elementAt(0).fechaEvento;
+
+    bool isActive = false;
+
+    Duration fechaEventoTime =
+        DateTime.now().difference(DateTime.parse(fechaEvento));
+
+    // if (fechaEventoTime.inSeconds.isNegative) {
+    //   fechaEventoTime = startTimer(fechaEventoTime, fechaEvento);
+    // }
+
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.all(20.0),
+      elevation: 10,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(4.0),
+        child: Column(
+          children: [
+            RichText(
+                text: TextSpan(
+              style: TextStyle(fontSize: 18.0),
+              text: isActive
+                  ? '${_printDuration(fechaEventoTime)}'
+                  : 'El evento ya finalizo',
+            ))
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitHours = twoDigits(duration.inHours.remainder(24) * -1);
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60) * -1);
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60) * -1);
+    return "Dias: ${duration.inDays * -1}, Horas: $twoDigitHours, Minutos: $twoDigitMinutes, Segundos: $twoDigitSeconds";
+  }
+
   miCardReporteDetallesEvento(ItemModelEvento evtt) {
     return GestureDetector(
       child: Card(
@@ -215,6 +310,121 @@ class _ResumenEventoState extends State<ResumenEvento> {
     }
   }
 
+  Widget futureToPlannes() {
+    return FutureBuilder(
+      future: _planesLogic.getAllPlannes(),
+      builder:
+          (BuildContext context, AsyncSnapshot<List<PlannesModel>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            width: 500,
+            height: 300,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              margin: EdgeInsets.all(20.0),
+              elevation: 10.0,
+              child: Align(
+                alignment: Alignment.center,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          );
+        } else {
+          if (snapshot.hasData) {
+            return miCardActividades(snapshot.data);
+          } else {
+            return Container(
+              width: 500,
+              height: 300,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                margin: EdgeInsets.all(20.0),
+                elevation: 10.0,
+                child: SingleChildScrollView(
+                    child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Center(
+                            child: Text('No se encontraron actividades')))),
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+
+  Widget miCardActividades(List<PlannesModel> planes) {
+    List<Widget> actividadeCompletas = [];
+    List<Widget> actividadesAtrasadas = [];
+    List<Widget> actividadesPedientes = [];
+
+    int completadas = 0;
+    int total = 0;
+
+    for (var plan in planes) {
+      Widget planWidget = ListTile(
+        title: Text(
+          '${plan.nombreActividad}',
+          style: TextStyle(fontSize: 15.0),
+        ),
+        subtitle: Text(
+          '${plan.descripcionActividad}',
+          style: TextStyle(fontSize: 12.0),
+        ),
+      );
+
+      if (plan.estatus == 'Completada') {
+        total++;
+
+        if (plan.estatusProgreso) {
+          completadas++;
+        }
+        actividadeCompletas.add(planWidget);
+      } else if (plan.estatus == 'Pendiente') {
+        actividadesPedientes.add(planWidget);
+      } else {
+        actividadesAtrasadas.add(planWidget);
+      }
+    }
+
+    return Container(
+      width: 500,
+      height: 300,
+      child: Card(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        margin: EdgeInsets.all(20.0),
+        elevation: 10.0,
+        child: SingleChildScrollView(
+            child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            children: [
+              ExpansionTile(
+                textColor: Colors.black,
+                subtitle: Text('Progreso: $completadas/$total'),
+                title: Text('Actividades complet0adas'),
+                children: actividadeCompletas,
+              ),
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text('Actividades pedientes'),
+                children: actividadesPedientes,
+              ),
+              ExpansionTile(
+                textColor: Colors.black,
+                title: Text('Actividades atrasadas'),
+                children: actividadesAtrasadas,
+              ),
+            ],
+          ),
+        )),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,7 +440,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
                   //child:
                   reporteEvento(),
                   reporteInvitados(),
-
+                  fechaData(),
+                  futureToPlannes(),
                   //),
                 ],
               ),

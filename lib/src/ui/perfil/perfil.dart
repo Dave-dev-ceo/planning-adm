@@ -8,10 +8,12 @@ import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:planning/src/blocs/grupos_bloc.dart';
 
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
+import 'package:planning/src/logic/login_logic.dart';
 import 'package:planning/src/models/item_model_perfil.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/perfil/perfil_planner_model.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 
 class Perfil extends StatefulWidget {
   Perfil({Key key}) : super(key: key);
@@ -194,70 +196,6 @@ class _PerfilState extends State<Perfil> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: PasswordWplanner(
-                    controller: TextEditingController(text: '${perfil.clave}'),
-                    inputStyle: TextStyle(color: Colors.black),
-                    hintStyle: TextStyle(color: Colors.grey),
-                    autoFocus: false,
-                    hasFloatingPlaceholder: true,
-                    prefixIcon: Icon(Icons.password),
-                    suffixIcon: Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),
-                    color: Colors.black,
-                    iconColor: Colors.grey,
-                    iconColorSelect: Colors.black,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(color: Colors.black)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(color: Colors.black)),
-                    validador: (value) {
-                      if (!_validaPsw(value)) {
-                        return 'Campo requerido con una minuscula, una mayúscula, un número, un simbolo y un minimo de 8 caracteres.';
-                      }
-                      return null;
-                    },
-                    onChanged: (valor) => perfil.clave = valor,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: PasswordWplanner(
-                    controller: TextEditingController(text: '${perfil.clave}'),
-                    inputStyle: TextStyle(color: Colors.black),
-                    hintStyle: TextStyle(color: Colors.grey),
-                    autoFocus: false,
-                    hasFloatingPlaceholder: true,
-                    prefixIcon: Icon(Icons.password),
-                    suffixIcon: Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),
-                    color: Colors.black,
-                    iconColor: Colors.grey,
-                    iconColorSelect: Colors.black,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(color: Colors.black)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(color: Colors.black)),
-                    validador: (value) {
-                      if (value != perfil.clave) {
-                        return 'Debe coincidir con la contraseña.';
-                      } else if (value.isEmpty) {
-                        return 'Campo requerido.';
-                      }
-                      return null;
-                    },
-                    onChanged: (valor) => perfil.repit = valor,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -283,6 +221,17 @@ class _PerfilState extends State<Perfil> {
                           child: Text('Agregar imagen'),
                           onPressed: () => _addImage(),
                         ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      CambiarContrasenaDialog());
+                            },
+                            child: Text('Cambiar contraseña')),
                       )
                     ],
                   ),
@@ -435,4 +384,234 @@ class _Perfil {
         'clave': clave,
         'image': image
       };
+}
+
+class CambiarContrasenaDialog extends StatefulWidget {
+  CambiarContrasenaDialog({Key key}) : super(key: key);
+
+  @override
+  _CambiarContrasenaDialogState createState() =>
+      _CambiarContrasenaDialogState();
+}
+
+class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
+  final _keyForm = GlobalKey<FormState>();
+  String passwordValid;
+
+  bool readOnly = false;
+  final loginLogic = BackendLoginLogic();
+  TextEditingController passwordUser = TextEditingController(text: '');
+  TextEditingController newPassword = TextEditingController(text: '');
+  TextEditingController repeatNewPassWord = TextEditingController(text: '');
+
+  @override
+  void initState() {
+    validatePassword();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cambiar Contraseña'),
+      ),
+      body: Center(
+        child: Container(
+          width: size.width,
+          height: size.height,
+          color: Colors.white,
+          child: Form(
+            key: _keyForm,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 15.0,
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: size.width * 0.8),
+                  child: ResponsiveGridRow(
+                    children: [
+                      ResponsiveGridCol(
+                        md: 12,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          child: PasswordWplanner(
+                            floatingText: 'Contraseña actual',
+                            hintText: 'Contraseña actual',
+                            controller: passwordUser,
+                            inputStyle: TextStyle(color: Colors.black),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            autoFocus: false,
+                            hasFloatingPlaceholder: true,
+                            prefixIcon: Icon(Icons.password),
+                            suffixIcon: Icon(
+                              Icons.remove_red_eye,
+                              color: Colors.grey,
+                            ),
+                            color: Colors.black,
+                            iconColor: Colors.grey,
+                            iconColorSelect: Colors.black,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide(color: Colors.black)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide(color: Colors.black)),
+                          ),
+                        ),
+                      ),
+                      ResponsiveGridCol(
+                        md: 12,
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: PasswordWplanner(
+                            controller: newPassword,
+                            floatingText: 'Nueva contraseña',
+                            hintText: 'Nueva contraseña',
+                            inputStyle: TextStyle(color: Colors.black),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            autoFocus: false,
+                            hasFloatingPlaceholder: true,
+                            prefixIcon: Icon(Icons.password),
+                            suffixIcon: Icon(
+                              Icons.remove_red_eye,
+                              color: Colors.grey,
+                            ),
+                            color: Colors.black,
+                            iconColor: Colors.grey,
+                            iconColorSelect: Colors.black,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide(color: Colors.black)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide(color: Colors.black)),
+                            validador: (value) {
+                              if (!_validaPsw(value)) {
+                                return 'Campo requerido con una minuscula, una mayúscula, un número y un minimo de 8 caracteres.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                      ResponsiveGridCol(
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: PasswordWplanner(
+                            floatingText: 'Confirmar contraseña',
+                            controller: repeatNewPassWord,
+                            hintText: 'Confirmar contraseña',
+                            inputStyle: TextStyle(color: Colors.black),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            autoFocus: false,
+                            hasFloatingPlaceholder: true,
+                            prefixIcon: Icon(Icons.password),
+                            suffixIcon: Icon(
+                              Icons.remove_red_eye,
+                              color: Colors.grey,
+                            ),
+                            color: Colors.black,
+                            iconColor: Colors.grey,
+                            iconColorSelect: Colors.black,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide(color: Colors.black)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25.0),
+                                borderSide: BorderSide(color: Colors.black)),
+                            validador: (value) {
+                              if (value != newPassword.text) {
+                                _mostrarMensaje(
+                                    'La contraseña no coincide', Colors.red);
+                                return 'Debe coincidir con la contraseña.';
+                              } else if (value.isEmpty) {
+                                return 'Campo requerido.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (passwordValid == passwordUser.text) {
+                      if (_keyForm.currentState.validate()) {
+                        final data =
+                            await loginLogic.changePassword(newPassword.text);
+                        if (data == 'Ok') {
+                          _mostrarMensaje(
+                              'Se ha cambiado la contraseña', Colors.green);
+                          Navigator.of(context).pop();
+                        } else {
+                          _mostrarMensaje('Ocurrio un error', Colors.red);
+                        }
+                      } else {
+                        _mostrarMensaje('Los campos no coiciden o estan vacios',
+                            Colors.red);
+                      }
+                    } else {
+                      _mostrarMensaje(
+                          'La contraseña es incorrecta', Colors.red);
+                    }
+                  },
+                  child: Text('Guardar'),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  validatePassword() async {
+    final password = await loginLogic.getPassword();
+
+    if (password != null) {
+      setState(() {
+        passwordValid = password;
+      });
+    }
+  }
+
+  bool _validaPsw(String txt) {
+    bool temp = false;
+
+    // filtros
+    bool mayusculas = false;
+    bool minusculas = false;
+    bool numeros = false;
+
+    // expresiones regulares
+    RegExp validaMayusculas = RegExp(r'[A-Z]');
+    RegExp validaMinusculas = RegExp(r'[a-z]');
+    RegExp validaNumeros = RegExp(r'[\d]');
+
+    // validaciones
+    if (validaMayusculas.hasMatch(txt)) mayusculas = true;
+    if (validaMinusculas.hasMatch(txt)) minusculas = true;
+    if (validaNumeros.hasMatch(txt)) numeros = true;
+
+    if (txt.length > 7 && mayusculas && minusculas && numeros) temp = true;
+
+    return temp;
+  }
+
+  void _mostrarMensaje(String descripcion, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(descripcion),
+      backgroundColor: color,
+      duration: Duration(seconds: 3),
+    ));
+  }
 }
