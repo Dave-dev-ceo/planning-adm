@@ -168,7 +168,6 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
             ),
             // subtitle: GestureDetector(
             //   child: Icon(Icons.edit),
-            //   onTap: () {print('editar');},
             // ),
           ),
         ),
@@ -209,7 +208,6 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
 
   // add image
   _addImage(int id) async {
-    print('add image');
     List<Evidencia> temp = [];
     Map mapTemp = Map();
 

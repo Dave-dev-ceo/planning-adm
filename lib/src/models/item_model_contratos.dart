@@ -7,7 +7,6 @@ class ItemModelContratos {
     temp.add(dat);*/
     for (int i = 0; i < parsedJson.length; i++) {
       Contratos result = Contratos(parsedJson[i]);
-      //print(parsedJson[i]);
       temp.add(result);
     }
     _results = temp;

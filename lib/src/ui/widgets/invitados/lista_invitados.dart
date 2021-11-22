@@ -271,8 +271,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
-      //onOpen: () => print('OPENING DIAL'),
-      //onClose: () => print('DIAL CLOSED'),
       tooltip: 'Opciones',
       heroTag: 'Opciones',
       backgroundColor: Colors.black,
@@ -458,7 +456,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
           //Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
           final result = await Navigator.of(context).pushNamed('/addInvitados',arguments: idEvento); 
           if(result==null || result=="" || result == false || result == 0){
-            //print("add "+result.toString());
             _ListaInvitadosState(idEvento).listaInvitados(context);
           }
         },
@@ -666,7 +663,6 @@ class _DataSource extends DataTableSource {
       _ListaInvitadosState(
               idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
           .listaInvitados(_cont);
-      //print("actualizado");
     } else {
       _msgSnackBar("Error al actualizar el estatus", Colors.red);
     }
@@ -676,7 +672,6 @@ class _DataSource extends DataTableSource {
     final resultE = await Navigator.of(_cont)
         .pushNamed('/editInvitado', arguments: idInvitado);
     if (resultE == null || resultE == "" || resultE == false || resultE == 0) {
-      //print("edit " + resultE.toString());
       _ListaInvitadosState(
               idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
           .listaInvitados(_cont);
@@ -691,11 +686,11 @@ class _DataSource extends DataTableSource {
       builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
         if (snapshot.hasData) {
           //_mySelection = ((snapshot.data.results.length - 1).toString());
-          print('sacha');
+
           return null;
           //_viewShowDialogGrupo(idInvitado, snapshot.data);
           //return _dataGrupo(snapshot.data);
-          //print(snapshot.data);
+          //
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -705,10 +700,9 @@ class _DataSource extends DataTableSource {
   }*/
 
   /*_dataGrupo(ItemModelGrupos grupos) {
-    print(grupos.results.length);
+
     /*List<Text> lT;
     for(int i = 0; i < grupos.results.length; i++){
-      print(grupos.results.elementAt(i).nombreGrupo);
       Text(grupos.results.elementAt(i).nombreGrupo);
       lT.
     }
@@ -718,7 +712,6 @@ class _DataSource extends DataTableSource {
         itemCount: grupos.results.length,
         //padding: const EdgeInsets.only(top: 10),
         itemBuilder: (BuildContext context, int index) {
-          print(grupos.results.elementAt(index).nombreGrupo);
           return Container(
               child: Center(
                   child: Text(grupos.results.elementAt(index).nombreGrupo)));
@@ -728,7 +721,6 @@ class _DataSource extends DataTableSource {
   _listaGruposEvento(int idInvitado) async {
     _grupos = await api.fetchGruposList(_cont);
     /*for (var data in _grupos.results) {
-      print(data.nombreGrupo);
     }*/
     _showMyDialogGrupo(idInvitado);
   }
@@ -736,7 +728,6 @@ class _DataSource extends DataTableSource {
   _listaEstatusEvento(int idInvitado) async {
     _estatus = await api.fetchEstatusList(_cont);
     /*for (var data in _grupos.results) {
-      print(data.nombreGrupo);
     }*/
     await _showMyDialog(idInvitado);
     //_viewShowDialogEstatus(idInvitado);
@@ -758,7 +749,6 @@ class _DataSource extends DataTableSource {
                     onSelectedItemChanged: (value) {
                       _grupoSelect =
                           _grupos.results.elementAt(value).idGrupo.toString();
-                      print(_grupoSelect);
                     },
                     children: <Widget>[
                   //for (var i = 0; i < _grupos.results.length; i++)
@@ -793,7 +783,7 @@ class _DataSource extends DataTableSource {
 
   /*_viewShowDialogGrupo(int idInvitado){
      
-      //print('ola');
+      //
       showDialog(
           context: _cont,
           builder: (BuildContext context) => CupertinoAlertDialog(
@@ -808,7 +798,7 @@ class _DataSource extends DataTableSource {
                           onSelectedItemChanged: (value){
                             
                             _grupoSelect = _grupos.results.elementAt(value).idGrupo.toString();
-                            print(_grupoSelect);
+                           
                           }, 
                           children: <Widget>[
                             //for (var i = 0; i < _grupos.results.length; i++) 
@@ -867,7 +857,6 @@ class _DataSource extends DataTableSource {
                           .elementAt(value)
                           .idEstatusInvitado
                           .toString();
-                      print(_grupoSelect);
                     },
                     children: <Widget>[
                   //for (var i = 0; i < _grupos.results.length; i++)
@@ -921,7 +910,6 @@ class _DataSource extends DataTableSource {
                               .elementAt(value)
                               .idEstatusInvitado
                               .toString();
-                          print(_grupoSelect);
                         },
                         children: <Widget>[
                       //for (var i = 0; i < _grupos.results.length; i++)
@@ -1002,15 +990,12 @@ class _DataSource extends DataTableSource {
       selected: row.selected,
       onSelectChanged: (value) {
         if (row.selected != value) {
-          // print(value);
           _selectedCount += value ? 1 : -1;
           assert(_selectedCount >= 0);
           row.selected = value;
-          //notifyListeners();
         }
       },
       cells: [
-        //DataCell(Text(row.valueId.toString())),
         DataCell(Text(row.valueA), onTap: () {
           _viewShowDialogEditar(row.valueId);
         }),
@@ -1029,7 +1014,6 @@ class _DataSource extends DataTableSource {
         DataCell(
           Text(row.valueE),
           onTap: () {
-            print('object');
             _showMyDialogWhatsApp(row.valueE);
           },
         )

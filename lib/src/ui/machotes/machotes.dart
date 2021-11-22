@@ -52,7 +52,6 @@ class _MachotesState extends State<Machotes> {
           itemMC.results.elementAt(element).machote,
           itemMC.results.elementAt(element).idMachote.toString()
         ]);
-        //print(itemModelMC.results.elementAt(element).machote);
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

@@ -310,7 +310,6 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
       bool response = await api.createInvitados(json, context);
 
       //bloc.insertInvitados;
-      //print(response);
       if (response) {
         keyForm.currentState.reset();
         nombreCtrl.clear();

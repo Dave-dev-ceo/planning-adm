@@ -165,9 +165,7 @@ class _ServiciosState extends State<Servicios> {
                   builder: (BuildContext context) => _editarDetalleLista(opt)),
               icon: const Icon(Icons.edit))
         ]),
-        onTap: () async {
-          print(opt.nombre);
-        },
+        onTap: () async {},
       );
       lista.add(tempWidget);
     }

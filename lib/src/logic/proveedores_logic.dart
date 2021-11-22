@@ -28,14 +28,11 @@ class FetchProveedoresLogic extends LogicProveedores {
 
   @override
   Future<int> createProveedor(Map<void, dynamic> data) async {
-    print('consulta');
-    print(data);
     if (data['nombre'] != '' && data['descripcion'] != '') {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       int idUsuario = await _sharedPreferences.getIdUsuario();
       String token = await _sharedPreferences.getToken();
       List listaTest = data['servicios'];
-      print(data['servicios']);
       final _data = {
         'nombre': data['nombre'],
         'descripcion': data['descripcion'],
@@ -181,7 +178,6 @@ class FetchProveedoresLogic extends LogicProveedores {
       await _sharedPreferences.setToken(json.decode(response.body)['token']);
       return 'Ok';
     } else {
-      print(response.body);
       return response.body;
     }
   }

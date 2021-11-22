@@ -4,12 +4,12 @@ import 'package:multi_select_item/multi_select_item.dart';
 
 class CargarContactosInvitados extends StatefulWidget {
   @override
-  _CargarContactosInvitadosState createState() => _CargarContactosInvitadosState();
+  _CargarContactosInvitadosState createState() =>
+      _CargarContactosInvitadosState();
 }
 
 class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
   Iterable<Contact> _contacts;
-
 
   @override
   void initState() {
@@ -17,7 +17,7 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
     getContacts();
     super.initState();
   }
-  
+
   Future<void> getContacts() async {
     //We already have permissions for contact when we get to this page, so we
     // are now just retrieving it
@@ -28,57 +28,59 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
     });
   }
 
-  _avatarContact(Contact contact){
-    if(contact.avatar!= null && contact.avatar.isNotEmpty){
+  _avatarContact(Contact contact) {
+    if (contact.avatar != null && contact.avatar.isNotEmpty) {
       return CircleAvatar(
-              backgroundImage: MemoryImage(contact.avatar),
-              radius: 25,
-            );
-    }else{
-      return
-      CircleAvatar(
+        backgroundImage: MemoryImage(contact.avatar),
+        radius: 25,
+      );
+    } else {
+      return CircleAvatar(
         child: Icon(Icons.person),
         backgroundColor: Theme.of(context).accentColor,
-        
         radius: 25,
       );
     }
   }
-  _nameContact(Contact contact){
-    if(contact.displayName!= null && contact.displayName.isNotEmpty){
+
+  _nameContact(Contact contact) {
+    if (contact.displayName != null && contact.displayName.isNotEmpty) {
       return contact.displayName;
-    }else{
-      return
-      'Sin nombre';
+    } else {
+      return 'Sin nombre';
     }
   }
-  _phoneContact(Contact contact){
-    if(contact.phones!= null && contact.phones.isNotEmpty){
+
+  _phoneContact(Contact contact) {
+    if (contact.phones != null && contact.phones.isNotEmpty) {
       return contact.phones.elementAt(0).value;
-    }else{
-      return
-      'Sin número';
+    } else {
+      return 'Sin número';
     }
   }
+
   MultiSelectController controller;
   void selectAll() {
     setState(() {
       controller.toggleAll();
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (Text(controller.selectedIndexes.length>0?'Seleccionados ${controller.selectedIndexes.length}':'Contactos')),
+        title: (Text(controller.selectedIndexes.length > 0
+            ? 'Seleccionados ${controller.selectedIndexes.length}'
+            : 'Contactos')),
         actions: (controller.isSelecting)
-        ?<Widget>[
-                  IconButton(
-                    icon: Icon(Icons.select_all),
-                    onPressed: selectAll,
-                  )
-                ]
-              : <Widget>[],
+            ? <Widget>[
+                IconButton(
+                  icon: Icon(Icons.select_all),
+                  onPressed: selectAll,
+                )
+              ]
+            : <Widget>[],
       ),
       body: _contacts != null
           //Build a list view of all contacts, displaying their avatar and
@@ -88,18 +90,18 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
               itemBuilder: (BuildContext context, int index) {
                 Contact contact = _contacts?.elementAt(index);
                 return MultiSelectItem(
-                  isSelecting: controller.isSelecting, 
-                  onSelected: (){
+                  isSelecting: controller.isSelecting,
+                  onSelected: () {
                     setState(() {
                       controller.toggle(index);
-                      //print(controller.selectedIndexes.toString());
                     });
                   },
                   child: Container(
                     child: Row(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 10),
                           child: _avatarContact(contact),
                         ),
                         //SizedBox(height: 10,),
@@ -109,14 +111,16 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
                             Text(
                               _nameContact(contact),
                               style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold
-                              ),
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 5,),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Text(
                               _phoneContact(contact),
                               style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.normal,
+                                fontSize: 10,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
                           ],
@@ -124,12 +128,11 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
                       ],
                     ),
                     decoration: controller.isSelected(index)
-                    ? new BoxDecoration(color: Colors.grey[300])
-                    : new BoxDecoration(),
+                        ? new BoxDecoration(color: Colors.grey[300])
+                        : new BoxDecoration(),
                   ),
-                  
                 );
-                  ////////////////////////
+                ////////////////////////
                 /*return Row(
                   children: <Widget>[
                     Padding(

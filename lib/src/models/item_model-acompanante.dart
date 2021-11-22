@@ -3,10 +3,7 @@ class ItemModelAcompanante {
 
   ItemModelAcompanante.fromJson(List<dynamic> parsedJson) {
     List<_ItemModelAcompanante> temp = [];
-    //print(parsedJson.length);
-    //print(parsedJson[0]['nombre']);
     for (int i = 0; i < parsedJson.length; i++) {
-      //print(parsedJson[0][i]);
       _ItemModelAcompanante result = _ItemModelAcompanante(parsedJson[i]);
       temp.add(result);
     }

@@ -46,7 +46,6 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
 
   @override
   Future<int> updateEstatus(Map<String, dynamic> data) async {
-    print('print update ---');
     if (data['descripcion'].toString() != '' &&
         data['id_estatus_invitado'].toString() != '') {
       int idPlanner = await _sharedPreferences.getIdPlanner();
@@ -57,7 +56,6 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
       data['descripcion'] = data['descripcion'].toString();
 
       String token = await _sharedPreferences.getToken();
-      print(data);
       final response = await client.post(
           Uri.parse(
               confiC.url + confiC.puerto + '/wedding/ESTATUS/updateEstatus'),

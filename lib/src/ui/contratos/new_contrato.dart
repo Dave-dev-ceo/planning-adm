@@ -189,7 +189,6 @@ class New_ContratoState extends State<NewContrato> {
                             icon: Icon(Icons.edit),
                             label: Text('Editar'),
                             onPressed: () {
-                              print('Editar');
                               Navigator.pushNamed(context, '/editarContratos',
                                   arguments: {
                                     'archivo': contrato.archivo,
@@ -296,7 +295,6 @@ class New_ContratoState extends State<NewContrato> {
                             icon: Icon(Icons.edit),
                             label: Text('Editar'),
                             onPressed: () {
-                              print('Editar');
                               Navigator.pushNamed(context, '/editarContratos',
                                   arguments: {
                                     'archivo': contrato.archivo,
@@ -403,7 +401,6 @@ class New_ContratoState extends State<NewContrato> {
                             icon: Icon(Icons.edit),
                             label: Text('Editar'),
                             onPressed: () {
-                              print('Editar');
                               Navigator.pushNamed(context, '/editarContratos',
                                   arguments: {
                                     'archivo': contrato.archivo,
@@ -510,7 +507,6 @@ class New_ContratoState extends State<NewContrato> {
                             icon: Icon(Icons.edit),
                             label: Text('Editar'),
                             onPressed: () {
-                              print('Editar');
                               Navigator.pushNamed(context, '/editarContratos',
                                   arguments: {
                                     'archivo': contrato.archivo,
@@ -617,7 +613,6 @@ class New_ContratoState extends State<NewContrato> {
                             icon: Icon(Icons.edit),
                             label: Text('Editar'),
                             onPressed: () {
-                              print('Editar');
                               Navigator.pushNamed(context, '/editarContratos',
                                   arguments: {
                                     'archivo': contrato.archivo,

@@ -675,9 +675,6 @@ class ApiProvider {
       String token = await _sharedPreferences.getToken();
       int planner = await _sharedPreferences.getIdPlanner();
       int evento = await _sharedPreferences.getIdEvento();
-      print('Id xddfjd');
-      print(_sharedPreferences.getIdEvento());
-      print(_sharedPreferences.getIdPlanner());
       final response = await client.get(
           Uri.parse(confiC.url +
               confiC.puerto +
@@ -685,7 +682,6 @@ class ApiProvider {
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
-        print(response);
         Map<String, dynamic> data = json.decode(response.body);
         // If the call to the server was successful, parse the JSON
         return ItemModelAcompanante.fromJson(data["data"]);
@@ -719,7 +715,6 @@ class ApiProvider {
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response == 200) {
-        print('Todo salio correctamente');
       } else {
         print(response.body);
       }
@@ -741,7 +736,6 @@ class ApiProvider {
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
-        print('Ok');
         return _isOk = 'Ok';
       } else {
         return _isOk = response.body;
@@ -764,7 +758,6 @@ class ApiProvider {
       data['id_evento'] = id_evento.toString();
       data['creado_por'] = creado_por.toString();
       data['modificado_por'] = modificado_por.toString();
-      print(data);
       final response = await client.post(
           Uri.parse(confiC.url +
               confiC.puerto +

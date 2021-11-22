@@ -50,7 +50,6 @@ class ServiciosBloc extends Bloc<ServiciosEvent, ServiciosState> {
       try {
         int service = await logic.deleteDetallaLista(event.idServicio);
         if (service == 0) {
-          print('Si actualizo la lista de eliminar');
           add(FechtServiciosEvent());
         }
       } catch (e) {}

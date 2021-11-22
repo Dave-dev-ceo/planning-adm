@@ -75,9 +75,6 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                       setState(() {
                         //dataJson["id"]=modelEstatus.results.elementAt(index).idEstatusInvitado.toString();
                         _pageIndex = index;
-
-                        print(_pageIndex);
-                        //print(dataJson["id"]);
                       });
                     },
                     indicatorColor: Colors.white,
@@ -228,7 +225,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
     List<Widget> temp = [];
     for (int i = 0; i < parsedJson.length; i++) {
       _Grupos result = _Grupos(parsedJson[i]);
-      //print(parsedJson[i]);
+      //
       temp.add(result);
     }
     _results = temp;

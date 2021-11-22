@@ -249,7 +249,6 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   _insertLink() async {
     Map<String, dynamic> jsonLink = {};
     if (_keyFormLink.currentState.validate()) {
-      print(urlValue);
       jsonLink = {
         'id_proveedor': this.provsrv['id_proveedor'],
         'id_servicio': this.provsrv['id_servicio'],
@@ -379,9 +378,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
               },
               icon: _icon),
         ]),
-        onTap: () async {
-          print(opt.nombre);
-        },
+        onTap: () async {},
       );
       lista.add(tempWidget);
     }

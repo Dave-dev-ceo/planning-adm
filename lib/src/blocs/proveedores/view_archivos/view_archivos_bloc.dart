@@ -17,7 +17,6 @@ class ViewArchivosBloc extends Bloc<ViewArchivosEvent, ViewArchivosState> {
     ViewArchivosEvent event,
   ) async* {
     if (event is FechtArchivoByIdEvent) {
-      print('Entro al bloc');
       try {
         ItemModelArchivoProvServ archivo =
             await logic.fetchArchivosById(event.id_archivo);

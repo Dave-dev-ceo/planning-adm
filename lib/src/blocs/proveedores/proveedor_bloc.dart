@@ -48,7 +48,6 @@ class ProveedorBloc extends Bloc<ProveedorEvent, ProveedorState> {
       try {
         int service = await logic.deleteServicioProv(event.idServicio);
         if (service == 0) {
-          print('Si actualizo la lista de eliminar');
           add(FechtProveedorEvent());
           add(FechtSevicioByProveedorEvent());
         }

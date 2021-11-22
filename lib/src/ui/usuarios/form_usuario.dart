@@ -69,7 +69,6 @@ class _FormUsuarioState extends State<FormUsuario> {
 
   @override
   Widget build(BuildContext context) {
-    print(datos);
     return SingleChildScrollView(
       child: BlocListener<UsuarioBloc, UsuarioState>(
         listener: (context, state) {
@@ -409,7 +408,6 @@ class _FormUsuarioState extends State<FormUsuario> {
         if (state is RolesInitial) {
           return Center(child: CircularProgressIndicator());
         } else if (state is ErrorTokenRoles) {
-          print('Error en token');
           return _showDialogMsg(context);
         } else if (state is LoadingRoles) {
           return Center(child: CircularProgressIndicator());

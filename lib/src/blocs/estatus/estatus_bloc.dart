@@ -49,7 +49,6 @@ class EstatusBloc extends Bloc<EstatusEvent, EstatusState> {
         yield ErrorCreateEstatusState("No se pudo insertar");
       }
     } else if (event is UpdateEstatusEvent) {
-      print('event update-- ');
       int response = await logic.updateEstatus(event.data);
       // ItemModelEstatusInvitado model = event.estatus;
       if (response == 0) {

@@ -3,10 +3,7 @@ class ItemModelInvitados {
 
   ItemModelInvitados.fromJson(List<dynamic> parsedJson) {
     List<_Result> temp = [];
-    //print(parsedJson.length);
-    //print(parsedJson[0]['nombre']);
     for (int i = 0; i < parsedJson.length; i++) {
-      //print(parsedJson[0][i]);
       _Result result = _Result(parsedJson[i]);
       temp.add(result);
     }

@@ -65,9 +65,7 @@ class _EditarEventoState extends State<EditarEvento> {
   ItemModelEventos itemModelEventos;
   EventosBloc eventosBloc;
 
-  _EditarEventoState(this.evento) {
-    print(this.evento);
-  }
+  _EditarEventoState(this.evento) {}
 
   @override
   void initState() {
@@ -395,7 +393,6 @@ class _EditarEventoState extends State<EditarEvento> {
         'id_planner': '',
         'id_usuario': ''
       };
-      print(jsonEvento.runtimeType);
       eventosBloc.add(EditarEventosEvent(jsonEvento, itemModelEventos));
     }
   }
@@ -417,7 +414,6 @@ class _EditarEventoState extends State<EditarEvento> {
               } else {
                 isExpanedI = !isExpanedI;
               }
-              //print(index);
             });
           },
           children: [
@@ -621,7 +617,7 @@ class _EditarEventoState extends State<EditarEvento> {
                 headerBuilder: (BuildContext context, bool isExpaned) {
                   return Center(
                       child: Text(
-                    'Involucrados',
+                    'Involucrado',
                     style: TextStyle(fontSize: 20.0),
                   ));
                 },

@@ -165,7 +165,6 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
             res =i==0?txt.replaceAll(datas.elementAt(i), dataInfo.elementAt(i)):res.replaceAll(datas.elementAt(i), dataInfo.elementAt(i));
             i++;
           }*/
-          //print(txt);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

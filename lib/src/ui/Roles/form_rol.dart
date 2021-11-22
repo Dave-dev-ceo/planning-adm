@@ -107,7 +107,6 @@ class _FormRolState extends State<FormRol> {
             //ERROR DE TOKEN
             else if (state is ErrorTokenRolState) {
               Navigator.pop(_dialogContext);
-              print('Error en token');
               return _showDialogMsg(context);
             }
           },
@@ -266,7 +265,6 @@ class _FormRolState extends State<FormRol> {
             '"nombre_rol"': '"${claveCtrl.text}"',
             '"permisos"': _formRolesTemp.toJsonStr()
           };
-          print(jsonRol);
           rolBloc.add(CrearRolEvent(jsonRol));
         } else {
           Map<String, dynamic> jsonRol = {
@@ -371,7 +369,6 @@ class _FormRolState extends State<FormRol> {
         if (state is FormRolInitial) {
           return Center(child: CircularProgressIndicator());
         } else if (state is ErrorTokenFormRolState) {
-          print('Error en token');
           return _showDialogMsg(context);
         } else if (state is LoadingMostrarFormRol) {
           return Center(child: CircularProgressIndicator());
@@ -522,7 +519,6 @@ class _FormRolState extends State<FormRol> {
                     onChanged: (value) {
                       setState(() {
                         item.selected = value;
-                        print(item.selected);
                         if (item.selected) {
                           item.pantallas.forEach((element) {
                             element.seleccion = true;
@@ -562,7 +558,6 @@ class _FormRolState extends State<FormRol> {
                         value: itemPantalla[index].seleccion,
                         onChanged: (value) {
                           setState(() {
-                            print(positionHeader);
                             itemPantalla[index].seleccion = value;
 
                             if (itemPantalla[index].seleccion) {

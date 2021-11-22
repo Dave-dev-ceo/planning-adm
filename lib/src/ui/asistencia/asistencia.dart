@@ -209,7 +209,6 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   _guardarAsistencia(int idInvitado, bool asistenciaValor) {
-    // print('id: $idInvitado \nvalor: $asistenciaValor');
     // BlocProvider - cargamos el evento
     asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
   }

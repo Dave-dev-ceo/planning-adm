@@ -33,9 +33,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
         if (snapshot.hasData) {
           //_mySelection = ((snapshot.data.results.length - 1).toString());
-          //print(_mySelection);
           return _dropDown(snapshot.data);
-          //print(snapshot.data);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -58,10 +56,9 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       onChanged: (newValue) {
         setState(() {
           if(newValue == "Nuevo grupo"){
-            //print(newValue);
+            //
             _showMyDialog();
           }else{
-            print(newValue);
             dropdownValue = newValue;
           }
           
@@ -178,7 +175,6 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
                   GestureDetector(
                     onTap: () {
                       _save(context);
-                      //print('guardado');
                     },
                     child: CallToAction('Agregar'),
                   ),
@@ -331,7 +327,6 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
                         onSelected: () {
                           setState(() {
                             controller.toggle(index);
-                            //print(controller.selectedIndexes.toString());
                           });
                         },
                         child: Container(

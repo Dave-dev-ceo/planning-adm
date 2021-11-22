@@ -328,7 +328,6 @@ class _AgregarEventoState extends State<AgregarEvento> {
 
   _save() {
     if (keyForm.currentState.validate()) {
-      print(numbInvitadosContrl.text);
       Map<String, dynamic> jsonEvento = {
         "descripcion_evento": descripcionCtrl.text,
         "fecha_inicio": fechaInicioCtrl.text,
@@ -360,7 +359,6 @@ class _AgregarEventoState extends State<AgregarEvento> {
               } else {
                 isExpanedT = !isExpanedT;
               }
-              // print(index);
             });
           },
           children: [
@@ -565,7 +563,6 @@ class _AgregarEventoState extends State<AgregarEvento> {
         ),
         GestureDetector(
             onTap: () {
-              print('Click guardar');
               _save();
             },
             child: CallToAction('Guardar'))

@@ -219,10 +219,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                     if (state is ErrorTokenEstatusState) {
                       return _showDialogMsg(context);
                     } else if (state is ErrorCreateEstatusState) {
-                      print(state.message);
-                    } else if (state is ErrorUpdateEstatusState) {
-                      print(state.message);
-                    }
+                    } else if (state is ErrorUpdateEstatusState) {}
                   },
                   child: BlocBuilder<EstatusBloc, EstatusState>(
                     builder: (context, state) {
@@ -358,7 +355,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                 GestureDetector(
                         onTap: (){
                           _saveEstatus(context, idEstatus);
-                          //print('guardado');
+                          //
                         },
                         child: CallToAction('Agregar'),
                       ),*/

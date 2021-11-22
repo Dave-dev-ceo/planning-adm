@@ -38,7 +38,6 @@ class _DialogAlertState extends State<DialogAlert> {
         }
         lista.add(valor);
       }
-      //print(dataInfo[i]);
     }
   }
 
@@ -128,7 +127,6 @@ class _DialogAlertState extends State<DialogAlert> {
   }
 
   _guardarAsistencia(int idInvitado, String nombre, bool asistenciaValor) {
-    // print('id: $idInvitado \nvalor: $asistenciaValor');
     // BlocProvider - cargamos el evento
     AsistenciaBloc asistenciaBloc;
     asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);

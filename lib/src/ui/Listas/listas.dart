@@ -54,10 +54,7 @@ class _ListaState extends State<Listas> {
                     if (state is ErrorTokenListaState) {
                       return _showDialogMsg(context);
                     } else if (state is ErrorCreateListasrState) {
-                      print(state.message);
-                    } else if (state is ErrorCreateListasrState) {
-                      print(state.message);
-                    }
+                    } else if (state is ErrorCreateListasrState) {}
                   },
                   child: BlocBuilder<ListasBloc, ListasState>(
                     builder: (context, state) {

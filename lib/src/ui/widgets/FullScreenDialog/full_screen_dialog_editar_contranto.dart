@@ -46,8 +46,6 @@ class _FullScreenDialogEditContratoState
   @override
   Widget build(BuildContext context) {
     var dfd = '<h1>Ejemplo</h1>';
-    print(dfd);
-    print(machote);
     setState(() {});
     return Scaffold(
         appBar: AppBar(
@@ -82,7 +80,6 @@ class _FullScreenDialogEditContratoState
                         return Center(child: CircularProgressIndicator());
                       } else if (state is MostrarEtiquetasState) {
                         itemModelET = state.etiquetas;
-                        print('--->' + machote);
                         return _constructorLista(state.etiquetas);
                       } else if (state is ErrorListaEtiquetasState) {
                         return Center(
@@ -121,8 +118,6 @@ class _FullScreenDialogEditContratoState
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.save),
           onPressed: () async {
-            print('Guardar');
-            print(await controller.getText());
             String editArchivo = await controller.getText();
             Map<String, dynamic> dataJson = {
               'id_contrato': data['id_contrato'],

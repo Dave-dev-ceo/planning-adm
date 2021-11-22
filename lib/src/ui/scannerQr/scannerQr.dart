@@ -165,7 +165,6 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      //print(scanData.code);
       setState(() async {
         controller.pauseCamera();
         result = scanData;

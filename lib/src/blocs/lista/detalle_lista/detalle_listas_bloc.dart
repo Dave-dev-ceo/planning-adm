@@ -31,16 +31,13 @@ class DetalleListasBloc extends Bloc<DetalleListasEvent, DetalleListasState> {
           add(FechtDetalleListaEvent(int.parse(event.data['id_lista'])));
         }
       } catch (e) {
-        print(e);
         yield ErrorCreateDetalleListasrState('No se pudo insertar');
       }
     } else if (event is DeleteDetalleListaEvent) {
       try {
         int idArticulo = await logic.deleteDetallaLista(event.idDetalleLista);
-        print('idArticulo');
-        print(idArticulo);
+
         if (idArticulo == 0) {
-          print('Si actualizo la lista de eliminar');
           add(FechtDetalleListaEvent(event.idLista));
         }
       } catch (e) {}
@@ -60,10 +57,8 @@ class DetalleListasBloc extends Bloc<DetalleListasEvent, DetalleListasState> {
         if (listaData == 0) {
           add(FechtDetalleListaEvent(listaData));
         }
-        print('Este es mi id xd  $listaData');
         yield CreateListasState(listaData);
       } catch (e) {
-        print(e);
         yield ErrorCreateDetalleListasrState('No se pudo insertar');
       }
     } else if (event is UpdateListasEvent) {
@@ -73,7 +68,6 @@ class DetalleListasBloc extends Bloc<DetalleListasEvent, DetalleListasState> {
           add(FechtDetalleListaEvent(int.parse(event.data['id_lista'])));
         }
       } catch (e) {
-        print(e);
         yield ErrorCreateDetalleListasrState('No se pudo insertar');
       }
     }

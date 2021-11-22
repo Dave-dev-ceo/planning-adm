@@ -95,9 +95,6 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
 
       try {
         final listPlannes = await logic.getAllPlannes();
-
-        print('Estatus de la lista desde el bloc');
-        print(listPlannes);
         yield GetAllPlanesState(listPlannes);
       } on ListaPlanesException {
         yield ErrorMostrarPlanesState('Sin Planes');

@@ -59,7 +59,6 @@ class _FullScreenDialogAgregarProveedorEvent
             this._items = [];
             _optItem = [];
             for (var opt in state.listServicios.results) {
-              print(opt.nombre);
               _optItem.add(ServiciosModel(
                   id_servicio: opt.id_servicio, nombre: opt.nombre));
             }
@@ -147,8 +146,6 @@ class _FullScreenDialogAgregarProveedorEvent
                         icon: const Icon(Icons.save),
                         color: Colors.white,
                         onPressed: () async {
-                          // keyForm.currentState.reset();
-                          print(_selectedServicios.length);
                           if (_selectedServicios.length > 0) {
                             Navigator.of(context).pop();
                             Map<String, dynamic> json =

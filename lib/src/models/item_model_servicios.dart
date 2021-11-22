@@ -4,7 +4,6 @@ class ItemModuleServicios {
     List<_Servicios> temp = [];
     for (int i = 0; i < parsedJson.length; i++) {
       _Servicios result = _Servicios(parsedJson[i]);
-      //print(parsedJson[i]);
       temp.add(result);
     }
     _results = temp;

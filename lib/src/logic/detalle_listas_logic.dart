@@ -103,7 +103,6 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
         headers: {
           HttpHeaders.authorizationHeader: token
         });
-    print('Vamos a eliminar xd');
     if (response.statusCode == 200) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
       await _sharedPreferences.setToken(responseEvento['token']);

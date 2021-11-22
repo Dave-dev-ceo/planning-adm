@@ -81,7 +81,6 @@ class _DataSource extends DataTableSource {
       selected: row.selected,
       onSelectChanged: (value) {
         if (row.selected != value) {
-          print(value);
           _selectedCount += value ? 1 : -1;
           assert(_selectedCount >= 0);
           row.selected = value;

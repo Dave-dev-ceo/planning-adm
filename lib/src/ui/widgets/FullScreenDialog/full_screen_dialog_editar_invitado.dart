@@ -107,7 +107,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           //_mySelection = ((snapshot.data.results.length - 1).toString());
           ItemModelAcompanante l;
           return formUI(snapshot.data, l);
-          //print(snapshot.data);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -373,7 +372,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   _eliminarAcompanante(int idAcompanante) async {
     final data = await api.deleteAcompanante(idAcompanante.toString());
-    print(data);
     if (data == 'Ok') {
       final snackbar = SnackBar(
           backgroundColor: Colors.green,
@@ -408,9 +406,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
         if (snapshot.hasData) {
           //_mySelection = ((snapshot.data.results.length - 1).toString());
-          //print(_mySelection);
           return _dropDownGrupos(snapshot.data);
-          //print(snapshot.data);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -427,9 +423,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       builder: (context, AsyncSnapshot<ItemModelMesas> snapshot) {
         if (snapshot.hasData) {
           //_mySelection = ((snapshot.data.results.length - 1).toString());
-          //print(_mySelection);
           return _dropDownMesas(snapshot.data);
-          //print(snapshot.data);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -527,7 +521,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                   GestureDetector(
                     onTap: () {
                       _save(context);
-                      //print('guardado');
                     },
                     child: CallToAction('Agregar'),
                   ),
@@ -586,9 +579,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       builder: (context, AsyncSnapshot<ItemModelEstatusInvitado> snapshot) {
         if (snapshot.hasData) {
           //_mySelection = ((snapshot.data.results.length - 1).toString());
-          //print(_mySelection);
           return _dropDownEstatusInvitado(snapshot.data);
-          //print(snapshot.data);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -739,7 +730,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
             } else if (index == 2) {
               isExpaneA = !isExpaneA;
             }
-            //print(index);
           });
         },
         children: [
@@ -881,13 +871,11 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                           _numberGuestsController.text =
                                               _numAcomp.toString();
                                         }
-                                        print(numbAcomFromDB == _numAcomp);
                                       },
                                       icon: Icon(Icons.keyboard_arrow_down)),
                                   IconButton(
                                       onPressed: () {
                                         _numAcomp += 1;
-                                        print(numbAcomFromDB == _numAcomp);
                                         _numberGuestsController.text =
                                             _numAcomp.toString();
                                       },

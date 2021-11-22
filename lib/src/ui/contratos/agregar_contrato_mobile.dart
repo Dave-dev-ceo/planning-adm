@@ -65,9 +65,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
     File file = File(
         "$dir/" + DateTime.now().millisecondsSinceEpoch.toString() + ".pdf");
     await file.writeAsBytes(bytes);
-    //print("file://"+file.path);
     final message = await OpenFile.open(file.path);
-    print(message);
   }
 
   _dialogMSG(String title) {

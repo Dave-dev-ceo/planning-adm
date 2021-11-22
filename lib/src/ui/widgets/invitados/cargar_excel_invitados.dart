@@ -76,9 +76,6 @@ class _CargarExcelState extends State<CargarExcel> {
       var excel = Excel.decodeBytes(bytes);
       bool bandera = true;
       for (var table in excel.tables.keys) {
-        //print(table); //sheet Name
-        //print(excel.tables[table].maxCols);
-        //print(excel.tables[table].maxRows);
         dynamic xx = excel.tables[table].rows;
 
         if (xx[0][0] == "NOMBRE" &&
@@ -202,9 +199,7 @@ class _CargarExcelState extends State<CargarExcel> {
                   style: TextButton.styleFrom(
                     primary: Colors.teal,
                   ),
-                  onPressed: () {
-                    print('Pressed');
-                  },
+                  onPressed: () {},
                 ),
                 SizedBox(
                   height: 20,

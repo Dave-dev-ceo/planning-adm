@@ -29,8 +29,6 @@ class ContratosDosBloc extends Bloc<ContratosEvent, ContratosState> {
       }
     } else if (event is UpdateValContratoEvent) {
       try {
-        print('object---->');
-        print(event.data);
         String valString = await logic.updateValContratos(event.data);
         yield UpdateValContratoState(valString);
         add(ContratosSelect());

@@ -167,8 +167,6 @@ class ServiceMesasLogic extends MesasLogic {
       headers: headers,
     );
 
-    print(response.statusCode);
-
     if (response.statusCode == 200) {
       return 'Ok';
     } else {

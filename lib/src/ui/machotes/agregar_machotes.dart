@@ -132,9 +132,7 @@ class _AgregarMachoteState extends State<AgregarMachote> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  print('asdas');
-                },
+                onPressed: () {},
                 child: Text('dasd'),
               )
             ],
@@ -162,7 +160,6 @@ class _AgregarMachoteState extends State<AgregarMachote> {
               res =i==0?txt.replaceAll(datas.elementAt(i), dataInfo.elementAt(i)):res.replaceAll(datas.elementAt(i), dataInfo.elementAt(i));
               i++;
             }*/
-            //print(txt);
           },
         ),
       ),

@@ -138,7 +138,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
   Widget reporteEvento() {
     return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
       builder: (context, state) {
-        //print(state);
         if (state is EvtBloc.LoadingEventoPorIdState) {
           return Center(child: CircularProgressIndicator());
         } else if (state is EvtBloc.MostrarEventoPorIdState) {
@@ -171,7 +170,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
   Widget fechaData() {
     return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
       builder: (context, state) {
-        //print(state);
         if (state is EvtBloc.LoadingEventoPorIdState) {
           return Center(child: CircularProgressIndicator());
         } else if (state is EvtBloc.MostrarEventoPorIdState) {

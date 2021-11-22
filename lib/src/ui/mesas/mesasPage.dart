@@ -1167,7 +1167,6 @@ class _MesasPageState extends State<MesasPage> {
               mesaAsigandoTemp.idMesa = mesaDisponible.idMesa;
               mesaAsigandoTemp.idEvento = mesaDisponible.idEvento;
               // * Compruebo que si es acompañante o invitado
-              // print('Compruebo que si es acompañante o invitado');
               mesaAsigandoTemp.idInvitado = invitado.idInvitado;
               if (invitado.idAcompanante != 0) {
                 mesaAsigandoTemp.idAcompanante = invitado.idAcompanante;

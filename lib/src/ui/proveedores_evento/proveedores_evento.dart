@@ -58,9 +58,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                 builder: (context, state) {
               if (state is MostrarProveedorEventoState) {
                 if (state.detlistas != null && _dataPrvEv.length == 0) {
-                  state.detlistas.results.forEach((element) {
-                    // print(element.idPlanner);
-                  });
+                  state.detlistas.results.forEach((element) {});
                   _dataPrvEv = _createDataListProvEvt(state.detlistas);
                 }
                 return _listaBuild();
@@ -92,9 +90,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                 builder: (context, state) {
               if (state is MostrarProveedorEventoState) {
                 if (state.detlistas != null && _dataPrvEv.length == 0) {
-                  state.detlistas.results.forEach((element) {
-                    // print(element.idPlanner);
-                  });
+                  state.detlistas.results.forEach((element) {});
                   _dataPrvEv = _createDataListProvEvt(state.detlistas);
                 }
                 return _listaInvolucrado();
@@ -214,7 +210,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                   setState(() {
                     opt.isExpanded = value;
                   });
-                  // print(opt.isExpanded);
                   Map<String, dynamic> json = {
                     'id_servicio': idServi,
                     'id_proveedor': opt.id_proveedor
@@ -234,7 +229,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   }
 
   insert(opt) {
-    // print('object');
     proveedoreventosBloc.add(CreateProveedorEventosEvent(
         {'id_servicio': opt.id_servicio, 'id_proveedor': opt.id_proveedor}));
   }

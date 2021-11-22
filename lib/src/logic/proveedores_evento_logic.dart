@@ -29,13 +29,11 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
       int id_planner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       var checkInvolucrado = await _sharedPreferences.getIdInvolucrado();
-      print(checkInvolucrado);
       if (checkInvolucrado == null) {
         checkInvolucrado = '1';
       } else {
         checkInvolucrado = '0';
       }
-      print(checkInvolucrado);
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
@@ -45,7 +43,6 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         await _sharedPreferences.setToken(data['token']);
-        // print(data['data']);
         return ItemModelProveedoresEvento.fromJson(data['data']);
       } else if (response.statusCode == 401) {
         throw TokenException();

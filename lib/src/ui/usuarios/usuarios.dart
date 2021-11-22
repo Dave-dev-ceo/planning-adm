@@ -299,7 +299,6 @@ class _UsuariosState extends State<Usuarios> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      print(_selectedIndex);
     });
   }
 

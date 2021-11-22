@@ -242,13 +242,10 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
 
   @override
   Future<String> updateValContratos(Map<String, dynamic> data) async {
-    print('llego a login');
-    print(data);
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_contrato'] = data['id_contrato'].toString();
-    print(data);
     final response = await client.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/PDF/updateValContratos'),

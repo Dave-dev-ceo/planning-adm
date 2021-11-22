@@ -331,9 +331,7 @@ class _DetalleListasState extends State<DetalleListas> {
                   builder: (BuildContext context) => _editarDetalleLista(opt)),
               icon: const Icon(Icons.edit))
         ]),
-        onTap: () async {
-          print(opt.nombre);
-        },
+        onTap: () async {},
       );
       lista.add(tempWidget);
     }

@@ -123,7 +123,6 @@ class MesasAsignadasService {
         body: json.encode(data), headers: headers);
 
     if (response.statusCode == 200) {
-      print('Entra aqui');
       return 'Ok';
     } else {
       return 'Ocurrio un error';
