@@ -5,12 +5,14 @@ import 'package:planning/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
+import 'package:planning/src/blocs/historialPagos/historialpagos_bloc.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 import 'package:planning/src/logic/add_contratos_logic.dart';
+import 'package:planning/src/logic/historial_pagos/historial_pagos_logic.dart';
 import 'package:planning/src/logic/invitados_mesas_logic/invitados_mesa_logic.dart';
 import 'package:planning/src/logic/involucrados_logic.dart';
 import 'package:planning/src/logic/mesas_logic/mesa_logic.dart';
@@ -223,7 +225,9 @@ class AppState extends StatelessWidget {
           create: (_) => MesasBloc(logic: ServiceMesasLogic())),
       BlocProvider<InvitadosMesasBloc>(
           create: (_) =>
-              InvitadosMesasBloc(logic: ServiceInvitadosMesasLogic()))
+              InvitadosMesasBloc(logic: ServiceInvitadosMesasLogic())),
+      BlocProvider<HistorialPagosBloc>(
+          create: (_) => HistorialPagosBloc(logic: HistorialPagosLogic()))
     ], child: MyApp());
   }
 }

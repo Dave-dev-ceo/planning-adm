@@ -85,17 +85,25 @@ class BackendLoginLogic implements LoginLogic {
   Future<String> getPassword() async {
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
+    int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
 
     const endpoint = '/wedding/ACCESO/getPassWord';
+
+    Map<String, dynamic> data;
+    if (idInvolucrado != null) {
+      data = {
+        'idInvolucrado': idInvolucrado,
+      };
+    } else {
+      data = {
+        'idUsuario': idUsuario,
+      };
+    }
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       HttpHeaders.authorizationHeader: token
-    };
-
-    final data = {
-      'idUsuario': idUsuario,
     };
 
     final resp = await client.post(
@@ -115,6 +123,20 @@ class BackendLoginLogic implements LoginLogic {
   Future<String> changePassword(String newPassword) async {
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
+    int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+
+    Map<String, dynamic> data;
+    if (idInvolucrado != null) {
+      data = {
+        'idInvolucrado': idInvolucrado,
+        'contrasena': newPassword,
+      };
+    } else {
+      data = {
+        'idUsuario': idUsuario,
+        'contrasena': newPassword,
+      };
+    }
 
     const endpoint = '/wedding/ACCESO/changePassword';
 
@@ -122,11 +144,6 @@ class BackendLoginLogic implements LoginLogic {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       HttpHeaders.authorizationHeader: token
-    };
-
-    final data = {
-      'idUsuario': idUsuario,
-      'contrasena': newPassword,
     };
 
     final resp = await client.post(

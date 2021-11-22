@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/blocs/historialPagos/historialpagos_bloc.dart';
+import 'package:planning/src/logic/historial_pagos/historial_pagos_logic.dart';
 import 'package:planning/src/logic/pagos_logic.dart';
+import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/pagos/agregar_pago_dialog.dart';
 import 'package:planning/src/utils/utils.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
@@ -15,33 +20,435 @@ class Pagos extends StatefulWidget {
   _PagosState createState() => _PagosState();
 }
 
-class _PagosState extends State<Pagos> {
+class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   // variables bloc
   PagosBloc pagosBloc;
+  HistorialPagosBloc historialPagosBloc;
 
   // vaiables modelo
   ItemModelPagos itemPago;
 
   // logic
   ConsultasPagosLogic pagosLogic = ConsultasPagosLogic();
+  NumberFormat f = new NumberFormat("#,##0.00", "en_US");
+  TabController _tabController;
 
   // styles
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  HistorialPagosLogic logicPagos = HistorialPagosLogic();
+
+  bool isInvolucrado;
+
+  int totalpresupuestos = 0;
+  int totalsaldopresupuestoInterno = 0;
+  int totalsaldopresupuestoEvento = 0;
+  double totalpagosInternos = 0;
+  double totalpagosEventos = 0;
+  int index = 0;
 
   @override
   void initState() {
     super.initState();
+
     pagosBloc = BlocProvider.of<PagosBloc>(context);
+    historialPagosBloc = BlocProvider.of<HistorialPagosBloc>(context);
     pagosBloc.add(SelectPagosEvent());
+    historialPagosBloc.add(MostrarHistorialPagosEvent());
+
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      index = _tabController.index;
+    });
+    isInvolucradoFunction();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  isInvolucradoFunction() async {
+    var idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+
+    if (idInvolucrado != null) {
+      isInvolucrado = true;
+    } else {
+      isInvolucrado = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _bloc(),
+      key: _scaffoldKey,
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          SingleChildScrollView(child: bodyPagosPlanner()),
+          SingleChildScrollView(child: pagosEventos())
+        ],
+      ),
+      bottomNavigationBar: TabBar(
+        controller: _tabController,
+        tabs: [
+          Tab(
+            text: 'Interno',
+            icon: Tooltip(
+              message: 'Interno',
+              child: Icon(Icons.insert_chart_outlined_sharp),
+            ),
+          ),
+          Tab(
+            text: 'Evento',
+            icon: Tooltip(
+              message: 'Evento',
+              child: Icon(Icons.event),
+            ),
+          )
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: _botonAction(),
     );
+  }
+
+  Widget pagosEventos() {
+    return Column(
+      children: [
+        _bloc(),
+        SizedBox(height: 10.0),
+        Row(
+          children: [
+            SizedBox(
+              width: 20.0,
+            ),
+            Text(
+              'Pagos',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(
+              width: 100,
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.black),
+                onPressed: () {
+                  _abrirDialog('E', false, HistorialPagosModel());
+                },
+                child: Text(
+                  'Agregar Pago',
+                  style: TextStyle(color: Colors.white),
+                ))
+          ],
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        _historialDePagos('E'),
+        SizedBox(
+          height: 100.0,
+        )
+      ],
+    );
+  }
+
+  Widget bodyPagosPlanner() {
+    return Column(
+      children: [
+        _bloc(),
+        SizedBox(height: 10.0),
+        Row(
+          children: [
+            SizedBox(
+              width: 20.0,
+            ),
+            Text(
+              'Pagos',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(
+              width: 100,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Colors.black),
+              onPressed: () {
+                _abrirDialog('I', false, HistorialPagosModel());
+              },
+              child: Text(
+                'Agregar Pago',
+                style: TextStyle(color: Colors.white),
+              ),
+            )
+          ],
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        _historialDePagos('I'),
+        SizedBox(
+          height: 100.0,
+        )
+      ],
+    );
+  }
+
+  Widget _historialDePagos(String tipoPresupuesto) {
+    return BlocBuilder<HistorialPagosBloc, HistorialPagosState>(
+      builder: (context, state) {
+        if (state is LoadingHistorialPagosState) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is MostrarHistorialPagosState) {
+          totalsaldopresupuestoInterno = 0;
+          totalsaldopresupuestoEvento = 0;
+          totalpagosInternos = 0;
+          totalpagosEventos = 0;
+          state.listaPagos.forEach((pago) {
+            if ('E' == pago.tipoPresupuesto) {
+              totalpagosEventos += pago.pago;
+            } else {
+              totalpagosInternos += pago.pago;
+            }
+          });
+
+          totalsaldopresupuestoEvento =
+              totalpresupuestos - int.tryParse(totalpagosEventos.toString());
+
+          totalsaldopresupuestoInterno =
+              totalpresupuestos - int.tryParse(totalpagosInternos.toString());
+
+          return buildTablePagos(state.listaPagos, tipoPresupuesto);
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+
+  Widget buildTablePagos(
+      List<HistorialPagosModel> pagos, String tipoPresupuesto) {
+    return PaginatedDataTable(
+      columns: [
+        DataColumn(
+          label: Text(
+            '',
+            style: _boldStyle,
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Fecha',
+            style: _boldStyle,
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Concepto',
+            style: _boldStyle,
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Monto',
+            style: _boldStyle,
+          ),
+          numeric: true,
+        ),
+      ],
+      source: DTS(
+          pago: (tipoPresupuesto == 'I')
+              ? _crearListaPagos(pagos)
+              : _crearListaPagosEventos(pagos)),
+      onRowsPerPageChanged: null,
+      rowsPerPage: pagos.length == 0 ? 1 : pagos.length + 1,
+      dataRowHeight: 25.0,
+    );
+  }
+
+  List<List<DataCell>> _crearListaPagos(List<HistorialPagosModel> pagos) {
+    List<List<DataCell>> pagosEventosList = [];
+
+    pagos.forEach((pago) {
+      if ('I' == pago.tipoPresupuesto) {
+        List<DataCell> pagosListTemp = [
+          DataCell(
+              Center(
+                child: Icon(
+                  Icons.delete,
+                ),
+              ), onTap: () async {
+            await showDialog(
+              context: _scaffoldKey.currentContext,
+              builder: (context) => AlertDialog(
+                title: Text('Eliminar pago'),
+                content: Text(
+                    '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final resp =
+                          await logicPagos.eliminarPagoEvento(pago.idPago);
+
+                      if (resp == 'Ok') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Se ha eliminado el pago'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        Navigator.of(context, rootNavigator: true).pop(true);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(resp),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Aceptar'),
+                  ),
+                ],
+              ),
+            ).then((value) => {
+                  if (value != null)
+                    {
+                      context
+                          .read<HistorialPagosBloc>()
+                          .add(MostrarHistorialPagosEvent()),
+                      if (value)
+                        {
+                          pagosBloc.add(SelectPagosEvent()),
+                        }
+                    }
+                });
+          }),
+          DataCell(
+            Text(
+              '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
+            ),
+          ),
+          DataCell(
+            Text(pago.concepto),
+            onTap: () {
+              _abrirDialog('I', true, pago);
+            },
+          ),
+          DataCell(
+              Text(
+                pago.pago.toString(),
+              ), onTap: () {
+            _abrirDialog('I', true, pago);
+          }),
+        ];
+        pagosEventosList.add(pagosListTemp);
+      }
+    });
+
+    return pagosEventosList;
+  }
+
+  List<List<DataCell>> _crearListaPagosEventos(
+      List<HistorialPagosModel> pagos) {
+    List<List<DataCell>> pagosEventosList = [];
+
+    if (pagos.length > 0) {
+      pagos.forEach((pago) {
+        if ('E' == pago.tipoPresupuesto) {
+          List<DataCell> pagosListTemp = [
+            DataCell(
+                Center(
+                  child: Icon(
+                    Icons.delete,
+                  ),
+                ), onTap: () async {
+              await showDialog(
+                context: _scaffoldKey.currentContext,
+                builder: (context) => AlertDialog(
+                  title: Text('Eliminar pago'),
+                  content: Text(
+                      '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancelar'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        final resp =
+                            await logicPagos.eliminarPagoEvento(pago.idPago);
+
+                        if (resp == 'Ok') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Se ha eliminado el pago'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          Navigator.of(context, rootNavigator: true).pop(true);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(resp),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                      child: Text('Aceptar'),
+                    ),
+                  ],
+                ),
+              ).then((value) => {
+                    if (value != null)
+                      {
+                        context
+                            .read<HistorialPagosBloc>()
+                            .add(MostrarHistorialPagosEvent()),
+                        if (value) {pagosBloc.add(SelectPagosEvent())}
+                      }
+                  });
+            }),
+            DataCell(
+              Text(
+                '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
+              ),
+            ),
+            DataCell(Text(pago.concepto), onTap: () {
+              _abrirDialog('E', true, pago);
+            }),
+            DataCell(
+                Text(
+                  pago.pago.toString(),
+                ), onTap: () {
+              _abrirDialog('E', true, pago);
+            }),
+          ];
+          pagosEventosList.add(pagosListTemp);
+        }
+      });
+    } else {
+      List<DataCell> pagosListWitoutData = [
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+      ];
+      pagosEventosList.add(pagosListWitoutData);
+    }
+
+    return pagosEventosList;
   }
 
   _bloc() {
@@ -56,6 +463,11 @@ class _PagosState extends State<Pagos> {
             child: CircularProgressIndicator(),
           );
         } else if (state is PagosSelect) {
+          totalpresupuestos = 0;
+          state.pagos.pagos.forEach((pago) {
+            totalpresupuestos += pago.total;
+          });
+
           return _stickyHeader(state.pagos);
         } else {
           return Center(
@@ -69,6 +481,7 @@ class _PagosState extends State<Pagos> {
   _stickyHeader(itemPago) {
     return Center(
       child: ListView(
+        shrinkWrap: true,
         children: [
           StickyHeader(header: _getHeader(), content: _getContent(itemPago))
         ],
@@ -88,17 +501,67 @@ class _PagosState extends State<Pagos> {
   _crearHeader() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              flex: 3,
-              child: Text(
-                'Presupuestos',
-                style: TextStyle(fontSize: 20.0),
-              )),
+            flex: 3,
+            child: Text(
+              index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              text: 'Total: ',
+              children: [
+                TextSpan(
+                  text: '\$${f.format(totalpresupuestos)}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          RichText(
+            text: TextSpan(
+              text: 'Pagos: ',
+              children: [
+                TextSpan(
+                  text: index == 0
+                      ? '\$${f.format(totalpagosInternos)}'
+                      : '\$${f.format(totalpagosEventos)}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          RichText(
+            text: TextSpan(
+              text: 'Saldo: ',
+              children: [
+                TextSpan(
+                  text: index == 0
+                      ? '\$${f.format(totalsaldopresupuestoInterno)}'
+                      : '\$${f.format(totalsaldopresupuestoEvento)}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -141,44 +604,41 @@ class _PagosState extends State<Pagos> {
           style: _boldStyle,
         ),
       ),
-      DataColumn(
-        label: Text(
-          'Total',
-          style: _boldStyle,
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'Anticipo',
-          style: _boldStyle,
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'Saldo',
-          style: _boldStyle,
-        ),
-      ),
     ];
+  }
+
+  _abrirDialog(
+      String tipoPresupuesto, bool edit, HistorialPagosModel pago) async {
+    await showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) => AgregarPagoDialog(
+        tipoPresupuesto: tipoPresupuesto,
+        isEdit: edit,
+        pagoModel: pago,
+      ),
+    ).then(
+      (value) => {
+        if (value != null)
+          {
+            if (value)
+              {
+                {pagosBloc.add(SelectPagosEvent())}
+              }
+          }
+      },
+    );
   }
 
   _crearLista(ItemModelPagos itemPago) {
     List<List<DataCell>> pagosList = [];
     if (itemPago.pagos.length > 0) {
-      NumberFormat f = new NumberFormat("#,##0.00", "en_US");
       var total = 0;
       var saldo = 0;
-      String saldotemp = '';
-      String totaltemp = '';
       itemPago.pagos.forEach((element) {
         total += element.total;
         saldo += element.saldo;
-        saldotemp = f.format(saldo);
-        totaltemp = f.format(total);
         String precioUnitario = f.format(element.precioUnitario);
-        String totalPago = f.format(element.total);
-        String anticipo = f.format(element.anticipo);
-        String saldoPago = f.format(element.saldo);
+
         List<DataCell> pagosListTemp = [
           DataCell(
               Center(
@@ -203,30 +663,6 @@ class _PagosState extends State<Pagos> {
                   alignment: Alignment.centerRight,
                   child: Text('\$$precioUnitario')),
               onTap: () => _editarPago(element.idConcepto)),
-          DataCell(
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  '\$$totalPago',
-                  textAlign: TextAlign.right,
-                ),
-              ),
-              onTap: () => _editarPago(element.idConcepto)),
-          DataCell(
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('\$$anticipo', textAlign: TextAlign.right),
-                  )),
-              onTap: () => _editarPago(element.idConcepto)),
-          DataCell(
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    '\$$saldoPago',
-                  )),
-              onTap: () => _editarPago(element.idConcepto)),
         ];
         pagosList.add(pagosListTemp);
       });
@@ -243,30 +679,10 @@ class _PagosState extends State<Pagos> {
         DataCell(
           Center(),
         ),
-        DataCell(
-          Center(
-            child: Align(
-                alignment: Alignment.centerRight,
-                child: Text('\$$totaltemp', style: _boldStyle)),
-          ),
-        ),
-        DataCell(
-          Center(),
-        ),
-        DataCell(
-          Center(
-            child: Align(
-                alignment: Alignment.centerRight,
-                child: Text('\$$saldotemp', style: _boldStyle)),
-          ),
-        ),
       ];
       pagosList.add(pagosLast);
     } else {
       List<DataCell> pagosListNoData = [
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),
@@ -293,9 +709,7 @@ class _PagosState extends State<Pagos> {
           label: 'Descargar PDF',
           child: Icon(Icons.download),
           onTap: () async {
-            print('Entre');
             final data = await pagosLogic.downlooadPagosEvento();
-            print('Sali');
             if (data != null) {
               buildPDFDownload(data, 'Pagos-Evento');
             }
@@ -319,7 +733,7 @@ class _PagosState extends State<Pagos> {
 
   Future<void> _alertaBorrar(int id) {
     return showDialog<void>(
-      context: context,
+      context: _scaffoldKey.currentContext,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(

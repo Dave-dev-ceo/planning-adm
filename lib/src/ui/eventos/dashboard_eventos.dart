@@ -161,35 +161,41 @@ class _DashboardEventosState extends State<DashboardEventos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<EventosBloc, EventosState>(
-        listener: (context, state) {
-          if (state is ErrorTokenEventosState) {
-            return _showDialogMsg(context);
-          }
+      body: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await eventosBloc.add(FechtEventosEvent());
         },
-        child: BlocBuilder<EventosBloc, EventosState>(
-          builder: (context, state) {
-            if (state is LoadingEventosState) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is MostrarEventosState) {
-              eventos = state.eventos;
-              return Container(
-                child: buildList(eventos),
-              );
-            } else if (state is ErrorListaEventosState) {
-              return Center(
-                child: Text(state.message),
-              );
-            } else {
-              if (eventos != null) {
+        child: BlocListener<EventosBloc, EventosState>(
+          listener: (context, state) {
+            if (state is ErrorTokenEventosState) {
+              return _showDialogMsg(context);
+            }
+          },
+          child: BlocBuilder<EventosBloc, EventosState>(
+            builder: (context, state) {
+              if (state is LoadingEventosState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is MostrarEventosState) {
+                eventos = state.eventos;
                 return Container(
                   child: buildList(eventos),
                 );
+              } else if (state is ErrorListaEventosState) {
+                return Center(
+                  child: Text(state.message),
+                );
               } else {
-                return Center(child: CircularProgressIndicator());
+                if (eventos != null) {
+                  return Container(
+                    child: buildList(eventos),
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
               }
-            }
-          },
+            },
+          ),
         ),
       ),
       floatingActionButton: WP_EVT_CRT

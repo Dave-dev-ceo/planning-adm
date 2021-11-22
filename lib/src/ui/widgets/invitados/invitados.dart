@@ -31,6 +31,7 @@ class _InvitadosState extends State<Invitados> {
   int _pages = 0;
   PermisosBloc permisosBloc;
   ItemModelPerfil permisoPantallas;
+  bool isInvolucrado = false;
 
   _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
@@ -40,7 +41,17 @@ class _InvitadosState extends State<Invitados> {
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
     permisosBloc.add(obtenerPermisosEvent());
+
+    getIdInvolucrado();
     super.initState();
+  }
+
+  getIdInvolucrado() async {
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   @override
@@ -96,13 +107,15 @@ class _InvitadosState extends State<Invitados> {
         length: _pages,
         child: Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              tooltip: 'Inicio',
-              icon: Icon(Icons.home),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            leading: (!isInvolucrado)
+                ? IconButton(
+                    tooltip: 'Inicio',
+                    icon: Icon(Icons.home),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                : null,
             automaticallyImplyLeading: widget.detalleEvento['boton'],
             title: Center(
               child: Row(
@@ -174,7 +187,7 @@ class _InvitadosState extends State<Invitados> {
                           Navigator.of(context).pushNamed('/perfilPlanner');
                         } else if (valor == 3) {
                           _sharedPreferences.clear();
-                          Navigator.pushNamed(context, '/');
+                          Navigator.pushReplacementNamed(context, '/');
                         }
                       },
                     ),
