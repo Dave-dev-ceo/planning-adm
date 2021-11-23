@@ -18,7 +18,7 @@ abstract class PagosLogic {
   Future<ItemModelPagos> selectProveedor();
   Future<ItemModelPagos> selectServicios();
   Future<ItemModelPagos> selectPagosId(int id);
-  Future<String> downlooadPagosEvento();
+  Future<String> downlooadPagosEvento(String tipoPresupuesto);
 }
 
 // consultas
@@ -214,7 +214,7 @@ class ConsultasPagosLogic extends PagosLogic {
   }
 
   @override
-  Future<String> downlooadPagosEvento() async {
+  Future<String> downlooadPagosEvento(String tipoPresupueto) async {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -230,6 +230,7 @@ class ConsultasPagosLogic extends PagosLogic {
     final data = {
       'idPlanner': idPlanner,
       'idEvento': idEvento,
+      'tipoPresupuesto': tipoPresupueto
     };
 
     final resp = await client.post(

@@ -709,7 +709,10 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           label: 'Descargar PDF',
           child: Icon(Icons.download),
           onTap: () async {
-            final data = await pagosLogic.downlooadPagosEvento();
+            print(index);
+            final data = index == 0
+                ? await pagosLogic.downlooadPagosEvento('I')
+                : await pagosLogic.downlooadPagosEvento('E');
             if (data != null) {
               buildPDFDownload(data, 'Pagos-Evento');
             }

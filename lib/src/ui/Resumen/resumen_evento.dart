@@ -403,7 +403,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
               ExpansionTile(
                 textColor: Colors.black,
                 subtitle: Text('Progreso: $completadas/$total'),
-                title: Text('Actividades complet0adas'),
+                title: Text('Actividades completadas'),
                 children: actividadeCompletas,
               ),
               ExpansionTile(
