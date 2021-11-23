@@ -84,9 +84,15 @@ class _UsuariosState extends State<Usuarios> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          width: double.infinity,
-          child: IndexedStack(index: _selectedIndex, children: footerTabs)),
+      body: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await usuariosBloc.add(FetchUsuariosPorPlannerEvent());
+        },
+        child: Container(
+            width: double.infinity,
+            child: IndexedStack(index: _selectedIndex, children: footerTabs)),
+      ),
       floatingActionButton: _selectedIndex == 0 ? _expasibleFab() : null,
       floatingActionButtonLocation:
           _selectedIndex == 0 ? FloatingActionButtonLocation.endFloat : null,

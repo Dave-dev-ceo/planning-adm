@@ -235,23 +235,29 @@ class _MachotesState extends State<Machotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: BlocBuilder<MachotesBloc, MachotesState>(
-          builder: (context, state) {
-            if (state is LoadingMachotesState) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is MostrarMachotesState) {
-              itemModelMC = state.machotes;
-              return _constructorLista(state.machotes);
-            } else if (state is ErrorListaMachotesState) {
-              return Center(
-                child: Text(state.message),
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-              //return _constructorLista(itemModelET);
-            }
-          },
+      body: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await machotesBloc.add(FechtMachotesEvent());
+        },
+        child: Container(
+          child: BlocBuilder<MachotesBloc, MachotesState>(
+            builder: (context, state) {
+              if (state is LoadingMachotesState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is MostrarMachotesState) {
+                itemModelMC = state.machotes;
+                return _constructorLista(state.machotes);
+              } else if (state is ErrorListaMachotesState) {
+                return Center(
+                  child: Text(state.message),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+                //return _constructorLista(itemModelET);
+              }
+            },
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

@@ -76,7 +76,6 @@ class _MesasPageState extends State<MesasPage> {
   void initState() {
     invitadosBloc = BlocProvider.of<InvitadosMesasBloc>(context);
     mesasAsignadasService.getMesasAsignadas();
-    // mesasAsignadasService.getLayoutMesa();
     BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
     BlocProvider.of<InvitadosMesasBloc>(context)
         .add(MostrarInvitadosMesasEvent());
@@ -575,131 +574,143 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget buildAsignarMesaMovil() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 15.0,
-        ),
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          child: BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
-            builder: (context, state) {
-              if (state is LoadingInvitadoMesasState) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is MostraListaInvitadosMesaState) {
-                state.listaInvitadoMesa.length > 0
-                    ? _enable = true
-                    : _enable = false;
-                if (state.listaInvitadoMesa.isNotEmpty ||
-                    state.listaInvitadoMesa != null) {
-                  _listaInvitadoDisponibles = state.listaInvitadoMesa;
-//
-                  return Expanded(
-                      child: buildListInvitadosConfirmador(
-                          state.listaInvitadoMesa));
-                } else {
-                  return Text('No se encontraron datos');
-                }
-              } else if (state is ErrorInvitadoMesaState) {
-                return Center(
-                  child: Text(state.message),
-                );
-              } else {
-                return Align(
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-        ),
-        SizedBox(
-          height: 8.0,
-        ),
-        Row(
-          children: [
-            ElevatedButton(
-              onPressed: asignarMesas,
-              child: Icon(Icons.arrow_downward),
-            ),
-            SizedBox(
-              width: 5.0,
-            ),
-            ElevatedButton(
-              onPressed: _deleteAsignadoToMesa,
-              child: Icon(Icons.arrow_upward),
-            ),
-            Spacer(),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                elevation: 5.0,
-              ),
-              onPressed: _asignarAutoMesas,
-              child: Text('Asignar auto.'),
-            ),
-            SizedBox(
-              width: 8.0,
-            )
-          ],
-        ),
-        SizedBox(
-          height: 8.0,
-        ),
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          child: BlocBuilder<MesasBloc, MesasState>(
-            builder: (context, state) {
-              if (state is LoadingMesasState) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is MostrarMesasState) {
-                if (state.listaMesas != null) {
-                  lastNumMesa = state.listaMesas.last.numDeMesa;
-                  listaMesaFromDB = state.listaMesas;
+    return SingleChildScrollView(
+      child: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await mesasAsignadasService.getMesasAsignadas();
 
-                  if (state.listaMesas.length > 0) {
-                    return _buildListaMesas(state.listaMesas);
+          await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+          await BlocProvider.of<InvitadosMesasBloc>(context)
+              .add(MostrarInvitadosMesasEvent());
+        },
+        child: Column(
+          children: [
+            SizedBox(
+              height: 15.0,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
+                builder: (context, state) {
+                  if (state is LoadingInvitadoMesasState) {
+                    return Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is MostraListaInvitadosMesaState) {
+                    state.listaInvitadoMesa.length > 0
+                        ? _enable = true
+                        : _enable = false;
+                    if (state.listaInvitadoMesa.isNotEmpty ||
+                        state.listaInvitadoMesa != null) {
+                      _listaInvitadoDisponibles = state.listaInvitadoMesa;
+                      //
+                      return Expanded(
+                          child: buildListInvitadosConfirmador(
+                              state.listaInvitadoMesa));
+                    } else {
+                      return Text('No se encontraron datos');
+                    }
+                  } else if (state is ErrorInvitadoMesaState) {
+                    return Center(
+                      child: Text(state.message),
+                    );
                   } else {
                     return Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        'No se encontraron datos',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
+                      child: CircularProgressIndicator(),
                     );
                   }
-                } else {
-                  return Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'No se encontraron datos',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  );
-                }
-              } else if (state is ErrorMesasState) {
-                return Container(
-                  child: Center(child: Text(state.message)),
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),
+                },
+              ),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: asignarMesas,
+                  child: Icon(Icons.arrow_downward),
+                ),
+                SizedBox(
+                  width: 5.0,
+                ),
+                ElevatedButton(
+                  onPressed: _deleteAsignadoToMesa,
+                  child: Icon(Icons.arrow_upward),
+                ),
+                Spacer(),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5.0,
+                  ),
+                  onPressed: _asignarAutoMesas,
+                  child: Text('Asignar auto.'),
+                ),
+                SizedBox(
+                  width: 8.0,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: BlocBuilder<MesasBloc, MesasState>(
+                builder: (context, state) {
+                  if (state is LoadingMesasState) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is MostrarMesasState) {
+                    if (state.listaMesas != null) {
+                      lastNumMesa = state.listaMesas.last.numDeMesa;
+                      listaMesaFromDB = state.listaMesas;
+
+                      if (state.listaMesas.length > 0) {
+                        return _buildListaMesas(state.listaMesas);
+                      } else {
+                        return Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'No se encontraron datos',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        );
+                      }
+                    } else {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'No se encontraron datos',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      );
+                    }
+                  } else if (state is ErrorMesasState) {
+                    return Container(
+                      child: Center(child: Text(state.message)),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            ),
+            if (mesaModelData != null) Divider(),
+            if (mesaModelData != null)
+              SizedBox(
+                height: 10.0,
+              ),
+            if (mesaModelData != null) Expanded(child: formTableByMesa())
+          ],
         ),
-        if (mesaModelData != null) Divider(),
-        if (mesaModelData != null)
-          SizedBox(
-            height: 10.0,
-          ),
-        if (mesaModelData != null) Expanded(child: formTableByMesa())
-      ],
+      ),
     );
   }
 

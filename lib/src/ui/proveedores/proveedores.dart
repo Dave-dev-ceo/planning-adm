@@ -38,11 +38,18 @@ class _ProveedoresState extends State<Proveedores> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          child: IndexedStack(
-        index: _selectedIndex,
-        children: [_listaProveedore(), Servicios()],
-      )),
+      body: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await proveedorBloc.add(FechtProveedorEvent());
+          await proveedorBloc.add(FechtSevicioByProveedorEvent());
+        },
+        child: Container(
+            child: IndexedStack(
+          index: _selectedIndex,
+          children: [_listaProveedore(), Servicios()],
+        )),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: expasionFabButton(),
       /* FloatingActionButton(

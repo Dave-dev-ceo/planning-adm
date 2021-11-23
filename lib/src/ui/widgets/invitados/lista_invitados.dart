@@ -400,16 +400,22 @@ class _ListaInvitadosState extends State<ListaInvitados>
   listaInvitados(BuildContext cont) {
     ///bloc.dispose();
     blocInvitados.fetchAllInvitados(cont);
-    return StreamBuilder(
-      stream: blocInvitados.allInvitados,
-      builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
-        if (snapshot.hasData) {
-          return buildList(snapshot);
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return Center(child: CircularProgressIndicator());
+    return RefreshIndicator(
+      color: Colors.blue,
+      onRefresh: () async {
+        await blocInvitados.fetchAllInvitados(context);
       },
+      child: StreamBuilder(
+        stream: blocInvitados.allInvitados,
+        builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
+          if (snapshot.hasData) {
+            return buildList(snapshot);
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 

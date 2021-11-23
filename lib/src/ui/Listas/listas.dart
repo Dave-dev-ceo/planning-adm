@@ -130,17 +130,24 @@ class _ListaState extends State<Listas> {
 
   Widget getLista(ItemModelListas model) {
     return SingleChildScrollView(
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(height: 400.0, width: 650.0, child: buildList(model)),
-            SizedBox(
-              height: 20,
-            ),
-          ],
+      child: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await listasBloc.add(FechtListasEvent());
+          await _getId();
+        },
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(height: 400.0, width: 650.0, child: buildList(model)),
+              SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
         ),
       ),
     );

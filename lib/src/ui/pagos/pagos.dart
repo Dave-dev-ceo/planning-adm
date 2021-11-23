@@ -41,6 +41,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   HistorialPagosLogic logicPagos = HistorialPagosLogic();
 
   bool isInvolucrado;
+  bool isPressed = false;
 
   int totalpresupuestos = 0;
   int totalsaldopresupuestoInterno = 0;
@@ -75,6 +76,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
     if (idInvolucrado != null) {
       isInvolucrado = true;
+      index = 1;
     } else {
       isInvolucrado = false;
     }
@@ -82,37 +84,70 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          SingleChildScrollView(child: bodyPagosPlanner()),
-          SingleChildScrollView(child: pagosEventos())
-        ],
-      ),
-      bottomNavigationBar: TabBar(
-        controller: _tabController,
-        tabs: [
-          Tab(
-            text: 'Interno',
-            icon: Tooltip(
-              message: 'Interno',
-              child: Icon(Icons.insert_chart_outlined_sharp),
-            ),
+    if (isInvolucrado) {
+      return Scaffold(
+        body: SingleChildScrollView(
+          child: RefreshIndicator(
+            color: Colors.blue,
+            onRefresh: () async {
+              await pagosBloc.add(SelectPagosEvent());
+              await historialPagosBloc.add(MostrarHistorialPagosEvent());
+            },
+            child: pagosEventos(),
           ),
-          Tab(
-            text: 'Evento',
-            icon: Tooltip(
-              message: 'Evento',
-              child: Icon(Icons.event),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: _botonAction(),
+      );
+    } else {
+      return Scaffold(
+        key: _scaffoldKey,
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            SingleChildScrollView(
+                child: RefreshIndicator(
+                    color: Colors.blue,
+                    onRefresh: () async {
+                      await pagosBloc.add(SelectPagosEvent());
+                      await historialPagosBloc
+                          .add(MostrarHistorialPagosEvent());
+                    },
+                    child: bodyPagosPlanner())),
+            SingleChildScrollView(
+                child: RefreshIndicator(
+                    color: Colors.blue,
+                    onRefresh: () async {
+                      await pagosBloc.add(SelectPagosEvent());
+                      await historialPagosBloc
+                          .add(MostrarHistorialPagosEvent());
+                    },
+                    child: pagosEventos()))
+          ],
+        ),
+        bottomNavigationBar: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(
+              text: 'Interno',
+              icon: Tooltip(
+                message: 'Interno',
+                child: Icon(Icons.insert_chart_outlined_sharp),
+              ),
             ),
-          )
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _botonAction(),
-    );
+            Tab(
+              text: 'Evento',
+              icon: Tooltip(
+                message: 'Evento',
+                child: Icon(Icons.event),
+              ),
+            )
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: _botonAction(),
+      );
+    }
   }
 
   Widget pagosEventos() {
@@ -133,14 +168,17 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               width: 100,
             ),
             ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.black),
-                onPressed: () {
-                  _abrirDialog('E', false, HistorialPagosModel());
-                },
-                child: Text(
-                  'Agregar Pago',
-                  style: TextStyle(color: Colors.white),
-                ))
+              style: ElevatedButton.styleFrom(primary: Colors.black),
+              onPressed: isPressed
+                  ? () {
+                      _abrirDialog('E', false, HistorialPagosModel());
+                    }
+                  : null,
+              child: Text(
+                'Agregar Pago',
+                style: TextStyle(color: Colors.white),
+              ),
+            )
           ],
         ),
         SizedBox(
@@ -173,9 +211,11 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.black),
-              onPressed: () {
-                _abrirDialog('I', false, HistorialPagosModel());
-              },
+              onPressed: isPressed
+                  ? () {
+                      _abrirDialog('I', false, HistorialPagosModel());
+                    }
+                  : null,
               child: Text(
                 'Agregar Pago',
                 style: TextStyle(color: Colors.white),
@@ -516,12 +556,12 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           RichText(
             text: TextSpan(
               text: 'Total: ',
+              style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
                   text: '\$${f.format(totalpresupuestos)}',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontWeight: FontWeight.bold, color: Colors.black),
                 )
               ],
             ),
@@ -532,6 +572,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           RichText(
             text: TextSpan(
               text: 'Pagos: ',
+              style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
                   text: index == 0
@@ -539,6 +580,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                       : '\$${f.format(totalpagosEventos)}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 )
               ],
@@ -550,12 +592,14 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           RichText(
             text: TextSpan(
               text: 'Saldo: ',
+              style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
                   text: index == 0
                       ? '\$${f.format(totalsaldopresupuestoInterno)}'
                       : '\$${f.format(totalsaldopresupuestoEvento)}',
                   style: TextStyle(
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 )
@@ -632,6 +676,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   _crearLista(ItemModelPagos itemPago) {
     List<List<DataCell>> pagosList = [];
     if (itemPago.pagos.length > 0) {
+      isPressed = true;
       var total = 0;
       var saldo = 0;
       itemPago.pagos.forEach((element) {
@@ -756,6 +801,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               onPressed: () {
                 Navigator.of(context).pop();
                 pagosBloc.add(DeletePagosEvent(id));
+                setState(() {
+                  isPressed = false;
+                });
                 _mensaje('Pago borrado');
               },
             ),

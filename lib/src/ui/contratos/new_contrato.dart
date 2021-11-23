@@ -47,7 +47,9 @@ class New_ContratoState extends State<NewContrato> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(child: _myBloc()),
+      body: SingleChildScrollView(
+        child: _myBloc(),
+      ),
       bottomNavigationBar: _showNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: _showButton(),
@@ -113,7 +115,12 @@ class New_ContratoState extends State<NewContrato> {
                   ))
               .toList();
         }
-        return _showContratos();
+        return RefreshIndicator(
+            color: Colors.blue,
+            onRefresh: () async {
+              await contratosBloc.add(ContratosSelect());
+            },
+            child: _showContratos());
       } else {
         return Center(
           child: CircularProgressIndicator(),

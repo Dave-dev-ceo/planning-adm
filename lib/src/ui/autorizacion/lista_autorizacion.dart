@@ -95,32 +95,38 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
 
   // stickyheader
   _crearStickyHeader(ItemModelAutorizacion item) {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      color: Colors.white,
-      child: ListView(
-        children: [
-          Column(
-            children: [
-              StickyHeader(
-                header: Card(
-                  elevation: 5,
-                  color: Colors.white,
-                  child: ExpansionTile(
-                    title: _header('Autorizaciones', 20.0),
-                    leading: null,
-                    trailing: Icon(Icons.add),
-                    backgroundColor: Colors.white,
-                    children: [
-                      _content(),
-                    ],
+    return RefreshIndicator(
+      color: Colors.blue,
+      onRefresh: () async {
+        await autorizacionBloc.add(SelectAutorizacionEvent());
+      },
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        color: Colors.white,
+        child: ListView(
+          children: [
+            Column(
+              children: [
+                StickyHeader(
+                  header: Card(
+                    elevation: 5,
+                    color: Colors.white,
+                    child: ExpansionTile(
+                      title: _header('Autorizaciones', 20.0),
+                      leading: null,
+                      trailing: Icon(Icons.add),
+                      backgroundColor: Colors.white,
+                      children: [
+                        _content(),
+                      ],
+                    ),
                   ),
+                  content: _listaAutorizaciones(item),
                 ),
-                content: _listaAutorizaciones(item),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

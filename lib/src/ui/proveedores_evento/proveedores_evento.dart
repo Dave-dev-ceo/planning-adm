@@ -50,22 +50,28 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   Widget build(BuildContext context) {
     if (checkInvolucrado == null) {
       return Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(15),
-            child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
-                builder: (context, state) {
-              if (state is MostrarProveedorEventoState) {
-                if (state.detlistas != null && _dataPrvEv.length == 0) {
-                  state.detlistas.results.forEach((element) {});
-                  _dataPrvEv = _createDataListProvEvt(state.detlistas);
+        body: RefreshIndicator(
+          color: Colors.blue,
+          onRefresh: () async {
+            await proveedoreventosBloc.add(FechtProveedorEventosEvent());
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(15),
+              child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
+                  builder: (context, state) {
+                if (state is MostrarProveedorEventoState) {
+                  if (state.detlistas != null && _dataPrvEv.length == 0) {
+                    state.detlistas.results.forEach((element) {});
+                    _dataPrvEv = _createDataListProvEvt(state.detlistas);
+                  }
+                  return _listaBuild();
+                } else {
+                  return Center(child: CircularProgressIndicator());
                 }
-                return _listaBuild();
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
+              }),
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(

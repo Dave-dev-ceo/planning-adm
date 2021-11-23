@@ -60,7 +60,12 @@ class _PlanesState extends State<Planes> {
   // creo el scaffold muestra la vista - v1
   Scaffold _crearScaffold() {
     return Scaffold(
-      body: _buildBloc(),
+      body: RefreshIndicator(
+          color: Colors.blue,
+          onRefresh: () async {
+            await _planesBloc.add(SelectPlanesEventoEvent(_condicionQuery));
+          },
+          child: _buildBloc()),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: _botonFlotante(),
     );

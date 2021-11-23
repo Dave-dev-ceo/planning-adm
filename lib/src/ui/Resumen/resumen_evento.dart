@@ -426,25 +426,35 @@ class _ResumenEventoState extends State<ResumenEvento> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Center(
-              child: Wrap(
-                spacing: 10.0,
-                runSpacing: 20.0,
-                children: [
-                  //Expanded(
-                  //child:
-                  reporteEvento(),
-                  reporteInvitados(),
-                  fechaData(),
-                  futureToPlannes(),
-                  //),
-                ],
-              ),
-            )
-          ],
+      body: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await eventosBloc.add(EvtBloc.FetchEventoPorIdEvent(
+              detalleEvento['idEvento'].toString()));
+          await _planesLogic.getAllPlannes();
+          await blocInvitados.fetchAllReporteGrupos(context);
+          await blocInvitados.fetchAllReporteInvitados(context);
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Center(
+                child: Wrap(
+                  spacing: 10.0,
+                  runSpacing: 20.0,
+                  children: [
+                    //Expanded(
+                    //child:
+                    reporteEvento(),
+                    reporteInvitados(),
+                    fechaData(),
+                    futureToPlannes(),
+                    //),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
