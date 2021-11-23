@@ -518,7 +518,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
     final data = await api.downloadPDFInvitados();
 
     if (data != null) {
-      buildPDFDownload(data, 'Lista-Invitados');
+      downloadFile(data, 'Lista-Invitados');
     }
   }
 }

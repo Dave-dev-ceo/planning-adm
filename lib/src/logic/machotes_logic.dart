@@ -9,6 +9,8 @@ abstract class ListaMachotesLogic {
   Future<ItemModelMachotes> fetchMachotes();
   Future<bool> updateMachotes(Map<String, dynamic> data);
   Future<int> createMachotes(Map<String, dynamic> data);
+  Future<bool> updateNameMachote(int idMachote, String newNombre);
+  Future<bool> eliminarMachote(int idMachote);
 }
 
 class ListaMachotesException implements Exception {}
@@ -90,6 +92,58 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
       throw TokenException();
     } else {
       throw CreateMachotesException();
+    }
+  }
+
+  @override
+  Future<bool> updateNameMachote(int idMachote, String newNombre) async {
+    String token = await _sharedPreferences.getToken();
+
+    final endpoint = 'wedding/MACHOTES/updateNombreMachote';
+
+    final data = {'idMachote': idMachote, 'nombre': newNombre};
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final response = await client.post(
+        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        body: json.encode(data),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> eliminarMachote(int idMachote) async {
+    String token = await _sharedPreferences.getToken();
+
+    final endpoint = 'wedding/MACHOTES/eliminarMachote';
+
+    final data = {'idMachote': idMachote};
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final response = await client.post(
+        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        body: json.encode(data),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

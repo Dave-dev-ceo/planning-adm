@@ -86,7 +86,7 @@ class _ProveedoresState extends State<Proveedores> {
           onTap: () async {
             final data = await proveedoresLogic.downloadPDFProveedor();
             if (data != null) {
-              await buildPDFDownload(data, 'Proveedores');
+              await downloadFile(data, 'Proveedores');
             }
           },
         ),

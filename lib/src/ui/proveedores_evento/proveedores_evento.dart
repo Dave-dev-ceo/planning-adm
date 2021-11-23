@@ -80,7 +80,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             final data =
                 await proveedoresEventoLogic.downloadPDFProveedoresEvento();
             if (data != null) {
-              buildPDFDownload(data, 'Proveedores-Evento');
+              downloadFile(data, 'Proveedores-Evento');
             }
           },
           tooltip: 'Descargar PDF',
@@ -112,7 +112,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             final data =
                 await proveedoresEventoLogic.downloadPDFProveedoresEvento();
             if (data != null) {
-              buildPDFDownload(data, 'Proveedores-Evento');
+              downloadFile(data, 'Proveedores-Evento');
             }
           },
           tooltip: 'Descargar PDF',

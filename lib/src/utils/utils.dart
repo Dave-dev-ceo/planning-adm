@@ -2,8 +2,12 @@ import 'dart:convert';
 
 import 'package:universal_html/html.dart' as html hide Text;
 
-void buildPDFDownload(String data, String titulo) async {
+void downloadFile(String data, String titulo, {String extensionFile}) async {
   final date = DateTime.now();
+
+  if (extensionFile == null) {
+    extensionFile = 'pdf';
+  }
 
   final bytes = base64Decode(data);
   final blob = html.Blob([bytes]);
@@ -12,7 +16,7 @@ void buildPDFDownload(String data, String titulo) async {
   final anchor = html.document.createElement('a') as html.AnchorElement
     ..href = url
     ..style.display = 'none'
-    ..download = '$titulo-$date.pdf';
+    ..download = '$titulo-$date.$extensionFile';
   html.document.body.children.add(anchor);
   anchor.click();
   html.document.body.children.remove(anchor);

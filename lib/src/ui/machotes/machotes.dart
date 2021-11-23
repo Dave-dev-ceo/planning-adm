@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
 import 'package:planning/src/models/item_model_machotes.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 
 class Machotes extends StatefulWidget {
   const Machotes({Key key}) : super(key: key);
@@ -26,6 +27,8 @@ class _MachotesState extends State<Machotes> {
   String _clave = "CT";
   int _selectedIndex = 0;
 
+  List<bool> editsContratos = [];
+
   @override
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
@@ -44,6 +47,8 @@ class _MachotesState extends State<Machotes> {
   }
 
   _contectCont(ItemModelMachotes itemMC, int element) {
+    String temp = itemMC.results.elementAt(element).descripcion;
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed('/editPlantilla', arguments: [
@@ -55,32 +60,115 @@ class _MachotesState extends State<Machotes> {
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(12),
         elevation: 10,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Container(
-                alignment: Alignment.topLeft,
-                height: 25,
-                width: double.infinity,
-                child: FittedBox(
-                  child: Text(
-                    itemMC.results.elementAt(element).descripcion,
-                    style: TextStyle(fontSize: 20),
-                    textAlign: TextAlign.left,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+                title: Container(
+                  alignment: Alignment.topLeft,
+                  height: 25,
+                  width: double.infinity,
+                  child: FittedBox(
+                    child: Text(
+                      itemMC.results.elementAt(element).descripcion,
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
                 ),
+                leading: Icon(Icons.event),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Center(
+                              child: Text('Editar Nombre de la plantilla'),
+                            ),
+                            content: ResponsiveGridRow(
+                              children: [
+                                ResponsiveGridCol(
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Nombre de la plantilla'),
+                                    initialValue: temp,
+                                    onChanged: (value) {
+                                      temp = value;
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  if (temp != '') {
+                                    await machotesBloc.add(
+                                        UpdateNombreMachoteEvent(
+                                            itemMC.results
+                                                .elementAt(element)
+                                                .idMachote,
+                                            temp));
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                child: Text('Aceptar'),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.edit),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Eliminar plantilla'),
+                            content: Text('¿Desea eliminar la plantilla?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  await machotesBloc.add(EliminarMachoteEvent(
+                                      itemMC.results
+                                          .elementAt(element)
+                                          .idMachote));
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Aceptar'),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.delete),
+                    )
+                  ],
+                ),
               ),
-              subtitle: Container(
-                  height: 55,
-                  //color: Colors.purple,
-                  child:
-                      Text(itemModelMC.results.elementAt(element).descripcion)),
-              leading: Icon(Icons.event),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -247,6 +335,7 @@ class _MachotesState extends State<Machotes> {
                 return Center(child: CircularProgressIndicator());
               } else if (state is MostrarMachotesState) {
                 itemModelMC = state.machotes;
+                editsContratos = [];
                 return _constructorLista(state.machotes);
               } else if (state is ErrorListaMachotesState) {
                 return Center(

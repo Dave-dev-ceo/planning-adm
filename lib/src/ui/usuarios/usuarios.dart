@@ -123,7 +123,7 @@ class _UsuariosState extends State<Usuarios> {
             final data = await usuariosLogic.downloadPdfUsuarios();
 
             if (data != null) {
-              buildPDFDownload(data, 'Usuarios');
+              downloadFile(data, 'Usuarios');
             }
           },
           child: Icon(Icons.download),

@@ -1,4 +1,5 @@
 // imports from flutter/dart
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' show Client;
@@ -358,6 +359,59 @@ class ConsultasPlanesLogic extends PlanesLogic {
                   json.decode(resp.body).map((e) => PlannesModel.fromJson(e)))
               .toList() ??
           [];
+
+      return listaPlannes;
+    } else {
+      return null;
+    }
+  }
+}
+
+class ActividadesEvento {
+  final _actividadesStreamController =
+      StreamController<List<PlannesModel>>.broadcast();
+  Function(List<PlannesModel>) get actividadeSink =>
+      _actividadesStreamController.sink.add;
+
+  Stream<List<PlannesModel>> get actividadesStream =>
+      _actividadesStreamController.stream;
+
+  void dispose() {
+    _actividadesStreamController?.close();
+  }
+
+  Future<List<PlannesModel>> getAllPlannes() async {
+    SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+    ConfigConection confiC = new ConfigConection();
+    Client client = Client();
+
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PLANES/getAllPlanes';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      List<PlannesModel> listaPlannes = List<PlannesModel>.from(
+                  json.decode(resp.body).map((e) => PlannesModel.fromJson(e)))
+              .toList() ??
+          [];
+
+      actividadeSink(listaPlannes);
 
       return listaPlannes;
     } else {

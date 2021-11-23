@@ -81,7 +81,7 @@ class _DetalleListasState extends State<DetalleListas> {
               .downloadPDFDetalleLista(widget.lista['id_lista']);
 
           if (data != null) {
-            buildPDFDownload(data, 'detalles-lista');
+            downloadFile(data, 'detalles-lista');
           }
         },
       ),

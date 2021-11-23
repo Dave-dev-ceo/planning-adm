@@ -759,7 +759,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 ? await pagosLogic.downlooadPagosEvento('I')
                 : await pagosLogic.downlooadPagosEvento('E');
             if (data != null) {
-              buildPDFDownload(data, 'Pagos-Evento');
+              downloadFile(data, 'Pagos-Evento');
             }
           },
         )

@@ -31,7 +31,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   final bool WP_EVT_RES_EDT;
   EvtBloc.EventosBloc eventosBloc;
   FetchListaEventosLogic eventoLogic = FetchListaEventosLogic();
-  ConsultasPlanesLogic _planesLogic = ConsultasPlanesLogic();
+  ActividadesEvento _planesLogic = ActividadesEvento();
 
   Timer _timer;
 
@@ -40,6 +40,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
     eventosBloc = BlocProvider.of<EvtBloc.EventosBloc>(context);
     eventosBloc.add(
         EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
+    _planesLogic.getAllPlannes();
 
     super.initState();
   }
@@ -203,9 +204,21 @@ class _ResumenEventoState extends State<ResumenEvento> {
     Duration fechaEventoTime =
         DateTime.now().difference(DateTime.parse(fechaEvento));
 
-    // if (fechaEventoTime.inSeconds.isNegative) {
-    //   fechaEventoTime = startTimer(fechaEventoTime, fechaEvento);
-    // }
+    if (fechaEventoTime.inSeconds.isNegative) {
+      isActive = true;
+      if (mounted) {
+        _timer = Timer(Duration(seconds: 1), () {
+          if (mounted) {
+            setState(() {
+              fechaEventoTime =
+                  DateTime.parse(fechaEvento).difference(DateTime.now());
+            });
+          }
+        });
+      } else {
+        _timer.cancel();
+      }
+    }
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -213,18 +226,25 @@ class _ResumenEventoState extends State<ResumenEvento> {
       ),
       margin: EdgeInsets.all(20.0),
       elevation: 10,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(4.0),
-        child: Column(
-          children: [
-            RichText(
-                text: TextSpan(
-              style: TextStyle(fontSize: 18.0),
-              text: isActive
-                  ? '${_printDuration(fechaEventoTime)}'
-                  : 'El evento ya finalizo',
-            ))
-          ],
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListTile(
+          leading: Icon(Icons.access_time_filled_outlined),
+          title: Column(
+            children: [
+              Text(
+                'Fecha restante:',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              RichText(
+                  text: TextSpan(
+                style: TextStyle(fontSize: 18.0, color: Colors.black),
+                text: isActive
+                    ? '${_printDuration(fechaEventoTime)}'
+                    : 'El evento ya finalizo',
+              )),
+            ],
+          ),
         ),
       ),
     );
@@ -309,8 +329,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget futureToPlannes() {
-    return FutureBuilder(
-      future: _planesLogic.getAllPlannes(),
+    return StreamBuilder(
+      stream: _planesLogic.actividadesStream,
       builder:
           (BuildContext context, AsyncSnapshot<List<PlannesModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -447,8 +467,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
                     //child:
                     reporteEvento(),
                     reporteInvitados(),
-                    fechaData(),
                     futureToPlannes(),
+                    fechaData(),
                     //),
                   ],
                 ),
@@ -463,7 +483,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           final data = await eventoLogic.donwloadPDFEvento();
 
           if (data != null) {
-            buildPDFDownload(data, 'Resumen_Evento');
+            downloadFile(data, 'Resumen_Evento');
           }
         },
         tooltip: 'Descargar PDF',

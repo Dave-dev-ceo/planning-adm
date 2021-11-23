@@ -86,7 +86,7 @@ class _TimingState extends State<Timing> {
           final data = await timingsLogic.downloadPDFTiming();
 
           if (data != null) {
-            await buildPDFDownload(data, 'Cronogramas');
+            await downloadFile(data, 'Cronogramas');
           }
         },
       ),

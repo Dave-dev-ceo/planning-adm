@@ -97,6 +97,8 @@ class FetchListaEventosLogic extends ListaEventosLogic {
         body: dataEvento,
         headers: {HttpHeaders.authorizationHeader: token});
 
+    print(response.body);
+
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
       await _sharedPreferences.setToken(responseEvento['token']);

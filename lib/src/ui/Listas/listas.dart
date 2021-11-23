@@ -121,7 +121,7 @@ class _ListaState extends State<Listas> {
               final data = await listaLogic.downloadPDFListas();
 
               if (data != null) {
-                buildPDFDownload(data, 'listas');
+                downloadFile(data, 'listas');
               }
             })
       ],

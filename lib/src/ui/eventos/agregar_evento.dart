@@ -110,7 +110,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
             // );
             // ScaffoldMessenger.of(context).showSnackBar(snackBar);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Evento agregardo'),
+              content: Text('Evento agregado'),
             ));
             _clearController();
           } else if (state is ErrorCreateEventosState) {

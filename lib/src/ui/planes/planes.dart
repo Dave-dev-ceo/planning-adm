@@ -790,7 +790,7 @@ class _PlanesState extends State<Planes> {
             final data = await planesLogic.donwloadPDFPlanesEvento();
 
             if (data != null) {
-              utils.buildPDFDownload(data, 'Actividades_Evento');
+              utils.downloadFile(data, 'Actividades_Evento');
             }
           },
           label: 'Descargar PDF',

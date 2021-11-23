@@ -46,6 +46,17 @@ class MachotesBloc extends Bloc<MachotesEvent, MachotesState> {
       } on UpdateMachotesException {
         yield ErrorUpdateMachotesState("No de actualizo");
       }
+    } else if (event is UpdateNombreMachoteEvent) {
+      try {
+        final data =
+            await logic.updateNameMachote(event.idMachote, event.nuevoombre);
+        add(FechtMachotesEvent());
+      } catch (e) {}
+    } else if (event is EliminarMachoteEvent) {
+      try {
+        final data = await logic.eliminarMachote(event.idMachote);
+        add(FechtMachotesEvent());
+      } catch (e) {}
     }
   }
 }

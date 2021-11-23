@@ -76,6 +76,7 @@ class _MesasPageState extends State<MesasPage> {
   void initState() {
     invitadosBloc = BlocProvider.of<InvitadosMesasBloc>(context);
     mesasAsignadasService.getMesasAsignadas();
+    // mesasAsignadasService.getLayoutMesa();
     BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
     BlocProvider.of<InvitadosMesasBloc>(context)
         .add(MostrarInvitadosMesasEvent());
@@ -318,114 +319,124 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget _gridMesasWidget(List<MesaModel> listaMesa) {
-    Widget gridOfListaMesas = GridView.builder(
-      key: previewContainer,
-      itemCount: listaMesa.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1.5,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        editTitleMesa.add(false);
-        String nameCurrentMesa;
-        int idCurrentMesa;
-        final listaAsignados = listaMesasAsignadas
-            .where((m) => m.idMesa == listaMesa[index].idMesa);
-        return ConstrainedBox(
-          constraints: BoxConstraints(),
-          child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              margin: EdgeInsets.all(6.0),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Center(
-                      child: ListTile(
-                        trailing: IconButton(
-                          onPressed: () async {
-                            setState(() {
-                              editTitleMesa[index]
-                                  ? editTitleMesa[index] = false
-                                  : editTitleMesa[index] = true;
-
-                              if (!editTitleMesa[index]) {
-                                idCurrentMesa = listaMesa[index].idMesa;
-                                if (nameCurrentMesa == null ||
-                                    nameCurrentMesa == '') {
-                                  nameCurrentMesa =
-                                      listaMesa[index].descripcion;
-                                }
-                                ;
-                                mesasLogic
-                                    .updateMesa(nameCurrentMesa, idCurrentMesa)
-                                    .then((value) {
-                                  if (value == 'Ok') {
-                                    BlocProvider.of<MesasBloc>(context)
-                                        .add(MostrarMesasEvent());
-                                    _mostrarMensaje(
-                                        'La mesa se edito correctamente',
-                                        Colors.green);
-                                  } else {
-                                    _mostrarMensaje(value, Colors.red);
-                                  }
-                                });
-                              }
-                            });
-                          },
-                          icon: Icon(
-                              !editTitleMesa[index] ? Icons.edit : Icons.save),
-                        ),
-                        title: TextFormField(
-                          enabled: editTitleMesa[index],
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          initialValue: listaMesa[index].descripcion,
-                          onChanged: (value) {
-                            nameCurrentMesa = value;
-                          },
-                        ),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        subtitle: Text(listaMesa[index].tipoMesa),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: listaMesa[index].dimension,
-                          itemBuilder: (BuildContext context, int i) {
-                            String temp = '';
-                            if (listaMesasAsignadas.isNotEmpty) {
-                              final asigando = listaAsignados.firstWhere(
-                                (a) => a.posicion == i + 1,
-                                orElse: () => null,
-                              );
-                              if (asigando != null)
-                                asigando.idAcompanante != 0
-                                    ? temp = asigando.acompanante
-                                    : temp = asigando.invitado;
-                            }
-                            return TextFormField(
-                              enabled: false,
-                              decoration:
-                                  InputDecoration(labelText: 'Silla ${i + 1}'),
-                              initialValue: temp,
-                            );
-                          }),
-                    )
-                  ],
-                ),
-              )),
-        );
+    return RefreshIndicator(
+      color: Colors.blue,
+      onRefresh: () async {
+        await mesasAsignadasService.getMesasAsignadas();
+        await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+        await BlocProvider.of<InvitadosMesasBloc>(context)
+            .add(MostrarInvitadosMesasEvent());
       },
+      child: GridView.builder(
+        key: previewContainer,
+        itemCount: listaMesa.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 1.5,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          editTitleMesa.add(false);
+          String nameCurrentMesa;
+          int idCurrentMesa;
+          final listaAsignados = listaMesasAsignadas
+              .where((m) => m.idMesa == listaMesa[index].idMesa);
+          return ConstrainedBox(
+            constraints: BoxConstraints(),
+            child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                margin: EdgeInsets.all(6.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: ListTile(
+                          trailing: IconButton(
+                            onPressed: () async {
+                              setState(() {
+                                editTitleMesa[index]
+                                    ? editTitleMesa[index] = false
+                                    : editTitleMesa[index] = true;
+
+                                if (!editTitleMesa[index]) {
+                                  idCurrentMesa = listaMesa[index].idMesa;
+                                  if (nameCurrentMesa == null ||
+                                      nameCurrentMesa == '') {
+                                    nameCurrentMesa =
+                                        listaMesa[index].descripcion;
+                                  }
+                                  ;
+                                  mesasLogic
+                                      .updateMesa(
+                                          nameCurrentMesa, idCurrentMesa)
+                                      .then((value) {
+                                    if (value == 'Ok') {
+                                      BlocProvider.of<MesasBloc>(context)
+                                          .add(MostrarMesasEvent());
+                                      _mostrarMensaje(
+                                          'La mesa se edito correctamente',
+                                          Colors.green);
+                                    } else {
+                                      _mostrarMensaje(value, Colors.red);
+                                    }
+                                  });
+                                }
+                              });
+                            },
+                            icon: Icon(!editTitleMesa[index]
+                                ? Icons.edit
+                                : Icons.save),
+                          ),
+                          title: TextFormField(
+                            enabled: editTitleMesa[index],
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            initialValue: listaMesa[index].descripcion,
+                            onChanged: (value) {
+                              nameCurrentMesa = value;
+                            },
+                          ),
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          subtitle: Text(listaMesa[index].tipoMesa),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: listaMesa[index].dimension,
+                            itemBuilder: (BuildContext context, int i) {
+                              String temp = '';
+                              if (listaMesasAsignadas.isNotEmpty) {
+                                final asigando = listaAsignados.firstWhere(
+                                  (a) => a.posicion == i + 1,
+                                  orElse: () => null,
+                                );
+                                if (asigando != null)
+                                  asigando.idAcompanante != 0
+                                      ? temp = asigando.acompanante
+                                      : temp = asigando.invitado;
+                              }
+                              return TextFormField(
+                                enabled: false,
+                                decoration: InputDecoration(
+                                    labelText: 'Silla ${i + 1}'),
+                                initialValue: temp,
+                              );
+                            }),
+                      )
+                    ],
+                  ),
+                )),
+          );
+        },
+      ),
     );
-    return gridOfListaMesas;
   }
 
   Future<void> _createPdfToMesa() async {
@@ -574,16 +585,15 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget buildAsignarMesaMovil() {
-    return SingleChildScrollView(
-      child: RefreshIndicator(
-        color: Colors.blue,
-        onRefresh: () async {
-          await mesasAsignadasService.getMesasAsignadas();
-
-          await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
-          await BlocProvider.of<InvitadosMesasBloc>(context)
-              .add(MostrarInvitadosMesasEvent());
-        },
+    return RefreshIndicator(
+      color: Colors.blue,
+      onRefresh: () async {
+        await mesasAsignadasService.getMesasAsignadas();
+        await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+        await BlocProvider.of<InvitadosMesasBloc>(context)
+            .add(MostrarInvitadosMesasEvent());
+      },
+      child: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
@@ -715,121 +725,109 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget buildAsignarMesaDesktop() {
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              height: 20.0,
-            ),
-            Expanded(
-                child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
-                    builder: (context, state) {
-                      if (state is LoadingInvitadoMesasState) {
-                        return Align(
-                          alignment: Alignment.center,
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (state is MostraListaInvitadosMesaState) {
-                        state.listaInvitadoMesa.length > 0
-                            ? _enable = true
-                            : _enable = false;
-                        if (state.listaInvitadoMesa.isNotEmpty ||
-                            state.listaInvitadoMesa != null) {
-                          _listaInvitadoDisponibles = state.listaInvitadoMesa;
-
-                          return Expanded(
-                              child: buildListInvitadosConfirmador(
-                                  state.listaInvitadoMesa));
-                        } else {
-                          return Text('No se encontraron datos');
-                        }
-                      } else if (state is ErrorInvitadoMesaState) {
-                        return Center(
-                          child: Text(state.message),
-                        );
-                      } else {
-                        return Align(
-                          alignment: Alignment.center,
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    },
-                  )
-                ],
-              ),
-            )),
-            SizedBox(
-              width: 8.0,
-            ),
-            Column(
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          SizedBox(
+            height: 20.0,
+          ),
+          Expanded(
+              child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: asignarMesas,
-                  child: Icon(Icons.arrow_forward),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ElevatedButton(
-                  onPressed: _deleteAsignadoToMesa,
-                  child: Icon(Icons.arrow_back),
-                ),
-                Spacer(),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 5.0,
-                  ),
-                  onPressed: _asignarAutoMesas,
-                  child: Text('Asignar auto.'),
-                ),
-                SizedBox(
-                  height: 20.0,
+                BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
+                  builder: (context, state) {
+                    if (state is LoadingInvitadoMesasState) {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is MostraListaInvitadosMesaState) {
+                      state.listaInvitadoMesa.length > 0
+                          ? _enable = true
+                          : _enable = false;
+                      if (state.listaInvitadoMesa.isNotEmpty ||
+                          state.listaInvitadoMesa != null) {
+                        _listaInvitadoDisponibles = state.listaInvitadoMesa;
+
+                        return Expanded(
+                            child: buildListInvitadosConfirmador(
+                                state.listaInvitadoMesa));
+                      } else {
+                        return Text('No se encontraron datos');
+                      }
+                    } else if (state is ErrorInvitadoMesaState) {
+                      return Center(
+                        child: Text(state.message),
+                      );
+                    } else {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
                 )
               ],
             ),
-            SizedBox(
-              width: 8.0,
-            ),
-            Expanded(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                child: Column(
-                  children: [
-                    BlocBuilder<MesasBloc, MesasState>(
-                      builder: (context, state) {
-                        if (state is LoadingMesasState) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (state is MostrarMesasState) {
-                          if (state.listaMesas != null) {
-                            lastNumMesa = state.listaMesas.last.numDeMesa;
-                            listaMesaFromDB = state.listaMesas;
+          )),
+          SizedBox(
+            width: 8.0,
+          ),
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: asignarMesas,
+                child: Icon(Icons.arrow_forward),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              ElevatedButton(
+                onPressed: _deleteAsignadoToMesa,
+                child: Icon(Icons.arrow_back),
+              ),
+              Spacer(),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 5.0,
+                ),
+                onPressed: _asignarAutoMesas,
+                child: Text('Asignar auto.'),
+              ),
+              SizedBox(
+                height: 20.0,
+              )
+            ],
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Expanded(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Column(
+                children: [
+                  BlocBuilder<MesasBloc, MesasState>(
+                    builder: (context, state) {
+                      if (state is LoadingMesasState) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is MostrarMesasState) {
+                        if (state.listaMesas != null) {
+                          lastNumMesa = state.listaMesas.last.numDeMesa;
+                          listaMesaFromDB = state.listaMesas;
 
-                            if (state.listaMesas.length > 0) {
-                              return _buildListaMesas(state.listaMesas);
-                            } else {
-                              return Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'No se encontraron datos',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              );
-                            }
+                          if (state.listaMesas.length > 0) {
+                            return _buildListaMesas(state.listaMesas);
                           } else {
                             return Align(
                               alignment: Alignment.center,
@@ -839,28 +837,35 @@ class _MesasPageState extends State<MesasPage> {
                               ),
                             );
                           }
-                        } else if (state is ErrorMesasState) {
-                          return Container(
-                            child: Center(child: Text(state.message)),
-                          );
                         } else {
-                          return Container();
+                          return Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'No se encontraron datos',
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                          );
                         }
-                      },
+                      } else if (state is ErrorMesasState) {
+                        return Container(
+                          child: Center(child: Text(state.message)),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
+                  if (mesaModelData != null) Divider(),
+                  if (mesaModelData != null)
+                    SizedBox(
+                      height: 10.0,
                     ),
-                    if (mesaModelData != null) Divider(),
-                    if (mesaModelData != null)
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    if (mesaModelData != null)
-                      Expanded(child: formTableByMesa())
-                  ],
-                ),
+                  if (mesaModelData != null) Expanded(child: formTableByMesa())
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

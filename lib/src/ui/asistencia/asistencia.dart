@@ -284,7 +284,7 @@ class _AsistenciaState extends State<Asistencia> {
             final data = await asistenciaLogic.downloadPDFAsistencia();
 
             if (data != null) {
-              buildPDFDownload(data, 'asistencia');
+              downloadFile(data, 'asistencia');
             }
           },
           label: 'Descargar PDf',
