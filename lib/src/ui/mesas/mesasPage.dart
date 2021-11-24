@@ -409,6 +409,7 @@ class _MesasPageState extends State<MesasPage> {
                       ),
                       Expanded(
                         child: ListView.builder(
+                            itemExtent: 35.0,
                             itemCount: listaMesa[index].dimension,
                             itemBuilder: (BuildContext context, int i) {
                               String temp = '';
@@ -1035,6 +1036,7 @@ class _MesasPageState extends State<MesasPage> {
     }
     return ListView.builder(
       shrinkWrap: true,
+      itemExtent: 35.0,
       itemCount: listaInvitados.length,
       itemBuilder: (BuildContext context, int index) {
         MesasAsignadasModel asignadotemp = MesasAsignadasModel();
@@ -1104,6 +1106,7 @@ class _MesasPageState extends State<MesasPage> {
     return Form(
       child: ListView.builder(
         shrinkWrap: true,
+        itemExtent: 35.0,
         itemCount: mesaModelData.dimension,
         itemBuilder: (BuildContext context, int i) {
           // * Asignar personas a sillas
@@ -1150,9 +1153,8 @@ class _MesasPageState extends State<MesasPage> {
                       ),
                 title: Padding(
                   padding: EdgeInsets.only(left: temp == '' ? 14 : 0),
-                  child: Text(temp),
+                  child: Text('Silla ${i + 1}: ' + temp),
                 ),
-                subtitle: Text('Silla ${i + 1}:'),
               ),
             ),
           );
