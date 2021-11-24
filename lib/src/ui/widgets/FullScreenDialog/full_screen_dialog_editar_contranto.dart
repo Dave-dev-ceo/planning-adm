@@ -6,6 +6,7 @@ import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:planning/src/models/item_model_etiquetas.dart';
 import 'package:planning/src/resources/api_provider.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class FullScreenDialogEditContrato extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -45,6 +46,7 @@ class _FullScreenDialogEditContratoState
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     var dfd = '<h1>Ejemplo</h1>';
     setState(() {});
     return Scaffold(
@@ -96,38 +98,46 @@ class _FullScreenDialogEditContratoState
                   height: 20,
                   thickness: 5,
                 ),
-                Container(child: BlocBuilder<ContratosDosBloc, ContratosState>(
-                    builder: (context, state) {
-                  if (state is FectValContratoState) {
-                    return HtmlEditor(
-                        controller: controller, //required
-                        htmlEditorOptions: HtmlEditorOptions(
-                            hint: "Escribe aquí...",
-                            initialText: this.data['archivo'].toString()),
-                        otherOptions: OtherOptions(
-                          height: 400,
-                        ));
-                  } else {
-                    return Text('data');
-                  }
-                })),
+                ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: size.width * 0.8,
+                    ),
+                    child: BlocBuilder<ContratosDosBloc, ContratosState>(
+                        builder: (context, state) {
+                      if (state is FectValContratoState) {
+                        return HtmlEditor(
+                            controller: controller, //required
+                            htmlEditorOptions: HtmlEditorOptions(
+                                autoAdjustHeight: false,
+                                adjustHeightForKeyboard: false,
+                                hint: "Escribe aquí...",
+                                initialText: this.data['archivo'].toString()),
+                            otherOptions: OtherOptions(
+                              height: size.height * 0.8,
+                            ));
+                      } else {
+                        return Text('data');
+                      }
+                    })),
               ],
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.save),
-          onPressed: () async {
-            String editArchivo = await controller.getText();
-            Map<String, dynamic> dataJson = {
-              'id_contrato': data['id_contrato'],
-              'archivo': editArchivo
-            };
-            contratosBlocDos.add(UpdateValContratoEvent(dataJson));
-            Navigator.of(context).pop();
-            _mostrarMensaje(
-                'El contrato se actualizó corractamente.', Colors.green);
-          },
+        floatingActionButton: PointerInterceptor(
+          child: FloatingActionButton(
+            child: Icon(Icons.save),
+            onPressed: () async {
+              String editArchivo = await controller.getText();
+              Map<String, dynamic> dataJson = {
+                'id_contrato': data['id_contrato'],
+                'archivo': editArchivo
+              };
+              contratosBlocDos.add(UpdateValContratoEvent(dataJson));
+              Navigator.of(context).pop();
+              _mostrarMensaje(
+                  'El contrato se actualizó corractamente.', Colors.green);
+            },
+          ),
         ));
   }
 

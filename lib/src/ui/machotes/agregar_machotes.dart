@@ -75,6 +75,7 @@ class _AgregarMachoteState extends State<AgregarMachote> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -122,10 +123,12 @@ class _AgregarMachoteState extends State<AgregarMachote> {
                 child: HtmlEditor(
                   controller: controller, //required
                   htmlEditorOptions: HtmlEditorOptions(
+                    autoAdjustHeight: false,
+                    adjustHeightForKeyboard: false,
                     hint: "Ingrese el texto...",
                   ),
                   otherOptions: OtherOptions(
-                    height: 580,
+                    height: size.height * 0.8,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.black, width: 1)),
                   ),

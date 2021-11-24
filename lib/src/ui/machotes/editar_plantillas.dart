@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:planning/src/models/item_model_machotes.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:html_editor_enhanced/utils/options.dart';
 import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class EditarPlantillas extends StatefulWidget {
   final String descripcionPlantilla;
@@ -89,6 +92,7 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -133,39 +137,45 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
                 thickness: 5,
               ),
               Container(
-                  child: HtmlEditor(
-                controller: _controller, //required
-                htmlEditorOptions: HtmlEditorOptions(
-                    hint: "Escribe aquí...", initialText: plantilla),
-                otherOptions: OtherOptions(
-                  height: 400,
+                child: HtmlEditor(
+                  controller: _controller, //required
+                  htmlEditorOptions: HtmlEditorOptions(
+                    hint: "Escribe aquí...",
+                    initialText: plantilla,
+                  ),
+
+                  otherOptions: OtherOptions(
+                    height: size.height * 0.8,
+                  ),
                 ),
-              ))
+              )
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        onPressed: () async {
-          String txt = await _controller.getText();
-          machotesBloc.add(UpdateMachotesEvent({
-            "descripcion": descripcionPlantilla,
-            "machote": txt,
-            "clave": clavePlantilla,
-            "id_machote": idMachote
-          }, itemModelMC));
-          Navigator.of(context).pop();
-          //await _showMyDialogGuardar(context);
+      floatingActionButton: PointerInterceptor(
+        child: FloatingActionButton(
+          child: Icon(Icons.save),
+          onPressed: () async {
+            String txt = await _controller.getText();
+            machotesBloc.add(UpdateMachotesEvent({
+              "descripcion": descripcionPlantilla,
+              "machote": txt,
+              "clave": clavePlantilla,
+              "id_machote": idMachote
+            }, itemModelMC));
+            Navigator.of(context).pop();
+            //await _showMyDialogGuardar(context);
 
-          //final txt = await controller.getText();
-          /*int i = 0;
-          String res;
-          while (i < datas.length) {
-            res =i==0?txt.replaceAll(datas.elementAt(i), dataInfo.elementAt(i)):res.replaceAll(datas.elementAt(i), dataInfo.elementAt(i));
-            i++;
-          }*/
-        },
+            //final txt = await controller.getText();
+            /*int i = 0;
+            String res;
+            while (i < datas.length) {
+              res =i==0?txt.replaceAll(datas.elementAt(i), dataInfo.elementAt(i)):res.replaceAll(datas.elementAt(i), dataInfo.elementAt(i));
+              i++;
+            }*/
+          },
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

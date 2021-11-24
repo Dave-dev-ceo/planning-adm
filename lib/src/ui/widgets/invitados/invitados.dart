@@ -174,7 +174,8 @@ class _InvitadosState extends State<Invitados> {
                           value: 1,
                           child: Text("Perfil"),
                         ),
-                        PopupMenuItem(value: 2, child: Text("Planner")),
+                        if (!isInvolucrado)
+                          PopupMenuItem(value: 2, child: Text("Planner")),
                         PopupMenuItem(
                           value: 3,
                           child: Text("Cerrar sesión"),
@@ -186,8 +187,8 @@ class _InvitadosState extends State<Invitados> {
                         } else if (valor == 2) {
                           Navigator.of(context).pushNamed('/perfilPlanner');
                         } else if (valor == 3) {
-                          await _sharedPreferences.clear();
-                          Navigator.pushReplacementNamed(context, '/');
+                          _sharedPreferences.clear();
+                          Navigator.pushNamed(context, '/');
                         }
                       },
                     ),
