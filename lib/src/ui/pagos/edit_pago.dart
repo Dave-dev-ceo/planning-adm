@@ -162,46 +162,6 @@ class _FormEditPagoState extends State<FormEditPago> {
               SizedBox(
                 height: 32.0,
               ),
-              Text('Total:'),
-              TextFormField(
-                controller: TextEditingController(text: '${itemPago['total']}'),
-                decoration: InputDecoration(hintText: 'Total:'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                onChanged: (valor) {
-                  itemPago['total'] = valor;
-                },
-              ),
-              SizedBox(
-                height: 32.0,
-              ),
-              Text('Anticipo:'),
-              TextFormField(
-                controller:
-                    TextEditingController(text: '${itemPago['anticipo']}'),
-                decoration: InputDecoration(hintText: 'Anticipo:'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                onChanged: (valor) {
-                  itemPago['anticipo'] = valor;
-                },
-              ),
-              SizedBox(
-                height: 32.0,
-              ),
-              Text('Saldo:'),
-              TextFormField(
-                controller: TextEditingController(text: '${itemPago['saldo']}'),
-                decoration: InputDecoration(hintText: 'Saldo:'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                onChanged: (valor) {
-                  itemPago['saldo'] = valor;
-                },
-              ),
-              SizedBox(
-                height: 32.0,
-              ),
               ElevatedButton(
                 child: Icon(Icons.edit),
                 onPressed: () => _editPago(),
@@ -289,10 +249,7 @@ class _FormEditPagoState extends State<FormEditPago> {
   _editPago() {
     if (itemPago['cantidad'] == '' ||
         itemPago['descripcion'] == '' ||
-        itemPago['precio'] == '' ||
-        itemPago['total'] == '' ||
-        itemPago['anticipo'] == '' ||
-        itemPago['saldo'] == '') {
+        itemPago['precio'] == '') {
       _mensaje('Todos los campos son obligatorios.');
     } else {
       itemPago['id_concepto'] = widget.id.toString();

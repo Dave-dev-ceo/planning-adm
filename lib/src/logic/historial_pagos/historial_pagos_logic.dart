@@ -84,6 +84,7 @@ class HistorialPagosLogic {
       'idPago': pagos.idPago,
       'pago': pagos.pago,
       'concepto': pagos.concepto,
+      'fecha': pagos.fecha.toString()
     };
 
     final headers = {

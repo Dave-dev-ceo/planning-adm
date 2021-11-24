@@ -48,6 +48,8 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
         yield PagosErrorState('Error en update');
       } on TokenException {
         yield PagosTokenErrorState('Error token');
+      } catch (e) {
+        print(e);
       }
     } else if (event is DeletePagosEvent) {
       yield PagosLogging();

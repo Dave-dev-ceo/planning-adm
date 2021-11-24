@@ -385,7 +385,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           ),
           DataCell(
               Text(
-                pago.pago.toString(),
+                '${f.format(pago.pago)}',
               ), onTap: () {
             _abrirDialog('I', true, pago);
           }),
@@ -470,7 +470,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             }),
             DataCell(
                 Text(
-                  pago.pago.toString(),
+                  '${f.format(pago.pago)}',
                 ), onTap: () {
               _abrirDialog('E', true, pago);
             }),
@@ -648,6 +648,12 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           style: _boldStyle,
         ),
       ),
+      DataColumn(
+        label: Text(
+          'Total',
+          style: _boldStyle,
+        ),
+      ),
     ];
   }
 
@@ -704,10 +710,15 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           DataCell(Text('${element.descripcion}'),
               onTap: () => _editarPago(element.idConcepto)),
           DataCell(
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: Text('\$$precioUnitario')),
-              onTap: () => _editarPago(element.idConcepto)),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text('\$${precioUnitario}')),
+            onTap: () => _editarPago(element.idConcepto),
+          ),
+          DataCell(
+            Text('\$${f.format(element.cantidad * element.precioUnitario)}'),
+            onTap: () => _editarPago(element.idConcepto),
+          ),
         ];
         pagosList.add(pagosListTemp);
       });
@@ -724,10 +735,14 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
         DataCell(
           Center(),
         ),
+        DataCell(
+          Center(),
+        ),
       ];
       pagosList.add(pagosLast);
     } else {
       List<DataCell> pagosListNoData = [
+        DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),
         DataCell(Text('Sin datos')),

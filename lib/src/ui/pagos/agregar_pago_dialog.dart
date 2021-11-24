@@ -29,6 +29,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
   FocusNode _conceptoNode;
   FocusNode _button;
   bool _isEdit = false;
+  TextEditingController fechaEdit;
 
   HistorialPagosLogic logic = HistorialPagosLogic();
 
@@ -39,6 +40,11 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
     _button = FocusNode();
     hitorialPagoModel.tipoPresupuesto = widget.tipoPresupuesto;
     _isEdit = widget.isEdit;
+    if (_isEdit) {
+      fechaEdit = TextEditingController(
+          text:
+              '${widget.pagoModel.fecha.day}/${widget.pagoModel.fecha.month}/${widget.pagoModel.fecha.year}');
+    }
     super.initState();
   }
 
@@ -140,6 +146,39 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                           ),
                         ),
                       ),
+                      if (_isEdit)
+                        ResponsiveGridCol(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              readOnly: true,
+                              controller: fechaEdit,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Fecha',
+                                labelText: 'Fecha',
+                                prefixIcon: Icon(Icons.calendar_today_outlined),
+                              ),
+                              onTap: () async {
+                                var picked = await showDatePicker(
+                                  context: context,
+                                  locale: const Locale("es", "ES"),
+                                  initialDate:
+                                      widget.pagoModel.fecha, // Refer step 1
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(2025),
+                                );
+
+                                if (picked != null) {
+                                  widget.pagoModel.fecha = picked;
+
+                                  fechaEdit.text =
+                                      '${widget.pagoModel.fecha.day}/${widget.pagoModel.fecha.month}/${widget.pagoModel.fecha.year}';
+                                }
+                              },
+                            ),
+                          ),
+                        )
                     ],
                   ),
                 ),
