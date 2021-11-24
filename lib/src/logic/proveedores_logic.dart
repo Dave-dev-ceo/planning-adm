@@ -9,7 +9,8 @@ abstract class LogicProveedores {
   Future<ItemModelProveedores> fetchProveedor();
   Future<ItemModelServicioByProv> fetchServicioByProv();
   Future<int> createProveedor(Map<String, dynamic> data);
-  Future<int> deleteServicioProv(int idServcio);
+  Future<int> deleteServicioProv(int idServcio, int idProveedor);
+  Future<int> insertServicioProv(int idServcio, int idProveedor);
   Future<String> updateProveedor(ItemProveedor proveedor);
   Future<String> deleteProveedor(int idProveedor);
   Future<String> downloadPDFProveedor();
@@ -114,7 +115,7 @@ class FetchProveedoresLogic extends LogicProveedores {
   }
 
   @override
-  Future<int> deleteServicioProv(int idServcio) async {
+  Future<int> deleteServicioProv(int idServcio, int idProveedor) async {
     int id_planner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
@@ -123,7 +124,8 @@ class FetchProveedoresLogic extends LogicProveedores {
             '/wedding/PROVEEDORES/deleteServicioProv'),
         body: {
           "id_servicio": idServcio.toString(),
-          'id_planner': id_planner.toString()
+          'id_planner': id_planner.toString(),
+          'id_proveedor': idProveedor.toString(),
         },
         headers: {
           HttpHeaders.authorizationHeader: token
@@ -160,6 +162,9 @@ class FetchProveedoresLogic extends LogicProveedores {
       'nombre': proveedor.nombre,
       'descripcion': proveedor.descripcion,
       'estatus': proveedor.estatus,
+      'telefono': proveedor.telefono,
+      'correo': proveedor.correo,
+      'direccion': proveedor.direccion,
     };
 
     final headers = {
@@ -237,6 +242,33 @@ class FetchProveedoresLogic extends LogicProveedores {
       return json.decode(resp.body)['pdf'];
     } else {
       return null;
+    }
+  }
+
+  @override
+  Future<int> insertServicioProv(int idServcio, int idProveedor) async {
+    int id_planner = await _sharedPreferences.getIdPlanner();
+    String token = await _sharedPreferences.getToken();
+    final response = await client.delete(
+        Uri.parse(configC.url +
+            configC.puerto +
+            '/wedding/PROVEEDORES/insertServicioProv'),
+        body: {
+          "id_servicio": idServcio.toString(),
+          'id_planner': id_planner.toString(),
+          'id_proveedor': idProveedor.toString(),
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseEvento = json.decode(response.body);
+      await _sharedPreferences.setToken(responseEvento['token']);
+      return 0;
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw ProveedoresException();
     }
   }
 }

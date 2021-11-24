@@ -21,17 +21,26 @@ class ProveedoresModel {
   String _nombre;
   String _descripcion;
   String _estatus;
+  String _telefono;
+  String _direccion;
+  String _correo;
 
   ProveedoresModel(datos) {
     _id_proveedor = datos['id_proveedor'];
     _nombre = datos['nombre'];
     _descripcion = datos['descripcion'];
     _estatus = datos['estatus'];
+    _telefono = datos['telefono'];
+    _direccion = datos['direccion'];
+    _correo = datos['correo'];
   }
   int get id_proveedor => _id_proveedor;
   String get nombre => _nombre;
   String get descripcion => _descripcion;
   String get estatus => _estatus;
+  String get telefono => _telefono;
+  String get direccion => _direccion;
+  String get correo => _correo;
 }
 
 class ItemProveedor {
@@ -44,6 +53,9 @@ class ItemProveedor {
     this.seleccion,
     this.observacion,
     this.estatus,
+    this.correo,
+    this.direccion,
+    this.telefono,
   });
   int id_proveedor;
   String nombre;
@@ -53,6 +65,9 @@ class ItemProveedor {
   bool seleccion;
   String observacion;
   String estatus;
+  String telefono;
+  String direccion;
+  String correo;
 }
 
 class ItemProveedorServicio {

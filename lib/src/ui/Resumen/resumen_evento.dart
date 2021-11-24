@@ -51,13 +51,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
     // _timer.cancel();
   }
 
-  Duration startTimer(Duration fechaEventoTime, String fechaEvento) {
-    _timer = Timer(Duration(seconds: 1), () {
-      fechaEventoTime = DateTime.parse(fechaEvento).difference(DateTime.now());
-    });
-    return fechaEventoTime;
-  }
-
   _ResumenEventoState(this.detalleEvento, this.WP_EVT_RES_EDT);
   reporteGrupos() {
     blocInvitados.fetchAllReporteGrupos(context);
@@ -204,21 +197,21 @@ class _ResumenEventoState extends State<ResumenEvento> {
     Duration fechaEventoTime =
         DateTime.now().difference(DateTime.parse(fechaEvento));
 
-    if (fechaEventoTime.inSeconds.isNegative) {
-      isActive = true;
-      if (mounted) {
-        _timer = Timer(Duration(seconds: 1), () {
-          if (mounted) {
-            setState(() {
-              fechaEventoTime =
-                  DateTime.parse(fechaEvento).difference(DateTime.now());
-            });
-          }
-        });
-      } else {
-        _timer.cancel();
-      }
-    }
+    // if (fechaEventoTime.inSeconds.isNegative) {
+    //   isActive = true;
+    //   if (mounted) {
+    //     _timer = Timer(Duration(seconds: 1), () {
+    //       if (mounted) {
+    //         setState(() {
+    //           fechaEventoTime =
+    //               DateTime.parse(fechaEvento).difference(DateTime.now());
+    //         });
+    //       }
+    //     });
+    //   } else {
+    //     _timer.cancel();
+    //   }
+    // }
 
     return Card(
       shape: RoundedRectangleBorder(

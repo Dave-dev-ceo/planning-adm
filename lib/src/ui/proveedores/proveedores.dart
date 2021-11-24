@@ -1,6 +1,8 @@
+import 'package:flutter/services.dart';
+import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
+import 'package:planning/src/ui/widgets/editProveedorDialog/edit_proveedor_dialog.dart';
 import 'package:planning/src/utils/utils.dart';
-import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -193,14 +195,15 @@ class _ProveedoresState extends State<Proveedores> {
               ]),
             );
           },
-          body: Column(children: _listServicio(item.servicio)),
+          body:
+              Column(children: _listServicio(item.servicio, item.id_proveedor)),
           isExpanded: item.isExpanded,
         );
       }).toList(),
     ));
   }
 
-  List<Widget> _listServicio(itemServicio) {
+  List<Widget> _listServicio(itemServicio, id_proveedor) {
     List<Widget> lista = new List<Widget>();
     for (var opt in itemServicio) {
       final tempWidget = ListTile(
@@ -212,7 +215,7 @@ class _ProveedoresState extends State<Proveedores> {
                   onPressed: () => showDialog<void>(
                       context: context,
                       builder: (BuildContext context) =>
-                          _eliminarDetalleLista(opt.id_servicio)),
+                          _eliminarDetalleLista(opt.id_servicio, id_proveedor)),
                   icon: const Icon(Icons.delete)),
               IconButton(
                   onPressed: () {
@@ -243,12 +246,15 @@ class _ProveedoresState extends State<Proveedores> {
         servicio: listaServ,
         isExpanded: false,
         estatus: element.estatus,
+        correo: element.correo,
+        direccion: element.direccion,
+        telefono: element.telefono,
       ));
     });
     return _dataProv;
   }
 
-  _eliminarDetalleLista(int idServ) {
+  _eliminarDetalleLista(int idServ, int idProveedor) {
     return AlertDialog(
       title: const Text('Eliminar'),
       content: const Text('¿Desea eliminar el elemento?'),
@@ -259,7 +265,7 @@ class _ProveedoresState extends State<Proveedores> {
         ),
         TextButton(
           onPressed: () => {
-            proveedorBloc.add(DeleteServicioProvEvent(idServ)),
+            proveedorBloc.add(DeleteServicioProvEvent(idServ, idProveedor)),
             Navigator.pop(context, 'Aceptar')
           },
           child: const Text('Aceptar'),
@@ -269,140 +275,4 @@ class _ProveedoresState extends State<Proveedores> {
   }
 
   _editarDetalleLista() {}
-}
-
-class EditProveedorDialog extends StatefulWidget {
-  final ItemProveedor proveedor;
-  EditProveedorDialog({Key key, this.proveedor}) : super(key: key);
-
-  @override
-  _EditProveedorDialogState createState() => _EditProveedorDialogState();
-}
-
-class _EditProveedorDialogState extends State<EditProveedorDialog> {
-  ProveedorBloc proveedorBloc;
-  final keyFormEditProveedor = GlobalKey<FormState>();
-  bool estatus;
-
-  @override
-  void initState() {
-    (widget.proveedor.estatus == 'Activo') ? estatus = true : estatus = false;
-    proveedorBloc = BlocProvider.of<ProveedorBloc>(context);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return AlertDialog(
-      title: Center(child: Text('Editar proveedor')),
-      elevation: 1.0,
-      content: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: size.height * 0.8,
-          maxWidth: size.width * 0.5,
-          minWidth: size.width * 0.4,
-          minHeight: size.height * 0.4,
-        ),
-        child: Column(
-          children: [
-            Form(
-              key: keyFormEditProveedor,
-              child: ResponsiveGridRow(
-                children: [
-                  ResponsiveGridCol(
-                    md: 12,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value != null && value != '') {
-                            return null;
-                          } else {
-                            return 'El campo es requerido';
-                          }
-                        },
-                        onChanged: (value) {
-                          widget.proveedor.nombre = value;
-                        },
-                        initialValue: widget.proveedor.nombre,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Nombre proveedor'),
-                      ),
-                    ),
-                  ),
-                  ResponsiveGridCol(
-                    md: 12,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        onChanged: (value) {
-                          widget.proveedor.descripcion = value;
-                        },
-                        validator: (value) {
-                          if (value != null && value != '') {
-                            return null;
-                          } else {
-                            return 'El campo es requerido';
-                          }
-                        },
-                        initialValue: widget.proveedor.descripcion,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Descripción del proveedor',
-                        ),
-                        maxLines: 4,
-                      ),
-                    ),
-                  ),
-                  ResponsiveGridCol(
-                    md: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CheckboxListTile(
-                        value: estatus,
-                        onChanged: (value) {
-                          setState(() {
-                            (estatus) ? estatus = false : estatus = true;
-                            (estatus)
-                                ? widget.proveedor.estatus = 'Activo'
-                                : widget.proveedor.estatus = 'Inactivo';
-                          });
-                        },
-                        title: Text(widget.proveedor.estatus),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Cancelar'),
-        ),
-        TextButton(
-          onPressed: () async {
-            if (keyFormEditProveedor.currentState.validate()) {
-              await proveedorBloc.add(UpdateProveedor(widget.proveedor));
-              await proveedorBloc.add(FechtProveedorEvent());
-              await proveedorBloc.add(FechtSevicioByProveedorEvent());
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Se ha editado correctamente el invitado'),
-                backgroundColor: Colors.green,
-              ));
-              Navigator.of(context).pop();
-            }
-          },
-          child: Text('Aceptar'),
-        )
-      ],
-    );
-  }
 }

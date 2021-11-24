@@ -16,12 +16,23 @@ class FechtSevicioByProveedorEvent extends ProveedorEvent {}
 
 class DeleteServicioProvEvent extends ProveedorEvent {
   final int idServicio;
-  DeleteServicioProvEvent(this.idServicio);
-  List<Object> get props => [idServicio];
+  final int idProveedor;
+  DeleteServicioProvEvent(this.idServicio, this.idProveedor);
+  List<Object> get props => [idServicio, idProveedor];
+}
+
+class InsertServicioProvEvent extends ProveedorEvent {
+  final int idServicio;
+  final int idProveedor;
+
+  InsertServicioProvEvent(this.idServicio, this.idProveedor);
+  List<Object> get props => [idServicio, idProveedor];
 }
 
 class UpdateProveedor extends ProveedorEvent {
   final ItemProveedor proveedor;
 
-  UpdateProveedor(this.proveedor);
+  UpdateProveedor(
+    this.proveedor,
+  );
 }

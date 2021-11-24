@@ -46,18 +46,29 @@ class ProveedorBloc extends Bloc<ProveedorEvent, ProveedorState> {
       }
     } else if (event is DeleteServicioProvEvent) {
       try {
-        int service = await logic.deleteServicioProv(event.idServicio);
+        int service =
+            await logic.deleteServicioProv(event.idServicio, event.idProveedor);
         if (service == 0) {
-          add(FechtProveedorEvent());
-          add(FechtSevicioByProveedorEvent());
+          await add(FechtProveedorEvent());
+          await add(FechtSevicioByProveedorEvent());
         }
       } catch (e) {}
     } else if (event is UpdateProveedor) {
       try {
         final response = await logic.updateProveedor(event.proveedor);
+
         if (response == 'Ok') {
-          add(FechtProveedorEvent());
-          add(FechtSevicioByProveedorEvent());
+          await add(FechtProveedorEvent());
+          await add(FechtSevicioByProveedorEvent());
+        }
+      } catch (e) {}
+    } else if (event is InsertServicioProvEvent) {
+      try {
+        int service =
+            await logic.insertServicioProv(event.idServicio, event.idProveedor);
+        if (service == 0) {
+          await add(FechtProveedorEvent());
+          await add(FechtSevicioByProveedorEvent());
         }
       } catch (e) {}
     }
