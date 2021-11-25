@@ -12,7 +12,7 @@ class MesasAsignadasService {
   SharedPreferencesT _sharedPreferencesT = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
 
-  List<MesasAsignadasModel> _mesasAsignadas = [];
+  List<MesasAsignadasModel> mesasAsignadas = [];
   LayoutMesaModel _layoutMesa;
 
   final _mesasAsignadasStreamController =
@@ -90,13 +90,13 @@ class MesasAsignadasService {
 
     if (json.decode(response.body) == null) return [];
 
-    _mesasAsignadas = List<MesasAsignadasModel>.from(json
+    mesasAsignadas = List<MesasAsignadasModel>.from(json
         .decode(response.body)
         .map((data) => MesasAsignadasModel.fromJson(data)));
 
-    mesasAsignadasSink(_mesasAsignadas);
+    mesasAsignadasSink(mesasAsignadas);
 
-    return _mesasAsignadas;
+    return mesasAsignadas;
   }
 
   Future<String> deleteAsignadoFromMesa(
@@ -153,7 +153,7 @@ class MesasAsignadasService {
 
     if (response.statusCode == 200) {
       await _sharedPreferencesT.setToken(json.decode(response.body)['token']);
-      mesasAsignadasSink(_mesasAsignadas);
+      mesasAsignadasSink(mesasAsignadas);
 
       return 'Ok';
     } else {
