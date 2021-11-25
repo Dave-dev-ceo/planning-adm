@@ -30,10 +30,4 @@ class InvitadosMesasBloc
       }
     }
   }
-
-  @override
-  void onTransition(
-      Transition<InvitadosMesasEvent, InvitadosMesasState> transition) {
-    print(transition);
-  }
 }
