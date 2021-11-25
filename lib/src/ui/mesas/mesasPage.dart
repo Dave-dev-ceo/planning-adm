@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:planning/src/blocs/mesasAsignadas/mesasasignadas_bloc.dart';
 
 // * Comentar cuando se Utilice en movil
 import 'package:universal_html/html.dart' as html hide Text;
@@ -75,9 +76,8 @@ class _MesasPageState extends State<MesasPage> {
   @override
   void initState() {
     invitadosBloc = BlocProvider.of<InvitadosMesasBloc>(context);
-    mesasAsignadasService.getMesasAsignadas();
-    // mesasAsignadasService.getLayoutMesa();
     BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+    BlocProvider.of<MesasAsignadasBloc>(context).add(GetMesasAsignadasEvent());
     BlocProvider.of<InvitadosMesasBloc>(context)
         .add(MostrarInvitadosMesasEvent());
     super.initState();
@@ -94,11 +94,19 @@ class _MesasPageState extends State<MesasPage> {
     size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: _bottomNavigatorBarCustom(),
-      body: StreamBuilder(
-        stream: mesasAsignadasService.mesasAsignadasStream,
-        builder: (context, AsyncSnapshot<List<MesasAsignadasModel>> snapshot) {
-          if (snapshot.hasData) {
-            listaMesasAsignadas = snapshot.data;
+      body: BlocBuilder<MesasAsignadasBloc, MesasAsignadasState>(
+        builder: (context, state) {
+          if (state is LoadingMesasAsignadasState) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is MostrarMesasAsignadasState) {
+            if (state.listaMesasAsignadas != null &&
+                state.listaMesasAsignadas.length > 0) {
+              listaMesasAsignadas = state.listaMesasAsignadas;
+            } else {
+              listaMesasAsignadas = [];
+            }
             return listWidget[indexNavBar];
           } else {
             listaMesasAsignadas = [];
@@ -322,7 +330,8 @@ class _MesasPageState extends State<MesasPage> {
     return RefreshIndicator(
       color: Colors.blue,
       onRefresh: () async {
-        await mesasAsignadasService.getMesasAsignadas();
+        await BlocProvider.of<MesasAsignadasBloc>(context)
+            .add(GetMesasAsignadasEvent());
         await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
         await BlocProvider.of<InvitadosMesasBloc>(context)
             .add(MostrarInvitadosMesasEvent());
@@ -330,9 +339,12 @@ class _MesasPageState extends State<MesasPage> {
       child: GridView.builder(
         key: previewContainer,
         itemCount: listaMesa.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1.5,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 500,
+          mainAxisExtent: 300,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
         ),
         itemBuilder: (BuildContext context, int index) {
           editTitleMesa.add(false);
@@ -340,104 +352,155 @@ class _MesasPageState extends State<MesasPage> {
           int idCurrentMesa;
           final listaAsignados = listaMesasAsignadas
               .where((m) => m.idMesa == listaMesa[index].idMesa);
-          return ConstrainedBox(
-            constraints: BoxConstraints(),
-            child: Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                margin: EdgeInsets.all(6.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Center(
-                        child: ListTile(
-                          trailing: IconButton(
-                            onPressed: () async {
-                              setState(() {
-                                editTitleMesa[index]
-                                    ? editTitleMesa[index] = false
-                                    : editTitleMesa[index] = true;
+          return Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              margin: EdgeInsets.all(6.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: ListTile(
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            PreferredSize(
+                              preferredSize: Size.fromWidth(15),
+                              child: IconButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    editTitleMesa[index]
+                                        ? editTitleMesa[index] = false
+                                        : editTitleMesa[index] = true;
 
-                                if (!editTitleMesa[index]) {
-                                  idCurrentMesa = listaMesa[index].idMesa;
-                                  if (nameCurrentMesa == null ||
-                                      nameCurrentMesa == '') {
-                                    nameCurrentMesa =
-                                        listaMesa[index].descripcion;
-                                  }
-                                  ;
-                                  mesasLogic
-                                      .updateMesa(
-                                          nameCurrentMesa, idCurrentMesa)
-                                      .then((value) {
-                                    if (value == 'Ok') {
-                                      BlocProvider.of<MesasBloc>(context)
-                                          .add(MostrarMesasEvent());
-                                      _mostrarMensaje(
-                                          'La mesa se edito correctamente',
-                                          Colors.green);
-                                    } else {
-                                      _mostrarMensaje(value, Colors.red);
+                                    if (!editTitleMesa[index]) {
+                                      idCurrentMesa = listaMesa[index].idMesa;
+                                      if (nameCurrentMesa == null ||
+                                          nameCurrentMesa == '') {
+                                        nameCurrentMesa =
+                                            listaMesa[index].descripcion;
+                                      }
+
+                                      mesasLogic
+                                          .updateMesa(
+                                              nameCurrentMesa, idCurrentMesa)
+                                          .then((value) {
+                                        if (value == 'Ok') {
+                                          BlocProvider.of<MesasBloc>(context)
+                                              .add(MostrarMesasEvent());
+                                          _mostrarMensaje(
+                                              'La mesa se edito correctamente',
+                                              Colors.green);
+                                        } else {
+                                          _mostrarMensaje(value, Colors.red);
+                                        }
+                                      });
                                     }
                                   });
-                                }
-                              });
-                            },
-                            icon: Icon(!editTitleMesa[index]
-                                ? Icons.edit
-                                : Icons.save),
-                          ),
-                          title: TextFormField(
-                            enabled: editTitleMesa[index],
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
+                                },
+                                icon: Icon(!editTitleMesa[index]
+                                    ? Icons.edit
+                                    : Icons.save),
+                              ),
                             ),
-                            initialValue: listaMesa[index].descripcion,
-                            onChanged: (value) {
-                              nameCurrentMesa = value;
-                            },
-                          ),
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                          subtitle: Text(listaMesa[index].tipoMesa),
+                            PreferredSize(
+                              preferredSize: Size.fromWidth(12),
+                              child: IconButton(
+                                onPressed: () async {
+                                  await _showAlertDialogDeleteMesa(
+                                      listaMesa[index].idMesa, listaAsignados);
+                                  setState(() {});
+                                },
+                                icon: Icon(Icons.delete),
+                              ),
+                            ),
+                          ],
                         ),
+                        title: TextFormField(
+                          enabled: editTitleMesa[index],
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          initialValue: listaMesa[index].descripcion,
+                          onChanged: (value) {
+                            nameCurrentMesa = value;
+                          },
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        subtitle: Text(listaMesa[index].tipoMesa),
                       ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            itemExtent: 35.0,
-                            itemCount: listaMesa[index].dimension,
-                            itemBuilder: (BuildContext context, int i) {
-                              String temp = '';
-                              if (listaMesasAsignadas.isNotEmpty) {
-                                final asigando = listaAsignados.firstWhere(
-                                  (a) => a.posicion == i + 1,
-                                  orElse: () => null,
-                                );
-                                if (asigando != null)
-                                  asigando.idAcompanante != 0
-                                      ? temp = asigando.acompanante
-                                      : temp = asigando.invitado;
-                              }
-                              return TextFormField(
-                                enabled: false,
-                                decoration: InputDecoration(
-                                    labelText: 'Silla ${i + 1}'),
-                                initialValue: temp,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                          itemExtent: 35.0,
+                          itemCount: listaMesa[index].dimension,
+                          itemBuilder: (BuildContext context, int i) {
+                            String temp = '';
+                            if (listaMesasAsignadas.isNotEmpty) {
+                              final asigando = listaAsignados.firstWhere(
+                                (a) => a.posicion == i + 1,
+                                orElse: () => null,
                               );
-                            }),
-                      )
-                    ],
-                  ),
-                )),
-          );
+                              if (asigando != null)
+                                asigando.idAcompanante != 0
+                                    ? temp = asigando.acompanante
+                                    : temp = asigando.invitado;
+                            }
+                            return ListTile(
+                              title: Text('Silla ${i + 1}: $temp'),
+                            );
+                          }),
+                    )
+                  ],
+                ),
+              ));
         },
       ),
     );
+  }
+
+  void _showAlertDialogDeleteMesa(
+      int idMesa, Iterable<MesasAsignadasModel> listaAsignados) async {
+    await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Eliminar mesa'),
+              content: Text('¿Estas seguro de eliminar la mesa?'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancelar'),
+                ),
+                TextButton(
+                    onPressed: () async {
+                      final data = await mesasLogic.deleteMesa(idMesa);
+                      if (data == 'Ok') {
+                        await BlocProvider.of<MesasBloc>(context)
+                            .add(MostrarMesasEvent());
+
+                        await BlocProvider.of<MesasAsignadasBloc>(context)
+                            .add(GetMesasAsignadasEvent());
+                        await BlocProvider.of<InvitadosMesasBloc>(context)
+                            .add(MostrarInvitadosMesasEvent());
+
+                        _mostrarMensaje(
+                            'La mesa se elimino correctamente', Colors.green);
+                        Navigator.of(context).pop();
+                      } else {
+                        _mostrarMensaje(data, Colors.red);
+                      }
+                    },
+                    child: Text('Aceptar'))
+              ],
+            ));
   }
 
   Future<void> _createPdfToMesa() async {
@@ -572,8 +635,6 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget asignarInvitadosMesasPage() {
-    setState(() {});
-
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 600) {
@@ -886,6 +947,8 @@ class _MesasPageState extends State<MesasPage> {
           await invitadosBloc.add(MostrarInvitadosMesasEvent());
 
           await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+          BlocProvider.of<MesasAsignadasBloc>(context)
+              .add(GetMesasAsignadasEvent());
 
           mesasAsignadasService
               .getMesasAsignadas()
@@ -907,6 +970,9 @@ class _MesasPageState extends State<MesasPage> {
 
                     listAsigandosToDelete.clear();
                   }));
+
+          BlocProvider.of<MesasAsignadasBloc>(context)
+              .add(GetMesasAsignadasEvent());
         } else {
           _mostrarMensaje('Ocurrio un error', Colors.red);
         }
@@ -971,6 +1037,8 @@ class _MesasPageState extends State<MesasPage> {
           setState(() {
             listToAsignarForAdd.clear();
           });
+          BlocProvider.of<MesasAsignadasBloc>(context)
+              .add(GetMesasAsignadasEvent());
         } else {
           _mostrarMensaje(data, Colors.red);
         }

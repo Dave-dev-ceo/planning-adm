@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' show Client;
 
 import 'package:planning/src/logic/estatus_logic.dart';
+import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/mesas_model.dart';
 import 'package:planning/src/resources/config_conection.dart';
@@ -14,6 +15,7 @@ abstract class MesasLogic {
   Future<String> createMesas(List<MesaModel> listaMesasToAdd);
   Future<String> updateMesa(String nameMesa, int idMesa);
   Future<String> createLayout(String fileBase64, String extension);
+  Future<String> deleteMesa(int idMesa);
 }
 
 class MesasAsignadasException implements Exception {}
@@ -154,6 +156,37 @@ class ServiceMesasLogic extends MesasLogic {
     };
 
     final endpoint = 'wedding/MESAS/uploadLayout';
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return 'Ocurrio un error';
+    }
+  }
+
+  @override
+  Future<String> deleteMesa(int idMesa) async {
+    String token = await _sharedPreferences.getToken();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    final data = {
+      'idEvento': idEvento,
+      'idMesa': idMesa,
+    };
+
+    final endpoint = 'wedding/MESAS/deleteMesa';
 
     final headers = {
       HttpHeaders.authorizationHeader: token,

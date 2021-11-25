@@ -8,6 +8,7 @@ import 'package:planning/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
 import 'package:planning/src/blocs/historialPagos/historialpagos_bloc.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
+import 'package:planning/src/blocs/mesasAsignadas/mesasasignadas_bloc.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
@@ -227,7 +228,8 @@ class AppState extends StatelessWidget {
           create: (_) =>
               InvitadosMesasBloc(logic: ServiceInvitadosMesasLogic())),
       BlocProvider<HistorialPagosBloc>(
-          create: (_) => HistorialPagosBloc(logic: HistorialPagosLogic()))
+          create: (_) => HistorialPagosBloc(logic: HistorialPagosLogic())),
+      BlocProvider<MesasAsignadasBloc>(create: (_) => MesasAsignadasBloc())
     ], child: MyApp());
   }
 }
