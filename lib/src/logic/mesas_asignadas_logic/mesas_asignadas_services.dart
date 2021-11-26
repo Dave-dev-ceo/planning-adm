@@ -187,4 +187,30 @@ class MesasAsignadasService {
       return null;
     }
   }
+
+  Future<String> getPDFMesasAsiganadas() async {
+    String token = await _sharedPreferencesT.getToken();
+    int id_planner = await _sharedPreferencesT.getIdPlanner();
+    int id_evento = await _sharedPreferencesT.getIdEvento();
+    final url = confiC.url + confiC.puerto;
+
+    final data = {'idPlanner': id_planner, 'idEvento': id_evento};
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final endpoint = 'wedding/INVITADOS/getPDFMesasAsiganadas';
+
+    final response = await http.post(Uri.parse(url + '/' + endpoint),
+        body: json.encode(data), headers: headers);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['pdf'];
+    } else {
+      return null;
+    }
+  }
 }

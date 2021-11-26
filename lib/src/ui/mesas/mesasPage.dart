@@ -33,6 +33,7 @@ import 'package:planning/src/models/mesa/layout_mesa_model.dart';
 import 'package:planning/src/models/mesa/mesas_model.dart';
 import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
+import 'package:planning/src/utils/utils.dart';
 
 class MesasPage extends StatefulWidget {
   const MesasPage({Key key, this.nameEvento}) : super(key: key);
@@ -227,7 +228,12 @@ class _MesasPageState extends State<MesasPage> {
           onTap: () async {
             if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
               // * Descargar PDF
-              await _createPdfToMesa();
+              // await _createPdfToMesa();
+              final datosMesas =
+                  await mesasAsignadasService.getPDFMesasAsiganadas();
+              if (datosMesas != null) {
+                downloadFile(datosMesas, 'Mesas Asignadas');
+              }
             } else {
               _mostrarMensaje('No se encontraron datos', Colors.red);
             }
