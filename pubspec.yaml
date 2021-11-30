@@ -58,6 +58,7 @@ dependencies:
   universal_ui: ^0.0.8
   flutter_launcher_icons: ^0.9.2
   favicon: ^1.0.15
+  auto_size_text: ^3.0.0
 
 dependency_overrides:
   flutter_colorpicker: ^0.6.0
