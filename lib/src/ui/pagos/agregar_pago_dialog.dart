@@ -30,6 +30,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
   FocusNode _button;
   bool _isEdit = false;
   TextEditingController fechaEdit;
+  DateTime timeNow = DateTime.now().toLocal();
 
   HistorialPagosLogic logic = HistorialPagosLogic();
 
@@ -40,7 +41,12 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
     _button = FocusNode();
     hitorialPagoModel.tipoPresupuesto = widget.tipoPresupuesto;
     _isEdit = widget.isEdit;
-    if (_isEdit) {
+    if (widget.pagoModel.fecha == null) {
+      widget.pagoModel.fecha = timeNow;
+      fechaEdit = TextEditingController(
+          text:
+              '${widget.pagoModel.fecha.day}/${widget.pagoModel.fecha.month}/${widget.pagoModel.fecha.year}');
+    } else {
       fechaEdit = TextEditingController(
           text:
               '${widget.pagoModel.fecha.day}/${widget.pagoModel.fecha.month}/${widget.pagoModel.fecha.year}');
@@ -76,6 +82,38 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                   width: size.width * 0.7,
                   child: ResponsiveGridRow(
                     children: [
+                      ResponsiveGridCol(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: fechaEdit,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Fecha',
+                              labelText: 'Fecha',
+                              prefixIcon: Icon(Icons.calendar_today_outlined),
+                            ),
+                            onTap: () async {
+                              var picked = await showDatePicker(
+                                context: context,
+                                locale: const Locale("es", "ES"),
+                                initialDate:
+                                    widget.pagoModel.fecha, // Refer step 1
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2025),
+                              );
+
+                              if (picked != null) {
+                                widget.pagoModel.fecha = picked;
+
+                                fechaEdit.text =
+                                    '${widget.pagoModel.fecha.day}/${widget.pagoModel.fecha.month}/${widget.pagoModel.fecha.year}';
+                              }
+                            },
+                          ),
+                        ),
+                      ),
                       ResponsiveGridCol(
                         md: 12,
                         child: Padding(
@@ -123,9 +161,9 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                               _submit();
                             },
                             decoration: InputDecoration(
-                              hintText: 'Pago',
+                              hintText: 'Monto',
                               border: OutlineInputBorder(),
-                              labelText: 'Pago',
+                              labelText: 'Monto',
                             ),
                             onChanged: (value) {
                               hitorialPagoModel.pago = double.parse(value);
@@ -146,39 +184,6 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                           ),
                         ),
                       ),
-                      if (_isEdit)
-                        ResponsiveGridCol(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: TextFormField(
-                              readOnly: true,
-                              controller: fechaEdit,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Fecha',
-                                labelText: 'Fecha',
-                                prefixIcon: Icon(Icons.calendar_today_outlined),
-                              ),
-                              onTap: () async {
-                                var picked = await showDatePicker(
-                                  context: context,
-                                  locale: const Locale("es", "ES"),
-                                  initialDate:
-                                      widget.pagoModel.fecha, // Refer step 1
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(2025),
-                                );
-
-                                if (picked != null) {
-                                  widget.pagoModel.fecha = picked;
-
-                                  fechaEdit.text =
-                                      '${widget.pagoModel.fecha.day}/${widget.pagoModel.fecha.month}/${widget.pagoModel.fecha.year}';
-                                }
-                              },
-                            ),
-                          ),
-                        )
                     ],
                   ),
                 ),

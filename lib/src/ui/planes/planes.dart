@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:planning/src/logic/planes_logic.dart';
+import 'package:planning/src/models/Planes/planes_model.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:flutter/services.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 // blocs
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +46,8 @@ class _PlanesState extends State<Planes> {
   int _tabShow = 0;
   int botonIs = 0;
   String _condicionQuery = 'AND ea.estatus_progreso = true';
-  bool _botonSave = false;
+  int _botonSave;
+  List<List<bool>> onTapsResponsable = [];
 
   @override
   void initState() {
@@ -152,7 +157,7 @@ class _PlanesState extends State<Planes> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _botonSave ? _mostrarBoton() : SizedBox(width: 0),
+              _botonSave != null ? _mostrarBoton() : SizedBox(width: 0),
               SizedBox(
                 width: 10.0,
               ),
@@ -246,6 +251,7 @@ class _PlanesState extends State<Planes> {
           tempActividad.add(ActividadPlanner(
             idActividadPlanner: model.planes[j].idActividad,
             nombreActividadPlanner: model.planes[j].nombreActividad,
+            nombreResponsable: model.planes[j].nombreResponsable,
             descripcionActividadPlanner: model.planes[j].descripcionActividad,
             visibleInvolucradosActividadPlanner:
                 model.planes[j].visibleInvolucradosActividad,
@@ -308,7 +314,6 @@ class _PlanesState extends State<Planes> {
     // ciclo para generar mis widgets padres
     for (int i = 0; i < _listTare.length; i++) {
       List<Widget> listWidget = []; // variable con los hijos del expanded
-
       // ciclo para generar los hijos
       for (int j = 0; j < _listTare[i].actividadTareaPlanner.length; j++) {
         // agregamos items a la lista widget
@@ -354,7 +359,7 @@ class _PlanesState extends State<Planes> {
 
                     _listTare[i].checkTarePlanner = tempBool;
 
-                    _botonSave = true; // cambio boton
+                    _botonSave = -1; // cambio boton
                   });
                 } else {
                   _mensaje('Debes poner fecha, antes de finalizar actividades');
@@ -371,6 +376,26 @@ class _PlanesState extends State<Planes> {
                 // Expanded(child: Icon(Icons.calendar_today_outlined),flex: 1,),
                 // Expanded(child: Icon(Icons.delete),flex: 1,),
                 Expanded(
+                  flex: 2,
+                  child: _botonSave == j
+                      ? TextFormField(
+                          initialValue: list[i]
+                              .actividadTareaPlanner[j]
+                              .nombreResponsable,
+                          onChanged: (value) {
+                            _listTare[i]
+                                .actividadTareaPlanner[j]
+                                .nombreResponsable = value;
+                          },
+                        )
+                      : Text(list[i]
+                                  .actividadTareaPlanner[j]
+                                  .nombreResponsable !=
+                              null
+                          ? list[i].actividadTareaPlanner[j].nombreResponsable
+                          : 'Sin responsable'),
+                ),
+                Expanded(
                   flex: 1,
                   child: _giveFecha(
                       _listTare[i]
@@ -381,7 +406,8 @@ class _PlanesState extends State<Planes> {
                       _listTare[i]
                           .actividadTareaPlanner[j]
                           .diasActividadPlanner,
-                      _listTare[i].actividadTareaPlanner[j].idActividadPlanner),
+                      _listTare[i].actividadTareaPlanner[j].idActividadPlanner,
+                      j),
                 ),
                 Expanded(
                   flex: 1,
@@ -707,7 +733,7 @@ class _PlanesState extends State<Planes> {
                       actividad.checkActividadPlanner = valor;
                     });
 
-                    _botonSave = true; // cambio boton
+                    _botonSave = -1; // cambio boton
                   });
                 },
               ),
@@ -803,7 +829,6 @@ class _PlanesState extends State<Planes> {
 
   // vamos a ver los planes para agregar
   void _goAddingPlanes() {
-    _tabShow = 2;
     Navigator.of(context).pushNamed('/agregarPlan', arguments: _listFull);
   }
 
@@ -830,6 +855,7 @@ class _PlanesState extends State<Planes> {
                       actividad.checkActividadPlanner)
                 tempActividad.add(ActividadPlanner(
                   idActividadPlanner: actividad.idActividadPlanner,
+                  nombreResponsable: actividad.nombreResponsable,
                   fechaInicioActividad: actividad.fechaInicioActividad,
                   checkActividadPlanner: actividad.checkActividadPlanner,
                   calendarActividad: actividad.calendarActividad,
@@ -843,13 +869,13 @@ class _PlanesState extends State<Planes> {
 
     // filtro para enviar
     if (tempActividad.length > 0 && _tabShow != botonIs) {
-      _botonSave = false; // reset
+      _botonSave = null; // reset
       _planesBloc.add(UpdatePlanesEventoEvent(
           tempActividad, _condicionQuery)); // cambiamos x updateevent
     }
 
     if (!who) {
-      _botonSave = false; // reset
+      _botonSave = null; // reset
       _planesBloc.add(UpdatePlanesEventoEvent(
           tempActividad, _condicionQuery)); // cambiamos x updateevent
       _planesBloc.add(SelectPlanesEventoEvent(_condicionQuery));
@@ -936,7 +962,7 @@ class _PlanesState extends State<Planes> {
   }
 
   Widget _giveFecha(DateTime fechaActividad, DateTime fechaInicio,
-      DateTime fechaFinal, int dias, int id) {
+      DateTime fechaFinal, int dias, int id, int index) {
     return GestureDetector(
       child: Icon(Icons.calendar_today),
       onTap: () async {
@@ -970,7 +996,7 @@ class _PlanesState extends State<Planes> {
                 else {
                   actividades.fechaInicioActividad = fechaActividad;
                   actividades.calendarActividad = true;
-                  _botonSave = true;
+                  _botonSave = index;
                 }
               } else {}
             }
@@ -1038,7 +1064,7 @@ class _PlanesState extends State<Planes> {
       });
     });
 
-    if (!_botonSave && sinFechas) {
+    if (_botonSave == null && sinFechas) {
       _listFull.forEach((tarea) {
         tarea.actividadTareaPlanner.forEach((actividad) {
           if (actividad.calendarActividad == true) send.add(actividad);
@@ -1086,6 +1112,7 @@ class TareaPlanner {
 class ActividadPlanner {
   int idActividadPlanner;
   String nombreActividadPlanner;
+  String nombreResponsable;
   String descripcionActividadPlanner;
   bool visibleInvolucradosActividadPlanner;
   int diasActividadPlanner;
@@ -1102,6 +1129,7 @@ class ActividadPlanner {
   ActividadPlanner({
     this.idActividadPlanner,
     this.nombreActividadPlanner,
+    this.nombreResponsable,
     this.descripcionActividadPlanner,
     this.visibleInvolucradosActividadPlanner,
     this.diasActividadPlanner,
@@ -1115,4 +1143,976 @@ class ActividadPlanner {
     this.nombreValida,
     this.descriValida,
   });
+
+  Map<String, dynamic> toJson() => {
+        'idActividadPlanner': idActividadPlanner,
+        'nombreActividadPlanner': nombreActividadPlanner,
+        'nombreResponsable': nombreResponsable,
+        'descripcionActividadPlanner': descripcionActividadPlanner,
+        'visibleInvolucradosActividadPlanner':
+            visibleInvolucradosActividadPlanner,
+        'diasActividadPlanner': diasActividadPlanner,
+        'predecesorActividadPlanner': predecesorActividadPlanner,
+        'fechaInicioActividad': fechaInicioActividad,
+        'fechaInicioEvento': fechaInicioEvento,
+        'fechaFinalEvento': fechaFinalEvento,
+        'idOldActividad': idOldActividad,
+        'calendarActividad': calendarActividad,
+        'checkActividadPlanner': checkActividadPlanner,
+        'nombreValida': nombreValida,
+        'descriValida': descriValida,
+      };
+}
+
+class PlanesPage extends StatefulWidget {
+  @override
+  _PlanesPageState createState() => _PlanesPageState();
+}
+
+class _PlanesPageState extends State<PlanesPage> {
+  PlanesBloc _planesBloc;
+  ConsultasPlanesLogic planesLogic = ConsultasPlanesLogic();
+  List<TimingModel> listaTimings = [];
+  Size size;
+  bool isEnableButton = false;
+  bool isInvolucrado = false;
+
+  @override
+  void initState() {
+    _planesBloc = BlocProvider.of<PlanesBloc>(context);
+    _planesBloc.add(GetTimingsAndActivitiesEvent());
+    getIdInvolucrado();
+    super.initState();
+  }
+
+  Future<void> getIdInvolucrado() async {
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (idInvolucrado != null) {
+      isInvolucrado = true;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _planesBloc.add(GetTimingsAndActivitiesEvent());
+        },
+        color: Colors.blue,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Card(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  'Actividades',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  children: [
+                    Spacer(),
+                    Theme(
+                      data: ThemeData(disabledColor: Colors.green),
+                      child: Checkbox(
+                        value: true,
+                        onChanged: null,
+                        hoverColor: Colors.transparent,
+                      ),
+                    ),
+                    Text('Completadas'),
+                    Spacer(),
+                    Theme(
+                      data: ThemeData(disabledColor: Colors.yellow[800]),
+                      child: Checkbox(
+                        value: false,
+                        onChanged: null,
+                      ),
+                    ),
+                    Text('Pendientes'),
+                    Spacer(),
+                    Theme(
+                      data: ThemeData(disabledColor: Colors.red),
+                      child: Checkbox(
+                        value: false,
+                        onChanged: null,
+                      ),
+                    ),
+                    Text('Atrasadas'),
+                    Spacer(),
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                if (!isInvolucrado)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: isEnableButton
+                            ? () async {
+                                _updateYselect();
+                              }
+                            : null,
+                        icon: Icon(Icons.save),
+                        label: Text('Guardar'),
+                      ),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: _goAddingPlanes,
+                        icon: Icon(Icons.add),
+                        label: Text('Añadir'),
+                      ),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                    ],
+                  ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                BlocBuilder<PlanesBloc, PlanesState>(
+                  builder: (context, state) {
+                    if (state is InitiaPlaneslState)
+                      return Center(child: CircularProgressIndicator());
+                    // state log
+                    else if (state is LodingPlanesState)
+                      return Center(child: CircularProgressIndicator());
+                    else if (state is ShowAllPlannesState) {
+                      if (state.listTimings != null) {
+                        listaTimings = state.listTimings;
+                      }
+                      return buildActividadesEvento();
+                    } else {
+                      return Center(
+                          child: Container(child: Text('Entre Aqui')));
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: 30.0,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: _botonFlotante(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Widget buildActividadesEvento() {
+    List<Widget> listPlanesWidget = [];
+
+    if (listaTimings.length <= 0) {
+      return Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Center(
+          child: Text('No se encontraron planes'),
+        ),
+      );
+    } else {
+      for (var timing in listaTimings) {
+        List<Widget> tempActividadesTiming = [];
+
+        for (var actividad in timing.actividades) {
+          if (!isInvolucrado) {
+            Widget actividadWidget = ListTile(
+              leading: Theme(
+                data: ThemeData(
+                    primarySwatch: Colors.green,
+                    unselectedWidgetColor: actividad.estatus == 'Pendiente'
+                        ? Colors.yellow[800]
+                        : Colors.red),
+                child: Checkbox(
+                  value: actividad.estatusProgreso,
+                  onChanged: (value) {
+                    if (actividad.estadoCalendarioActividad) {
+                      setState(
+                        () {
+                          isEnableButton = true;
+                          actividad.estatusProgreso = value;
+                          if (actividad.estatusProgreso) {
+                            actividad.estatus = 'Completada';
+                          }
+                        },
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          'Debes poner fecha, antes de finalizar actividades',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        backgroundColor: Colors.orange,
+                      ));
+                    }
+                  },
+                ),
+              ),
+              title: Row(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: AutoSizeText(
+                      actividad.nombreActividad,
+                      maxLines: 2,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      child: TextFormField(
+                        enabled: actividad.enable,
+                        decoration: InputDecoration(
+                          constraints: BoxConstraints(
+                            maxWidth: size.width * 0.06,
+                          ),
+                        ),
+                        initialValue: actividad.responsable != null
+                            ? actividad.responsable
+                            : 'Sin responsable',
+                        onChanged: (value) {
+                          actividad.responsable = value;
+                        },
+                        onFieldSubmitted: (_) {},
+                      ),
+                      onDoubleTap: () {
+                        setState(() {
+                          isEnableButton = true;
+
+                          actividad.enable
+                              ? actividad.enable = false
+                              : actividad.enable = true;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: AutoSizeText(
+                          '${actividad.fechaInicioActividad.day}/${actividad.fechaInicioActividad.month}/${actividad.fechaInicioActividad.year}',
+                          maxLines: 1,
+                          wrapWords: false,
+                        ),
+                      ),
+                      onTap: () async {
+                        final fecha = await _giveFecha(
+                          actividad.fechaInicioActividad,
+                          actividad.fechaInicioEvento,
+                          actividad.fechaFinEvento,
+                          actividad.diasActividad,
+                          actividad.idActividad,
+                        );
+
+                        setState(() {
+                          if (fecha != null) {
+                            isEnableButton = true;
+
+                            if (fecha.isAfter(actividad.fechaInicioActividad)) {
+                              actividad.estatus = 'Pendiente';
+                            } else if (fecha
+                                .isBefore(actividad.fechaInicioActividad)) {
+                              actividad.estatus = 'Atrasada';
+                            } else {
+                              actividad.estatus = 'Pendiente';
+                            }
+                            actividad.fechaInicioActividad = fecha;
+                            actividad.estadoCalendarioActividad = true;
+                          }
+                        });
+                      },
+                    ),
+                    flex: 1,
+                  ),
+                  Expanded(
+                    child: (!isInvolucrado)
+                        ? GestureDetector(
+                            child: Tooltip(
+                              message: 'Eliminar Actividad',
+                              child: Icon(Icons.delete),
+                            ),
+                            onTap: () async {
+                              await _alertaBorrar(actividad.idActividad,
+                                  actividad.nombreActividad);
+                            },
+                          )
+                        : Container(),
+                    flex: 1,
+                  )
+                ],
+              ),
+              subtitle: Text(actividad.descripcionActividad),
+            );
+            tempActividadesTiming.add(actividadWidget);
+          } else {
+            if (actividad.visibleInvolucrado) {
+              Widget actividadWidget = ListTile(
+                leading: Theme(
+                  data: ThemeData(
+                      primarySwatch: Colors.green,
+                      unselectedWidgetColor: actividad.estatus == 'Pendiente'
+                          ? Colors.yellow[800]
+                          : Colors.red),
+                  child: Checkbox(
+                    value: actividad.estatusProgreso,
+                    onChanged: (value) {
+                      if (actividad.estadoCalendarioActividad) {
+                        setState(
+                          () {
+                            isEnableButton = true;
+                            actividad.estatusProgreso = value;
+                            if (actividad.estatusProgreso) {
+                              actividad.estatus = 'Completada';
+                            }
+                          },
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'Debes poner fecha, antes de finalizar actividades',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          backgroundColor: Colors.orange,
+                        ));
+                      }
+                    },
+                  ),
+                ),
+                title: Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: AutoSizeText(
+                        actividad.nombreActividad,
+                        maxLines: 2,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                        child: TextFormField(
+                          enabled: actividad.enable,
+                          decoration: InputDecoration(
+                            constraints: BoxConstraints(
+                              maxWidth: size.width * 0.06,
+                            ),
+                          ),
+                          initialValue: actividad.responsable != null
+                              ? actividad.responsable
+                              : 'Sin responsable',
+                          onChanged: (value) {
+                            actividad.responsable = value;
+                          },
+                          onFieldSubmitted: (_) {},
+                        ),
+                        onDoubleTap: () {
+                          setState(() {
+                            isEnableButton = true;
+
+                            actividad.enable
+                                ? actividad.enable = false
+                                : actividad.enable = true;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: AutoSizeText(
+                            '${actividad.fechaInicioActividad.day}/${actividad.fechaInicioActividad.month}/${actividad.fechaInicioActividad.year}',
+                            maxLines: 1,
+                            wrapWords: false,
+                          ),
+                        ),
+                        onTap: () async {
+                          final fecha = await _giveFecha(
+                            actividad.fechaInicioActividad,
+                            actividad.fechaInicioEvento,
+                            actividad.fechaFinEvento,
+                            actividad.diasActividad,
+                            actividad.idActividad,
+                          );
+
+                          setState(() {
+                            if (fecha != null) {
+                              isEnableButton = true;
+
+                              if (fecha
+                                  .isAfter(actividad.fechaInicioActividad)) {
+                                actividad.estatus = 'Pendiente';
+                              } else if (fecha
+                                  .isBefore(actividad.fechaInicioActividad)) {
+                                actividad.estatus = 'Atrasada';
+                              } else {
+                                actividad.estatus = 'Pendiente';
+                              }
+                              actividad.fechaInicioActividad = fecha;
+                              actividad.estadoCalendarioActividad = true;
+                            }
+                          });
+                        },
+                      ),
+                      flex: 1,
+                    ),
+                  ],
+                ),
+                subtitle: Text(actividad.descripcionActividad),
+              );
+              tempActividadesTiming.add(actividadWidget);
+            }
+          }
+        }
+
+        if (!isInvolucrado) {
+          tempActividadesTiming.add(
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AddNuevaActividad(
+                      idPlanner: timing.idPlanner,
+                      plan: timing,
+                    ),
+                  );
+                },
+                icon: Icon(Icons.add),
+                label: Text('Agregar actividad'),
+              ),
+            ),
+          );
+        }
+
+        if (tempActividadesTiming.length > 0) {
+          Widget timingWidget = ExpansionTile(
+            iconColor: Colors.black,
+            title: Text(
+              timing.nombrePlaner,
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            children: tempActividadesTiming,
+          );
+
+          listPlanesWidget.add(timingWidget);
+        }
+      }
+      if (listPlanesWidget.length > 0) {
+        return Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          margin: EdgeInsets.all(20.0),
+          elevation: 10.0,
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10.0,
+                ),
+                ListView(
+                  shrinkWrap: true,
+                  children: listPlanesWidget,
+                )
+              ],
+            ),
+          ),
+        );
+      } else {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text('No se encontraron actividades'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<DateTime> _giveFecha(DateTime fechaActividad, DateTime fechaInicio,
+      DateTime fechaFinal, int dias, int id) async {
+    fechaActividad = await showDatePicker(
+      context: context,
+      initialDate: fechaActividad,
+      errorFormatText: 'Error en el formato',
+      errorInvalidText: 'Error en la fecha',
+      fieldHintText: 'día/mes/año',
+      fieldLabelText: 'Fecha de inicio de actividad',
+      firstDate: fechaInicio,
+      lastDate: fechaFinal,
+    );
+    return fechaActividad;
+  }
+
+  Widget _botonFlotante() {
+    return SpeedDial(
+      icon: Icons.more_vert,
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.calendar_today),
+          onTap: () => _saveActividades(),
+          label: 'Ver calendario',
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.download),
+          onTap: () async {
+            final data = await planesLogic.donwloadPDFPlanesEvento();
+
+            if (data != null) {
+              utils.downloadFile(data, 'Actividades_Evento');
+            }
+          },
+          label: 'Descargar PDF',
+        )
+      ],
+    );
+  }
+
+  void _goAddingPlanes() {
+    Navigator.of(context).pushNamed('/agregarPlan', arguments: listaTimings);
+  }
+
+  Future<void> _alertaBorrar(int idActividad, String nombre) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Estás por borrar una actividad.'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Text('La actividad: $nombre')),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Center(child: Text('¿Deseas confirmar?')),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Confirmar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _planesBloc.add(BorrarActividadPlanEvent(idActividad));
+                _mensaje('Actividad borrada');
+              },
+            ),
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _mensaje(String txt) async {
+    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(txt),
+    ));
+  }
+
+  void _saveActividades() {
+    List<ActividadPlanner> send = [];
+
+    bool sinFechas = false;
+
+    listaTimings.forEach((tarea) {
+      tarea.actividades.forEach((actividad) {
+        if (actividad.estadoCalendarioActividad) sinFechas = true;
+      });
+    });
+
+    if (sinFechas) {
+      listaTimings.forEach((tarea) {
+        tarea.actividades.forEach((actividad) {
+          // if (actividad.estadoCalendarioActividad == true)
+          send.add(ActividadPlanner(
+              fechaInicioActividad: actividad.fechaInicioActividad,
+              idActividadPlanner: actividad.idActividad,
+              nombreActividadPlanner: actividad.nombreActividad,
+              nombreResponsable: actividad.responsable,
+              descripcionActividadPlanner: actividad.descripcionActividad,
+              visibleInvolucradosActividadPlanner: actividad.visibleInvolucrado,
+              diasActividadPlanner: actividad.diasActividad,
+              predecesorActividadPlanner: actividad.predecesorActividad,
+              fechaInicioEvento: actividad.fechaInicioEvento,
+              fechaFinalEvento: actividad.fechaFinEvento,
+              idOldActividad: actividad.idActividadOld,
+              calendarActividad: actividad.estadoCalendarioActividad,
+              checkActividadPlanner: actividad.estatusProgreso,
+              nombreValida: true,
+              descriValida: true));
+        });
+      });
+
+      // agregamos a la base de datos
+      Navigator.of(context).pushNamed('/calendarPlan', arguments: send);
+    } else {
+      if (!sinFechas)
+        _mensaje('No hay fechas');
+      else
+        _mensaje('Tienes cambios pendientes por guardar');
+    }
+  }
+
+  void _updateYselect() {
+    List<EventoActividadModel> send = [];
+
+    listaTimings.forEach((tarea) {
+      send += [...tarea.actividades];
+    });
+    // fin ciclosi
+
+    // filtro para enviar
+    if (send.length > 0) {
+      isEnableButton = false; // reset
+      _planesBloc
+          .add(UpdateActividadesEventoEvent(send)); // cambiamos x updateevent
+    }
+  }
+}
+
+class AddNuevaActividad extends StatefulWidget {
+  final int idPlanner;
+  final TimingModel plan;
+
+  const AddNuevaActividad({Key key, @required this.idPlanner, this.plan})
+      : super(key: key);
+
+  @override
+  _AddNuevaActividadState createState() => _AddNuevaActividadState();
+}
+
+class _AddNuevaActividadState extends State<AddNuevaActividad> {
+  final keyForm = GlobalKey<FormState>();
+  EventoActividadModel actividad = EventoActividadModel(
+    diasActividad: 0,
+    descripcionActividad: '',
+    nombreActividad: '',
+    visibleInvolucrado: false,
+    estadoCalendarioActividad: false,
+  );
+
+  TextEditingController fechaController = TextEditingController(text: '');
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Añadir actividad'),
+      ),
+      body: SingleChildScrollView(
+        child: BlocListener<PlanesBloc, PlanesState>(
+          listener: (context, state) {
+            if (state is AddedActividadState) {
+              if (state.isAdded) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Se ha agregado la actividad'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                Navigator.of(context).pop();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Ocurrio un error'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            }
+          },
+          child: Form(
+            key: keyForm,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 20.0,
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: <Widget>[
+                    TextFormFields(
+                      icon: Icons.local_activity,
+                      large: 500.0,
+                      ancho: 80.0,
+                      item: Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value != null && value != '') {
+                              return null;
+                            } else {
+                              return 'El campo es requerido';
+                            }
+                          },
+                          decoration: new InputDecoration(
+                            labelText: 'Nombre:',
+                          ),
+                          onChanged: (valor) {
+                            actividad.nombreActividad = valor;
+                          },
+                        ),
+                      ),
+                    ),
+                    TextFormFields(
+                      icon: Icons.drive_file_rename_outline,
+                      large: 500.0,
+                      ancho: 80.0,
+                      item: TextFormField(
+                        decoration: new InputDecoration(
+                          labelText: 'Descripción:',
+                        ),
+                        onChanged: (valor) {
+                          actividad.descripcionActividad = valor;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: <Widget>[
+                    TextFormFields(
+                      icon: Icons.drive_file_rename_outline,
+                      large: 500.0,
+                      ancho: 80.0,
+                      item: Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value != null && value != '') {
+                              return null;
+                            } else {
+                              return 'El campo es requerido';
+                            }
+                          },
+                          readOnly: true,
+                          controller: fechaController,
+                          decoration: new InputDecoration(
+                            labelText: 'Fecha',
+                          ),
+                          onTap: () async {
+                            final fecha = await showDatePicker(
+                              initialDate:
+                                  (actividad.fechaInicioActividad != null)
+                                      ? actividad.fechaInicioActividad
+                                      : widget.plan.actividades.first
+                                          .fechaInicioEvento,
+                              context: context,
+                              firstDate: widget
+                                  .plan.actividades.first.fechaInicioEvento,
+                              lastDate:
+                                  widget.plan.actividades.first.fechaFinEvento,
+                              errorFormatText: 'Error en el formato',
+                              errorInvalidText: 'Error en la fecha',
+                              fieldHintText: 'día/mes/año',
+                              fieldLabelText: 'Fecha de inicio de actividad',
+                            );
+                            if (fecha != null) {
+                              fechaController.text =
+                                  '${fecha.day}/${fecha.month}/${fecha.year}';
+                              actividad.fechaInicioActividad = fecha;
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    TextFormFields(
+                      icon: Icons.date_range_outlined,
+                      large: 500.0,
+                      ancho: 80.0,
+                      item: Row(
+                        children: [
+                          Expanded(child: Text("Duración en días:")),
+                          IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: actividad.diasActividad > 1
+                                ? () {
+                                    setState(() => actividad.diasActividad--);
+                                  }
+                                : null,
+                          ),
+                          Container(
+                            width: 45,
+                            height: 45,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 3),
+                              child: TextFormField(
+                                controller: TextEditingController(
+                                    text: '${actividad.diasActividad}'),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                setState(() => actividad.diasActividad++);
+                              })
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    TextFormFields(
+                      icon: Icons.remove_red_eye,
+                      large: 500.0,
+                      ancho: 80,
+                      item: CheckboxListTile(
+                        title: Text('Visible para novios:'),
+                        controlAffinity: ListTileControlAffinity.platform,
+                        value: actividad.visibleInvolucrado,
+                        onChanged: (valor) {
+                          setState(
+                            () {
+                              actividad.visibleInvolucrado = valor;
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    TextFormFields(
+                      icon: Icons.linear_scale_outlined,
+                      large: 500,
+                      ancho: 80,
+                      item: DropdownButton(
+                        isExpanded: true,
+                        value: actividad.predecesorActividad,
+                        icon: const Icon(Icons.arrow_drop_down_outlined),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Color(0xFF000000)),
+                        underline: Container(
+                          height: 2,
+                          color: Color(0xFF000000),
+                        ),
+                        onChanged: (valor) {
+                          setState(() {
+                            actividad.predecesorActividad = valor;
+                          });
+                        },
+                        items: widget.plan.actividades.map(
+                          (item) {
+                            return DropdownMenuItem(
+                              value: item.idActividad,
+                              child: Text(
+                                item.idActividad != 0
+                                    ? item.nombreActividad
+                                    : 'Selecciona un predecesor',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    TextFormFields(
+                      icon: Icons.person_rounded,
+                      large: 500.0,
+                      ancho: 80.0,
+                      item: TextFormField(
+                        decoration: new InputDecoration(
+                          labelText: 'Responsable:',
+                        ),
+                        onChanged: (valor) {
+                          actividad.responsable = valor;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: PointerInterceptor(
+                      child: ElevatedButton(
+                        child: Tooltip(
+                          child: Icon(Icons.save_sharp),
+                          message: "Agregar actividad.",
+                        ),
+                        onPressed: () async {
+                          if (keyForm.currentState.validate()) {
+                            await BlocProvider.of<PlanesBloc>(context).add(
+                              AddNewActividadEvent(
+                                  actividad, widget.plan.idPlanner),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'Inserte datos en los campos requeridos'),
+                              backgroundColor: Colors.red,
+                            ));
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

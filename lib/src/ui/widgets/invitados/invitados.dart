@@ -326,7 +326,7 @@ class _InvitadosState extends State<Invitados> {
         ));
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-        temp.add(Planes());
+        temp.add(PlanesPage());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
         temp.add(NewContrato());

@@ -234,7 +234,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 style: TextStyle(fontSize: 18.0, color: Colors.black),
                 text: isActive
                     ? '${_printDuration(fechaEventoTime)}'
-                    : 'El evento ya finalizo',
+                    : 'Evento finalzado',
               )),
             ],
           ),

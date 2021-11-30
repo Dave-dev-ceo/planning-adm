@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
@@ -49,6 +50,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   double totalpagosInternos = 0;
   double totalpagosEventos = 0;
   int index = 0;
+
+  var myGroup = AutoSizeGroup();
 
   @override
   void initState() {
@@ -373,19 +376,28 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 });
           }),
           DataCell(
-            Text(
-              '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
+              ),
             ),
-          ),
-          DataCell(
-            Text(pago.concepto),
             onTap: () {
               _abrirDialog('I', true, pago);
             },
           ),
           DataCell(
-              Text(
-                '${f.format(pago.pago)}',
+            Align(alignment: Alignment.centerLeft, child: Text(pago.concepto)),
+            onTap: () {
+              _abrirDialog('I', true, pago);
+            },
+          ),
+          DataCell(
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '\$${f.format(pago.pago)}',
+                ),
               ), onTap: () {
             _abrirDialog('I', true, pago);
           }),
@@ -461,16 +473,26 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   });
             }),
             DataCell(
-              Text(
-                '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
-              ),
-            ),
-            DataCell(Text(pago.concepto), onTap: () {
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
+                  ),
+                ), onTap: () {
               _abrirDialog('E', true, pago);
             }),
             DataCell(
-                Text(
-                  '${f.format(pago.pago)}',
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(pago.concepto)), onTap: () {
+              _abrirDialog('E', true, pago);
+            }),
+            DataCell(
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '\$${f.format(pago.pago)}',
+                  ),
                 ), onTap: () {
               _abrirDialog('E', true, pago);
             }),
@@ -541,71 +563,96 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   _crearHeader() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          Expanded(
-            flex: 3,
-            child: Text(
-              index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
-              style: TextStyle(fontSize: 20.0),
+          Center(
+            child: Expanded(
+              flex: 3,
+              child: AutoSizeText(
+                index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
+                maxFontSize: 20.0,
+                style: TextStyle(fontFamily: 'Comfortaa'),
+                maxLines: 2,
+                minFontSize: 12,
+                group: myGroup,
+              ),
             ),
           ),
-          RichText(
-            text: TextSpan(
-              text: 'Total: ',
-              style: TextStyle(color: Colors.black),
-              children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              AutoSizeText.rich(
                 TextSpan(
-                  text: '\$${f.format(totalpresupuestos)}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 8.0,
-          ),
-          RichText(
-            text: TextSpan(
-              text: 'Pagos: ',
-              style: TextStyle(color: Colors.black),
-              children: [
+                  text: 'Total: ',
+                  style:
+                      TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                  children: [
+                    TextSpan(
+                      text: '\$${f.format(totalpresupuestos)}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Comfortaa'),
+                    )
+                  ],
+                ),
+                minFontSize: 5.0,
+                maxLines: 2,
+                style: TextStyle(fontSize: 15),
+                group: myGroup,
+              ),
+              SizedBox(
+                width: 8.0,
+              ),
+              AutoSizeText.rich(
                 TextSpan(
-                  text: index == 0
-                      ? '\$${f.format(totalpagosInternos)}'
-                      : '\$${f.format(totalpagosEventos)}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 8.0,
-          ),
-          RichText(
-            text: TextSpan(
-              text: 'Saldo: ',
-              style: TextStyle(color: Colors.black),
-              children: [
+                  text: 'Pagos: ',
+                  style:
+                      TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                  children: [
+                    TextSpan(
+                      text: index == 0
+                          ? '\$${f.format(totalpagosInternos)}'
+                          : '\$${f.format(totalpagosEventos)}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Comfortaa'),
+                    ),
+                  ],
+                ),
+                minFontSize: 10.0,
+                maxLines: 2,
+                style: TextStyle(fontSize: 15),
+                group: myGroup,
+              ),
+              SizedBox(
+                width: 8.0,
+              ),
+              AutoSizeText.rich(
                 TextSpan(
-                  text: index == 0
-                      ? '\$${f.format(totalsaldopresupuestoInterno)}'
-                      : '\$${f.format(totalsaldopresupuestoEvento)}',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ),
-          ),
+                  text: 'Saldo: ',
+                  style:
+                      TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                  children: [
+                    TextSpan(
+                      text: index == 0
+                          ? '\$${f.format(totalsaldopresupuestoInterno)}'
+                          : '\$${f.format(totalsaldopresupuestoEvento)}',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Comfortaa'),
+                    )
+                  ],
+                ),
+                group: myGroup,
+                minFontSize: 10.0,
+                maxLines: 2,
+                style: TextStyle(fontSize: 15),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -705,9 +752,15 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 ),
               ),
               onTap: () => _deletePago(element.idConcepto)),
-          DataCell(Center(child: Text('${element.proveedor}')),
+          DataCell(
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('${element.proveedor}')),
               onTap: () => _editarPago(element.idConcepto)),
-          DataCell(Text('${element.descripcion}'),
+          DataCell(
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('${element.descripcion}')),
               onTap: () => _editarPago(element.idConcepto)),
           DataCell(
             Align(
@@ -716,7 +769,10 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             onTap: () => _editarPago(element.idConcepto),
           ),
           DataCell(
-            Text('\$${f.format(element.cantidad * element.precioUnitario)}'),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                    '\$${f.format(element.cantidad * element.precioUnitario)}')),
             onTap: () => _editarPago(element.idConcepto),
           ),
         ];

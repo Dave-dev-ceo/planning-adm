@@ -24,6 +24,10 @@ abstract class PlanesLogic {
   Future<bool> deleteActividadEvento(int idActividad);
   Future<String> donwloadPDFPlanesEvento();
   Future<List<PlannesModel>> getAllPlannes();
+  Future<List<TimingModel>> getTimingsAndActivities();
+  Future<bool> updateEventoActividades(List<EventoActividadModel> actividades);
+  Future<bool> addNewActividadEvento(
+      EventoActividadModel actividadModel, int idEventoTiming);
 }
 
 class ConsultasPlanesLogic extends PlanesLogic {
@@ -244,7 +248,6 @@ class ConsultasPlanesLogic extends PlanesLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
-
     // pedido al servidor - hay que ciclar
     listaPlanner.forEach((actividad) async {
       await client.post(
@@ -257,7 +260,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
             'id_actividad': actividad.idActividadPlanner.toString(),
             'fecha': actividad.fechaInicioActividad.toString(),
             'progreso': actividad.checkActividadPlanner.toString(),
-            'status': actividad.calendarActividad.toString()
+            'status': actividad.calendarActividad.toString(),
+            'responsable': actividad.nombreResponsable.toString(),
           },
           headers: {
             HttpHeaders.authorizationHeader: token
@@ -363,6 +367,118 @@ class ConsultasPlanesLogic extends PlanesLogic {
       return listaPlannes;
     } else {
       return null;
+    }
+  }
+
+  @override
+  Future<List<TimingModel>> getTimingsAndActivities() async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PLANES/getPlannesAndActivities';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      List<TimingModel> listTimings = List<TimingModel>.from(
+                  json.decode(resp.body).map((e) => TimingModel.fromJson(e)))
+              .toList() ??
+          [];
+
+      return listTimings;
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> updateEventoActividades(
+      List<EventoActividadModel> actividades) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PLANES/updateActividadesEvento';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+      'actividades': actividades
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return true;
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> addNewActividadEvento(
+      EventoActividadModel actividadModel, int idEventoTiming) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
+    const endpoint = '/wedding/PLANES/addActividadEvento';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idUsuario': idUsuario,
+      'idEvento': idEvento,
+      'idEventoTiming': idEventoTiming,
+      'nombreActiviad': actividadModel.nombreActividad,
+      'descripcion': actividadModel.descripcionActividad,
+      'fecha': actividadModel.fechaInicioActividad.toString(),
+      'visibleInvolucrado': actividadModel.visibleInvolucrado,
+      'predecesor': actividadModel.predecesorActividad,
+      'dias': actividadModel.diasActividad,
+      'idActividadTiming': actividadModel.idActividadOld,
+      'responsable': actividadModel.responsable,
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

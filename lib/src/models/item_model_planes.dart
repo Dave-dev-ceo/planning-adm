@@ -20,7 +20,7 @@ class ItemModelPlanes {
   // no ocupo metodo copy/copyWith
 
   // data que recuperamos
-  List<_Planes> get planes => _planes;    
+  List<_Planes> get planes => _planes;
 }
 
 // mi objeto
@@ -35,6 +35,7 @@ class _Planes {
   // parte de actividades
   int _idActividad;
   String _nombreActividad;
+  String _nombreResponsable;
   String _descripcionActividad;
   bool _visibleInvolucradosActividad;
   int _duracionActividad;
@@ -55,6 +56,7 @@ class _Planes {
     // parte de actividades
     _idActividad = result['id_actividad'];
     _nombreActividad = result['nombre_actividad'];
+    _nombreResponsable = result['responsable'];
     _descripcionActividad = result['descripcion_actividad'];
     _visibleInvolucradosActividad = result['visible_involucrados_actividad'];
     _duracionActividad = result['dias_actividad'];
@@ -75,6 +77,7 @@ class _Planes {
   // parte de actividades
   int get idActividad => this._idActividad;
   String get nombreActividad => this._nombreActividad;
+  String get nombreResponsable => this._nombreResponsable;
   String get descripcionActividad => this._descripcionActividad;
   bool get visibleInvolucradosActividad => this._visibleInvolucradosActividad;
   int get duracionActividad => this._duracionActividad;

@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
+import 'package:planning/src/models/item_model_evento_timing.dart';
 import 'package:planning/src/models/item_model_planes.dart';
 
 part 'planes_event.dart';
@@ -32,6 +33,7 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       try {
         bool data = await logic.crearTareasEventoLista(event.planesPlanner);
         yield CreatePlanesState(data);
+        add(GetTimingsAndActivitiesEvent());
       } on CrearPlannerPlanesException {
         yield ErrorMostrarPlanesState('Error al crear');
       } on TokenException {
@@ -98,6 +100,36 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
         yield GetAllPlanesState(listPlannes);
       } on ListaPlanesException {
         yield ErrorMostrarPlanesState('Sin Planes');
+      }
+    } else if (event is GetTimingsAndActivitiesEvent) {
+      yield LodingPlanesState();
+
+      try {
+        final data = await logic.getTimingsAndActivities();
+
+        yield ShowAllPlannesState(data);
+      } catch (e) {
+        print(e);
+      }
+    } else if (event is BorrarActividadPlanEvent) {
+      try {
+        final data = await logic.deleteActividadEvento(event.idActividad);
+        add(GetTimingsAndActivitiesEvent());
+      } catch (e) {}
+    } else if (event is UpdateActividadesEventoEvent) {
+      try {
+        final data = await logic.updateEventoActividades(event.actividades);
+
+        add(GetTimingsAndActivitiesEvent());
+      } catch (e) {}
+    } else if (event is AddNewActividadEvent) {
+      try {
+        final data = await logic.addNewActividadEvento(
+            event.actividad, event.idEventoTiming);
+        yield AddedActividadState(data);
+        add(GetTimingsAndActivitiesEvent());
+      } catch (e) {
+        print(e);
       }
     }
   }

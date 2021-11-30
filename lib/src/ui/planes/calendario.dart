@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/ui/planes/planes.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 // imports from wedding
@@ -10,7 +11,7 @@ import 'package:planning/src/blocs/comentariosActividades/comentariosactividades
 import 'package:planning/src/models/item_model_comentarios_actividades.dart';
 
 class CalendarioPlan extends StatefulWidget {
-  final List<dynamic> actividadesLista;
+  final List<ActividadPlanner> actividadesLista;
   const CalendarioPlan({Key key, @required this.actividadesLista})
       : super(key: key);
 
@@ -42,6 +43,9 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
   void initState() {
     super.initState();
 
+    widget.actividadesLista.forEach(((actividad) {
+      print(actividad.toJson());
+    }));
     eventoComentario = BlocProvider.of<ComentariosactividadesBloc>(context);
     eventoComentario.add(SelectComentarioPorIdEvent());
 
@@ -288,7 +292,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
   // cremos eventos v4
   List<Event> _getEventsForDay(DateTime day) {
     // Implementation example
-    List<dynamic> itemRecived = widget.actividadesLista;
+    List<ActividadPlanner> itemRecived = widget.actividadesLista;
 
     // crea
     final _kEventSourceModel = Map<DateTime, List<Event>>.fromIterable(

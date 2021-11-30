@@ -87,10 +87,11 @@ class _MachotesState extends State<Machotes> {
                     IconButton(
                       onPressed: () async {
                         showDialog(
+                          barrierDismissible: false,
                           context: context,
                           builder: (context) => AlertDialog(
                             title: Center(
-                              child: Text('Editar Nombre de la plantilla'),
+                              child: Text('Editar nombre de la plantilla'),
                             ),
                             content: ResponsiveGridRow(
                               children: [

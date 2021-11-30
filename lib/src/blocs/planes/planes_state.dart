@@ -62,3 +62,20 @@ class ErrorTokenPlanesState extends PlanesState {
 
   List<Object> get props => [message];
 }
+
+class ShowAllPlannesState extends PlanesState {
+  final List<TimingModel> listTimings;
+
+  ShowAllPlannesState(this.listTimings);
+
+  @override
+  List<Object> get props => [listTimings];
+}
+
+class AddedActividadState extends PlanesState {
+  final bool isAdded;
+
+  AddedActividadState(this.isAdded);
+
+  Object get props => isAdded;
+}

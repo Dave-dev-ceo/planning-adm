@@ -62,3 +62,28 @@ class DeleteAnActividadEvent extends PlanesEvent {
 }
 
 class GetAllPlannesEvent extends PlanesEvent {}
+
+class GetTimingsAndActivitiesEvent extends PlanesEvent {}
+
+class BorrarActividadPlanEvent extends PlanesEvent {
+  final int idActividad;
+
+  BorrarActividadPlanEvent(this.idActividad);
+}
+
+class UpdateActividadesEventoEvent extends PlanesEvent {
+  final List<EventoActividadModel> actividades;
+
+  UpdateActividadesEventoEvent(this.actividades);
+
+  List<Object> get props => [actividades];
+}
+
+class AddNewActividadEvent extends PlanesEvent {
+  final EventoActividadModel actividad;
+  final int idEventoTiming;
+
+  AddNewActividadEvent(this.actividad, this.idEventoTiming);
+
+  List<Object> get props => [actividad, idEventoTiming];
+}

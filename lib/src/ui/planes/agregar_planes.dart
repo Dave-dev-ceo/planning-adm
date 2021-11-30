@@ -1,5 +1,7 @@
 // imports dart/flutter
 import 'package:flutter/material.dart';
+import 'package:planning/src/models/Planes/planes_model.dart';
+import 'package:planning/src/ui/timings/timing.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 // blocs
@@ -10,7 +12,7 @@ import 'package:planning/src/blocs/planes/planes_bloc.dart';
 import 'package:planning/src/models/item_model_planes.dart';
 
 class AgregarPlanes extends StatefulWidget {
-  final List<dynamic> lista;
+  final List<TimingModel> lista;
   AgregarPlanes({Key key, @required this.lista}) : super(key: key);
 
   @override
@@ -45,7 +47,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
   Widget _crearScaffold() {
     return new WillPopScope(
       onWillPop: () async {
-        _planesBloc.add(SelectPlanesEventoEvent(_condicionQuery));
+        _planesBloc.add(GetTimingsAndActivitiesEvent());
         return true;
       },
       child: new Scaffold(
@@ -91,7 +93,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       }
       // state create
       else if (state is CreatePlanesState) {
-        _planesBloc.add(SelectPlanesEventoEvent(_condicionQuery));
+        _planesBloc.add(GetTimingsAndActivitiesEvent());
         return _crearStickyHeader(_itemModel);
       }
       // no state
@@ -252,17 +254,17 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
 
     tempTarea.forEach((tareaHere) {
       widget.lista.forEach((tareaThere) {
-        if (tareaThere.idTareaOld == tareaHere.idTareaPlanner) {
-          tareaHere.idTareaPlanner = tareaThere.idTareaPlanner;
+        if (tareaThere.idPlanerOld == tareaHere.idTareaPlanner) {
+          tareaHere.idTareaPlanner = tareaThere.idPlanner;
           tareaHere.checkTarePlanner = true;
           tareaHere.isEvento = true;
 
           tareaHere.actividadTareaPlanner.forEach((actividadHere) {
-            tareaThere.actividadTareaPlanner.forEach((actividadThere) {
+            tareaThere.actividades.forEach((actividadThere) {
               if (actividadHere.idActividadPlanner ==
-                  actividadThere.idOldActividad) {
+                  actividadThere.idActividadOld) {
                 actividadHere.idActividadPlanner =
-                    actividadThere.idOldActividad;
+                    actividadThere.idActividadOld;
                 actividadHere.checkActividadPlanner = true;
                 actividadHere.isEvento = true;
               }
@@ -430,6 +432,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
     if (tareaPlaner.length > 0) {
       // regresamos
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
+      _planesBloc.add(GetTimingsAndActivitiesEvent());
       Navigator.pop(context);
       _mensaje('Planes agregados.');
     } else
@@ -476,6 +479,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
     if (tareaPlaner.length > 0) {
       // regresamos
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
+      _planesBloc.add(GetTimingsAndActivitiesEvent());
       Navigator.pop(context);
       _mensaje('Planes agregados.');
     } else
