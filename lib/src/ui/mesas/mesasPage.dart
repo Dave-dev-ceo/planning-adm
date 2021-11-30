@@ -803,6 +803,97 @@ class _MesasPageState extends State<MesasPage> {
             height: 20.0,
           ),
           Expanded(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Column(
+                children: [
+                  BlocBuilder<MesasBloc, MesasState>(
+                    builder: (context, state) {
+                      if (state is LoadingMesasState) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is MostrarMesasState) {
+                        if (state.listaMesas != null &&
+                            state.listaMesas.length > 0) {
+                          lastNumMesa = state.listaMesas.last.numDeMesa;
+                          listaMesaFromDB = state.listaMesas;
+
+                          if (state.listaMesas.length > 0) {
+                            return _buildListaMesas(state.listaMesas);
+                          } else {
+                            return Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'No se encontraron datos',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            );
+                          }
+                        } else {
+                          return Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              'No se encontraron datos',
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                          );
+                        }
+                      } else if (state is ErrorMesasState) {
+                        return Container(
+                          child: Center(child: Text(state.message)),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
+                  if (mesaModelData != null) Divider(),
+                  if (mesaModelData != null)
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                  if (mesaModelData != null) Expanded(child: formTableByMesa())
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: asignarMesas,
+                // child: Text('Regresar'),
+                child: Icon(Icons.arrow_back),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              ElevatedButton(
+                onPressed: _deleteAsignadoToMesa,
+                // child: Text('Asignar'),
+                child: Icon(Icons.arrow_forward),
+              ),
+              Spacer(),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 5.0,
+                ),
+                onPressed: _asignarAutoMesas,
+                child: Text('Asignar auto.'),
+              ),
+              SizedBox(
+                height: 20.0,
+              )
+            ],
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Expanded(
               child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
@@ -845,94 +936,6 @@ class _MesasPageState extends State<MesasPage> {
               ],
             ),
           )),
-          SizedBox(
-            width: 8.0,
-          ),
-          Column(
-            children: [
-              ElevatedButton(
-                onPressed: asignarMesas,
-                child: Icon(Icons.arrow_forward),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              ElevatedButton(
-                onPressed: _deleteAsignadoToMesa,
-                child: Icon(Icons.arrow_back),
-              ),
-              Spacer(),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 5.0,
-                ),
-                onPressed: _asignarAutoMesas,
-                child: Text('Asignar auto.'),
-              ),
-              SizedBox(
-                height: 20.0,
-              )
-            ],
-          ),
-          SizedBox(
-            width: 8.0,
-          ),
-          Expanded(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              child: Column(
-                children: [
-                  BlocBuilder<MesasBloc, MesasState>(
-                    builder: (context, state) {
-                      if (state is LoadingMesasState) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (state is MostrarMesasState) {
-                        if (state.listaMesas != null) {
-                          lastNumMesa = state.listaMesas.last.numDeMesa;
-                          listaMesaFromDB = state.listaMesas;
-
-                          if (state.listaMesas.length > 0) {
-                            return _buildListaMesas(state.listaMesas);
-                          } else {
-                            return Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'No se encontraron datos',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                            );
-                          }
-                        } else {
-                          return Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'No se encontraron datos',
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                          );
-                        }
-                      } else if (state is ErrorMesasState) {
-                        return Container(
-                          child: Center(child: Text(state.message)),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                  if (mesaModelData != null) Divider(),
-                  if (mesaModelData != null)
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                  if (mesaModelData != null) Expanded(child: formTableByMesa())
-                ],
-              ),
-            ),
-          )
         ],
       ),
     );
