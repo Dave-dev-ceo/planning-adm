@@ -1173,6 +1173,8 @@ class _PlanesPageState extends State<PlanesPage> {
   PlanesBloc _planesBloc;
   ConsultasPlanesLogic planesLogic = ConsultasPlanesLogic();
   List<TimingModel> listaTimings = [];
+
+  int index = 0;
   Size size;
   bool isEnableButton = false;
   bool isInvolucrado = false;
@@ -1315,6 +1317,8 @@ class _PlanesPageState extends State<PlanesPage> {
 
   Widget buildActividadesEvento() {
     List<Widget> listPlanesWidget = [];
+    // List<FocusNode> focusNode = [];
+    index = 0;
 
     if (listaTimings.length <= 0) {
       return Padding(
@@ -1328,6 +1332,8 @@ class _PlanesPageState extends State<PlanesPage> {
         List<Widget> tempActividadesTiming = [];
 
         for (var actividad in timing.actividades) {
+          // FocusNode tempFocus = FocusNode();
+          // focusNode.add(tempFocus);
           if (!isInvolucrado) {
             Widget actividadWidget = ListTile(
               leading: Theme(
@@ -1375,9 +1381,17 @@ class _PlanesPageState extends State<PlanesPage> {
                   ),
                   Expanded(
                     flex: 2,
-                    child: GestureDetector(
+                    child: Tooltip(
+                      showDuration: Duration(
+                        milliseconds: 3,
+                      ),
+                      message: 'Click para editar',
                       child: TextFormField(
-                        enabled: actividad.enable,
+                        onTap: () => setState(() {
+                          actividad.enable = true;
+                        }),
+                        // focusNode: focusNode[index],
+                        readOnly: !actividad.enable,
                         decoration: InputDecoration(
                           constraints: BoxConstraints(
                             maxWidth: size.width * 0.06,
@@ -1391,15 +1405,6 @@ class _PlanesPageState extends State<PlanesPage> {
                         },
                         onFieldSubmitted: (_) {},
                       ),
-                      onDoubleTap: () {
-                        setState(() {
-                          isEnableButton = true;
-
-                          actividad.enable
-                              ? actividad.enable = false
-                              : actividad.enable = true;
-                        });
-                      },
                     ),
                   ),
                   Expanded(
@@ -1461,6 +1466,7 @@ class _PlanesPageState extends State<PlanesPage> {
               subtitle: Text(actividad.descripcionActividad),
             );
             tempActividadesTiming.add(actividadWidget);
+            index++;
           } else {
             if (actividad.visibleInvolucrado) {
               Widget actividadWidget = ListTile(
@@ -1508,34 +1514,12 @@ class _PlanesPageState extends State<PlanesPage> {
                       ),
                     ),
                     Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                        child: TextFormField(
-                          enabled: actividad.enable,
-                          decoration: InputDecoration(
-                            constraints: BoxConstraints(
-                              maxWidth: size.width * 0.06,
-                            ),
-                          ),
-                          initialValue: actividad.responsable != null
+                        flex: 2,
+                        child: Text(
+                          actividad.responsable != null
                               ? actividad.responsable
                               : 'Sin responsable',
-                          onChanged: (value) {
-                            actividad.responsable = value;
-                          },
-                          onFieldSubmitted: (_) {},
-                        ),
-                        onDoubleTap: () {
-                          setState(() {
-                            isEnableButton = true;
-
-                            actividad.enable
-                                ? actividad.enable = false
-                                : actividad.enable = true;
-                          });
-                        },
-                      ),
-                    ),
+                        )),
                     Expanded(
                       child: GestureDetector(
                         child: Padding(
@@ -1581,6 +1565,7 @@ class _PlanesPageState extends State<PlanesPage> {
                 subtitle: Text(actividad.descripcionActividad),
               );
               tempActividadesTiming.add(actividadWidget);
+              index++;
             }
           }
         }
