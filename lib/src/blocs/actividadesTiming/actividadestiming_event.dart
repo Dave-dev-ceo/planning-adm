@@ -23,7 +23,7 @@ class CreateActividadesTimingsEvent extends ActividadestimingEvent {
 class DeleteActividadesTimingsEvent extends ActividadestimingEvent {
   final int idTiming;
   final int idActividadTiming;
-  DeleteActividadesTimingsEvent(this.idTiming,this.idActividadTiming);
+  DeleteActividadesTimingsEvent(this.idTiming, this.idActividadTiming);
   List<Object> get props => [idTiming, idActividadTiming];
 }
 
@@ -39,10 +39,10 @@ class ActulizarTimingsEvent extends ActividadestimingEvent {
   );
 
   List<Object> get props => [
-    idEventoActividad,
-    addEventoActividad,
-    fechaEventoActividad,
-  ];
+        idEventoActividad,
+        addEventoActividad,
+        fechaEventoActividad,
+      ];
 }
 
 class AddActividadesEvent extends ActividadestimingEvent {
@@ -50,4 +50,13 @@ class AddActividadesEvent extends ActividadestimingEvent {
   final int idTarea;
   AddActividadesEvent(this.data, this.idTarea);
   List<Object> get props => [data];
+}
+
+class UpdateActividadEvent extends ActividadestimingEvent {
+  final EventoActividadModel actividad;
+  final int idTiming;
+
+  UpdateActividadEvent(this.actividad, this.idTiming);
+
+  List<Object> get props => [actividad, idTiming];
 }

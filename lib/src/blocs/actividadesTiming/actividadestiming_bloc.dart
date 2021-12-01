@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:planning/src/logic/actividades_timing_logic.dart';
+import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
 import 'package:planning/src/models/item_model_timings.dart';
 
@@ -60,6 +61,14 @@ class ActividadestimingBloc
       } on TokenException {
         yield ErrorTokenActividadesTimingsState("Error de validación de token");
       }
+    } else if (event is UpdateActividadEvent) {
+      try {
+        final resp =
+            await logic.updateActividadTiming(event.actividad, event.idTiming);
+
+        yield EditedActividadEvent(resp);
+        add(FetchActividadesTimingsPorPlannerEvent(event.idTiming));
+      } catch (e) {}
     }
     // pre 04 de agosto del 2021
     // else if(event is FetchActividadesTimingsPorIdPlannerEvent) {

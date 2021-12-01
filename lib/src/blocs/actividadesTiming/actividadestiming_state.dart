@@ -88,3 +88,9 @@ class ErrorTokenActividadesTimingsState extends ActividadestimingState {
 
   List<Object> get props => [message];
 }
+
+class EditedActividadEvent extends ActividadestimingState {
+  final bool isOk;
+
+  EditedActividadEvent(this.isOk);
+}

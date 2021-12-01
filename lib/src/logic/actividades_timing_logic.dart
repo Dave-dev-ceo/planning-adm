@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:http/http.dart' show Client;
@@ -28,6 +29,8 @@ abstract class ActividadesTimingsLogic {
       int idActividad, bool addActividad, DateTime addDate);
   Future<int> creatActividadInEvent(
       Map<String, dynamic> dataActividad, int idTarea);
+  Future<bool> updateActividadTiming(
+      EventoActividadModel actividadModel, int idTiming);
 }
 
 class ListaActividadesTimingsException implements Exception {}
@@ -453,6 +456,45 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
       throw TokenException();
     } else {
       throw CreateActividadesTimingException();
+    }
+  }
+
+  @override
+  Future<bool> updateActividadTiming(
+      EventoActividadModel actividadModel, int idTiming) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+    String token = await _sharedPreferences.getToken();
+
+    final endpoint = 'wedding/TIMINGS/updateActividadTiming';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idUsuario': idUsuario,
+      'idTiming': idTiming,
+      'idActividad': actividadModel.idActividad,
+      'nombre': actividadModel.nombreActividad,
+      'descripcion': actividadModel.descripcionActividad,
+      'dias': actividadModel.diasActividad,
+      'visibleInvolucrado': actividadModel.visibleInvolucrado,
+      'predecesor': actividadModel.predecesorActividad
+    };
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

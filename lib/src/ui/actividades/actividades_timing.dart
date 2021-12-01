@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
+import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
@@ -285,11 +286,13 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   _dropDownActividades(ItemModelActividadesTimings items) {
     return items.results.length != 0
         ? DropdownButton(
+            isExpanded: true,
             value: _mySelectionAT,
             icon: const Icon(Icons.arrow_drop_down_outlined),
             iconSize: 24,
             elevation: 16,
-            style: const TextStyle(color: Color(0xFF000000)),
+            style: const TextStyle(
+                color: Color(0xFF000000), overflow: TextOverflow.ellipsis),
             underline: Container(
               height: 2,
               color: Color(0xFF000000),
@@ -389,36 +392,93 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     return await showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return Container(
-                              width: double.infinity,
-                              child: AlertDialog(
-                                title: Text('Editar actividad'),
-                                content: SingleChildScrollView(
-                                    child: ListBody(
-                                  children: [_formIu(false)],
-                                )),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          actividadestimingBloc.add(
-                                              DeleteActividadesTimingsEvent(
-                                                  idTiming,
-                                                  item.results
-                                                      .elementAt(i)
-                                                      .idActividad));
-                                          //item.results.removeAt(i);
-                                        });
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Sí')),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('No')),
-                                ],
-                              ));
+                          EventoActividadModel actividadModel =
+                              EventoActividadModel(
+                            idActividad: item.results.elementAt(i).idActividad,
+                            nombreActividad:
+                                item.results.elementAt(i).nombreActividad,
+                            descripcionActividad:
+                                item.results.elementAt(i).descripcion,
+                            diasActividad: item.results.elementAt(i).dia,
+                            visibleInvolucrado:
+                                item.results.elementAt(i).visibleInvolucrados,
+                            predecesorActividad:
+                                item.results.elementAt(i).predecesor,
+                          );
+
+                          List<EventoActividadModel> listaActividades = [];
+
+                          item.results.forEach((actividad) => {
+                                if (item.results.elementAt(i).idActividad !=
+                                        actividad.idActividad &&
+                                    actividad.idActividad != 0)
+                                  {
+                                    listaActividades.add(
+                                      (EventoActividadModel(
+                                        idActividad: actividad.idActividad,
+                                        nombreActividad:
+                                            actividad.nombreActividad,
+                                        descripcionActividad:
+                                            actividad.descripcion,
+                                        diasActividad: actividad.dia,
+                                        visibleInvolucrado:
+                                            actividad.visibleInvolucrados,
+                                        predecesorActividad:
+                                            actividad.predecesor,
+                                      )),
+                                    )
+                                  }
+                              });
+
+                          return EditActividadDialog(
+                            actividad: actividadModel,
+                            idTiming: idTiming,
+                            actividades: listaActividades,
+                          );
+                          // return Container(
+                          //     width: double.infinity,
+                          //     child: AlertDialog(
+                          //       title: Text('Editar actividad'),
+                          //       content: SingleChildScrollView(
+                          //           child: ListBody(
+                          //         children: [_formIu(false)],
+                          //       )),
+                          //       actions: [
+                          //         TextButton(
+                          //             onPressed: () {
+                          //               EventoActividadModel actividadModel =
+                          //                   EventoActividadModel(
+                          //                 idActividad: item.results
+                          //                     .elementAt(i)
+                          //                     .idActividad,
+                          //                 descripcionActividad: item.results
+                          //                     .elementAt(i)
+                          //                     .descripcion,
+                          //                 diasActividad:
+                          //                     item.results.elementAt(i).dia,
+                          //                 visibleInvolucrado: item.results
+                          //                     .elementAt(i)
+                          //                     .visibleInvolucrados,
+                          //                 predecesorActividad: item.results
+                          //                     .elementAt(i)
+                          //                     .predecesor,
+                          //               );
+                          //               setState(() {
+                          //                 actividadestimingBloc.add(
+                          //                     UpdateActividadEvent(
+                          //                         actividadModel, idTiming));
+                          //                 //item.results.removeAt(i);
+                          //               });
+                          //               Navigator.of(context).pop();
+                          //             },
+                          //             child: Text('Sí')),
+                          //         TextButton(
+                          //             onPressed: () {
+                          //               Navigator.of(context).pop();
+                          //             },
+                          //             child: Text('No')),
+                          //       ],
+                          //     ));
                         });
                   } else {
                     return await showDialog(
@@ -519,5 +579,221 @@ class _AgregarActividadesState extends State<AgregarActividades> {
             )),
       ),
     );
+  }
+}
+
+class EditActividadDialog extends StatefulWidget {
+  final EventoActividadModel actividad;
+  final List<EventoActividadModel> actividades;
+  final int idTiming;
+
+  const EditActividadDialog(
+      {Key key,
+      @required this.actividad,
+      @required this.idTiming,
+      this.actividades})
+      : super(key: key);
+
+  @override
+  _EditActividadDialogState createState() =>
+      _EditActividadDialogState(actividad, idTiming);
+}
+
+class _EditActividadDialogState extends State<EditActividadDialog> {
+  EventoActividadModel actividad;
+  int idTiming;
+  _EditActividadDialogState(this.actividad, this.idTiming);
+
+  ActividadestimingBloc actividadestimingBloc;
+  TextEditingController diasController;
+
+  @override
+  void initState() {
+    actividadestimingBloc = BlocProvider.of<ActividadestimingBloc>(context);
+    diasController = TextEditingController(text: '${actividad.diasActividad}');
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: double.infinity,
+        child: AlertDialog(
+          title: Text('Editar actividad'),
+          content: SingleChildScrollView(
+              child:
+                  BlocListener<ActividadestimingBloc, ActividadestimingState>(
+            listener: (context, state) {
+              if (state is EditedActividadEvent) {
+                if (state.isOk) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Se ha editado correctamente la actividad'),
+                    backgroundColor: Colors.green,
+                  ));
+                  Navigator.of(context).pop();
+                }
+              }
+            },
+            child: ListBody(
+              children: [
+                Container(
+                  width: 1200,
+                  //height: 600,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 12,
+                    shadowColor: Colors.black12,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                      children: <Widget>[
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          children: <Widget>[
+                            TextFormFields(
+                                icon: Icons.local_activity,
+                                item: TextFormField(
+                                  initialValue: actividad.nombreActividad,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Nombre',
+                                  ),
+                                  onChanged: (value) {
+                                    actividad.nombreActividad = value;
+                                  },
+                                ),
+                                large: 500.0,
+                                ancho: 80.0),
+                            TextFormFields(
+                                icon: Icons.drive_file_rename_outline,
+                                item: TextFormField(
+                                  initialValue: actividad.descripcionActividad,
+                                  decoration: new InputDecoration(
+                                    labelText: 'Descripción',
+                                  ),
+                                  onChanged: (value) {
+                                    actividad.descripcionActividad = value;
+                                  },
+                                ),
+                                large: 500.0,
+                                ancho: 80.0),
+                          ],
+                        ),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          children: <Widget>[
+                            TextFormFields(
+                              icon: Icons.date_range_outlined,
+                              ancho: 80.0,
+                              large: 363.0,
+                              item: Row(
+                                children: [
+                                  Expanded(child: Text("Duración en días:")),
+                                  IconButton(
+                                    icon: Icon(Icons.remove),
+                                    onPressed: actividad.diasActividad == 0
+                                        ? null
+                                        : () => setState(() {
+                                              actividad.diasActividad--;
+                                              diasController.text = actividad
+                                                  .diasActividad
+                                                  .toString();
+                                            }),
+                                  ),
+                                  Container(
+                                    width: 45,
+                                    height: 45,
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 3),
+                                      child: TextFormField(
+                                        controller: diasController,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () => setState(() {
+                                            actividad.diasActividad++;
+                                            diasController.text = actividad
+                                                .diasActividad
+                                                .toString();
+                                          })),
+                                ],
+                              ),
+                            ),
+                            TextFormFields(
+                              icon: null,
+                              item: CheckboxListTile(
+                                title: Text('Visible para novios'),
+                                //secondary: Icon(Icons.be),
+                                controlAffinity:
+                                    ListTileControlAffinity.platform,
+                                value: actividad.visibleInvolucrado,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    actividad.visibleInvolucrado = value;
+                                  });
+                                },
+                                activeColor: Colors.green,
+                                checkColor: Colors.black,
+                              ),
+                              ancho: 80,
+                              large: 363.0,
+                            ),
+                            if (widget.actividades.length > 0)
+                              TextFormFields(
+                                icon: Icons.linear_scale_outlined,
+                                item: DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                        constraints: BoxConstraints(
+                                      maxWidth: 450,
+                                    )),
+                                    hint: Text('Seleccione el predecesor'),
+                                    menuMaxHeight: 450,
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        actividad.predecesorActividad = value;
+                                      });
+                                    },
+                                    iconSize: 10.0,
+                                    isExpanded: true,
+                                    value: actividad.predecesorActividad,
+                                    items: widget.actividades
+                                        .map((e) => DropdownMenuItem(
+                                              child: Text(
+                                                e.nombreActividad,
+                                              ),
+                                              value: e.idActividad,
+                                            ))
+                                        .toList()),
+                                ancho: 80,
+                                large: 500,
+                              ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancelar')),
+            TextButton(
+                onPressed: () async {
+                  await actividadestimingBloc
+                      .add(UpdateActividadEvent(actividad, idTiming));
+                },
+                child: Text('Aceptar')),
+          ],
+        ));
   }
 }
