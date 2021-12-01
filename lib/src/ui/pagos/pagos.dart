@@ -564,22 +564,18 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: Expanded(
-              flex: 3,
-              child: AutoSizeText(
-                index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
-                maxFontSize: 20.0,
-                style: TextStyle(fontFamily: 'Comfortaa'),
-                maxLines: 2,
-                minFontSize: 12,
-                group: myGroup,
-              ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
+              style: TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
+              maxLines: 2,
             ),
           ),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               AutoSizeText.rich(
                 TextSpan(
@@ -659,13 +655,16 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   }
 
   _getContent(itemPago) {
-    return PaginatedDataTable(
-      // header: _crearHeader(asistencia),
-      columns: _crearColumna(),
-      source: DTS(pago: _crearLista(itemPago)),
-      onRowsPerPageChanged: null,
-      rowsPerPage: itemPago.pagos.length == 0 ? 1 : itemPago.pagos.length + 1,
-      dataRowHeight: 25.0,
+    return Container(
+      alignment: Alignment.center,
+      child: PaginatedDataTable(
+        // header: _crearHeader(asistencia),
+        columns: _crearColumna(),
+        source: DTS(pago: _crearLista(itemPago)),
+        onRowsPerPageChanged: null,
+        rowsPerPage: itemPago.pagos.length == 0 ? 1 : itemPago.pagos.length + 1,
+        dataRowHeight: 25.0,
+      ),
     );
   }
 

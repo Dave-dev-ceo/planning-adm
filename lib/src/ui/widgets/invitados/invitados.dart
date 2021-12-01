@@ -187,8 +187,8 @@ class _InvitadosState extends State<Invitados> {
                         } else if (valor == 2) {
                           Navigator.of(context).pushNamed('/perfilPlanner');
                         } else if (valor == 3) {
-                          _sharedPreferences.clear();
-                          Navigator.pushNamed(context, '/');
+                          await _sharedPreferences.clear();
+                          Navigator.pushReplacementNamed(context, '/');
                         }
                       },
                     ),

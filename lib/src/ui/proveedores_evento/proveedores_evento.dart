@@ -56,6 +56,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             await proveedoreventosBloc.add(FechtProveedorEventosEvent());
           },
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.all(15),
