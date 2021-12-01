@@ -466,7 +466,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/TIMINGS/updateActividadTiming';
+    final endpoint = 'wedding/ACTIVIDADESTIMINGS/updateActividadTiming';
 
     final data = {
       'idPlanner': idPlanner,
