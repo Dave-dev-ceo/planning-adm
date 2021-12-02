@@ -26,7 +26,7 @@ class _ListaState extends State<Listas> {
   //stilos
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
-
+  int _idInvolucrado;
   // TextEditingController claveCtrl = new TextEditingController();
   // TextEditingController nombreCtrl = new TextEditingController();
   // TextEditingController descripcionCtrl = new TextEditingController();
@@ -95,25 +95,35 @@ class _ListaState extends State<Listas> {
         });
   }
 
+  void setInvolucrado() async {
+    _idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+  }
+
   Widget expasionFab() {
+    setInvolucrado();
     return SpeedDial(
       icon: Icons.more_vert_outlined,
       children: [
-        SpeedDialChild(
-          label: 'Crear lista',
-          child: Icon(Icons.add),
-          onTap: () async {
-            final result = await Navigator.of(context).pushNamed(
-                '/detalleListas',
-                arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
-            if (result == null ||
-                result == "" ||
-                result == false ||
-                result == 0) {
-              listasBloc.add(FechtListasEvent());
-            }
-          },
-        ),
+        _idInvolucrado == null
+            ? SpeedDialChild(
+                label: 'Crear lista',
+                child: Icon(Icons.add),
+                onTap: () async {
+                  final result = await Navigator.of(context)
+                      .pushNamed('/detalleListas', arguments: {
+                    'id_lista': null,
+                    'nombre': '',
+                    'descripcion': ''
+                  });
+                  if (result == null ||
+                      result == "" ||
+                      result == false ||
+                      result == 0) {
+                    listasBloc.add(FechtListasEvent());
+                  }
+                },
+              )
+            : SpeedDialChild(),
         SpeedDialChild(
             label: 'Descargar PDF',
             child: Icon(Icons.download),
