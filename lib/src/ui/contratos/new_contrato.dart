@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 
 // imports
 import 'package:file_picker/file_picker.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -31,12 +32,24 @@ class New_ContratoState extends State<NewContrato> {
   int _selectedIndex = 0;
   List<Contratos> itemModel = [];
 
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   @override
   void initState() {
     super.initState();
     contratosBloc = BlocProvider.of<ContratosDosBloc>(context);
     contratosBloc.add(ContratosSelect());
     verContratos = BlocProvider.of<VerContratosBloc>(context);
+    getIdInvolucrado();
+  }
+
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   //_HomeState(this.idPlanner);
@@ -188,27 +201,30 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.edit),
-                            label: Text('Editar'),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/editarContratos',
-                                  arguments: {
-                                    'archivo': contrato.archivo,
-                                    'id_contrato': contrato.idContrato
-                                  });
-                              setState(() {
-                                contratosBloc.add(ContratosSelect());
-                              });
-                            },
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.edit),
+                                  label: Text('Editar'),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, '/editarContratos',
+                                        arguments: {
+                                          'archivo': contrato.archivo,
+                                          'id_contrato': contrato.idContrato
+                                        });
+                                    setState(() {
+                                      contratosBloc.add(ContratosSelect());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,13 +267,15 @@ class New_ContratoState extends State<NewContrato> {
                         : SizedBox()
                   ],
                 ),
-                trailing: GestureDetector(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
-                  onTap: () => _borrarContratos(contrato.idContrato),
-                )),
+                trailing: !isInvolucrado
+                    ? GestureDetector(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                        ),
+                        onTap: () => _borrarContratos(contrato.idContrato),
+                      )
+                    : Text('')),
           ));
         }
       });
@@ -294,27 +312,30 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.edit),
-                            label: Text('Editar'),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/editarContratos',
-                                  arguments: {
-                                    'archivo': contrato.archivo,
-                                    'id_contrato': contrato.idContrato
-                                  });
-                              setState(() {
-                                contratosBloc.add(ContratosSelect());
-                              });
-                            },
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.edit),
+                                  label: Text('Editar'),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, '/editarContratos',
+                                        arguments: {
+                                          'archivo': contrato.archivo,
+                                          'id_contrato': contrato.idContrato
+                                        });
+                                    setState(() {
+                                      contratosBloc.add(ContratosSelect());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,13 +378,15 @@ class New_ContratoState extends State<NewContrato> {
                         : SizedBox()
                   ],
                 ),
-                trailing: GestureDetector(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
-                  onTap: () => _borrarContratos(contrato.idContrato),
-                )),
+                trailing: !isInvolucrado
+                    ? GestureDetector(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                        ),
+                        onTap: () => _borrarContratos(contrato.idContrato),
+                      )
+                    : Text('')),
           ));
         }
       });
@@ -400,27 +423,30 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.edit),
-                            label: Text('Editar'),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/editarContratos',
-                                  arguments: {
-                                    'archivo': contrato.archivo,
-                                    'id_contrato': contrato.idContrato
-                                  });
-                              setState(() {
-                                contratosBloc.add(ContratosSelect());
-                              });
-                            },
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.edit),
+                                  label: Text('Editar'),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, '/editarContratos',
+                                        arguments: {
+                                          'archivo': contrato.archivo,
+                                          'id_contrato': contrato.idContrato
+                                        });
+                                    setState(() {
+                                      contratosBloc.add(ContratosSelect());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,13 +489,15 @@ class New_ContratoState extends State<NewContrato> {
                         : SizedBox()
                   ],
                 ),
-                trailing: GestureDetector(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
-                  onTap: () => _borrarContratos(contrato.idContrato),
-                )),
+                trailing: !isInvolucrado
+                    ? GestureDetector(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                        ),
+                        onTap: () => _borrarContratos(contrato.idContrato),
+                      )
+                    : Text('')),
           ));
         }
       });
@@ -506,27 +534,30 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.edit),
-                            label: Text('Editar'),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/editarContratos',
-                                  arguments: {
-                                    'archivo': contrato.archivo,
-                                    'id_contrato': contrato.idContrato
-                                  });
-                              setState(() {
-                                contratosBloc.add(ContratosSelect());
-                              });
-                            },
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.edit),
+                                  label: Text('Editar'),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, '/editarContratos',
+                                        arguments: {
+                                          'archivo': contrato.archivo,
+                                          'id_contrato': contrato.idContrato
+                                        });
+                                    setState(() {
+                                      contratosBloc.add(ContratosSelect());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -569,13 +600,15 @@ class New_ContratoState extends State<NewContrato> {
                         : SizedBox()
                   ],
                 ),
-                trailing: GestureDetector(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
-                  onTap: () => _borrarContratos(contrato.idContrato),
-                )),
+                trailing: !isInvolucrado
+                    ? GestureDetector(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                        ),
+                        onTap: () => _borrarContratos(contrato.idContrato),
+                      )
+                    : Text('')),
           ));
         }
       });
@@ -612,27 +645,30 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.edit),
-                            label: Text('Editar'),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/editarContratos',
-                                  arguments: {
-                                    'archivo': contrato.archivo,
-                                    'id_contrato': contrato.idContrato
-                                  });
-                              setState(() {
-                                contratosBloc.add(ContratosSelect());
-                              });
-                            },
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.edit),
+                                  label: Text('Editar'),
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, '/editarContratos',
+                                        arguments: {
+                                          'archivo': contrato.archivo,
+                                          'id_contrato': contrato.idContrato
+                                        });
+                                    setState(() {
+                                      contratosBloc.add(ContratosSelect());
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -675,13 +711,15 @@ class New_ContratoState extends State<NewContrato> {
                         : SizedBox()
                   ],
                 ),
-                trailing: GestureDetector(
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
-                  onTap: () => _borrarContratos(contrato.idContrato),
-                )),
+                trailing: !isInvolucrado
+                    ? GestureDetector(
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                        ),
+                        onTap: () => _borrarContratos(contrato.idContrato),
+                      )
+                    : Text('')),
           ));
         }
       });

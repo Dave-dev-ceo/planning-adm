@@ -815,11 +815,13 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     return SpeedDial(
       icon: Icons.more_vert,
       children: [
-        SpeedDialChild(
-          label: 'Agregar presupuesto',
-          child: Icon(Icons.add),
-          onTap: () => _agregarPago(),
-        ),
+        !isInvolucrado
+            ? SpeedDialChild(
+                label: 'Agregar presupuesto',
+                child: Icon(Icons.add),
+                onTap: () => _agregarPago(),
+              )
+            : SpeedDialChild(),
         SpeedDialChild(
           label: 'Descargar PDF',
           child: Icon(Icons.download),

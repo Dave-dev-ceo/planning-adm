@@ -1,5 +1,6 @@
 // imports flutter/dart
 import 'package:flutter/material.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
@@ -36,11 +37,15 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
   // variables editar
   List<Autorizacion> _listAutorizacion;
 
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   @override
   void initState() {
     super.initState();
     autorizacionBloc = BlocProvider.of<AutorizacionBloc>(context);
     autorizacionBloc.add(SelectAutorizacionEvent());
+    getIdInvolucrado();
   }
 
   @override
@@ -48,6 +53,14 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     return Scaffold(
       body: _buildBloc(),
     );
+  }
+
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   _buildBloc() {
@@ -238,22 +251,24 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
   _botonSave() {
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
-      child: Container(
-          decoration: const ShapeDecoration(
-            color: Colors.black,
-            shape: CircleBorder(),
-          ),
-          child: Ink(
-            decoration: const ShapeDecoration(
-              color: Colors.black,
-              shape: CircleBorder(),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.save),
-              color: Colors.white,
-              onPressed: () => _addAutorizacion(),
-            ),
-          )),
+      child: !isInvolucrado
+          ? Container(
+              decoration: const ShapeDecoration(
+                color: Colors.black,
+                shape: CircleBorder(),
+              ),
+              child: Ink(
+                decoration: const ShapeDecoration(
+                  color: Colors.black,
+                  shape: CircleBorder(),
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.save),
+                  color: Colors.white,
+                  onPressed: () => _addAutorizacion(),
+                ),
+              ))
+          : Text(''),
     );
   }
 
@@ -307,19 +322,24 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
                         },
                       ),
               ),
-              Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    child: Icon(Icons.edit),
-                    onTap: () => _editAutorizacion(autorizacion.idAutorizacion),
-                  )),
-              Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    child: Icon(Icons.delete),
-                    onTap: () =>
-                        _deleteAutorizacion(autorizacion.idAutorizacion),
-                  )),
+              !isInvolucrado
+                  ? Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        child: Icon(Icons.edit),
+                        onTap: () =>
+                            _editAutorizacion(autorizacion.idAutorizacion),
+                      ))
+                  : Text(''),
+              !isInvolucrado
+                  ? Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        child: Icon(Icons.delete),
+                        onTap: () =>
+                            _deleteAutorizacion(autorizacion.idAutorizacion),
+                      ))
+                  : Text(''),
             ],
           ),
           subtitle: autorizacion.validacion

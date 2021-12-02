@@ -74,8 +74,12 @@ class _MesasPageState extends State<MesasPage> {
   int indexNavBar = 0;
   int lastNumMesa;
 
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   @override
   void initState() {
+    getIdInvolucrado();
     invitadosBloc = BlocProvider.of<InvitadosMesasBloc>(context);
     BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
     BlocProvider.of<MesasAsignadasBloc>(context).add(GetMesasAsignadasEvent());
@@ -119,10 +123,22 @@ class _MesasPageState extends State<MesasPage> {
     );
   }
 
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
+  }
+
   Widget buttonByPage() {
     switch (indexNavBar) {
       case 0:
-        return _buttonAddMesas();
+        if (!isInvolucrado) {
+          return _buttonAddMesas();
+        } else {
+          return FloatingActionButton(onPressed: () {});
+        }
         break;
       case 1:
         return _expandableButtonOptions();
@@ -146,19 +162,22 @@ class _MesasPageState extends State<MesasPage> {
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
-        SpeedDialChild(
-          child: Icon(Icons.add),
-          label: 'Añadir mesa',
-          onTap: () {
-            Navigator.of(context)
-                .pushNamed('/asignarMesas',
-                    arguments:
-                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
-                .then((value) => {
-                      lastNumMesa = value,
-                    });
-          },
-        ),
+        !isInvolucrado
+            ? SpeedDialChild(
+                child: Icon(Icons.add),
+                label: 'Añadir mesa',
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed('/asignarMesas',
+                          arguments: (lastNumMesa == null)
+                              ? lastNumMesa = 0
+                              : lastNumMesa)
+                      .then((value) => {
+                            lastNumMesa = value,
+                          });
+                },
+              )
+            : SpeedDialChild(),
         SpeedDialChild(
           child: Icon(Icons.upload),
           label: 'Subir archivo',
@@ -209,19 +228,22 @@ class _MesasPageState extends State<MesasPage> {
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
-        SpeedDialChild(
-          child: Icon(Icons.add),
-          label: 'Añadir mesa',
-          onTap: () {
-            Navigator.of(context)
-                .pushNamed('/asignarMesas',
-                    arguments:
-                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
-                .then((value) => {
-                      lastNumMesa = value,
-                    });
-          },
-        ),
+        !isInvolucrado
+            ? SpeedDialChild(
+                child: Icon(Icons.add),
+                label: 'Añadir mesa',
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed('/asignarMesas',
+                          arguments: (lastNumMesa == null)
+                              ? lastNumMesa = 0
+                              : lastNumMesa)
+                      .then((value) => {
+                            lastNumMesa = value,
+                          });
+                },
+              )
+            : SpeedDialChild(),
         SpeedDialChild(
           child: Icon(Icons.download),
           label: 'Descargar PDF',
@@ -372,55 +394,63 @@ class _MesasPageState extends State<MesasPage> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            PreferredSize(
-                              preferredSize: Size.fromWidth(15),
-                              child: IconButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    editTitleMesa[index]
-                                        ? editTitleMesa[index] = false
-                                        : editTitleMesa[index] = true;
+                            !isInvolucrado
+                                ? PreferredSize(
+                                    preferredSize: Size.fromWidth(15),
+                                    child: IconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          editTitleMesa[index]
+                                              ? editTitleMesa[index] = false
+                                              : editTitleMesa[index] = true;
 
-                                    if (!editTitleMesa[index]) {
-                                      idCurrentMesa = listaMesa[index].idMesa;
-                                      if (nameCurrentMesa == null ||
-                                          nameCurrentMesa == '') {
-                                        nameCurrentMesa =
-                                            listaMesa[index].descripcion;
-                                      }
+                                          if (!editTitleMesa[index]) {
+                                            idCurrentMesa =
+                                                listaMesa[index].idMesa;
+                                            if (nameCurrentMesa == null ||
+                                                nameCurrentMesa == '') {
+                                              nameCurrentMesa =
+                                                  listaMesa[index].descripcion;
+                                            }
 
-                                      mesasLogic
-                                          .updateMesa(
-                                              nameCurrentMesa, idCurrentMesa)
-                                          .then((value) {
-                                        if (value == 'Ok') {
-                                          BlocProvider.of<MesasBloc>(context)
-                                              .add(MostrarMesasEvent());
-                                          _mostrarMensaje(
-                                              'La mesa se edito correctamente',
-                                              Colors.green);
-                                        } else {
-                                          _mostrarMensaje(value, Colors.red);
-                                        }
-                                      });
-                                    }
-                                  });
-                                },
-                                icon: Icon(!editTitleMesa[index]
-                                    ? Icons.edit
-                                    : Icons.save),
-                              ),
-                            ),
+                                            mesasLogic
+                                                .updateMesa(nameCurrentMesa,
+                                                    idCurrentMesa)
+                                                .then((value) {
+                                              if (value == 'Ok') {
+                                                BlocProvider.of<MesasBloc>(
+                                                        context)
+                                                    .add(MostrarMesasEvent());
+                                                _mostrarMensaje(
+                                                    'La mesa se edito correctamente',
+                                                    Colors.green);
+                                              } else {
+                                                _mostrarMensaje(
+                                                    value, Colors.red);
+                                              }
+                                            });
+                                          }
+                                        });
+                                      },
+                                      icon: Icon(!editTitleMesa[index]
+                                          ? Icons.edit
+                                          : Icons.save),
+                                    ),
+                                  )
+                                : Text(''),
                             PreferredSize(
                               preferredSize: Size.fromWidth(12),
-                              child: IconButton(
-                                onPressed: () async {
-                                  await _showAlertDialogDeleteMesa(
-                                      listaMesa[index].idMesa, listaAsignados);
-                                  setState(() {});
-                                },
-                                icon: Icon(Icons.delete),
-                              ),
+                              child: !isInvolucrado
+                                  ? IconButton(
+                                      onPressed: () async {
+                                        await _showAlertDialogDeleteMesa(
+                                            listaMesa[index].idMesa,
+                                            listaAsignados);
+                                        setState(() {});
+                                      },
+                                      icon: Icon(Icons.delete),
+                                    )
+                                  : Text(''),
                             ),
                           ],
                         ),
@@ -864,27 +894,33 @@ class _MesasPageState extends State<MesasPage> {
           ),
           Column(
             children: [
-              ElevatedButton(
-                onPressed: asignarMesas,
-                // child: Text('Regresar'),
-                child: Icon(Icons.arrow_back),
-              ),
+              !isInvolucrado
+                  ? ElevatedButton(
+                      onPressed: asignarMesas,
+                      // child: Text('Regresar'),
+                      child: Icon(Icons.arrow_back),
+                    )
+                  : Text(''),
               SizedBox(
                 height: 10.0,
               ),
-              ElevatedButton(
-                onPressed: _deleteAsignadoToMesa,
-                // child: Text('Asignar'),
-                child: Icon(Icons.arrow_forward),
-              ),
+              !isInvolucrado
+                  ? ElevatedButton(
+                      onPressed: _deleteAsignadoToMesa,
+                      // child: Text('Asignar'),
+                      child: Icon(Icons.arrow_forward),
+                    )
+                  : Text(''),
               Spacer(),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 5.0,
-                ),
-                onPressed: _asignarAutoMesas,
-                child: Text('Asignar auto.'),
-              ),
+              !isInvolucrado
+                  ? ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 5.0,
+                      ),
+                      onPressed: _asignarAutoMesas,
+                      child: Text('Asignar auto.'),
+                    )
+                  : Text(''),
               SizedBox(
                 height: 20.0,
               )

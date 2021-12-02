@@ -10,6 +10,7 @@ import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
 
 // model
 import 'package:planning/src/models/item_model_autorizacion.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 
 class GaleriaEvidencia extends StatefulWidget {
   final Map map;
@@ -29,11 +30,15 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
   // variabls clase
   List<Evidencia> _listaEvidencia = [];
 
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   @override
   void initState() {
     super.initState();
     autorizacionBloc = BlocProvider.of<AutorizacionBloc>(context);
     autorizacionBloc.add(SelectEvidenciaEvent(widget.map['id']));
+    getIdInvolucrado();
   }
 
   @override
@@ -50,11 +55,26 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
         body: _buildBloc(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => _addImage(widget.map['id']),
-        ),
+            child: Icon(Icons.add),
+            onPressed: () {
+              if (!isInvolucrado) {
+                _addImage(widget.map['id']);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Permisos Insuficientes.')),
+                );
+              }
+            }),
       ),
     );
+  }
+
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   // bloc cargamos la consulta
@@ -140,30 +160,32 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
                           },
                         ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: evidencia.valida
-                      ? GestureDetector(
-                          child: Icon(Icons.edit),
-                          onTap: () {
-                            setState(() {
-                              evidencia.valida = !evidencia.valida;
-                            });
-                          },
-                        )
-                      : GestureDetector(
-                          child: Icon(Icons.save),
-                          onTap: () {
-                            setState(() {
-                              evidencia.valida = !evidencia.valida;
-                            });
-                            autorizacionBloc.add(UpdateEvidenciaEvent(
-                                evidencia.idEvidencia,
-                                widget.map['id'],
-                                evidencia.nombre));
-                          },
-                        ),
-                ),
+                !isInvolucrado
+                    ? Expanded(
+                        flex: 1,
+                        child: evidencia.valida
+                            ? GestureDetector(
+                                child: Icon(Icons.edit),
+                                onTap: () {
+                                  setState(() {
+                                    evidencia.valida = !evidencia.valida;
+                                  });
+                                },
+                              )
+                            : GestureDetector(
+                                child: Icon(Icons.save),
+                                onTap: () {
+                                  setState(() {
+                                    evidencia.valida = !evidencia.valida;
+                                  });
+                                  autorizacionBloc.add(UpdateEvidenciaEvent(
+                                      evidencia.idEvidencia,
+                                      widget.map['id'],
+                                      evidencia.nombre));
+                                },
+                              ),
+                      )
+                    : Text(''),
               ],
             ),
             // subtitle: GestureDetector(
@@ -177,14 +199,16 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(4)),
           ),
           clipBehavior: Clip.antiAlias,
-          child: GridTileBar(
-            backgroundColor: Colors.black45,
-            // title: _GridTitleText(photo.title),
-            subtitle: GestureDetector(
-              child: Icon(Icons.delete),
-              onTap: () => _borrarImage(evidencia.idEvidencia),
-            ),
-          ),
+          child: !isInvolucrado
+              ? GridTileBar(
+                  backgroundColor: Colors.black45,
+                  // title: _GridTitleText(photo.title),
+                  subtitle: GestureDetector(
+                    child: Icon(Icons.delete),
+                    onTap: () => _borrarImage(evidencia.idEvidencia),
+                  ),
+                )
+              : Text(''),
         ),
         child: PhotoView(
           tightMode: true,
