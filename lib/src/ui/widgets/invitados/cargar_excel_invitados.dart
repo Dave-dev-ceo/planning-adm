@@ -99,7 +99,7 @@ class _CargarExcelState extends State<CargarExcel> {
               content: Container(
                 height: 30,
                 child: Center(
-                  child: Text('Se importo el archivo con éxito'),
+                  child: Text('Se importó el archivo con éxito'),
                 ),
                 //color: Colors.red,
               ),
