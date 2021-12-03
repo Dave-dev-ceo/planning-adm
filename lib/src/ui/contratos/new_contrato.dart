@@ -65,7 +65,7 @@ class New_ContratoState extends State<NewContrato> {
       ),
       bottomNavigationBar: _showNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _showButton(),
+      floatingActionButton: !isInvolucrado ? _showButton() : null,
     );
   }
 

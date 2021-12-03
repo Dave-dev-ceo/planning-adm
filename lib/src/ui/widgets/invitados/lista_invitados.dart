@@ -565,9 +565,13 @@ class _DataSource extends DataTableSource {
   String _grupoSelect = "0";
   String _estatusSelect = "0";
   ApiProvider api = new ApiProvider();
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   _DataSource(context, BuildContext cont, this.idEvento, this.WP_EVT_INV_CRT,
       this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV) {
     _rows = <_Row>[];
+    getIdInvolucrado();
     for (int i = 0; i < context.length; i++) {
       _rows.add(_Row(
           context[i].idInvitado,
@@ -591,6 +595,14 @@ class _DataSource extends DataTableSource {
       backgroundColor: color,
     );
     ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
+  }
+
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   Future<void> _showMyDialogLlamada(String numero) async {
@@ -1021,24 +1033,34 @@ class _DataSource extends DataTableSource {
       },
       cells: [
         DataCell(Text(row.valueA), onTap: () {
-          _viewShowDialogEditar(row.valueId);
+          if (!isInvolucrado) {
+            _viewShowDialogEditar(row.valueId);
+          }
         }),
         DataCell(Text(row.valueB), onTap: () async {
-          await _showMyDialogLlamada(row.valueB);
+          if (!isInvolucrado) {
+            await _showMyDialogLlamada(row.valueB);
+          }
         }),
         DataCell(Text(row.valueC), onTap: () {
-          _listaGruposEvento(row.valueId);
+          if (!isInvolucrado) {
+            _listaGruposEvento(row.valueId);
+          }
         }),
         DataCell(
           Text(row.valueD),
           onTap: () {
-            _listaEstatusEvento(row.valueId);
+            if (!isInvolucrado) {
+              _listaEstatusEvento(row.valueId);
+            }
           },
         ),
         DataCell(
           Text(row.valueE),
           onTap: () {
-            _showMyDialogWhatsApp(row.valueE);
+            if (!isInvolucrado) {
+              _showMyDialogWhatsApp(row.valueE);
+            }
           },
         )
         //DataCell(Icon(Icons.edit)),
