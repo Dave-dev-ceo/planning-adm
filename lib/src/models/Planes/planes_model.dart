@@ -117,6 +117,7 @@ class EventoActividadModel {
   int predecesorActividad;
   bool estadoCalendarioActividad;
   DateTime fechaInicioActividad;
+  DateTime fechaFinActividad;
   int idActividadOld;
   bool estatusProgreso;
   String responsable;
@@ -141,6 +142,7 @@ class EventoActividadModel {
     this.fechaFinEvento,
     this.fechaInicioEvento,
     this.enable = false,
+    this.fechaFinActividad,
   });
 
   factory EventoActividadModel.fromJson(Map<String, dynamic> json) =>
@@ -154,13 +156,19 @@ class EventoActividadModel {
         estadoCalendarioActividad: json['estado_calendario_actividad'],
         fechaInicioActividad:
             DateTime.tryParse(json['fecha_inicio_actividad']).toLocal(),
+        fechaFinActividad: json['fecha_fin_actividad'] != null
+            ? DateTime.tryParse(json['fecha_fin_actividad']).toLocal()
+            : null,
         idActividadOld: json['id_actividad_old'],
         estatusProgreso: json['estatus_progreso'],
         responsable: json['responsable'],
         estatus: json['estatus'],
-        fechaFinEvento: DateTime.tryParse(json['fecha_final_evento']).toLocal(),
-        fechaInicioEvento:
-            DateTime.tryParse(json['fecha_inicio_evento']).toLocal(),
+        fechaFinEvento: json['fecha_final_evento'] != null
+            ? DateTime.tryParse(json['fecha_final_evento']).toLocal()
+            : null,
+        fechaInicioEvento: json['fecha_inicio_evento'] != null
+            ? DateTime.tryParse(json['fecha_inicio_evento']).toLocal()
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -172,6 +180,7 @@ class EventoActividadModel {
         'predecesor_actividad': predecesorActividad,
         'estado_calendario_actividad': estadoCalendarioActividad,
         'fecha_inicio_actividad': fechaInicioActividad.toString(),
+        'fecha_fin_actividad': fechaFinActividad.toString(),
         'id_actividad_old': idActividadOld,
         'estatus_progreso': estatusProgreso,
         'responsable': responsable,

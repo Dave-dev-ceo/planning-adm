@@ -461,7 +461,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                     reporteEvento(),
                     reporteInvitados(),
                     futureToPlannes(),
-                    fechaData(),
+                    // fechaData(),
                     //),
                   ],
                 ),

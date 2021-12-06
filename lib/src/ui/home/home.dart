@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
-import 'package:planning/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
 import 'package:planning/src/ui/construccion/construccion.dart';
+import 'package:planning/src/ui/dashboard_planner/dashboard_calendar_page.dart';
 import 'package:planning/src/ui/eventos/dashboard_eventos.dart';
 import 'package:planning/src/ui/machotes/machotes.dart';
 import 'package:planning/src/ui/proveedores/proveedores.dart';
@@ -194,6 +194,10 @@ class _HomeState extends State<Home> {
     int temp = 0;
 
     if (secciones != null) {
+      if (secciones.hasAcceso(claveSeccion: 'WP-CEV')) {
+        tabs.add(TabItem(titulo: 'Dashboard', icono: Icons.dashboard));
+        temp += 1;
+      }
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
         tabs.add(
             TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
@@ -249,6 +253,9 @@ class _HomeState extends State<Home> {
   List<Widget> obtenerPantallasSecciones(ItemModelSecciones secciones) {
     List<Widget> pan = [];
     if (secciones != null) {
+      if (secciones.hasAcceso(claveSeccion: 'WP-CEV')) {
+        pan.add(DashboardCalendarPage());
+      }
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
         pan.add(DashboardEventos(
             WP_EVT_CRT:
