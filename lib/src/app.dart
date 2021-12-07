@@ -113,8 +113,6 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: [
         const Locale('es'),
-        const Locale('en'),
-        const Locale('fr'),
       ],
       locale: const Locale('es'),
       title: 'Planning',

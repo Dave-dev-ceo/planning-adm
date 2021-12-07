@@ -6,6 +6,7 @@ import 'package:planning/src/blocs/dashboard/dashboard_bloc.dart';
 import 'package:planning/src/logic/dashboard_logic/dashboard_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/eventosModel/eventos_dashboard_model.dart';
+import 'package:planning/src/models/item_model_tipo_evento.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class DashboardCalendarPage extends StatefulWidget {
@@ -15,7 +16,6 @@ class DashboardCalendarPage extends StatefulWidget {
 
 class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
   final List<CalendarView> _allowedViews = <CalendarView>[
-    CalendarView.day,
     CalendarView.week,
     CalendarView.month,
     CalendarView.schedule,
@@ -62,6 +62,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
                   isAlwaysShown: true,
                   controller: _controller,
                   child: ListView(
+                    shrinkWrap: true,
                     controller: _controller,
                     children: <Widget>[
                       Container(height: 600, child: calendar())
@@ -104,7 +105,6 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
           backgroundColor: Colors.green,
           textStyle: TextStyle(
             color: Colors.white,
-            locale: Locale('es'),
           ),
         ),
         initialDisplayDate: DateTime.now(),
@@ -117,8 +117,9 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
             color: Colors.transparent,
             border: Border.all(color: Colors.green, width: 2)),
         monthViewSettings: const MonthViewSettings(
-            showAgenda: true,
-            appointmentDisplayMode: MonthAppointmentDisplayMode.indicator),
+          showAgenda: true,
+          appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+        ),
         loadMoreWidgetBuilder:
             (BuildContext context, LoadMoreCallback loadMoreAppointments) {
           return FutureBuilder<void>(
@@ -138,7 +139,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
   }
 
   List<Meeting> _getDataSource() {
-    return _eventos = [];
+    return [];
   }
 }
 
@@ -148,7 +149,6 @@ class MeetingDataSource extends CalendarDataSource {
   final DashboardLogic logic = DashboardLogic();
 
   List<Meeting> source;
-  List<Meeting> seccionSource = [];
 
   @override
   List<dynamic> get appointments => source;
@@ -197,42 +197,67 @@ class MeetingDataSource extends CalendarDataSource {
     _colorCollection.add(Color(0xFFE47C73));
     _colorCollection.add(Color(0xFF636363));
     _colorCollection.add(Color(0xFF0A8043));
+    _colorCollection.add(Color(0xFFff6961));
+    _colorCollection.add(Color(0xFF77dd77));
+    _colorCollection.add(Color(0xFFfdfd96));
+    _colorCollection.add(Color(0xFF84b6f4));
+    _colorCollection.add(Color(0xFFfdcae1));
+    _colorCollection.add(Color(0xFFb2dafa));
+    _colorCollection.add(Color(0xFFfad2b2));
+    _colorCollection.add(Color(0xFFb6fab2));
+
+    List<EventoDetails> eventoColors = [];
+
     try {
+      final List<Meeting> meetings = <Meeting>[];
       int index = 0;
+
       final actividades =
           await logic.getAllActivitiesPlanner(startDate, endDate);
 
       for (var actividad in actividades) {
-        DateTime starttime = actividad.fechaInicioActividad;
-        DateTime endtime = actividad.fechaFinActividad;
-
-        source.add(Meeting(
+        if (appointments.any((m) => m.idActividad == actividad.idActividad)) {
+          continue;
+        }
+        if (!eventoColors.any((evento) => evento.id == actividad.idEvento)) {
+          eventoColors.add(EventoDetails(
+            color: _colorCollection[index],
+            id: actividad.idEvento,
+          ));
+        }
+        final meeting = Meeting(
           eventName: actividad.nombreActividad,
           description: actividad.descripcionActividad,
-          from: starttime,
-          to: endtime,
-          background: _colorCollection[index],
+          from: actividad.fechaInicioActividad,
+          to: actividad.fechaFinActividad,
+          background:
+              eventoColors.firstWhere((e) => e.id == actividad.idEvento).color,
           isAllDay: false,
           organizer: actividad.responsable != null
               ? actividad.responsable
               : 'Sin responsable',
           idActividad: actividad.idActividad,
-        ));
+        );
+        meetings.add(meeting);
         index++;
       }
 
-      for (var meet in source) {
-        if (appointments.contains(meet.idActividad) ||
-            appointments.contains(meet.idEvento)) {
-          appointments.add(meet);
-          continue;
-        }
-      }
-      notifyListeners(CalendarDataSourceAction.add, source);
+      appointments.addAll(meetings);
+      notifyListeners(CalendarDataSourceAction.add, meetings);
     } catch (e) {
       print(e);
     }
   }
+}
+
+class EventoDetails {
+  int id;
+  Color color;
+
+  EventoDetails({
+    this.id,
+    this.color,
+  });
 }
 
 class Meeting {

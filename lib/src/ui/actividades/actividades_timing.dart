@@ -606,10 +606,15 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
 
   ActividadestimingBloc actividadestimingBloc;
   TextEditingController diasController;
+  List<EventoActividadModel> predecesores = [];
 
   @override
   void initState() {
     actividadestimingBloc = BlocProvider.of<ActividadestimingBloc>(context);
+    EventoActividadModel primeraOpcion = EventoActividadModel(
+        nombreActividad: 'Seleccione un predecesor', idActividad: -1);
+    predecesores = [primeraOpcion, ...widget.actividades];
+
     diasController = TextEditingController(text: '${actividad.diasActividad}');
     super.initState();
   }
@@ -753,15 +758,21 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                                     menuMaxHeight: 450,
                                     style: TextStyle(
                                         overflow: TextOverflow.ellipsis),
-                                    onChanged: (value) {
+                                    onChanged: (valor) {
                                       setState(() {
-                                        actividad.predecesorActividad = value;
+                                        if (valor != -1) {
+                                          actividad.predecesorActividad = valor;
+                                        } else {
+                                          actividad.predecesorActividad = null;
+                                        }
                                       });
                                     },
                                     iconSize: 10.0,
                                     isExpanded: true,
-                                    value: actividad.predecesorActividad,
-                                    items: widget.actividades
+                                    value: actividad.predecesorActividad == null
+                                        ? -1
+                                        : actividad.predecesorActividad,
+                                    items: predecesores
                                         .map((e) => DropdownMenuItem(
                                               child: Text(
                                                 e.nombreActividad,

@@ -133,10 +133,4 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       }
     }
   }
-
-  @override
-  void onTransition(Transition<PlanesEvent, PlanesState> transition) {
-    super.onTransition(transition);
-    print(transition);
-  }
 }
