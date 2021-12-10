@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 
@@ -56,7 +57,14 @@ class _ProspectosPageState extends State<ProspectosPage> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Añadir Etapa',
         child: Icon(Icons.add),
-        onPressed: _addEtapaSubmit,
+        onPressed: () {
+          _addEtapaSubmit(
+              EtapasModel(
+                  nombreEtapa: '',
+                  ordenEtapa: etapas.length + 1,
+                  color: '0xFFfdf4e5'),
+              false);
+        },
       ),
     );
   }
@@ -71,7 +79,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
         listWidth: 300,
         listDraggingWidth: 200,
         listDecoration: BoxDecoration(
-          color: Color(0xFFEBECF0),
+          color: Color(0xFFfdf4e5),
           borderRadius: BorderRadius.all(Radius.circular(7.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -102,66 +110,75 @@ class _ProspectosPageState extends State<ProspectosPage> {
         children: <Widget>[
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(7.0)),
-                color: Color(0xFFEBECF0),
-              ),
-              padding: EdgeInsets.all(10),
-              child: (etapa.claveEtapa == null)
-                  ? GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          etapa.isEditNombreEtapa = true;
-                        });
-                      },
-                      child: ListTile(
-                        title: TextFormField(
-                          style: TextStyle(fontSize: 20.0),
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.blue, width: 1.0),
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          enabled: etapa.isEditNombreEtapa,
-                          initialValue: etapa.nombreEtapa,
-                          onChanged: (value) => {etapa.nombreEtapa = value},
-                          onFieldSubmitted: (value) => {
-                            if (value.length >= 1)
-                              {
-                                _prospectoBloc.add(EditNameEtapaEvent(etapa)),
-                                setState(() {
-                                  etapa.isEditNombreEtapa = false;
-                                })
-                              }
-                          },
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(7.0)),
+                  color: Color(int.parse(etapa.color)),
+                ),
+                padding: EdgeInsets.all(10),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      etapa.isEditNombreEtapa = true;
+                    });
+                  },
+                  child: ListTile(
+                    title: TextFormField(
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          color:
+                              useWhiteForeground(Color(int.parse(etapa.color)))
+                                  ? Colors.white
+                                  : Colors.black),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 1.0),
                         ),
-                        trailing: PopupMenuButton(
-                            onSelected: (value) {
-                              if (value == 1) {
-                                _prospectoBloc
-                                    .add(DeleteEtapaEvent(etapa.idEtapa));
-                              }
-                            },
-                            tooltip: null,
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuItem>[
-                                  const PopupMenuItem(
-                                    child: Text('Eliminar'),
-                                    value: 1,
-                                  ),
-                                ]),
+                        border: InputBorder.none,
                       ),
-                    )
-                  : ListTile(
-                      title: Text(
-                        etapa.nombreEtapa,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 20.0),
-                      ),
+                      enabled: etapa.isEditNombreEtapa,
+                      initialValue: etapa.nombreEtapa,
+                      onChanged: (value) => {etapa.nombreEtapa = value},
+                      onFieldSubmitted: (value) => {
+                        if (value.length >= 1)
+                          {
+                            _prospectoBloc.add(EditNameEtapaEvent(etapa)),
+                            setState(() {
+                              etapa.isEditNombreEtapa = false;
+                            })
+                          }
+                      },
                     ),
-            ),
+                    trailing: PopupMenuButton(
+                        icon: Icon(
+                          Icons.more_vert_rounded,
+                          color:
+                              useWhiteForeground(Color(int.parse(etapa.color)))
+                                  ? Colors.white
+                                  : Colors.black,
+                        ),
+                        onSelected: (value) {
+                          if (value == 2) {
+                            _prospectoBloc.add(DeleteEtapaEvent(etapa.idEtapa));
+                          } else {
+                            _addEtapaSubmit(etapa, true);
+                          }
+                        },
+                        tooltip: null,
+                        itemBuilder: (BuildContext context) => <PopupMenuItem>[
+                              const PopupMenuItem(
+                                child: Text('Editar'),
+                                value: 1,
+                              ),
+                              if (etapa.claveEtapa == null)
+                                PopupMenuItem(
+                                  child: Text('Eliminar'),
+                                  value: 2,
+                                ),
+                            ]),
+                  ),
+                )),
           ),
         ],
       ),
@@ -244,18 +261,22 @@ class _ProspectosPageState extends State<ProspectosPage> {
         width: 1.5,
         thickness: 1.5,
       ),
-      contentsWhenEmpty: Text('Sin datos'),
-      children:
-          etapa.prospectos.map((prospecto) => _buildItem(prospecto)).toList(),
+      contentsWhenEmpty: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text('Sin datos'),
+      ),
+      children: etapa.prospectos
+          .map((prospecto) => _buildItem(prospecto, etapa.nombreEtapa))
+          .toList(),
     );
   }
 
-  DragAndDropItem _buildItem(ProspectoModel prospecto) {
+  DragAndDropItem _buildItem(ProspectoModel prospecto, String nameEtapa) {
     return DragAndDropItem(
       child: Card(
         child: ListTile(
           title: Text(prospecto.nombreProspecto),
-          onTap: () => _openDetailProspecto(prospecto),
+          onTap: () => _openDetailProspecto(prospecto, nameEtapa),
         ),
       ),
     );
@@ -269,22 +290,20 @@ class _ProspectosPageState extends State<ProspectosPage> {
     ));
   }
 
-  void _openDetailProspecto(ProspectoModel prospecto) {
+  void _openDetailProspecto(ProspectoModel prospecto, String nameEtapa) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => DetailProspectoDialog(
+        nameEtapa: nameEtapa,
         prospecto: prospecto,
       ),
     );
   }
 
-  void _addEtapaSubmit() {
+  void _addEtapaSubmit(EtapasModel etapa, bool isEdit) {
     final _keyFormNewEtapa = GlobalKey<FormState>();
-    EtapasModel newEtapa = EtapasModel(
-      nombreEtapa: '',
-      ordenEtapa: etapas.length + 1,
-    );
+
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -302,71 +321,137 @@ class _ProspectosPageState extends State<ProspectosPage> {
                 }
               }
             },
-            child: AlertDialog(
-              title: Text('Insertar etapa'),
-              content: SizedBox(
-                width: size.width * 0.3,
-                height: size.height * 0.5,
-                child: Form(
-                  key: _keyFormNewEtapa,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Agregar etapa',
-                            labelText: 'Agregar etapa',
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return AlertDialog(
+                  title: Text(!isEdit ? 'Insertar etapa' : 'Editar etapa'),
+                  content: SizedBox(
+                    width: size.width * 0.3,
+                    height: size.height * 0.5,
+                    child: Form(
+                      key: _keyFormNewEtapa,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              initialValue: etapa.nombreEtapa,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Nombre de la etapa',
+                                labelText: 'Nombre de la etapa',
+                              ),
+                              onChanged: (value) {
+                                etapa.nombreEtapa = value;
+                              },
+                              validator: (value) {
+                                if (value != null && value != '') {
+                                  return null;
+                                } else {
+                                  return 'El nombre del etapa es necesario';
+                                }
+                              },
+                            ),
                           ),
-                          onChanged: (value) {
-                            newEtapa.nombreEtapa = value;
-                          },
-                          validator: (value) {
-                            if (value != null && value != '') {
-                              return null;
-                            } else {
-                              return 'El nombre del etapa es necesario';
-                            }
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Descripción de la etapa',
-                            labelText: 'Descripción de la etapa',
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              initialValue: etapa.descripcionEtapa,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Descripción de la etapa',
+                                labelText: 'Descripción de la etapa',
+                              ),
+                              onChanged: (value) {
+                                etapa.descripcionEtapa = value;
+                              },
+                            ),
                           ),
-                          onChanged: (value) {
-                            newEtapa.descripcionEtapa = value;
-                          },
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Text('Seleccione el color'),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                GestureDetector(
+                                  child: Icon(
+                                    Icons.circle,
+                                    color: Color(int.parse(etapa.color)),
+                                  ),
+                                  onTap: () {
+                                    showColorPicker(
+                                            Color(int.parse(etapa.color)))
+                                        .then((value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          etapa.color =
+                                              "0x" + colorToHex(value);
+                                        });
+                                      }
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                    ],
+                    ),
                   ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancelar'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (isEdit) {
+                          if (_keyFormNewEtapa.currentState.validate()) {
+                            _prospectoBloc.add(UpdateDatosEtapa(etapa));
+                          }
+                        } else {
+                          if (_keyFormNewEtapa.currentState.validate()) {
+                            _prospectoBloc.add(AddEtapaEvent(etapa));
+                          }
+                        }
+                      },
+                      child: Text('Aceptar'),
+                    )
+                  ],
+                );
+              },
+            ),
+          );
+        });
+  }
+
+  Future showColorPicker(Color selectedColor) {
+    return showDialog(
+        context: context,
+        builder: (contex) => AlertDialog(
+              title: Text('Seleccionar color'),
+              content: SingleChildScrollView(
+                child: ColorPicker(
+                  pickerColor: selectedColor,
+                  onColorChanged: (value) {
+                    setState(() {
+                      selectedColor = value;
+                    });
+                  },
                 ),
               ),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Cancelar'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (_keyFormNewEtapa.currentState.validate()) {
-                      _prospectoBloc.add(AddEtapaEvent(newEtapa));
-                    }
-                  },
-                  child: Text('Aceptar'),
-                )
+                    onPressed: () {
+                      Navigator.of(context).pop(selectedColor);
+                    },
+                    child: Text('Aceptar'))
               ],
-            ),
-          );
-        });
+            ));
   }
 
   _onItemReorder(
@@ -404,8 +489,10 @@ class _ProspectosPageState extends State<ProspectosPage> {
 
 class DetailProspectoDialog extends StatefulWidget {
   final ProspectoModel prospecto;
+  final String nameEtapa;
 
-  const DetailProspectoDialog({Key key, @required this.prospecto})
+  const DetailProspectoDialog(
+      {Key key, @required this.prospecto, this.nameEtapa})
       : super(key: key);
 
   @override
@@ -440,25 +527,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Spacer(),
-                    AutoSizeText(
-                      'Datos del predecesor',
-                      maxFontSize: 15.0,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(Icons.close),
-                    )
-                  ],
-                ),
+                tituloWidget(context),
                 namePredecesorWidget(),
                 phonePredecesorWidget(),
                 emailPredecesorWidget(),
@@ -469,6 +538,36 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
           ),
         ),
       ),
+    );
+  }
+
+  Row tituloWidget(BuildContext context) {
+    return Row(
+      children: [
+        Spacer(),
+        Column(
+          children: [
+            AutoSizeText(
+              'Datos del prospecto',
+              maxFontSize: 18.0,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            AutoSizeText(
+              'Etapa: ${widget.nameEtapa}',
+              maxFontSize: 13.0,
+            )
+          ],
+        ),
+        Spacer(),
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.close),
+        )
+      ],
     );
   }
 
@@ -496,22 +595,40 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             RegExp regExpEmail = RegExp(
                 r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
-            if (regExpEmail.hasMatch(value)) {
+            if (value == null || value == '') {
               return null;
             } else {
-              return 'Ingrese un correo eléctronico valido';
+              if (regExpEmail.hasMatch(value)) {
+                return null;
+              } else {
+                return 'Ingrese un correo eléctronico valido';
+              }
             }
           },
           decoration: InputDecoration(
+            suffixIcon: canEditEmail
+                ? IconButton(
+                    onPressed: () {
+                      if (_keyFormEmail.currentState.validate()) {
+                        _prospectoBloc
+                            .add(UpdateCorreoProspecto(widget.prospecto));
+                        setState(() {
+                          canEditEmail = false;
+                        });
+                      }
+                      setState(() {
+                        canEditEmail = false;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.save,
+                      color: Colors.black,
+                    ),
+                  )
+                : null,
             hintText: 'Añadir correo eléctronico...',
             helperText: 'correo@dominio.com',
             disabledBorder: InputBorder.none,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue, width: 1.0),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red, width: 1.0),
-            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 1.0),
             ),
@@ -559,8 +676,27 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
         ),
         title: Text('Teléfono'),
         subtitle: TextFormField(
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+          ],
           decoration: InputDecoration(
+            suffixIcon: canEditPhone
+                ? IconButton(
+                    onPressed: () {
+                      if (_keyPhoneForm.currentState.validate()) {
+                        _prospectoBloc
+                            .add(UpdateTelefonoProspecto(widget.prospecto));
+                        setState(() {
+                          canEditPhone = false;
+                        });
+                      }
+                    },
+                    icon: Icon(
+                      Icons.save,
+                      color: Colors.black,
+                    ),
+                  )
+                : null,
             hintText: 'Añadir teléfono',
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 1.0),
@@ -568,10 +704,14 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             border: InputBorder.none,
           ),
           validator: (value) {
-            if (value.length < 11 && value.length > 0) {
+            if (value == null || value == '') {
               return null;
             } else {
-              return 'El número debe tener 10 digitos';
+              if (value.length < 11 && value.length > 0) {
+                return null;
+              } else {
+                return 'El número debe tener 10 digitos';
+              }
             }
           },
           enabled: canEditPhone,
@@ -621,31 +761,48 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   ListTile namePredecesorWidget() {
     return ListTile(
       leading: Icon(Icons.article_outlined, color: Color(0xFF172C4C)),
-      title: TextFormField(
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16.0,
-        ),
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue, width: 1.0),
-          ),
-          border: InputBorder.none,
-        ),
-        readOnly: !canEditName,
-        initialValue: widget.prospecto.nombreProspecto,
-        onChanged: (value) => {widget.prospecto.nombreProspecto = value},
+      title: GestureDetector(
         onTap: () => setState(
           () {
             canEditName = true;
           },
         ),
-        onFieldSubmitted: (value) => {
-          setState(() {
-            _prospectoBloc.add(UpdateNameProspecto(widget.prospecto));
-            canEditName = false;
-          })
-        },
+        child: TextFormField(
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+          ),
+          decoration: InputDecoration(
+            suffixIcon: canEditName
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _prospectoBloc
+                            .add(UpdateNameProspecto(widget.prospecto));
+                        canEditName = false;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.save,
+                      color: Colors.black,
+                    ),
+                  )
+                : null,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 1.0),
+            ),
+            border: InputBorder.none,
+          ),
+          enabled: canEditName,
+          initialValue: widget.prospecto.nombreProspecto,
+          onChanged: (value) => {widget.prospecto.nombreProspecto = value},
+          onFieldSubmitted: (value) => {
+            setState(() {
+              _prospectoBloc.add(UpdateNameProspecto(widget.prospecto));
+              canEditName = false;
+            })
+          },
+        ),
       ),
     );
   }
@@ -655,7 +812,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     return ListTile(
       minVerticalPadding: 10.0,
       leading: Icon(
-        Icons.description_outlined,
+        Icons.wysiwyg,
         color: Color(0xFF172C4C),
       ),
       title: Text('Actividades'),
@@ -706,7 +863,72 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                   List.from(widget.prospecto.actividades.reversed);
               return ListTile(
                 leading: Icon(Icons.messenger_sharp),
-                title: Text(actividades[index].descripcion),
+                title: TextFormField(
+                  onTap: () {
+                    setState(() {
+                      actividades[index].isEdit = true;
+                    });
+                  },
+                  readOnly: !actividades[index].isEdit,
+                  initialValue: actividades[index].descripcion,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 1.0,
+                        ),
+                      ),
+                      suffixIcon: actividades[index].isEdit
+                          ? IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _prospectoBloc.add(
+                                      UpdateActividadEvent(actividades[index]));
+                                  actividades[index].isEdit = false;
+                                });
+                              },
+                              icon: Icon(
+                                Icons.save,
+                                color: Colors.black,
+                              ))
+                          : null),
+                  onChanged: (value) {
+                    actividades[index].descripcion = value;
+                  },
+                ),
+                trailing: IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              content: Text('¿Desea eliminar la actividad?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _prospectoBloc.add(DeleteActividadEvent(
+                                        actividades[index].idActividad));
+                                    setState(() {
+                                      widget.prospecto.actividades
+                                          .remove(actividades[index]);
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Aceptar'),
+                                )
+                              ],
+                            ));
+                  },
+                  icon: Icon(Icons.delete_forever),
+                ),
               );
             },
           ),

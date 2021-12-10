@@ -7,6 +7,7 @@ class EtapasModel {
   String descripcionEtapa;
   bool isEditNombreEtapa;
   bool isAdd;
+  String color;
   List<ProspectoModel> prospectos;
 
   EtapasModel({
@@ -19,11 +20,13 @@ class EtapasModel {
     this.isAdd = false,
     this.isEditNombreEtapa = false,
     this.prospectos,
+    this.color,
   });
 
   factory EtapasModel.fromJson(Map<String, dynamic> json) => EtapasModel(
       idEtapa: json['id_etapa'],
       ordenEtapa: json['orden_etapa'],
+      color: json['color'],
       idPlanner: json['id_planner'],
       claveEtapa: json['clave_etapa'],
       nombreEtapa: json['nombre_etapa'],
@@ -37,7 +40,9 @@ class EtapasModel {
         'clave_etapa': claveEtapa,
         'nombre_etapa': nombreEtapa,
         'descripcion_etapa': descripcionEtapa,
-        'prospectos': prospectos.map((e) => e.toJson()).toList() ?? []
+        'prospectos': (prospectos != null)
+            ? prospectos.map((e) => e.toJson()).toList()
+            : []
       };
 }
 
@@ -84,7 +89,9 @@ class ProspectoModel {
         'involucrado_prospecto': involucradoProspecto,
         'telefono': telefono,
         'correo': correo,
-        'actividades': actividades.map((e) => e.toJson()).toList() ?? []
+        'actividades': (actividades != null)
+            ? actividades.map((e) => e.toJson()).toList()
+            : []
       };
 }
 
@@ -92,11 +99,13 @@ class ActividadProspectoModel {
   int idActividad;
   int idProspecto;
   String descripcion;
+  bool isEdit;
 
   ActividadProspectoModel({
     this.idActividad,
     this.idProspecto,
     this.descripcion,
+    this.isEdit = false,
   });
 
   factory ActividadProspectoModel.fromJson(Map<String, dynamic> json) =>

@@ -120,11 +120,39 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         print(e);
       }
     });
+
+    on<DeleteActividadEvent>((event, emit) async {
+      try {
+        await logic.deleteActividadProspecto(event.idActividad);
+        add(MostrarEtapasEvent());
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<UpdateActividadEvent>((event, emit) async {
+      try {
+        await logic.editActividad(event.actividadToEdit);
+
+        add(MostrarEtapasEvent());
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<UpdateDatosEtapa>((event, emit) async {
+      try {
+        final data = await logic.editDatosEtapas(event.estapaToEdit);
+        emit(AddedEtapaState(data));
+        add(MostrarEtapasEvent());
+      } catch (e) {
+        print(e);
+      }
+    });
   }
 
   @override
   void onTransition(Transition<ProspectoEvent, ProspectoState> transition) {
-    print(transition.event);
     super.onTransition(transition);
   }
 }

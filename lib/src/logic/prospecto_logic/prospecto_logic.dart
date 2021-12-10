@@ -147,7 +147,7 @@ class ProspectoLogic {
       'nombre': newEtapa.nombreEtapa,
       'orden': newEtapa.ordenEtapa,
       'descripcion': newEtapa.descripcionEtapa,
-      'claveEtapa': newEtapa.claveEtapa,
+      'color': newEtapa.color
     };
 
     final headers = {
@@ -366,6 +366,100 @@ class ProspectoLogic {
     final data = {
       'idPlanner': idPlanner,
       'idEtapa': idEtapa,
+    };
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(_configC.url + _configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> deleteActividadProspecto(int idActividad) async {
+    String token = await _sharedPreferencesT.getToken();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+
+    const endpoint = '/wedding/PROSPECTO/deleteActividadProspecto';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idActividad': idActividad,
+    };
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(_configC.url + _configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> editActividad(ActividadProspectoModel actividadToEdit) async {
+    String token = await _sharedPreferencesT.getToken();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+
+    const endpoint = '/wedding/PROSPECTO/editActividad';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'descripcion': actividadToEdit.descripcion,
+      'idActividad': actividadToEdit.idActividad,
+    };
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(_configC.url + _configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> editDatosEtapas(EtapasModel etapaToEdit) async {
+    String token = await _sharedPreferencesT.getToken();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+
+    const endpoint = '/wedding/PROSPECTO/editDatosEtapas';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'nombre': etapaToEdit.nombreEtapa,
+      'descripcion': etapaToEdit.descripcionEtapa,
+      'idActividad': etapaToEdit.idEtapa,
+      'color': etapaToEdit.color,
     };
 
     final headers = {

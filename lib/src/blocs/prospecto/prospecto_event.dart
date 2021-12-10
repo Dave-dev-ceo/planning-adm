@@ -91,3 +91,21 @@ class DeleteEtapaEvent extends ProspectoEvent {
 
   DeleteEtapaEvent(this.idEtapa);
 }
+
+class DeleteActividadEvent extends ProspectoEvent {
+  final int idActividad;
+
+  DeleteActividadEvent(this.idActividad);
+}
+
+class UpdateActividadEvent extends ProspectoEvent {
+  final ActividadProspectoModel actividadToEdit;
+
+  UpdateActividadEvent(this.actividadToEdit);
+}
+
+class UpdateDatosEtapa extends ProspectoEvent {
+  final EtapasModel estapaToEdit;
+
+  UpdateDatosEtapa(this.estapaToEdit);
+}
