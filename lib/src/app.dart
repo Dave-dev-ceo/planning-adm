@@ -20,6 +20,7 @@ import 'package:planning/src/logic/invitados_mesas_logic/invitados_mesa_logic.da
 import 'package:planning/src/logic/involucrados_logic.dart';
 import 'package:planning/src/logic/mesas_logic/mesa_logic.dart';
 import 'package:planning/src/logic/pagos_logic.dart';
+import 'package:planning/src/logic/prospecto_logic/prospecto_logic.dart';
 import 'package:planning/src/logic/proveedores_evento_logic.dart';
 import 'package:planning/src/logic/servicios_logic.dart';
 import 'package:planning/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
@@ -59,6 +60,7 @@ import 'package:planning/src/logic/tipos_eventos_logic.dart';
 import 'package:planning/src/resources/route_generator.dart';
 import 'blocs/paises/paises_bloc.dart';
 import 'blocs/perfil/perfil_bloc.dart';
+import 'blocs/prospecto/prospecto_bloc.dart';
 import 'blocs/usuarios/usuario/usuario_bloc.dart';
 import 'logic/estatus_logic.dart';
 import 'logic/eventos_logic.dart';
@@ -234,7 +236,9 @@ class AppState extends StatelessWidget {
           create: (_) => HistorialPagosBloc(logic: HistorialPagosLogic())),
       BlocProvider<MesasAsignadasBloc>(create: (_) => MesasAsignadasBloc()),
       BlocProvider<DashboardBloc>(
-        create: (_) => DashboardBloc(logic: DashboardLogic()),
+          create: (_) => DashboardBloc(logic: DashboardLogic())),
+      BlocProvider<ProspectoBloc>(
+        create: (context) => ProspectoBloc(logic: ProspectoLogic()),
       )
     ], child: MyApp());
   }
