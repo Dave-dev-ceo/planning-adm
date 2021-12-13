@@ -110,7 +110,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                       )),
                 ),
               ),
-            if (widget.provsrv['type'] == 0)
+            if (widget.provsrv['type'] == 0 && widget.provsrv['prvEv'] == 2)
               ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: 500),
                 child: ExpansionPanelList(
