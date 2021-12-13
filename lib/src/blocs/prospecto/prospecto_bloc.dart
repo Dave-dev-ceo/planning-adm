@@ -149,6 +149,24 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         print(e);
       }
     });
+
+    on<EditInvolucradoEvent>((event, emit) async {
+      try {
+        await logic.editInvolucrado(event.prospectoModel);
+        add(MostrarEtapasEvent());
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<EventoFromProspectoEvent>((event, emit) async {
+      try {
+        await logic.eventoFromProspecto(event.idProspecto);
+        add(MostrarEtapasEvent());
+      } catch (e) {
+        print(e);
+      }
+    });
   }
 
   @override

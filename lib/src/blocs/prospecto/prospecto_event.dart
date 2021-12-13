@@ -109,3 +109,16 @@ class UpdateDatosEtapa extends ProspectoEvent {
 
   UpdateDatosEtapa(this.estapaToEdit);
 }
+
+class EditInvolucradoEvent extends ProspectoEvent {
+  final ProspectoModel prospectoModel;
+
+  EditInvolucradoEvent(this.prospectoModel);
+}
+
+class EventoFromProspectoEvent extends ProspectoEvent {
+  final int idProspecto;
+
+  EventoFromProspectoEvent(this.idProspecto);
+  List<Object> get props => [idProspecto];
+}

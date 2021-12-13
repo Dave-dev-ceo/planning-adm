@@ -512,6 +512,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   bool canEditName = false;
   bool canEditPhone = false;
   bool canEditEmail = false;
+  bool canEditInvolucrado = false;
 
   bool isFocusDescripcion = false;
   bool isEditDescripcion = false;
@@ -536,6 +537,63 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
               children: [
                 tituloWidget(context),
                 namePredecesorWidget(),
+                ListTile(
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  selectedTileColor: Colors.transparent,
+                  onTap: () => setState(
+                    () {
+                      canEditInvolucrado = true;
+                    },
+                  ),
+                  leading: Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                  title: Text('Involucrado'),
+                  subtitle: TextFormField(
+                    decoration: InputDecoration(
+                      suffixIcon: canEditInvolucrado
+                          ? IconButton(
+                              onPressed: () {
+                                _prospectoBloc.add(
+                                    EditInvolucradoEvent(widget.prospecto));
+                                setState(() {
+                                  canEditInvolucrado = false;
+                                });
+                              },
+                              icon: Icon(
+                                Icons.save,
+                                color: Colors.black,
+                              ),
+                            )
+                          : null,
+                      hintText: 'Añadir involucrado...',
+                      disabledBorder: InputBorder.none,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 1.0),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 1.0),
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    enabled: canEditInvolucrado,
+                    initialValue:
+                        (widget.prospecto.involucradoProspecto != null)
+                            ? widget.prospecto.involucradoProspecto
+                            : null,
+                    onChanged: (value) =>
+                        {widget.prospecto.involucradoProspecto = value},
+                    onFieldSubmitted: (value) => {
+                      _prospectoBloc
+                          .add(EditInvolucradoEvent(widget.prospecto)),
+                      setState(() {
+                        canEditInvolucrado = false;
+                      })
+                    },
+                  ),
+                ),
                 phonePredecesorWidget(),
                 emailPredecesorWidget(),
                 descripcionPredecesorWidget(),
@@ -545,7 +603,12 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                     padding: const EdgeInsets.all(8.0),
                     child: FloatingActionButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/addEvento');
+                        Navigator.of(context)
+                            .pushNamed('/addEvento',
+                                arguments: widget.prospecto)
+                            .then((_) {
+                          Navigator.of(context).pop();
+                        });
                       },
                       child: Icon(Icons.add_task_sharp),
                     ),
@@ -608,6 +671,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
         ),
         title: Text('Correo'),
         subtitle: TextFormField(
+          keyboardType: TextInputType.emailAddress,
           validator: (value) {
             RegExp regExpEmail = RegExp(
                 r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
@@ -696,6 +760,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
           ],
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
             suffixIcon: canEditPhone
                 ? IconButton(
@@ -721,15 +786,10 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             border: InputBorder.none,
           ),
           validator: (value) {
-            if (value == null || value == '') {
+            if (value.length < 11 && value.length > 0) {
               return null;
-            } else {
-              if (value.length < 11 && value.length > 0) {
-                return null;
-              } else {
-                return 'El número debe tener 10 digitos';
-              }
             }
+            return 'El numero debe tener 10 digitos';
           },
           enabled: canEditPhone,
           initialValue: (widget.prospecto.telefono != null)

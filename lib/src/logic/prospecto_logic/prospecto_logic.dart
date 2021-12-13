@@ -480,4 +480,65 @@ class ProspectoLogic {
       return false;
     }
   }
+
+  Future<bool> editInvolucrado(ProspectoModel prospectoModel) async {
+    String token = await _sharedPreferencesT.getToken();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+
+    const endpoint = '/wedding/PROSPECTO/editInvolucradoProspecto';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'involucrado': prospectoModel.involucradoProspecto,
+      'idProspecto': prospectoModel.idProspecto,
+    };
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(_configC.url + _configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> eventoFromProspecto(int idProspecto) async {
+    String token = await _sharedPreferencesT.getToken();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+
+    const endpoint = '/wedding/PROSPECTO/eventoFromProspecto';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idProspecto': idProspecto,
+    };
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(_configC.url + _configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
