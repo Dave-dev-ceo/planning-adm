@@ -266,17 +266,21 @@ class _ProspectosPageState extends State<ProspectosPage> {
         child: Text('Sin datos'),
       ),
       children: etapa.prospectos
-          .map((prospecto) => _buildItem(prospecto, etapa.nombreEtapa))
+          .map((prospecto) =>
+              _buildItem(prospecto, etapa.nombreEtapa, etapa.claveEtapa))
           .toList(),
     );
   }
 
-  DragAndDropItem _buildItem(ProspectoModel prospecto, String nameEtapa) {
+  DragAndDropItem _buildItem(
+      ProspectoModel prospecto, String nameEtapa, String claveEtapa) {
     return DragAndDropItem(
       child: Card(
+        margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 5.0),
+        elevation: 3,
         child: ListTile(
           title: Text(prospecto.nombreProspecto),
-          onTap: () => _openDetailProspecto(prospecto, nameEtapa),
+          onTap: () => _openDetailProspecto(prospecto, nameEtapa, claveEtapa),
         ),
       ),
     );
@@ -290,13 +294,15 @@ class _ProspectosPageState extends State<ProspectosPage> {
     ));
   }
 
-  void _openDetailProspecto(ProspectoModel prospecto, String nameEtapa) {
+  void _openDetailProspecto(
+      ProspectoModel prospecto, String nameEtapa, String claveEtapa) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => DetailProspectoDialog(
         nameEtapa: nameEtapa,
         prospecto: prospecto,
+        claveEtapa: claveEtapa,
       ),
     );
   }
@@ -489,10 +495,11 @@ class _ProspectosPageState extends State<ProspectosPage> {
 
 class DetailProspectoDialog extends StatefulWidget {
   final ProspectoModel prospecto;
+  final String claveEtapa;
   final String nameEtapa;
 
   const DetailProspectoDialog(
-      {Key key, @required this.prospecto, this.nameEtapa})
+      {Key key, @required this.prospecto, this.nameEtapa, this.claveEtapa})
       : super(key: key);
 
   @override
@@ -533,6 +540,16 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                 emailPredecesorWidget(),
                 descripcionPredecesorWidget(),
                 actividadesWidget(),
+                if (widget.claveEtapa == 'ACP')
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/addEvento');
+                      },
+                      child: Icon(Icons.add_task_sharp),
+                    ),
+                  )
               ],
             ),
           ),
