@@ -65,7 +65,7 @@ class New_ContratoState extends State<NewContrato> {
       ),
       bottomNavigationBar: _showNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _showButton(),
+      floatingActionButton: !isInvolucrado ? _showButton() : null,
     );
   }
 
@@ -238,18 +238,21 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_upload_outlined),
-                            label: Text('Subir archivo'),
-                            onPressed: () => _uploadFile(contrato.idContrato),
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.cloud_upload_outlined),
+                                  label: Text('Subir archivo'),
+                                  onPressed: () =>
+                                      _uploadFile(contrato.idContrato),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     contrato.valida
                         ? Expanded(
                             child: Column(
@@ -349,18 +352,21 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_upload_outlined),
-                            label: Text('Subir archivo'),
-                            onPressed: () => _uploadFile(contrato.idContrato),
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.cloud_upload_outlined),
+                                  label: Text('Subir archivo'),
+                                  onPressed: () =>
+                                      _uploadFile(contrato.idContrato),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     contrato.valida
                         ? Expanded(
                             child: Column(
@@ -460,18 +466,21 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_upload_outlined),
-                            label: Text('Subir archivo'),
-                            onPressed: () => _uploadFile(contrato.idContrato),
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.cloud_upload_outlined),
+                                  label: Text('Subir archivo'),
+                                  onPressed: () =>
+                                      _uploadFile(contrato.idContrato),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     contrato.valida
                         ? Expanded(
                             child: Column(
@@ -571,18 +580,21 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_upload_outlined),
-                            label: Text('Subir archivo'),
-                            onPressed: () => _uploadFile(contrato.idContrato),
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.cloud_upload_outlined),
+                                  label: Text('Subir archivo'),
+                                  onPressed: () =>
+                                      _uploadFile(contrato.idContrato),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     contrato.valida
                         ? Expanded(
                             child: Column(
@@ -682,18 +694,21 @@ class New_ContratoState extends State<NewContrato> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_upload_outlined),
-                            label: Text('Subir archivo'),
-                            onPressed: () => _uploadFile(contrato.idContrato),
+                    !isInvolucrado
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.cloud_upload_outlined),
+                                  label: Text('Subir archivo'),
+                                  onPressed: () =>
+                                      _uploadFile(contrato.idContrato),
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
-                    ),
+                        : Text(''),
                     contrato.valida
                         ? Expanded(
                             child: Column(

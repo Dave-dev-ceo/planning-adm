@@ -60,9 +60,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
   final bool WP_EVT_INV_EDT;
   final bool WP_EVT_INV_ENV;
 
-  // Variable involucrado
-  bool isInvolucrado = false;
-
   bool dialVisible = true;
 
   BuildContext _dialogContext;
@@ -75,7 +72,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
         currentIndex = _controller.index;
       });
     });
-    getIdInvolucrado();
     super.initState();
   }
 
@@ -89,14 +85,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
     setState(() {
       dialVisible = value;
     });
-  }
-
-  void getIdInvolucrado() async {
-    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
-
-    if (_idInvolucrado != null) {
-      isInvolucrado = true;
-    }
   }
 
   _viewShowDialogExcel() {
@@ -307,29 +295,28 @@ class _ListaInvitadosState extends State<ListaInvitados>
   List<SpeedDialChild> armarBotonesAcciones() {
     List<SpeedDialChild> temp = [];
     if (WP_EVT_INV_CRT) {
-      if (!isInvolucrado) {
-        temp.add(SpeedDialChild(
-          foregroundColor: Colors.black,
-          child: Tooltip(
-            child: Icon(Icons.person_add),
-            message: "Agregar invitado",
-          ),
-          backgroundColor: hexToColor("#fdf4e5"),
-          onTap: () async {
-            final result = await Navigator.of(context)
-                .pushNamed('/addInvitados', arguments: idEvento);
-            if (result == null ||
-                result == "" ||
-                result == false ||
-                result == 0) {
-              _ListaInvitadosState(
-                      idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
-                  .listaInvitados(context);
-            }
-          },
-          onLongPress: () => print('FIRST CHILD LONG PRESS'),
-        ));
-      }
+      temp.add(SpeedDialChild(
+        foregroundColor: Colors.black,
+        child: Tooltip(
+          child: Icon(Icons.person_add),
+          message: "Agregar invitado",
+        ),
+        backgroundColor: hexToColor("#fdf4e5"),
+        onTap: () async {
+          final result = await Navigator.of(context)
+              .pushNamed('/addInvitados', arguments: idEvento);
+          if (result == null ||
+              result == "" ||
+              result == false ||
+              result == 0) {
+            _ListaInvitadosState(
+                    idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
+                .listaInvitados(context);
+          }
+        },
+        onLongPress: () => print('FIRST CHILD LONG PRESS'),
+      ));
+
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
         child: Tooltip(
@@ -419,13 +406,11 @@ class _ListaInvitadosState extends State<ListaInvitados>
       color: Colors.blue,
       onRefresh: () async {
         await blocInvitados.fetchAllInvitados(context);
-        getIdInvolucrado();
       },
       child: StreamBuilder(
         stream: blocInvitados.allInvitados,
         builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
           if (snapshot.hasData) {
-            getIdInvolucrado();
             return buildList(snapshot);
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -445,7 +430,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
     ];
 
     double pHz = MediaQuery.of(context).size.width;
-    getIdInvolucrado();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -565,6 +549,7 @@ class _DataSource extends DataTableSource {
   String _grupoSelect = "0";
   String _estatusSelect = "0";
   ApiProvider api = new ApiProvider();
+
   _DataSource(context, BuildContext cont, this.idEvento, this.WP_EVT_INV_CRT,
       this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV) {
     _rows = <_Row>[];

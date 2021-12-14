@@ -125,14 +125,16 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
                     elevation: 5,
                     color: Colors.white,
                     child: ExpansionTile(
-                      title: _header('Autorizaciones', 20.0),
-                      leading: null,
-                      trailing: Icon(Icons.add),
-                      backgroundColor: Colors.white,
-                      children: [
-                        _content(),
-                      ],
-                    ),
+                        title: _header('Autorizaciones', 20.0),
+                        leading: null,
+                        trailing: Icon(Icons.add),
+                        backgroundColor: Colors.white,
+                        children: !isInvolucrado
+                            ? [
+                                _content(),
+                              ]
+                            : [],
+                        initiallyExpanded: false),
                   ),
                   content: _listaAutorizaciones(item),
                 ),

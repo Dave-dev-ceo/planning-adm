@@ -198,6 +198,20 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           trailing: Wrap(
             spacing: 12,
             children: <Widget>[
+              SizedBox(),
+              IconButton(
+                  onPressed: () {
+                    print('Clickskjh nuevo...');
+                    Navigator.of(context)
+                        .pushNamed('/agregarArchivo', arguments: {
+                      'id_proveedor': opt.id_proveedor,
+                      'id_servicio': null,
+                      'nombre': opt.nombre,
+                      'type': 0,
+                      'prvEv': 0
+                    });
+                  },
+                  icon: Icon(Icons.file_present)),
               opt.seleccion
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -287,7 +301,8 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                           'id_proveedor': opt.id_proveedor,
                           'id_servicio': null,
                           'nombre': opt.nombre,
-                          'type': 1
+                          'type': 1,
+                          'prvEv': 2
                         });
                       },
                       icon: const Icon(Icons.file_present)),

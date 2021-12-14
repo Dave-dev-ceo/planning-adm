@@ -3,13 +3,16 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
+import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
 import 'package:planning/src/blocs/tiposEventos/tiposeventos_bloc.dart';
 import 'package:planning/src/models/item_model_eventos.dart';
 import 'package:planning/src/models/item_model_tipo_evento.dart';
+import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 
 class AgregarEvento extends StatefulWidget {
-  const AgregarEvento({Key key}) : super(key: key);
+  final ProspectoModel prospecto;
+  const AgregarEvento({Key key, this.prospecto}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => AgregarEvento(),
       );
@@ -97,6 +100,10 @@ class _AgregarEventoState extends State<AgregarEvento> {
           if (state is CreateEventosState) {
             return _dialogMSG('Creando evento');
           } else if (state is CreateEventosOkState) {
+            if (widget.prospecto != null) {
+              BlocProvider.of<ProspectoBloc>(context)
+                  .add(EventoFromProspectoEvent(widget.prospecto.idProspecto));
+            }
             Navigator.pop(_ingresando);
             // final snackBar = SnackBar(
             //   content: Container(
@@ -263,14 +270,26 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   _setInitialController() {
-    descripcionCtrl = new TextEditingController();
+    descripcionCtrl = new TextEditingController(
+        text: (widget.prospecto != null)
+            ? widget.prospecto.nombreProspecto
+            : null);
     fechaInicioCtrl = new TextEditingController();
     fechaFinCtrl = new TextEditingController();
     fechaEventoCtrl = new TextEditingController();
-    nombreCtrl = new TextEditingController();
+    nombreCtrl = new TextEditingController(
+        text: (widget.prospecto != null)
+            ? widget.prospecto.involucradoProspecto
+            : null);
     apellidoCtrl = new TextEditingController();
-    telefonoCtrl = new TextEditingController();
-    emailCtrl = new TextEditingController();
+    telefonoCtrl = new TextEditingController(
+        text: (widget.prospecto != null)
+            ? (widget.prospecto.telefono != null)
+                ? widget.prospecto.telefono.toString()
+                : null
+            : null);
+    emailCtrl = new TextEditingController(
+        text: (widget.prospecto != null) ? widget.prospecto.correo : null);
     direccionCtrl = new TextEditingController();
     estadoCtrl = new TextEditingController();
     numbInvitadosContrl = new TextEditingController();
@@ -326,7 +345,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
       });
   }
 
-  _save() {
+  _save() async {
     if (keyForm.currentState.validate()) {
       Map<String, dynamic> jsonEvento = {
         "descripcion_evento": descripcionCtrl.text,
@@ -343,7 +362,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
         "numeroInvitados": numbInvitadosContrl.text
       };
 
-      eventosBloc.add(CreateEventosEvent(jsonEvento, itemModelEventos));
+      await eventosBloc.add(CreateEventosEvent(jsonEvento, itemModelEventos));
     }
   }
 
@@ -390,6 +409,8 @@ class _AgregarEventoState extends State<AgregarEvento> {
                       child: formItemsDesign(
                           Icons.date_range_outlined,
                           TextFormField(
+                            readOnly: true,
+                            onTap: () => _selectDateInicio(context),
                             controller: fechaInicioCtrl,
                             decoration: new InputDecoration(
                               labelText: 'Fecha inicio',
@@ -404,6 +425,8 @@ class _AgregarEventoState extends State<AgregarEvento> {
                       child: formItemsDesign(
                           Icons.date_range_outlined,
                           TextFormField(
+                            readOnly: true,
+                            onTap: () => _selectDateFin(context),
                             controller: fechaFinCtrl,
                             decoration: new InputDecoration(
                               labelText: 'Fecha fin',
@@ -418,6 +441,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                       child: formItemsDesign(
                           Icons.date_range_outlined,
                           TextFormField(
+                            onTap: () => _selectDateEvento(context),
                             controller: fechaEventoCtrl,
                             decoration: new InputDecoration(
                               labelText: 'Fecha evento',

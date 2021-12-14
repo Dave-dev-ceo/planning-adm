@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/eventos/agregar_evento.dart';
 
 class FullScreenDialogAddEvento extends StatefulWidget {
-  const FullScreenDialogAddEvento({Key key}) : super(key: key);
+  final ProspectoModel prospecto;
+  const FullScreenDialogAddEvento({Key key, this.prospecto}) : super(key: key);
   @override
   _FullScreenDialogAddEventoState createState() =>
       _FullScreenDialogAddEventoState();
@@ -26,7 +28,10 @@ class _FullScreenDialogAddEventoState extends State<FullScreenDialogAddEvento> {
         actions: [],
         automaticallyImplyLeading: true,
       ),
-      body: SafeArea(child: AgregarEvento()),
+      body: SafeArea(
+          child: AgregarEvento(
+        prospecto: widget.prospecto,
+      )),
     );
   }
 }

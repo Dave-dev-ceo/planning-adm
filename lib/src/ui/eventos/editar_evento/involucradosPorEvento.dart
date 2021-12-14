@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 
 class InvolucradosPorEvento extends StatefulWidget {
   const InvolucradosPorEvento({Key key}) : super(key: key);
@@ -13,6 +14,9 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
   // variables bloc
   InvolucradosBloc involucradosBloc;
 
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   // variables class
   bool saveShow = false;
   Involucrado item =
@@ -23,6 +27,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
     super.initState();
     involucradosBloc = BlocProvider.of<InvolucradosBloc>(context);
     involucradosBloc.add(SelectInvolucrado());
+    getIdInvolucrado();
   }
 
   @override
@@ -65,6 +70,14 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
         }
       },
     );
+  }
+
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   Widget viewForm() {
@@ -113,11 +126,13 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
           SizedBox(
             height: 30.0,
           ),
-          IconButton(
-            icon: Icon(Icons.save),
-            color: Colors.black,
-            onPressed: () => validaTodo(),
-          ),
+          !isInvolucrado
+              ? IconButton(
+                  icon: Icon(Icons.save),
+                  color: Colors.black,
+                  onPressed: () => validaTodo(),
+                )
+              : Text(''),
           SizedBox(
             height: 30.0,
           ),

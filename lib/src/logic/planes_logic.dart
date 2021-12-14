@@ -467,6 +467,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
       'dias': actividadModel.diasActividad,
       'idActividadTiming': actividadModel.idActividadOld,
       'responsable': actividadModel.responsable,
+      'fechafin': actividadModel.fechaFinActividad.toString()
     };
 
     final resp = await client.post(

@@ -43,9 +43,12 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
   void initState() {
     super.initState();
 
-    widget.actividadesLista.forEach(((actividad) {
-      print(actividad.toJson());
-    }));
+    _focusedDay =
+        DateTime.now().isBefore(widget.actividadesLista.first.fechaFinalEvento)
+            ? widget.actividadesLista.first.fechaFinalEvento
+                .subtract(Duration(days: 1))
+            : DateTime.now();
+
     eventoComentario = BlocProvider.of<ComentariosactividadesBloc>(context);
     eventoComentario.add(SelectComentarioPorIdEvent());
 

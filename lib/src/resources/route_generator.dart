@@ -94,7 +94,9 @@ class RouteGenerator {
             builder: (context) => FullScreenDialogAddPlanners());
       case '/addEvento':
         return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddEvento());
+            builder: (context) => FullScreenDialogAddEvento(
+                  prospecto: args,
+                ));
       case '/editarEvento':
         return MaterialPageRoute(
             builder: (context) => FullScreenDialogEditEvento(

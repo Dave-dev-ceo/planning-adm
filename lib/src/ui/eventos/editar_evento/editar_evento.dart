@@ -5,6 +5,7 @@ import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
 import 'package:planning/src/blocs/tiposEventos/tiposeventos_bloc.dart';
 import 'package:planning/src/models/item_model_evento.dart';
 import 'package:planning/src/models/item_model_eventos.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_tipo_evento.dart';
 import 'package:planning/src/ui/eventos/editar_evento/involucradosPorEvento.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
@@ -67,6 +68,9 @@ class _EditarEventoState extends State<EditarEvento> {
 
   _EditarEventoState(this.evento) {}
 
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   @override
   void initState() {
     eventosBloc = BlocProvider.of<EventosBloc>(context);
@@ -76,7 +80,16 @@ class _EditarEventoState extends State<EditarEvento> {
     fechaInicio = DateTime.now();
     fechaFin = DateTime.now();
     fechaEvento = DateTime.now();
+    getIdInvolucrado();
     super.initState();
+  }
+
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   _clearControllerEvtCont() {
@@ -147,6 +160,9 @@ class _EditarEventoState extends State<EditarEvento> {
       child: BlocListener<EventosBloc, EventosState>(
         listener: (context, state) {
           if (state is EditarEventosState) {
+            setState(() {
+              getIdInvolucrado();
+            });
             return _dialogMSG('Actualizando info. de evento');
           } else if (state is EditarEventosOkState) {
             Navigator.pop(_ingresando);
@@ -629,11 +645,19 @@ class _EditarEventoState extends State<EditarEvento> {
         SizedBox(
           height: 30.0,
         ),
-        GestureDetector(
-            onTap: () {
-              _save();
-            },
-            child: CallToAction('Guardar'))
+        !isInvolucrado
+            ? GestureDetector(
+                onTap: () {
+                  if (!isInvolucrado) {
+                    _save();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Permisos Insuficientes.')),
+                    );
+                  }
+                },
+                child: CallToAction('Guardar'))
+            : Text('')
       ],
     );
   }

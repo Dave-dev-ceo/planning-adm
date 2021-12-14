@@ -5,6 +5,7 @@ import 'package:planning/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
+import 'package:planning/src/blocs/dashboard/dashboard_bloc.dart';
 import 'package:planning/src/blocs/historialPagos/historialpagos_bloc.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
@@ -13,11 +14,13 @@ import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 import 'package:planning/src/logic/add_contratos_logic.dart';
+import 'package:planning/src/logic/dashboard_logic/dashboard_logic.dart';
 import 'package:planning/src/logic/historial_pagos/historial_pagos_logic.dart';
 import 'package:planning/src/logic/invitados_mesas_logic/invitados_mesa_logic.dart';
 import 'package:planning/src/logic/involucrados_logic.dart';
 import 'package:planning/src/logic/mesas_logic/mesa_logic.dart';
 import 'package:planning/src/logic/pagos_logic.dart';
+import 'package:planning/src/logic/prospecto_logic/prospecto_logic.dart';
 import 'package:planning/src/logic/proveedores_evento_logic.dart';
 import 'package:planning/src/logic/servicios_logic.dart';
 import 'package:planning/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
@@ -57,6 +60,7 @@ import 'package:planning/src/logic/tipos_eventos_logic.dart';
 import 'package:planning/src/resources/route_generator.dart';
 import 'blocs/paises/paises_bloc.dart';
 import 'blocs/perfil/perfil_bloc.dart';
+import 'blocs/prospecto/prospecto_bloc.dart';
 import 'blocs/usuarios/usuario/usuario_bloc.dart';
 import 'logic/estatus_logic.dart';
 import 'logic/eventos_logic.dart';
@@ -73,6 +77,7 @@ import 'package:planning/src/logic/archivos_proveedores_logic.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
 import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
 import 'package:planning/src/logic/autorizacion_logic.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 class MyApp extends StatelessWidget {
   Color hexToColor(String code) {
@@ -106,12 +111,12 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
+        SfGlobalLocalizations.delegate,
       ],
       supportedLocales: [
-        const Locale('en'),
-        const Locale('fr'),
-        const Locale('es')
+        const Locale('es'),
       ],
+      locale: const Locale('es'),
       title: 'Planning',
       theme: ThemeData(
         bottomNavigationBarTheme:
@@ -229,7 +234,12 @@ class AppState extends StatelessWidget {
               InvitadosMesasBloc(logic: ServiceInvitadosMesasLogic())),
       BlocProvider<HistorialPagosBloc>(
           create: (_) => HistorialPagosBloc(logic: HistorialPagosLogic())),
-      BlocProvider<MesasAsignadasBloc>(create: (_) => MesasAsignadasBloc())
+      BlocProvider<MesasAsignadasBloc>(create: (_) => MesasAsignadasBloc()),
+      BlocProvider<DashboardBloc>(
+          create: (_) => DashboardBloc(logic: DashboardLogic())),
+      BlocProvider<ProspectoBloc>(
+        create: (context) => ProspectoBloc(logic: ProspectoLogic()),
+      )
     ], child: MyApp());
   }
 }

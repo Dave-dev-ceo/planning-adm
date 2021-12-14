@@ -128,7 +128,7 @@ class _FormEditPagoState extends State<FormEditPago> {
                     TextEditingController(text: '${itemPago['cantidad']}'),
                 decoration: InputDecoration(hintText: 'Cantidad:'),
                 keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 onChanged: (valor) {
                   itemPago['cantidad'] = valor;
                 },
@@ -154,7 +154,7 @@ class _FormEditPagoState extends State<FormEditPago> {
                     TextEditingController(text: '${itemPago['precio']}'),
                 decoration: InputDecoration(hintText: 'Precio Unitario:'),
                 keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 onChanged: (valor) {
                   itemPago['precio'] = valor;
                 },

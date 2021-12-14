@@ -172,7 +172,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.black),
-              onPressed: isPressed
+              onPressed: isPressed && !isInvolucrado
                   ? () {
                       _abrirDialog('E', false, HistorialPagosModel());
                     }
@@ -214,7 +214,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.black),
-              onPressed: isPressed
+              onPressed: isPressed && !isInvolucrado
                   ? () {
                       _abrirDialog('I', false, HistorialPagosModel());
                     }
@@ -323,106 +323,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   Icons.delete,
                 ),
               ), onTap: () async {
-            await showDialog(
-              context: _scaffoldKey.currentContext,
-              builder: (context) => AlertDialog(
-                title: Text('Eliminar pago'),
-                content: Text(
-                    '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Cancelar'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final resp =
-                          await logicPagos.eliminarPagoEvento(pago.idPago);
-
-                      if (resp == 'Ok') {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Se ha eliminado el pago'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        Navigator.of(context, rootNavigator: true).pop(true);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(resp),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    },
-                    child: Text('Aceptar'),
-                  ),
-                ],
-              ),
-            ).then((value) => {
-                  if (value != null)
-                    {
-                      context
-                          .read<HistorialPagosBloc>()
-                          .add(MostrarHistorialPagosEvent()),
-                      if (value)
-                        {
-                          pagosBloc.add(SelectPagosEvent()),
-                        }
-                    }
-                });
-          }),
-          DataCell(
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
-              ),
-            ),
-            onTap: () {
-              _abrirDialog('I', true, pago);
-            },
-          ),
-          DataCell(
-            Align(alignment: Alignment.centerLeft, child: Text(pago.concepto)),
-            onTap: () {
-              _abrirDialog('I', true, pago);
-            },
-          ),
-          DataCell(
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  '\$${f.format(pago.pago)}',
-                ),
-              ), onTap: () {
-            _abrirDialog('I', true, pago);
-          }),
-        ];
-        pagosEventosList.add(pagosListTemp);
-      }
-    });
-
-    return pagosEventosList;
-  }
-
-  List<List<DataCell>> _crearListaPagosEventos(
-      List<HistorialPagosModel> pagos) {
-    List<List<DataCell>> pagosEventosList = [];
-
-    if (pagos.length > 0) {
-      pagos.forEach((pago) {
-        if ('E' == pago.tipoPresupuesto) {
-          List<DataCell> pagosListTemp = [
-            DataCell(
-                Center(
-                  child: Icon(
-                    Icons.delete,
-                  ),
-                ), onTap: () async {
+            if (!isInvolucrado) {
               await showDialog(
                 context: _scaffoldKey.currentContext,
                 builder: (context) => AlertDialog(
@@ -468,9 +369,118 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                         context
                             .read<HistorialPagosBloc>()
                             .add(MostrarHistorialPagosEvent()),
-                        if (value) {pagosBloc.add(SelectPagosEvent())}
+                        if (value)
+                          {
+                            pagosBloc.add(SelectPagosEvent()),
+                          }
                       }
                   });
+            }
+          }),
+          DataCell(
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
+              ),
+            ),
+            onTap: () {
+              if (!isInvolucrado) {
+                _abrirDialog('I', true, pago);
+              }
+            },
+          ),
+          DataCell(
+            Align(alignment: Alignment.centerLeft, child: Text(pago.concepto)),
+            onTap: () {
+              if (!isInvolucrado) {
+                _abrirDialog('I', true, pago);
+              }
+            },
+          ),
+          DataCell(
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '\$${f.format(pago.pago)}',
+                ),
+              ), onTap: () {
+            if (!isInvolucrado) {
+              _abrirDialog('I', true, pago);
+            }
+          }),
+        ];
+        pagosEventosList.add(pagosListTemp);
+      }
+    });
+
+    return pagosEventosList;
+  }
+
+  List<List<DataCell>> _crearListaPagosEventos(
+      List<HistorialPagosModel> pagos) {
+    List<List<DataCell>> pagosEventosList = [];
+
+    if (pagos.length > 0) {
+      pagos.forEach((pago) {
+        if ('E' == pago.tipoPresupuesto) {
+          List<DataCell> pagosListTemp = [
+            DataCell(
+                Center(
+                  child: Icon(
+                    Icons.delete,
+                  ),
+                ), onTap: () async {
+              if (!isInvolucrado)
+                await showDialog(
+                  context: _scaffoldKey.currentContext,
+                  builder: (context) => AlertDialog(
+                    title: Text('Eliminar pago'),
+                    content: Text(
+                        '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          final resp =
+                              await logicPagos.eliminarPagoEvento(pago.idPago);
+
+                          if (resp == 'Ok') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Se ha eliminado el pago'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            Navigator.of(context, rootNavigator: true)
+                                .pop(true);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(resp),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        child: Text('Aceptar'),
+                      ),
+                    ],
+                  ),
+                ).then((value) => {
+                      if (value != null)
+                        {
+                          context
+                              .read<HistorialPagosBloc>()
+                              .add(MostrarHistorialPagosEvent()),
+                          if (value) {pagosBloc.add(SelectPagosEvent())}
+                        }
+                    });
             }),
             DataCell(
                 Align(
@@ -479,13 +489,17 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                     '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
                   ),
                 ), onTap: () {
-              _abrirDialog('E', true, pago);
+              if (!isInvolucrado) {
+                _abrirDialog('E', true, pago);
+              }
             }),
             DataCell(
                 Align(
                     alignment: Alignment.centerLeft,
                     child: Text(pago.concepto)), onTap: () {
-              _abrirDialog('E', true, pago);
+              if (!isInvolucrado) {
+                _abrirDialog('E', true, pago);
+              }
             }),
             DataCell(
                 Align(
@@ -494,7 +508,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                     '\$${f.format(pago.pago)}',
                   ),
                 ), onTap: () {
-              _abrirDialog('E', true, pago);
+              if (!isInvolucrado) {
+                _abrirDialog('E', true, pago);
+              }
             }),
           ];
           pagosEventosList.add(pagosListTemp);
@@ -749,31 +765,45 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                     )
                   ],
                 ),
-              ),
-              onTap: () => _deletePago(element.idConcepto)),
+              ), onTap: () {
+            if (!isInvolucrado) {
+              _deletePago(element.idConcepto);
+            }
+          }),
           DataCell(
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('${element.proveedor}')),
-              onTap: () => _editarPago(element.idConcepto)),
+                  child: Text('${element.proveedor}')), onTap: () {
+            if (!isInvolucrado) {
+              _editarPago(element.idConcepto);
+            }
+          }),
           DataCell(
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('${element.descripcion}')),
-              onTap: () => _editarPago(element.idConcepto)),
+                  child: Text('${element.descripcion}')), onTap: () {
+            if (!isInvolucrado) {
+              _editarPago(element.idConcepto);
+            }
+          }),
           DataCell(
-            Align(
-                alignment: Alignment.centerRight,
-                child: Text('\$${precioUnitario}')),
-            onTap: () => _editarPago(element.idConcepto),
-          ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('\$${precioUnitario}')), onTap: () {
+            if (!isInvolucrado) {
+              _editarPago(element.idConcepto);
+            }
+          }),
           DataCell(
-            Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                    '\$${f.format(element.cantidad * element.precioUnitario)}')),
-            onTap: () => _editarPago(element.idConcepto),
-          ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                      '\$${f.format(element.cantidad * element.precioUnitario)}')),
+              onTap: () {
+            if (!isInvolucrado) {
+              _editarPago(element.idConcepto);
+            }
+          }),
         ];
         pagosList.add(pagosListTemp);
       });

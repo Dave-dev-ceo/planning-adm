@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:planning/src/logic/asistencia_logic.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/utils/utils.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
@@ -30,6 +31,9 @@ class _AsistenciaState extends State<Asistencia> {
   //stilos
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
 
+  // Variable involucrado
+  bool isInvolucrado = false;
+
   // ini
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _AsistenciaState extends State<Asistencia> {
     // BlocProvider - cargamos el evento
     asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
     asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
+    getIdInvolucrado();
   }
 
   @override
@@ -90,6 +95,14 @@ class _AsistenciaState extends State<Asistencia> {
       floatingActionButton:
           _crearBotonFlotante(MediaQuery.of(context).size.width),
     );
+  }
+
+  void getIdInvolucrado() async {
+    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (_idInvolucrado != null) {
+      isInvolucrado = true;
+    }
   }
 
   Widget getAsistencia(asistencia) {
@@ -180,26 +193,40 @@ class _AsistenciaState extends State<Asistencia> {
       itemModel.asistencias.forEach((element) {
         List<DataCell> invitadosListTemp = [
           DataCell(
-            SwitchListTile(
-              title: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '${element.nombre}',
-                    style: _boldStyle,
+            !isInvolucrado
+                ? SwitchListTile(
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${element.nombre}',
+                          style: _boldStyle,
+                        ),
+                        Text('Grupo: ${element.grupo}'),
+                        Text('Mesa: ${element.mesa}'),
+                      ],
+                    ),
+                    value: element.asistencia,
+                    onChanged: (value) {
+                      _guardarAsistencia(element.id_invitado, value);
+                      setState(() => element.asistencia = value);
+                    },
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${element.nombre}',
+                        style: _boldStyle,
+                      ),
+                      Text('Grupo: ${element.grupo}'),
+                      Text('Mesa: ${element.mesa}'),
+                    ],
                   ),
-                  Text('Grupo: ${element.grupo}'),
-                  Text('Mesa: ${element.mesa}'),
-                ],
-              ),
-              value: element.asistencia,
-              onChanged: (value) {
-                _guardarAsistencia(element.id_invitado, value);
-                setState(() => element.asistencia = value);
-              },
-            ),
           )
         ];
         invitadosList.add(invitadosListTemp);
