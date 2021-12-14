@@ -48,6 +48,7 @@ class _AsistenciaState extends State<Asistencia> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        margin: EdgeInsets.only(bottom: 30.0),
         padding: EdgeInsets.all(30.0),
         // BlocBuilder - revisamos el estado
         child: BlocBuilder<AsistenciaBloc, AsistenciaState>(

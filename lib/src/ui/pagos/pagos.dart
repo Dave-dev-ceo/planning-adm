@@ -41,7 +41,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   HistorialPagosLogic logicPagos = HistorialPagosLogic();
 
-  bool isInvolucrado;
+  bool isInvolucrado = false;
   bool isPressed = false;
 
   int totalpresupuestos = 0;

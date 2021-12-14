@@ -13,7 +13,7 @@ abstract class MesasLogic {
   Future<List<MesaModel>> getAsignadasMesas();
   Future<List<MesaModel>> getMesas();
   Future<String> createMesas(List<MesaModel> listaMesasToAdd);
-  Future<String> updateMesa(String nameMesa, int idMesa);
+  Future<bool> updateMesa(MesaModel editToMesa);
   Future<String> createLayout(String fileBase64, String extension);
   Future<String> deleteMesa(int idMesa);
 }
@@ -119,12 +119,16 @@ class ServiceMesasLogic extends MesasLogic {
   }
 
   @override
-  Future<String> updateMesa(String nameMesa, int idMesa) async {
+  Future<bool> updateMesa(MesaModel mesaToEdit) async {
     String token = await SharedPreferencesT().getToken();
 
     final endpoint = 'wedding/MESAS/updateMesa';
 
-    final data = {'descripcion': nameMesa, 'idMesa': idMesa};
+    final data = {
+      'descripcion': mesaToEdit.descripcion,
+      'idMesa': mesaToEdit.idMesa,
+      'idTipoMesa': mesaToEdit.idTipoDeMesa,
+    };
 
     final headers = {
       HttpHeaders.authorizationHeader: token,
@@ -138,9 +142,9 @@ class ServiceMesasLogic extends MesasLogic {
         headers: headers);
 
     if (response.statusCode == 200) {
-      return 'Ok';
+      return true;
     } else {
-      return 'Ocurrio un error';
+      return false;
     }
   }
 

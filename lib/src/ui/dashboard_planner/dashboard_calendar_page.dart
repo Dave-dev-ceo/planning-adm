@@ -229,7 +229,10 @@ class MeetingDataSource extends CalendarDataSource {
           eventName: actividad.nombreActividad,
           description: actividad.descripcionActividad,
           from: actividad.fechaInicioActividad,
-          to: actividad.fechaFinActividad,
+          to: (actividad.fechaFinActividad != null)
+              ? actividad.fechaFinActividad
+              : actividad.fechaInicioActividad
+                  .add(Duration(hours: actividad.diasActividad * 24)),
           background:
               eventoColors.firstWhere((e) => e.id == actividad.idEvento).color,
           isAllDay: false,

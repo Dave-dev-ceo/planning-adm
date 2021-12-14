@@ -40,4 +40,10 @@ class CreatedMesasState extends MesasState {
   String get props => response;
 }
 
+class MesasEditedState extends MesasState {
+  final bool wasEdited;
+
+  MesasEditedState(this.wasEdited);
+}
+
 class ErrorCreateMesasState extends MesasState {}

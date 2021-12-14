@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'dart:ui';
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
@@ -14,8 +13,6 @@ import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:pdf/pdf.dart';
@@ -399,42 +396,14 @@ class _MesasPageState extends State<MesasPage> {
                                     preferredSize: Size.fromWidth(15),
                                     child: IconButton(
                                       onPressed: () async {
-                                        setState(() {
-                                          editTitleMesa[index]
-                                              ? editTitleMesa[index] = false
-                                              : editTitleMesa[index] = true;
-
-                                          if (!editTitleMesa[index]) {
-                                            idCurrentMesa =
-                                                listaMesa[index].idMesa;
-                                            if (nameCurrentMesa == null ||
-                                                nameCurrentMesa == '') {
-                                              nameCurrentMesa =
-                                                  listaMesa[index].descripcion;
-                                            }
-
-                                            mesasLogic
-                                                .updateMesa(nameCurrentMesa,
-                                                    idCurrentMesa)
-                                                .then((value) {
-                                              if (value == 'Ok') {
-                                                BlocProvider.of<MesasBloc>(
-                                                        context)
-                                                    .add(MostrarMesasEvent());
-                                                _mostrarMensaje(
-                                                    'La mesa se edito correctamente',
-                                                    Colors.green);
-                                              } else {
-                                                _mostrarMensaje(
-                                                    value, Colors.red);
-                                              }
-                                            });
-                                          }
-                                        });
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => EditMesaDialog(
+                                            mesaModel: listaMesa[index],
+                                          ),
+                                        );
                                       },
-                                      icon: Icon(!editTitleMesa[index]
-                                          ? Icons.edit
-                                          : Icons.save),
+                                      icon: Icon(Icons.edit),
                                     ),
                                   )
                                 : Text(''),
@@ -454,16 +423,17 @@ class _MesasPageState extends State<MesasPage> {
                             ),
                           ],
                         ),
-                        title: TextFormField(
-                          enabled: editTitleMesa[index],
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          initialValue: listaMesa[index].descripcion,
-                          onChanged: (value) {
-                            nameCurrentMesa = value;
-                          },
-                        ),
+                        title: Text(listaMesa[index].descripcion),
+                        // TextFormField(
+                        //   enabled: editTitleMesa[index],
+                        //   decoration: InputDecoration(
+                        //     border: InputBorder.none,
+                        //   ),
+                        //   initialValue: listaMesa[index].descripcion,
+                        //   onChanged: (value) {
+                        //     nameCurrentMesa = value;
+                        //   },
+                        // ),
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                         subtitle: Text(listaMesa[index].tipoMesa),
@@ -1412,6 +1382,119 @@ class _MesasPageState extends State<MesasPage> {
         ),
       );
     }
+  }
+
+  _mostrarMensaje(String msj, Color color) {
+    SnackBar snackBar = SnackBar(
+      content: Text(msj),
+      backgroundColor: color,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}
+
+class EditMesaDialog extends StatefulWidget {
+  final MesaModel mesaModel;
+
+  const EditMesaDialog({Key key, @required this.mesaModel}) : super(key: key);
+
+  @override
+  _EditMesaDialogState createState() => _EditMesaDialogState();
+}
+
+class _EditMesaDialogState extends State<EditMesaDialog> {
+  final _keyForm = GlobalKey<FormState>();
+  List<Map<String, dynamic>> listTipoDeMesa = [
+    {'name': 'Cuadrada', 'value': 1},
+    {'name': 'Redonda', 'value': 2},
+    {'name': 'Rectangular', 'value': 3},
+    {'name': 'Ovalada', 'value': 4},
+    {'name': 'Imperial', 'value': 5},
+    {'name': 'En forma U', 'value': 6},
+  ];
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return AlertDialog(
+      title: Text('Editar datos de la mesa'),
+      content: BlocListener<MesasBloc, MesasState>(
+        listener: (context, state) {
+          if (state is MesasEditedState) {
+            if (state.wasEdited) {
+              Navigator.of(context).pop();
+              _mostrarMensaje('Mesa editada', Colors.green);
+            } else {
+              _mostrarMensaje('Ocurrio un error', Colors.red);
+            }
+          }
+        },
+        child: Form(
+          key: _keyForm,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                validator: (value) => (value != null || value != '')
+                    ? null
+                    : 'El Campo es requerido',
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: widget.mesaModel.descripcion,
+                onChanged: (value) {
+                  widget.mesaModel.descripcion = value;
+                },
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              DropdownButtonFormField(
+                value: widget.mesaModel.idTipoDeMesa,
+                decoration: InputDecoration(
+                    constraints: BoxConstraints(maxWidth: size.width * 0.2),
+                    prefixIcon: Icon(Icons.table_chart),
+                    hintText: 'Tipo de mesa'),
+                items: listTipoDeMesa
+                    .map((m) => DropdownMenuItem(
+                          child: Text(m['name']),
+                          value: m['value'],
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    widget.mesaModel.idTipoDeMesa = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null) {
+                    return 'El tipo de mesa es necesario';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancelar')),
+        TextButton(
+            onPressed: () {
+              if (_keyForm.currentState.validate()) {
+                BlocProvider.of<MesasBloc>(context)
+                    .add(EditMesaEvent(widget.mesaModel));
+              } else {
+                _mostrarMensaje('Los campos son necesarios', Colors.red);
+              }
+            },
+            child: Text('Aceptar'))
+      ],
+    );
   }
 
   _mostrarMensaje(String msj, Color color) {

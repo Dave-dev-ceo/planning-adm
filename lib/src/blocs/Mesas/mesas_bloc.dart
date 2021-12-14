@@ -36,6 +36,15 @@ class MesasBloc extends Bloc<MesasEvent, MesasState> {
       } catch (e) {
         yield CreatedMesasState(e);
       }
+    } else if (event is EditMesaEvent) {
+      try {
+        final data = await logic.updateMesa(event.mesaToEdit);
+
+        yield MesasEditedState(data);
+        add(MostrarMesasEvent());
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }

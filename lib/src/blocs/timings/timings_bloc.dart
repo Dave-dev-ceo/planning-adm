@@ -48,6 +48,15 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
           add(FetchTimingsPorPlannerEvent());
         }
       } catch (e) {}
+    } else if (event is DeleteTimingPlannerEvent) {
+      try {
+        final data = await logic.deleteTimingPlanner(event.idTipoTiming);
+
+        yield TimingDeletedState(data);
+        add(FetchTimingsPorPlannerEvent());
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }

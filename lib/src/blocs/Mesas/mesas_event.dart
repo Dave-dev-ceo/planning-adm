@@ -12,3 +12,9 @@ class CreateMesasEvent extends MesasEvent {
 
   List<Object> get props => [mesas];
 }
+
+class EditMesaEvent extends MesasEvent {
+  final MesaModel mesaToEdit;
+
+  EditMesaEvent(this.mesaToEdit);
+}
