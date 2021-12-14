@@ -1,7 +1,7 @@
 class ConfigConection {
   String _url;
   String _puerto;
-  bool ambiente = true;
+  bool desarrollo = true;
   set addUrl(String data) {
     this._url = data;
   }
@@ -13,7 +13,7 @@ class ConfigConection {
   String get url => _url;
   String get puerto => _puerto;
   ConfigConection() {
-    if (ambiente) {
+    if (desarrollo) {
       addPuerto = "3005";
       addUrl = "http://localhost:";
     } else {

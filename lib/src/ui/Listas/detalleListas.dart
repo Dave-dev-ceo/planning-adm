@@ -38,14 +38,11 @@ class _DetalleListasState extends State<DetalleListas> {
 
   // Declaración variables globales.
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  // Variable involucrado
-  int _idInvolucrado;
 
   final listaLogic = FetchDetalleListaLogic();
 
   @override
   void initState() {
-    setInvolucrado();
     detalleListasBloc = BlocProvider.of<DetalleListasBloc>(context);
     if (this.listas['id_lista'] == null) {
       detalleListasBloc.add(FechtDetalleListaEvent(0));
@@ -95,200 +92,189 @@ class _DetalleListasState extends State<DetalleListas> {
     );
   }
 
-  void setInvolucrado() async {
-    _idInvolucrado = await _sharedPreferences.getIdInvolucrado();
-  }
-
   Widget _formLista() {
-    return _idInvolucrado == null
-        ? Card(
-            color: Colors.white,
-            elevation: 12,
-            shadowColor: Colors.black12,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              children: <Widget>[
-                Text('Lista',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 24)),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  children: <Widget>[
-                    TextFormFields(
-                      icon: Icons.local_activity,
-                      item: TextFormField(
-                        controller: nombreCtrl,
-                        decoration: new InputDecoration(
-                          labelText: 'Nombre',
+    return Card(
+      color: Colors.white,
+      elevation: 12,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: <Widget>[
+          Text('Lista',
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 24)),
+          Wrap(
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              TextFormFields(
+                icon: Icons.local_activity,
+                item: TextFormField(
+                  controller: nombreCtrl,
+                  decoration: new InputDecoration(
+                    labelText: 'Nombre',
+                  ),
+                ),
+                large: 450.0,
+                ancho: 90.0,
+              ),
+              TextFormFields(
+                icon: Icons.drive_file_rename_outline,
+                item: TextFormField(
+                  controller: descripcionCtrl,
+                  decoration: new InputDecoration(labelText: 'Descripción'),
+                ),
+                large: 450.0,
+                ancho: 90.0,
+              ),
+              Ink(
+                padding: EdgeInsets.all(5),
+                width: 100.0,
+                // height: 100.0,
+                decoration: const ShapeDecoration(
+                  color: Colors.black,
+                  shape: CircleBorder(),
+                ),
+                child: IconButton(
+                  icon: this.listas['id_lista'] == null
+                      ? const Icon(Icons.save)
+                      : const Icon(Icons.edit),
+                  color: Colors.white,
+                  onPressed: () async {
+                    if (this.listas['id_lista'] == null) {
+                      Map<String, dynamic> json =
+                          await _jsonAgregarLista(context);
+                      detalleListasBloc
+                          .add(CreateListasEvent(json, itemModeDetallaLista));
+                      await ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          action: SnackBarAction(
+                            label: 'Action',
+                            onPressed: () {
+                              // Code to execute.
+                            },
+                          ),
+                          content: const Text(
+                              'El elemento se actualizó correctamente.'),
+                          duration: const Duration(milliseconds: 1500),
+                          width: 290.0, // Width of the SnackBar.
+                          padding: const EdgeInsets.symmetric(
+                            horizontal:
+                                8.0, // Inner padding for SnackBar content.
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
                         ),
-                      ),
-                      large: 450.0,
-                      ancho: 90.0,
-                    ),
-                    TextFormFields(
-                      icon: Icons.drive_file_rename_outline,
-                      item: TextFormField(
-                        controller: descripcionCtrl,
-                        decoration:
-                            new InputDecoration(labelText: 'Descripción'),
-                      ),
-                      large: 450.0,
-                      ancho: 90.0,
-                    ),
-                    Ink(
-                      padding: EdgeInsets.all(5),
-                      width: 100.0,
-                      // height: 100.0,
-                      decoration: const ShapeDecoration(
-                        color: Colors.black,
-                        shape: CircleBorder(),
-                      ),
-                      child: IconButton(
-                        icon: this.listas['id_lista'] == null
-                            ? const Icon(Icons.save)
-                            : const Icon(Icons.edit),
-                        color: Colors.white,
-                        onPressed: () async {
-                          if (this.listas['id_lista'] == null) {
-                            Map<String, dynamic> json =
-                                await _jsonAgregarLista(context);
-                            detalleListasBloc.add(
-                                CreateListasEvent(json, itemModeDetallaLista));
-                            await ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                action: SnackBarAction(
-                                  label: 'Action',
-                                  onPressed: () {
-                                    // Code to execute.
-                                  },
-                                ),
-                                content: const Text(
-                                    'El elemento se actualizó correctamente.'),
-                                duration: const Duration(milliseconds: 1500),
-                                width: 290.0, // Width of the SnackBar.
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal:
-                                      8.0, // Inner padding for SnackBar content.
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            );
-                          } else if (this.listas['id_lista'] != null) {
-                            Map<String, dynamic> json =
-                                await _jsonUpdateLista(context);
-                            detalleListasBloc.add(
-                                UpdateListasEvent(json, itemModeDetallaLista));
-                            await ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                action: SnackBarAction(
-                                  label: 'Action',
-                                  onPressed: () {
-                                    // Code to execute.
-                                  },
-                                ),
-                                content: const Text(
-                                    'El elemento se agrego correctamente.'),
-                                duration: const Duration(milliseconds: 1500),
-                                width: 290.0, // Width of the SnackBar.
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal:
-                                      8.0, // Inner padding for SnackBar content.
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
+                      );
+                    } else if (this.listas['id_lista'] != null) {
+                      Map<String, dynamic> json =
+                          await _jsonUpdateLista(context);
+                      detalleListasBloc
+                          .add(UpdateListasEvent(json, itemModeDetallaLista));
+                      await ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          action: SnackBarAction(
+                            label: 'Action',
+                            onPressed: () {
+                              // Code to execute.
+                            },
+                          ),
+                          content: const Text(
+                              'El elemento se agrego correctamente.'),
+                          duration: const Duration(milliseconds: 1500),
+                          width: 290.0, // Width of the SnackBar.
+                          padding: const EdgeInsets.symmetric(
+                            horizontal:
+                                8.0, // Inner padding for SnackBar content.
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              )
+            ],
           )
-        : Card();
+        ],
+      ),
+    );
   }
 
   Widget _formDetalleList() {
-    return _idInvolucrado == null
-        ? Card(
-            color: Colors.white,
-            elevation: 12,
-            shadowColor: Colors.black12,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              children: <Widget>[
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  children: <Widget>[
-                    TextFormFields(
-                      icon: Icons.tag,
-                      item: TextFormField(
-                        controller: cantidadDescCtrl,
-                        decoration: new InputDecoration(
-                          labelText: 'Cantidad',
-                        ),
-                      ),
-                      large: 200.0,
-                      ancho: 80.0,
-                    ),
-                    TextFormFields(
-                      icon: Icons.local_activity,
-                      item: TextFormField(
-                        controller: nombreDescCtrl,
-                        decoration: new InputDecoration(
-                          labelText: 'Nombre',
-                        ),
-                      ),
-                      large: 350.0,
-                      ancho: 80.0,
-                    ),
-                    TextFormFields(
-                      icon: Icons.drive_file_rename_outline,
-                      item: TextFormField(
-                        controller: descripcionDescCtrl,
-                        decoration: new InputDecoration(
-                          labelText: 'Descripción',
-                        ),
-                      ),
-                      large: 350.0,
-                      ancho: 80.0,
-                    ),
-                    Ink(
-                      padding: EdgeInsets.all(5),
-                      width: 100.0,
-                      // height: 100.0,
-                      decoration: const ShapeDecoration(
-                        color: Colors.black,
-                        shape: CircleBorder(),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () async {
-                          Map<String, dynamic> json =
-                              await _jsonDetalleLista(context);
-                          detalleListasBloc.add(CreateDetalleListasEvent(
-                              json, itemModeDetallaLista));
-                          await _limpiarForm();
-                        },
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
+    return Card(
+      color: Colors.white,
+      elevation: 12,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: <Widget>[
+          Wrap(
+            alignment: WrapAlignment.center,
+            children: <Widget>[
+              TextFormFields(
+                icon: Icons.tag,
+                item: TextFormField(
+                  controller: cantidadDescCtrl,
+                  decoration: new InputDecoration(
+                    labelText: 'Cantidad',
+                  ),
+                ),
+                large: 200.0,
+                ancho: 80.0,
+              ),
+              TextFormFields(
+                icon: Icons.local_activity,
+                item: TextFormField(
+                  controller: nombreDescCtrl,
+                  decoration: new InputDecoration(
+                    labelText: 'Nombre',
+                  ),
+                ),
+                large: 350.0,
+                ancho: 80.0,
+              ),
+              TextFormFields(
+                icon: Icons.drive_file_rename_outline,
+                item: TextFormField(
+                  controller: descripcionDescCtrl,
+                  decoration: new InputDecoration(
+                    labelText: 'Descripción',
+                  ),
+                ),
+                large: 350.0,
+                ancho: 80.0,
+              ),
+              Ink(
+                padding: EdgeInsets.all(5),
+                width: 100.0,
+                // height: 100.0,
+                decoration: const ShapeDecoration(
+                  color: Colors.black,
+                  shape: CircleBorder(),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.add),
+                  color: Colors.white,
+                  onPressed: () async {
+                    Map<String, dynamic> json =
+                        await _jsonDetalleLista(context);
+                    detalleListasBloc.add(
+                        CreateDetalleListasEvent(json, itemModeDetallaLista));
+                    await _limpiarForm();
+                  },
+                ),
+              )
+            ],
           )
-        : Card();
+        ],
+      ),
+    );
   }
 
   Widget _buildList(ItemModelDetalleListas snapshot) {
@@ -337,22 +323,17 @@ class _DetalleListasState extends State<DetalleListas> {
         title: Text(opt.cantidad.toString() + ' - ' + opt.nombre),
         subtitle: Text(opt.descripcion),
         trailing: Wrap(spacing: 12, children: <Widget>[
-          _idInvolucrado == null
-              ? IconButton(
-                  onPressed: () => showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) => _eliminarDetalleLista(
-                          opt.id_detalle_lista, opt.id_lista)),
-                  icon: const Icon(Icons.delete))
-              : IconButton(onPressed: () {}, icon: Icon(null)),
-          _idInvolucrado == null
-              ? IconButton(
-                  onPressed: () => showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          _editarDetalleLista(opt)),
-                  icon: const Icon(Icons.edit))
-              : IconButton(onPressed: () {}, icon: Icon(null)),
+          IconButton(
+              onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) => _eliminarDetalleLista(
+                      opt.id_detalle_lista, opt.id_lista)),
+              icon: const Icon(Icons.delete)),
+          IconButton(
+              onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) => _editarDetalleLista(opt)),
+              icon: const Icon(Icons.edit)),
         ]),
         onTap: () async {},
       );
