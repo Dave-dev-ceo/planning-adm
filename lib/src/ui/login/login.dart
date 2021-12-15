@@ -18,7 +18,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   int _index = 0;
-  dynamic loginBloc;
+  LoginBloc loginBloc;
   TextEditingController emailCtrl = new TextEditingController(text: '');
   TextEditingController passwordCtrl = new TextEditingController(text: '');
   TextEditingController emailRCtrl = new TextEditingController();
@@ -26,6 +26,7 @@ class _LoginState extends State<Login> {
   TextEditingController passwordConfirRCtrl = new TextEditingController();
   TextEditingController nombreRCtrl = new TextEditingController();
   TextEditingController telefonoRCtrl = new TextEditingController();
+  TextEditingController correoRecuperacionCtrl = new TextEditingController();
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   BuildContext _ingresando;
   bool _visible = true;
@@ -33,6 +34,8 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
+    loginBloc = BlocProvider.of<LoginBloc>(context);
+
     super.initState();
     _checkSession();
   }
@@ -59,184 +62,6 @@ class _LoginState extends State<Login> {
           'imag': image
         });
       }
-    }
-  }
-
-  _registroPlanner() async {
-    if (emailRCtrl.text == "" ||
-        emailRCtrl.text == null ||
-        nombreRCtrl.text == "" ||
-        nombreRCtrl.text == null ||
-        passwordRCtrl.text == "" ||
-        passwordRCtrl.text == null ||
-        telefonoRCtrl.text == "" ||
-        telefonoRCtrl.text == null ||
-        passwordConfirRCtrl.text == "" ||
-        passwordConfirRCtrl.text == null) {
-      showDialog(
-          context: context,
-          //barrierDismissible: false,
-          builder: (BuildContext context) {
-            //_ingresando = context;
-            return AlertDialog(
-              title: Text(
-                "Registro",
-                textAlign: TextAlign.center,
-              ),
-              content: Text('No puede dejar campos vacíos'),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Cerrar'),
-                  onPressed: () {
-                    //_index = 0;
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          });
-    } else if (passwordConfirRCtrl.text == passwordRCtrl.text) {
-      showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            _ingresando = context;
-            return AlertDialog(
-              title: Text(
-                "Registrando",
-                textAlign: TextAlign.center,
-              ),
-              content: AnimatedOpacity(
-                  duration: Duration(milliseconds: 500),
-                  opacity: _visible ? 1.0 : 0.0,
-                  child: Image.asset(
-                    'assets/new_logo.png',
-                    height: 100.0,
-                    width: 150.0,
-                    color: Colors.purple,
-                  )),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
-            );
-          });
-      Map<String, String> json = {
-        "nombre_completo": nombreRCtrl.text,
-        "correo": emailRCtrl.text,
-        "contrasena": passwordRCtrl.text,
-        "telefono": telefonoRCtrl.text
-      };
-      int response = await api.registroPlanner(json);
-      //   int response = 0;
-      if (response == 0) {
-        emailRCtrl.clear();
-        passwordRCtrl.clear();
-        nombreRCtrl.clear();
-        passwordConfirRCtrl.clear();
-        telefonoRCtrl.clear();
-        _index = 0;
-        Navigator.pop(_ingresando);
-        showDialog(
-            context: context,
-            //barrierDismissible: false,
-            builder: (BuildContext context) {
-              //_ingresando = context;
-              return AlertDialog(
-                title: Text(
-                  "Registro",
-                  textAlign: TextAlign.center,
-                ),
-                content: Text('Planner Registrado con éxito'),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Cerrar'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-
-        //Navigator.pushNamed(context, '/dasboard');
-      } else if (response == 1) {
-        Navigator.pop(_ingresando);
-        showDialog(
-            context: context,
-            //barrierDismissible: false,
-            builder: (BuildContext context) {
-              //_ingresando = context;
-              return AlertDialog(
-                title: Text(
-                  "Datos invalidos",
-                  textAlign: TextAlign.center,
-                ),
-                content: Text('No se pudo realizar el registro'),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Cerrar'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-      } else if (response == 2) {
-        Navigator.pop(_ingresando);
-        showDialog(
-            context: context,
-            //barrierDismissible: false,
-            builder: (BuildContext context) {
-              //_ingresando = context;
-              return AlertDialog(
-                title: Text(
-                  "Error",
-                  textAlign: TextAlign.center,
-                ),
-                content: Text('Registro invalido'),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Cerrar'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-      }
-    } else {
-      showDialog(
-          context: context,
-          //barrierDismissible: false,
-          builder: (BuildContext context) {
-            //_ingresando = context;
-            return AlertDialog(
-              title: Text(
-                "Alerta!",
-                textAlign: TextAlign.center,
-              ),
-              content: Text('La contraseña no coincide.'),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Cerrar'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          });
     }
   }
 
@@ -279,253 +104,6 @@ class _LoginState extends State<Login> {
                     ]
                   : null);
         });
-  }
-
-  _registrarDataUser() {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: 10.0,
-        ),
-        Image.asset(
-          'assets/new_logo.png',
-          height: 180.0,
-          width: 450,
-        ),
-        SizedBox(
-          height: 5.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
-          child: TextFormField(
-            controller: nombreRCtrl,
-            style: TextStyle(color: Colors.black),
-            decoration: new InputDecoration(
-              labelText: "Nombre",
-              labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.black,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.purple[100],
-                  width: 2.0,
-                ),
-              ),
-            ),
-            cursorColor: Colors.purple[100],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-          child: TextFormField(
-            controller: emailRCtrl,
-            style: TextStyle(color: Colors.black),
-            decoration: new InputDecoration(
-              labelText: "Correo",
-              labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.black,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.purple[100],
-                  width: 2.0,
-                ),
-              ),
-            ),
-            cursorColor: Colors.purple[100],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-          child: TextFormField(
-            controller: telefonoRCtrl,
-            style: TextStyle(color: Colors.black),
-            maxLength: 10,
-            decoration: new InputDecoration(
-              labelText: "Teléfono",
-              labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.black,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.purple[100],
-                  width: 2.0,
-                ),
-              ),
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            cursorColor: Colors.purple[100],
-          ),
-        ),
-        //SizedBox(height: 15.0,),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-          child: TextFormField(
-            controller: passwordRCtrl,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            style: TextStyle(color: Colors.black),
-            decoration: new InputDecoration(
-              floatingLabelStyle: TextStyle(color: Colors.purple[100]),
-              labelText: "Contraseña",
-              labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.black,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.purple[100],
-                  width: 2.0,
-                ),
-              ),
-            ),
-            cursorColor: Colors.purple[100],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-          child: TextFormField(
-            controller: passwordConfirRCtrl,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            style: TextStyle(color: Colors.black),
-            decoration: new InputDecoration(
-              floatingLabelStyle: TextStyle(color: Colors.purple[100]),
-              labelText: "Confirmar Contraseña",
-              labelStyle: TextStyle(color: Colors.purple[100]),
-              fillColor: Colors.black,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-                borderSide: BorderSide(
-                  color: Colors.purple[100],
-                  width: 2.0,
-                ),
-              ),
-            ),
-            cursorColor: Colors.purple[100],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-          child: TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                overlayColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return Colors.purple.withOpacity(0.04);
-                    if (states.contains(MaterialState.focused) ||
-                        states.contains(MaterialState.pressed))
-                      return Colors.purple.withOpacity(0.12);
-                    return null; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () {
-                _registroPlanner();
-              },
-              child: Text(
-                'Registrarse',
-                style: TextStyle(fontSize: 17),
-              )),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        //Row(
-        //children: <Widget>[
-        //Padding(
-        //padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-        //      child:
-        //Expanded(
-        //child:
-        TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-              overlayColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered))
-                    return Colors.purple.withOpacity(0.04);
-                  if (states.contains(MaterialState.focused) ||
-                      states.contains(MaterialState.pressed))
-                    return Colors.purple.withOpacity(0.12);
-                  return null; // Defer to the widget's default.
-                },
-              ),
-            ),
-            onPressed: () {
-              setState(() {
-                _index = 0;
-              });
-            },
-            child: Text(
-              'Acceso',
-              style: TextStyle(fontSize: 12),
-            )),
-        // ),
-        //),
-        //Padding(
-        //padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 4.0),
-        //child:
-        /*Expanded(
-                                              child: TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                  overlayColor: MaterialStateProperty.resolveWith<Color>(
-                    (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.hovered))
-                            return Colors.purple.withOpacity(0.04);
-                          if (states.contains(MaterialState.focused) ||
-                              states.contains(MaterialState.pressed))
-                            return Colors.purple.withOpacity(0.12);
-                          return null; // Defer to the widget's default.
-                    },
-                  ),
-                ),
-                onPressed: () {setState(() {
-                  _index = 1;
-                }); },
-                child: Text('Registro',style: TextStyle(fontSize: 12),)
-              ),*/
-        //    ),
-        //),
-        //],
-        // )
-      ],
-    );
   }
 
   _decorationText(String text) {
@@ -646,7 +224,7 @@ class _LoginState extends State<Login> {
             //FinPadilla
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 1.0),
+            padding: const EdgeInsets.fromLTRB(32.0, 5.0, 32.0, 1.0),
             child: TextButton(
                 style: ButtonStyle(
                   foregroundColor:
@@ -669,70 +247,29 @@ class _LoginState extends State<Login> {
                   style: TextStyle(fontSize: 17),
                 )),
           ),
+          recoverPasswordButton(context),
           SizedBox(
             height: 10,
           ),
-          //Row(
-          //children: <Widget>[
-          //Padding(
-          //padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-          //      child:
-          /*          Expanded(
-                                                  child: 
-                                                  TextButton(
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                      overlayColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered))
-                                return Colors.purple.withOpacity(0.04);
-                              if (states.contains(MaterialState.focused) ||
-                                  states.contains(MaterialState.pressed))
-                                return Colors.purple.withOpacity(0.12);
-                              return null; // Defer to the widget's default.
-                        },
-                      ),
-                    ),
-                    onPressed: () {setState(() {
-                      _index = 0;
-                    }); },
-                    child: Text('Login',style: TextStyle(fontSize: 12),)
-                  ),*/
-          //    ),
-          //),
-          //Padding(
-          //padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 4.0),
-          //child:
-          //    Expanded(
-          //                          child:
-          TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                overlayColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return Colors.purple.withOpacity(0.04);
-                    if (states.contains(MaterialState.focused) ||
-                        states.contains(MaterialState.pressed))
-                      return Colors.purple.withOpacity(0.12);
-                    return null; // Defer to the widget's default.
-                  },
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  _index = 1;
-                });
-              },
-              child: Text(
-                'Registro',
-                style: TextStyle(fontSize: 12),
-              )),
-          //),
-          //),
-          //],
-          // )
         ],
+      ),
+    );
+  }
+
+  Padding recoverPasswordButton(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5.0),
+      child: TextButton(
+        onPressed: () {
+          showDialog(
+              barrierColor: Colors.transparent,
+              context: context,
+              builder: (context) => RecoverPasswordDialog());
+        },
+        child: Text(
+          'Olvidé mi contraseña',
+          style: TextStyle(fontSize: 12.0),
+        ),
       ),
     );
   }
@@ -768,7 +305,6 @@ class _LoginState extends State<Login> {
                         index: _index,
                         children: <Widget>[
                           _authDataUser(context),
-                          _registrarDataUser()
                         ],
                       ),
                     ),
@@ -792,5 +328,109 @@ class _LoginState extends State<Login> {
     RegExp validaPhone = RegExp(r"^[\d]{10,10}$");
     if (validaPhone.hasMatch(txt)) temp = true;
     return temp;
+  }
+}
+
+class RecoverPasswordDialog extends StatefulWidget {
+  @override
+  State<RecoverPasswordDialog> createState() => _RecoverPasswordDialogState();
+}
+
+class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
+  LoginBloc loginBloc;
+
+  TextEditingController correoRecuperacionCtrl = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    loginBloc = BlocProvider.of<LoginBloc>(context);
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state is CorreoSentState) {
+          correoRecuperacionCtrl.clear();
+
+          _showMessage('Se ha enviado el correo', Colors.green);
+          Navigator.of(context).pop();
+        } else if (state is CorreoNotFoundState) {
+          correoRecuperacionCtrl.clear();
+
+          _showMessage('Este correo no esta registrado', Colors.red);
+        }
+      },
+      child: AlertDialog(
+        title: Text(
+          'Recuperar contraseña',
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: size.width * 0.3,
+            maxHeight: size.height * 0.4,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Ingrese su correo electronico, se le enviará un un enlace a su correo para recuperar su contraseña.',
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Correo electrónico',
+                    labelText: 'Correo electrónico',
+                  ),
+                  controller: correoRecuperacionCtrl,
+                ),
+              )
+            ],
+          ),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 3.0,
+              ),
+              onPressed: () async {
+                RegExp regExpEmail = RegExp(
+                    r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+
+                if (regExpEmail.hasMatch(correoRecuperacionCtrl.text)) {
+                  await loginBloc
+                      .add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
+                } else {
+                  _showMessage('Ingrese un correo valido', Colors.red);
+                }
+              },
+              child: Text('Enviar'),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _showMessage(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: color,
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 }

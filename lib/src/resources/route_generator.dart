@@ -15,6 +15,7 @@ import 'package:planning/src/ui/perfil/perfil.dart';
 import 'package:planning/src/ui/perfil/perfil_planner_page.dart';
 import 'package:planning/src/ui/planes/agregar_planes.dart';
 import 'package:planning/src/ui/planes/calendario.dart';
+import 'package:planning/src/ui/recoverPassword/recover_password.dart';
 import 'package:planning/src/ui/scannerQr/scannerQr.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_actividades.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_contrato.dart';
@@ -42,8 +43,8 @@ import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agre
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
-
-    switch (settings.name) {
+    final ruta = Uri.parse(settings.name);
+    switch (ruta.path) {
       case '/':
         //return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
         //return MaterialPageRoute(builder: (context) => Landing());
@@ -191,6 +192,12 @@ class RouteGenerator {
                 ));
       case '/perfilPlanner':
         return MaterialPageRoute(builder: (context) => PerfilPlannerPage());
+      case '/recoverPassword':
+        final token = ruta.queryParameters['token'];
+        return MaterialPageRoute(
+            builder: (context) => RecoverPasswordPage(
+                  token: token,
+                ));
       default:
         return _errorRoute();
     }

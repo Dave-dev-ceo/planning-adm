@@ -31,6 +31,51 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } on LoginException {
         yield ErrorLogginState("Correo o contraseña incorrectos");
       }
+    } else if (event is RecoverPasswordEvent) {
+      try {
+        final data = await logic.recoverPassword(event.correo);
+        print(data);
+        if (data == 'Ok') {
+          yield CorreoSentState();
+        } else if (data == 'NotFound') {
+          yield CorreoNotFoundState();
+        } else {
+          yield ErrorLogginState('Ocurrio un error');
+        }
+      } catch (e) {
+        print(e);
+      }
+    } else if (event is ValidateTokenEvent) {
+      try {
+        final data = await logic.validarTokenPassword(event.token);
+
+        if (data) {
+          yield TokenValidadoState();
+        } else {
+          yield TokenExpiradoState();
+        }
+      } catch (e) {
+        print(e);
+      }
+    } else if (event is ChangeAndRecoverPassword) {
+      try {
+        final statusCode =
+            await logic.changePasswordAnRecover(event.newPassword, event.token);
+
+        if (statusCode == 200) {
+          yield PasswordChangedState();
+        } else if (statusCode == 302) {
+          yield TokenExpiradoState();
+        }
+      } catch (e) {
+        print(e);
+      }
     }
+  }
+
+  @override
+  void onTransition(Transition<LoginEvent, LoginState> transition) {
+    print(transition);
+    super.onTransition(transition);
   }
 }

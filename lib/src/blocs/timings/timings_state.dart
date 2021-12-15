@@ -50,3 +50,9 @@ class ErrorTokenTimingsState extends TimingsState {
 
   List<Object> get props => [message];
 }
+
+class TimingDeletedState extends TimingsState {
+  final bool wasDeletedTiming;
+
+  TimingDeletedState(this.wasDeletedTiming);
+}

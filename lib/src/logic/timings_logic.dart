@@ -12,6 +12,7 @@ abstract class TimingsLogic {
   Future<int> createTiming(Map<String, dynamic> dataTiming);
   Future<String> updateTiming(int idTiming, String name, String estatus);
   Future<String> downloadPDFTiming();
+  Future<bool> deleteTimingPlanner(int idTipoTiming);
 }
 
 class ListaTimingsException implements Exception {}
@@ -134,6 +135,35 @@ class FetchListaTimingsLogic extends TimingsLogic {
       return json.decode(response.body)['pdf'];
     } else {
       return null;
+    }
+  }
+
+  @override
+  Future<bool> deleteTimingPlanner(int idTipoTiming) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+
+    final endpoint = '/wedding/TIMINGS/deleteTimingPlanner';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idTipoTiming': idTipoTiming,
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token,
+    };
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

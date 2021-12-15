@@ -9,6 +9,9 @@ abstract class LoginLogic {
   Future<String> logout();
   Future<String> getPassword();
   Future<String> changePassword(String newPassword);
+  Future<String> recoverPassword(String correo);
+  Future<bool> validarTokenPassword(String token);
+  Future<int> changePasswordAnRecover(String newPassword, String token);
 }
 
 class LoginException implements Exception {}
@@ -157,6 +160,78 @@ class BackendLoginLogic implements LoginLogic {
     } else {
       return resp.body;
     }
+  }
+
+  @override
+  Future<String> recoverPassword(String correo) async {
+    const endpoint = '/wedding/ACCESO/recoverPassword';
+    final data = {'correo': correo};
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return 'Ok';
+    } else if (resp.statusCode == 203) {
+      return 'NotFound';
+    } else {
+      return 'Ocurrio un error';
+    }
+  }
+
+  @override
+  Future<bool> validarTokenPassword(String token) async {
+    const endpoint = '/wedding/ACCESO/validarTokenRecoverPassword';
+    final data = {'token': token};
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    print(resp);
+
+    if (resp.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<int> changePasswordAnRecover(String newPassword, String token) async {
+    const endpoint = '/wedding/ACCESO/changeAndRecoverPassword';
+    final data = {
+      'token': token,
+      'password': newPassword,
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    return resp.statusCode;
   }
 }
 

@@ -21,3 +21,9 @@ class UpdateTimingEvent extends TimingsEvent {
   UpdateTimingEvent(this.idTiming, this.nombre, this.estatus);
   List<Object> get props => [idTiming, nombre, estatus];
 }
+
+class DeleteTimingPlannerEvent extends TimingsEvent {
+  final int idTipoTiming;
+
+  DeleteTimingPlannerEvent(this.idTipoTiming);
+}

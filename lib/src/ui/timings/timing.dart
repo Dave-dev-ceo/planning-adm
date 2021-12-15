@@ -255,28 +255,108 @@ class _TimingState extends State<Timing> {
                 itemCount: listItemModelTimings.results.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    trailing: IconButton(
-                      enableFeedback: true,
-                      hoverColor: Colors.white,
-                      onPressed: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => EditTimingDialog(
-                            name: listItemModelTimings
-                                .results[index].nombre_timing,
-                            idCronograma:
-                                listItemModelTimings.results[index].id_timing,
-                            estatus:
-                                listItemModelTimings.results[index].estatus,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          enableFeedback: true,
+                          hoverColor: Colors.white,
+                          onPressed: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (context) => EditTimingDialog(
+                                name: listItemModelTimings
+                                    .results[index].nombre_timing,
+                                idCronograma: listItemModelTimings
+                                    .results[index].id_timing,
+                                estatus:
+                                    listItemModelTimings.results[index].estatus,
+                              ),
+                            );
+                            await timingBloc.add(FetchTimingsPorPlannerEvent());
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            size: 14.0,
                           ),
-                        );
-                        await timingBloc.add(FetchTimingsPorPlannerEvent());
-                        setState(() {});
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        size: 14.0,
-                      ),
+                        ),
+                        SizedBox(width: 3.0),
+                        IconButton(
+                          onPressed: () async {
+                            showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    BlocListener<TimingsBloc, TimingsState>(
+                                      listener: (context, state) {
+                                        if (state is TimingDeletedState) {
+                                          if (state.wasDeletedTiming) {
+                                            Navigator.of(context).pop();
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    'El cronograma se eliminar corecctamente'),
+                                                backgroundColor: Colors.green,
+                                              ),
+                                            );
+                                          } else {
+                                            Navigator.of(context).pop();
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content:
+                                                    Text('Ocurrio un error'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                      child: AlertDialog(
+                                        content: RichText(
+                                          text: TextSpan(
+                                            text:
+                                                '¿Esta seguro de eliminar el cronograma?\n',
+                                            style: TextStyle(
+                                              decorationStyle:
+                                                  TextDecorationStyle.dotted,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text:
+                                                    '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
+                                                style: TextStyle(
+                                                  fontStyle: FontStyle.italic,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancelar'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              // await timingBloc.add(
+                                              //     DeleteTimingPlannerEvent(
+                                              //         listItemModelTimings
+                                              //             .results[index]
+                                              //             .id_timing));
+                                            },
+                                            child: Text('Aceptar'),
+                                          )
+                                        ],
+                                      ),
+                                    ));
+                          },
+                          icon: Icon(Icons.delete_forever),
+                        )
+                      ],
                     ),
                     onTap: () {
                       Navigator.of(context).pushNamed('/addActividadesTiming',
