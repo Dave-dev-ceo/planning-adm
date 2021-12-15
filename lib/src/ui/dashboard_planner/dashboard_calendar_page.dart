@@ -224,8 +224,10 @@ class MeetingDataSource extends CalendarDataSource {
             color: _colorCollection[index],
             id: actividad.idEvento,
           ));
+          index++;
         }
         final meeting = Meeting(
+          idEvento: actividad.idEvento,
           eventName: actividad.nombreActividad,
           description: actividad.descripcionActividad,
           from: actividad.fechaInicioActividad,
@@ -242,9 +244,7 @@ class MeetingDataSource extends CalendarDataSource {
           idActividad: actividad.idActividad,
         );
         meetings.add(meeting);
-        index++;
       }
-
       appointments.addAll(meetings);
       notifyListeners(CalendarDataSourceAction.add, meetings);
     } catch (e) {

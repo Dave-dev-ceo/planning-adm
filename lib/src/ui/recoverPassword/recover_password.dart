@@ -66,10 +66,14 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
           builder: (context, state) {
             if (state is TokenValidadoState) {
               return changePasswordWidget(size, context);
-            } else {
+            } else if (state is TokenExpiradoState) {
               return Center(
                 child: Text(
                     'El enlace ya expiro. \nLa pagina se redireccionara al login'),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
               );
             }
           },

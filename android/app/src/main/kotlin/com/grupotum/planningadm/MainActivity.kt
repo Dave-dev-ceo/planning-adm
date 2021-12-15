@@ -1,4 +1,4 @@
-package com.grupotum.planning
+package com.grupotum.planningadm
 
 import io.flutter.embedding.android.FlutterActivity
 

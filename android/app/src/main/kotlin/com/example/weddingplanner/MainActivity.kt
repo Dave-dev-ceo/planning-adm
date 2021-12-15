@@ -1,4 +1,4 @@
-package com.grupotum.planning
+package com.example.weddingplanner
 
 import io.flutter.embedding.android.FlutterActivity
 
