@@ -1188,7 +1188,9 @@ class _PlanesPageState extends State<PlanesPage> {
     final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
     if (idInvolucrado != null) {
-      isInvolucrado = true;
+      setState(() {
+        isInvolucrado = true;
+      });
     }
   }
 
@@ -1196,6 +1198,12 @@ class _PlanesPageState extends State<PlanesPage> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: (isInvolucrado)
+          ? AppBar(
+              title: Text('Actividades'),
+              centerTitle: true,
+            )
+          : null,
       body: RefreshIndicator(
         onRefresh: () async {
           await _planesBloc.add(GetTimingsAndActivitiesEvent());

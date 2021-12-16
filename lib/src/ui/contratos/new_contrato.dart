@@ -49,7 +49,9 @@ class New_ContratoState extends State<NewContrato> {
     final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
     if (_idInvolucrado != null) {
-      isInvolucrado = true;
+      setState(() {
+        isInvolucrado = true;
+      });
     }
   }
 
@@ -61,6 +63,12 @@ class New_ContratoState extends State<NewContrato> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: (isInvolucrado)
+          ? AppBar(
+              title: Text('Documentos'),
+              centerTitle: true,
+            )
+          : null,
       body: SingleChildScrollView(
         child: _myBloc(),
       ),

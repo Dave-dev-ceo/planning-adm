@@ -34,7 +34,10 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
       FetchProveedoresEventoLogic();
 
   void getValues() async {
-    checkInvolucrado = await _sharedPreferences.getIdInvolucrado();
+    final idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+    setState(() {
+      checkInvolucrado = idInvolucrado;
+    });
   }
 
   @override
@@ -88,6 +91,10 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
       );
     } else {
       return Scaffold(
+        appBar: AppBar(
+          title: Text('Proveedores'),
+          centerTitle: true,
+        ),
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,

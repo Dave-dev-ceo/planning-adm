@@ -51,6 +51,12 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: (isInvolucrado)
+          ? AppBar(
+              title: Text('Autorizaciones'),
+              centerTitle: true,
+            )
+          : null,
       body: _buildBloc(),
     );
   }
@@ -59,7 +65,9 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
     if (_idInvolucrado != null) {
-      isInvolucrado = true;
+      setState(() {
+        isInvolucrado = true;
+      });
     }
   }
 

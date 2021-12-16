@@ -10,6 +10,7 @@ import 'package:native_pdf_view/native_pdf_view.dart';
 
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/logic/login_logic.dart';
+import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_perfil.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
@@ -353,13 +354,21 @@ class _PerfilState extends State<Perfil> {
       if (involucrado == null) {
         Navigator.pushNamed(context, '/home', arguments: data);
       } else {
-        Navigator.pushNamed(context, '/eventos', arguments: {
-          'idEvento': idEvento,
-          'nEvento': titulo,
-          'nombre': perfil.names,
-          'boton': false,
-          'imag': image
-        });
+        Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
+            arguments: EventoResumenModel(
+              idEvento: idEvento,
+              descripcion: titulo,
+              nombreCompleto: perfil.names,
+              boton: false,
+              img: image,
+            ));
+        //     Navigator.pushNamed(context, '/eventos', arguments: {
+        //       'idEvento': idEvento,
+        //       'nEvento': titulo,
+        //       'nombre': perfil.names,
+        //       'boton': false,
+        //       'imag': image
+        //     });
       }
     }
   }

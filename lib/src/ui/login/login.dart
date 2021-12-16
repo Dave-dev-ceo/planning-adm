@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/login/login_bloc.dart';
+import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/api_provider.dart';
 
@@ -55,13 +56,21 @@ class _LoginState extends State<Login> {
       if (involucrado == null) {
         Navigator.pushNamed(context, '/home', arguments: data);
       } else {
-        Navigator.pushNamed(context, '/eventos', arguments: {
-          'idEvento': idEvento,
-          'nEvento': titulo,
-          'nombre': nombreUser,
-          'boton': false,
-          'imag': image
-        });
+        Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
+            arguments: EventoResumenModel(
+              idEvento: idEvento,
+              descripcion: titulo,
+              nombreCompleto: nombreUser,
+              boton: false,
+              img: image,
+            ));
+        // Navigator.pushNamed(context, '/eventos', arguments: {
+        //   'idEvento': idEvento,
+        //   'nEvento': titulo,
+        //   'nombre': nombreUser,
+        //   'boton': false,
+        //   'imag': image
+        // });
       }
     }
   }
@@ -153,13 +162,22 @@ class _LoginState extends State<Login> {
             };
             Navigator.pushNamed(context, '/home', arguments: data);
           } else {
-            Navigator.pushNamed(context, '/eventos', arguments: {
-              'idEvento': state.response['usuario']['id_evento'],
-              'nEvento': state.response['usuario']['descripcion'],
-              'nombre': state.response['usuario']['nombre_completo'],
-              'boton': false,
-              'imag': state.response['usuario']['imagen']
-            });
+            // Navigator.pushNamed(context, '/eventos', arguments: {
+            //   'idEvento': state.response['usuario']['id_evento'],
+            //   'nEvento': state.response['usuario']['descripcion'],
+            //   'nombre': state.response['usuario']['nombre_completo'],
+            //   'boton': false,
+            //   'imag': state.response['usuario']['imagen']
+            // });
+
+            Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
+                arguments: EventoResumenModel(
+                  boton: false,
+                  idEvento: state.response['usuario']['id_evento'],
+                  descripcion: state.response['usuario']['descripcion'],
+                  nombreCompleto: state.response['usuario']['nombre_completo'],
+                  img: state.response['usuario']['imagen'],
+                ));
           }
         }
       },

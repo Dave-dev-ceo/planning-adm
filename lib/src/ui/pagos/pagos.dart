@@ -80,10 +80,14 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     var idInvolucrado = await _sharedPreferences.getIdInvolucrado();
 
     if (idInvolucrado != null) {
-      isInvolucrado = true;
-      index = 1;
+      setState(() {
+        isInvolucrado = true;
+        index = 1;
+      });
     } else {
-      isInvolucrado = false;
+      setState(() {
+        isInvolucrado = false;
+      });
     }
   }
 
@@ -91,6 +95,10 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     if (isInvolucrado) {
       return Scaffold(
+        appBar: AppBar(
+          title: Text('Presupuestos'),
+          centerTitle: true,
+        ),
         body: SingleChildScrollView(
           child: RefreshIndicator(
             color: Colors.blue,

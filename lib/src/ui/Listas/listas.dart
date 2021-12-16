@@ -25,6 +25,7 @@ class _ListaState extends State<Listas> {
   int idPlanner;
   ListasBloc listasBloc;
   ItemModelListas itemModelListas;
+  bool isInvolucrado = false;
   //stilos
   final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
   final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
@@ -40,6 +41,18 @@ class _ListaState extends State<Listas> {
     super.initState();
     listasBloc = BlocProvider.of<ListasBloc>(context);
     listasBloc.add(FechtListasEvent());
+
+    checkIsInvolucrado();
+  }
+
+  checkIsInvolucrado() async {
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (idInvolucrado != null) {
+      setState(() {
+        isInvolucrado = true;
+      });
+    }
   }
 
   @override
@@ -49,6 +62,12 @@ class _ListaState extends State<Listas> {
         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
+              appBar: (isInvolucrado)
+                  ? AppBar(
+                      title: Text('Listas'),
+                      centerTitle: true,
+                    )
+                  : null,
               body: SingleChildScrollView(
                 child: BlocListener<ListasBloc, ListasState>(
                   listener: (context, state) {
