@@ -6,8 +6,6 @@ import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
-import 'package:sticky_headers/sticky_headers/widget.dart';
-import 'package:flutter/services.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 // blocs
@@ -15,7 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/planes/planes_bloc.dart';
 
 // model
-import 'package:planning/src/models/item_model_planes.dart';
 
 // utils
 import 'package:planning/src/utils/utils.dart' as utils;

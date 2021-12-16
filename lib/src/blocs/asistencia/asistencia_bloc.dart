@@ -17,7 +17,6 @@ class AsistenciaBloc extends Bloc<AsistenciaEvent, AsistenciaState> {
   Stream<AsistenciaState> mapEventToState(
     AsistenciaEvent event,
   ) async* {
-    // TODO: implement mapEventToState
     if (event is FetchAsistenciaPorPlannerEvent) {
       yield LodingAsistenciaState();
       try {
@@ -31,7 +30,7 @@ class AsistenciaBloc extends Bloc<AsistenciaEvent, AsistenciaState> {
     }
     // mejorar
     else if (event is SaveAsistenciaEvent) {
-      int response =
+      
           await logic.saveAsistencia(event.idInvitado, event.asistencia);
       // yield SavedAsistenciaState(response);
       ItemModelAsistencia usuarios = await logic.fetchAsistenciaPorPlanner();

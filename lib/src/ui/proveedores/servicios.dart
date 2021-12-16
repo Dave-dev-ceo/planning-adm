@@ -137,7 +137,7 @@ class _ServiciosState extends State<Servicios> {
 
   List<Widget> _createListItems(ItemModuleServicios item) {
     // Creación de lista de Widget.
-    List<Widget> lista = new List<Widget>();
+    List<Widget> lista = [];
     // Se agrega el titulo del card
     final titulo = Text('Servicios',
         textAlign: TextAlign.center,

@@ -241,6 +241,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
   }
 
   @override
+  // ignore: missing_return
   Future<String> updateValContratos(Map<String, dynamic> data) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
@@ -260,6 +261,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
   }
 
   @override
+  // ignore: missing_return
   Future<String> fetchValContratos(String _machote) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();

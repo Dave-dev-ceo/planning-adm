@@ -1,6 +1,5 @@
 library passwordfield;
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:passwordfield/password_bloc.dart';
 
@@ -11,7 +10,7 @@ class PasswordWplanner extends StatefulWidget {
       this.focusedBorder,
       this.color,
       this.iconColor,
-      this.iconColorSelect,      
+      this.iconColorSelect,
       this.controller,
       this.hasFloatingPlaceholder = false,
       this.hintText,
@@ -47,8 +46,9 @@ class PasswordWplanner extends StatefulWidget {
 
   /// changes the primary color of the PasswordWplanner
   final Color color;
-  final Color iconColor;  
+  final Color iconColor;
   final Color iconColorSelect;
+
   /// Background Color for the textfield must be specified with [backgroundBorderRadius]
   final Color backgroundColor;
 
@@ -162,7 +162,7 @@ class PasswordWplannerState extends State<PasswordWplanner> {
   }
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     iconBoton = widget.suffixIcon;
   }
@@ -210,19 +210,21 @@ class PasswordWplannerState extends State<PasswordWplanner> {
                 prefixIcon: widget.prefixIcon,
                 suffixIcon: widget.suffixIconEnabled
                     ? GestureDetector(
-                        onTap: (){ setState(() {
-                          obscureText = !obscureText; 
-                          if(obscureText)
-                            iconBoton = Icon(
-                              Icons.remove_red_eye,
-                              color: widget.iconColor,
-                            );
-                          else
-                            iconBoton = Icon(
-                              Icons.remove_red_eye_outlined,
-                              color: widget.iconColorSelect,
-                            );
-                        });},
+                        onTap: () {
+                          setState(() {
+                            obscureText = !obscureText;
+                            if (obscureText)
+                              iconBoton = Icon(
+                                Icons.remove_red_eye,
+                                color: widget.iconColor,
+                              );
+                            else
+                              iconBoton = Icon(
+                                Icons.remove_red_eye_outlined,
+                                color: widget.iconColorSelect,
+                              );
+                          });
+                        },
                         child: iconBoton,
                         // onTapDown: inContact,
                         // onTapUp: outContact,

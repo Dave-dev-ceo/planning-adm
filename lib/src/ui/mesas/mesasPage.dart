@@ -1,11 +1,11 @@
+// ignore_for_file: unused_field
+
 import 'dart:typed_data';
 import 'dart:convert';
 
-import 'package:intl/intl.dart';
 import 'package:planning/src/blocs/mesasAsignadas/mesasasignadas_bloc.dart';
 
 // * Comentar cuando se Utilice en movil
-import 'package:universal_html/html.dart' as html hide Text;
 
 // * Descomentar en movil
 // import 'package:path_provider/path_provider.dart';
@@ -15,8 +15,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -373,8 +371,6 @@ class _MesasPageState extends State<MesasPage> {
         ),
         itemBuilder: (BuildContext context, int index) {
           editTitleMesa.add(false);
-          String nameCurrentMesa;
-          int idCurrentMesa;
           final listaAsignados = listaMesasAsignadas
               .where((m) => m.idMesa == listaMesa[index].idMesa);
           return Card(
@@ -507,137 +503,6 @@ class _MesasPageState extends State<MesasPage> {
                     child: Text('Aceptar'))
               ],
             ));
-  }
-
-  Future<void> _createPdfToMesa() async {
-    final logo = await mesasAsignadasService.getLogoPlanner();
-
-    final pdf = pw.Document();
-    List<pw.Widget> listaGridChild = [];
-    List<pw.Widget> listaView = [];
-
-    for (int index = 0; index < listaMesaFromDB.length; index++) {
-      listaView = [];
-      final listaAsignados = listaMesasAsignadas
-          .where((m) => m.idMesa == listaMesaFromDB[index].idMesa)
-          .toList();
-      for (var i = 0; i < listaAsignados.length; i++) {
-        String temp = '';
-        final asigando = listaAsignados[i];
-        asigando.idAcompanante != 0
-            ? temp = asigando.acompanante
-            : temp = asigando.invitado;
-
-        pw.Widget listViewChild = pw.Align(
-          alignment: pw.Alignment.topLeft,
-          child: pw.Text(
-            temp,
-            style: pw.TextStyle(
-              fontSize: 10.0,
-            ),
-          ),
-        );
-
-        listaView.add(listViewChild);
-      }
-
-      pw.Widget gridChild = (pw.Container(
-        margin: const pw.EdgeInsets.only(bottom: 6.0),
-        decoration: pw.BoxDecoration(boxShadow: [
-          pw.BoxShadow(
-            color: PdfColors.grey,
-            offset: PdfPoint(0.0, 0.1),
-            spreadRadius: 5.0, //(x,y)
-            blurRadius: 6.0,
-          ),
-        ], border: pw.Border.all()),
-        padding: pw.EdgeInsets.all(8.0),
-        child: pw.Column(
-          children: [
-            pw.Center(
-              child: pw.Text(
-                listaMesaFromDB[index].descripcion,
-                style: pw.TextStyle(fontSize: 10),
-              ),
-            ),
-            pw.Center(
-              child: pw.Text(
-                listaMesaFromDB[index].tipoMesa,
-                style: pw.TextStyle(fontSize: 10),
-              ),
-            ),
-            pw.SizedBox(
-              height: 10.0,
-            ),
-            for (var item in listaView) item
-          ],
-        ),
-      ));
-      listaGridChild.add(gridChild);
-    }
-    var imageWidget;
-    if (logo != null) {
-      Uint8List image = base64Decode(logo);
-      imageWidget = pw.MemoryImage(image);
-    }
-
-    var now = DateTime.now();
-
-    String fecha = DateFormat.yMMMd().format(now);
-
-    pdf.addPage(
-      pw.MultiPage(
-        build: (pw.Context context) => [
-          pw.Row(children: [
-            if (logo != null)
-              pw.ConstrainedBox(
-                constraints: pw.BoxConstraints(maxWidth: 50.0, minWidth: 40.0),
-                child: pw.Image(imageWidget),
-              ),
-            pw.Spacer(),
-            pw.Center(
-              child: pw.Text('Evento: ${widget.nameEvento}',
-                  style: pw.Theme.of(context).header4),
-            ),
-            pw.Spacer(),
-            pw.Text(fecha)
-          ]),
-          pw.SizedBox(height: 15.0),
-          pw.GridView(
-            crossAxisCount: 3,
-            childAspectRatio: 1.0,
-            crossAxisSpacing: 8.0,
-            mainAxisSpacing: 8.0,
-            direction: pw.Axis.vertical,
-            children: listaGridChild,
-          )
-        ],
-      ),
-    );
-
-    String titulotemp = widget.nameEvento;
-
-    final titulo = titulotemp.replaceAll(" ", "_");
-
-    final date = DateTime.now();
-
-    final bytes = await pdf.save();
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = 'Evento :$titulo-$date.pdf';
-    html.document.body.children.add(anchor);
-    anchor.click();
-    html.document.body.children.remove(anchor);
-    html.Url.revokeObjectUrl(url);
-
-    // * For Mobile
-    // final output = await getTemporaryDirectory();
-    // final file = File("${output.path}/$titulo.pdf");
-    // await file.writeAsBytes(await pdf.save());
   }
 
   Widget asignarInvitadosMesasPage() {
@@ -1059,17 +924,6 @@ class _MesasPageState extends State<MesasPage> {
         }
       }
     }
-  }
-
-  List<Text> _buildListAcompanantes(
-      List<AcompanantesConfirmadosModel> listAcompanante) {
-    List<Text> listaAcompanantes = [];
-    if (listAcompanante.length > 0) {
-      for (var i = 0; i < listAcompanante.length; i++) {
-        listaAcompanantes.add(Text(listAcompanante[i].nombre));
-      }
-    }
-    return listaAcompanantes;
   }
 
   _buildListaMesas(List<MesaModel> listaDeMesas) {

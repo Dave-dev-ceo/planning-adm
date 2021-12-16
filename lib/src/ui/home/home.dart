@@ -1,6 +1,7 @@
+// ignore_for_file: unused_field
+
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';

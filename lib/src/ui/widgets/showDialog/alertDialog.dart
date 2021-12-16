@@ -1,9 +1,9 @@
+// ignore_for_file: missing_return
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/asistencia/asistencia_bloc.dart';
-
-import 'package:planning/src/ui/asistencia/asistencia.dart';
 
 class DialogAlert extends StatefulWidget {
   final String dataInfo;

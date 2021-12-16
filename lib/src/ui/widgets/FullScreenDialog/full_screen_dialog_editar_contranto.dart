@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
@@ -47,7 +46,6 @@ class _FullScreenDialogEditContratoState
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    var dfd = '<h1>Ejemplo</h1>';
     setState(() {});
     return Scaffold(
         appBar: AppBar(

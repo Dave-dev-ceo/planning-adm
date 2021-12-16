@@ -21,7 +21,7 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
 
     on<AddProspectoEvent>((event, emit) async {
       try {
-        final data = await logic.addEtapasUpdate(event.newProspecto);
+        await logic.addEtapasUpdate(event.newProspecto);
 
         add(MostrarEtapasEvent());
       } catch (e) {
@@ -31,8 +31,7 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
 
     on<UpdateEtapaProspectoEvent>((event, emit) async {
       try {
-        final data =
-            await logic.updateEtapaProspecto(event.idEtapa, event.idProspecto);
+        await logic.updateEtapaProspecto(event.idEtapa, event.idProspecto);
       } catch (e) {
         print(e);
       }
@@ -40,7 +39,7 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
 
     on<UpdateEtapaEvent>((event, emit) async {
       try {
-        final data = await logic.updateEtapa(event.listEtapasUpdate);
+        await logic.updateEtapa(event.listEtapasUpdate);
       } catch (e) {
         print(e);
       }

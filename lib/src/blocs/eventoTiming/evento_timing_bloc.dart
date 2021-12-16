@@ -12,7 +12,5 @@ class EventoTimingBloc extends Bloc<EventoTimingEvent, EventoTimingState> {
   @override
   Stream<EventoTimingState> mapEventToState(
     EventoTimingEvent event,
-  ) async* {
-    // TODO: implement mapEventToState
-  }
+  ) async* {}
 }

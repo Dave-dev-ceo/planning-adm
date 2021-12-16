@@ -1,3 +1,5 @@
+// ignore_for_file: missing_return
+
 class ItemModelActividadesTimings {
   List<_Result> _results = [];
 
@@ -5,9 +7,11 @@ class ItemModelActividadesTimings {
 
   ItemModelActividadesTimings.fromJson(List<dynamic> parsedJson) {
     List<_Result> temp = [];
-    if(parsedJson.length > 0){
-      _Result dat =
-        _Result({"id_actividad_timing": 0, "nombre_actividad": "Seleccionar predecesor"});
+    if (parsedJson.length > 0) {
+      _Result dat = _Result({
+        "id_actividad_timing": 0,
+        "nombre_actividad": "Seleccionar predecesor"
+      });
       temp.add(dat);
     }
     for (int i = 0; i < parsedJson.length; i++) {
@@ -19,7 +23,7 @@ class ItemModelActividadesTimings {
 
   ItemModelActividadesTimings.fromJsonEvento(List<dynamic> parsedJson) {
     List<_Result> temp = [];
-    
+
     for (int i = 0; i < parsedJson.length; i++) {
       _Result result = _Result(parsedJson[i]);
       temp.add(result);
@@ -39,13 +43,13 @@ class ItemModelActividadesTimings {
   }
 
   ItemModelActividadesTimings copyWith(ItemModelActividadesTimings obj) {
-      List<_Result> temp = [];
+    List<_Result> temp = [];
 
-      for (int i = 0; i < obj.results.length; i++) {
-        _Result result = _Result.fromModel(obj.results[i]);
-        temp.add(result);
-      }
+    for (int i = 0; i < obj.results.length; i++) {
+      _Result result = _Result.fromModel(obj.results[i]);
+      temp.add(result);
     }
+  }
 
   List<_Result> get results => _results;
 }
@@ -60,7 +64,7 @@ class _Result {
   int _idTipoTimig;
   bool _addActividad;
   DateTime _fechaInicio;
-  
+
   /* nuevas */
   int _idEventoTiming;
   String _nombreEventoTarea;
@@ -72,7 +76,6 @@ class _Result {
   DateTime _fechaInicioEvento;
   DateTime _fechaFinalEvento;
   int _dia;
-
 
   _Result(result) {
     _idActividad = result['id_actividad_timing'];
@@ -91,17 +94,17 @@ class _Result {
     _nombreEventoActividad = result['nombre'];
     _isCheck = false;
     _isExpanded = false;
-    if(result['fecha_inicio_actividad'] != null)
+    if (result['fecha_inicio_actividad'] != null)
       _fechaInicioActividad = DateTime.parse(result['fecha_inicio_actividad']);
-    if(result['fecha_inicio_evento'] != null)
+    if (result['fecha_inicio_evento'] != null)
       _fechaInicioEvento = DateTime.parse(result['fecha_inicio_evento']);
-    if(result['fecha_final_evento'] != null)
+    if (result['fecha_final_evento'] != null)
       _fechaFinalEvento = DateTime.parse(result['fecha_final_evento']);
-    if(result['dias'] != null) {
-      if(result['dias'].runtimeType == String)
+    if (result['dias'] != null) {
+      if (result['dias'].runtimeType == String)
         _dia = int.parse(result['dias']);
-        else
-          _dia = result['dias'];
+      else
+        _dia = result['dias'];
     }
   }
 
@@ -147,7 +150,7 @@ class _Result {
   DateTime get fechaInicioEvento => this._fechaInicioEvento;
   DateTime get fechaFinalEvento => this._fechaFinalEvento;
   int get dia => this._dia;
-  
+
   set addidActividad(int value) => this._idActividad = value;
   set addnombreActividad(String value) => this._nombreActividad = value;
   set adddescripcion(String value) => this._descripcion = value;

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/eventosModel/eventos_dashboard_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
-import 'package:planning/src/models/item_model_tipo_evento.dart';
 import 'package:planning/src/resources/config_conection.dart';
 import 'package:http/http.dart' show Client;
 

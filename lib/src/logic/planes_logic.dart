@@ -196,7 +196,6 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
   @override
   Future<int> createTareaEvento(Map<String, dynamic> tareaEvento) {
-    // TODO: implement createTareaEvento
     throw UnimplementedError();
   }
 
@@ -238,7 +237,6 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
   @override
   Future<bool> updateTareaEvento(Map<String, dynamic> tareaEvento) {
-    // TODO: implement updateTareaEvento
     throw UnimplementedError();
   }
 

@@ -12,7 +12,5 @@ class EventoPagoBloc extends Bloc<EventoPagoEvent, EventoPagoState> {
   @override
   Stream<EventoPagoState> mapEventToState(
     EventoPagoEvent event,
-  ) async* {
-    // TODO: implement mapEventToState
-  }
+  ) async* {}
 }

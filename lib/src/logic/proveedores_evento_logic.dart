@@ -22,6 +22,7 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
   Client client = Client();
 
   @override
+  // ignore: missing_return
   Future<ItemModelProveedoresEvento> fetchProveedorEvento() async {
     try {
       // var checkInvolucrado;
@@ -55,6 +56,7 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
   }
 
   @override
+  // ignore: missing_return
   Future<int> createProveedorEvento(Map<String, dynamic> data) async {
     if (data['id_servicio'] != 0 && data['id_proveedor'] != 0) {
       int idPlanner = await _sharedPreferences.getIdPlanner();
@@ -86,12 +88,11 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
     }
   }
 
-  @override
+  // ignore: missing_return
   Future<int> deleteProveedorEvento(Map<String, dynamic> data) async {
     if (data['id_servicio'] != 0 && data['id_proveedor'] != 0) {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       int idEvento = await _sharedPreferences.getIdEvento();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
       data['id_servicio'] = data['id_servicio'].toString();
       data['id_proveedor'] = data['id_proveedor'].toString();
       data['id_evento'] = idEvento.toString();

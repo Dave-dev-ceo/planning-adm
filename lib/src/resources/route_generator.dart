@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:planning/src/ui/LandingPage/landing.dart';
 import 'package:planning/src/ui/autorizacion/galeria_autorizacion.dart';
 import 'package:planning/src/ui/contratos/add_contrato.dart';
-import 'package:planning/src/ui/contratos/contrato.dart';
 import 'package:planning/src/ui/contratos/view_contrato_pdf.dart';
 import 'package:planning/src/ui/eventos/dashboard_eventos.dart';
 import 'package:planning/src/ui/home/home.dart';
@@ -35,7 +33,6 @@ import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_sele
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_verPaginaWeb.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_view_file.dart';
 import 'package:planning/src/ui/widgets/invitados/invitados.dart';
-import 'package:planning/src/ui/timing_evento/eventos_calendario.dart';
 import 'package:planning/src/ui/timing_evento/table_calendar.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_archivo_prov_serv.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_proveedor.dart';

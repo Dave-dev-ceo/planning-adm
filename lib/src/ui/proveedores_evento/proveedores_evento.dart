@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
@@ -253,8 +252,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
     proveedoreventosBloc.add(CreateProveedorEventosEvent(
         {'id_servicio': opt.id_servicio, 'id_proveedor': opt.id_proveedor}));
   }
-
-  _eliminarDetalleLista() {}
 
   // involucrados
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:planning/src/ui/actividades/actividades_timing.dart';
-import 'package:planning/src/ui/eventos/agregar_evento.dart';
 
 class FullScreenDialogAddActividades extends StatefulWidget {
   final int idTiming;

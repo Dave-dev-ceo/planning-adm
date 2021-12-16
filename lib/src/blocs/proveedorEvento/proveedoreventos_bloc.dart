@@ -28,14 +28,14 @@ class ProveedoreventosBloc
       }
     } else if (event is CreateProveedorEventosEvent) {
       try {
-        int listaData = await logic.createProveedorEvento(event.data);
+        await logic.createProveedorEvento(event.data);
         // yield CreateProveedorEventoState(listaData);
       } catch (e) {
         yield ErrorCreateProveedorEventoState('No se pudo insertar');
       }
     } else if (event is DeleteProveedorEventosEvent) {
       try {
-        int listaData = await logic.deleteProveedorEvento(event.data);
+        await logic.deleteProveedorEvento(event.data);
         // yield CreateProveedorEventoState(listaData);
       } catch (e) {
         yield ErrorDeleteProveedorEventoState('No se pudo insertar');

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, unused_local_variable
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -7,8 +9,6 @@ import 'package:planning/src/blocs/proveedores/archivo_proveedor/bloc/archivo_pr
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -41,6 +41,8 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
           HttpHeaders.authorizationHeader: token
         });
 
+    print({response});
+
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       Map<String, dynamic> data = json.decode(response.body);
@@ -57,7 +59,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    await client.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ASISTENCIA/saveAsistenciasPorPlanner'),

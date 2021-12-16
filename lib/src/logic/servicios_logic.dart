@@ -1,3 +1,5 @@
+// ignore_for_file: missing_return
+
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';

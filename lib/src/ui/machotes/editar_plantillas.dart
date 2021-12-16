@@ -1,7 +1,4 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
@@ -9,8 +6,6 @@ import 'package:planning/src/models/item_model_etiquetas.dart';
 import 'package:planning/src/models/item_model_machotes.dart';
 // flutter run -d chrome --web-renderer html --profile
 import 'package:html_editor_enhanced/html_editor.dart';
-import 'package:html_editor_enhanced/utils/options.dart';
-import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class EditarPlantillas extends StatefulWidget {

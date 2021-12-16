@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
@@ -307,7 +309,7 @@ class _DetalleListasState extends State<DetalleListas> {
 
   List<Widget> _createListItems(ItemModelDetalleListas item) {
     // Creación de lista de Widget.
-    List<Widget> lista = new List<Widget>();
+    List<Widget> lista = [];
     // Se agrega el titulo del card
     final titulo = Text('Detalles de lista',
         textAlign: TextAlign.center,

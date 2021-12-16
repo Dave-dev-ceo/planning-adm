@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:planning/src/logic/estatus_logic.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
-import 'package:planning/src/ui/catalogos_planner/estatus_invitaciones_evento.dart';
 
 part 'estatus_event.dart';
 part 'estatus_state.dart';

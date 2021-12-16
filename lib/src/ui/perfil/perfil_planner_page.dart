@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, unused_element
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -50,7 +52,6 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
   Widget buildPerfilPlanner(PerfilPlannerModel data) {
     PerfilPlannerModel perfil = data;
     Uint8List image = base64Decode(perfil.logo);
-    String clave = '';
     return Form(
       key: _formPlannerKey,
       child: Container(

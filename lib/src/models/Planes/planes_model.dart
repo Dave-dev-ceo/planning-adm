@@ -1,5 +1,3 @@
-import 'package:planning/src/models/item_model_tipo_evento.dart';
-
 class PlannesModel {
   bool estadoCalendario;
   bool estatusProgreso;

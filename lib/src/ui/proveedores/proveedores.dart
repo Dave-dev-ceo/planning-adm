@@ -1,5 +1,3 @@
-import 'package:flutter/services.dart';
-import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
 import 'package:planning/src/ui/widgets/editProveedorDialog/edit_proveedor_dialog.dart';
 import 'package:planning/src/utils/utils.dart';
@@ -7,7 +5,6 @@ import 'package:planning/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 import 'package:planning/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
@@ -205,7 +202,7 @@ class _ProveedoresState extends State<Proveedores> {
   }
 
   List<Widget> _listServicio(itemServicio, id_proveedor) {
-    List<Widget> lista = new List<Widget>();
+    List<Widget> lista = [];
     for (var opt in itemServicio) {
       final tempWidget = ListTile(
           title: Text(opt.nombre),
@@ -275,6 +272,4 @@ class _ProveedoresState extends State<Proveedores> {
       ],
     );
   }
-
-  _editarDetalleLista() {}
 }

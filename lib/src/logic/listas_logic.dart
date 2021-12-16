@@ -27,6 +27,7 @@ class FetchListaLogic extends ListasLogic {
   Client client = Client();
 
   @override
+  // ignore: missing_return
   Future<ItemModelListas> fetchListas() async {
     try {
       int id_planner = await _sharedPreferences.getIdPlanner();
@@ -52,7 +53,6 @@ class FetchListaLogic extends ListasLogic {
     }
   }
 
-  @override
   Future<bool> updateArticulosRecibir(Map<String, dynamic> data) async {
     if (data['descripcion'] != null && data['descripcion'] != '') {
       return true;
@@ -64,6 +64,7 @@ class FetchListaLogic extends ListasLogic {
   Future<int> deleteActividadesRecibir(int idActividad) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
+    // ignore: unused_local_variable
     int idUsuario = await _sharedPreferences.getIdUsuario();
 
     final response = await client.post(

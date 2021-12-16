@@ -1,3 +1,5 @@
+// ignore_for_file: missing_return
+
 class ItemModelRoles {
   List<_Rol> _results = [];
 

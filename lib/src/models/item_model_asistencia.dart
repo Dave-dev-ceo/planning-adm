@@ -1,3 +1,5 @@
+// ignore_for_file: missing_return
+
 class ItemModelAsistencia {
   List<_Result> _results = [];
 

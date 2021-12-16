@@ -1,5 +1,3 @@
-import 'package:excel/excel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/estatus/estatus_bloc.dart';
@@ -280,7 +278,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
 
   List<Widget> _createListItems(ItemModelEstatusInvitado item) {
     // Creación de lista de Widget.
-    List<Widget> lista = new List<Widget>();
+    List<Widget> lista = [];
     // Se agrega el titulo del card
     const titulo = ListTile(
       title: Text('Lista de los estatus',

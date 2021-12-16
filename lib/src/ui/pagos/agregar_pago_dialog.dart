@@ -202,6 +202,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
 
   void _submit() async {
     if (_keyForm.currentState.validate()) {
+      // ignore: unused_local_variable
       final pagosBloc = context.read<HistorialPagosBloc>();
       if (!_isEdit) {
         final resp = await logic.agregarPagoEvento(hitorialPagoModel);

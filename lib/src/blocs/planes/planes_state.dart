@@ -68,7 +68,6 @@ class ShowAllPlannesState extends PlanesState {
 
   ShowAllPlannesState(this.listTimings);
 
-  @override
   List<Object> get props => [listTimings];
 }
 

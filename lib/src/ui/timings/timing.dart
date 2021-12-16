@@ -1,6 +1,6 @@
-import 'dart:convert';
+// ignore_for_file: unused_element
+
 import 'package:planning/src/utils/utils.dart';
-import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,7 +93,7 @@ class _TimingState extends State<Timing> {
     );
   }
 
-  Future<void> _refresTiming() {
+  Future<void> _refresTiming() async {
     Future.delayed(Duration(seconds: 200), () {
       setState(() {});
     });

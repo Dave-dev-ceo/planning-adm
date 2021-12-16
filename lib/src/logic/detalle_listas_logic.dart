@@ -29,6 +29,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
   Client client = Client();
 
   @override
+  // ignore: missing_return
   Future<ItemModelDetalleListas> fetchDetalleListas(int idLista) async {
     try {
       int id_planner = await _sharedPreferences.getIdPlanner();
@@ -55,6 +56,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
   }
 
   @override
+  // ignore: missing_return
   Future<int> createDetalleLista(Map<String, dynamic> data) async {
     if (data['cantidad'] != 0 &&
         data['nombre'] != '' &&
@@ -115,6 +117,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
   }
 
   @override
+  // ignore: missing_return
   Future<int> editarDetalleLista(Map<String, dynamic> data) async {
     if (data['cantidad'] != 0 &&
         data['nombre'] != '' &&
@@ -147,6 +150,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
   }
 
   @override
+  // ignore: missing_return
   Future<int> createLista(Map<String, dynamic> data) async {
     if (data['nombre'] != '' && data['descripcion'] != '') {
       int idPlanner = await _sharedPreferences.getIdPlanner();
@@ -175,6 +179,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
   }
 
   @override
+  // ignore: missing_return
   Future<int> editarLista(Map<String, dynamic> data) async {
     if (data['nombre'] != '' &&
         data['descripcion'] != '' &&

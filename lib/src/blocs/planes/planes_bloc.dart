@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 
 import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
-import 'package:planning/src/models/item_model_evento_timing.dart';
 import 'package:planning/src/models/item_model_planes.dart';
 
 part 'planes_event.dart';
@@ -113,12 +112,12 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       }
     } else if (event is BorrarActividadPlanEvent) {
       try {
-        final data = await logic.deleteActividadEvento(event.idActividad);
+        await logic.deleteActividadEvento(event.idActividad);
         add(GetTimingsAndActivitiesEvent());
       } catch (e) {}
     } else if (event is UpdateActividadesEventoEvent) {
       try {
-        final data = await logic.updateEventoActividades(event.actividades);
+        await logic.updateEventoActividades(event.actividades);
 
         add(GetTimingsAndActivitiesEvent());
       } catch (e) {}

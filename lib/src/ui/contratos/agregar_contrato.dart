@@ -1,8 +1,9 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 // import 'package:universal_html/html.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:planning/src/blocs/contratos/contratos_bloc.dart';

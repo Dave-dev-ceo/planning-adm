@@ -37,7 +37,7 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
     } else {
       return CircleAvatar(
         child: Icon(Icons.person),
-        backgroundColor: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         radius: 25,
       );
     }

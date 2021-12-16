@@ -197,7 +197,6 @@ class _InvitadosState extends State<Invitados> {
             bottom: TabBar(
                 onTap: (int index) {
                   if (index == 6) {
-                    final size = MediaQuery.of(context).size;
                     showDialog(
                         context: context,
                         builder: (context) => ListaInvitados(

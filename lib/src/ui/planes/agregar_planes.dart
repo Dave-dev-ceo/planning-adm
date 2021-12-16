@@ -1,7 +1,8 @@
 // imports dart/flutter
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
-import 'package:planning/src/ui/timings/timing.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 // blocs

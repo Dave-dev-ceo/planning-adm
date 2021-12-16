@@ -87,7 +87,7 @@ class ContratosBloc extends Bloc<ContratosEvent, ContratosState> {
           'descripcion': event.name
         };
 
-        bool contrato = await logic.updateFile(data);
+        await logic.updateFile(data);
         // yield MostrarContratosPdfViewState(contrato);
       } on ListaContratosPdfException {
         yield ErrorListaContratosPdfState("Error contrato");

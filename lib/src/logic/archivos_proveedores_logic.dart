@@ -24,6 +24,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
   Client client = Client();
 
   @override
+  // ignore: missing_return
   Future<int> createArchivos(Map<String, dynamic> data) async {
     if (data['id_proveedor'] != '' || data['id_servicio'] != '') {
       int idPlanner = await _sharedPreferences.getIdPlanner();
@@ -53,6 +54,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
   }
 
   @override
+  // ignore: missing_return
   Future<ItemModelArchivoProvServ> fetchArchivosProvServ(
       int prov, int serv) async {
     try {
@@ -105,6 +107,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
   }
 
   @override
+  // ignore: missing_return
   Future<ItemModelArchivoProvServ> fetchArchivosById(int idArchivo) async {
     try {
       int id_planner = await _sharedPreferences.getIdPlanner();

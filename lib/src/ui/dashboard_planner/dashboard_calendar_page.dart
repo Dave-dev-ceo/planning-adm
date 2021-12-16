@@ -1,4 +1,4 @@
-import 'dart:math';
+// ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +6,6 @@ import 'package:planning/src/blocs/dashboard/dashboard_bloc.dart';
 import 'package:planning/src/logic/dashboard_logic/dashboard_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/eventosModel/eventos_dashboard_model.dart';
-import 'package:planning/src/models/item_model_tipo_evento.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class DashboardCalendarPage extends StatefulWidget {
@@ -185,17 +184,30 @@ class MeetingDataSource extends CalendarDataSource {
 
   @override
   Future<void> handleLoadMore(DateTime startDate, DateTime endDate) async {
-    final Random random = Random();
     List<Color> _colorCollection = <Color>[];
+
+    _colorCollection.add(Color(0xFF0444BF));
+    _colorCollection.add(Color(0xFFF05837));
     _colorCollection.add(Color(0xFF0F8644));
+    _colorCollection.add(Color(0xFF888c46));
+    _colorCollection.add(Color(0xFFf4874b));
+    _colorCollection.add(Color(0xFF6465A5));
     _colorCollection.add(Color(0xFF8B1FA9));
     _colorCollection.add(Color(0xFFD20100));
-    _colorCollection.add(Color(0xFFFC571D));
+    _colorCollection.add(Color(0xFFdaa2da));
+    _colorCollection.add(Color(0xFFF49F05));
     _colorCollection.add(Color(0xFF36B37B));
     _colorCollection.add(Color(0xFF01A1EF));
+    _colorCollection.add(Color(0xFFFC571D));
+    _colorCollection.add(Color(0xFF80add7));
+    _colorCollection.add(Color(0xFFbf9d7a));
     _colorCollection.add(Color(0xFF3D4FB5));
     _colorCollection.add(Color(0xFFE47C73));
+    _colorCollection.add(Color(0xFFbed905));
+    _colorCollection.add(Color(0xFF00743f));
     _colorCollection.add(Color(0xFF636363));
+    _colorCollection.add(Color(0xFF1d65a6));
+    _colorCollection.add(Color(0xFFde8cf0));
     _colorCollection.add(Color(0xFF0A8043));
     _colorCollection.add(Color(0xFFff6961));
     _colorCollection.add(Color(0xFF77dd77));
@@ -203,7 +215,9 @@ class MeetingDataSource extends CalendarDataSource {
     _colorCollection.add(Color(0xFF84b6f4));
     _colorCollection.add(Color(0xFFfdcae1));
     _colorCollection.add(Color(0xFFb2dafa));
+    _colorCollection.add(Color(0xFF0584F2));
     _colorCollection.add(Color(0xFFfad2b2));
+    _colorCollection.add(Color(0xFFA7414A));
     _colorCollection.add(Color(0xFFb6fab2));
 
     List<EventoDetails> eventoColors = [];

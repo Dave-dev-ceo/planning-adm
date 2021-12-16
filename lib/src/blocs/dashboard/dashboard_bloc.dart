@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 import 'package:planning/src/logic/dashboard_logic/dashboard_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/eventosModel/eventos_dashboard_model.dart';
-import 'package:planning/src/ui/planes/calendario.dart';
 
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';

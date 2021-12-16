@@ -1,17 +1,16 @@
+// ignore_for_file: unused_field
+
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:planning/src/models/item_model-acompanante.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/models/item_model_invitado.dart';
-import 'package:planning/src/models/item_model_mesas.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/resources/my_flutter_app_icons.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
@@ -412,51 +411,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         }
         return Center(child: CircularProgressIndicator());
       },
-    );
-  }
-
-  _listaMesas() {
-    ///bloc.dispose();
-    blocMesas.fetchAllMesas(context);
-    return StreamBuilder(
-      stream: blocMesas.allMesas,
-      builder: (context, AsyncSnapshot<ItemModelMesas> snapshot) {
-        if (snapshot.hasData) {
-          //_mySelection = ((snapshot.data.results.length - 1).toString());
-          return _dropDownMesas(snapshot.data);
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return Center(child: CircularProgressIndicator());
-      },
-    );
-  }
-
-  _dropDownMesas(ItemModelMesas mesas) {
-    return DropdownButton(
-      value: _mySelectionM,
-      icon: const Icon(Icons.arrow_drop_down_outlined),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Color(0xFF000000)),
-      underline: Container(
-        height: 2,
-        color: Color(0xFF000000),
-      ),
-      onChanged: (newValue) {
-        setState(() {
-          _mySelectionM = newValue;
-        });
-      },
-      items: mesas.results.map((item) {
-        return DropdownMenuItem(
-          value: item.idMesa.toString(),
-          child: Text(
-            item.mesa,
-            style: TextStyle(fontSize: 18),
-          ),
-        );
-      }).toList(),
     );
   }
 
@@ -1211,8 +1165,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           child: CallToAction('Guardar'))
     ]);
   }
-
-  _limpiarAcompanante() {}
 
   String validateGrupo(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";

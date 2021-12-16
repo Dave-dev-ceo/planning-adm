@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -204,7 +206,7 @@ class _ListaState extends State<Listas> {
 
   List<Widget> _createListItems(ItemModelListas item) {
     // Creación de lista de Widget.
-    List<Widget> lista = new List<Widget>();
+    List<Widget> lista = [];
     // Se agrega el titulo del card
     final titulo = Text('Listas',
         textAlign: TextAlign.center,

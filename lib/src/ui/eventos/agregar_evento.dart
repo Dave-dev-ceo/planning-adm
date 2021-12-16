@@ -1,6 +1,6 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
@@ -158,6 +158,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
 
   _dropDownTiposEventos(ItemModelTipoEvento tiposEventos) {
     return DropdownButton(
+      onChanged: (value) {},
       value: _mySelectionTE,
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
