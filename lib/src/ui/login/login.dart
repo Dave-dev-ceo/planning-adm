@@ -374,7 +374,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Ingrese su correo electronico, se le enviará un un enlace a su correo para recuperar su contraseña.',
+                'Ingrese su correo electronico de recuperación',
               ),
               SizedBox(
                 height: 10.0,
