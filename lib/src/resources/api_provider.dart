@@ -26,9 +26,6 @@ class ApiProvider {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
   Client client = Client();
-
-  //String baseUrlPruebas = 'server02.grupotum.com:9005';
-  //String baseUrlPruebas = 'localhost:3005';
   _loadLogin(BuildContext context) async {
     await _sharedPreferences.clear();
     _showDialogMsg(context);
