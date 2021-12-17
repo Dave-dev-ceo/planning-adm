@@ -36,6 +36,7 @@ class BackendLoginLogic implements LoginLogic {
         await _sharedPreferences.setNombre(data['usuario']['nombre_completo']);
         await _sharedPreferences.setImagen(
             data['usuario']['imagen'] == null ? '' : data['usuario']['imagen']);
+
         await _sharedPreferences.setSesion(true);
         await _sharedPreferences.setPermisoBoton(true);
         List<String> dataJsonWPlanner = [
@@ -60,6 +61,9 @@ class BackendLoginLogic implements LoginLogic {
             .setEventoNombre(data['usuario']['descripcion']);
         await _sharedPreferences.setImagen(
             data['usuario']['imagen'] == null ? '' : data['usuario']['imagen']);
+        await _sharedPreferences.setPortada(data['usuario']['portada'] == null
+            ? ''
+            : data['usuario']['portada']);
         await _sharedPreferences.setPermisoBoton(true);
         List<String> dataJsonWPlanner = [
           data['usuario']['id_planner'].toString(),

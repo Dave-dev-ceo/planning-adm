@@ -810,4 +810,29 @@ class ApiProvider {
       return null;
     }
   }
+
+  Future<int> updatePortadaEvento(String newPortada) async {
+    String token = await _sharedPreferences.getToken();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    final endpoint = '/wedding/EVENTOS/updatePortadaImage';
+
+    final data = {
+      'idEvento': idEvento,
+      'portada': newPortada,
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token,
+    };
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    return response.statusCode;
+  }
 }

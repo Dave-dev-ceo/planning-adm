@@ -4,6 +4,8 @@ class EventoResumenModel {
   String nombreCompleto;
   bool boton;
   String img;
+  String portada;
+  DateTime fechaEvento;
 
   EventoResumenModel({
     this.idEvento,
@@ -11,5 +13,7 @@ class EventoResumenModel {
     this.nombreCompleto,
     this.boton,
     this.img,
+    this.portada,
+    this.fechaEvento,
   });
 }

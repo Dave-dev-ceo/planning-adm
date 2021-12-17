@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
@@ -195,16 +198,38 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   Widget _builCard(String titulo, dynamic page) {
     return GestureDetector(
       child: Card(
-        elevation: 7.0,
-        child: Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                titulo,
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            side: BorderSide(
+              color: Colors.grey.withOpacity(0.2),
+              width: 1,
             )),
+        elevation: 7.0,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              gradient: LinearGradient(
+                stops: [
+                  0.047,
+                  0.96,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFf5f1e5),
+                  Color(0xFFfff7f0),
+                ],
+              )),
+          child: Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  titulo,
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              )),
+        ),
       ),
       onTap: () {
         showDialog(context: context, builder: (context) => page);
@@ -213,9 +238,15 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   }
 
   Widget appBarCustom() {
+    final IconThemeData iconTheme = IconTheme.of(context);
     return PreferredSize(
       preferredSize: Size.fromHeight(250.0),
       child: AppBar(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
         title: Align(
           alignment: Alignment.topRight,
           child: PopupMenuButton(
@@ -245,13 +276,44 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  detalleEvento.descripcion,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Stack(
+                  children: [
+                    Text(
+                      detalleEvento.descripcion,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 7
+                          ..color = Colors.white,
+                      ),
+                    ),
+                    Text(
+                      detalleEvento.descripcion,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                Icon(Icons.keyboard_arrow_down_outlined),
+                Stack(
+                  clipBehavior: Clip.hardEdge,
+                  children: [
+                    Icon(
+                      Icons.keyboard_arrow_down_outlined,
+                      size: iconTheme.size + 4,
+                      color: Colors.white,
+                    ),
+                    Positioned(
+                      top: 10.0 ,
+                      child: Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        color: Colors.black,
+                        size: iconTheme.size + 1,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -261,14 +323,23 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           child: Stack(
             children: [
               Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                    ),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: (detalleEvento.portada == null)
+                          ? AssetImage(
+                              'portada.jpg',
+                            )
+                          : MemoryImage(
+                              base64Decode(detalleEvento.portada),
+                            ),
+                    )),
                 width: double.infinity,
                 height: 250,
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: AssetImage(
-                    'portada.jpg',
-                  ),
-                ),
               ),
               Align(
                 alignment: Alignment.topLeft,
@@ -280,49 +351,17 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                       child: Image.asset(
                         'assets/new_logo.png',
                         fit: BoxFit.contain,
+                        color: Color(0xFFfdf4e5),
                       )),
                 ),
               ),
               // Positioned(
-              //   top: 15.0,
-              //   right: 10.0,
-              //   child: Container(
-              //     margin: EdgeInsets.only(right: 10.0),
-              //     child: CircleAvatar(
-              //       backgroundColor: hexToColor('#d39942'),
-              //       child: PopupMenuButton(
-              //         child: detalleEvento.img == null
-              //             ? Icon(Icons.person)
-              //             : CircleAvatar(
-              //                 backgroundImage:
-              //                     MemoryImage(base64Decode(detalleEvento.img)),
-              //               ),
-              //         itemBuilder: (context) => [
-              //           PopupMenuItem(
-              //             value: 1,
-              //             child: Text("Perfil"),
-              //           ),
-              //           if (!isInvolucrado)
-              //             PopupMenuItem(value: 2, child: Text("Planner")),
-              //           PopupMenuItem(
-              //             value: 3,
-              //             child: Text("Cerrar sesión"),
-              //           )
-              //         ],
-              //         onSelected: (valor) async {
-              //           if (valor == 1) {
-              //             Navigator.pushNamed(context, '/perfil');
-              //           } else if (valor == 2) {
-              //             Navigator.of(context).pushNamed('/perfilPlanner');
-              //           } else if (valor == 3) {
-              //             await SharedPreferencesT().clear();
-              //             Navigator.pushReplacementNamed(context, '/');
-              //           }
-              //         },
-              //       ),
-              //     ),
+              //   bottom: 10,
+              //   right: 10,
+              //   child: ContadorEventoPage(
+              //     fechaEvento: detalleEvento.fechaEvento,
               //   ),
-              // )
+              // ),
             ],
           ),
         ),
@@ -331,31 +370,80 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   }
 }
 
-// Widget fechaData() {
-//   return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
-//     builder: (context, state) {
-//       if (state is EvtBloc.LoadingEventoPorIdState) {
-//         return Center(child: CircularProgressIndicator());
-//       } else if (state is EvtBloc.MostrarEventoPorIdState) {
-//         eventoFecha = state.evento;
-//         eventosBloc.add(EvtBloc.FechtEventosEvent());
-//         return Container(
-//             width: 400, height: 200, child: miCardContadorFecha(eventoFecha));
-//       } else if (state is EvtBloc.ErrorEventoPorIdState) {
-//         return Center(
-//           child: Text(state.message),
-//         );
-//       } else {
-//         if (eventoFecha != null) {
-//           return Container(
-//               width: 400, height: 200, child: miCardContadorFecha(eventoFecha));
-//         } else {
-//           return Center(child: CircularProgressIndicator());
-//         }
-//       }
-//     },
-//   );
-// }
+class ContadorEventoPage extends StatefulWidget {
+  final DateTime fechaEvento;
+
+  const ContadorEventoPage({Key key, @required this.fechaEvento})
+      : super(key: key);
+
+  @override
+  _ContadorEventoPageState createState() => _ContadorEventoPageState();
+}
+
+class _ContadorEventoPageState extends State<ContadorEventoPage> {
+  Timer timer;
+  Duration fechaEventoTime;
+  bool isActive = false;
+
+  @override
+  void initState() {
+    Duration fechaEventoTime = DateTime.now()
+        .difference(DateTime.parse(widget.fechaEvento.toString()));
+
+    print(fechaEventoTime);
+
+    setState(() {
+      isActive = true;
+    });
+
+    initTimer();
+    super.initState();
+  }
+
+  initTimer() {
+    timer = Timer(Duration(minutes: 1), () {
+      setState(() {
+        fechaEventoTime = DateTime.parse(widget.fechaEvento.toString())
+            .difference(DateTime.now());
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Text(
+            'Fecha restante:',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+          RichText(
+              text: TextSpan(
+            style: TextStyle(fontSize: 18.0, color: Colors.black),
+            text: isActive
+                ? '${_printDuration(fechaEventoTime)}'
+                : 'Evento finalzado',
+          )),
+        ],
+      ),
+    );
+  }
+
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitHours = twoDigits(duration.inHours.remainder(24) * -1);
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60) * -1);
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60) * -1);
+    return "Dias: ${duration.inDays * -1}, Horas: $twoDigitHours, Minutos: $twoDigitMinutes, Segundos: $twoDigitSeconds";
+  }
+}
 
   // miCardContadorFecha(ItemModelEvento evento) {
   //   String fechaEvento = evento.results.elementAt(0).fechaEvento;
@@ -365,21 +453,21 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   //   Duration fechaEventoTime =
   //       DateTime.now().difference(DateTime.parse(fechaEvento));
 
-  //   // if (fechaEventoTime.inSeconds.isNegative) {
-  //   //   isActive = true;
-  //   //   if (mounted) {
-  //   //     _timer = Timer(Duration(seconds: 1), () {
-  //   //       if (mounted) {
-  //   //         setState(() {
-  //   //           fechaEventoTime =
-  //   //               DateTime.parse(fechaEvento).difference(DateTime.now());
-  //   //         });
-  //   //       }
-  //   //     });
-  //   //   } else {
-  //   //     _timer.cancel();
-  //   //   }
-  //   // }
+    // if (fechaEventoTime.inSeconds.isNegative) {
+    //   isActive = true;
+    //   if (mounted) {
+    //     _timer = Timer(Duration(seconds: 1), () {
+    //       if (mounted) {
+    //         setState(() {
+    //           fechaEventoTime =
+    //               DateTime.parse(fechaEvento).difference(DateTime.now());
+    //         });
+    //       }
+    //     });
+    //   } else {
+    //     _timer.cancel();
+    //   }
+    // }
 
   //   return Card(
   //     shape: RoundedRectangleBorder(
@@ -409,12 +497,4 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   //       ),
   //     ),
   //   );
-  // }
-
-  // String _printDuration(Duration duration) {
-  //   String twoDigits(int n) => n.toString().padLeft(2, "0");
-  //   String twoDigitHours = twoDigits(duration.inHours.remainder(24) * -1);
-  //   String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60) * -1);
-  //   String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60) * -1);
-  //   return "Dias: ${duration.inDays * -1}, Horas: $twoDigitHours, Minutos: $twoDigitMinutes, Segundos: $twoDigitSeconds";
   // }

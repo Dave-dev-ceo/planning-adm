@@ -49,6 +49,7 @@ class _LoginState extends State<Login> {
     String titulo = await _sharedPreferences.getEventoNombre();
     String nombreUser = await _sharedPreferences.getNombre();
     String image = await _sharedPreferences.getImagen();
+    String portada = await _sharedPreferences.getPortada();
 
     Map data = {'name': await _sharedPreferences.getNombre(), 'imag': image};
 
@@ -62,6 +63,7 @@ class _LoginState extends State<Login> {
               descripcion: titulo,
               nombreCompleto: nombreUser,
               boton: false,
+              portada: portada != null ? portada : null,
               img: image,
             ));
         // Navigator.pushNamed(context, '/eventos', arguments: {
@@ -177,6 +179,9 @@ class _LoginState extends State<Login> {
                   descripcion: state.response['usuario']['descripcion'],
                   nombreCompleto: state.response['usuario']['nombre_completo'],
                   img: state.response['usuario']['imagen'],
+                  portada: state.response['usuario']['portada'],
+                  fechaEvento: DateTime.tryParse(
+                      state.response['usuario']['fecha_evento']),
                 ));
           }
         }
