@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -105,19 +106,19 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES')) {
       gridCard.add(
         _builCard(
-          'Resumen',
-          ResumenEvento(
-            detalleEvento: {
-              'idEvento': detalleEvento.idEvento,
-              'nEvento': detalleEvento.descripcion,
-              'nombre': detalleEvento.nombreCompleto,
-              'boton': false,
-              'imag': detalleEvento.img
-            },
-            WP_EVT_RES_EDT:
-                pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
-          ),
-        ),
+            'Resumen',
+            ResumenEvento(
+              detalleEvento: {
+                'idEvento': detalleEvento.idEvento,
+                'nEvento': detalleEvento.descripcion,
+                'nombre': detalleEvento.nombreCompleto,
+                'boton': false,
+                'imag': detalleEvento.img
+              },
+              WP_EVT_RES_EDT:
+                  pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
+            ),
+            FaIcon(FontAwesomeIcons.clipboardList)),
       );
       // temp.add(ResumenEvento(
       //   detalleEvento: detalleEvento,
@@ -125,42 +126,60 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
       // ));
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-      gridCard.add(_builCard('Actividades', PlanesPage()));
+      gridCard.add(
+        _builCard('Actividades', PlanesPage(),
+            FaIcon(FontAwesomeIcons.calendarCheck)),
+      );
       // temp.add(PlanesPage());
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
-      gridCard.add(_builCard('Documentos', NewContrato()));
+      gridCard.add(_builCard(
+        'Documentos',
+        NewContrato(),
+        FaIcon(FontAwesomeIcons.book),
+      ));
 
       // temp.add(NewContrato());
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-      gridCard.add(_builCard('Presupuestos', Pagos()));
+      gridCard.add(_builCard(
+        'Presupuestos',
+        Pagos(),
+        FaIcon(FontAwesomeIcons.moneyBillWave),
+      ));
 
       // temp.add(Pagos());
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
-      gridCard.add(_builCard('Proveedores', ProveedorEvento()));
+      gridCard.add(_builCard(
+        'Proveedores',
+        ProveedorEvento(),
+        FaIcon(FontAwesomeIcons.peopleCarry),
+      ));
 
       // temp.add(ProveedorEvento());
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-      gridCard.add(_builCard('Autorizaciones', AutorizacionLista()));
+      gridCard.add(_builCard(
+        'Autorizaciones',
+        AutorizacionLista(),
+        FaIcon(FontAwesomeIcons.moneyCheck),
+      ));
 
       // temp.add(AutorizacionLista());
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
       gridCard.add(_builCard(
-          'Invitados',
-          ListaInvitados(
-            idEvento: detalleEvento.idEvento,
-            WP_EVT_INV_CRT:
-                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-            WP_EVT_INV_EDT:
-                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-            WP_EVT_INV_ENV:
-                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-            nameEvento: detalleEvento.descripcion,
-          )));
+        'Invitados',
+        ListaInvitados(
+          idEvento: detalleEvento.idEvento,
+          WP_EVT_INV_CRT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+          WP_EVT_INV_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+          WP_EVT_INV_ENV: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+          nameEvento: detalleEvento.descripcion,
+        ),
+        FaIcon(FontAwesomeIcons.users),
+      ));
       // temp.add(ListaInvitados(
       // idEvento: detalleEvento['idEvento'],
       // WP_EVT_INV_CRT:
@@ -173,12 +192,19 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     }
 
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-      gridCard.add(_builCard('Listas', Listas()));
+      gridCard.add(_builCard(
+        'Listas',
+        Listas(),
+        FaIcon(FontAwesomeIcons.thList),
+      ));
 
       // temp.add(Listas());
     }
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(
+        vertical: 20.0,
+        horizontal: 10.0,
+      ),
       child: GridView.builder(
         itemCount: gridCard.length,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -195,7 +221,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     );
   }
 
-  Widget _builCard(String titulo, dynamic page) {
+  Widget _builCard(String titulo, dynamic page, Widget icon) {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(
@@ -210,25 +236,35 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               borderRadius: BorderRadius.circular(15.0),
               gradient: LinearGradient(
                 stops: [
-                  0.047,
-                  0.96,
+                  0.10,
+                  0.52,
+                  0.90,
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
                 colors: [
-                  Color(0xFFf5f1e5),
-                  Color(0xFFfff7f0),
+                  Color(0xFFf4e4d2),
+                  Color(0xFFfdf6e8),
+                  Color(0xFFf7e5d4),
                 ],
               )),
-          child: Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: icon,
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   titulo,
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
-              )),
+              ),
+            ],
+          ),
         ),
       ),
       onTap: () {
@@ -305,7 +341,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                       color: Colors.white,
                     ),
                     Positioned(
-                      top: 10.0 ,
+                      top: 10.0,
                       child: Icon(
                         Icons.keyboard_arrow_down_outlined,
                         color: Colors.black,
