@@ -20,6 +20,7 @@ class _MachotesState extends State<Machotes> {
     {"nombre": "Pagos", "clave": "PG"},
     {"nombre": "Minutas", "clave": "MT"},
     {"nombre": "Oden de pago", "clave": "OP"},
+    {"nombre": "Autorizaciones", "clave": "AU"},
   ];
   TextEditingController descripcionMachote;
   GlobalKey<FormState> keyForm;
@@ -232,6 +233,17 @@ class _MachotesState extends State<Machotes> {
           ],
         ),
       ),
+      Container(
+        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            for (var i = 0; i < modelMC.results.length; i++)
+              if (modelMC.results.elementAt(i).clave == 'AU')
+                _contectCont(modelMC, i)
+          ],
+        ),
+      )
     ]);
   }
 
@@ -381,6 +393,10 @@ class _MachotesState extends State<Machotes> {
             icon: Icon(Icons.list_alt_outlined),
             label: 'Orden de pago',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt_outlined),
+            label: 'Autorizaciones',
+          )
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
