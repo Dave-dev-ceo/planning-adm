@@ -1451,6 +1451,44 @@ class _PlanesPageState extends State<PlanesPage> {
                     flex: 1,
                   ),
                   Expanded(
+                    child: GestureDetector(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: AutoSizeText(
+                          '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
+                          maxLines: 1,
+                          wrapWords: false,
+                        ),
+                      ),
+                      onTap: () async {
+                        final fecha = await _giveFecha(
+                          actividad.fechaInicioActividad,
+                          actividad.fechaInicioEvento,
+                          actividad.fechaFinEvento,
+                          actividad.diasActividad,
+                          actividad.idActividad,
+                        );
+
+                        setState(() {
+                          if (fecha != null) {
+                            isEnableButton = true;
+
+                            if (fecha.isAfter(DateTime.now())) {
+                              actividad.estatus = 'Pendiente';
+                            } else if (fecha.isBefore(DateTime.now())) {
+                              actividad.estatus = 'Atrasada';
+                            } else {
+                              actividad.estatus = 'Pendiente';
+                            }
+                            actividad.fechaFinActividad = fecha;
+                            actividad.estadoCalendarioActividad = true;
+                          }
+                        });
+                      },
+                    ),
+                    flex: 1,
+                  ),
+                  Expanded(
                     child: (!isInvolucrado)
                         ? GestureDetector(
                             child: Tooltip(
