@@ -55,6 +55,19 @@ class SharedPreferencesT {
   }
   // fin permisos involucrado
 
+  // inicio fecha involucrado
+
+  setFechaEvento(String json) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setString('fechaEvento', json);
+  }
+
+  getFechaEvento() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.getString('fechaEvento');
+  }
+  // fin fecha involucrado
+
   // ini perfil
   setImagen(String json) async {
     _sharedPreferences = await SharedPreferences.getInstance();

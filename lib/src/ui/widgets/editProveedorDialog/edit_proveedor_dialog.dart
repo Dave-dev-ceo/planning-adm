@@ -225,6 +225,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: UniqueKey(),
         onPressed: () async {
           if (keyFormEditProveedor.currentState.validate()) {
             await proveedorBloc.add(UpdateProveedor(widget.proveedor));

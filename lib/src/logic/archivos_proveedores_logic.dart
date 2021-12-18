@@ -59,12 +59,25 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       int prov, int serv) async {
     try {
       int id_planner = await _sharedPreferences.getIdPlanner();
+
+      final data = {
+        "id_planner": id_planner,
+        "id_proveedor": prov,
+        "id_servicio": serv,
+      };
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await client.post(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerArchivos/$id_planner/$prov/$serv'),
-          headers: {HttpHeaders.authorizationHeader: token});
+              '/wedding/PROVEEDORES/archivosByProvedorEvento'),
+          headers: {
+            HttpHeaders.authorizationHeader: token,
+            'Content-type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: json.encode(data));
+
+      print(json.decode(response.body)['data']);
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);

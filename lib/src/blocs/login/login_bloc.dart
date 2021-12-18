@@ -34,7 +34,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else if (event is RecoverPasswordEvent) {
       try {
         final data = await logic.recoverPassword(event.correo);
-        print(data);
         if (data == 'Ok') {
           yield CorreoSentState();
         } else if (data == 'NotFound') {

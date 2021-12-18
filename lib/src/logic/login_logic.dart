@@ -63,6 +63,8 @@ class BackendLoginLogic implements LoginLogic {
         await _sharedPreferences.setPortada(data['usuario']['portada'] == null
             ? ''
             : data['usuario']['portada']);
+        await _sharedPreferences
+            .setFechaEvento(data['usuario']['fecha_evento']);
         await _sharedPreferences.setPermisoBoton(true);
         List<String> dataJsonWPlanner = [
           data['usuario']['id_planner'].toString(),

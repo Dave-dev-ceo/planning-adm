@@ -39,10 +39,12 @@ class ArchivoProveedorBloc
 
           if (event.data['id_servicio'] == 'null') {
             add(FechtArchivoProvServEvent(
-                int.parse(event.data['id_proveedor']), 0));
+                int.parse(event.data['id_proveedor']), 0, false));
           } else if (event.data['id_proveedor'] == 'null') {
-            add(FechtArchivoProvServEvent(
-                0, int.parse(event.data['id_servicio'])));
+            add(
+              FechtArchivoProvServEvent(
+                  0, int.parse(event.data['id_servicio']), true),
+            );
           }
         }
       } catch (e) {
@@ -53,7 +55,8 @@ class ArchivoProveedorBloc
       try {
         int service = await logic.deleteArchivo(event.idArchivo);
         if (service == 0) {
-          add(FechtArchivoProvServEvent(event.idProveedor, event.idServicio));
+          add(FechtArchivoProvServEvent(
+              event.idProveedor, event.idServicio, event.isServici));
         }
       } catch (e) {}
     }

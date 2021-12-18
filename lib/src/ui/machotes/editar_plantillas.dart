@@ -150,6 +150,7 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
       ),
       floatingActionButton: PointerInterceptor(
         child: FloatingActionButton(
+          heroTag: UniqueKey(),
           child: Icon(Icons.save),
           onPressed: () async {
             String txt = await _controller.getText();

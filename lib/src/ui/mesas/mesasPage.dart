@@ -132,7 +132,7 @@ class _MesasPageState extends State<MesasPage> {
         if (!isInvolucrado) {
           return _buttonAddMesas();
         } else {
-          return FloatingActionButton(onPressed: () {});
+          return FloatingActionButton(onPressed: () {}, heroTag: UniqueKey());
         }
         break;
       case 1:
@@ -262,6 +262,7 @@ class _MesasPageState extends State<MesasPage> {
 
   Widget _buttonAddMesas() {
     return FloatingActionButton(
+      heroTag: UniqueKey(),
       tooltip: 'Agregar mesa',
       child: Icon(Icons.add),
       onPressed: () {

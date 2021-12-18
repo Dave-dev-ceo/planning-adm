@@ -50,6 +50,7 @@ class _LoginState extends State<Login> {
     String nombreUser = await _sharedPreferences.getNombre();
     String image = await _sharedPreferences.getImagen();
     String portada = await _sharedPreferences.getPortada();
+    String fechaEvento = await _sharedPreferences.getFechaEvento();
 
     Map data = {'name': await _sharedPreferences.getNombre(), 'imag': image};
 
@@ -65,6 +66,7 @@ class _LoginState extends State<Login> {
               boton: false,
               portada: portada != null ? portada : null,
               img: image,
+              fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
             ));
         // Navigator.pushNamed(context, '/eventos', arguments: {
         //   'idEvento': idEvento,
@@ -181,7 +183,8 @@ class _LoginState extends State<Login> {
                   img: state.response['usuario']['imagen'],
                   portada: state.response['usuario']['portada'],
                   fechaEvento: DateTime.tryParse(
-                      state.response['usuario']['fecha_evento']),
+                          state.response['usuario']['fecha_evento'])
+                      .toLocal(),
                 ));
           }
         }
@@ -405,6 +408,9 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
+                  onFieldSubmitted: (_) {
+                    _submit();
+                  },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Correo electrónico',
@@ -424,23 +430,24 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
               style: ElevatedButton.styleFrom(
                 elevation: 3.0,
               ),
-              onPressed: () async {
-                RegExp regExpEmail = RegExp(
-                    r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
-
-                if (regExpEmail.hasMatch(correoRecuperacionCtrl.text)) {
-                  await loginBloc
-                      .add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
-                } else {
-                  _showMessage('Ingrese un correo valido', Colors.red);
-                }
-              },
+              onPressed: _submit,
               child: Text('Enviar'),
             ),
           )
         ],
       ),
     );
+  }
+
+  _submit() async {
+    RegExp regExpEmail = RegExp(
+        r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+
+    if (regExpEmail.hasMatch(correoRecuperacionCtrl.text)) {
+      await loginBloc.add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
+    } else {
+      _showMessage('Ingrese un correo valido', Colors.red);
+    }
   }
 
   void _showMessage(String message, Color color) {

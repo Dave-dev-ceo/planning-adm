@@ -440,6 +440,7 @@ class _PerfilState extends State<Perfil> {
     String titulo = await _sharedPreferences.getEventoNombre();
     String image = await _sharedPreferences.getImagen();
     String portada = await _sharedPreferences.getPortada();
+    String fechaEvento = await _sharedPreferences.getFechaEvento();
 
     Map data = {'name': perfil.names, 'imag': image};
 
@@ -455,6 +456,7 @@ class _PerfilState extends State<Perfil> {
               boton: false,
               img: image,
               portada: portada != null ? portada : null,
+              fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
             ));
         //     Navigator.pushNamed(context, '/eventos', arguments: {
         //       'idEvento': idEvento,

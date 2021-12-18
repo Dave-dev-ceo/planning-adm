@@ -78,6 +78,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: UniqueKey(),
           child: Icon(Icons.download),
           onPressed: () async {
             final data =
@@ -114,6 +115,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: UniqueKey(),
           child: Icon(Icons.download),
           onPressed: () async {
             final data =
@@ -207,11 +209,10 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
               SizedBox(),
               IconButton(
                   onPressed: () {
-                    print('Clickskjh nuevo...');
                     Navigator.of(context)
                         .pushNamed('/agregarArchivo', arguments: {
                       'id_proveedor': opt.id_proveedor,
-                      'id_servicio': null,
+                      'id_servicio': idServi,
                       'nombre': opt.nombre,
                       'type': 0,
                       'prvEv': 0
@@ -303,7 +304,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                         Navigator.of(context)
                             .pushNamed('/agregarArchivo', arguments: {
                           'id_proveedor': opt.id_proveedor,
-                          'id_servicio': null,
+                          'id_servicio': idServi,
                           'nombre': opt.nombre,
                           'type': 1,
                           'prvEv': 2

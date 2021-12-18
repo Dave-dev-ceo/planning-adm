@@ -14,8 +14,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
   final Map<String, dynamic> provsrv;
+  final bool isServicio;
   const FullScreenDialogAgregarArchivoProvServEvent(
-      {Key key, @required this.provsrv})
+      {Key key, @required this.provsrv, this.isServicio = false})
       : super(key: key);
 
   @override
@@ -44,7 +45,9 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   void initState() {
     archivoProveedorBloc = BlocProvider.of<ArchivoProveedorBloc>(context);
     archivoProveedorBloc.add(FechtArchivoProvServEvent(
-        this.provsrv['id_proveedor'], this.provsrv['id_servicio']));
+        this.provsrv['id_proveedor'],
+        this.provsrv['id_servicio'],
+        widget.isServicio));
     super.initState();
   }
 
@@ -410,8 +413,11 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         TextButton(
           onPressed: () => {
             Navigator.pop(context, 'Aceptar'),
-            archivoProveedorBloc.add(DeleteArchivoEvent(idArchivo,
-                this.provsrv['id_proveedor'], this.provsrv['id_servicio']))
+            archivoProveedorBloc.add(DeleteArchivoEvent(
+                idArchivo,
+                this.provsrv['id_proveedor'],
+                this.provsrv['id_servicio'],
+                widget.isServicio))
           },
           child: const Text('Aceptar'),
         ),

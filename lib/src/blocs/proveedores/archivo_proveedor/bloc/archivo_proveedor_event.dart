@@ -13,7 +13,9 @@ class CreateArchivoProvServEvent extends ArchivoProveedorEvent {
 class FechtArchivoProvServEvent extends ArchivoProveedorEvent {
   final int id_proveedor;
   final int id_servicio;
-  FechtArchivoProvServEvent(this.id_proveedor, this.id_servicio);
+  final bool isServicio;
+  FechtArchivoProvServEvent(
+      this.id_proveedor, this.id_servicio, this.isServicio);
   List<Object> get props => [id_proveedor, id_servicio];
 }
 
@@ -21,6 +23,8 @@ class DeleteArchivoEvent extends ArchivoProveedorEvent {
   final int idArchivo;
   final int idProveedor;
   final int idServicio;
-  DeleteArchivoEvent(this.idArchivo, this.idProveedor, this.idServicio);
+  final bool isServici;
+  DeleteArchivoEvent(
+      this.idArchivo, this.idProveedor, this.idServicio, this.isServici);
   List<Object> get props => [idArchivo];
 }

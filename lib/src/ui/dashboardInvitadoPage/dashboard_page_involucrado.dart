@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -276,7 +277,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   Widget appBarCustom() {
     final IconThemeData iconTheme = IconTheme.of(context);
     return PreferredSize(
-      preferredSize: Size.fromHeight(250.0),
+      preferredSize: Size.fromHeight(200.0),
       child: AppBar(
         elevation: 5,
         shape: RoundedRectangleBorder(
@@ -314,41 +315,29 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               children: [
                 Stack(
                   children: [
+                    // Text(
+                    //   detalleEvento.descripcion,
+                    //   style: TextStyle(
+                    //     fontWeight: FontWeight.bold,
+                    //     foreground: Paint()
+                    //       ..style = PaintingStyle.stroke
+                    //       ..strokeWidth = 7
+                    //       ..color = Colors.white,
+                    //   ),
+                    // ),
                     Text(
                       detalleEvento.descripcion,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        foreground: Paint()
-                          ..style = PaintingStyle.stroke
-                          ..strokeWidth = 7
-                          ..color = Colors.white,
-                      ),
-                    ),
-                    Text(
-                      detalleEvento.descripcion,
-                      style: TextStyle(
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-                Stack(
-                  clipBehavior: Clip.hardEdge,
-                  children: [
-                    Icon(
-                      Icons.keyboard_arrow_down_outlined,
-                      size: iconTheme.size + 4,
-                      color: Colors.white,
-                    ),
-                    Positioned(
-                      top: 10.0,
-                      child: Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: Colors.black,
-                        size: iconTheme.size + 1,
-                      ),
-                    ),
-                  ],
+                Icon(
+                  Icons.keyboard_arrow_down_outlined,
+                  size: iconTheme.size + 4,
+                  color: Colors.white,
                 ),
               ],
             ),
@@ -361,8 +350,8 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
                     ),
                     image: DecorationImage(
                       fit: BoxFit.cover,
@@ -375,7 +364,18 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                             ),
                     )),
                 width: double.infinity,
-                height: 250,
+                height: 200,
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                    child: Container(
+                      width: double.infinity,
+                      height: 200,
+                      decoration:
+                          BoxDecoration(color: Colors.black.withOpacity(0.2)),
+                    ),
+                  ),
+                ),
               ),
               Align(
                 alignment: Alignment.topLeft,
@@ -391,13 +391,13 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                       )),
                 ),
               ),
-              // Positioned(
-              //   bottom: 10,
-              //   right: 10,
-              //   child: ContadorEventoPage(
-              //     fechaEvento: detalleEvento.fechaEvento,
-              //   ),
-              // ),
+              Positioned(
+                bottom: 10,
+                right: 10,
+                child: ContadorEventoPage(
+                  fechaEvento: detalleEvento.fechaEvento,
+                ),
+              ),
             ],
           ),
         ),
@@ -413,31 +413,34 @@ class ContadorEventoPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ContadorEventoPageState createState() => _ContadorEventoPageState();
+  _ContadorEventoPageState createState() =>
+      _ContadorEventoPageState(fechaEvento);
 }
 
 class _ContadorEventoPageState extends State<ContadorEventoPage> {
+  final DateTime fechaEvento;
   Timer timer;
   Duration fechaEventoTime;
   bool isActive = false;
 
+  double turns = 0.0;
+
+  _ContadorEventoPageState(this.fechaEvento);
+
   @override
   void initState() {
-    Duration fechaEventoTime = DateTime.now()
+    fechaEventoTime = DateTime.now()
         .difference(DateTime.parse(widget.fechaEvento.toString()));
-
-    print(fechaEventoTime);
 
     setState(() {
       isActive = true;
     });
-
     initTimer();
     super.initState();
   }
 
-  initTimer() {
-    timer = Timer(Duration(minutes: 1), () {
+  initTimer() async {
+    timer = Timer.periodic(Duration(seconds: 30), (timer) async {
       setState(() {
         fechaEventoTime = DateTime.parse(widget.fechaEvento.toString())
             .difference(DateTime.now());
@@ -458,26 +461,61 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
         children: [
           Text(
             'Fecha restante:',
-            style: Theme.of(context).textTheme.subtitle1,
+            style: TextStyle(color: Colors.white),
           ),
-          RichText(
-              text: TextSpan(
-            style: TextStyle(fontSize: 18.0, color: Colors.black),
-            text: isActive
-                ? '${_printDuration(fechaEventoTime)}'
-                : 'Evento finalzado',
-          )),
+          if (!isActive) Text('El evento ya finalizó') else timerEvento()
         ],
       ),
     );
   }
 
-  String _printDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitHours = twoDigits(duration.inHours.remainder(24) * -1);
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60) * -1);
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60) * -1);
-    return "Dias: ${duration.inDays * -1}, Horas: $twoDigitHours, Minutos: $twoDigitMinutes, Segundos: $twoDigitSeconds";
+  Widget timerEvento() {
+    return Row(
+      children: [
+        cardTime(dayRest(fechaEventoTime), 'Dias'),
+        cardTime(twoDigitsHours(fechaEventoTime), 'Horas'),
+        cardTime(twoDigitMinutes(fechaEventoTime), 'Minutos'),
+      ],
+    );
+  }
+
+  Widget cardTime(String time, String tipoTime) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text(
+              time,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(tipoTime)
+          ],
+        ),
+      ),
+    );
+  }
+
+  String twoDigitsHours(Duration duration) {
+    return twoDigits(duration.inHours.isNegative
+        ? duration.inHours.remainder(24) * -1
+        : duration.inHours.remainder(24) * 1);
+  }
+
+  String twoDigitMinutes(Duration duration) {
+    return twoDigits(duration.inMinutes.isNegative
+        ? duration.inMinutes.remainder(60) * -1
+        : duration.inMinutes.remainder(60) * 1);
+  }
+
+  String twoDigitSeconds(Duration duration) {
+    return twoDigits(duration.inSeconds.remainder(60) * 1);
+  }
+
+  String twoDigits(int n) => n.toString().padLeft(2, "0");
+
+  String dayRest(Duration duration) {
+    return "${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";
   }
 }
 

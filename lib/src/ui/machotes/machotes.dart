@@ -364,7 +364,7 @@ class _MachotesState extends State<Machotes> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        heroTag: null,
+        heroTag: UniqueKey(),
         child: Icon(Icons.add),
         onPressed: () async {
           await _showMyDialogGuardar();

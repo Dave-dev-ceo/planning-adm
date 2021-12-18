@@ -393,6 +393,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: UniqueKey(),
         child: Icon(Icons.download),
         onPressed: () async {
           final data = await eventoLogic.donwloadPDFEvento();

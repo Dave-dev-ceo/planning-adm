@@ -55,6 +55,7 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
         body: _buildBloc(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
+            heroTag: UniqueKey(),
             child: Icon(Icons.add),
             onPressed: () {
               if (!isInvolucrado) {
