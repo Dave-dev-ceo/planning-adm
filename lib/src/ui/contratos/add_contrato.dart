@@ -54,13 +54,17 @@ class _AddMachoteState extends State<AddMachote> {
   _giveTitle(String clave) {
     switch (clave) {
       case 'CT':
-        return Text('Selecciona contratos');
+        return Text('Selecciona Contratos');
       case 'RC':
-        return Text('Selecciona recibos');
+        return Text('Selecciona Recibos');
       case 'PG':
-        return Text('Selecciona pagos');
+        return Text('Selecciona Pagos');
+      case 'MT':
+        return Text('Selecciona Minutas');
+      case 'OP':
+        return Text('Selecciona Orden de Pago');
       default:
-        return Text('Selecciona minutas');
+        return Text('Selecciona Autorizaciones');
     }
   }
 

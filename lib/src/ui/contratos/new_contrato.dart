@@ -28,6 +28,17 @@ class New_ContratoState extends State<NewContrato> {
   // variables bloc
   ContratosDosBloc contratosBloc;
   VerContratosBloc verContratos;
+  int _grupoRadio = 0;
+  String _clave = "CT";
+  GlobalKey<FormState> keyForm;
+  List<Map<String, String>> radioB = [
+    {"nombre": "Contratos", "clave": "CT"},
+    {"nombre": "Recibos", "clave": "RC"},
+    {"nombre": "Pagos", "clave": "PG"},
+    {"nombre": "Minutas", "clave": "MT"},
+    {"nombre": "Orden de Pago", "clave": "OP"},
+    {"nombre": "Autorizaciones", "clave": "AU"},
+  ];
 
   // vaiables clase
   int _selectedIndex = 0;
@@ -42,6 +53,7 @@ class New_ContratoState extends State<NewContrato> {
     contratosBloc = BlocProvider.of<ContratosDosBloc>(context);
     contratosBloc.add(ContratosSelect());
     verContratos = BlocProvider.of<VerContratosBloc>(context);
+    keyForm = new GlobalKey();
     getIdInvolucrado();
   }
 
@@ -72,7 +84,8 @@ class New_ContratoState extends State<NewContrato> {
       body: SingleChildScrollView(
         child: _myBloc(),
       ),
-      bottomNavigationBar: _showNavigationBar(),
+
+      // bottomNavigationBar: _showNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: !isInvolucrado ? _showButton() : null,
     );
@@ -159,14 +172,88 @@ class New_ContratoState extends State<NewContrato> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: _itemsContratos(),
+        //children: _itemsContratos(),
+        children: <Widget>[
+          Card(
+            child: ExpansionTile(
+              title: Text(
+                'Contratos',
+                style: TextStyle(color: Colors.black),
+              ),
+              trailing: Icon(
+                Icons.gavel,
+                color: Colors.black,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              children: _itemsContratos(0),
+            ),
+          ),
+          Card(
+            child: ExpansionTile(
+              title: Text('Recibos', style: TextStyle(color: Colors.black)),
+              trailing: Icon(
+                Icons.receipt,
+                color: Colors.black,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              children: _itemsContratos(1),
+            ),
+          ),
+          Card(
+            child: ExpansionTile(
+              title: Text('Pagos', style: TextStyle(color: Colors.black)),
+              trailing: Icon(
+                Icons.request_page,
+                color: Colors.black,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              children: _itemsContratos(2),
+            ),
+          ),
+          Card(
+            child: ExpansionTile(
+              title: Text('Minutas', style: TextStyle(color: Colors.black)),
+              trailing: Icon(
+                Icons.border_color_sharp,
+                color: Colors.black,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              children: _itemsContratos(3),
+            ),
+          ),
+          Card(
+            child: ExpansionTile(
+              title:
+                  Text('Orden de Pago', style: TextStyle(color: Colors.black)),
+              trailing: Icon(
+                Icons.feed_outlined,
+                color: Colors.black,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              children: _itemsContratos(4),
+            ),
+          ),
+          Card(
+            child: ExpansionTile(
+              title:
+                  Text('Autorizaciones', style: TextStyle(color: Colors.black)),
+              trailing: Icon(
+                Icons.class__outlined,
+                color: Colors.black,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              children: _itemsContratos(5),
+            ),
+          )
+        ],
       ),
     );
   }
 
   // select lista
-  _itemsContratos() {
-    switch (_selectedIndex) {
+  _itemsContratos(selectItem) {
+    // switch (_selectedIndex) {
+    switch (selectItem) {
       case 0:
         return _contratosItem();
       case 1:
@@ -227,9 +314,9 @@ class New_ContratoState extends State<NewContrato> {
                                           'archivo': contrato.archivo,
                                           'id_contrato': contrato.idContrato
                                         });
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
+                                    // setState(() {
+                                    // contratosBloc.add(ContratosSelect());
+                                    //});
                                   },
                                 )
                               ],
@@ -930,8 +1017,71 @@ class New_ContratoState extends State<NewContrato> {
         child: Icon(Icons.send_and_archive_sharp),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        onTap: _eventoAdd));
+        onTap: _showMyDialogGuardar));
     return temp;
+  }
+
+  Future<void> _showMyDialogGuardar() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Crear plantilla', textAlign: TextAlign.center),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Form(
+                key: keyForm,
+                child: SingleChildScrollView(
+                  child: ListBody(
+                    children: [
+                      Column(
+                        children: <Widget>[
+                          for (int i = 0; i < radioB.length; i++)
+                            ListTile(
+                              title: Text(
+                                radioB.elementAt(i)['nombre'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(color: Colors.black),
+                              ),
+                              leading: Radio(
+                                value: i,
+                                groupValue: _grupoRadio,
+                                activeColor: Color(0xFF6200EE),
+                                onChanged: (int value) {
+                                  setState(() {
+                                    _grupoRadio = value;
+                                    _clave = radioB.elementAt(i)['clave'];
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            SizedBox(
+              width: 10.0,
+            ),
+            TextButton(
+              child: Text('Aceptar'),
+              onPressed: () async {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/addContratos',
+                    arguments: {'clave': _clave.toString()});
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   _eventoUpload() {

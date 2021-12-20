@@ -386,15 +386,15 @@ class _MachotesState extends State<Machotes> {
             label: 'Pagos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.request_page),
+            icon: Icon(Icons.border_color_sharp),
             label: 'Minutas',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt_outlined),
+            icon: Icon(Icons.feed_outlined),
             label: 'Orden de pago',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt_outlined),
+            icon: Icon(Icons.class__outlined),
             label: 'Autorizaciones',
           )
         ],
