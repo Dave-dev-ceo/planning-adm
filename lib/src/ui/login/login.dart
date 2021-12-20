@@ -1,14 +1,8 @@
-//import 'dart:ffi';
-
-// ignore_for_file: unused_element
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/login/login_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/api_provider.dart';
-
-// Padilla
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 
 class Login extends StatefulWidget {
@@ -141,8 +135,8 @@ class _LoginState extends State<Login> {
         } else if (state is LogginState) {
           _dialogMSG('Iniciando sesión', '', 'log');
         } else if (state is MsgLogginState) {
-          //Navigator.pop(_ingresando);
-          _dialogMSG('Datos invalidos', state.message, 'msg');
+          Navigator.pop(_ingresando);
+          _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
           Navigator.pop(_ingresando);
@@ -357,7 +351,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
         } else if (state is CorreoNotFoundState) {
           correoRecuperacionCtrl.clear();
 
-          _showMessage('Este correo no esta registrado', Colors.red);
+          _showMessage('Este correo no está registrado', Colors.red);
         }
       },
       child: AlertDialog(
@@ -374,7 +368,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Ingrese su correo electronico de recuperación',
+                'Ingrese su correo electrónico de recuperación',
               ),
               SizedBox(
                 height: 10.0,
@@ -409,7 +403,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
                   await loginBloc
                       .add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
                 } else {
-                  _showMessage('Ingrese un correo valido', Colors.red);
+                  _showMessage('Ingrese un correo válido', Colors.red);
                 }
               },
               child: Text('Enviar'),
