@@ -5,8 +5,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/blocs/archivosEspeciales/archivosespeciales_bloc.dart';
 import 'package:planning/src/blocs/proveedores/archivo_proveedor/bloc/archivo_proveedor_bloc.dart';
+import 'package:planning/src/models/archivosEspeciales/archivo_especial_model.dart';
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:mime_type/mime_type.dart';
@@ -15,9 +18,11 @@ import 'package:url_launcher/url_launcher.dart';
 class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
   final Map<String, dynamic> provsrv;
   final bool isServicio;
-  const FullScreenDialogAgregarArchivoProvServEvent(
-      {Key key, @required this.provsrv, this.isServicio = false})
-      : super(key: key);
+  const FullScreenDialogAgregarArchivoProvServEvent({
+    Key key,
+    @required this.provsrv,
+    this.isServicio = false,
+  }) : super(key: key);
 
   @override
   _FullScreenDialogAgregarArchivoProvServEvent createState() =>
@@ -27,6 +32,7 @@ class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
 class _FullScreenDialogAgregarArchivoProvServEvent
     extends State<FullScreenDialogAgregarArchivoProvServEvent> {
   GlobalKey<FormState> keyForm = new GlobalKey();
+  GlobalKey<FormState> keyFormAE = new GlobalKey();
   final _keyFormLink = GlobalKey<FormState>();
   final Map<String, dynamic> provsrv;
   final _textcontrollerDes = TextEditingController();
@@ -35,6 +41,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   String _fileBase64 = '';
   _FullScreenDialogAgregarArchivoProvServEvent(this.provsrv);
   TextEditingController descripcionCtrl = new TextEditingController();
+  TextEditingController descripcionCtrlAE = new TextEditingController();
   ArchivoProveedorBloc archivoProveedorBloc;
   ItemModelProveedores itemModelProveedores;
 
@@ -43,12 +50,26 @@ class _FullScreenDialogAgregarArchivoProvServEvent
 
   @override
   void initState() {
+    checkIsEvent();
     archivoProveedorBloc = BlocProvider.of<ArchivoProveedorBloc>(context);
     archivoProveedorBloc.add(FechtArchivoProvServEvent(
-        this.provsrv['id_proveedor'],
-        this.provsrv['id_servicio'],
-        widget.isServicio));
+      this.provsrv['id_proveedor'],
+      this.provsrv['id_servicio'],
+    ));
     super.initState();
+  }
+
+  checkIsEvent() async {
+    if (this.provsrv['isEvento']) {
+      int idEvento = await SharedPreferencesT().getIdEvento();
+      setState(() {
+        BlocProvider.of<ArchivosEspecialesBloc>(context)
+            .add(MostrarArchivosEspecialesEvent(
+          this.provsrv['id_proveedor'],
+          idEvento,
+        ));
+      });
+    }
   }
 
   @override
@@ -104,7 +125,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                 icon: const Icon(Icons.upload_file),
                                 color: Colors.white,
                                 onPressed: () async {
-                                  _selectFile();
+                                  _selectFile(false);
                                 },
                               ),
                             ),
@@ -243,9 +264,88 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                 return Center(child: CircularProgressIndicator());
               }
             }),
+            if (this.provsrv['isEvento']) _archivosEspecilesWidget(),
           ],
         ),
       )),
+    );
+  }
+
+  Widget _archivosEspecilesWidget() {
+    return Column(
+      children: [
+        Divider(
+          color: Colors.grey,
+        ),
+        SizedBox(
+          height: 20.0,
+        ),
+        Text(
+          'Archivos Especiales',
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        if (widget.provsrv['type'] == 0)
+          Card(
+            color: Colors.white,
+            elevation: 12,
+            shadowColor: Colors.black12,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: new Form(
+                  key: keyFormAE,
+                  child: Column(
+                    children: <Widget>[
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        children: <Widget>[
+                          TextFormFields(
+                            icon: Icons.drive_file_rename_outline,
+                            item: TextFormField(
+                              controller: descripcionCtrlAE,
+                              decoration: new InputDecoration(
+                                labelText: 'Descripción del archivo',
+                              ),
+                            ),
+                            large: 400.0,
+                            ancho: 80.0,
+                          ),
+                        ],
+                      ),
+                      Ink(
+                        padding: EdgeInsets.all(5),
+                        width: 100.0,
+                        decoration: const ShapeDecoration(
+                          color: Colors.black,
+                          shape: CircleBorder(),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconButton(
+                            icon: const Icon(Icons.upload_file),
+                            color: Colors.white,
+                            onPressed: () async {
+                              _selectFile(true);
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+            ),
+          ),
+        SizedBox(
+          height: 8.0,
+        ),
+        Text(
+          'Archivos Especiales',
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        SizedBox(
+          height: 20.0,
+        ),
+      ],
     );
   }
 
@@ -260,14 +360,18 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         'nombre': descripcionLink,
         'descripcion': descripcionLink
       };
-      archivoProveedorBloc
-          .add(CreateArchivoProvServEvent(jsonLink, itemModelProveedores));
+      archivoProveedorBloc.add(CreateArchivoProvServEvent(
+        jsonLink,
+        itemModelProveedores,
+        this.provsrv['id_proveedor'],
+        this.provsrv['id_servicio'],
+      ));
       _textcontrollerDes.clear();
       _textControllerUrl.clear();
     } else {}
   }
 
-  _selectFile() async {
+  _selectFile(bool isArchivoEspecial) async {
     const extensiones = ['pdf', 'jpg', 'png', 'jpeg'];
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -275,31 +379,54 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       allowMultiple: false,
     );
     if (pickedFile != null) {
-      List files = [];
-      Map<String, dynamic> json = {};
-      pickedFile.files.forEach((f) {
-        if (extensiones.contains(f.extension)) {
-          var bytes = f.bytes;
-          if (bytes == null) {
-            bytes = File(f.path).readAsBytesSync();
+      if (!isArchivoEspecial) {
+        List files = [];
+        Map<String, dynamic> json = {};
+        pickedFile.files.forEach((f) {
+          if (extensiones.contains(f.extension)) {
+            var bytes = f.bytes;
+            if (bytes == null) {
+              bytes = File(f.path).readAsBytesSync();
+            }
+            String fileBase64 = base64.encode(bytes);
+            String mimeType = mime(f.name.replaceAll(' ', ''));
+            String fileName = f.name;
+            // files
+            json = {
+              'id_proveedor': this.provsrv['id_proveedor'],
+              'id_servicio': this.provsrv['id_servicio'],
+              // 'tipo_mime': 'data:application/pdf;base64,',
+              'tipo_mime': mimeType,
+              'archivo': fileBase64,
+              'nombre': fileName,
+              'descripcion': descripcionCtrl.text
+            };
           }
-          String fileBase64 = base64.encode(bytes);
-          String mimeType = mime(f.name.replaceAll(' ', ''));
-          String fileName = f.name;
-          // files
-          json = {
-            'id_proveedor': this.provsrv['id_proveedor'],
-            'id_servicio': this.provsrv['id_servicio'],
-            // 'tipo_mime': 'data:application/pdf;base64,',
-            'tipo_mime': mimeType,
-            'archivo': fileBase64,
-            'nombre': fileName,
-            'descripcion': descripcionCtrl.text
-          };
+        });
+        archivoProveedorBloc.add(CreateArchivoProvServEvent(
+          json,
+          itemModelProveedores,
+          this.provsrv['id_proveedor'],
+          this.provsrv['id_servicio'],
+        ));
+      } else {
+        ArchivoEspecialModel newEditArchivoEspecial = ArchivoEspecialModel();
+        var file = pickedFile.files.single.bytes;
+
+        if (file == null) {
+          file = File(pickedFile.files.single.path).readAsBytesSync();
         }
-      });
-      archivoProveedorBloc
-          .add(CreateArchivoProvServEvent(json, itemModelProveedores));
+
+        newEditArchivoEspecial.archivo = base64Encode(file);
+        newEditArchivoEspecial.tipoMime =
+            mime(pickedFile.files.single.name.replaceAll(' ', ''));
+        newEditArchivoEspecial.descripcion = descripcionCtrlAE.text;
+        newEditArchivoEspecial.nombre = pickedFile.files.single.name;
+        newEditArchivoEspecial.idProveedor = this.provsrv['id_proveedor'];
+
+        BlocProvider.of<ArchivosEspecialesBloc>(context)
+            .add(InsertArchivoEspecialEvent(newEditArchivoEspecial));
+      }
     }
   }
 
@@ -318,14 +445,22 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Container(width: 650.0, child: _list(moduleServicios))
+                        Container(
+                          width: 650.0,
+                          child: _list(moduleServicios, false),
+                        ),
+                        if (provsrv['id_servicio'] != null)
+                          Container(
+                            width: 650.0,
+                            child: _list(moduleServicios, true),
+                          )
                       ],
                     ))),
           )
         ]));
   }
 
-  Widget _list(ItemModelArchivoProvServ moduleServicios) {
+  Widget _list(ItemModelArchivoProvServ moduleServicios, bool isServicio) {
     return Card(
         color: Colors.white,
         elevation: 12,
@@ -333,22 +468,36 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: _createListItems(moduleServicios)));
+            children: _createListItems(moduleServicios, isServicio)));
   }
 
-  List<Widget> _createListItems(ItemModelArchivoProvServ item) {
+  List<Widget> _createListItems(
+      ItemModelArchivoProvServ item, bool isServicio) {
     // Creación de lista de Widget.
     List<Widget> lista = [];
+    List<Widget> listaServicio = [];
     // Se agrega el titulo del card
-    final titulo = Text('Archivos',
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 24));
+    final titulo = Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text('Archivos del proveedor',
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 24)));
     // final campos =
     final size = SizedBox(height: 20);
     lista.add(titulo);
     // lista.add(campos);
     lista.add(size);
+
+    final tituloServicio = Text('Archivos del servicio',
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 24));
+    // final campos =
+    final sizeSercicio = SizedBox(height: 20);
+    listaServicio.add(tituloServicio);
+    // lista.add(campos);
+    listaServicio.add(sizeSercicio);
     for (var opt in item.results) {
       Icon _icon;
       if (opt.tipoMime == 'application/pdf') {
@@ -358,6 +507,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       } else {
         _icon = Icon(Icons.image);
       }
+
       final tempWidget = ListTile(
         title: Text(opt.nombre),
         subtitle: Text(opt.descripcion),
@@ -383,9 +533,18 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         ]),
         onTap: () async {},
       );
-      lista.add(tempWidget);
+      if (opt.idServicio != provsrv['id_servicio']) {
+        lista.add(tempWidget);
+      } else {
+        listaServicio.add(tempWidget);
+      }
     }
-    return lista;
+
+    if (!isServicio) {
+      return lista;
+    } else {
+      return listaServicio;
+    }
   }
 
   Future<void> _launchInBrowser(String url) async {

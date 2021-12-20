@@ -104,6 +104,10 @@ flutter:
     - family: Comfortaa
       fonts:
         - asset: fonts/Comfortaa-Regular.ttf
+
+    - family: Oleo
+      fonts:
+        - asset: fonts/OleoScript-Regular.ttf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

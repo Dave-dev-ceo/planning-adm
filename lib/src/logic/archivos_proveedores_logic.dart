@@ -77,8 +77,6 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
           },
           body: json.encode(data));
 
-      print(json.decode(response.body)['data']);
-
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         await _sharedPreferences.setToken(data['token']);

@@ -32,21 +32,11 @@ class ArchivoProveedorBloc
     } else if (event is CreateArchivoProvServEvent) {
       try {
         int proveedor = await logic.createArchivos(event.data);
-        print(proveedor);
-        if (proveedor == 0) {
-          // add(FechtArchivoProvServEvent(
-          //     int.parse(event.data['id_proveedor']), 0));
 
-          if (event.data['id_servicio'] == 'null') {
-            add(FechtArchivoProvServEvent(
-                int.parse(event.data['id_proveedor']), 0, false));
-          } else if (event.data['id_proveedor'] == 'null') {
-            add(
-              FechtArchivoProvServEvent(
-                  0, int.parse(event.data['id_servicio']), true),
-            );
-          }
-        }
+        // add(FechtArchivoProvServEvent(
+        //     int.parse(event.data['id_proveedor']), 0));
+
+        add(FechtArchivoProvServEvent(event.idProveedor, event.idServicio));
       } catch (e) {
         print(e);
         yield ErrorCreateArchivoProvServState('No se pudo insertar');
@@ -55,8 +45,7 @@ class ArchivoProveedorBloc
       try {
         int service = await logic.deleteArchivo(event.idArchivo);
         if (service == 0) {
-          add(FechtArchivoProvServEvent(
-              event.idProveedor, event.idServicio, event.isServici));
+          add(FechtArchivoProvServEvent(event.idProveedor, event.idServicio));
         }
       } catch (e) {}
     }

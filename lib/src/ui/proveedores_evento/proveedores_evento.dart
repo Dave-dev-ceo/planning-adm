@@ -215,7 +215,8 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                       'id_servicio': idServi,
                       'nombre': opt.nombre,
                       'type': 0,
-                      'prvEv': 0
+                      'prvEv': 0,
+                      'isEvento': true,
                     });
                   },
                   icon: Icon(Icons.file_present)),
@@ -307,7 +308,8 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                           'id_servicio': idServi,
                           'nombre': opt.nombre,
                           'type': 1,
-                          'prvEv': 2
+                          'prvEv': 2,
+                          'isEvento': true,
                         });
                       },
                       icon: const Icon(Icons.file_present)),

@@ -117,68 +117,42 @@ class _ProspectosPageState extends State<ProspectosPage> {
                   color: Color(int.parse(etapa.color)),
                 ),
                 padding: EdgeInsets.all(10),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      etapa.isEditNombreEtapa = true;
-                    });
-                  },
-                  child: ListTile(
-                    title: TextFormField(
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          color:
-                              useWhiteForeground(Color(int.parse(etapa.color)))
-                                  ? Colors.white
-                                  : Colors.black),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 1.0),
-                        ),
-                        border: InputBorder.none,
-                      ),
-                      enabled: etapa.isEditNombreEtapa,
-                      initialValue: etapa.nombreEtapa,
-                      onChanged: (value) => {etapa.nombreEtapa = value},
-                      onFieldSubmitted: (value) => {
-                        if (value.length >= 1)
-                          {
-                            _prospectoBloc.add(EditNameEtapaEvent(etapa)),
-                            setState(() {
-                              etapa.isEditNombreEtapa = false;
-                            })
-                          }
-                      },
+                child: ListTile(
+                  title: Text(
+                    etapa.nombreEtapa,
+                    style: TextStyle(
+                      color: useWhiteForeground(Color(int.parse(etapa.color)))
+                          ? Colors.white
+                          : Colors.black,
+                      fontSize: 20.0,
                     ),
-                    trailing: PopupMenuButton(
-                        icon: Icon(
-                          Icons.more_vert_rounded,
-                          color:
-                              useWhiteForeground(Color(int.parse(etapa.color)))
-                                  ? Colors.white
-                                  : Colors.black,
-                        ),
-                        onSelected: (value) {
-                          if (value == 2) {
-                            _prospectoBloc.add(DeleteEtapaEvent(etapa.idEtapa));
-                          } else {
-                            _addEtapaSubmit(etapa, true);
-                          }
-                        },
-                        tooltip: null,
-                        itemBuilder: (BuildContext context) => <PopupMenuItem>[
-                              const PopupMenuItem(
-                                child: Text('Editar'),
-                                value: 1,
-                              ),
-                              if (etapa.claveEtapa == null)
-                                PopupMenuItem(
-                                  child: Text('Eliminar'),
-                                  value: 2,
-                                ),
-                            ]),
                   ),
+                  trailing: PopupMenuButton(
+                      icon: Icon(
+                        Icons.more_vert_rounded,
+                        color: useWhiteForeground(Color(int.parse(etapa.color)))
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      onSelected: (value) {
+                        if (value == 2) {
+                          _prospectoBloc.add(DeleteEtapaEvent(etapa.idEtapa));
+                        } else {
+                          _addEtapaSubmit(etapa, true);
+                        }
+                      },
+                      tooltip: null,
+                      itemBuilder: (BuildContext context) => <PopupMenuItem>[
+                            const PopupMenuItem(
+                              child: Text('Editar'),
+                              value: 1,
+                            ),
+                            if (etapa.claveEtapa == null)
+                              PopupMenuItem(
+                                child: Text('Eliminar'),
+                                value: 2,
+                              ),
+                          ]),
                 )),
           ),
         ],
@@ -476,21 +450,21 @@ class _ProspectosPageState extends State<ProspectosPage> {
     });
   }
 
-  _onListReorder(int oldListIndex, int newListIndex) {
+  _onListReorder(int oldListIndex, int newListIndex) async {
     List<UpdateEtapaModel> etapasToUpdate = [];
+
     setState(() {
       EtapasModel movedList = etapas.removeAt(oldListIndex);
       etapas.insert(newListIndex, movedList);
-
-      for (var i = 0; i < etapas.length; i++) {
-        etapas[i].ordenEtapa = i + 1;
-        etapasToUpdate.add(UpdateEtapaModel(
-          idEtapa: etapas[i].idEtapa,
-          ordenEtapa: etapas[i].ordenEtapa,
-        ));
-      }
-      _prospectoBloc.add(UpdateEtapaEvent(listEtapasUpdate: etapasToUpdate));
     });
+    for (var i = 0; i < etapas.length; i++) {
+      etapas[i].ordenEtapa = i + 1;
+      etapasToUpdate.add(UpdateEtapaModel(
+        idEtapa: etapas[i].idEtapa,
+        ordenEtapa: etapas[i].ordenEtapa,
+      ));
+    }
+    _prospectoBloc.add(UpdateEtapaEvent(listEtapasUpdate: etapasToUpdate));
   }
 }
 

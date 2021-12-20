@@ -129,7 +129,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
       gridCard.add(
         _builCard('Actividades', PlanesPage(),
-            FaIcon(FontAwesomeIcons.calendarCheck)),
+            FaIcon(FontAwesomeIcons.solidCalendarCheck)),
       );
       // temp.add(PlanesPage());
     }
@@ -330,6 +330,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontFamily: 'Oleo',
                       ),
                     ),
                   ],
@@ -367,7 +368,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                 height: 200,
                 child: ClipRect(
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                    filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
                     child: Container(
                       width: double.infinity,
                       height: 200,
@@ -432,9 +433,11 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
     fechaEventoTime = DateTime.now()
         .difference(DateTime.parse(widget.fechaEvento.toString()));
 
-    setState(() {
-      isActive = true;
-    });
+    if (widget.fechaEvento.isAfter(DateTime.now().toLocal())) {
+      setState(() {
+        isActive = true;
+      });
+    }
     initTimer();
     super.initState();
   }
@@ -444,6 +447,12 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
       setState(() {
         fechaEventoTime = DateTime.parse(widget.fechaEvento.toString())
             .difference(DateTime.now());
+
+        if (widget.fechaEvento
+            .subtract(Duration(minutes: 1))
+            .isBefore(DateTime.now().toLocal())) {
+          isActive = false;
+        }
       });
     });
   }
@@ -459,11 +468,24 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
     return Container(
       child: Column(
         children: [
-          Text(
-            'Fecha restante:',
-            style: TextStyle(color: Colors.white),
-          ),
-          if (!isActive) Text('El evento ya finalizó') else timerEvento()
+          if (isActive)
+            Text(
+              'Tiempo restante:',
+              style: TextStyle(color: Colors.white),
+            ),
+          if (!isActive)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'El evento ya finalizó',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          else
+            timerEvento()
         ],
       ),
     );
@@ -472,7 +494,7 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
   Widget timerEvento() {
     return Row(
       children: [
-        cardTime(dayRest(fechaEventoTime), 'Dias'),
+        cardTime(dayRest(fechaEventoTime), 'Días'),
         cardTime(twoDigitsHours(fechaEventoTime), 'Horas'),
         cardTime(twoDigitMinutes(fechaEventoTime), 'Minutos'),
       ],
@@ -515,60 +537,12 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
   String twoDigits(int n) => n.toString().padLeft(2, "0");
 
   String dayRest(Duration duration) {
-    return "${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";
+    if (duration.inDays >= 0 && duration.inDays <= 9) {
+      return "0${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";
+    } else if (duration.inDays >= -9) {
+      return "0${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";
+    } else {
+      return "${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";
+    }
   }
 }
-
-  // miCardContadorFecha(ItemModelEvento evento) {
-  //   String fechaEvento = evento.results.elementAt(0).fechaEvento;
-
-  //   bool isActive = false;
-
-  //   Duration fechaEventoTime =
-  //       DateTime.now().difference(DateTime.parse(fechaEvento));
-
-    // if (fechaEventoTime.inSeconds.isNegative) {
-    //   isActive = true;
-    //   if (mounted) {
-    //     _timer = Timer(Duration(seconds: 1), () {
-    //       if (mounted) {
-    //         setState(() {
-    //           fechaEventoTime =
-    //               DateTime.parse(fechaEvento).difference(DateTime.now());
-    //         });
-    //       }
-    //     });
-    //   } else {
-    //     _timer.cancel();
-    //   }
-    // }
-
-  //   return Card(
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(10.0),
-  //     ),
-  //     margin: EdgeInsets.all(20.0),
-  //     elevation: 10,
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(10.0),
-  //       child: ListTile(
-  //         leading: Icon(Icons.access_time_filled_outlined),
-  //         title: Column(
-  //           children: [
-  //             Text(
-  //               'Fecha restante:',
-  //               style: Theme.of(context).textTheme.subtitle1,
-  //             ),
-  //             RichText(
-  //                 text: TextSpan(
-  //               style: TextStyle(fontSize: 18.0, color: Colors.black),
-  //               text: isActive
-  //                   ? '${_printDuration(fechaEventoTime)}'
-  //                   : 'Evento finalzado',
-  //             )),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
