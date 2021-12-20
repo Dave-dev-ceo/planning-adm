@@ -6,16 +6,19 @@ abstract class ArchivoProveedorEvent {}
 class CreateArchivoProvServEvent extends ArchivoProveedorEvent {
   final Map<String, dynamic> data;
   final ItemModelProveedores listas;
-  CreateArchivoProvServEvent(this.data, this.listas);
+  final int idProveedor;
+  final int idServicio;
+  CreateArchivoProvServEvent(this.data, this.listas, this.idProveedor, this.idServicio);
   List<Object> get props => [data, listas];
 }
 
 class FechtArchivoProvServEvent extends ArchivoProveedorEvent {
   final int id_proveedor;
   final int id_servicio;
-  final bool isServicio;
   FechtArchivoProvServEvent(
-      this.id_proveedor, this.id_servicio, this.isServicio);
+    this.id_proveedor,
+    this.id_servicio,
+  );
   List<Object> get props => [id_proveedor, id_servicio];
 }
 
