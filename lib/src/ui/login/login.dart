@@ -23,7 +23,6 @@ class _LoginState extends State<Login> {
   TextEditingController telefonoRCtrl = new TextEditingController();
   TextEditingController correoRecuperacionCtrl = new TextEditingController();
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  BuildContext _ingresando;
   bool _visible = true;
   ApiProvider api = new ApiProvider();
 
@@ -79,7 +78,6 @@ class _LoginState extends State<Login> {
         context: context,
         //barrierDismissible: false,
         builder: (BuildContext context) {
-          _ingresando = context;
           return AlertDialog(
               title: Text(
                 title,
@@ -129,17 +127,17 @@ class _LoginState extends State<Login> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is ErrorLogginState) {
-          Navigator.pop(_ingresando);
+          Navigator.pop(context);
           _dialogMSG(
-              'Datos invalidos', 'Correo o contraseña incorrectos', 'msg');
+              'Datos inválidos', 'Correo o contraseña incorrectos', 'msg');
         } else if (state is LogginState) {
           _dialogMSG('Iniciando sesión', '', 'log');
         } else if (state is MsgLogginState) {
-          Navigator.pop(_ingresando);
+          Navigator.pop(context);
           _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
-          Navigator.pop(_ingresando);
+          Navigator.pop(context);
           if (state.response['usuario']['id_involucrado'] == 'null') {
             Map data = {
               'name': state.response['usuario']['nombre_completo'],
