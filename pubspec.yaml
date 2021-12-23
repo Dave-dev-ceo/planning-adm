@@ -92,17 +92,33 @@ flutter:
     - assets/
 
   fonts:
-    - family: MyFlutterApp
+    - family: BubbleBee
       fonts:
-        - asset: fonts/MyFlutterApp.ttf
+        - asset: fonts/BubbleBee.ttf
+
+    - family: Comfortaa
+      fonts:
+        - asset: fonts/Comfortaa-Regular.ttf
 
     - family: Dancing
       fonts:
         - asset: fonts/DancingScript-Medium.ttf
 
-    - family: Comfortaa
+    - family: Montserrat
       fonts:
-        - asset: fonts/Comfortaa-Regular.ttf
+        - asset: fonts/Montserrat.ttf
+  
+    - family: Delberg
+      fonts:
+        - asset: fonts/Delberg.ttf
+
+    - family: MyFlutterApp
+      fonts:
+        - asset: fonts/MyFlutterApp.ttf
+
+    - family: Quaylike
+      fonts:
+        - asset: fonts/Quaylike.ttf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

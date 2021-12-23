@@ -131,8 +131,8 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: InputDecorationTheme(
             floatingLabelStyle: TextStyle(color: Colors.black54)),
         //backgroundColor: createMaterialColor(Color(0xD34444)),
-        scaffoldBackgroundColor: hexToColor('#FFF9F9'),
-        fontFamily: 'Comfortaa',
+        scaffoldBackgroundColor: hexToColor('#fff9f9'),
+        fontFamily: 'Montserrat',
       ),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
