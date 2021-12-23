@@ -132,7 +132,7 @@ class MyApp extends StatelessWidget {
             floatingLabelStyle: TextStyle(color: Colors.black54)),
         //backgroundColor: createMaterialColor(Color(0xD34444)),
         scaffoldBackgroundColor: hexToColor('#fff9f9'),
-        fontFamily: 'Montserrat',
+        fontFamily: 'Montserrat-Medium',
       ),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
