@@ -101,7 +101,6 @@ class _PlannersState extends State<Planners> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: UniqueKey(),
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed('/addPlanners');

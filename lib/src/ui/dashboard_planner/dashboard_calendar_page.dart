@@ -26,7 +26,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
 
   final ScrollController _controller = ScrollController();
   List<Meeting> _eventos = [];
-  final MeetingDataSource _events = MeetingDataSource();
+  final MeetingDataSource _events = MeetingDataSource(<Meeting>[]);
   List<DashboardEventoModel> eventos = [];
   List<EventoActividadModel> actividades = [];
   final CalendarController _calendarController = CalendarController();
@@ -109,7 +109,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
         initialDisplayDate: DateTime.now(),
         controller: _calendarController,
         allowedViews: _allowedViews,
-        dataSource: _events,
+        dataSource: MeetingDataSource(_getDataSource()),
         showNavigationArrow: true,
         showDatePickerButton: true,
         selectionDecoration: BoxDecoration(
@@ -123,7 +123,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
             (BuildContext context, LoadMoreCallback loadMoreAppointments) {
           return FutureBuilder<void>(
               future: loadMoreAppointments(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<void> snapchost) {
                 return Container(
                   height: _calendarController.view == CalendarView.schedule
                       ? 50
@@ -136,14 +136,18 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
       ),
     );
   }
+
+  List<Meeting> _getDataSource() {
+    return [];
+  }
 }
 
 class MeetingDataSource extends CalendarDataSource {
-  MeetingDataSource();
+  MeetingDataSource(this.source);
 
   final DashboardLogic logic = DashboardLogic();
 
-  List<Meeting> source = [];
+  List<Meeting> source;
 
   @override
   List<dynamic> get appointments => source;

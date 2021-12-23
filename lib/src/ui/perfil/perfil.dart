@@ -10,10 +10,8 @@ import 'package:native_pdf_view/native_pdf_view.dart';
 
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/logic/login_logic.dart';
-import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_perfil.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
-import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -31,36 +29,15 @@ class _PerfilState extends State<Perfil> {
 
   // variables de la classe
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  String portada = '';
   final _formKey = GlobalKey<FormState>();
 
-  ApiProvider logicApi = ApiProvider();
-
   _Perfil perfil;
-  bool _isInvolucrado = false;
 
   @override
   void initState() {
     super.initState();
     perfilBloc = BlocProvider.of<PerfilBloc>(context);
     perfilBloc.add(SelectPerfilEvent());
-    checkIsInvolucrado();
-    getPortadaImage();
-  }
-
-  getPortadaImage() async {
-    portada = await _sharedPreferences.getPortada();
-    setState(() {});
-  }
-
-  checkIsInvolucrado() async {
-    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
-
-    if (idInvolucrado != null) {
-      setState(() {
-        _isInvolucrado = true;
-      });
-    }
   }
 
   @override
@@ -142,9 +119,6 @@ class _PerfilState extends State<Perfil> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 20.0,
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -262,55 +236,25 @@ class _PerfilState extends State<Perfil> {
                     ],
                   ),
                 ),
-                Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: new ElevatedButton(
-                            child: const Text('Guardar'),
-                            onPressed: () {
-                              // It returns true if the form is valid, otherwise returns false
-                              if (_formKey.currentState.validate()) {
-                                // If the form is valid, display a Snackbar.
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('Guardando cambios.')));
-                                _guardarPerfil();
-                              }
-                            },
-                          )),
-                    ],
-                  ),
-                ),
-                Divider(),
-                Center(
-                  child: Text(
-                    'Portada',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-                if (_isInvolucrado)
-                  Center(
-                    child: GestureDetector(
-                      onTap: changePortadaImage,
-                      child: Tooltip(
-                        message: 'Cambiar Portada',
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: 200,
-                            width: 400,
-                            child: Image.memory(
-                              base64Decode(portada),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: new ElevatedButton(
+                      child: const Text('Guardar'),
+                      onPressed: () {
+                        // It returns true if the form is valid, otherwise returns false
+                        if (_formKey.currentState.validate()) {
+                          // If the form is valid, display a Snackbar.
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Guardando cambios.')));
+                          _guardarPerfil();
+                        }
+                      },
+                    )),
               ],
             ),
           ],
@@ -331,43 +275,6 @@ class _PerfilState extends State<Perfil> {
 
     pickedFile.files.forEach((archivo) =>
         setState(() => perfil.image = base64.encode(archivo.bytes)));
-  }
-
-  changePortadaImage() async {
-    const extensiones = ['jpg', 'png', 'jpeg'];
-
-    FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: extensiones,
-      allowMultiple: false,
-    );
-
-    if (pickedFile != null) {
-      final file = pickedFile.files.single.bytes;
-      String newPortada = base64Encode(file);
-
-      setState(() {
-        portada = newPortada;
-      });
-
-      final statusCode = await logicApi.updatePortadaEvento(newPortada);
-
-      if (statusCode == 200) {
-        _sharedPreferences.setPortada(newPortada);
-        _showMessage('Se ha editado la foto de portada', Colors.green);
-      } else {
-        _showMessage('Ocurrio un error', Colors.red);
-      }
-    } else {
-      _showMessage('No se pudo seleccionar la imagen', Colors.red);
-    }
-  }
-
-  _showMessage(String titulo, Color backgroundColor) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(titulo),
-      backgroundColor: backgroundColor,
-    ));
   }
 
   // ini validaciones
@@ -439,8 +346,6 @@ class _PerfilState extends State<Perfil> {
     int idEvento = await _sharedPreferences.getIdEvento();
     String titulo = await _sharedPreferences.getEventoNombre();
     String image = await _sharedPreferences.getImagen();
-    String portada = await _sharedPreferences.getPortada();
-    String fechaEvento = await _sharedPreferences.getFechaEvento();
 
     Map data = {'name': perfil.names, 'imag': image};
 
@@ -448,23 +353,13 @@ class _PerfilState extends State<Perfil> {
       if (involucrado == null) {
         Navigator.pushNamed(context, '/home', arguments: data);
       } else {
-        Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
-            arguments: EventoResumenModel(
-              idEvento: idEvento,
-              descripcion: titulo,
-              nombreCompleto: perfil.names,
-              boton: false,
-              img: image,
-              portada: portada != null ? portada : null,
-              fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
-            ));
-        //     Navigator.pushNamed(context, '/eventos', arguments: {
-        //       'idEvento': idEvento,
-        //       'nEvento': titulo,
-        //       'nombre': perfil.names,
-        //       'boton': false,
-        //       'imag': image
-        //     });
+        Navigator.pushNamed(context, '/eventos', arguments: {
+          'idEvento': idEvento,
+          'nEvento': titulo,
+          'nombre': perfil.names,
+          'boton': false,
+          'imag': image
+        });
       }
     }
   }

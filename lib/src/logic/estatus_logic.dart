@@ -74,6 +74,22 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
     } else {
       throw CreateEstatusException();
     }
+    /*int idPlanner = await _sharedPreferences.getIdPlanner();
+      String token = await _sharedPreferences.getToken();
+      data['id_planner'] = idPlanner.toString();
+       final response = await client.post(Uri.http('localhost:3005', 'wedding/ESTATUS/updateEstatus'),
+        
+        body: data,
+      headers: {HttpHeaders.authorizationHeader: token});
+      
+      if (response.statusCode == 201) {
+        return true;  
+      } else if(response.statusCode == 401){
+        
+        return null;
+      }else{
+        return false;
+      }*/
   }
 
   @override

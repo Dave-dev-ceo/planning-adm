@@ -26,6 +26,9 @@ class ApiProvider {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
   Client client = Client();
+
+  //String baseUrlPruebas = 'server02.grupotum.com:9005';
+  //String baseUrlPruebas = 'localhost:3005';
   _loadLogin(BuildContext context) async {
     await _sharedPreferences.clear();
     _showDialogMsg(context);
@@ -806,30 +809,5 @@ class ApiProvider {
     } else {
       return null;
     }
-  }
-
-  Future<int> updatePortadaEvento(String newPortada) async {
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
-
-    final endpoint = '/wedding/EVENTOS/updatePortadaImage';
-
-    final data = {
-      'idEvento': idEvento,
-      'portada': newPortada,
-    };
-
-    final headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
-    };
-    final response = await client.post(
-      Uri.parse(confiC.url + confiC.puerto + endpoint),
-      body: json.encode(data),
-      headers: headers,
-    );
-
-    return response.statusCode;
   }
 }

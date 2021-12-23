@@ -22,7 +22,7 @@ class SharedPreferencesT {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getInt('idPlanner');
   }
-
+  
   // ini permisos involucrado
   setIdInvolucrado(int idInvolucrado) async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -55,19 +55,6 @@ class SharedPreferencesT {
   }
   // fin permisos involucrado
 
-  // inicio fecha involucrado
-
-  setFechaEvento(String json) async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.setString('fechaEvento', json);
-  }
-
-  getFechaEvento() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getString('fechaEvento');
-  }
-  // fin fecha involucrado
-
   // ini perfil
   setImagen(String json) async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -77,16 +64,6 @@ class SharedPreferencesT {
   getImagen() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('imagen');
-  }
-
-  setPortada(String json) async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.setString('portada', json);
-  }
-
-  getPortada() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getString('portada');
   }
   // fin perfil
 
@@ -137,9 +114,7 @@ class SharedPreferencesT {
 
   getSession() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getBool('session') == null
-        ? false
-        : _sharedPreferences.getBool('session');
+    return _sharedPreferences.getBool('session') == null ? false : _sharedPreferences.getBool('session');
   }
 
   setLogic(bool logic) async {
@@ -149,9 +124,7 @@ class SharedPreferencesT {
 
   getLogic() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getBool('logic') == null
-        ? false
-        : _sharedPreferences.getBool('logic');
+    return _sharedPreferences.getBool('logic') == null ? false : _sharedPreferences.getBool('logic');
   }
 
   setJsonData(List<String> json) async {

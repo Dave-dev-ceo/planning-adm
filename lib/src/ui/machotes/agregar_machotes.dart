@@ -144,7 +144,6 @@ class _AgregarMachoteState extends State<AgregarMachote> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: PointerInterceptor(
         child: FloatingActionButton(
-          heroTag: UniqueKey(),
           child: Icon(Icons.save),
           onPressed: () async {
             String txt = await controller.getText();

@@ -49,9 +49,7 @@ class New_ContratoState extends State<NewContrato> {
     final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
     if (_idInvolucrado != null) {
-      setState(() {
-        isInvolucrado = true;
-      });
+      isInvolucrado = true;
     }
   }
 
@@ -63,12 +61,6 @@ class New_ContratoState extends State<NewContrato> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (isInvolucrado)
-          ? AppBar(
-              title: Text('Documentos'),
-              centerTitle: true,
-            )
-          : null,
       body: SingleChildScrollView(
         child: _myBloc(),
       ),
@@ -175,10 +167,8 @@ class New_ContratoState extends State<NewContrato> {
         return _pagosItem();
       case 3:
         return _minutasItem();
-      case 4:
-        return _ordenPagos();
       default:
-        return _autorizaciones();
+        return _ordenPagos();
     }
   }
 
@@ -752,120 +742,6 @@ class New_ContratoState extends State<NewContrato> {
     }
     return item;
   }
-
-  _autorizaciones() {
-    List<Widget> item = [];
-    if (itemModel.length != 0) {
-      itemModel.forEach((contrato) {
-        if (contrato.clave == 'AU') {
-          item.add(Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(20),
-            elevation: 10,
-            child: ListTile(
-                contentPadding: EdgeInsets.all(20.0),
-                leading: Icon(Icons.gavel),
-                title: Text(contrato.description),
-                subtitle: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote, contrato.archivo),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.edit),
-                                  label: Text('Editar'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/editarContratos',
-                                        arguments: {
-                                          'archivo': contrato.archivo,
-                                          'id_contrato': contrato.idContrato
-                                        });
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,
-                                contrato.archivo, contrato.description),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.cloud_upload_outlined),
-                                  label: Text('Subir archivo'),
-                                  onPressed: () =>
-                                      _uploadFile(contrato.idContrato),
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.remove_red_eye_rounded),
-                                  label: Text('Ver archivo subido'),
-                                  onPressed: () =>
-                                      _verNewFile(contrato.original),
-                                )
-                              ],
-                            ),
-                          )
-                        : SizedBox()
-                  ],
-                ),
-                trailing: !isInvolucrado
-                    ? GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onTap: () => _borrarContratos(contrato.idContrato),
-                      )
-                    : Text('')),
-          ));
-        }
-      });
-    }
-    return item;
-  }
   // fin items
 
   _showNavigationBar() {
@@ -891,10 +767,6 @@ class New_ContratoState extends State<NewContrato> {
         BottomNavigationBarItem(
           icon: Icon(Icons.list_alt),
           label: 'Orden de pago',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.description_outlined),
-          label: 'Autorizaciones',
         ),
       ],
       currentIndex: _selectedIndex,
@@ -948,11 +820,8 @@ class New_ContratoState extends State<NewContrato> {
       case 3:
         _createContrato('MT');
         break;
-      case 4:
-        _createContrato('OP');
-        break;
       default:
-        _createContrato('AU');
+        _createContrato('OP');
         break;
     }
   }
@@ -975,13 +844,9 @@ class New_ContratoState extends State<NewContrato> {
         Navigator.pushNamed(context, '/addContratos',
             arguments: {'clave': 'MT'});
         break;
-      case 4:
-        Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'OP'});
-        break;
       default:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'AU'});
+            arguments: {'clave': 'OP'});
         break;
     }
   }

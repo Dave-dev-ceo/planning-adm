@@ -1,15 +1,8 @@
-//import 'dart:ffi';
-
-// ignore_for_file: unused_element
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/login/login_bloc.dart';
-import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/api_provider.dart';
-
-// Padilla
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 
 class Login extends StatefulWidget {
@@ -30,7 +23,6 @@ class _LoginState extends State<Login> {
   TextEditingController telefonoRCtrl = new TextEditingController();
   TextEditingController correoRecuperacionCtrl = new TextEditingController();
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  BuildContext _ingresando;
   bool _visible = true;
   ApiProvider api = new ApiProvider();
 
@@ -49,8 +41,6 @@ class _LoginState extends State<Login> {
     String titulo = await _sharedPreferences.getEventoNombre();
     String nombreUser = await _sharedPreferences.getNombre();
     String image = await _sharedPreferences.getImagen();
-    String portada = await _sharedPreferences.getPortada();
-    String fechaEvento = await _sharedPreferences.getFechaEvento();
 
     Map data = {'name': await _sharedPreferences.getNombre(), 'imag': image};
 
@@ -58,23 +48,13 @@ class _LoginState extends State<Login> {
       if (involucrado == null) {
         Navigator.pushNamed(context, '/home', arguments: data);
       } else {
-        Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
-            arguments: EventoResumenModel(
-              idEvento: idEvento,
-              descripcion: titulo,
-              nombreCompleto: nombreUser,
-              boton: false,
-              portada: portada != null ? portada : null,
-              img: image,
-              fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
-            ));
-        // Navigator.pushNamed(context, '/eventos', arguments: {
-        //   'idEvento': idEvento,
-        //   'nEvento': titulo,
-        //   'nombre': nombreUser,
-        //   'boton': false,
-        //   'imag': image
-        // });
+        Navigator.pushNamed(context, '/eventos', arguments: {
+          'idEvento': idEvento,
+          'nEvento': titulo,
+          'nombre': nombreUser,
+          'boton': false,
+          'imag': image
+        });
       }
     }
   }
@@ -98,7 +78,6 @@ class _LoginState extends State<Login> {
         context: context,
         //barrierDismissible: false,
         builder: (BuildContext context) {
-          _ingresando = context;
           return AlertDialog(
               title: Text(
                 title,
@@ -148,17 +127,17 @@ class _LoginState extends State<Login> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is ErrorLogginState) {
-          Navigator.pop(_ingresando);
+          Navigator.pop(context);
           _dialogMSG(
-              'Datos invalidos', 'Correo o contraseña incorrectos', 'msg');
+              'Datos inválidos', 'Correo o contraseña incorrectos', 'msg');
         } else if (state is LogginState) {
           _dialogMSG('Iniciando sesión', '', 'log');
         } else if (state is MsgLogginState) {
-          //Navigator.pop(_ingresando);
-          _dialogMSG('Datos invalidos', state.message, 'msg');
+          Navigator.pop(context);
+          _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
-          Navigator.pop(_ingresando);
+          Navigator.pop(context);
           if (state.response['usuario']['id_involucrado'] == 'null') {
             Map data = {
               'name': state.response['usuario']['nombre_completo'],
@@ -166,26 +145,13 @@ class _LoginState extends State<Login> {
             };
             Navigator.pushNamed(context, '/home', arguments: data);
           } else {
-            // Navigator.pushNamed(context, '/eventos', arguments: {
-            //   'idEvento': state.response['usuario']['id_evento'],
-            //   'nEvento': state.response['usuario']['descripcion'],
-            //   'nombre': state.response['usuario']['nombre_completo'],
-            //   'boton': false,
-            //   'imag': state.response['usuario']['imagen']
-            // });
-
-            Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
-                arguments: EventoResumenModel(
-                  boton: false,
-                  idEvento: state.response['usuario']['id_evento'],
-                  descripcion: state.response['usuario']['descripcion'],
-                  nombreCompleto: state.response['usuario']['nombre_completo'],
-                  img: state.response['usuario']['imagen'],
-                  portada: state.response['usuario']['portada'],
-                  fechaEvento: DateTime.tryParse(
-                          state.response['usuario']['fecha_evento'])
-                      .toLocal(),
-                ));
+            Navigator.pushNamed(context, '/eventos', arguments: {
+              'idEvento': state.response['usuario']['id_evento'],
+              'nEvento': state.response['usuario']['descripcion'],
+              'nombre': state.response['usuario']['nombre_completo'],
+              'boton': false,
+              'imag': state.response['usuario']['imagen']
+            });
           }
         }
       },
@@ -383,7 +349,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
         } else if (state is CorreoNotFoundState) {
           correoRecuperacionCtrl.clear();
 
-          _showMessage('Este correo no esta registrado', Colors.red);
+          _showMessage('Este correo no está registrado', Colors.red);
         }
       },
       child: AlertDialog(
@@ -400,7 +366,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Ingrese su correo electronico de recuperación',
+                'Ingrese su correo electrónico de recuperación',
               ),
               SizedBox(
                 height: 10.0,
@@ -408,9 +374,6 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
-                  onFieldSubmitted: (_) {
-                    _submit();
-                  },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Correo electrónico',
@@ -430,24 +393,23 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
               style: ElevatedButton.styleFrom(
                 elevation: 3.0,
               ),
-              onPressed: _submit,
+              onPressed: () async {
+                RegExp regExpEmail = RegExp(
+                    r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+
+                if (regExpEmail.hasMatch(correoRecuperacionCtrl.text)) {
+                  await loginBloc
+                      .add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
+                } else {
+                  _showMessage('Ingrese un correo válido', Colors.red);
+                }
+              },
               child: Text('Enviar'),
             ),
           )
         ],
       ),
     );
-  }
-
-  _submit() async {
-    RegExp regExpEmail = RegExp(
-        r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
-
-    if (regExpEmail.hasMatch(correoRecuperacionCtrl.text)) {
-      await loginBloc.add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
-    } else {
-      _showMessage('Ingrese un correo valido', Colors.red);
-    }
   }
 
   void _showMessage(String message, Color color) {

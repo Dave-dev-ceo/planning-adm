@@ -55,7 +55,6 @@ class _ProspectosPageState extends State<ProspectosPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: UniqueKey(),
         tooltip: 'Añadir Etapa',
         child: Icon(Icons.add),
         onPressed: () {
@@ -577,7 +576,6 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FloatingActionButton(
-                      heroTag: UniqueKey(),
                       onPressed: () {
                         Navigator.of(context)
                             .pushNamed('/addEvento',

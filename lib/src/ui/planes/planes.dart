@@ -1188,9 +1188,7 @@ class _PlanesPageState extends State<PlanesPage> {
     final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
     if (idInvolucrado != null) {
-      setState(() {
-        isInvolucrado = true;
-      });
+      isInvolucrado = true;
     }
   }
 
@@ -1198,12 +1196,6 @@ class _PlanesPageState extends State<PlanesPage> {
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: (isInvolucrado)
-          ? AppBar(
-              title: Text('Actividades'),
-              centerTitle: true,
-            )
-          : null,
       body: RefreshIndicator(
         onRefresh: () async {
           await _planesBloc.add(GetTimingsAndActivitiesEvent());
@@ -1443,44 +1435,6 @@ class _PlanesPageState extends State<PlanesPage> {
                               actividad.estatus = 'Pendiente';
                             }
                             actividad.fechaInicioActividad = fecha;
-                            actividad.estadoCalendarioActividad = true;
-                          }
-                        });
-                      },
-                    ),
-                    flex: 1,
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: AutoSizeText(
-                          '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
-                          maxLines: 1,
-                          wrapWords: false,
-                        ),
-                      ),
-                      onTap: () async {
-                        final fecha = await _giveFecha(
-                          actividad.fechaInicioActividad,
-                          actividad.fechaInicioEvento,
-                          actividad.fechaFinEvento,
-                          actividad.diasActividad,
-                          actividad.idActividad,
-                        );
-
-                        setState(() {
-                          if (fecha != null) {
-                            isEnableButton = true;
-
-                            if (fecha.isAfter(DateTime.now())) {
-                              actividad.estatus = 'Pendiente';
-                            } else if (fecha.isBefore(DateTime.now())) {
-                              actividad.estatus = 'Atrasada';
-                            } else {
-                              actividad.estatus = 'Pendiente';
-                            }
-                            actividad.fechaFinActividad = fecha;
                             actividad.estadoCalendarioActividad = true;
                           }
                         });

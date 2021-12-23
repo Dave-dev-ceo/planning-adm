@@ -644,7 +644,6 @@ class _TimingsEventosState extends State<TimingsEventos> {
 
   FloatingActionButton _agregarActividadCalendario() {
     return FloatingActionButton(
-      heroTag: UniqueKey(),
       backgroundColor: hexToColor('#fdf4e5'),
       foregroundColor: Colors.white,
       child: Tooltip(

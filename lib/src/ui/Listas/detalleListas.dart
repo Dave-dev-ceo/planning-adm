@@ -81,7 +81,6 @@ class _DetalleListasState extends State<DetalleListas> {
         }),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: UniqueKey(),
         child: Icon(Icons.download),
         onPressed: () async {
           final data = await listaLogic

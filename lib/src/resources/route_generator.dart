@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:planning/src/ui/autorizacion/galeria_autorizacion.dart';
 import 'package:planning/src/ui/contratos/add_contrato.dart';
 import 'package:planning/src/ui/contratos/view_contrato_pdf.dart';
-import 'package:planning/src/ui/dashboardInvitadoPage/dashboard_page_involucrado.dart';
 import 'package:planning/src/ui/eventos/dashboard_eventos.dart';
 import 'package:planning/src/ui/home/home.dart';
 import 'package:planning/src/ui/home/home_admin.dart';
@@ -195,11 +194,6 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (context) => RecoverPasswordPage(
                   token: token,
-                ));
-      case '/dashboardInvolucrado':
-        return MaterialPageRoute(
-            builder: (context) => DashboardInvolucradoPage(
-                  detalleEvento: args,
                 ));
       default:
         return _errorRoute();

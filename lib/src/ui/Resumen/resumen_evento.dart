@@ -7,7 +7,6 @@ import 'package:planning/src/logic/eventos_logic.dart';
 import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_evento.dart';
-import 'package:planning/src/models/item_model_preferences.dart';
 
 import 'package:planning/src/models/item_model_reporte_grupos.dart';
 import 'package:planning/src/models/item_model_reporte_invitados.dart';
@@ -29,7 +28,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
   EvtBloc.EventosBloc eventosBloc;
   FetchListaEventosLogic eventoLogic = FetchListaEventosLogic();
   ActividadesEvento _planesLogic = ActividadesEvento();
-  bool isInvolucrado = false;
+
+  // Timer _timer;
 
   @override
   void initState() {
@@ -37,19 +37,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
     eventosBloc.add(
         EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
     _planesLogic.getAllPlannes();
-    _checkIsInvolucrado();
 
     super.initState();
-  }
-
-  _checkIsInvolucrado() async {
-    int idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
-
-    if (idInvolucrado != null) {
-      setState(() {
-        isInvolucrado = true;
-      });
-    }
   }
 
   @override
@@ -167,6 +156,96 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   ItemModelEvento eventoFecha;
+
+  Widget fechaData() {
+    return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
+      builder: (context, state) {
+        if (state is EvtBloc.LoadingEventoPorIdState) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is EvtBloc.MostrarEventoPorIdState) {
+          eventoFecha = state.evento;
+          eventosBloc.add(EvtBloc.FechtEventosEvent());
+          return Container(
+              width: 400, height: 200, child: miCardContadorFecha(eventoFecha));
+        } else if (state is EvtBloc.ErrorEventoPorIdState) {
+          return Center(
+            child: Text(state.message),
+          );
+        } else {
+          if (eventoFecha != null) {
+            return Container(
+                width: 400,
+                height: 200,
+                child: miCardContadorFecha(eventoFecha));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }
+      },
+    );
+  }
+
+  miCardContadorFecha(ItemModelEvento evento) {
+    String fechaEvento = evento.results.elementAt(0).fechaEvento;
+
+    bool isActive = false;
+
+    Duration fechaEventoTime =
+        DateTime.now().difference(DateTime.parse(fechaEvento));
+
+    // if (fechaEventoTime.inSeconds.isNegative) {
+    //   isActive = true;
+    //   if (mounted) {
+    //     _timer = Timer(Duration(seconds: 1), () {
+    //       if (mounted) {
+    //         setState(() {
+    //           fechaEventoTime =
+    //               DateTime.parse(fechaEvento).difference(DateTime.now());
+    //         });
+    //       }
+    //     });
+    //   } else {
+    //     _timer.cancel();
+    //   }
+    // }
+
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.all(20.0),
+      elevation: 10,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListTile(
+          leading: Icon(Icons.access_time_filled_outlined),
+          title: Column(
+            children: [
+              Text(
+                'Fecha restante:',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              RichText(
+                  text: TextSpan(
+                style: TextStyle(fontSize: 18.0, color: Colors.black),
+                text: isActive
+                    ? '${_printDuration(fechaEventoTime)}'
+                    : 'Evento finalzado',
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitHours = twoDigits(duration.inHours.remainder(24) * -1);
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60) * -1);
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60) * -1);
+    return "Dias: ${duration.inDays * -1}, Horas: $twoDigitHours, Minutos: $twoDigitMinutes, Segundos: $twoDigitSeconds";
+  }
 
   miCardReporteDetallesEvento(ItemModelEvento evtt) {
     return GestureDetector(
@@ -356,12 +435,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (isInvolucrado)
-          ? AppBar(
-              centerTitle: true,
-              title: Text('Resumen del evento'),
-            )
-          : null,
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
@@ -384,6 +457,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                     reporteEvento(),
                     reporteInvitados(),
                     futureToPlannes(),
+                    // fechaData(),
                     //),
                   ],
                 ),
@@ -393,7 +467,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: UniqueKey(),
         child: Icon(Icons.download),
         onPressed: () async {
           final data = await eventoLogic.donwloadPDFEvento();

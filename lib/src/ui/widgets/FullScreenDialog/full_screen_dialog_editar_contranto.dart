@@ -123,7 +123,6 @@ class _FullScreenDialogEditContratoState
         ),
         floatingActionButton: PointerInterceptor(
           child: FloatingActionButton(
-            heroTag: UniqueKey(),
             child: Icon(Icons.save),
             onPressed: () async {
               String editArchivo = await controller.getText();

@@ -179,6 +179,7 @@ class _ProveedoresState extends State<Proveedores> {
               trailing: Wrap(spacing: 12, children: <Widget>[
                 IconButton(
                   onPressed: () {
+<<<<<<< HEAD
                     Navigator.of(context).pushNamed(
                       '/agregarArchivo',
                       arguments: {
@@ -190,6 +191,16 @@ class _ProveedoresState extends State<Proveedores> {
                         'isEvento': false,
                       },
                     );
+=======
+                    Navigator.of(context)
+                        .pushNamed('/agregarArchivo', arguments: {
+                      'id_proveedor': item.id_proveedor,
+                      'id_servicio': null,
+                      'nombre': item.nombre,
+                      'type': 0,
+                      'prvEv': 2
+                    });
+>>>>>>> 1e10bb58f2ac74258ee595b4d6d6c989e0d82592
                   },
                   icon: const Icon(Icons.file_present),
                 ),
@@ -222,7 +233,7 @@ class _ProveedoresState extends State<Proveedores> {
                   onPressed: () {
                     Navigator.of(context)
                         .pushNamed('/agregarArchivo', arguments: {
-                      'id_proveedor': id_proveedor,
+                      'id_proveedor': null,
                       'id_servicio': opt.id_servicio,
                       'nombre': opt.nombre,
                       'type': 0,
