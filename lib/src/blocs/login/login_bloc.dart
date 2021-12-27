@@ -17,19 +17,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) async* {
     if (event is LogginEvent) {
       try {
-        if (event.correo == "" ||
-            event.password == "" ||
-            event.correo == null ||
-            event.password == null) {
-          yield MsgLogginState("Favor de ingresar correo y contraseña");
-        } else {
-          yield LogginState();
-          Map<dynamic, dynamic> response =
-              await logic.login(event.correo, event.password);
-          yield LoggedState(response);
-        }
+        yield MsgLogginState("Favor de ingresar correo y contraseña");
+        yield LogginState();
+        Map<dynamic, dynamic> response =
+            await logic.login(event.correo, event.password);
+        yield LoggedState(response);
       } on LoginException {
-        yield ErrorLogginState("Correo o contraseña incorrectos");
+        yield ErrorLogginState("Correo o contraseña incorrectos.");
       }
     } else if (event is RecoverPasswordEvent) {
       try {

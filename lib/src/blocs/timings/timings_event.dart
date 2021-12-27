@@ -4,7 +4,8 @@ part of 'timings_bloc.dart';
 abstract class TimingsEvent {}
 
 class FetchTimingsPorPlannerEvent extends TimingsEvent {
-  FetchTimingsPorPlannerEvent();
+  final String estatus;
+  FetchTimingsPorPlannerEvent(this.estatus);
 }
 
 class CreateTimingsEvent extends TimingsEvent {

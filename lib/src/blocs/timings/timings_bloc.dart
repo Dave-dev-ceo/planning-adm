@@ -19,7 +19,8 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
     if (event is FetchTimingsPorPlannerEvent) {
       yield LoadingTimingsState();
       try {
-        ItemModelTimings usuarios = await logic.fetchTimingsPorPlanner();
+        ItemModelTimings usuarios =
+            await logic.fetchTimingsPorPlanner(event.estatus);
         yield MostrarTimingsState(usuarios);
       } on ListaTimingsException {
         yield ErrorMostrarTimingsState("Sin Timings");
@@ -31,7 +32,7 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
         yield CreateTimingsState();
         int data = await logic.createTiming(event.data);
         if (data == 0) {
-          add(FetchTimingsPorPlannerEvent());
+          add(FetchTimingsPorPlannerEvent('A'));
         }
 
         yield CreateTimingsOkState();
@@ -45,7 +46,7 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
         final resp = await logic.updateTiming(
             event.idTiming, event.nombre, event.estatus);
         if (resp == 'Ok') {
-          add(FetchTimingsPorPlannerEvent());
+          add(FetchTimingsPorPlannerEvent('A'));
         }
       } catch (e) {}
     } else if (event is DeleteTimingPlannerEvent) {
@@ -53,7 +54,7 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
         final data = await logic.deleteTimingPlanner(event.idTipoTiming);
 
         yield TimingDeletedState(data);
-        add(FetchTimingsPorPlannerEvent());
+        add(FetchTimingsPorPlannerEvent('A'));
       } catch (e) {
         print(e);
       }

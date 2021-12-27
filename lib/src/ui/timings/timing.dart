@@ -1,5 +1,7 @@
 // ignore_for_file: unused_element
 
+import 'dart:convert';
+
 import 'package:planning/src/utils/utils.dart';
 
 import 'package:flutter/material.dart';
@@ -30,15 +32,20 @@ class _TimingState extends State<Timing> {
   List<bool> sort = [false, false, false, false];
   int _sortColumnIndex = 0;
   bool sortArrow = false;
-
+  String dropdownValue = 'A';
   bool crt = true;
 
   _TimingState();
 
+  List<dynamic> listaEstatus = [
+    {'descripcion': 'Activo', 'value': 'A'},
+    {'descripcion': 'Inactivo', 'value': 'I'}
+  ];
+
   @override
   void initState() {
     timingBloc = BlocProvider.of<TimingsBloc>(context);
-    timingBloc.add(FetchTimingsPorPlannerEvent());
+    timingBloc.add(FetchTimingsPorPlannerEvent(dropdownValue));
     super.initState();
   }
 
@@ -48,7 +55,7 @@ class _TimingState extends State<Timing> {
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          timingBloc.add(FetchTimingsPorPlannerEvent());
+          timingBloc.add(FetchTimingsPorPlannerEvent('A'));
         },
         child: SingleChildScrollView(
           child: Container(
@@ -217,38 +224,69 @@ class _TimingState extends State<Timing> {
               padding: const EdgeInsets.all(8.0),
               child: Text('Cronograma'),
             ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: dropdownValue,
+                  icon: const Icon(Icons.arrow_downward),
+                  elevation: 16,
+                  iconSize: 24,
+                  style: const TextStyle(color: Colors.black54),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.black,
                   ),
-                  hintText: 'Buscar...'),
-              onChanged: (String value) async {
-                if (value.length > 2) {
-                  List<dynamic> usrs = itemModelTimings.results
-                      .where((imu) => imu.nombre_timing
-                          .toLowerCase()
-                          .contains(value.toLowerCase()))
-                      .toList();
-                  setState(() {
-                    filterTimings.results.clear();
-                    if (usrs.length > 0) {
-                      for (var usr in usrs) {
-                        filterTimings.results.add(usr);
-                      }
-                    } else {}
-                  });
-                } else {
-                  setState(
-                    () {
-                      filterTimings = itemModelTimings.copy();
-                    },
-                  );
-                }
-              },
+                  onChanged: (newValue) async {
+                    setState(() {
+                      dropdownValue = newValue;
+                    });
+                    await timingBloc
+                        .add(FetchTimingsPorPlannerEvent(dropdownValue));
+                  },
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("Activo", style: TextStyle(fontSize: 16)),
+                      value: 'A',
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Inactivo", style: TextStyle(fontSize: 16)),
+                      value: 'I',
+                    )
+                  ]),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: TextField(
+                decoration: InputDecoration(
+                    prefixIcon: Icon(
+                      Icons.search,
+                    ),
+                    hintText: 'Buscar...'),
+                onChanged: (String value) async {
+                  if (value.length > 2) {
+                    List<dynamic> usrs = itemModelTimings.results
+                        .where((imu) => imu.nombre_timing
+                            .toLowerCase()
+                            .contains(value.toLowerCase()))
+                        .toList();
+                    setState(() {
+                      filterTimings.results.clear();
+                      if (usrs.length > 0) {
+                        for (var usr in usrs) {
+                          filterTimings.results.add(usr);
+                        }
+                      } else {}
+                    });
+                  } else {
+                    setState(
+                      () {
+                        filterTimings = itemModelTimings.copy();
+                      },
+                    );
+                  }
+                },
+              ),
             ),
             ListView.builder(
                 shrinkWrap: true,
@@ -273,7 +311,8 @@ class _TimingState extends State<Timing> {
                                     listItemModelTimings.results[index].estatus,
                               ),
                             );
-                            await timingBloc.add(FetchTimingsPorPlannerEvent());
+                            await timingBloc
+                                .add(FetchTimingsPorPlannerEvent('A'));
                             setState(() {});
                           },
                           icon: Icon(
@@ -636,7 +675,7 @@ class _EditTimingDialogState extends State<EditTimingDialog> {
               await timingsBloc
                   .add(UpdateTimingEvent(idCronograma, name, estatus));
 
-              await timingsBloc.add(FetchTimingsPorPlannerEvent());
+              await timingsBloc.add(FetchTimingsPorPlannerEvent('A'));
 
               Navigator.of(context).pop(true);
             } else {

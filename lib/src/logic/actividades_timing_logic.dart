@@ -176,7 +176,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/TIMINGS/obtenerTimingsPorPlanner'),
-        body: {'id_planner': idPlanner.toString()},
+        body: {'id_planner': idPlanner.toString(), 'estatus': 'A'},
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {

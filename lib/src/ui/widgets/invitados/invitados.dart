@@ -7,6 +7,7 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/ui/Resumen/resumen_evento.dart';
 import 'package:planning/src/ui/Listas/listas.dart';
+import 'package:planning/src/ui/book_inspiracion/book_inspiracion.dart';
 import 'package:planning/src/ui/contratos/new_contrato.dart';
 import 'package:planning/src/ui/pagos/pagos.dart';
 import 'package:planning/src/ui/planes/planes.dart';
@@ -307,6 +308,12 @@ class _InvitadosState extends State<Invitados> {
         temp += 1;
       }
 
+      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
+        tabs.add(
+            TabItem(titulo: 'Book Inspiración', icono: Icons.edit_road_sharp));
+        temp += 1;
+      }
+
       _pages = temp;
       return tabs;
     } else {
@@ -353,6 +360,10 @@ class _InvitadosState extends State<Invitados> {
 
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
         temp.add(Listas());
+      }
+
+      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
+        temp.add(BookInspiracion());
       }
 
       return temp;

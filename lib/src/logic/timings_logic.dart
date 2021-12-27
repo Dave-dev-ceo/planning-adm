@@ -7,7 +7,7 @@ import 'package:planning/src/models/item_model_timings.dart';
 import 'package:planning/src/resources/config_conection.dart';
 
 abstract class TimingsLogic {
-  Future<ItemModelTimings> fetchTimingsPorPlanner();
+  Future<ItemModelTimings> fetchTimingsPorPlanner(String estatus);
   Future<int> createTiming(Map<String, dynamic> dataTiming);
   Future<String> updateTiming(int idTiming, String name, String estatus);
   Future<String> downloadPDFTiming();
@@ -27,7 +27,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
   Client client = Client();
 
   @override
-  Future<ItemModelTimings> fetchTimingsPorPlanner() async {
+  Future<ItemModelTimings> fetchTimingsPorPlanner(String estatus) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
@@ -35,7 +35,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/TIMINGS/obtenerTimingsPorPlanner'),
-        body: {'id_planner': idPlanner.toString()},
+        body: {'id_planner': idPlanner.toString(), 'estatus': estatus},
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {

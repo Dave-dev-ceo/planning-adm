@@ -149,8 +149,8 @@ class _LoginState extends State<Login> {
       listener: (context, state) {
         if (state is ErrorLogginState) {
           Navigator.pop(_ingresando);
-          _dialogMSG(
-              'Datos invalidos', 'Correo o contraseña incorrectos', 'msg');
+          Navigator.pushNamed(context, '/');
+          _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LogginState) {
           _dialogMSG('Iniciando sesión', '', 'log');
         } else if (state is MsgLogginState) {
@@ -267,8 +267,16 @@ class _LoginState extends State<Login> {
                     },
                   ),
                 ),
-                onPressed: () => loginBloc.add(LogginEvent(
-                    emailCtrl.text.trim(), passwordCtrl.text.trim())),
+                onPressed: () {
+                  if ((emailCtrl.text.trim() == '') ||
+                      (passwordCtrl.text.trim() == '')) {
+                    _dialogMSG('Datos inválidos', 'Correo o contraseña vacíos.',
+                        'msg');
+                  } else {
+                    loginBloc.add(LogginEvent(
+                        emailCtrl.text.trim(), passwordCtrl.text.trim()));
+                  }
+                },
                 child: Text(
                   'Iniciar Sesión',
                   style: TextStyle(fontSize: 17),
