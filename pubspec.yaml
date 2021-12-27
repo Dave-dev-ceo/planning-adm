@@ -102,7 +102,7 @@ flutter:
 
     - family: Dancing
       fonts:
-        - asset: fonts/DancingScript-Medium.ttf Montserrat-Medium
+        - asset: fonts/DancingScript-Medium.ttf
 
     - family: Montserrat
       fonts:
