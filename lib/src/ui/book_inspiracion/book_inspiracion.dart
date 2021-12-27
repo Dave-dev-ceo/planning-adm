@@ -7,6 +7,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
+import 'package:planning/src/utils/utils.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class BookInspiracion extends StatefulWidget {
@@ -103,10 +104,16 @@ class _BookInspiracion extends State<BookInspiracion> {
                           });
                 }
               }),
-          // SpeedDialChild(
-          //     child: Icon(Icons.download),
-          //     label: 'Descargar PDF',
-          //     onTap: () async {})
+          SpeedDialChild(
+              child: Icon(Icons.download),
+              label: 'Descargar PDF',
+              onTap: () async {
+                final datosBookIns =
+                    await bookInspiracionService.getBookInspiracion();
+                if (datosBookIns != null) {
+                  downloadFile(datosBookIns.file, 'Book Inspiración');
+                }
+              })
         ],
       ),
     );
