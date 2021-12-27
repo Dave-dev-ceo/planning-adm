@@ -76,7 +76,7 @@ class _BookInspiracion extends State<BookInspiracion> {
               child: Icon(Icons.upload),
               label: 'Subir archivo',
               onTap: () async {
-                const extensiones = ['pdf'];
+                const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
                 FilePickerResult pickedFile =
                     await FilePicker.platform.pickFiles(
@@ -88,7 +88,6 @@ class _BookInspiracion extends State<BookInspiracion> {
                   final bytes = pickedFile.files.first.bytes;
                   String _extension = pickedFile.files.first.extension;
                   String file64 = base64Encode(bytes);
-                  print('Vamos a update');
                   bookInspiracionService
                       .createBookInspiracion(file64, _extension)
                       .then((value) => {
