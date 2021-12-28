@@ -105,12 +105,13 @@ class _BookInspiracion extends State<BookInspiracion> {
               }),
           SpeedDialChild(
               child: Icon(Icons.download),
-              label: 'Descargar PDF',
+              label: 'Descargar Archivo',
               onTap: () async {
                 final datosBookIns =
                     await bookInspiracionService.getBookInspiracion();
                 if (datosBookIns != null) {
-                  downloadFile(datosBookIns.file, 'Book Inspiración');
+                  downloadFile(datosBookIns.file, 'Book Inspiración',
+                      extensionFile: datosBookIns.mime.toString());
                 }
               })
         ],
