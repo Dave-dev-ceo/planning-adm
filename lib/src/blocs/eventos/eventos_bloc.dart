@@ -21,7 +21,7 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
       yield LoadingEventosState();
 
       try {
-        ItemModelEventos eventos = await logic.fetchEventos();
+        ItemModelEventos eventos = await logic.fetchEventos(event.estatus);
         yield MostrarEventosState(eventos);
       } on ListaEventosException {
         yield ErrorListaEventosState("Sin eventos");
@@ -33,7 +33,7 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
         yield CreateEventosState();
         int data = await logic.createEventos(event.data);
         if (data == 0) {
-          add(FechtEventosEvent());
+          add(FechtEventosEvent('A'));
         }
         yield CreateEventosOkState();
       } on CreateEventoException {

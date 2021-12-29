@@ -39,7 +39,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     machotesBloc.add(FechtMachotesEvent());
     eventosBloc = BlocProvider.of<EventosBloc>(context);
-    eventosBloc.add(FechtEventosEvent());
+    eventosBloc.add(FechtEventosEvent('A'));
     contratosBloc = BlocProvider.of<ContratosBloc>(context);
     super.initState();
   }

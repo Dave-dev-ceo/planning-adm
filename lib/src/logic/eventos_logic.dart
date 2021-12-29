@@ -7,7 +7,7 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
 
 abstract class ListaEventosLogic {
-  Future<ItemModelEventos> fetchEventos();
+  Future<ItemModelEventos> fetchEventos(String estatus);
   Future<int> createEventos(Map<String, dynamic> dataEvento);
   Future<int> EditarEvento(Map<String, dynamic> dataEvento);
   Future<ItemModelEvento> fetchEventoPorId(String id_evento);
@@ -31,7 +31,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   Client client = Client();
 
   @override
-  Future<ItemModelEventos> fetchEventos() async {
+  Future<ItemModelEventos> fetchEventos(String estatus) async {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
@@ -41,6 +41,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
         body: {
           'id_usuario': idUsuario.toString(),
           'id_planner': idPlanner.toString(),
+          'estatus': estatus
         },
         headers: {
           HttpHeaders.authorizationHeader: token

@@ -143,7 +143,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           return Center(child: CircularProgressIndicator());
         } else if (state is EvtBloc.MostrarEventoPorIdState) {
           evento = state.evento;
-          eventosBloc.add(EvtBloc.FechtEventosEvent());
+          eventosBloc.add(EvtBloc.FechtEventosEvent('A'));
           return Container(
               width: 400,
               height: 200,

@@ -29,6 +29,7 @@ class Evento {
   int _idTipoEvento;
   String _tipoEvento;
   int _numeroInivtados;
+  String _estatus;
   // Contrato
   int _idContratante;
   String _nombrect;
@@ -49,6 +50,7 @@ class Evento {
     _idTipoEvento = datos['id_tipo_evento'];
     _tipoEvento = datos['tipo_evento'];
     _numeroInivtados = datos['numero_invitados'];
+    _estatus = datos['estatus'];
     // Contratante
     _idContratante = datos['id_contratante'];
     _nombrect = datos['nombre_ct'];
@@ -75,6 +77,7 @@ class Evento {
   String get evento => _evento;
   int get idTipoEvento => _idTipoEvento;
   int get numeroInivtados => _numeroInivtados;
+  String get estatus => _estatus;
   // Contratante
   int get idContratante => _idContratante;
   String get nombrect => _nombrect;

@@ -29,7 +29,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
   ItemModelEventos eventos;
   PerfiladoLogic perfilado;
   final bool WP_EVT_CRT;
-
+  bool _lights = false;
   _DashboardEventosState(this.WP_EVT_CRT);
 
   Color hexToColor(String code) {
@@ -38,8 +38,9 @@ class _DashboardEventosState extends State<DashboardEventos> {
 
   @override
   void initState() {
+    var valEstatus = _lights ? 'I' : 'A';
     eventosBloc = BlocProvider.of<EventosBloc>(context);
-    eventosBloc.add(FechtEventosEvent());
+    eventosBloc.add(FechtEventosEvent(valEstatus));
     super.initState();
   }
 
@@ -159,11 +160,12 @@ class _DashboardEventosState extends State<DashboardEventos> {
 
   @override
   Widget build(BuildContext context) {
+    var valEstatus = _lights ? 'I' : 'A';
     return Scaffold(
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await eventosBloc.add(FechtEventosEvent());
+          await eventosBloc.add(FechtEventosEvent(valEstatus));
         },
         child: BlocListener<EventosBloc, EventosState>(
           listener: (context, state) {
@@ -178,7 +180,30 @@ class _DashboardEventosState extends State<DashboardEventos> {
               } else if (state is MostrarEventosState) {
                 eventos = state.eventos;
                 return Container(
-                  child: buildList(eventos),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: SwitchListTile(
+                                title: const Text('Ver todos los eventos.'),
+                                value: _lights,
+                                onChanged: (bool value) {
+                                  setState(() {
+                                    _lights = value;
+                                    eventosBloc
+                                        .add(FechtEventosEvent(valEstatus));
+                                  });
+                                })),
+                        Expanded(
+                            child: Row(
+                          children: [Expanded(child: buildList(eventos))],
+                        ))
+                      ],
+                    ),
+                  ),
+                  // child: buildList(eventos),
                 );
               } else if (state is ErrorListaEventosState) {
                 return Center(

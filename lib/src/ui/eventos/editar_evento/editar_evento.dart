@@ -35,6 +35,7 @@ class _EditarEventoState extends State<EditarEvento> {
   TextEditingController fechaFinCtrl;
   TextEditingController fechaEventoCtrl;
   TextEditingController numbInvitadosCtrl;
+  String dropdownValue = 'A';
   DateTime fechaInicio;
   DateTime fechaFin;
   DateTime fechaEvento;
@@ -126,7 +127,7 @@ class _EditarEventoState extends State<EditarEvento> {
     fechaEventoCtrl.text = evento.results.elementAt(0).fechaEvento;
     numbInvitadosCtrl.text =
         evento.results.elementAt(0).numeroInivtados.toString();
-
+    dropdownValue = evento.results.elementAt(0).estatus;
     // Contrato
     nombreCtrl.text = evento.results.elementAt(0).nombrect;
     apellidoCtrl.text = evento.results.elementAt(0).apellidoct;
@@ -396,7 +397,8 @@ class _EditarEventoState extends State<EditarEvento> {
             '"fecha_fin": "${fechaFinCtrl.text}",' +
             '"fecha_evento": "${fechaEventoCtrl.text}",' +
             '"id_tipo_evento": "$_mySelectionTE" ,' +
-            '"numero_invitados": "${numbInvitadosCtrl.text}"'
+            '"numero_invitados": "${numbInvitadosCtrl.text}", ' +
+            '"estatus": "${dropdownValue}"'
                 '}]',
         'ctdata': '[{' +
             '"id_contratante": ${evento.results.elementAt(0).idContratante.toString()},' +
@@ -510,7 +512,40 @@ class _EditarEventoState extends State<EditarEvento> {
                               80.0),
                           onTap: () => _selectDateEvento(context),
                         ),
-
+                        GestureDetector(
+                          child: formItemsDesign(
+                              Icons.date_range_outlined,
+                              DropdownButton<String>(
+                                  isExpanded: true,
+                                  value: dropdownValue,
+                                  icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+                                  iconSize: 24,
+                                  style: const TextStyle(color: Colors.black54),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Colors.black,
+                                  ),
+                                  onChanged: (newValue) async {
+                                    setState(() {
+                                      dropdownValue = newValue;
+                                    });
+                                  },
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text("Activo",
+                                          style: TextStyle(fontSize: 16)),
+                                      value: 'A',
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("Inactivo",
+                                          style: TextStyle(fontSize: 16)),
+                                      value: 'I',
+                                    )
+                                  ]),
+                              500.0,
+                              80.0),
+                        )
                         /* Expanded(child: BlocBuilder<TiposEventosBloc, TiposEventosState>(
                           builder: (context, state) {
                             if (state is TiposEventosInitial) {

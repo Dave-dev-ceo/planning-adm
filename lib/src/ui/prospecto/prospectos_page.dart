@@ -576,18 +576,16 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                 if (widget.claveEtapa == 'ACP')
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: FloatingActionButton(
-                      heroTag: UniqueKey(),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed('/addEvento',
-                                arguments: widget.prospecto)
-                            .then((_) {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                      child: Icon(Icons.add_task_sharp),
-                    ),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed('/addEvento',
+                                  arguments: widget.prospecto)
+                              .then((_) {
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        child: Text('Guarda Datos')),
                   )
               ],
             ),
@@ -904,7 +902,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                         });
                       }
                     },
-                    child: Text('Guardar'))
+                    child: Text('Guarda'))
               ],
             ),
           ),

@@ -3,7 +3,10 @@ part of 'eventos_bloc.dart';
 @immutable
 abstract class EventosEvent {}
 
-class FechtEventosEvent extends EventosEvent {}
+class FechtEventosEvent extends EventosEvent {
+  final String estatus;
+  FechtEventosEvent(this.estatus);
+}
 
 class CreateEventosEvent extends EventosEvent {
   final ItemModelEventos eventos;

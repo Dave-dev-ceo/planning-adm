@@ -36,9 +36,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       data['modificado_por'] = idUsuario.toString();
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/PROVEEDORES/insertArchivoProvServ'),
+          Uri.parse(configC.url + configC.puerto + '/wedding/c'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
