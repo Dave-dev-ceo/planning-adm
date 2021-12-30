@@ -1022,11 +1022,8 @@ class New_ContratoState extends State<NewContrato> {
 
   _crearPDF(int id, String contrato, String nombreDocumento) {
     if (id != 0) {
-      print('entro al if');
-
       verContratos.add(DescargarContrato(nombreDocumento, contrato));
     } else {
-      print('No entro al if');
       _descargarFile(contrato, nombreDocumento);
     }
   }
