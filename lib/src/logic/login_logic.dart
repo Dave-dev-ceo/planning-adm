@@ -9,6 +9,7 @@ abstract class LoginLogic {
   Future<String> logout();
   Future<String> getPassword();
   Future<String> changePassword(String newPassword);
+  Future<String> changePasswordInvolucrado(String newPassword);
   Future<String> recoverPassword(String correo);
   Future<bool> validarTokenPassword(String token);
   Future<int> changePasswordAnRecover(String newPassword, String token);
@@ -131,6 +132,46 @@ class BackendLoginLogic implements LoginLogic {
   Future<String> changePassword(String newPassword) async {
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+
+    Map<String, dynamic> data;
+    if (idPlanner != null) {
+      data = {
+        'idInvolucrado': idPlanner,
+        'contrasena': newPassword,
+      };
+    } else {
+      data = {
+        'idUsuario': idUsuario,
+        'contrasena': newPassword,
+      };
+    }
+
+    const endpoint = '/wedding/ACCESO/changePassword';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return resp.body;
+    }
+  }
+
+  @override
+  Future<String> changePasswordInvolucrado(String newPassword) async {
+    String token = await _sharedPreferences.getToken();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
     int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
 
     Map<String, dynamic> data;
@@ -146,7 +187,7 @@ class BackendLoginLogic implements LoginLogic {
       };
     }
 
-    const endpoint = '/wedding/ACCESO/changePassword';
+    const endpoint = '/wedding/ACCESO/changePasswordInvolucrado';
 
     final headers = {
       'Content-Type': 'application/json',

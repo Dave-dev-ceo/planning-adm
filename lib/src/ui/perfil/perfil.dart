@@ -508,11 +508,21 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
   TextEditingController passwordUser = TextEditingController(text: '');
   TextEditingController newPassword = TextEditingController(text: '');
   TextEditingController repeatNewPassWord = TextEditingController(text: '');
-
+  bool _isInvolucrado = false;
   @override
   void initState() {
     validatePassword();
+    checkIsInvolucrado();
     super.initState();
+  }
+
+  checkIsInvolucrado() async {
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    if (idInvolucrado != null) {
+      setState(() {
+        _isInvolucrado = true;
+      });
+    }
   }
 
   @override
@@ -651,8 +661,15 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                   onPressed: () async {
                     if (passwordValid == passwordUser.text) {
                       if (_keyForm.currentState.validate()) {
-                        final data =
-                            await loginLogic.changePassword(newPassword.text);
+                        // Falta se para cambio de contraseñas invo / planner
+                        var data;
+                        if (_isInvolucrado) {
+                          data = await loginLogic
+                              .changePasswordInvolucrado(newPassword.text);
+                        } else if (!_isInvolucrado) {
+                          data =
+                              await loginLogic.changePassword(newPassword.text);
+                        }
                         if (data == 'Ok') {
                           _mostrarMensaje(
                               'Se ha cambiado la contraseña', Colors.green);
