@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 // imports
 import 'package:file_picker/file_picker.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/utils/utils.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -1021,28 +1022,17 @@ class New_ContratoState extends State<NewContrato> {
 
   _crearPDF(int id, String contrato, String nombreDocumento) {
     if (id != 0) {
+      print('entro al if');
+
       verContratos.add(DescargarContrato(nombreDocumento, contrato));
     } else {
+      print('No entro al if');
       _descargarFile(contrato, nombreDocumento);
     }
   }
 
   Future<void> _descargarFile(String contrato, String nombreDocumento) async {
-    //Create a PDF document
-    PdfDocument document = PdfDocument.fromBase64String(contrato);
-    List<int> bytes = document.save();
-    //Dispose the document
-    document.dispose();
-    //Download the output file
-    if (kIsWeb) {
-      // AnchorElement(
-      //   href:
-      //       "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
-      // ..setAttribute("download", nombreDocumento + ".pdf")
-      // ..click();
-    } else {
-      print("Error download");
-    }
+    downloadFile(contrato, nombreDocumento);
   }
 
   _createContrato(String clave) async {
