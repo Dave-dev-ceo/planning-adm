@@ -585,7 +585,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                             Navigator.of(context).pop();
                           });
                         },
-                        child: Text('Guarda Datos')),
+                        child: Text('Crear Evento')),
                   )
               ],
             ),
