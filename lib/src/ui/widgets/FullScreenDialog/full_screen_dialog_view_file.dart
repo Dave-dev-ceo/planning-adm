@@ -29,7 +29,11 @@ class _FullScreenDialogViewFileEvent
   void initState() {
     _pdfViewerController = PdfViewerController();
     viewArchivoBloc = BlocProvider.of<ViewArchivosBloc>(context);
-    viewArchivoBloc.add(FechtArchivoByIdEvent(archivo['id_archivo']));
+    if (archivo['especial']) {
+      viewArchivoBloc.add(FechtArchivoEspecialByIdEvent(archivo['id_archivo']));
+    } else if (!archivo['especial']) {
+      viewArchivoBloc.add(FechtArchivoByIdEvent(archivo['id_archivo']));
+    }
     super.initState();
   }
 
@@ -64,6 +68,9 @@ class _FullScreenDialogViewFileEvent
           child: BlocBuilder<ViewArchivosBloc, ViewArchivosState>(
             builder: (context, state) {
               if (state is MostrarArchivoByIdState) {
+                return _buildVisor(state.detlistas.results[0].tipoMime,
+                    state.detlistas.results[0].archivo);
+              } else if (state is MostrarArchivoEspecialByIdState) {
                 return _buildVisor(state.detlistas.results[0].tipoMime,
                     state.detlistas.results[0].archivo);
               } else {

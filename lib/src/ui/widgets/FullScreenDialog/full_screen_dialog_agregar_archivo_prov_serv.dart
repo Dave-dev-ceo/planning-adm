@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:planning/src/blocs/archivosEspeciales/archivosespeciales_bloc.dart';
 import 'package:planning/src/blocs/proveedores/archivo_proveedor/bloc/archivo_proveedor_bloc.dart';
+import 'package:planning/src/blocs/proveedores/archivos_especiales/archivos_especiales_bloc.dart';
 // import 'package:planning/src/models/archivosEspeciales/archivo_especial_model.dart';
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -42,33 +43,28 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   _FullScreenDialogAgregarArchivoProvServEvent(this.provsrv);
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController descripcionCtrlAE = new TextEditingController();
-  // ArchivoProveedorBloc archivoProveedorBloc;
+  ArchivoProveedorBloc archivoProveedorBloc;
+  ArchivosEspecialesBloc archivoEspecialBloc;
   ItemModelProveedores itemModelProveedores;
 
   String descripcionLink;
   String urlValue;
-
+  int idEvento;
   @override
   void initState() {
+    archivoProveedorBloc = BlocProvider.of<ArchivoProveedorBloc>(context);
+    archivoProveedorBloc.add(FechtArchivoProvServEvent(
+        this.provsrv['id_proveedor'], this.provsrv['id_servicio'], false));
     checkIsEvent();
-    // archivoProveedorBloc = BlocProvider.of<ArchivoProveedorBloc>(context);
-    // archivoProveedorBloc.add(FechtArchivoProvServEvent(
-    //   this.provsrv['id_proveedor'],
-    //   this.provsrv['id_servicio'],
-    // ));
     super.initState();
   }
 
   checkIsEvent() async {
     if (this.provsrv['isEvento']) {
-      int idEvento = await SharedPreferencesT().getIdEvento();
-      setState(() {
-        // BlocProvider.of<ArchivosEspecialesBloc>(context)
-        //     .add(MostrarArchivosEspecialesEvent(
-        //   this.provsrv['id_proveedor'],
-        //   idEvento,
-        // ));
-      });
+      idEvento = await SharedPreferencesT().getIdEvento();
+      archivoEspecialBloc = BlocProvider.of<ArchivosEspecialesBloc>(context);
+      archivoEspecialBloc.add(
+          FechtArchivoEspecialEvent(this.provsrv['id_proveedor'], idEvento));
     }
   }
 
@@ -253,17 +249,16 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                   ],
                 ),
               ),
-            SizedBox(),
-            // BlocBuilder<ArchivoProveedorBloc, ArchivoProveedorState>(
-            //     builder: (context, state) {
-            //   if (state is LoadingArchivoProveedorState) {
-            //     return Center(child: CircularProgressIndicator());
-            //   } else if (state is MostrarArchivoProvServState) {
-            //     return _form(state.detlistas);
-            //   } else {
-            //     return Center(child: CircularProgressIndicator());
-            //   }
-            // }),
+            BlocBuilder<ArchivoProveedorBloc, ArchivoProveedorState>(
+                builder: (context, state) {
+              if (state is LoadingArchivoProveedorState) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is MostrarArchivoProvServState) {
+                return _form(state.detlistas);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
             if (this.provsrv['isEvento']) _archivosEspecilesWidget(),
           ],
         ),
@@ -278,7 +273,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           color: Colors.grey,
         ),
         SizedBox(
-          height: 20.0,
+          height: 2.0,
         ),
         Text(
           'Archivos Especiales',
@@ -335,16 +330,16 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                   )),
             ),
           ),
-        SizedBox(
-          height: 8.0,
-        ),
-        Text(
-          'Archivos Especiales',
-          style: Theme.of(context).textTheme.headline5,
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
+        BlocBuilder<ArchivosEspecialesBloc, ArchivosEspecialesState>(
+            builder: (context, state) {
+          if (state is LoadingArchivoEspecialState) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is MostrarArchivoProvEventState) {
+            return _formEspecial(state.detlistas);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        }),
       ],
     );
   }
@@ -360,12 +355,12 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         'nombre': descripcionLink,
         'descripcion': descripcionLink
       };
-      // archivoProveedorBloc.add(CreateArchivoProvServEvent(
-      //   jsonLink,
-      //   itemModelProveedores,
-      //   this.provsrv['id_proveedor'],
-      //   this.provsrv['id_servicio'],
-      // ));
+      //archivoProveedorBloc.add(CreateArchivoProvServEvent(
+      //  jsonLink,
+      //  itemModelProveedores,
+      //  this.provsrv['id_proveedor'],
+      //  this.provsrv['id_servicio'],
+      //));
       _textcontrollerDes.clear();
       _textControllerUrl.clear();
     } else {}
@@ -403,29 +398,33 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             };
           }
         });
-        // archivoProveedorBloc.add(CreateArchivoProvServEvent(
-        //   json,
-        //   itemModelProveedores,
-        //   this.provsrv['id_proveedor'],
-        //   this.provsrv['id_servicio'],
-        // ));
+        archivoProveedorBloc.add(CreateArchivoProvServEvent(json));
+        descripcionCtrl.text = '';
       } else {
-        // ArchivoEspecialModel newEditArchivoEspecial = ArchivoEspecialModel();
-        var file = pickedFile.files.single.bytes;
-
-        if (file == null) {
-          file = File(pickedFile.files.single.path).readAsBytesSync();
-        }
-
-        // newEditArchivoEspecial.archivo = base64Encode(file);
-        // newEditArchivoEspecial.tipoMime =
-        //     mime(pickedFile.files.single.name.replaceAll(' ', ''));
-        // newEditArchivoEspecial.descripcion = descripcionCtrlAE.text;
-        // newEditArchivoEspecial.nombre = pickedFile.files.single.name;
-        // newEditArchivoEspecial.idProveedor = this.provsrv['id_proveedor'];
-
-        // BlocProvider.of<ArchivosEspecialesBloc>(context)
-        //     .add(InsertArchivoEspecialEvent(newEditArchivoEspecial));
+        Map<String, dynamic> json = {};
+        pickedFile.files.forEach((f) {
+          if (extensiones.contains(f.extension)) {
+            var bytes = f.bytes;
+            if (bytes == null) {
+              bytes = File(f.path).readAsBytesSync();
+            }
+            String fileBase64 = base64.encode(bytes);
+            String mimeType = mime(f.name.replaceAll(' ', ''));
+            String fileName = f.name;
+            // files
+            json = {
+              'id_proveedor': this.provsrv['id_proveedor'],
+              'id_evento': idEvento,
+              // 'tipo_mime': 'data:application/pdf;base64,',
+              'tipo_mime': mimeType,
+              'archivo': fileBase64,
+              'nombre': fileName,
+              'descripcion': descripcionCtrlAE.text
+            };
+          }
+        });
+        archivoEspecialBloc.add(CreateArchivoEspecialEvent(json));
+        descripcionCtrlAE.text = '';
       }
     }
   }
@@ -435,7 +434,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         width: double.infinity,
         child: Column(children: <Widget>[
           SizedBox(
-            height: 50.0,
+            height: 2.0,
           ),
           Center(
             child: SingleChildScrollView(
@@ -460,6 +459,43 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         ]));
   }
 
+  Widget _formEspecial(ItemModelArchivoEspecial moduleServicios) {
+    return Container(
+        width: double.infinity,
+        child: Column(children: <Widget>[
+          SizedBox(
+            height: 2.0,
+          ),
+          Center(
+            child: SingleChildScrollView(
+                child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: 650.0,
+                          child: _listEspecial(moduleServicios, false),
+                        ),
+                      ],
+                    ))),
+          )
+        ]));
+  }
+
+  Widget _listEspecial(
+      ItemModelArchivoEspecial moduleServicios, bool isServicio) {
+    return Card(
+        color: Colors.white,
+        elevation: 12,
+        shadowColor: Colors.black12,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _createListItemsEspecial(moduleServicios, isServicio)));
+  }
+
   Widget _list(ItemModelArchivoProvServ moduleServicios, bool isServicio) {
     return Card(
         color: Colors.white,
@@ -469,6 +505,65 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         child: Column(
             mainAxisSize: MainAxisSize.min,
             children: _createListItems(moduleServicios, isServicio)));
+  }
+
+  List<Widget> _createListItemsEspecial(
+      ItemModelArchivoEspecial item, bool isServicio) {
+    // Creación de lista de Widget.
+    List<Widget> lista = [];
+    List<Widget> listaServicio = [];
+    // Se agrega el titulo del card
+    final tituloServicio = Text('Archivos del servicio',
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(fontSize: 24));
+    // final campos =
+    final sizeSercicio = SizedBox(height: 20);
+    listaServicio.add(tituloServicio);
+    // lista.add(campos);
+    listaServicio.add(sizeSercicio);
+    for (var opt in item.results) {
+      Icon _icon;
+      if (opt.tipoMime == 'application/pdf') {
+        _icon = Icon(Icons.picture_as_pdf);
+      } else if (opt.tipoMime == 'url') {
+        _icon = Icon(Icons.web);
+      } else {
+        _icon = Icon(Icons.image);
+      }
+
+      final tempWidget = ListTile(
+        title: Text(opt.nombre),
+        subtitle: Text(opt.descripcion),
+        trailing: Wrap(spacing: 12, children: <Widget>[
+          IconButton(
+              onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      _eliminarArchivoListaEspecial(
+                          opt.idArchivoEspecial, opt.idProveedor)),
+              icon: const Icon(Icons.delete)),
+          IconButton(
+              // opt.tipoMime.toString() + opt.archivo.toString()
+              onPressed: () {
+                opt.tipoMime == 'url'
+                    ? _launchInBrowser(opt.archivo)
+                    : Navigator.of(context).pushNamed('/viewArchivo',
+                        arguments: {
+                            'nombre': opt.nombre,
+                            'id_archivo': opt.idArchivoEspecial,
+                            'especial': true
+                          });
+              },
+              icon: _icon),
+        ]),
+        onTap: () async {},
+      );
+
+      lista.add(tempWidget);
+    }
+
+    return lista;
   }
 
   List<Widget> _createListItems(
@@ -526,7 +621,8 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                     : Navigator.of(context).pushNamed('/viewArchivo',
                         arguments: {
                             'nombre': opt.nombre,
-                            'id_archivo': opt.idArchivo
+                            'id_archivo': opt.idArchivo,
+                            'especial': false
                           });
               },
               icon: _icon),
@@ -572,11 +668,32 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         TextButton(
           onPressed: () => {
             Navigator.pop(context, 'Aceptar'),
-            // archivoProveedorBloc.add(DeleteArchivoEvent(
-            //     idArchivo,
-            //     this.provsrv['id_proveedor'],
-            //     this.provsrv['id_servicio'],
-            //     widget.isServicio))
+            archivoProveedorBloc.add(DeleteArchivoEvent(
+                idArchivo,
+                this.provsrv['id_proveedor'],
+                this.provsrv['id_servicio'],
+                widget.isServicio))
+          },
+          child: const Text('Aceptar'),
+        ),
+      ],
+    );
+  }
+
+  _eliminarArchivoListaEspecial(int idArchivo, int idProveedor) {
+    return AlertDialog(
+      title: const Text('Eliminar'),
+      content: const Text('¿Desea eliminar el elemento?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () => {
+            Navigator.pop(context, 'Aceptar'),
+            archivoEspecialBloc.add(DeleteArchivoEspecialEvent(
+                idArchivo, this.provsrv['id_proveedor'], idEvento))
           },
           child: const Text('Aceptar'),
         ),

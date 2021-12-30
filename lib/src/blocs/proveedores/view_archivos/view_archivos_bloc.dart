@@ -25,6 +25,15 @@ class ViewArchivosBloc extends Bloc<ViewArchivosEvent, ViewArchivosState> {
         print(e);
         yield ErrorArchivoByIdState('No se pudo insertar');
       }
+    } else if (event is FechtArchivoEspecialByIdEvent) {
+      try {
+        ItemModelArchivoEspecial archivo =
+            await logic.fetchArchivosEspecialById(event.id_archivo);
+        yield MostrarArchivoEspecialByIdState(archivo);
+      } catch (e) {
+        print(e);
+        yield ErrorArchivoByIdState('No se pudo insertar');
+      }
     }
   }
 }

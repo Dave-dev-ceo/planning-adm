@@ -8,3 +8,9 @@ class FechtArchivoByIdEvent extends ViewArchivosEvent {
   FechtArchivoByIdEvent(this.id_archivo);
   List<Object> get props => [id_archivo];
 }
+
+class FechtArchivoEspecialByIdEvent extends ViewArchivosEvent {
+  final int id_archivo;
+  FechtArchivoEspecialByIdEvent(this.id_archivo);
+  List<Object> get props => [id_archivo];
+}

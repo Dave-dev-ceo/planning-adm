@@ -12,6 +12,7 @@ import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
 import 'package:planning/src/blocs/mesasAsignadas/mesasasignadas_bloc.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
+import 'package:planning/src/blocs/proveedores/archivos_especiales/archivos_especiales_bloc.dart';
 import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
 import 'package:planning/src/logic/add_contratos_logic.dart';
 import 'package:planning/src/logic/dashboard_logic/dashboard_logic.dart';
@@ -201,9 +202,12 @@ class AppState extends StatelessWidget {
       ),
       BlocProvider<ProveedorBloc>(
           create: (_) => ProveedorBloc(logic: FetchProveedoresLogic())),
-      // BlocProvider<ArchivoProveedorBloc>(
-      //     create: (_) =>
-      //         ArchivoProveedorBloc(logic: FetchArchivoProveedoresLogic())),
+      BlocProvider<ArchivoProveedorBloc>(
+          create: (_) =>
+              ArchivoProveedorBloc(logic: FetchArchivoProveedoresLogic())),
+      BlocProvider<ArchivosEspecialesBloc>(
+          create: (_) =>
+              ArchivosEspecialesBloc(logic: FetchArchivoProveedoresLogic())),
       BlocProvider<ServiciosBloc>(
           create: (_) => ServiciosBloc(logic: FetchServiciosLogic())),
       BlocProvider<ViewArchivosBloc>(

@@ -11,6 +11,12 @@ class MostrarArchivoByIdState extends ViewArchivosState {
   ItemModelArchivoProvServ get props => detlistas;
 }
 
+class MostrarArchivoEspecialByIdState extends ViewArchivosState {
+  final ItemModelArchivoEspecial detlistas;
+  MostrarArchivoEspecialByIdState(this.detlistas);
+  ItemModelArchivoEspecial get props => detlistas;
+}
+
 class ErrorArchivoByIdState extends ViewArchivosState {
   final String message;
   ErrorArchivoByIdState(this.message);
