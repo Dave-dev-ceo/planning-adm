@@ -283,10 +283,10 @@ class _InvitadosState extends State<Invitados> {
             titulo: 'Proveedores', icono: Icons.support_agent_outlined));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-        tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.brush));
-        temp += 1;
-      }
+      //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+      //  tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.brush));
+      //  temp += 1;
+      //}
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
         tabs.add(TabItem(titulo: 'Invitados', icono: Icons.people));
         temp += 1;
