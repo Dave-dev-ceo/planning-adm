@@ -149,7 +149,7 @@ class _LoginState extends State<Login> {
       listener: (context, state) {
         if (state is ErrorLogginState) {
           Navigator.pop(_ingresando);
-          Navigator.pushNamed(context, '/');
+          // Navigator.pushNamed(context, '/');
           _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LogginState) {
           _dialogMSG('Iniciando sesión', '', 'log');
@@ -164,7 +164,7 @@ class _LoginState extends State<Login> {
               'name': state.response['usuario']['nombre_completo'],
               'imag': state.response['usuario']['imagen']
             };
-            Navigator.pushNamed(context, '/home', arguments: data);
+            Navigator.pushReplacementNamed(context, '/home', arguments: data);
           } else {
             // Navigator.pushNamed(context, '/eventos', arguments: {
             //   'idEvento': state.response['usuario']['id_evento'],
