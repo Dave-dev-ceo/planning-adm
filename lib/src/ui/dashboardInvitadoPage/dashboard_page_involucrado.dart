@@ -356,7 +356,8 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                     ),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: (detalleEvento.portada == null)
+                      image: (detalleEvento.portada == null ||
+                              detalleEvento.portada == '')
                           ? AssetImage(
                               'portada.jpg',
                             )
@@ -448,9 +449,7 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
         fechaEventoTime = DateTime.parse(widget.fechaEvento.toString())
             .difference(DateTime.now());
 
-        if (widget.fechaEvento
-            .subtract(Duration(minutes: 1))
-            .isBefore(DateTime.now().toLocal())) {
+        if (widget.fechaEvento.isBefore(DateTime.now().toLocal())) {
           isActive = false;
         }
       });
@@ -538,8 +537,6 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
 
   String dayRest(Duration duration) {
     if (duration.inDays >= 0 && duration.inDays <= 9) {
-      return "0${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";
-    } else if (duration.inDays >= -9) {
       return "0${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";
     } else {
       return "${duration.inDays.isNegative ? duration.inDays * -1 : duration.inDays * 1}";

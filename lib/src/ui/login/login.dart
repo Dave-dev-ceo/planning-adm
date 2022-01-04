@@ -154,7 +154,7 @@ class _LoginState extends State<Login> {
         } else if (state is LogginState) {
           _dialogMSG('Iniciando sesión', '', 'log');
         } else if (state is MsgLogginState) {
-          //Navigator.pop(_ingresando);
+          // Navigator.pop(_ingresando);
           _dialogMSG('Datos invalidos', state.message, 'msg');
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();

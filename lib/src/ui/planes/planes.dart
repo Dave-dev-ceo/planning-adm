@@ -1210,6 +1210,7 @@ class _PlanesPageState extends State<PlanesPage> {
         },
         color: Colors.blue,
         child: SingleChildScrollView(
+          controller: ScrollController(),
           physics: const AlwaysScrollableScrollPhysics(),
           child: Card(
             child: Column(
@@ -1339,6 +1340,11 @@ class _PlanesPageState extends State<PlanesPage> {
         for (var actividad in timing.actividades) {
           // FocusNode tempFocus = FocusNode();
           // focusNode.add(tempFocus);
+
+          if (actividad.fechaFinActividad == null) {
+            actividad.fechaFinActividad =
+                actividad.fechaInicioActividad.add(Duration(days: 1));
+          }
           if (!isInvolucrado) {
             Widget actividadWidget = ListTile(
               leading: Theme(
@@ -1442,6 +1448,10 @@ class _PlanesPageState extends State<PlanesPage> {
                             } else {
                               actividad.estatus = 'Pendiente';
                             }
+                            if (fecha.isAfter(actividad.fechaFinActividad)) {
+                              actividad.fechaFinActividad =
+                                  fecha.add(Duration(days: 1));
+                            }
                             actividad.fechaInicioActividad = fecha;
                             actividad.estadoCalendarioActividad = true;
                           }
@@ -1479,6 +1489,11 @@ class _PlanesPageState extends State<PlanesPage> {
                               actividad.estatus = 'Atrasada';
                             } else {
                               actividad.estatus = 'Pendiente';
+                            }
+                            if (fecha
+                                .isBefore(actividad.fechaInicioActividad)) {
+                              actividad.fechaInicioActividad =
+                                  fecha.subtract(Duration(days: 1));
                             }
                             actividad.fechaFinActividad = fecha;
                             actividad.estadoCalendarioActividad = true;

@@ -17,10 +17,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) async* {
     if (event is LogginEvent) {
       try {
-        yield MsgLogginState("Favor de ingresar correo y contraseña");
+        // yield MsgLogginState("Favor de ingresar correo y contraseña");
         yield LogginState();
         Map<dynamic, dynamic> response =
             await logic.login(event.correo, event.password);
+
         yield LoggedState(response);
       } on LoginException {
         yield ErrorLogginState("Correo o contraseña incorrectos.");
@@ -64,5 +65,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         print(e);
       }
     }
+  }
+
+  @override
+  void onTransition(Transition<LoginEvent, LoginState> transition) {
+    print(transition);
+    super.onTransition(transition);
   }
 }

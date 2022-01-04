@@ -541,4 +541,34 @@ class ProspectoLogic {
       return false;
     }
   }
+
+  Future<bool> deleteProspecto(int idProspecto) async {
+    String token = await _sharedPreferencesT.getToken();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+
+    const endpoint = '/wedding/PROSPECTO/deleteProspecto';
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idProspecto': idProspecto,
+    };
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(_configC.url + _configC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

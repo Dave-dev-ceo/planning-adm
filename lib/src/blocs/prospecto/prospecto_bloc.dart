@@ -166,6 +166,22 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         print(e);
       }
     });
+
+    on<DeleteProspectoEvent>((event, emit) async {
+      try {
+        final data = await logic.deleteProspecto(event.idProspecto);
+
+        if (data) {
+          emit(DeleteProspectoSuccessState());
+          add(MostrarEtapasEvent());
+        } else {
+          emit(DeleteProspectoErrorState());
+          add(MostrarEtapasEvent());
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
   }
 
   @override

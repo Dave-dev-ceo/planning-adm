@@ -20,3 +20,7 @@ class AddedEtapaState extends ProspectoState {
 
   AddedEtapaState(this.wasAdded);
 }
+
+class DeleteProspectoSuccessState extends ProspectoState {}
+
+class DeleteProspectoErrorState extends ProspectoState {}

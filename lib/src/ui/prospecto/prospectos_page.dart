@@ -502,92 +502,32 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Dialog(
-      child: SingleChildScrollView(
-        child: Container(
-          height: size.height * 0.8,
-          width: size.width * 0.6,
-          margin: EdgeInsets.all(15.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                tituloWidget(context),
-                namePredecesorWidget(),
-                ListTile(
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  selectedTileColor: Colors.transparent,
-                  onTap: () => setState(
-                    () {
-                      canEditInvolucrado = true;
-                    },
-                  ),
-                  leading: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                  ),
-                  title: Text('Involucrado'),
-                  subtitle: TextFormField(
-                    decoration: InputDecoration(
-                      suffixIcon: canEditInvolucrado
-                          ? IconButton(
-                              onPressed: () {
-                                _prospectoBloc.add(
-                                    EditInvolucradoEvent(widget.prospecto));
-                                setState(() {
-                                  canEditInvolucrado = false;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.save,
-                                color: Colors.black,
-                              ),
-                            )
-                          : null,
-                      hintText: 'Añadir involucrado...',
-                      disabledBorder: InputBorder.none,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 1.0),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                    enabled: canEditInvolucrado,
-                    initialValue:
-                        (widget.prospecto.involucradoProspecto != null)
-                            ? widget.prospecto.involucradoProspecto
-                            : null,
-                    onChanged: (value) =>
-                        {widget.prospecto.involucradoProspecto = value},
-                    onFieldSubmitted: (value) => {
-                      _prospectoBloc
-                          .add(EditInvolucradoEvent(widget.prospecto)),
-                      setState(() {
-                        canEditInvolucrado = false;
-                      })
-                    },
-                  ),
-                ),
-                phonePredecesorWidget(),
-                emailPredecesorWidget(),
-                descripcionPredecesorWidget(),
-                actividadesWidget(),
-                if (widget.claveEtapa == 'ACP')
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed('/addEvento',
-                                  arguments: widget.prospecto)
-                              .then((_) {
-                            Navigator.of(context).pop();
-                          });
-                        },
-                        child: Text('Crear Evento')),
-                  )
-              ],
+      child: BlocListener<ProspectoBloc, ProspectoState>(
+        listener: (context, state) {
+          if (state is DeleteProspectoSuccessState) {
+            Navigator.of(context).pop();
+          }
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            height: size.height * 0.8,
+            width: size.width * 0.6,
+            margin: EdgeInsets.all(15.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  tituloWidget(context),
+                  namePredecesorWidget(),
+                  involucradoWidget(),
+                  phonePredecesorWidget(),
+                  emailPredecesorWidget(),
+                  descripcionPredecesorWidget(),
+                  actividadesWidget(),
+                  if (widget.claveEtapa == 'ACP') addEventoButton(context),
+                  spacerSizedBoxWidget(),
+                  deleteProspectoButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -595,7 +535,116 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     );
   }
 
-  Row tituloWidget(BuildContext context) {
+  SizedBox spacerSizedBoxWidget() {
+    return SizedBox(
+      height: 10.0,
+    );
+  }
+
+  Align deleteProspectoButton() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: ElevatedButton(
+        onPressed: () {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text('¿Esta seguro de eliminar el prospecto?'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancelar')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _prospectoBloc.add(
+                          DeleteProspectoEvent(widget.prospecto.idProspecto));
+                    },
+                    child: Text('Aceptar')),
+              ],
+            ),
+          );
+        },
+        child: Text('Eliminar prospecto'),
+      ),
+    );
+  }
+
+  Widget involucradoWidget() {
+    return ListTile(
+      focusColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      selectedTileColor: Colors.transparent,
+      onTap: () => setState(
+        () {
+          canEditInvolucrado = true;
+        },
+      ),
+      leading: Icon(
+        Icons.person,
+        color: Colors.black,
+      ),
+      title: Text('Involucrado'),
+      subtitle: TextFormField(
+        decoration: InputDecoration(
+          suffixIcon: canEditInvolucrado
+              ? IconButton(
+                  onPressed: () {
+                    _prospectoBloc.add(EditInvolucradoEvent(widget.prospecto));
+                    setState(() {
+                      canEditInvolucrado = false;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.save,
+                    color: Colors.black,
+                  ),
+                )
+              : null,
+          hintText: 'Añadir involucrado...',
+          disabledBorder: InputBorder.none,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue, width: 1.0),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
+          ),
+          border: InputBorder.none,
+        ),
+        enabled: canEditInvolucrado,
+        initialValue: (widget.prospecto.involucradoProspecto != null)
+            ? widget.prospecto.involucradoProspecto
+            : null,
+        onChanged: (value) => {widget.prospecto.involucradoProspecto = value},
+        onFieldSubmitted: (value) => {
+          _prospectoBloc.add(EditInvolucradoEvent(widget.prospecto)),
+          setState(() {
+            canEditInvolucrado = false;
+          })
+        },
+      ),
+    );
+  }
+
+  Widget addEventoButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context)
+                .pushNamed('/addEvento', arguments: widget.prospecto)
+                .then((_) {
+              Navigator.of(context).pop();
+            });
+          },
+          child: Text('Crear Evento')),
+    );
+  }
+
+  Widget tituloWidget(BuildContext context) {
     return Row(
       children: [
         Spacer(),
@@ -784,7 +833,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     );
   }
 
-  ListTile descripcionPredecesorWidget() {
+  Widget descripcionPredecesorWidget() {
     return ListTile(
       leading: Icon(
         Icons.description_outlined,
@@ -809,7 +858,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     );
   }
 
-  ListTile namePredecesorWidget() {
+  Widget namePredecesorWidget() {
     return ListTile(
       leading: Icon(Icons.article_outlined, color: Color(0xFF172C4C)),
       title: GestureDetector(
@@ -858,7 +907,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     );
   }
 
-  ListTile actividadesWidget() {
+  Widget actividadesWidget() {
     TextEditingController textEditingController = TextEditingController();
     return ListTile(
       minVerticalPadding: 10.0,
@@ -988,7 +1037,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     );
   }
 
-  Column textAreaWidgetEdit() {
+  Widget textAreaWidgetEdit() {
     return Column(
       children: [
         Padding(

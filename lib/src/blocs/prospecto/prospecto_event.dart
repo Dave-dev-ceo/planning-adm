@@ -122,3 +122,11 @@ class EventoFromProspectoEvent extends ProspectoEvent {
   EventoFromProspectoEvent(this.idProspecto);
   List<Object> get props => [idProspecto];
 }
+
+class DeleteProspectoEvent extends ProspectoEvent {
+  final int idProspecto;
+
+  DeleteProspectoEvent(this.idProspecto);
+
+  List<Object> get props => [idProspecto];
+}

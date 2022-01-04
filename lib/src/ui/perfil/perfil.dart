@@ -284,13 +284,14 @@ class _PerfilState extends State<Perfil> {
                     ],
                   ),
                 ),
-                Divider(),
-                Center(
-                  child: Text(
-                    'Portada',
-                    style: Theme.of(context).textTheme.headline6,
+                if (_isInvolucrado) Divider(),
+                if (_isInvolucrado)
+                  Center(
+                    child: Text(
+                      'Portada',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
                   ),
-                ),
                 if (_isInvolucrado)
                   Center(
                     child: GestureDetector(
@@ -300,13 +301,19 @@ class _PerfilState extends State<Perfil> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
-                            height: 200,
-                            width: 400,
-                            child: Image.memory(
-                              base64Decode(portada),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              height: 200,
+                              width: 400,
+                              child: (portada != '')
+                                  ? Image.memory(
+                                      base64Decode(portada),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image(
+                                      image: AssetImage(
+                                        'portada.jpg',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )),
                         ),
                       ),
                     ),
