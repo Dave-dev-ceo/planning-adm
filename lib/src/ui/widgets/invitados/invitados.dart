@@ -197,7 +197,7 @@ class _InvitadosState extends State<Invitados> {
             ],
             bottom: TabBar(
                 onTap: (int index) {
-                  if (index == 6) {
+                  if (index == 5) {
                     showDialog(
                         context: context,
                         builder: (context) => ListaInvitados(
@@ -274,7 +274,7 @@ class _InvitadosState extends State<Invitados> {
             TabItem(titulo: 'Documentos', icono: Icons.description_outlined));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG')) {
         tabs.add(TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
         temp += 1;
       }
@@ -337,15 +337,15 @@ class _InvitadosState extends State<Invitados> {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
         temp.add(NewContrato());
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG')) {
         temp.add(Pagos());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
         temp.add(ProveedorEvento());
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-        temp.add(AutorizacionLista());
-      }
+      //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+      //  temp.add(AutorizacionLista());
+      //}
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
         temp.add(ListaInvitados(
             idEvento: detalleEvento['idEvento'],
