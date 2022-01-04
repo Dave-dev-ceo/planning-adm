@@ -188,7 +188,7 @@ class New_ContratoState extends State<NewContrato> {
     List<Widget> item = [];
     if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if (contrato.clave == 'CT') {
+        if (contrato.clave == 'CT' || contrato.clave == 'CT_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -302,7 +302,7 @@ class New_ContratoState extends State<NewContrato> {
     List<Widget> item = [];
     if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if (contrato.clave == 'RC') {
+        if (contrato.clave == 'RC' || contrato.clave == 'RC_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -416,7 +416,7 @@ class New_ContratoState extends State<NewContrato> {
     List<Widget> item = [];
     if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if (contrato.clave == 'PG') {
+        if (contrato.clave == 'PG' || contrato.clave == 'PG_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -530,7 +530,7 @@ class New_ContratoState extends State<NewContrato> {
     List<Widget> item = [];
     if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if (contrato.clave == 'OP') {
+        if (contrato.clave == 'OP' || contrato.clave == 'OP_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -644,7 +644,7 @@ class New_ContratoState extends State<NewContrato> {
     List<Widget> item = [];
     if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if (contrato.clave == 'MT') {
+        if (contrato.clave == 'MT' || contrato.clave == 'MT_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -758,7 +758,7 @@ class New_ContratoState extends State<NewContrato> {
     List<Widget> item = [];
     if (itemModel.length != 0) {
       itemModel.forEach((contrato) {
-        if (contrato.clave == 'AU') {
+        if (contrato.clave == 'AU' || contrato.clave == 'AU_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -962,27 +962,27 @@ class New_ContratoState extends State<NewContrato> {
     switch (_selectedIndex) {
       case 0:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'CT'});
+            arguments: {'clave': 'CT', 'clave': 'CT_T'});
         break;
       case 1:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'RC'});
+            arguments: {'clave': 'RC', 'clave': 'RC_T'});
         break;
       case 2:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'PG'});
+            arguments: {'clave': 'PG', 'clave': 'PG_T'});
         break;
       case 3:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'MT'});
+            arguments: {'clave': 'MT', 'clave': 'MT_T'});
         break;
       case 4:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'OP'});
+            arguments: {'clave': 'OP', 'clave': 'OP_T'});
         break;
       default:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'AU'});
+            arguments: {'clave': 'AU', 'clave': 'AU_T'});
         break;
     }
   }
