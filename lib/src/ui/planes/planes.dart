@@ -1169,6 +1169,8 @@ class PlanesPage extends StatefulWidget {
 class _PlanesPageState extends State<PlanesPage> {
   PlanesBloc _planesBloc;
   ConsultasPlanesLogic planesLogic = ConsultasPlanesLogic();
+  ActividadesEvento _planesLogic = ActividadesEvento();
+
   List<TimingModel> listaTimings = [];
 
   int index = 0;
@@ -1303,8 +1305,7 @@ class _PlanesPageState extends State<PlanesPage> {
                       }
                       return buildActividadesEvento();
                     } else {
-                      return Center(
-                          child: Container(child: Text('Entre Aqui')));
+                      return Center(child: CircularProgressIndicator());
                     }
                   },
                 ),
@@ -1356,28 +1357,15 @@ class _PlanesPageState extends State<PlanesPage> {
                 child: Checkbox(
                   value: actividad.estatusProgreso,
                   onChanged: (value) {
-                    if (actividad.estadoCalendarioActividad) {
-                      setState(
-                        () {
-                          isEnableButton = true;
-                          actividad.estatusProgreso = value;
-                          if (actividad.estatusProgreso) {
-                            actividad.estatus = 'Completada';
-                          }
-                        },
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          'Debes poner fecha, antes de finalizar actividades',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        backgroundColor: Colors.orange,
-                      ));
-                    }
+                    setState(
+                      () {
+                        isEnableButton = true;
+                        actividad.estatusProgreso = value;
+                        if (actividad.estatusProgreso) {
+                          actividad.estatus = 'Completada';
+                        }
+                      },
+                    );
                   },
                 ),
               ),
@@ -1400,17 +1388,19 @@ class _PlanesPageState extends State<PlanesPage> {
                       child: TextFormField(
                         onTap: () => setState(() {
                           actividad.enable = true;
+                          isEnableButton = true;
                         }),
                         // focusNode: focusNode[index],
                         readOnly: !actividad.enable,
                         decoration: InputDecoration(
+                          hintText: 'Responsable',
                           constraints: BoxConstraints(
                             maxWidth: size.width * 0.06,
                           ),
                         ),
                         initialValue: actividad.responsable != null
                             ? actividad.responsable
-                            : 'Sin responsable',
+                            : null,
                         onChanged: (value) {
                           actividad.responsable = value;
                         },
@@ -1429,7 +1419,7 @@ class _PlanesPageState extends State<PlanesPage> {
                         ),
                       ),
                       onTap: () async {
-                        final fecha = await _giveFecha(
+                        final data = await _giveFecha(
                           actividad.fechaInicioActividad,
                           actividad.fechaInicioEvento,
                           actividad.fechaFinEvento,
@@ -1438,8 +1428,15 @@ class _PlanesPageState extends State<PlanesPage> {
                         );
 
                         setState(() {
-                          if (fecha != null) {
+                          if (data != null) {
                             isEnableButton = true;
+                            DateTime fecha = DateTime(
+                              data.year,
+                              data.month,
+                              data.day,
+                              DateTime.now().toLocal().hour,
+                              DateTime.now().toLocal().minute,
+                            );
 
                             if (fecha.isAfter(DateTime.now())) {
                               actividad.estatus = 'Pendiente';
@@ -1450,7 +1447,9 @@ class _PlanesPageState extends State<PlanesPage> {
                             }
                             if (fecha.isAfter(actividad.fechaFinActividad)) {
                               actividad.fechaFinActividad =
-                                  fecha.add(Duration(days: 1));
+                                  fecha.add(Duration(hours: 1));
+                              print(fecha);
+                              print(actividad.fechaFinActividad);
                             }
                             actividad.fechaInicioActividad = fecha;
                             actividad.estadoCalendarioActividad = true;
@@ -1471,7 +1470,7 @@ class _PlanesPageState extends State<PlanesPage> {
                         ),
                       ),
                       onTap: () async {
-                        final fecha = await _giveFecha(
+                        final data = await _giveFecha(
                           actividad.fechaInicioActividad,
                           actividad.fechaInicioEvento,
                           actividad.fechaFinEvento,
@@ -1480,9 +1479,16 @@ class _PlanesPageState extends State<PlanesPage> {
                         );
 
                         setState(() {
-                          if (fecha != null) {
+                          if (data != null) {
                             isEnableButton = true;
 
+                            DateTime fecha = DateTime(
+                              data.year,
+                              data.month,
+                              data.day,
+                              DateTime.now().toLocal().hour,
+                              DateTime.now().toLocal().minute,
+                            );
                             if (fecha.isAfter(DateTime.now())) {
                               actividad.estatus = 'Pendiente';
                             } else if (fecha.isBefore(DateTime.now())) {
@@ -1493,7 +1499,10 @@ class _PlanesPageState extends State<PlanesPage> {
                             if (fecha
                                 .isBefore(actividad.fechaInicioActividad)) {
                               actividad.fechaInicioActividad =
-                                  fecha.subtract(Duration(days: 1));
+                                  fecha.subtract(Duration(hours: 1));
+                              print(fecha);
+
+                              print(actividad.fechaInicioActividad);
                             }
                             actividad.fechaFinActividad = fecha;
                             actividad.estadoCalendarioActividad = true;
@@ -1746,37 +1755,37 @@ class _PlanesPageState extends State<PlanesPage> {
       });
     });
 
-    if (sinFechas) {
-      listaTimings.forEach((tarea) {
-        tarea.actividades.forEach((actividad) {
-          // if (actividad.estadoCalendarioActividad == true)
-          send.add(ActividadPlanner(
-              fechaInicioActividad: actividad.fechaInicioActividad,
-              idActividadPlanner: actividad.idActividad,
-              nombreActividadPlanner: actividad.nombreActividad,
-              nombreResponsable: actividad.responsable,
-              descripcionActividadPlanner: actividad.descripcionActividad,
-              visibleInvolucradosActividadPlanner: actividad.visibleInvolucrado,
-              diasActividadPlanner: actividad.diasActividad,
-              predecesorActividadPlanner: actividad.predecesorActividad,
-              fechaInicioEvento: actividad.fechaInicioEvento,
-              fechaFinalEvento: actividad.fechaFinEvento,
-              idOldActividad: actividad.idActividadOld,
-              calendarActividad: actividad.estadoCalendarioActividad,
-              checkActividadPlanner: actividad.estatusProgreso,
-              nombreValida: true,
-              descriValida: true));
-        });
+    // if (sinFechas) {
+    listaTimings.forEach((tarea) {
+      tarea.actividades.forEach((actividad) {
+        // if (actividad.estadoCalendarioActividad == true)
+        send.add(ActividadPlanner(
+            fechaInicioActividad: actividad.fechaInicioActividad,
+            idActividadPlanner: actividad.idActividad,
+            nombreActividadPlanner: actividad.nombreActividad,
+            nombreResponsable: actividad.responsable,
+            descripcionActividadPlanner: actividad.descripcionActividad,
+            visibleInvolucradosActividadPlanner: actividad.visibleInvolucrado,
+            diasActividadPlanner: actividad.diasActividad,
+            predecesorActividadPlanner: actividad.predecesorActividad,
+            fechaInicioEvento: actividad.fechaInicioEvento,
+            fechaFinalEvento: actividad.fechaFinEvento,
+            idOldActividad: actividad.idActividadOld,
+            calendarActividad: actividad.estadoCalendarioActividad,
+            checkActividadPlanner: actividad.estatusProgreso,
+            nombreValida: true,
+            descriValida: true));
       });
+    });
 
-      // agregamos a la base de datos
-      Navigator.of(context).pushNamed('/calendarPlan', arguments: send);
-    } else {
-      if (!sinFechas)
-        _mensaje('No hay fechas');
-      else
-        _mensaje('Tienes cambios pendientes por guardar');
-    }
+    // agregamos a la base de datos
+    Navigator.of(context).pushNamed('/calendarPlan', arguments: send);
+    // } else {
+    //   if (!sinFechas)
+    //     _mensaje('No hay fechas');
+    //   else
+    //     _mensaje('Tienes cambios pendientes por guardar');
+    // }
   }
 
   void _updateYselect() {
@@ -1789,9 +1798,12 @@ class _PlanesPageState extends State<PlanesPage> {
 
     // filtro para enviar
     if (send.length > 0) {
-      isEnableButton = false; // reset
-      _planesBloc
-          .add(UpdateActividadesEventoEvent(send)); // cambiamos x updateevent
+      setState(() {
+        isEnableButton = false;
+      }); // reset
+      _planesBloc.add(UpdateActividadesEventoEvent(send));
+      _planesLogic.getAllPlannes();
+      // cambiamos x updateevent
     }
   }
 }

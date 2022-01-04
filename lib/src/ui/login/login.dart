@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
 
     if (sesion) {
       if (involucrado == null) {
-        Navigator.pushNamed(context, '/home', arguments: data);
+        Navigator.pushReplacementNamed(context, '/home', arguments: data);
       } else {
         Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
             arguments: EventoResumenModel(
