@@ -19,7 +19,7 @@ class _MachotesState extends State<Machotes> {
     {"nombre": "Recibos", "clave": "RC"},
     {"nombre": "Pagos", "clave": "PG"},
     {"nombre": "Minutas", "clave": "MT"},
-    {"nombre": "Oden de pago", "clave": "OP"},
+    {"nombre": "Orden de pago", "clave": "OP"},
     {"nombre": "Autorizaciones", "clave": "AU"},
   ];
   TextEditingController descripcionMachote;
@@ -184,7 +184,8 @@ class _MachotesState extends State<Machotes> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'CT')
+              if (modelMC.results.elementAt(i).clave == 'CT' ||
+                  modelMC.results.elementAt(i).clave == 'CT_T')
                 _contectCont(modelMC, i)
           ],
         ),
@@ -195,7 +196,8 @@ class _MachotesState extends State<Machotes> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'RC')
+              if (modelMC.results.elementAt(i).clave == 'RC' ||
+                  modelMC.results.elementAt(i).clave == 'RC_T')
                 _contectCont(modelMC, i)
           ],
         ),
@@ -206,7 +208,8 @@ class _MachotesState extends State<Machotes> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'PG')
+              if (modelMC.results.elementAt(i).clave == 'PG' ||
+                  modelMC.results.elementAt(i).clave == 'PG_T')
                 _contectCont(modelMC, i)
           ],
         ),
@@ -217,7 +220,8 @@ class _MachotesState extends State<Machotes> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'MT')
+              if (modelMC.results.elementAt(i).clave == 'MT' ||
+                  modelMC.results.elementAt(i).clave == 'MT_T')
                 _contectCont(modelMC, i)
           ],
         ),
@@ -228,7 +232,8 @@ class _MachotesState extends State<Machotes> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'OP')
+              if (modelMC.results.elementAt(i).clave == 'OP' ||
+                  modelMC.results.elementAt(i).clave == 'OP_T')
                 _contectCont(modelMC, i)
           ],
         ),
@@ -239,7 +244,8 @@ class _MachotesState extends State<Machotes> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             for (var i = 0; i < modelMC.results.length; i++)
-              if (modelMC.results.elementAt(i).clave == 'AU')
+              if (modelMC.results.elementAt(i).clave == 'AU' ||
+                  modelMC.results.elementAt(i).clave == 'AU_T')
                 _contectCont(modelMC, i)
           ],
         ),
