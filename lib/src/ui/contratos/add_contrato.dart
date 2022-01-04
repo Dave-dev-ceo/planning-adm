@@ -54,13 +54,17 @@ class _AddMachoteState extends State<AddMachote> {
   _giveTitle(String clave) {
     switch (clave) {
       case 'CT':
-        return Text('Selecciona contratos');
+        return Text('Selecciona Contratos');
       case 'RC':
-        return Text('Selecciona recibos');
+        return Text('Selecciona Recibos');
       case 'PG':
-        return Text('Selecciona pagos');
+        return Text('Selecciona Pagos');
+      case 'MT':
+        return Text('Selecciona Minutas');
+      case 'OP':
+        return Text('Selecciona Orden de Pedido');
       default:
-        return Text('Selecciona minutas');
+        return Text('Selecciona Autorizaciones');
     }
   }
 
@@ -108,11 +112,13 @@ class _AddMachoteState extends State<AddMachote> {
             }).toList();
           }
           return Container(
-            child: _generaContratos(itemModel, widget.map['clave']),
+            child: _generaContratos(
+                itemModel, widget.map['clave'], widget.map['clave_t']),
           );
         } else if (state is InsertAddContratosState) {
           return Container(
-            child: _generaContratos(itemModel, widget.map['clave']),
+            child: _generaContratos(
+                itemModel, widget.map['clave'], widget.map['clave_t']),
           );
         } else {
           return Center(child: Text('Sin datos'));
@@ -122,11 +128,11 @@ class _AddMachoteState extends State<AddMachote> {
   }
 
   // genera cards
-  _generaContratos(List<Contratos> contratos, String clave) {
+  _generaContratos(List<Contratos> contratos, String clave, String clave_t) {
     List<Widget> listContrato = [];
     if (contratos.length > 0) {
       contratos.forEach((data) {
-        if (data.clave == clave) {
+        if (data.clave == clave || data.clave == clave_t) {
           listContrato.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

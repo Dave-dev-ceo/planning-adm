@@ -962,27 +962,27 @@ class New_ContratoState extends State<NewContrato> {
     switch (_selectedIndex) {
       case 0:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'CT', 'clave': 'CT_T'});
+            arguments: {'clave': 'CT', 'clave_t': 'CT_T'});
         break;
       case 1:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'RC', 'clave': 'RC_T'});
+            arguments: {'clave': 'RC', 'clave_t': 'RC_T'});
         break;
       case 2:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'PG', 'clave': 'PG_T'});
+            arguments: {'clave': 'PG', 'clave_t': 'PG_T'});
         break;
       case 3:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'MT', 'clave': 'MT_T'});
+            arguments: {'clave': 'MT', 'clave_t': 'MT_T'});
         break;
       case 4:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'OP', 'clave': 'OP_T'});
+            arguments: {'clave': 'OP', 'clave_t': 'OP_T'});
         break;
       default:
         Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'AU', 'clave': 'AU_T'});
+            arguments: {'clave': 'AU', 'clave_t': 'AU_T'});
         break;
     }
   }
