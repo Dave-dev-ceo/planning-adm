@@ -1078,7 +1078,7 @@ class New_ContratoState extends State<NewContrato> {
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
       tooltip: 'Opciones',
-      heroTag: 'Opciones',
+      heroTag: UniqueKey().toString(),
       children: _childrenButtons(),
     );
   }

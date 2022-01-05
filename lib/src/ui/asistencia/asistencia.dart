@@ -290,7 +290,7 @@ class _AsistenciaState extends State<Asistencia> {
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
       tooltip: 'Opciones',
-      heroTag: 'Opciones',
+      heroTag: UniqueKey().toString(),
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
       elevation: 8.0,

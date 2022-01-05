@@ -271,7 +271,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
       tooltip: 'Opciones',
-      heroTag: 'Opciones',
+      heroTag: UniqueKey().toString(),
       backgroundColor: Colors.black,
       foregroundColor: Colors.black,
       elevation: 12.0,
