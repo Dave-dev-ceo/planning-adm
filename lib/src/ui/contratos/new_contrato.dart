@@ -342,7 +342,23 @@ class New_ContratoState extends State<NewContrato> {
                               ],
                             ),
                           )
-                        : SizedBox()
+                        : SizedBox(),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                    icon: Icon(Icons.cloud_download_outlined),
+                                    label: Text('Descarga Archivo Firmado.'),
+                                    onPressed: () => {
+                                          downloadFile(contrato.original,
+                                              contrato.description)
+                                        }),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
                   ],
                 ),
                 trailing: !isInvolucrado
@@ -456,7 +472,23 @@ class New_ContratoState extends State<NewContrato> {
                               ],
                             ),
                           )
-                        : SizedBox()
+                        : SizedBox(),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                    icon: Icon(Icons.cloud_download_outlined),
+                                    label: Text('Descarga Archivo Firmado.'),
+                                    onPressed: () => {
+                                          downloadFile(contrato.original,
+                                              contrato.description)
+                                        }),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
                   ],
                 ),
                 trailing: !isInvolucrado
@@ -567,6 +599,22 @@ class New_ContratoState extends State<NewContrato> {
                                   onPressed: () =>
                                       _verNewFile(contrato.original),
                                 )
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                    icon: Icon(Icons.cloud_download_outlined),
+                                    label: Text('Descarga Archivo Firmado.'),
+                                    onPressed: () => {
+                                          downloadFile(contrato.original,
+                                              contrato.description)
+                                        }),
                               ],
                             ),
                           )
@@ -684,6 +732,22 @@ class New_ContratoState extends State<NewContrato> {
                               ],
                             ),
                           )
+                        : SizedBox(),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                    icon: Icon(Icons.cloud_download_outlined),
+                                    label: Text('Descarga Archivo Firmado.'),
+                                    onPressed: () => {
+                                          downloadFile(contrato.original,
+                                              contrato.description)
+                                        }),
+                              ],
+                            ),
+                          )
                         : SizedBox()
                   ],
                 ),
@@ -798,6 +862,22 @@ class New_ContratoState extends State<NewContrato> {
                               ],
                             ),
                           )
+                        : SizedBox(),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                    icon: Icon(Icons.cloud_download_outlined),
+                                    label: Text('Descarga Archivo Firmado.'),
+                                    onPressed: () => {
+                                          downloadFile(contrato.original,
+                                              contrato.description)
+                                        }),
+                              ],
+                            ),
+                          )
                         : SizedBox()
                   ],
                 ),
@@ -909,6 +989,22 @@ class New_ContratoState extends State<NewContrato> {
                                   onPressed: () =>
                                       _verNewFile(contrato.original),
                                 )
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+                    contrato.valida
+                        ? Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextButton.icon(
+                                    icon: Icon(Icons.cloud_download_outlined),
+                                    label: Text('Descarga Archivo Firmado.'),
+                                    onPressed: () => {
+                                          downloadFile(contrato.original,
+                                              contrato.description)
+                                        }),
                               ],
                             ),
                           )
@@ -1082,7 +1178,7 @@ class New_ContratoState extends State<NewContrato> {
             TextButton(
               child: Text('Guardar'),
               onPressed: () async {
-                Navigator.pushNamed(context, '/addContratos',
+                Navigator.pushReplacementNamed(context, '/addContratos',
                     arguments: _clave);
               },
             ),
