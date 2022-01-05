@@ -29,6 +29,7 @@ abstract class PlanesLogic {
   Future<bool> updateEventoActividades(List<EventoActividadModel> actividades);
   Future<bool> addNewActividadEvento(
       EventoActividadModel actividadModel, int idEventoTiming);
+  Future<bool> editActtividad(EventoActividadModel actividadModel);
 }
 
 class ConsultasPlanesLogic extends PlanesLogic {
@@ -465,6 +466,48 @@ class ConsultasPlanesLogic extends PlanesLogic {
       'predecesor': actividadModel.predecesorActividad,
       'dias': actividadModel.diasActividad,
       'idActividadTiming': actividadModel.idActividadOld,
+      'responsable': actividadModel.responsable,
+      'fechafin': actividadModel.fechaFinActividad.toString()
+    };
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> editActtividad(EventoActividadModel actividadModel) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
+    const endpoint = '/wedding/PLANES/editActividad';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idPlanner': idPlanner,
+      'idUsuario': idUsuario,
+      'idEvento': idEvento,
+      'idActividad': actividadModel.idActividad,
+      'nombreActiviad': actividadModel.nombreActividad,
+      'descripcion': actividadModel.descripcionActividad,
+      'fecha': actividadModel.fechaInicioActividad.toString(),
+      'visibleInvolucrado': actividadModel.visibleInvolucrado,
+      'predecesor': actividadModel.predecesorActividad,
       'responsable': actividadModel.responsable,
       'fechafin': actividadModel.fechaFinActividad.toString()
     };

@@ -130,6 +130,14 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       } catch (e) {
         print(e);
       }
+    } else if (event is EditActividadEvent) {
+      try {
+        final data = await logic.editActtividad(event.actividad);
+        yield AddedActividadState(data);
+        add(GetTimingsAndActivitiesEvent());
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }

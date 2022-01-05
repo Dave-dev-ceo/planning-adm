@@ -87,3 +87,10 @@ class AddNewActividadEvent extends PlanesEvent {
 
   List<Object> get props => [actividad, idEventoTiming];
 }
+
+class EditActividadEvent extends PlanesEvent {
+  final EventoActividadModel actividad;
+
+  EditActividadEvent(this.actividad);
+  List<Object> get props => [actividad];
+}

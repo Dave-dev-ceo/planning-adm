@@ -7,6 +7,7 @@ import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // blocs
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -1302,73 +1303,73 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
       stream: _planesLogic.contadorActividadStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Column(
-            children: [
-              Row(
-                children: [
-                  Spacer(),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.green),
-                    child: Checkbox(
-                      value: true,
-                      onChanged: null,
-                      hoverColor: Colors.transparent,
+          if (snapshot.data.total > 0) {
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    Spacer(),
+                    Theme(
+                      data: ThemeData(disabledColor: Colors.green),
+                      child: Checkbox(
+                        value: true,
+                        onChanged: null,
+                        hoverColor: Colors.transparent,
+                      ),
                     ),
-                  ),
-                  Text('${snapshot.data.completadas.toString()} Completadas'),
-                  Spacer(),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.yellow[800]),
-                    child: Checkbox(
-                      value: false,
-                      onChanged: null,
+                    Text('${snapshot.data.completadas.toString()} Completadas'),
+                    Spacer(),
+                    Theme(
+                      data: ThemeData(disabledColor: Colors.yellow[800]),
+                      child: Checkbox(
+                        value: false,
+                        onChanged: null,
+                      ),
                     ),
-                  ),
-                  Text('${snapshot.data.pendientes.toString()} Pendientes'),
-                  Spacer(),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.red),
-                    child: Checkbox(
-                      value: false,
-                      onChanged: null,
+                    Text('${snapshot.data.pendientes.toString()} Pendientes'),
+                    Spacer(),
+                    Theme(
+                      data: ThemeData(disabledColor: Colors.red),
+                      child: Checkbox(
+                        value: false,
+                        onChanged: null,
+                      ),
                     ),
-                  ),
-                  Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
-                  Spacer(),
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Text(
-                  'Progreso ${((snapshot.data.completadas / snapshot.data.total) * 100).toStringAsFixed(0)}%'),
-              SizedBox(
-                height: 10,
-              ),
-              Theme(
-                data: ThemeData(),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 400,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    child: LinearProgressIndicator(
-                      // backgroundColor: Color(0xffFEF0D7),
-                      // color: Color(0xffFDD899),
-                      minHeight: 5.0,
-                      value: snapshot.data.completadas / snapshot.data.total,
-                      semanticsLabel: 'Linear progress indicator',
+                    Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
+                    Spacer(),
+                  ],
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                    'Progreso ${((snapshot.data.completadas / snapshot.data.total) * 100).toStringAsFixed(0)}%'),
+                SizedBox(
+                  height: 10,
+                ),
+                Theme(
+                  data: ThemeData(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 400,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: LinearProgressIndicator(
+                        minHeight: 5.0,
+                        value: snapshot.data.completadas / snapshot.data.total,
+                        semanticsLabel: 'Linear progress indicator',
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Text('Total: ${snapshot.data.total}')
-            ],
-          );
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text('Total: ${snapshot.data.total}')
+              ],
+            );
+          }
         }
         return Row(
           children: [
@@ -1458,9 +1459,34 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 children: [
                   Expanded(
                     flex: 4,
-                    child: AutoSizeText(
-                      actividad.nombreActividad,
-                      maxLines: 2,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AddNuevaActividad(
+                            actividadModel: actividad,
+                            idPlanner: timing.idPlanner,
+                            plan: timing,
+                          ),
+                        ).then((_) async {
+                          await _planesLogic.getAllPlannes();
+                          await _planesLogic.getContadorValues();
+                          setState(() {});
+                        });
+                      },
+                      child: AutoSizeText(
+                        actividad.nombreActividad,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: FaIcon(
+                      actividad.visibleInvolucrado
+                          ? FontAwesomeIcons.eye
+                          : FontAwesomeIcons.eyeSlash,
+                      size: 15.0,
                     ),
                   ),
                   Expanded(
@@ -1684,10 +1710,15 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                     showDialog(
                       context: context,
                       builder: (context) => AddNuevaActividad(
+                        actividadModel: EventoActividadModel(),
                         idPlanner: timing.idPlanner,
                         plan: timing,
                       ),
-                    );
+                    ).then((_) async {
+                      await _planesLogic.getAllPlannes();
+                      await _planesLogic.getContadorValues();
+                      setState(() {});
+                    });
                   },
                   icon: Icon(Icons.add),
                   label: Text('Agregar actividad'),
@@ -1907,8 +1938,15 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
 class AddNuevaActividad extends StatefulWidget {
   final int idPlanner;
   final TimingModel plan;
+  final int idActividad;
+  final EventoActividadModel actividadModel;
 
-  const AddNuevaActividad({Key key, @required this.idPlanner, this.plan})
+  const AddNuevaActividad(
+      {Key key,
+      @required this.idPlanner,
+      this.plan,
+      this.idActividad,
+      @required this.actividadModel})
       : super(key: key);
 
   @override
@@ -1917,27 +1955,38 @@ class AddNuevaActividad extends StatefulWidget {
 
 class _AddNuevaActividadState extends State<AddNuevaActividad> {
   final keyForm = GlobalKey<FormState>();
-  EventoActividadModel actividad = EventoActividadModel(
-    diasActividad: 1,
-    descripcionActividad: '',
-    nombreActividad: '',
-    visibleInvolucrado: false,
-    estadoCalendarioActividad: false,
-  );
+  EventoActividadModel actividad;
 
-  TextEditingController fechaInicioController = TextEditingController(text: '');
-  TextEditingController fechaFinController = TextEditingController(text: '');
+  TextEditingController fechaInicioController = TextEditingController();
+  TextEditingController fechaFinController = TextEditingController();
   List<EventoActividadModel> predecesores = [];
 
   @override
   void initState() {
-    actividad.fechaInicioActividad =
-        widget.plan.actividades.first.fechaInicioEvento;
-    actividad.fechaFinActividad = widget.plan.actividades.first.fechaFinEvento;
+    if (widget.actividadModel.idActividad != null) {
+      actividad = widget.actividadModel;
+      fechaInicioController.text = DateFormat.yMd()
+          .add_jm()
+          .format(widget.actividadModel.fechaInicioActividad);
+      fechaFinController.text = DateFormat.yMd()
+          .add_jm()
+          .format(widget.actividadModel.fechaFinActividad);
+    } else {
+      actividad = EventoActividadModel(
+        diasActividad: 1,
+        visibleInvolucrado: false,
+        estadoCalendarioActividad: false,
+      );
+      actividad.fechaInicioActividad =
+          widget.plan.actividades.first.fechaInicioEvento;
+      actividad.fechaFinActividad =
+          widget.plan.actividades.first.fechaFinEvento;
+      fechaInicioController.text = '';
+      fechaFinController.text = '';
+    }
     EventoActividadModel primeraOpcion = EventoActividadModel(
         nombreActividad: 'Seleccione un predecesor', idActividad: -1);
     predecesores = [primeraOpcion, ...widget.plan.actividades];
-
     super.initState();
   }
 
@@ -1988,6 +2037,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       item: Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: TextFormField(
+                          initialValue: actividad.nombreActividad,
                           validator: (value) {
                             if (value != null && value != '') {
                               return null;
@@ -2012,6 +2062,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                         decoration: new InputDecoration(
                           labelText: 'Responsable:',
                         ),
+                        initialValue: actividad.responsable,
                         onChanged: (valor) {
                           actividad.responsable = valor;
                         },
@@ -2436,6 +2487,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       large: 500.0,
                       ancho: 80.0,
                       item: TextFormField(
+                        initialValue: actividad.descripcionActividad,
                         decoration: new InputDecoration(
                           labelText: 'Descripción:',
                         ),
@@ -2460,10 +2512,15 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                         ),
                         onPressed: () async {
                           if (keyForm.currentState.validate()) {
-                            await BlocProvider.of<PlanesBloc>(context).add(
-                              AddNewActividadEvent(
-                                  actividad, widget.plan.idPlanner),
-                            );
+                            if (widget.actividadModel.idActividad != null) {
+                              await BlocProvider.of<PlanesBloc>(context)
+                                  .add(EditActividadEvent(actividad));
+                            } else {
+                              await BlocProvider.of<PlanesBloc>(context).add(
+                                AddNewActividadEvent(
+                                    actividad, widget.plan.idPlanner),
+                              );
+                            }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
