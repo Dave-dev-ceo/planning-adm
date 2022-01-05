@@ -36,7 +36,6 @@ class _ResumenEventoState extends State<ResumenEvento> {
     eventosBloc = BlocProvider.of<EvtBloc.EventosBloc>(context);
     eventosBloc.add(
         EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
-    _planesLogic.getAllPlannes();
     _checkIsInvolucrado();
 
     super.initState();
@@ -239,6 +238,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget futureToPlannes() {
+    _planesLogic.getAllPlannes();
+
     return StreamBuilder(
       stream: _planesLogic.actividadesStream,
       builder:

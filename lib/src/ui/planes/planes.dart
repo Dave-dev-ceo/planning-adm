@@ -1166,7 +1166,7 @@ class PlanesPage extends StatefulWidget {
   _PlanesPageState createState() => _PlanesPageState();
 }
 
-class _PlanesPageState extends State<PlanesPage> {
+class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
   PlanesBloc _planesBloc;
   ConsultasPlanesLogic planesLogic = ConsultasPlanesLogic();
   ActividadesEvento _planesLogic = ActividadesEvento();
@@ -1183,6 +1183,7 @@ class _PlanesPageState extends State<PlanesPage> {
     _planesBloc = BlocProvider.of<PlanesBloc>(context);
     _planesBloc.add(GetTimingsAndActivitiesEvent());
     getIdInvolucrado();
+
     super.initState();
   }
 
@@ -1194,6 +1195,11 @@ class _PlanesPageState extends State<PlanesPage> {
         isInvolucrado = true;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -1227,39 +1233,7 @@ class _PlanesPageState extends State<PlanesPage> {
                 SizedBox(
                   height: 10.0,
                 ),
-                Row(
-                  children: [
-                    Spacer(),
-                    Theme(
-                      data: ThemeData(disabledColor: Colors.green),
-                      child: Checkbox(
-                        value: true,
-                        onChanged: null,
-                        hoverColor: Colors.transparent,
-                      ),
-                    ),
-                    Text('Completadas'),
-                    Spacer(),
-                    Theme(
-                      data: ThemeData(disabledColor: Colors.yellow[800]),
-                      child: Checkbox(
-                        value: false,
-                        onChanged: null,
-                      ),
-                    ),
-                    Text('Pendientes'),
-                    Spacer(),
-                    Theme(
-                      data: ThemeData(disabledColor: Colors.red),
-                      child: Checkbox(
-                        value: false,
-                        onChanged: null,
-                      ),
-                    ),
-                    Text('Atrasadas'),
-                    Spacer(),
-                  ],
-                ),
+                contadorActividadesWidget(),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -1319,6 +1293,117 @@ class _PlanesPageState extends State<PlanesPage> {
       ),
       floatingActionButton: _botonFlotante(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  StreamBuilder<ContadorActividadesModel> contadorActividadesWidget() {
+    _planesLogic.getContadorValues();
+    return StreamBuilder(
+      stream: _planesLogic.contadorActividadStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: [
+              Row(
+                children: [
+                  Spacer(),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.green),
+                    child: Checkbox(
+                      value: true,
+                      onChanged: null,
+                      hoverColor: Colors.transparent,
+                    ),
+                  ),
+                  Text('${snapshot.data.completadas.toString()} Completadas'),
+                  Spacer(),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.yellow[800]),
+                    child: Checkbox(
+                      value: false,
+                      onChanged: null,
+                    ),
+                  ),
+                  Text('${snapshot.data.pendientes.toString()} Pendientes'),
+                  Spacer(),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.red),
+                    child: Checkbox(
+                      value: false,
+                      onChanged: null,
+                    ),
+                  ),
+                  Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
+                  Spacer(),
+                ],
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                  'Progreso ${((snapshot.data.completadas / snapshot.data.total) * 100).toStringAsFixed(0)}%'),
+              SizedBox(
+                height: 10,
+              ),
+              Theme(
+                data: ThemeData(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 400,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    child: LinearProgressIndicator(
+                      // backgroundColor: Color(0xffFEF0D7),
+                      // color: Color(0xffFDD899),
+                      minHeight: 5.0,
+                      value: snapshot.data.completadas / snapshot.data.total,
+                      semanticsLabel: 'Linear progress indicator',
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Text('Total: ${snapshot.data.total}')
+            ],
+          );
+        }
+        return Row(
+          children: [
+            Spacer(),
+            Theme(
+              data: ThemeData(disabledColor: Colors.green),
+              child: Checkbox(
+                value: true,
+                onChanged: null,
+                hoverColor: Colors.transparent,
+              ),
+            ),
+            Text('Completadas'),
+            Spacer(),
+            Theme(
+              data: ThemeData(disabledColor: Colors.yellow[800]),
+              child: Checkbox(
+                value: false,
+                onChanged: null,
+              ),
+            ),
+            Text('Pendientes'),
+            Spacer(),
+            Theme(
+              data: ThemeData(disabledColor: Colors.red),
+              child: Checkbox(
+                value: false,
+                onChanged: null,
+              ),
+            ),
+            Text('Atrasadas'),
+            Spacer(),
+          ],
+        );
+      },
     );
   }
 
@@ -1522,6 +1607,9 @@ class _PlanesPageState extends State<PlanesPage> {
                             onTap: () async {
                               await _alertaBorrar(actividad.idActividad,
                                   actividad.nombreActividad);
+                              _planesLogic.getAllPlannes();
+                              _planesLogic.getContadorValues();
+                              setState(() {});
                             },
                           )
                         : Container(),
@@ -1696,7 +1784,13 @@ class _PlanesPageState extends State<PlanesPage> {
   }
 
   void _goAddingPlanes() {
-    Navigator.of(context).pushNamed('/agregarPlan', arguments: listaTimings);
+    Navigator.of(context)
+        .pushNamed('/agregarPlan', arguments: listaTimings)
+        .then((_) async {
+      await _planesLogic.getAllPlannes();
+      await _planesLogic.getContadorValues();
+      setState(() {});
+    });
   }
 
   Future<void> _alertaBorrar(int idActividad, String nombre) {
@@ -1803,6 +1897,8 @@ class _PlanesPageState extends State<PlanesPage> {
       }); // reset
       _planesBloc.add(UpdateActividadesEventoEvent(send));
       _planesLogic.getAllPlannes();
+      _planesLogic.getContadorValues();
+
       // cambiamos x updateevent
     }
   }
@@ -2229,7 +2325,6 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                           if (actividad.fechaFinActividad
                                               .isBefore(actividad
                                                   .fechaInicioActividad)) {
-                                            print('Entre');
                                             actividad.fechaInicioActividad =
                                                 DateTime(
                                                     actividad

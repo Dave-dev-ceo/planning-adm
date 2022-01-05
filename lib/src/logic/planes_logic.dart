@@ -11,6 +11,7 @@ import 'package:planning/src/resources/config_conection.dart';
 
 // import model
 import 'package:planning/src/models/item_model_planes.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class PlanesLogic {
   Future<ItemModelPlanes> selectPlanesPlanner();
@@ -483,16 +484,24 @@ class ConsultasPlanesLogic extends PlanesLogic {
 }
 
 class ActividadesEvento {
-  final _actividadesStreamController =
-      StreamController<List<PlannesModel>>.broadcast();
+  final _actividadesStreamController = PublishSubject<List<PlannesModel>>();
+  final _contadorStreamController = PublishSubject<ContadorActividadesModel>();
+  // StreamController<List<PlannesModel>>.broadcast();
   Function(List<PlannesModel>) get actividadeSink =>
       _actividadesStreamController.sink.add;
 
   Stream<List<PlannesModel>> get actividadesStream =>
       _actividadesStreamController.stream;
 
+  Function(ContadorActividadesModel) get contadorActividadSink =>
+      _contadorStreamController.sink.add;
+
+  Stream<ContadorActividadesModel> get contadorActividadStream =>
+      _contadorStreamController.stream;
+
   void dispose() {
     _actividadesStreamController?.close();
+    _contadorStreamController?.close();
   }
 
   Future<List<PlannesModel>> getAllPlannes() async {
@@ -533,6 +542,70 @@ class ActividadesEvento {
       return null;
     }
   }
+
+  Future<ContadorActividadesModel> getContadorValues() async {
+    SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+    ConfigConection confiC = new ConfigConection();
+    Client client = Client();
+
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PLANES/conteoPorEstatusActividad';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
+
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      ContadorActividadesModel contadorActividad =
+          ContadorActividadesModel.fromJson(json.decode(resp.body));
+
+      contadorActividadSink(contadorActividad);
+      return contadorActividad;
+    } else {
+      return null;
+    }
+  }
+}
+
+class ContadorActividadesModel {
+  int completadas;
+  int pendientes;
+  int atrasadas;
+  int total;
+
+  ContadorActividadesModel(
+      {this.completadas, this.atrasadas, this.pendientes, this.total});
+
+  factory ContadorActividadesModel.fromJson(Map<String, dynamic> json) =>
+      ContadorActividadesModel(
+        atrasadas:
+            json['atrasadas'] != null ? int.parse(json['atrasadas']) : null,
+        pendientes:
+            json['pendientes'] != null ? int.parse(json['pendientes']) : null,
+        completadas:
+            json['completadas'] != null ? int.parse(json['completadas']) : null,
+        total: json['total'] != null ? int.parse(json['total']) : null,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'atrasadas': atrasadas,
+        'pendientes': pendientes,
+        'completadas': completadas,
+        'total': total,
+      };
 }
 
 // exceptiones
