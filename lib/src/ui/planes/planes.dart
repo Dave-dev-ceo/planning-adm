@@ -1814,10 +1814,11 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     );
   }
 
-  void _goAddingPlanes() {
+  void _goAddingPlanes() async {
     Navigator.of(context)
         .pushNamed('/agregarPlan', arguments: listaTimings)
         .then((_) async {
+      _planesBloc.add(GetTimingsAndActivitiesEvent());
       await _planesLogic.getAllPlannes();
       await _planesLogic.getContadorValues();
       setState(() {});
@@ -1845,9 +1846,12 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           actions: <Widget>[
             TextButton(
               child: const Text('Confirmar'),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
                 _planesBloc.add(BorrarActividadPlanEvent(idActividad));
+                await _planesLogic.getAllPlannes();
+                await _planesLogic.getContadorValues();
+                setState(() {});
                 _mensaje('Actividad borrada');
               },
             ),
