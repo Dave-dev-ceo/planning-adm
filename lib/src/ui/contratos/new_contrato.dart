@@ -37,6 +37,20 @@ class New_ContratoState extends State<NewContrato> {
   // Variable involucrado
   bool isInvolucrado = false;
 
+  GlobalKey<FormState> keyForm;
+// arguments: {'clave': 'CT', 'clave_t': 'CT_T'});
+  List<Map<String, String>> radioB = [
+    {"nombre": "Contratos", "clave": "CT", 'clave_t': 'CT_T'},
+    {"nombre": "Recibos", "clave": "RC", 'clave_t': 'RC_T'},
+    {"nombre": "Pagos", "clave": "PG", 'clave_t': 'PG_T'},
+    {"nombre": "Minutas", "clave": "MT", 'clave_t': 'MT_T'},
+    {"nombre": "Orden de pago", "clave": "OP", 'clave_t': 'OP_T'},
+    {"nombre": "Autorizaciones", "clave": "AU", 'clave_t': 'AU_T'},
+  ];
+
+  int _grupoRadio = 0;
+  Map _clave = {'clave': 'CT', 'clave_t': 'CT_T'};
+
   @override
   void initState() {
     super.initState();
@@ -73,7 +87,7 @@ class New_ContratoState extends State<NewContrato> {
       body: SingleChildScrollView(
         child: _myBloc(),
       ),
-      bottomNavigationBar: _showNavigationBar(),
+      // bottomNavigationBar: _showNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: !isInvolucrado ? _showButton() : null,
     );
@@ -155,14 +169,63 @@ class New_ContratoState extends State<NewContrato> {
   // cointener => columna => listas x tipo
   _showContratos() {
     return Container(
-      padding: EdgeInsets.all(10.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: _itemsContratos(),
-      ),
-    );
+        padding: EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            // children: _itemsContratos(),
+            children: [
+              Column(
+                children: [
+                  Card(
+                    child: ExpansionTile(
+                        title: Text(
+                          'Contratos',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        children: _contratosItem()),
+                  ),
+                  Card(
+                    child: ExpansionTile(
+                        title: Text('Recibos',
+                            style: TextStyle(color: Colors.black)),
+                        children: _recibosItem()),
+                  ),
+                  Card(
+                    child: ExpansionTile(
+                      title:
+                          Text('Pagos', style: TextStyle(color: Colors.black)),
+                      children: _pagosItem(),
+                    ),
+                  ),
+                  Card(
+                    child: ExpansionTile(
+                      title: Text('Minutas',
+                          style: TextStyle(color: Colors.black)),
+                      children: _minutasItem(),
+                    ),
+                  ),
+                  Card(
+                    child: ExpansionTile(
+                      title: Text('Orden de Pedido',
+                          style: TextStyle(color: Colors.black)),
+                      children: _ordenPagos(),
+                    ),
+                  ),
+                  Card(
+                    child: ExpansionTile(
+                      title: Text('Autorizaciones',
+                          style: TextStyle(color: Colors.black)),
+                      children: _autorizaciones(),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
   }
 
   // select lista
@@ -958,33 +1021,101 @@ class New_ContratoState extends State<NewContrato> {
     }
   }
 
-  _eventoAdd() {
-    switch (_selectedIndex) {
-      case 0:
-        Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'CT', 'clave_t': 'CT_T'});
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'RC', 'clave_t': 'RC_T'});
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'PG', 'clave_t': 'PG_T'});
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'MT', 'clave_t': 'MT_T'});
-        break;
-      case 4:
-        Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'OP', 'clave_t': 'OP_T'});
-        break;
-      default:
-        Navigator.pushNamed(context, '/addContratos',
-            arguments: {'clave': 'AU', 'clave_t': 'AU_T'});
-        break;
-    }
+  Future<void> _eventoAdd() async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Crear plantilla', textAlign: TextAlign.center),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Form(
+                key: keyForm,
+                child: SingleChildScrollView(
+                  child: ListBody(
+                    children: [
+                      Column(
+                        children: <Widget>[
+                          for (int i = 0; i < radioB.length; i++)
+                            ListTile(
+                              title: Text(
+                                radioB.elementAt(i)['nombre'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(color: Colors.black),
+                              ),
+                              leading: Radio(
+                                value: i,
+                                groupValue: _grupoRadio,
+                                activeColor: Color(0xFF6200EE),
+                                onChanged: (int value) {
+                                  setState(() {
+                                    _grupoRadio = value;
+                                    _clave = {
+                                      'clave': radioB.elementAt(i)['clave'],
+                                      'clave_t': radioB.elementAt(i)['clave_t']
+                                    };
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            TextButton(
+              child: Text('Guardar'),
+              onPressed: () async {
+                Navigator.pushNamed(context, '/addContratos',
+                    arguments: _clave);
+              },
+            ),
+          ],
+        );
+      },
+      // switch (_selectedIndex) {
+      //   case 0:
+      //     Navigator.pushNamed(context, '/addContratos',
+      //         arguments: {'clave': 'CT', 'clave_t': 'CT_T'});
+      //     break;
+      //   case 1:
+      //     Navigator.pushNamed(context, '/addContratos',
+      //         arguments: {'clave': 'RC', 'clave_t': 'RC_T'});
+      //     break;
+      //   case 2:
+      //     Navigator.pushNamed(context, '/addContratos',
+      //         arguments: {'clave': 'PG', 'clave_t': 'PG_T'});
+      //     break;
+      //   case 3:
+      //     Navigator.pushNamed(context, '/addContratos',
+      //         arguments: {'clave': 'MT', 'clave_t': 'MT_T'});
+      //     break;
+      //   case 4:
+      //     Navigator.pushNamed(context, '/addContratos',
+      //         arguments: {'clave': 'OP', 'clave_t': 'OP_T'});
+      //     break;
+      //   default:
+      //     Navigator.pushNamed(context, '/addContratos',
+      //         arguments: {'clave': 'AU', 'clave_t': 'AU_T'});
+      //     break;
+      // }
+    );
   }
 
   // ini eventos Cards
