@@ -290,7 +290,8 @@ class New_ContratoState extends State<NewContrato> {
                                         arguments: {
                                           'archivo': contrato.archivo,
                                           'id_contrato': contrato.idContrato
-                                        });
+                                        }).then((value) =>
+                                        contratosBloc.add(ContratosSelect()));
                                     setState(() {
                                       contratosBloc.add(ContratosSelect());
                                     });
@@ -420,7 +421,8 @@ class New_ContratoState extends State<NewContrato> {
                                         arguments: {
                                           'archivo': contrato.archivo,
                                           'id_contrato': contrato.idContrato
-                                        });
+                                        }).then((value) =>
+                                        contratosBloc.add(ContratosSelect()));
                                     setState(() {
                                       contratosBloc.add(ContratosSelect());
                                     });
@@ -550,7 +552,8 @@ class New_ContratoState extends State<NewContrato> {
                                         arguments: {
                                           'archivo': contrato.archivo,
                                           'id_contrato': contrato.idContrato
-                                        });
+                                        }).then((value) =>
+                                        contratosBloc.add(ContratosSelect()));
                                     setState(() {
                                       contratosBloc.add(ContratosSelect());
                                     });
@@ -680,7 +683,8 @@ class New_ContratoState extends State<NewContrato> {
                                         arguments: {
                                           'archivo': contrato.archivo,
                                           'id_contrato': contrato.idContrato
-                                        });
+                                        }).then((value) =>
+                                        contratosBloc.add(ContratosSelect()));
                                     setState(() {
                                       contratosBloc.add(ContratosSelect());
                                     });
@@ -810,7 +814,8 @@ class New_ContratoState extends State<NewContrato> {
                                         arguments: {
                                           'archivo': contrato.archivo,
                                           'id_contrato': contrato.idContrato
-                                        });
+                                        }).then((value) =>
+                                        contratosBloc.add(ContratosSelect()));
                                     setState(() {
                                       contratosBloc.add(ContratosSelect());
                                     });
@@ -940,7 +945,8 @@ class New_ContratoState extends State<NewContrato> {
                                         arguments: {
                                           'archivo': contrato.archivo,
                                           'id_contrato': contrato.idContrato
-                                        });
+                                        }).then((value) =>
+                                        contratosBloc.add(ContratosSelect()));
                                     setState(() {
                                       contratosBloc.add(ContratosSelect());
                                     });
