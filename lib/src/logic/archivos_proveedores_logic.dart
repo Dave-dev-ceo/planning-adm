@@ -125,7 +125,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerArchivosById/$id_planner/$idArchivo'),
+              '/wedding/PROVEEDORES/obtenerArchivosById/$id_planner.to/$idArchivo'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -208,9 +208,11 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       int idUsuario = await _sharedPreferences.getIdUsuario();
       data['id_proveedor'] = data['id_proveedor'].toString();
       data['id_evento'] = data['id_evento'].toString();
+      data['id_servicio'] = data['id_servicio'].toString();
       data['id_planner'] = idPlanner.toString();
       data['creado_por'] = idUsuario.toString();
       data['modificado_por'] = idUsuario.toString();
+
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(configC.url +

@@ -644,7 +644,9 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       );
       if (provsrv['id_servicio'] != null) {
         if (opt.idServicio != provsrv['id_servicio']) {
-          lista.add(tempWidget);
+          if (opt.idServicio == null) {
+            lista.add(tempWidget);
+          }
         } else {
           listaServicio.add(tempWidget);
         }
@@ -709,10 +711,10 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           child: const Text('Cancelar'),
         ),
         TextButton(
-          onPressed: () => {
+          onPressed: () async => {
+            await archivoEspecialBloc.add(DeleteArchivoEspecialEvent(
+                idArchivo, this.provsrv['id_proveedor'], idEvento)),
             Navigator.pop(context, 'Aceptar'),
-            archivoEspecialBloc.add(DeleteArchivoEspecialEvent(
-                idArchivo, this.provsrv['id_proveedor'], idEvento))
           },
           child: const Text('Aceptar'),
         ),

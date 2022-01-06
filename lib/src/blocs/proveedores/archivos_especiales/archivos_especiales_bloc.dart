@@ -28,15 +28,35 @@ class ArchivosEspecialesBloc
       try {
         int service = await logic.deleteArchivoEspecial(event.idArchivo);
         add(FechtArchivoEspecialEvent(event.idProveedor, event.idEvento));
-      } catch (e) {}
+      } catch (e) {
+        print(e);
+      }
     } else if (event is CreateArchivoEspecialEvent) {
       try {
-        int proveedor = await logic.createArchivosEspecial(event.data);
-        add(FechtArchivoEspecialEvent(int.parse(event.data['id_proveedor']),
-            int.parse(event.data['id_evento'])));
+        await logic.createArchivosEspecial(event.data);
+        print(event.data['id_proveedor'].runtimeType);
+        print(event.data['id_evento'].runtimeType);
+
+        add(
+          FechtArchivoEspecialEvent(
+            (event.data['id_proveedor'].runtimeType == String)
+                ? int.parse(event.data['id_proveedor'])
+                : event.data['id_proveedor'],
+            (event.data['id_evento'].runtimeType == String)
+                ? int.parse(event.data['id_evento'])
+                : event.data['id_evento'],
+          ),
+        );
       } catch (e) {
         print(e);
       }
     }
   }
+
+  // @override
+  // void onTransition(
+  //     Transition<ArchivosEspecialesEvent, ArchivosEspecialesState> transition) {
+  //   print(transition);
+  //   super.onTransition(transition);
+  // }
 }
