@@ -452,7 +452,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                           Container(
                             width: 650.0,
                             child: _list(moduleServicios, true),
-                          )
+                          ),
                       ],
                     ))),
           )
@@ -629,11 +629,10 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         ]),
         onTap: () async {},
       );
-      if (opt.idServicio != provsrv['id_servicio']) {
-        lista.add(tempWidget);
-      } else {
+      if (opt.idServicio == provsrv['id_servicio']) {
         listaServicio.add(tempWidget);
       }
+      lista.add(tempWidget);
     }
 
     if (!isServicio) {
