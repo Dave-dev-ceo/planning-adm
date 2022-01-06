@@ -151,9 +151,7 @@ class _DetalleListasState extends State<DetalleListas> {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                        icon: this.listas['id_lista'] == null
-                            ? const Icon(Icons.save)
-                            : const Icon(Icons.edit),
+                        icon: const Icon(Icons.save),
                         color: Colors.white,
                         onPressed: () async {
                           if (this.listas['id_lista'] == null) {
