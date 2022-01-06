@@ -219,8 +219,10 @@ class _ResumenEventoState extends State<ResumenEvento> {
       ),
       onTap: WP_EVT_RES_EDT
           ? () async {
-              await Navigator.pushNamed(context, '/editarEvento',
-                  arguments: {'evento': evtt});
+              if (!isInvolucrado) {
+                await Navigator.pushNamed(context, '/editarEvento',
+                    arguments: {'evento': evtt});
+              }
             }
           : null,
     );
