@@ -8,6 +8,7 @@ import 'package:planning/src/resources/config_conection.dart';
 
 abstract class ListasLogic {
   Future<ItemModelListas> fetchListas();
+  Future<int> deleteLista(Map<String, dynamic> data);
   Future<int> deleteActividadesRecibir(int idActividad);
   Future<String> downloadPDFListas();
   // Future<ItemModelArticulosRecibir> fetchArticulosRecibirIdPlanner();
@@ -50,6 +51,34 @@ class FetchListaLogic extends ListasLogic {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  @override
+  Future<int> deleteLista(Map<String, dynamic> data) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
+    String token = await _sharedPreferences.getToken();
+    final response = await client.post(
+        Uri.parse(configC.url + configC.puerto + '/wedding/LISTAS/deleteLista'),
+        body: {
+          'id_lista': data['id_lista'].toString(),
+          'id_planner': data['id_planner'].toString(),
+          'id_evento': data['id_evento'].toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
+    if (response.statusCode == 200) {
+      Map<String, dynamic> res = json.decode(response.body);
+      await _sharedPreferences.setToken(res['token']);
+      return 0;
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw CreateListasException();
     }
   }
 

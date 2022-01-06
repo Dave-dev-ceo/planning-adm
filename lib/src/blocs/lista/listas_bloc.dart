@@ -26,5 +26,13 @@ class ListasBloc extends Bloc<ListasEvent, ListasState> {
         yield ErrorCreateListasrState('Sesión caducada');
       }
     }
+    if (event is DeleteListaEvent) {
+      try {
+        int idLista = await logic.deleteLista(event.data);
+        if (idLista == 0) {
+          add(FechtListasEvent());
+        }
+      } catch (e) {}
+    }
   }
 }

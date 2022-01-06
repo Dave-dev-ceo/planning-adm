@@ -38,6 +38,8 @@ class _DetalleListasState extends State<DetalleListas> {
   DetalleListasBloc detalleListasBloc;
   _DetalleListasState(this.listas) {}
 
+  bool btnAddEditList = false;
+
   // Declaración variables globales.
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
 
@@ -117,6 +119,11 @@ class _DetalleListasState extends State<DetalleListas> {
                   decoration: new InputDecoration(
                     labelText: 'Nombre',
                   ),
+                  onChanged: (text) {
+                    setState(() {
+                      btnAddEditList = true;
+                    });
+                  },
                 ),
                 large: 450.0,
                 ancho: 90.0,
@@ -124,84 +131,90 @@ class _DetalleListasState extends State<DetalleListas> {
               TextFormFields(
                 icon: Icons.drive_file_rename_outline,
                 item: TextFormField(
-                  controller: descripcionCtrl,
-                  decoration: new InputDecoration(labelText: 'Descripción'),
-                ),
+                    controller: descripcionCtrl,
+                    decoration: new InputDecoration(labelText: 'Descripción'),
+                    onChanged: (text) {
+                      setState(() {
+                        btnAddEditList = true;
+                      });
+                    }),
                 large: 450.0,
                 ancho: 90.0,
               ),
-              Ink(
-                padding: EdgeInsets.all(5),
-                width: 100.0,
-                // height: 100.0,
-                decoration: const ShapeDecoration(
-                  color: Colors.black,
-                  shape: CircleBorder(),
-                ),
-                child: IconButton(
-                  icon: this.listas['id_lista'] == null
-                      ? const Icon(Icons.save)
-                      : const Icon(Icons.edit),
-                  color: Colors.white,
-                  onPressed: () async {
-                    if (this.listas['id_lista'] == null) {
-                      Map<String, dynamic> json =
-                          await _jsonAgregarLista(context);
-                      detalleListasBloc
-                          .add(CreateListasEvent(json, itemModeDetallaLista));
-                      await ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          action: SnackBarAction(
-                            label: 'Action',
-                            onPressed: () {
-                              // Code to execute.
-                            },
-                          ),
-                          content: const Text(
-                              'El elemento se actualizó correctamente.'),
-                          duration: const Duration(milliseconds: 1500),
-                          width: 290.0, // Width of the SnackBar.
-                          padding: const EdgeInsets.symmetric(
-                            horizontal:
-                                8.0, // Inner padding for SnackBar content.
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                      );
-                    } else if (this.listas['id_lista'] != null) {
-                      Map<String, dynamic> json =
-                          await _jsonUpdateLista(context);
-                      detalleListasBloc
-                          .add(UpdateListasEvent(json, itemModeDetallaLista));
-                      await ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          action: SnackBarAction(
-                            label: 'Action',
-                            onPressed: () {
-                              // Code to execute.
-                            },
-                          ),
-                          content: const Text(
-                              'El elemento se agrego correctamente.'),
-                          duration: const Duration(milliseconds: 1500),
-                          width: 290.0, // Width of the SnackBar.
-                          padding: const EdgeInsets.symmetric(
-                            horizontal:
-                                8.0, // Inner padding for SnackBar content.
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              )
+              btnAddEditList
+                  ? Ink(
+                      padding: EdgeInsets.all(5),
+                      width: 100.0,
+                      // height: 100.0,
+                      decoration: const ShapeDecoration(
+                        color: Colors.black,
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        icon: this.listas['id_lista'] == null
+                            ? const Icon(Icons.save)
+                            : const Icon(Icons.edit),
+                        color: Colors.white,
+                        onPressed: () async {
+                          if (this.listas['id_lista'] == null) {
+                            Map<String, dynamic> json =
+                                await _jsonAgregarLista(context);
+                            detalleListasBloc.add(
+                                CreateListasEvent(json, itemModeDetallaLista));
+                            await ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                action: SnackBarAction(
+                                  label: 'Action',
+                                  onPressed: () {
+                                    // Code to execute.
+                                  },
+                                ),
+                                content: const Text(
+                                    'El elemento se actualizó correctamente.'),
+                                duration: const Duration(milliseconds: 1500),
+                                width: 290.0, // Width of the SnackBar.
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal:
+                                      8.0, // Inner padding for SnackBar content.
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            );
+                          } else if (this.listas['id_lista'] != null) {
+                            Map<String, dynamic> json =
+                                await _jsonUpdateLista(context);
+                            detalleListasBloc.add(
+                                UpdateListasEvent(json, itemModeDetallaLista));
+                            await ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                action: SnackBarAction(
+                                  label: 'Action',
+                                  onPressed: () {
+                                    // Code to execute.
+                                  },
+                                ),
+                                content: const Text(
+                                    'El elemento se agrego correctamente.'),
+                                duration: const Duration(milliseconds: 1500),
+                                width: 290.0, // Width of the SnackBar.
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal:
+                                      8.0, // Inner padding for SnackBar content.
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    )
+                  : Text('')
             ],
           )
         ],

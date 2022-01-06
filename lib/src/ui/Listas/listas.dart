@@ -237,6 +237,14 @@ class _ListaState extends State<Listas> {
       final tempWidget = ListTile(
         title: Text(opt.nombre),
         subtitle: Text(opt.descripcion),
+        trailing: Wrap(spacing: 12, children: <Widget>[
+          IconButton(
+              onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      _eliminarLista(opt.idLista)),
+              icon: const Icon(Icons.delete))
+        ]),
         onTap: () async {
           await Navigator.pushNamed(context, '/detalleListas', arguments: {
             'id_lista': opt.idLista,
@@ -248,6 +256,28 @@ class _ListaState extends State<Listas> {
       lista.add(tempWidget);
     }
     return lista;
+  }
+
+  _eliminarLista(int idLista) {
+    return AlertDialog(
+      title: const Text('Eliminar'),
+      content: const Text(
+          '¿Desea eliminar el elemento? Se eliminará los registros que contenga el elemento.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () {
+            Map<String, dynamic> json = {'id_lista': idLista};
+            Navigator.pop(context, 'Aceptar');
+            listasBloc.add(DeleteListaEvent(json));
+          },
+          child: const Text('Aceptar'),
+        ),
+      ],
+    );
   }
 
   formItemsDesign(icon, item, large, ancho) {
