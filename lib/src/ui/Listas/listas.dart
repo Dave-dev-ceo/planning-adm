@@ -242,7 +242,7 @@ class _ListaState extends State<Listas> {
             'id_lista': opt.idLista,
             'nombre': opt.nombre,
             'descripcion': opt.descripcion
-          });
+          }).then((_) => listasBloc.add(FechtListasEvent()));
         },
       );
       lista.add(tempWidget);

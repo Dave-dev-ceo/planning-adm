@@ -282,8 +282,9 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             );
           },
           body: Column(
-              children: _listServicioInvolucrado(
-                  item.prov, item.id_servicio, servicios)),
+            children: _listServicioInvolucrado(
+                item.prov, item.id_servicio, servicios),
+          ),
           isExpanded: item.isExpanded,
         );
       }).toList(),
@@ -372,7 +373,9 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
         ),
       ));
     }
-
+    lista.add(SizedBox(
+      height: 20.0,
+    ));
     return lista;
   }
 }
