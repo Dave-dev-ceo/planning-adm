@@ -129,11 +129,11 @@ class _MesasPageState extends State<MesasPage> {
   Widget buttonByPage() {
     switch (indexNavBar) {
       case 0:
-        if (!isInvolucrado) {
-          return _buttonAddMesas();
-        } else {
-          return FloatingActionButton(onPressed: () {}, heroTag: UniqueKey());
-        }
+        //if (!isInvolucrado) {
+        return _buttonAddMesas();
+        //} else {
+        //  return FloatingActionButton(onPressed: () {}, heroTag: UniqueKey());
+        //}
         break;
       case 1:
         return _expandableButtonOptions();
@@ -157,22 +157,19 @@ class _MesasPageState extends State<MesasPage> {
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
-        !isInvolucrado
-            ? SpeedDialChild(
-                child: Icon(Icons.add),
-                label: 'Añadir mesa',
-                onTap: () {
-                  Navigator.of(context)
-                      .pushNamed('/asignarMesas',
-                          arguments: (lastNumMesa == null)
-                              ? lastNumMesa = 0
-                              : lastNumMesa)
-                      .then((value) => {
-                            lastNumMesa = value,
-                          });
-                },
-              )
-            : SpeedDialChild(),
+        SpeedDialChild(
+          child: Icon(Icons.add),
+          label: 'Añadir mesa',
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed('/asignarMesas',
+                    arguments:
+                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+                .then((value) => {
+                      lastNumMesa = value,
+                    });
+          },
+        ),
         SpeedDialChild(
           child: Icon(Icons.upload),
           label: 'Subir archivo',
@@ -223,22 +220,19 @@ class _MesasPageState extends State<MesasPage> {
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
-        !isInvolucrado
-            ? SpeedDialChild(
-                child: Icon(Icons.add),
-                label: 'Añadir mesa',
-                onTap: () {
-                  Navigator.of(context)
-                      .pushNamed('/asignarMesas',
-                          arguments: (lastNumMesa == null)
-                              ? lastNumMesa = 0
-                              : lastNumMesa)
-                      .then((value) => {
-                            lastNumMesa = value,
-                          });
-                },
-              )
-            : SpeedDialChild(),
+        SpeedDialChild(
+          child: Icon(Icons.add),
+          label: 'Añadir mesa',
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed('/asignarMesas',
+                    arguments:
+                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+                .then((value) => {
+                      lastNumMesa = value,
+                    });
+          },
+        ),
         SpeedDialChild(
           child: Icon(Icons.download),
           label: 'Descargar PDF',
@@ -388,35 +382,30 @@ class _MesasPageState extends State<MesasPage> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            !isInvolucrado
-                                ? PreferredSize(
-                                    preferredSize: Size.fromWidth(15),
-                                    child: IconButton(
-                                      onPressed: () async {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => EditMesaDialog(
-                                            mesaModel: listaMesa[index],
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(Icons.edit),
+                            PreferredSize(
+                              preferredSize: Size.fromWidth(15),
+                              child: IconButton(
+                                onPressed: () async {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => EditMesaDialog(
+                                      mesaModel: listaMesa[index],
                                     ),
-                                  )
-                                : Text(''),
+                                  );
+                                },
+                                icon: Icon(Icons.edit),
+                              ),
+                            ),
                             PreferredSize(
                               preferredSize: Size.fromWidth(12),
-                              child: !isInvolucrado
-                                  ? IconButton(
-                                      onPressed: () async {
-                                        await _showAlertDialogDeleteMesa(
-                                            listaMesa[index].idMesa,
-                                            listaAsignados);
-                                        setState(() {});
-                                      },
-                                      icon: Icon(Icons.delete),
-                                    )
-                                  : Text(''),
+                              child: IconButton(
+                                onPressed: () async {
+                                  await _showAlertDialogDeleteMesa(
+                                      listaMesa[index].idMesa, listaAsignados);
+                                  setState(() {});
+                                },
+                                icon: Icon(Icons.delete),
+                              ),
                             ),
                           ],
                         ),
@@ -730,33 +719,27 @@ class _MesasPageState extends State<MesasPage> {
           ),
           Column(
             children: [
-              !isInvolucrado
-                  ? ElevatedButton(
-                      onPressed: asignarMesas,
-                      // child: Text('Regresar'),
-                      child: Icon(Icons.arrow_back),
-                    )
-                  : Text(''),
+              ElevatedButton(
+                onPressed: asignarMesas,
+                // child: Text('Regresar'),
+                child: Icon(Icons.arrow_back),
+              ),
               SizedBox(
                 height: 10.0,
               ),
-              !isInvolucrado
-                  ? ElevatedButton(
-                      onPressed: _deleteAsignadoToMesa,
-                      // child: Text('Asignar'),
-                      child: Icon(Icons.arrow_forward),
-                    )
-                  : Text(''),
+              ElevatedButton(
+                onPressed: _deleteAsignadoToMesa,
+                // child: Text('Asignar'),
+                child: Icon(Icons.arrow_forward),
+              ),
               Spacer(),
-              !isInvolucrado
-                  ? ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 5.0,
-                      ),
-                      onPressed: _asignarAutoMesas,
-                      child: Text('Asignar auto.'),
-                    )
-                  : Text(''),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 5.0,
+                ),
+                onPressed: _asignarAutoMesas,
+                child: Text('Asignar auto.'),
+              ),
               SizedBox(
                 height: 20.0,
               )
