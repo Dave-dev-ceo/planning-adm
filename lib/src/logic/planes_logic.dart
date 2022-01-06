@@ -586,7 +586,7 @@ class ActividadesEvento {
     }
   }
 
-  Future<ContadorActividadesModel> getContadorValues() async {
+  Future<ContadorActividadesModel> getContadorValues(bool isInvolucrado) async {
     SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
     ConfigConection confiC = new ConfigConection();
     Client client = Client();
@@ -595,7 +595,13 @@ class ActividadesEvento {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
 
-    const endpoint = '/wedding/PLANES/conteoPorEstatusActividad';
+    String endpoint;
+
+    if (isInvolucrado) {
+      endpoint = '/wedding/PLANES/conteoPorEstatusActividadInvolucrado';
+    } else {
+      endpoint = '/wedding/PLANES/conteoPorEstatusActividad';
+    }
 
     final headers = {
       'Content-Type': 'application/json',

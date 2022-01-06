@@ -1298,7 +1298,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
   }
 
   StreamBuilder<ContadorActividadesModel> contadorActividadesWidget() {
-    _planesLogic.getContadorValues();
+    _planesLogic.getContadorValues(isInvolucrado);
+
     return StreamBuilder(
       stream: _planesLogic.contadorActividadStream,
       builder: (context, snapshot) {
@@ -1470,7 +1471,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                           ),
                         ).then((_) async {
                           await _planesLogic.getAllPlannes();
-                          await _planesLogic.getContadorValues();
+                          await _planesLogic.getContadorValues(isInvolucrado);
                           setState(() {});
                         });
                       },
@@ -1634,7 +1635,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                               await _alertaBorrar(actividad.idActividad,
                                   actividad.nombreActividad);
                               _planesLogic.getAllPlannes();
-                              _planesLogic.getContadorValues();
+                              _planesLogic.getContadorValues(isInvolucrado);
                               setState(() {});
                             },
                           )
@@ -1716,7 +1717,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       ),
                     ).then((_) async {
                       await _planesLogic.getAllPlannes();
-                      await _planesLogic.getContadorValues();
+                      await _planesLogic.getContadorValues(isInvolucrado);
                       setState(() {});
                     });
                   },
@@ -1820,7 +1821,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
         .then((_) async {
       _planesBloc.add(GetTimingsAndActivitiesEvent());
       await _planesLogic.getAllPlannes();
-      await _planesLogic.getContadorValues();
+      await _planesLogic.getContadorValues(isInvolucrado);
       setState(() {});
     });
   }
@@ -1850,7 +1851,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 Navigator.of(context).pop();
                 _planesBloc.add(BorrarActividadPlanEvent(idActividad));
                 await _planesLogic.getAllPlannes();
-                await _planesLogic.getContadorValues();
+                await _planesLogic.getContadorValues(isInvolucrado);
                 setState(() {});
                 _mensaje('Actividad borrada');
               },
@@ -1932,7 +1933,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
       }); // reset
       _planesBloc.add(UpdateActividadesEventoEvent(send));
       _planesLogic.getAllPlannes();
-      _planesLogic.getContadorValues();
+      _planesLogic.getContadorValues(isInvolucrado);
 
       // cambiamos x updateevent
     }
