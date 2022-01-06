@@ -547,13 +547,14 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         title: Text(opt.nombre),
         subtitle: Text(opt.descripcion),
         trailing: Wrap(spacing: 12, children: <Widget>[
-          IconButton(
-              onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _eliminarArchivoListaEspecial(
-                          opt.idArchivoEspecial, opt.idProveedor)),
-              icon: const Icon(Icons.delete)),
+          if (!isInvolucrado)
+            IconButton(
+                onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        _eliminarArchivoListaEspecial(
+                            opt.idArchivoEspecial, opt.idProveedor)),
+                icon: const Icon(Icons.delete)),
           IconButton(
               // opt.tipoMime.toString() + opt.archivo.toString()
               onPressed: () {
@@ -618,12 +619,13 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         title: Text(opt.nombre),
         subtitle: Text(opt.descripcion),
         trailing: Wrap(spacing: 12, children: <Widget>[
-          IconButton(
-              onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) => _eliminarArchivoLista(
-                      opt.idArchivo, opt.idProveedor, opt.idServicio)),
-              icon: const Icon(Icons.delete)),
+          if (!isInvolucrado)
+            IconButton(
+                onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) => _eliminarArchivoLista(
+                        opt.idArchivo, opt.idProveedor, opt.idServicio)),
+                icon: const Icon(Icons.delete)),
           IconButton(
               // opt.tipoMime.toString() + opt.archivo.toString()
               onPressed: () {
@@ -647,7 +649,9 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           listaServicio.add(tempWidget);
         }
       } else {
-        lista.add(tempWidget);
+        if (opt.idServicio == null) {
+          lista.add(tempWidget);
+        }
       }
     }
 
