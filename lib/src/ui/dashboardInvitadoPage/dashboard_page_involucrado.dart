@@ -160,15 +160,14 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
 
       // temp.add(ProveedorEvento());
     }
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-      gridCard.add(_builCard(
-        'Autorizaciones',
-        AutorizacionLista(),
-        FaIcon(FontAwesomeIcons.moneyCheck),
-      ));
-
-      // temp.add(AutorizacionLista());
-    }
+    // if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
+    //   gridCard.add(_builCard(
+    //     'Autorizaciones',
+    //     AutorizacionLista(),
+    //     FaIcon(FontAwesomeIcons.moneyCheck),
+    //   ));
+    //   // temp.add(AutorizacionLista());
+    // }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
       gridCard.add(_builCard(
         'Invitados',
