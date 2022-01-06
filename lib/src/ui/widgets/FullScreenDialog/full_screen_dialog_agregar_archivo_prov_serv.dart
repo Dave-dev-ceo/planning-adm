@@ -50,13 +50,25 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   String descripcionLink;
   String urlValue;
   int idEvento;
+  bool isInvolucrado = false;
   @override
   void initState() {
     archivoProveedorBloc = BlocProvider.of<ArchivoProveedorBloc>(context);
     archivoProveedorBloc.add(FechtArchivoProvServEvent(
         this.provsrv['id_proveedor'], this.provsrv['id_servicio'], false));
     checkIsEvent();
+    checkisInvolucrado();
     super.initState();
+  }
+
+  checkisInvolucrado() async {
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (idInvolucrado != null) {
+      setState(() {
+        isInvolucrado = true;
+      });
+    }
   }
 
   checkIsEvent() async {
@@ -395,6 +407,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             };
           }
         });
+
         archivoProveedorBloc.add(CreateArchivoProvServEvent(json));
         descripcionCtrl.text = '';
       } else {
@@ -411,6 +424,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             // files
             json = {
               'id_proveedor': this.provsrv['id_proveedor'],
+              'id_servicio': this.provsrv['id_servicio'],
               'id_evento': idEvento,
               // 'tipo_mime': 'data:application/pdf;base64,',
               'tipo_mime': mimeType,

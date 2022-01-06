@@ -20,8 +20,11 @@ class ArchivoProveedorBloc
       try {
         ItemModelArchivoProvServ proveedor = await logic.fetchArchivosProvServ(
             event.id_proveedor, event.id_servicio);
+        print('EntreAqui traer archivos');
         yield MostrarArchivoProvServState(proveedor);
       } catch (e) {
+        print('error obtener datos');
+
         print(e);
         yield ErrorMostrarArchivoProvServState('No se pudo insertar');
       }
@@ -29,9 +32,21 @@ class ArchivoProveedorBloc
       try {
         int proveedor = await logic.createArchivos(event.data);
         //add(FechtArchivoProvServEvent(int.parse(event.data['id_proveedor']), 0));
-        add(FechtArchivoProvServEvent(int.parse(event.data['id_proveedor']),
-            int.parse(event.data['id_servicio']), false));
+        event.data.forEach((key, value) {
+          print('$key == ${value.runtimeType}');
+        });
+        add(FechtArchivoProvServEvent(
+            (event.data['id_proveedor'].runtimeType is int)
+                ? event.data['id_proveedor']
+                : int.parse(event.data['id_proveedor']),
+            (event.data['id_servicio'] == null)
+                ? 0
+                : (event.data['id_servicio'].runtimeType is int)
+                    ? event.data['id_proveedor']
+                    : int.parse(event.data['id_proveedor']),
+            false));
       } catch (e) {
+        print('error crear evento');
         print(e);
         yield ErrorCreateArchivoProvServState('No se pudo insertar');
       }
