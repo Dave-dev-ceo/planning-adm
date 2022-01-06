@@ -1690,6 +1690,17 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       ),
                       flex: 1,
                     ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: AutoSizeText(
+                          '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
+                          maxLines: 1,
+                          wrapWords: false,
+                        ),
+                      ),
+                      flex: 1,
+                    )
                   ],
                 ),
                 subtitle: Text(actividad.descripcionActividad),
