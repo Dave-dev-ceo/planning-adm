@@ -111,6 +111,7 @@ class _ProveedoresState extends State<Proveedores> {
 
   Widget _listaProveedore() {
     return SingleChildScrollView(
+      controller: ScrollController(),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(15),
@@ -138,7 +139,14 @@ class _ProveedoresState extends State<Proveedores> {
               });
             }
 
-            return _listaBuild();
+            return Column(
+              children: [
+                _listaBuild(),
+                SizedBox(
+                  height: 50.0,
+                )
+              ],
+            );
           } else {
             return Center(child: CircularProgressIndicator());
           }

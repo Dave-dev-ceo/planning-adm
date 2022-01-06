@@ -355,12 +355,9 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         'nombre': descripcionLink,
         'descripcion': descripcionLink
       };
-      //archivoProveedorBloc.add(CreateArchivoProvServEvent(
-      //  jsonLink,
-      //  itemModelProveedores,
-      //  this.provsrv['id_proveedor'],
-      //  this.provsrv['id_servicio'],
-      //));
+      archivoProveedorBloc.add(CreateArchivoProvServEvent(
+        jsonLink,
+      ));
       _textcontrollerDes.clear();
       _textControllerUrl.clear();
     } else {}
@@ -629,10 +626,15 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         ]),
         onTap: () async {},
       );
-      if (opt.idServicio == provsrv['id_servicio']) {
-        listaServicio.add(tempWidget);
+      if (provsrv['id_servicio'] != null) {
+        if (opt.idServicio != provsrv['id_servicio']) {
+          lista.add(tempWidget);
+        } else {
+          listaServicio.add(tempWidget);
+        }
+      } else {
+        lista.add(tempWidget);
       }
-      lista.add(tempWidget);
     }
 
     if (!isServicio) {

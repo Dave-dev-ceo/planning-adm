@@ -166,6 +166,6 @@ class SharedPreferencesT {
 
   clear() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    _sharedPreferences.clear();
+    await _sharedPreferences.clear();
   }
 }

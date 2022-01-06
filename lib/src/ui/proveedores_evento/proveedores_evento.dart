@@ -58,6 +58,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             await proveedoreventosBloc.add(FechtProveedorEventosEvent());
           },
           child: SingleChildScrollView(
+            controller: ScrollController(),
             physics: const AlwaysScrollableScrollPhysics(),
             child: Container(
               width: double.infinity,
@@ -69,7 +70,14 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                     state.detlistas.results.forEach((element) {});
                     _dataPrvEv = _createDataListProvEvt(state.detlistas);
                   }
-                  return _listaBuild();
+                  return Column(
+                    children: [
+                      _listaBuild(),
+                      SizedBox(
+                        height: 50.0,
+                      )
+                    ],
+                  );
                 } else {
                   return Center(child: CircularProgressIndicator());
                 }
@@ -107,7 +115,14 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                   state.detlistas.results.forEach((element) {});
                   _dataPrvEv = _createDataListProvEvt(state.detlistas);
                 }
-                return _listaInvolucrado();
+                return Column(
+                  children: [
+                    _listaInvolucrado(),
+                    SizedBox(
+                      height: 50.0,
+                    )
+                  ],
+                );
               } else {
                 return Center(child: CircularProgressIndicator());
               }
