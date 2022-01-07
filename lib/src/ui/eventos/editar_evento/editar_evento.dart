@@ -487,7 +487,7 @@ class _EditarEventoState extends State<EditarEvento> {
                               Icons.date_range_outlined,
                               TextFormField(
                                 controller: fechaFinCtrl,
-                                onTap: () => _selectDateInicio(context),
+                                onTap: () => _selectDateFin(context),
                                 readOnly: true,
                                 decoration: new InputDecoration(
                                   labelText: 'Fecha fin',
@@ -506,6 +506,8 @@ class _EditarEventoState extends State<EditarEvento> {
                           child: formItemsDesign(
                               Icons.date_range_outlined,
                               TextFormField(
+                                onTap: () => _selectDateEvento(context),
+                                readOnly: true,
                                 controller: fechaEventoCtrl,
                                 decoration: new InputDecoration(
                                   labelText: 'Fecha evento',
