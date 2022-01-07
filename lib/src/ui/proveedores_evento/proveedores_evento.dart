@@ -250,20 +250,24 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
               Checkbox(
                 checkColor: Colors.black,
                 value: opt.isExpanded,
-                onChanged: (value) {
-                  setState(() {
-                    opt.isExpanded = value;
-                  });
-                  Map<String, dynamic> json = {
-                    'id_servicio': idServi,
-                    'id_proveedor': opt.id_proveedor
-                  };
-                  if (opt.isExpanded) {
-                    proveedoreventosBloc.add(CreateProveedorEventosEvent(json));
-                  } else if (!opt.isExpanded) {
-                    proveedoreventosBloc.add(DeleteProveedorEventosEvent(json));
-                  }
-                },
+                onChanged: !opt.seleccion
+                    ? (value) {
+                        setState(() {
+                          opt.isExpanded = value;
+                        });
+                        Map<String, dynamic> json = {
+                          'id_servicio': idServi,
+                          'id_proveedor': opt.id_proveedor
+                        };
+                        if (opt.isExpanded) {
+                          proveedoreventosBloc
+                              .add(CreateProveedorEventosEvent(json));
+                        } else if (!opt.isExpanded) {
+                          proveedoreventosBloc
+                              .add(DeleteProveedorEventosEvent(json));
+                        }
+                      }
+                    : null,
               ),
             ],
           ));
