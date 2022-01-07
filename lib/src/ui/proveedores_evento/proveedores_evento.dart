@@ -340,25 +340,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             trailing: Wrap(
               spacing: 12,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Seleccionar: '),
-                ),
-                Radio(
-                  value: opt.id_proveedor,
-                  groupValue: servicios[idServi],
-                  onChanged: (value) async {
-                    setState(() {
-                      servicios[idServi] = value;
-                    });
-                    Map data = {
-                      'id_proveedor': opt.id_proveedor.toString(),
-                      'id_servicio': idServi.toString()
-                    };
-                    await proveedoreventosBloc
-                        .add(UpdateProveedorEventosEvent(data));
-                  },
-                ),
                 servicios[idServi] == opt.id_proveedor
                     ? Container(
                         width: 250.0,
@@ -379,7 +360,26 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                           },
                         ),
                       )
-                    : SizedBox()
+                    : SizedBox(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Seleccionar: '),
+                ),
+                Radio(
+                  value: opt.id_proveedor,
+                  groupValue: servicios[idServi],
+                  onChanged: (value) async {
+                    setState(() {
+                      servicios[idServi] = value;
+                    });
+                    Map data = {
+                      'id_proveedor': opt.id_proveedor.toString(),
+                      'id_servicio': idServi.toString()
+                    };
+                    await proveedoreventosBloc
+                        .add(UpdateProveedorEventosEvent(data));
+                  },
+                ),
               ],
             ));
         lista.add(tempWidget);
