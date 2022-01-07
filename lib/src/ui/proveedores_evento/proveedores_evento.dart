@@ -244,7 +244,9 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
               opt.seleccion
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('Observaciones: ${opt.observacion}'),
+                      child: opt.observacion != null
+                          ? Text('Observaciones: ${opt.observacion}')
+                          : null,
                     )
                   : SizedBox(),
               Checkbox(
@@ -315,6 +317,9 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
       if (opt.isExpanded) {
+        TextEditingController textEditController = opt.observacion != null
+            ? TextEditingController(text: '${opt.observacion}')
+            : TextEditingController();
         final tempWidget = ListTile(
             title: Row(
               children: [
@@ -344,10 +349,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                     ? Container(
                         width: 250.0,
                         child: TextFormField(
-                          controller: opt.observacion != null
-                              ? TextEditingController(
-                                  text: '${opt.observacion}')
-                              : TextEditingController(),
+                          controller: textEditController,
                           decoration:
                               InputDecoration(hintText: 'Observaciones: '),
                           onChanged: (value) async {
@@ -372,6 +374,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                   groupValue: servicios[idServi],
                   onChanged: (value) async {
                     setState(() {
+                      opt.observacion = null;
                       servicios[idServi] = value;
                     });
                     Map data = {
