@@ -347,7 +347,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                 Radio(
                   value: opt.id_proveedor,
                   groupValue: servicios[idServi],
-                  onChanged: (value) {
+                  onChanged: (value) async {
                     setState(() {
                       servicios[idServi] = value;
                     });
@@ -355,26 +355,32 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                       'id_proveedor': opt.id_proveedor.toString(),
                       'id_servicio': idServi.toString()
                     };
-                    proveedoreventosBloc.add(UpdateProveedorEventosEvent(data));
+                    await proveedoreventosBloc
+                        .add(UpdateProveedorEventosEvent(data));
+                    proveedoreventosBloc.add(FechtProveedorEventosEvent());
                   },
                 ),
                 servicios[idServi] == opt.id_proveedor
                     ? Container(
                         width: 250.0,
                         child: TextFormField(
-                          controller:
-                              TextEditingController(text: '${opt.observacion}'),
+                          controller: opt.observacion != null
+                              ? TextEditingController(
+                                  text: '${opt.observacion}')
+                              : TextEditingController(),
                           decoration:
                               InputDecoration(hintText: 'Observaciones: '),
-                          onChanged: (value) {
+                          onChanged: (value) async {
                             opt.observacion = value;
                             Map data = {
                               'id_proveedor': opt.id_proveedor.toString(),
                               'id_servicio': idServi.toString(),
                               'observacion': opt.observacion
                             };
-                            proveedoreventosBloc
+                            await proveedoreventosBloc
                                 .add(UpdateProveedorEventosEvent(data));
+                            proveedoreventosBloc
+                                .add(FechtProveedorEventosEvent());
                           },
                         ),
                       )
