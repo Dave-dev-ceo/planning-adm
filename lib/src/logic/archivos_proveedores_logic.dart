@@ -125,7 +125,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerArchivosById/$id_planner.to/$idArchivo'),
+              '/wedding/PROVEEDORES/obtenerArchivosById/$id_planner/$idArchivo'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
