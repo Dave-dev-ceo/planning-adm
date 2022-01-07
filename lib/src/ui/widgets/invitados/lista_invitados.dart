@@ -62,6 +62,9 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
   BuildContext _dialogContext;
 
+  TextEditingController controllerBuscar = TextEditingController();
+  String _searchResult = '';
+  List<dynamic> buscador = [];
   @override
   void initState() {
     _controller = TabController(length: 3, vsync: this);
@@ -493,9 +496,48 @@ class _ListaInvitadosState extends State<ListaInvitados>
   }
 
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
+    if (_searchResult == '') {
+      buscador = snapshot.data.results;
+    }
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        Card(
+          child: ListTile(
+            leading: new Icon(Icons.search),
+            title: new TextField(
+              controller: controllerBuscar,
+              decoration: new InputDecoration(
+                  hintText: 'Buscar...', border: InputBorder.none),
+              onChanged: (value) async {
+                print(value);
+                setState(() {
+                  _searchResult = value;
+                  if (_searchResult == '') {
+                    buscador = snapshot.data.results;
+                  }
+                  buscador = snapshot.data.results
+                      .where((element) => element.nombre
+                          .toLowerCase()
+                          .contains(value.toLowerCase()))
+                      .toList();
+                  buscador.forEach((element) {
+                    print(element.nombre);
+                  });
+                });
+              },
+            ),
+            trailing: new IconButton(
+                icon: Icon(Icons.cancel),
+                onPressed: () {
+                  setState(() {
+                    controllerBuscar.clear();
+                    _searchResult = '';
+                  });
+                }),
+            autofocus: false,
+          ),
+        ),
         PaginatedDataTable(
           header: Text('Invitados'),
           rowsPerPage: 8,
@@ -508,8 +550,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
             DataColumn(label: Text('Asistencia', style: estiloTxt)),
             DataColumn(label: Text('Acción', style: estiloTxt)),
           ],
-          source: _DataSource(snapshot.data.results, context, idEvento,
-              WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV),
+          source: _DataSource(buscador, context, idEvento, WP_EVT_INV_CRT,
+              WP_EVT_INV_EDT, WP_EVT_INV_ENV),
         ),
       ],
     );
