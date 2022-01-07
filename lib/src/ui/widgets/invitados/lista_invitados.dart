@@ -1056,17 +1056,17 @@ class _DataSource extends DataTableSource {
         DataCell(Text(row.valueB), onTap: () async {
           await _showMyDialogLlamada(row.valueB);
         }),
-        DataCell(Center(child: Text(row.valueC)), onTap: () {
+        DataCell(Text(row.valueC), onTap: () {
           _listaGruposEvento(row.valueId);
         }),
         DataCell(
-          Center(child: Text(row.valueD)),
+          Text(row.valueD),
           onTap: () {
             _listaEstatusEvento(row.valueId);
           },
         ),
         DataCell(
-          Center(child: Icon(Icons.delete)),
+          Icon(Icons.delete),
           onTap: () {
             _showMyDialogWhatsApp(row.valueE, row.valueId);
           },
