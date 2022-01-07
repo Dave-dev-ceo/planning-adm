@@ -357,6 +357,8 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                               'id_servicio': idServi.toString(),
                               'observacion': opt.observacion
                             };
+                            await proveedoreventosBloc
+                                .add(UpdateProveedorEventosEvent(data));
                           },
                         ),
                       )
