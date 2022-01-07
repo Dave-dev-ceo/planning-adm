@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
+import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
@@ -156,18 +157,10 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
         'Proveedores',
         ProveedorEvento(),
         FaIcon(FontAwesomeIcons.peopleCarry),
+        isProveedor: true,
       ));
-
-      // temp.add(ProveedorEvento());
     }
-    // if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-    //   gridCard.add(_builCard(
-    //     'Autorizaciones',
-    //     AutorizacionLista(),
-    //     FaIcon(FontAwesomeIcons.moneyCheck),
-    //   ));
-    //   // temp.add(AutorizacionLista());
-    // }
+
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
       gridCard.add(_builCard(
         'Invitados',
@@ -180,15 +173,6 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
         ),
         FaIcon(FontAwesomeIcons.users),
       ));
-      // temp.add(ListaInvitados(
-      // idEvento: detalleEvento['idEvento'],
-      // WP_EVT_INV_CRT:
-      // pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-      // WP_EVT_INV_EDT:
-      // pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-      // WP_EVT_INV_ENV:
-      // pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-      // nameEvento: widget.detalleEvento['nEvento']));
     }
 
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
@@ -221,7 +205,8 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     );
   }
 
-  Widget _builCard(String titulo, dynamic page, Widget icon) {
+  Widget _builCard(String titulo, dynamic page, Widget icon,
+      {bool isProveedor}) {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(
@@ -268,7 +253,16 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
         ),
       ),
       onTap: () {
-        showDialog(context: context, builder: (context) => page);
+        showDialog(context: context, builder: (context) => page).then((_) => {
+              if (isInvolucrado != null)
+                {
+                  if (isInvolucrado)
+                    {
+                      BlocProvider.of<ProveedoreventosBloc>(context)
+                          .add(FechtProveedorEventosEvent())
+                    }
+                }
+            });
       },
     );
   }

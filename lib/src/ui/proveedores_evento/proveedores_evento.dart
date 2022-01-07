@@ -357,7 +357,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                     };
                     await proveedoreventosBloc
                         .add(UpdateProveedorEventosEvent(data));
-                    proveedoreventosBloc.add(FechtProveedorEventosEvent());
                   },
                 ),
                 servicios[idServi] == opt.id_proveedor
@@ -377,10 +376,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                               'id_servicio': idServi.toString(),
                               'observacion': opt.observacion
                             };
-                            await proveedoreventosBloc
-                                .add(UpdateProveedorEventosEvent(data));
-                            proveedoreventosBloc
-                                .add(FechtProveedorEventosEvent());
                           },
                         ),
                       )
