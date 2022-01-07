@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
 import 'package:planning/src/models/item_model_machotes.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Machotes extends StatefulWidget {
   const Machotes({Key key}) : super(key: key);
@@ -388,7 +389,7 @@ class _MachotesState extends State<Machotes> {
             label: 'Recibos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.request_page),
+            icon: FaIcon(FontAwesomeIcons.moneyCheckAlt),
             label: 'Pagos',
           ),
           BottomNavigationBarItem(
@@ -400,7 +401,7 @@ class _MachotesState extends State<Machotes> {
             label: 'Orden de pedido',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt_outlined),
+            icon: Icon(Icons.fact_check_outlined),
             label: 'Autorizaciones',
           )
         ],
