@@ -185,41 +185,61 @@ class New_ContratoState extends State<NewContrato> {
                           'Contratos',
                           style: TextStyle(color: Colors.black),
                         ),
-                        children: _contratosItem()),
+                        children: _contratosItem(),
+                        trailing: Icon(
+                          Icons.gavel,
+                          color: Colors.black,
+                        )),
                   ),
                   Card(
                     child: ExpansionTile(
                         title: Text('Recibos',
                             style: TextStyle(color: Colors.black)),
-                        children: _recibosItem()),
+                        children: _recibosItem(),
+                        trailing: Icon(
+                          Icons.receipt,
+                          color: Colors.black,
+                        )),
                   ),
                   Card(
                     child: ExpansionTile(
-                      title:
-                          Text('Pagos', style: TextStyle(color: Colors.black)),
-                      children: _pagosItem(),
-                    ),
+                        title: Text('Pagos',
+                            style: TextStyle(color: Colors.black)),
+                        children: _pagosItem(),
+                        trailing: Icon(
+                          Icons.request_page,
+                          color: Colors.black,
+                        )),
                   ),
                   Card(
                     child: ExpansionTile(
-                      title: Text('Minutas',
-                          style: TextStyle(color: Colors.black)),
-                      children: _minutasItem(),
-                    ),
+                        title: Text('Minutas',
+                            style: TextStyle(color: Colors.black)),
+                        children: _minutasItem(),
+                        trailing: Icon(
+                          Icons.receipt,
+                          color: Colors.black,
+                        )),
                   ),
                   Card(
                     child: ExpansionTile(
-                      title: Text('Orden de Pedido',
-                          style: TextStyle(color: Colors.black)),
-                      children: _ordenPagos(),
-                    ),
+                        title: Text('Orden de Pedido',
+                            style: TextStyle(color: Colors.black)),
+                        children: _ordenPagos(),
+                        trailing: Icon(
+                          Icons.list_alt,
+                          color: Colors.black,
+                        )),
                   ),
                   Card(
                     child: ExpansionTile(
-                      title: Text('Autorizaciones',
-                          style: TextStyle(color: Colors.black)),
-                      children: _autorizaciones(),
-                    ),
+                        title: Text('Autorizaciones',
+                            style: TextStyle(color: Colors.black)),
+                        children: _autorizaciones(),
+                        trailing: Icon(
+                          Icons.description_outlined,
+                          color: Colors.black,
+                        )),
                   ),
                 ],
               )

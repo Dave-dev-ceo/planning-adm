@@ -502,10 +502,11 @@ class _ListaInvitadosState extends State<ListaInvitados>
           showCheckboxColumn: false,
           columns: [
             DataColumn(label: Text('Nombre', style: estiloTxt)),
-            DataColumn(label: Text('Telefono', style: estiloTxt)),
+            DataColumn(
+                label: Center(child: Text('Telefono', style: estiloTxt))),
             DataColumn(label: Text('Grupo', style: estiloTxt)),
             DataColumn(label: Text('Asistencia', style: estiloTxt)),
-            DataColumn(label: Text('WhatsApp', style: estiloTxt)),
+            DataColumn(label: Text('Acción', style: estiloTxt)),
           ],
           source: _DataSource(snapshot.data.results, context, idEvento,
               WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV),
@@ -582,8 +583,41 @@ class _DataSource extends DataTableSource {
       //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Llamada', textAlign: TextAlign.center),
-          content: Text('Se llamara al número $numero'),
+          title: Text('Telefono', textAlign: TextAlign.center),
+          content: Container(
+            margin: const EdgeInsets.all(10.0),
+            width: 400.0,
+            height: 140.0,
+            child: Column(
+              children: <Widget>[
+                Card(
+                  child: ListTile(
+                    title: Text('Se llamara al número $numero'),
+                    trailing: Icon(Icons.phone),
+                    onTap: () async {
+                      await print('object');
+                      launch('tel://$numero');
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                      title: Text('Abrir WhatsApp',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              // fontSize: 20,
+                              color: Colors.green)),
+                      trailing: Icon(Icons.message),
+                      onTap: () async {
+                        await print('objectsss');
+                        launch('http://wa.me/521' + numero);
+                      }),
+                )
+              ],
+            ),
+          ),
           actions: <Widget>[
             TextButton(
               child: Text('Cancelar'),
@@ -591,51 +625,64 @@ class _DataSource extends DataTableSource {
                 Navigator.of(context).pop();
               },
             ),
-            SizedBox(
-              width: 10.0,
-            ),
-            TextButton(
-              child: Text('Confirmar'),
-              onPressed: () async {
-                launch('tel://$numero');
-                Navigator.of(context).pop();
-              },
-            ),
+            // SizedBox(
+            //   width: 10.0,
+            // ),
+            // TextButton(
+            //   child: Text('Confirmar'),
+            //   onPressed: () async {
+            //     launch('tel://$numero');
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
           ],
         );
       },
     );
   }
 
-  Future<void> _showMyDialogWhatsApp(String numero) async {
+  Future<void> _showMyDialogWhatsApp(String numero, idInvitado) async {
     return showDialog<void>(
-      context: _cont,
-      //barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Image.asset('whatsApp.png', height: 100.0, width: 150.0),
-          content: InkWell(
-            child: Text(
-              'Abrir WhatsApp',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.green),
-            ),
-            onTap: () => launch('http://wa.me/521' + numero),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cerrar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+        context: _cont,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Eliminar Invitado'),
+              content: // RichText(
+                  RichText(
+                text: TextSpan(
+                  text: '¿Desara eliminar el invitado? ',
+                  children: const <TextSpan>[
+                    TextSpan(
+                        text:
+                            '!Se eliminarán los acompañantes relacionados al invitado!',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    // TextSpan(text: ' world!'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                TextButton(
+                  child: Text('Aceptar'),
+                  onPressed: () async {
+                    Map<String, dynamic> json = {'id_invitado': idInvitado};
+                    int response = await api.deleteInvitados(json);
+                    if (response == 0) {
+                      await blocInvitados.fetchAllInvitados(context);
+                    }
+                    Navigator.of(context).pop();
+                  },
+                )
+              ]);
+        });
   }
 
   /*_viewShowDialog(String numero){
@@ -1009,19 +1056,19 @@ class _DataSource extends DataTableSource {
         DataCell(Text(row.valueB), onTap: () async {
           await _showMyDialogLlamada(row.valueB);
         }),
-        DataCell(Text(row.valueC), onTap: () {
+        DataCell(Center(child: Text(row.valueC)), onTap: () {
           _listaGruposEvento(row.valueId);
         }),
         DataCell(
-          Text(row.valueD),
+          Center(child: Text(row.valueD)),
           onTap: () {
             _listaEstatusEvento(row.valueId);
           },
         ),
         DataCell(
-          Text(row.valueE),
+          Center(child: Icon(Icons.delete)),
           onTap: () {
-            _showMyDialogWhatsApp(row.valueE);
+            _showMyDialogWhatsApp(row.valueE, row.valueId);
           },
         )
         //DataCell(Icon(Icons.edit)),

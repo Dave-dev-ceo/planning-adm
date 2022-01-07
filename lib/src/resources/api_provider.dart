@@ -832,4 +832,32 @@ class ApiProvider {
 
     return response.statusCode;
   }
+
+  Future<int> deleteInvitados(Map<String, dynamic> data) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
+    String token = await _sharedPreferences.getToken();
+    print(data);
+    final response = await client.post(
+        Uri.parse(
+            confiC.url + confiC.puerto + '/wedding/INVITADOS/deleteInvitados'),
+        body: {
+          'id_invitado': data['id_invitado'].toString(),
+          'id_planner': data['id_planner'].toString(),
+          'id_evento': data['id_evento'].toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> res = json.decode(response.body);
+      await _sharedPreferences.setToken(res['token']);
+      return 0;
+    } else {
+      return null;
+    }
+  }
 }
