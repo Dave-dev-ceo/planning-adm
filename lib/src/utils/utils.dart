@@ -57,7 +57,7 @@ void downloadFile(String data, String titulo, {String extensionFile}) async {
         print(e);
       } finally {
         NoticationsService()
-            .showNotification(1, 'Se descargo el archivo', result, 4);
+            .showNotification(1, 'Se descargó el archivo', result, 2);
       }
     } else {
       print('NO HAY PERMISO');
