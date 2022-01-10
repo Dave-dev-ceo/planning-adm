@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
-import 'package:planning/src/utils/utils.dart';
+import 'package:planning/src/utils/utils.dart' as utils;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BookInspiracion extends StatefulWidget {
   const BookInspiracion({Key key}) : super(key: key);
@@ -17,17 +18,35 @@ class BookInspiracion extends StatefulWidget {
 
 class _BookInspiracion extends State<BookInspiracion> {
   final bookInspiracionService = ServiceBookInspiracionLogic();
+  bool isInvolucrado = false;
 
   @override
   void initState() {
     bookInspiracionService.getBookInspiracion();
+    checkIsInvolucrado();
 
     super.initState();
+  }
+
+  checkIsInvolucrado() async {
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (idInvolucrado != null) {
+      setState(() {
+        isInvolucrado = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: (isInvolucrado)
+          ? AppBar(
+              title: Text('Boook Inspiración'),
+              centerTitle: true,
+            )
+          : null,
       body: StreamBuilder(
           stream: bookInspiracionService.layoutBookImagesStream,
           builder: (BuildContext context,
@@ -96,8 +115,7 @@ class _BookInspiracion extends State<BookInspiracion> {
                                       (value) => setState(() {}),
                                     ),
                                 _mostrarMensaje(
-                                    'Se subio correctamente el PDF.',
-                                    Colors.green)
+                                    'Se subio correctamente.', Colors.green)
                               }
                           });
                 }
@@ -107,8 +125,10 @@ class _BookInspiracion extends State<BookInspiracion> {
               label: 'Descargar Archivo',
               onTap: () async {
                 final datosBookIns =
-                    await bookInspiracionService.getBookInspiracion();
-                if (datosBookIns != null) {}
+                    await bookInspiracionService.downloadBookInspiracion();
+                if (datosBookIns != null) {
+                  utils.downloadFile(datosBookIns, 'Book-Inspiracion');
+                }
               })
         ],
       ),
@@ -128,14 +148,49 @@ class _BookInspiracion extends State<BookInspiracion> {
         ),
         itemBuilder: (BuildContext context, int index) {
           final bytes = base64Decode(layoutBookModel[index].file);
-          return Center(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: Image.memory(
-                bytes,
-                fit: BoxFit.cover,
+          return Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Image.memory(
+                  bytes,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
+              Container(
+                alignment: Alignment.centerRight,
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.3)),
+                width: double.infinity,
+                height: 30.0,
+                child: FittedBox(
+                  child: IconButton(
+                    onPressed: () async {
+                      bookInspiracionService
+                          .deleteBookInspiracion(
+                              layoutBookModel[index].idBookInspiracion)
+                          .then((value) => {
+                                if (value)
+                                  {
+                                    _mostrarMensaje(
+                                        'Se ha elimina correctamente',
+                                        Colors.green),
+                                    bookInspiracionService
+                                        .getBookInspiracion()
+                                        .then((value) => setState(() {})),
+                                  }
+                                else
+                                  {
+                                    _mostrarMensaje(
+                                        'Ocurrio un error', Colors.red)
+                                  }
+                              });
+                    },
+                    icon: FaIcon(FontAwesomeIcons.trash, color: Colors.white),
+                  ),
+                ),
+              )
+            ],
           );
         });
   }

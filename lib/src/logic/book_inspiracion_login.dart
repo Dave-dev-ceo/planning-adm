@@ -93,4 +93,63 @@ class ServiceBookInspiracionLogic {
       return 'Ocurrio un error';
     }
   }
+
+  Future<String> downloadBookInspiracion() async {
+    String token = await _sharedPreferences.getToken();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+
+    final data = {
+      'idEvento': idEvento,
+      'idPlanner': idPlanner,
+    };
+
+    final endpoint = 'wedding/BOOK/downloadBookInspiracion';
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['pdf'];
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> deleteBookInspiracion(int idbookInspiracion) async {
+    String token = await _sharedPreferences.getToken();
+
+    final data = {
+      'idbookInspiracion': idbookInspiracion,
+    };
+
+    final endpoint = 'wedding/BOOK/deleteBookInspiracion';
+
+    final headers = {
+      HttpHeaders.authorizationHeader: token,
+      'Content-type': 'application/json',
+      'Accept': 'application/json'
+    };
+
+    final response = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
