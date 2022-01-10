@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 
@@ -35,8 +36,14 @@ void downloadFile(String data, String titulo, {String extensionFile}) async {
   } else {
     PermissionStatus status = await Permission.storage.request();
     if (status.isGranted) {
-      final path = await ExternalPath.getExternalStoragePublicDirectory(
-          ExternalPath.DIRECTORY_DOWNLOADS);
+      String path;
+      if (Platform.isAndroid) {
+        path = await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DOWNLOADS);
+      } else {
+        path = await getApplicationDocumentsDirectory()
+            .then((value) => value.path);
+      }
       File f = File('$path/$titulo-$date.$extensionFile');
       Map<String, dynamic> result = {
         'message': '$titulo-$date.$extensionFile',
