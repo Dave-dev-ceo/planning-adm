@@ -40,12 +40,10 @@ class NoticationsService {
               String body,
               String payload,
             ) async {
-              onDidReceiveLocalNotification(
-                id,
-                title,
-                body,
-                payload,
-              );
+              if (payload != null) {
+                debugPrint(payload);
+                await OpenFile.open(payload);
+              }
             });
     const MacOSInitializationSettings initializationSettingsMacOS =
         MacOSInitializationSettings(
@@ -127,27 +125,27 @@ class NoticationsService {
   }
 }
 
-void onDidReceiveLocalNotification(
-    int id, String title, String body, String payload) async {
-  BuildContext context;
-  // display a dialog with the notification details, tap ok to go to another page
-  showDialog(
-    context: context,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      title: Text(title),
-      content: Text(body),
-      actions: [
-        CupertinoDialogAction(
-          isDefaultAction: true,
-          child: Text('Ok'),
-          onPressed: () async {
-            await OpenFile.open(payload);
-          },
-        )
-      ],
-    ),
-  );
-}
+// void onDidReceiveLocalNotification(
+//     int id, String title, String body, String payload) async {
+//   BuildContext context;
+//   // display a dialog with the notification details, tap ok to go to another page
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) => CupertinoAlertDialog(
+//       title: Text(title),
+//       content: Text(body),
+//       actions: [
+//         CupertinoDialogAction(
+//           isDefaultAction: true,
+//           child: Text('Ok'),
+//           onPressed: () async {
+//             await OpenFile.open(payload);
+//           },
+//         )
+//       ],
+//     ),
+//   );
+// }
 
 class ReceivedNotification {
   ReceivedNotification({
