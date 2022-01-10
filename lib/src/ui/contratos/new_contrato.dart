@@ -108,10 +108,13 @@ class New_ContratoState extends State<NewContrato> {
         _mensaje('Se ha subido el documento.');
       } else if (state is VerContratosVer) {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/viewContrato', arguments: state.archivo);
+        Navigator.pushNamed(context, '/viewContrato', arguments: {
+          'htmlPdf': state.archivo,
+          'tipo_mime': state.tipo_mime
+        });
       } else if (state is DescargarContratoState) {
         Navigator.pop(context);
-        _descargarFile(state.archivo, state.nombre);
+        _descargarFile(state.archivo, state.nombre, state.extencion);
       } else if (state is CrearContratoState) {
         Navigator.pop(context);
         contratosBloc.add(ContratosSelect());
@@ -130,26 +133,28 @@ class New_ContratoState extends State<NewContrato> {
         if (itemModel.length == 0) {
           itemModel = state.contrato.contrato
               .map((item) => Contratos(
-                    idContrato: item.idContrato,
-                    idMachote: item.idMachote,
-                    description: item.descripcion,
-                    original: item.original,
-                    archivo: item.archivo,
-                    clave: item.clavePlantilla,
-                    valida: item.original != null ? true : false,
-                  ))
+                  idContrato: item.idContrato,
+                  idMachote: item.idMachote,
+                  description: item.descripcion,
+                  original: item.original,
+                  archivo: item.archivo,
+                  clave: item.clavePlantilla,
+                  valida: item.original != null ? true : false,
+                  tipo_doc: item.tipo_doc,
+                  tipo_mime: item.tipo_mime))
               .toList();
         } else if (itemModel.length != state.contrato.contrato) {
           itemModel = state.contrato.contrato
               .map((item) => Contratos(
-                    idContrato: item.idContrato,
-                    idMachote: item.idMachote,
-                    description: item.descripcion,
-                    original: item.original,
-                    archivo: item.archivo,
-                    clave: item.clavePlantilla,
-                    valida: item.original != null ? true : false,
-                  ))
+                  idContrato: item.idContrato,
+                  idMachote: item.idMachote,
+                  description: item.descripcion,
+                  original: item.original,
+                  archivo: item.archivo,
+                  clave: item.clavePlantilla,
+                  valida: item.original != null ? true : false,
+                  tipo_doc: item.tipo_doc,
+                  tipo_mime: item.tipo_mime))
               .toList();
         }
         return RefreshIndicator(
@@ -290,13 +295,13 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote, contrato.archivo),
+                            onPressed: () => _verOldFile(contrato.idMachote,
+                                contrato.archivo, contrato.tipo_mime),
                           )
                         ],
                       ),
                     ),
-                    !isInvolucrado
+                    !isInvolucrado && contrato.tipo_doc == 'html'
                         ? Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,8 +333,11 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,
-                                contrato.archivo, contrato.description),
+                            onPressed: () => _crearPDF(
+                                contrato.idMachote,
+                                contrato.archivo,
+                                contrato.description,
+                                contrato.tipo_mime),
                           )
                         ],
                       ),
@@ -357,8 +365,8 @@ class New_ContratoState extends State<NewContrato> {
                                 TextButton.icon(
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
-                                  onPressed: () =>
-                                      _verNewFile(contrato.original),
+                                  onPressed: () => _verNewFile(
+                                      contrato.original, contrato.tipo_mime),
                                 )
                               ],
                             ),
@@ -421,13 +429,13 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote, contrato.archivo),
+                            onPressed: () => _verOldFile(contrato.idMachote,
+                                contrato.archivo, contrato.tipo_mime),
                           )
                         ],
                       ),
                     ),
-                    !isInvolucrado
+                    !isInvolucrado && contrato.tipo_doc == 'html'
                         ? Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,8 +467,11 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,
-                                contrato.archivo, contrato.description),
+                            onPressed: () => _crearPDF(
+                                contrato.idMachote,
+                                contrato.archivo,
+                                contrato.description,
+                                contrato.tipo_mime),
                           )
                         ],
                       ),
@@ -488,8 +499,8 @@ class New_ContratoState extends State<NewContrato> {
                                 TextButton.icon(
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
-                                  onPressed: () =>
-                                      _verNewFile(contrato.original),
+                                  onPressed: () => _verNewFile(
+                                      contrato.original, contrato.tipo_mime),
                                 )
                               ],
                             ),
@@ -552,13 +563,13 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote, contrato.archivo),
+                            onPressed: () => _verOldFile(contrato.idMachote,
+                                contrato.archivo, contrato.tipo_mime),
                           )
                         ],
                       ),
                     ),
-                    !isInvolucrado
+                    !isInvolucrado && contrato.tipo_doc == 'html'
                         ? Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -590,8 +601,11 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,
-                                contrato.archivo, contrato.description),
+                            onPressed: () => _crearPDF(
+                                contrato.idMachote,
+                                contrato.archivo,
+                                contrato.description,
+                                contrato.tipo_mime),
                           )
                         ],
                       ),
@@ -619,8 +633,8 @@ class New_ContratoState extends State<NewContrato> {
                                 TextButton.icon(
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
-                                  onPressed: () =>
-                                      _verNewFile(contrato.original),
+                                  onPressed: () => _verNewFile(
+                                      contrato.original, contrato.tipo_mime),
                                 )
                               ],
                             ),
@@ -683,13 +697,13 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote, contrato.archivo),
+                            onPressed: () => _verOldFile(contrato.idMachote,
+                                contrato.archivo, contrato.tipo_mime),
                           )
                         ],
                       ),
                     ),
-                    !isInvolucrado
+                    !isInvolucrado && contrato.tipo_doc == 'html'
                         ? Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -721,8 +735,11 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,
-                                contrato.archivo, contrato.description),
+                            onPressed: () => _crearPDF(
+                                contrato.idMachote,
+                                contrato.archivo,
+                                contrato.description,
+                                contrato.tipo_mime),
                           )
                         ],
                       ),
@@ -750,8 +767,8 @@ class New_ContratoState extends State<NewContrato> {
                                 TextButton.icon(
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
-                                  onPressed: () =>
-                                      _verNewFile(contrato.original),
+                                  onPressed: () => _verNewFile(
+                                      contrato.original, contrato.tipo_mime),
                                 )
                               ],
                             ),
@@ -814,13 +831,13 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote, contrato.archivo),
+                            onPressed: () => _verOldFile(contrato.idMachote,
+                                contrato.archivo, contrato.tipo_mime),
                           )
                         ],
                       ),
                     ),
-                    !isInvolucrado
+                    !isInvolucrado && contrato.tipo_doc == 'html'
                         ? Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -852,8 +869,11 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,
-                                contrato.archivo, contrato.description),
+                            onPressed: () => _crearPDF(
+                                contrato.idMachote,
+                                contrato.archivo,
+                                contrato.description,
+                                contrato.tipo_mime),
                           )
                         ],
                       ),
@@ -881,8 +901,8 @@ class New_ContratoState extends State<NewContrato> {
                                 TextButton.icon(
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
-                                  onPressed: () =>
-                                      _verNewFile(contrato.original),
+                                  onPressed: () => _verNewFile(
+                                      contrato.original, contrato.tipo_mime),
                                 )
                               ],
                             ),
@@ -945,13 +965,13 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote, contrato.archivo),
+                            onPressed: () => _verOldFile(contrato.idMachote,
+                                contrato.archivo, contrato.tipo_mime),
                           )
                         ],
                       ),
                     ),
-                    !isInvolucrado
+                    !isInvolucrado && contrato.tipo_doc == 'html'
                         ? Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -983,8 +1003,11 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.cloud_download_outlined),
                             label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(contrato.idMachote,
-                                contrato.archivo, contrato.description),
+                            onPressed: () => _crearPDF(
+                                contrato.idMachote,
+                                contrato.archivo,
+                                contrato.description,
+                                contrato.tipo_mime),
                           )
                         ],
                       ),
@@ -1012,8 +1035,8 @@ class New_ContratoState extends State<NewContrato> {
                                 TextButton.icon(
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
-                                  onPressed: () =>
-                                      _verNewFile(contrato.original),
+                                  onPressed: () => _verNewFile(
+                                      contrato.original, contrato.tipo_mime),
                                 )
                               ],
                             ),
@@ -1107,43 +1130,50 @@ class New_ContratoState extends State<NewContrato> {
     List<SpeedDialChild> temp = [];
     // 2do
     temp.add(SpeedDialChild(
-        child: Icon(Icons.upload_file),
+        child: Tooltip(
+          child: Icon(Icons.upload_file),
+          message: 'Subir archivo',
+        ),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        onTap: _eventoUpload));
+        onTap: _eventoUploadFile));
     // 1ro
     temp.add(SpeedDialChild(
-        child: Icon(Icons.send_and_archive_sharp),
+        child: Tooltip(
+            child: Icon(Icons.send_and_archive_sharp),
+            message: 'Crear plantilla'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        onTap: _eventoAdd));
+        onTap: () {
+          _eventoAdd('html');
+        }));
     return temp;
   }
 
-  _eventoUpload() {
-    switch (_selectedIndex) {
-      case 0:
-        _createContrato('CT');
-        break;
-      case 1:
-        _createContrato('RC');
-        break;
-      case 2:
-        _createContrato('PG');
-        break;
-      case 3:
-        _createContrato('MT');
-        break;
-      case 4:
-        _createContrato('OP');
-        break;
-      default:
-        _createContrato('AU');
-        break;
-    }
-  }
+  //_eventoUpload() {
+  //  switch (_selectedIndex) {
+  //    case 0:
+  //      _createContrato('CT');
+  //      break;
+  //    case 1:
+  //      _createContrato('RC');
+  //      break;
+  //    case 2:
+  //      _createContrato('PG');
+  //      break;
+  //    case 3:
+  //      _createContrato('MT');
+  //      break;
+  //    case 4:
+  //      _createContrato('OP');
+  //      break;
+  //    default:
+  //      _createContrato('AU');
+  //      break;
+  //  }
+  //}
 
-  Future<void> _eventoAdd() async {
+  Future<void> _eventoUploadFile() async {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -1178,6 +1208,77 @@ class New_ContratoState extends State<NewContrato> {
                                     _clave = {
                                       'clave': radioB.elementAt(i)['clave'],
                                       'clave_t': radioB.elementAt(i)['clave_t']
+                                    };
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(
+              width: 10.0,
+            ),
+            TextButton(
+              child: Text('Seleccionar Archivo'),
+              onPressed: () async {
+                _createContrato(_clave['clave'], 'file');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _eventoAdd(String tipo_doc) async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Crear plantilla', textAlign: TextAlign.center),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Form(
+                key: keyForm,
+                child: SingleChildScrollView(
+                  child: ListBody(
+                    children: [
+                      Column(
+                        children: <Widget>[
+                          for (int i = 0; i < radioB.length; i++)
+                            ListTile(
+                              title: Text(
+                                radioB.elementAt(i)['nombre'],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1
+                                    .copyWith(color: Colors.black),
+                              ),
+                              leading: Radio(
+                                value: i,
+                                groupValue: _grupoRadio,
+                                activeColor: Color(0xFF6200EE),
+                                onChanged: (int value) {
+                                  setState(() {
+                                    _grupoRadio = value;
+                                    _clave = {
+                                      'clave': radioB.elementAt(i)['clave'],
+                                      'clave_t': radioB.elementAt(i)['clave_t'],
+                                      'tipo_doc': tipo_doc
                                     };
                                   });
                                 },
@@ -1241,11 +1342,11 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   // ini eventos Cards
-  _verOldFile(int id, String archivo) {
+  _verOldFile(int id, String archivo, String tipo_mime) {
     if (id != 0) {
-      verContratos.add(VerContrato(archivo));
+      verContratos.add(VerContrato(archivo, tipo_mime));
     } else {
-      _verNewFile(archivo);
+      _verNewFile(archivo, tipo_mime);
     }
   }
 
@@ -1264,29 +1365,30 @@ class New_ContratoState extends State<NewContrato> {
     }
   }
 
-  _verNewFile(String original) {
+  _verNewFile(String original, String tipo_mime) {
     // Navigator.pushNamed(context, '/viewContrato', arguments: original);
-    verContratos.add(VerContratoSubido(original));
+    verContratos.add(VerContratoSubido(original, tipo_mime));
   }
 
   _borrarContratos(int idContrato) {
     _alertaBorrar(idContrato);
   }
 
-  _crearPDF(int id, String contrato, String nombreDocumento) {
+  _crearPDF(int id, String contrato, String nombreDocumento, String extencion) {
     if (id != 0) {
-      verContratos.add(DescargarContrato(nombreDocumento, contrato));
+      verContratos.add(DescargarContrato(nombreDocumento, contrato, extencion));
     } else {
-      _descargarFile(contrato, nombreDocumento);
+      _descargarFile(contrato, nombreDocumento, extencion);
     }
   }
 
-  Future<void> _descargarFile(String contrato, String nombreDocumento) async {
-    downloadFile(contrato, nombreDocumento);
+  Future<void> _descargarFile(
+      String contrato, String nombreDocumento, String extencion) async {
+    downloadFile(contrato, nombreDocumento, extensionFile: extencion);
   }
 
-  _createContrato(String clave) async {
-    const extensiones = ['pdf'];
+  _createContrato(String clave, String tipo_doc) async {
+    const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -1295,10 +1397,14 @@ class New_ContratoState extends State<NewContrato> {
     );
 
     if (pickedFile != null) {
+      String _extension = pickedFile.files.first.extension;
       verContratos.add(CrearContrato(
-          (pickedFile.files[0].name).replaceAll(".pdf", ""),
+          (pickedFile.files[0].name).replaceAll(_extension.toString(), ""),
           base64.encode(pickedFile.files[0].bytes),
-          clave));
+          clave,
+          tipo_doc,
+          _extension));
+      Navigator.of(context).pop();
     }
   }
   // fin eventos Cards
@@ -1346,17 +1452,17 @@ class New_ContratoState extends State<NewContrato> {
           ),
           actions: <Widget>[
             TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
               child: const Text('Confirmar'),
               onPressed: () {
                 Navigator.of(context).pop();
                 verContratos.add(BorrarContrato(idContrato));
                 _mensaje('Contrato borrado');
-              },
-            ),
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],
@@ -1376,14 +1482,17 @@ class Contratos {
   String archivo;
   String clave;
   bool valida;
+  String tipo_doc;
+  String tipo_mime;
 
-  Contratos({
-    this.idContrato,
-    this.idMachote,
-    this.description,
-    this.original,
-    this.archivo,
-    this.clave,
-    this.valida,
-  });
+  Contratos(
+      {this.idContrato,
+      this.idMachote,
+      this.description,
+      this.original,
+      this.archivo,
+      this.clave,
+      this.valida,
+      this.tipo_doc,
+      this.tipo_mime});
 }

@@ -43,7 +43,7 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String pdf = await logic.fetchContratosPdf({'machote': event.archivo});
-        yield VerContratosVer(pdf);
+        yield VerContratosVer(pdf, event.tipo_mime);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -53,7 +53,7 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
       yield VerContratosLoggin();
 
       try {
-        yield VerContratosVer(event.archivo);
+        yield VerContratosVer(event.archivo, event.tipo_mime);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -64,7 +64,7 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String pdf = await logic.fetchContratosPdf({'machote': event.archivo});
-        yield DescargarContratoState(event.nombre, pdf);
+        yield DescargarContratoState(event.nombre, pdf, event.tipo_mime);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -78,7 +78,9 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
           'id_machote': '0',
           'titulo': event.nombre,
           'archivo': event.archivo,
-          'clave': event.clave
+          'clave': event.clave,
+          'tipo_doc': event.tipo_doc,
+          'tipo_mime': event.tipo_mime
         };
         await logic.inserContrato(data);
         yield CrearContratoState();

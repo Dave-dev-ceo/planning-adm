@@ -106,8 +106,8 @@ class _FullScreenDialogEditContratoState
                         return HtmlEditor(
                             controller: controller, //required
                             htmlEditorOptions: HtmlEditorOptions(
-                                autoAdjustHeight: false,
-                                adjustHeightForKeyboard: false,
+                                autoAdjustHeight: true,
+                                adjustHeightForKeyboard: true,
                                 hint: "Escribe aquí...",
                                 initialText: this.data['archivo'].toString()),
                             otherOptions: OtherOptions(

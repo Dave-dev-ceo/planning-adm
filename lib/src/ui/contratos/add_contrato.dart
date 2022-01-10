@@ -212,7 +212,9 @@ class _AddMachoteState extends State<AddMachote> {
         'id_machote': idContrato.toString(),
         'titulo': titulo,
         'archivo': archivo,
-        'clave': clave
+        'clave': clave,
+        'tipo_doc': widget.map['tipo_doc'],
+        'tipo_mime': ''
       }));
     } else {
       _mensaje('Descripcion vacia.');

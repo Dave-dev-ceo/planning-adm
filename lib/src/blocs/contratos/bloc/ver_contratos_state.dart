@@ -4,6 +4,7 @@ part of 'ver_contratos_bloc.dart';
 abstract class VerContratosState {}
 
 class VerContratosInitial extends VerContratosState {}
+
 class VerContratosLoggin extends VerContratosState {}
 
 class VerContratosBorrar extends VerContratosState {}
@@ -14,8 +15,8 @@ class CrearContratoState extends VerContratosState {}
 
 class VerContratosVer extends VerContratosState {
   final String archivo;
-
-  VerContratosVer(this.archivo);
+  final String tipo_mime;
+  VerContratosVer(this.archivo, this.tipo_mime);
 
   String get prop => archivo;
 }
@@ -23,11 +24,13 @@ class VerContratosVer extends VerContratosState {
 class DescargarContratoState extends VerContratosState {
   final String nombre;
   final String archivo;
+  final String extencion;
 
-  DescargarContratoState(this.nombre,this.archivo);
+  DescargarContratoState(this.nombre, this.archivo, this.extencion);
 
   String get props => nombre;
   String get prop => archivo;
+  String get prod => extencion;
 }
 
 class AutorizacionErrorState extends VerContratosState {
