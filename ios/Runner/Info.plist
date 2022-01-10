@@ -5,11 +5,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
+	<string>Plannig</string>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
-	<string>Plannig</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
