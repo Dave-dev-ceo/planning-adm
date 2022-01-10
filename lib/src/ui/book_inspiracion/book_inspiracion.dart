@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
 import 'package:planning/src/utils/utils.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class BookInspiracion extends StatefulWidget {
   const BookInspiracion({Key key}) : super(key: key);
@@ -20,46 +18,45 @@ class BookInspiracion extends StatefulWidget {
 class _BookInspiracion extends State<BookInspiracion> {
   final bookInspiracionService = ServiceBookInspiracionLogic();
 
-  PdfViewerController _pdfViewerController;
   @override
-  void initState() {}
+  void initState() {
+    bookInspiracionService.getBookInspiracion();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: bookInspiracionService.getBookInspiracion(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<LayoutBookModel> snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.file != null) {
-                      return _viewFile(snapshot.data);
-                    } else {
-                      return Align(
-                        alignment: Alignment.center,
-                        child: Center(
-                          child: Text('No se encontraron datos'),
-                        ),
-                      );
-                    }
-                  } else {
-                    return Align(
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Text('No se encontraron datos'),
-                      ),
-                    );
-                  }
-                },
-              )
-            ],
-          ),
-        ),
-      ),
+      body: StreamBuilder(
+          stream: bookInspiracionService.layoutBookImagesStream,
+          builder: (BuildContext context,
+              AsyncSnapshot<List<LayoutBookModel>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                return _viewFile(snapshot.data);
+              } else {
+                return Align(
+                  alignment: Alignment.center,
+                  child: Center(
+                    child: Text('No se encontraron datos'),
+                  ),
+                );
+              }
+            } else {
+              return Align(
+                alignment: Alignment.center,
+                child: Center(
+                  child: Text('No se encontraron datos'),
+                ),
+              );
+            }
+          }),
       floatingActionButton: SpeedDial(
         activeForegroundColor: Colors.blueGrey,
         icon: Icons.add,
@@ -76,7 +73,7 @@ class _BookInspiracion extends State<BookInspiracion> {
               child: Icon(Icons.upload),
               label: 'Subir archivo',
               onTap: () async {
-                const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
+                const extensiones = ['jpg', 'png', 'jpeg'];
 
                 FilePickerResult pickedFile =
                     await FilePicker.platform.pickFiles(
@@ -90,12 +87,14 @@ class _BookInspiracion extends State<BookInspiracion> {
                   String file64 = base64Encode(bytes);
                   bookInspiracionService
                       .createBookInspiracion(file64, _extension)
-                      .then((value) => {
+                      .then((value) async => {
                             if (value == 'Ok')
                               {
-                                setState(() {
-                                  bookInspiracionService.getBookInspiracion();
-                                }),
+                                await bookInspiracionService
+                                    .getBookInspiracion()
+                                    .then(
+                                      (value) => setState(() {}),
+                                    ),
                                 _mostrarMensaje(
                                     'Se subio correctamente el PDF.',
                                     Colors.green)
@@ -109,48 +108,36 @@ class _BookInspiracion extends State<BookInspiracion> {
               onTap: () async {
                 final datosBookIns =
                     await bookInspiracionService.getBookInspiracion();
-                if (datosBookIns != null) {
-                  downloadFile(datosBookIns.file, 'Book Inspiración',
-                      extensionFile: datosBookIns.mime.toString());
-                }
+                if (datosBookIns != null) {}
               })
         ],
       ),
     );
   }
 
-  Widget _viewFile(LayoutBookModel layoutMesa) {
-    if (layoutMesa.mime == 'pdf') {
-      final bytes = base64Decode(layoutMesa.file);
-      return Center(
-        child: Container(
-          width: 500.0,
-          height: MediaQuery.of(context).size.height,
-          child: SfPdfViewer.memory(
-            bytes,
-            controller: _pdfViewerController,
-            canShowScrollStatus: true,
-            interactionMode: PdfInteractionMode.pan,
-          ),
+  Widget _viewFile(List<LayoutBookModel> layoutBookModel) {
+    return GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+        itemCount: layoutBookModel.length,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 500,
+          mainAxisExtent: 300,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
         ),
-      );
-    } else {
-      final bytes = base64Decode(layoutMesa.file);
-      final image = MemoryImage(bytes);
-      return Center(
-        child: Container(
-          width: 500.0,
-          height: MediaQuery.of(context).size.height,
-          child: ClipRect(
-            child: PhotoView(
-              tightMode: true,
-              backgroundDecoration: BoxDecoration(color: Colors.white),
-              imageProvider: image,
+        itemBuilder: (BuildContext context, int index) {
+          final bytes = base64Decode(layoutBookModel[index].file);
+          return Center(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: Image.memory(
+                bytes,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        ),
-      );
-    }
+          );
+        });
   }
 
   _mostrarMensaje(String msj, Color color) {

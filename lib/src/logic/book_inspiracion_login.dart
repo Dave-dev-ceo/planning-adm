@@ -12,14 +12,22 @@ class ServiceBookInspiracionLogic {
   ConfigConection confiC = ConfigConection();
   Client client = Client();
   LayoutBookModel _layoutMesa;
+  List<LayoutBookModel> _layoutBookImages = [];
 
-  final _layoutMesaStreamController =
-      StreamController<LayoutBookModel>.broadcast();
+  final _layoutBookInspiracionStreamController =
+      StreamController<List<LayoutBookModel>>.broadcast();
 
-  Function(LayoutBookModel) get layoutMesaSink =>
-      _layoutMesaStreamController.sink.add;
+  Function(List<LayoutBookModel>) get layoutBookImagesSink =>
+      _layoutBookInspiracionStreamController.sink.add;
 
-  Future<LayoutBookModel> getBookInspiracion() async {
+  Stream<List<LayoutBookModel>> get layoutBookImagesStream =>
+      _layoutBookInspiracionStreamController.stream;
+
+  void dispose() {
+    _layoutBookInspiracionStreamController?.close();
+  }
+
+  Future<List<LayoutBookModel>> getBookInspiracion() async {
     String token = await _sharedPreferences.getToken();
     int idEvento = await _sharedPreferences.getIdEvento();
 
@@ -36,17 +44,19 @@ class ServiceBookInspiracionLogic {
     };
 
     final response = await http.post(
-        Uri.parse(
-            confiC.url + confiC.puerto + endpoint + 'BOOK/getBookInspiracion'),
-        body: json.encode(data),
-        headers: headers);
+      Uri.parse(
+          confiC.url + confiC.puerto + endpoint + 'BOOK/getBookInspiracion'),
+      body: json.encode(data),
+      headers: headers,
+    );
 
     if (response.statusCode == 200) {
-      final layoutMesa = LayoutBookModel.fromJson(json.decode(response.body));
+      final layoutMesa = List<LayoutBookModel>.from(json
+          .decode(response.body)
+          .map((b) => LayoutBookModel.fromJson(b))).toList();
 
-      _layoutMesa = layoutMesa;
-      layoutMesaSink(_layoutMesa);
-      return _layoutMesa;
+      layoutBookImagesSink(layoutMesa);
+      return layoutMesa;
     } else {
       return null;
     }
