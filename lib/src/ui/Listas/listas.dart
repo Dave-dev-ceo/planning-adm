@@ -81,7 +81,13 @@ class _ListaState extends State<Listas> {
                       if (state is LoadingListasState) {
                         return Center(child: CircularProgressIndicator());
                       } else if (state is MostrarListasState) {
-                        return getLista(state.listas);
+                        if (state.listas != null) {
+                          return getLista(state.listas);
+                        } else {
+                          return Center(
+                            child: Text('Sin datos'),
+                          );
+                        }
                       } else if (state is ErrorCreateListasrState) {
                         return Center(child: Text(state.message));
                       } else {

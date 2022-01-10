@@ -259,22 +259,42 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           totalsaldopresupuestoEvento = 0;
           totalpagosInternos = 0;
           totalpagosEventos = 0;
-          state.listaPagos.forEach((pago) {
-            if ('E' == pago.tipoPresupuesto) {
-              totalpagosEventos += pago.pago;
+          if (state.listaPagos != null) {
+            if (state.listaPagos.length > 0) {
+              state.listaPagos.forEach((pago) {
+                if ('E' == pago.tipoPresupuesto) {
+                  totalpagosEventos += pago.pago;
+                } else {
+                  totalpagosInternos += pago.pago;
+                }
+              });
+
+              totalsaldopresupuestoEvento =
+                  totalpresupuestos - totalpagosEventos != null
+                      ? (int.tryParse(totalpagosEventos.toString()))
+                      : 0;
+
+              totalsaldopresupuestoInterno =
+                  totalpresupuestos - totalpagosInternos != null
+                      ? int.tryParse(totalpagosInternos.toString())
+                      : 0;
+
+              return buildTablePagos(state.listaPagos, tipoPresupuesto);
             } else {
-              totalpagosInternos += pago.pago;
+              return Center(
+                child: Text('Sin Datos'),
+              );
             }
-          });
-
-          totalsaldopresupuestoEvento =
-              totalpresupuestos - int.tryParse(totalpagosEventos.toString());
-
-          totalsaldopresupuestoInterno =
-              totalpresupuestos - int.tryParse(totalpagosInternos.toString());
-
-          return buildTablePagos(state.listaPagos, tipoPresupuesto);
+          } else {
+            return Center(
+              child: Text('Sin Datos'),
+            );
+          }
         } else {
+          totalsaldopresupuestoInterno = 0;
+          totalsaldopresupuestoEvento = 0;
+          totalpagosInternos = 0;
+          totalpagosEventos = 0;
           return Container();
         }
       },
@@ -551,12 +571,18 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             child: CircularProgressIndicator(),
           );
         } else if (state is PagosSelect) {
-          totalpresupuestos = 0;
-          state.pagos.pagos.forEach((pago) {
-            totalpresupuestos += pago.total;
-          });
+          if (state.pagos != null) {
+            totalpresupuestos = 0;
+            state.pagos.pagos.forEach((pago) {
+              totalpresupuestos += pago.total;
+            });
 
-          return _stickyHeader(state.pagos);
+            return _stickyHeader(state.pagos);
+          } else {
+            return Center(
+              child: Text('Sin datos'),
+            );
+          }
         } else {
           return Center(
             child: CircularProgressIndicator(),
@@ -587,6 +613,10 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   }
 
   _crearHeader() {
+    print(totalpagosInternos);
+    print(totalpresupuestos);
+    print(totalpagosEventos);
+    print(totalsaldopresupuestoInterno);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -610,7 +640,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                       TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
                   children: [
                     TextSpan(
-                      text: '\$${f.format(totalpresupuestos)}',
+                      text:
+                          '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -634,8 +665,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   children: [
                     TextSpan(
                       text: index == 0
-                          ? '\$${f.format(totalpagosInternos)}'
-                          : '\$${f.format(totalpagosEventos)}',
+                          ? '\$${totalpagosInternos > 0 ? f.format(totalpagosInternos) : totalpagosInternos}'
+                          : '\$${totalpagosEventos > 0 ? f.format(totalpagosEventos) : totalpagosEventos}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -659,8 +690,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   children: [
                     TextSpan(
                       text: index == 0
-                          ? '\$${f.format(totalsaldopresupuestoInterno)}'
-                          : '\$${f.format(totalsaldopresupuestoEvento)}',
+                          ? '\$${totalsaldopresupuestoInterno > 0 ? f.format(totalsaldopresupuestoInterno) : totalsaldopresupuestoInterno}'
+                          : '\$${totalsaldopresupuestoEvento > 0 ? f.format(totalsaldopresupuestoEvento) : totalsaldopresupuestoEvento}',
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

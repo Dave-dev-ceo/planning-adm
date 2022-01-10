@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:planning/src/utils/notifications_service.dart';
 import 'src/app.dart';
 
 class MyHttpOverrides extends HttpOverrides {
@@ -13,6 +14,8 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = new MyHttpOverrides();
+  NoticationsService().initNotication();
   runApp(AppState());
 }

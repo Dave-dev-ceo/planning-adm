@@ -206,6 +206,7 @@ class _LoginState extends State<Login> {
             padding: const EdgeInsets.fromLTRB(32.0, 40.0, 32.0, 4.0),
             child: TextFormField(
               controller: emailCtrl,
+              keyboardType: TextInputType.emailAddress,
               style: TextStyle(color: Colors.black),
               decoration: _decorationText("Correo"),
               cursorColor: Colors.purple[100],

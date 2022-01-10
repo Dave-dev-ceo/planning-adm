@@ -1227,14 +1227,15 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 SizedBox(
                   height: 10.0,
                 ),
-                Text(
-                  'Actividades',
-                  style: Theme.of(context).textTheme.headline5,
-                ),
+                if (!isInvolucrado)
+                  Text(
+                    'Actividades',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                 SizedBox(
                   height: 10.0,
                 ),
-                contadorActividadesWidget(),
+                contadorActividadesWidget(size),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -1297,7 +1298,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     );
   }
 
-  StreamBuilder<ContadorActividadesModel> contadorActividadesWidget() {
+  StreamBuilder<ContadorActividadesModel> contadorActividadesWidget(Size size) {
     _planesLogic.getContadorValues(isInvolucrado);
 
     return StreamBuilder(
@@ -1307,9 +1308,43 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           if (snapshot.data.total > 0) {
             return Column(
               children: [
-                Row(
-                  children: [
-                    Spacer(),
+                if (size.width > 400)
+                  Row(
+                    children: [
+                      Spacer(),
+                      Theme(
+                        data: ThemeData(disabledColor: Colors.green),
+                        child: Checkbox(
+                          value: true,
+                          onChanged: null,
+                          hoverColor: Colors.transparent,
+                        ),
+                      ),
+                      Text(
+                          '${snapshot.data.completadas.toString()} Completadas'),
+                      Spacer(),
+                      Theme(
+                        data: ThemeData(disabledColor: Colors.yellow[800]),
+                        child: Checkbox(
+                          value: false,
+                          onChanged: null,
+                        ),
+                      ),
+                      Text('${snapshot.data.pendientes.toString()} Pendientes'),
+                      Spacer(),
+                      Theme(
+                        data: ThemeData(disabledColor: Colors.red),
+                        child: Checkbox(
+                          value: false,
+                          onChanged: null,
+                        ),
+                      ),
+                      Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
+                      Spacer(),
+                    ],
+                  )
+                else
+                  Column(children: [
                     Theme(
                       data: ThemeData(disabledColor: Colors.green),
                       child: Checkbox(
@@ -1319,7 +1354,9 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       ),
                     ),
                     Text('${snapshot.data.completadas.toString()} Completadas'),
-                    Spacer(),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     Theme(
                       data: ThemeData(disabledColor: Colors.yellow[800]),
                       child: Checkbox(
@@ -1328,7 +1365,9 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       ),
                     ),
                     Text('${snapshot.data.pendientes.toString()} Pendientes'),
-                    Spacer(),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     Theme(
                       data: ThemeData(disabledColor: Colors.red),
                       child: Checkbox(
@@ -1337,9 +1376,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       ),
                     ),
                     Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
-                    Spacer(),
-                  ],
-                ),
+                  ]),
                 SizedBox(
                   height: 20.0,
                 ),
@@ -1352,7 +1389,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   data: ThemeData(),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: 400,
+                      maxWidth: size.width > 400 ? 400 : 200,
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10)),

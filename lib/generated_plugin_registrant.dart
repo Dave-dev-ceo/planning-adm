@@ -7,6 +7,7 @@
 
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:flutter_keyboard_visibility_web/flutter_keyboard_visibility_web.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone_web.dart';
 import 'package:native_pdf_renderer/src/web/native_pdf_renderer_plugin.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:syncfusion_flutter_pdfviewer_web/pdfviewer_web.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 void registerPlugins(Registrar registrar) {
   FilePickerWeb.registerWith(registrar);
   FlutterKeyboardVisibilityPlugin.registerWith(registrar);
+  FlutterNativeTimezonePlugin.registerWith(registrar);
   NativePdfRendererPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   SyncfusionFlutterPdfViewerPlugin.registerWith(registrar);
