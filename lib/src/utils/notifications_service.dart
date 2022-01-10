@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
 import 'package:planning/src/utils/utils.dart';
@@ -38,13 +40,11 @@ class NoticationsService {
               String body,
               String payload,
             ) async {
-              didReceiveLocalNotificationSubject.add(
-                ReceivedNotification(
-                  id: id,
-                  title: title,
-                  body: body,
-                  payload: payload,
-                ),
+              onDidReceiveLocalNotification(
+                id,
+                title,
+                body,
+                payload,
               );
             });
     const MacOSInitializationSettings initializationSettingsMacOS =
@@ -72,6 +72,24 @@ class NoticationsService {
         await OpenFile.open(payload);
       }
     });
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
+    final bool result = await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            MacOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
 
   Future<void> showNotification(
@@ -107,6 +125,28 @@ class NoticationsService {
       payload: body['filePath'],
     );
   }
+}
+
+void onDidReceiveLocalNotification(
+    int id, String title, String body, String payload) async {
+  BuildContext context;
+  // display a dialog with the notification details, tap ok to go to another page
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => CupertinoAlertDialog(
+      title: Text(title),
+      content: Text(body),
+      actions: [
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          child: Text('Ok'),
+          onPressed: () async {
+            await OpenFile.open(payload);
+          },
+        )
+      ],
+    ),
+  );
 }
 
 class ReceivedNotification {
