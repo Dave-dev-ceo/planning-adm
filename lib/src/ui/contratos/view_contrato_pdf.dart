@@ -21,13 +21,17 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
   _ViewPdfContratoState(this.data);
   @override
   void initState() {
-    Uint8List _bytesData = Base64Decoder().convert(this.data['htmlPdf']);
-    _pdfController = PdfController(
-      //document: PdfDocument.openAsset('assets/businesscard.pdf'),
-      document: PdfDocument.openData(_bytesData),
-      initialPage: _initialPage,
-    );
-    super.initState();
+    if (this.data['tipo_mime'] == 'pdf' ||
+        this.data['tipo_mime'] == null ||
+        this.data['tipo_mime'] == '') {
+      Uint8List _bytesData = Base64Decoder().convert(this.data['htmlPdf']);
+      _pdfController = PdfController(
+        //document: PdfDocument.openAsset('assets/businesscard.pdf'),
+        document: PdfDocument.openData(_bytesData),
+        initialPage: _initialPage,
+      );
+      super.initState();
+    }
   }
 
   @override
@@ -41,46 +45,50 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Contrato'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.navigate_before),
-            onPressed: () {
-              _pdfController.previousPage(
-                curve: Curves.ease,
-                duration: Duration(milliseconds: 100),
-              );
-            },
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              '$_actualPageNumber/$_allPagesCount',
-              style: TextStyle(fontSize: 22),
-            ),
-          ),
-          IconButton(
-            icon: Icon(Icons.navigate_next),
-            onPressed: () {
-              _pdfController.nextPage(
-                curve: Curves.ease,
-                duration: Duration(milliseconds: 100),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              if (isSampleDoc) {
-                _pdfController.loadDocument(PdfDocument.openData(
-                    Base64Decoder().convert(this.data['htmlPdf'])));
-              } else {
-                _pdfController.loadDocument(PdfDocument.openData(
-                    Base64Decoder().convert(this.data['htmlPdf'])));
-              }
-              isSampleDoc = !isSampleDoc;
-            },
-          )
-        ],
+        actions: this.data['tipo_mime'] == 'pdf' ||
+                this.data['tipo_mime'] == null ||
+                this.data['tipo_mime'] == ''
+            ? <Widget>[
+                IconButton(
+                  icon: Icon(Icons.navigate_before),
+                  onPressed: () {
+                    _pdfController.previousPage(
+                      curve: Curves.ease,
+                      duration: Duration(milliseconds: 100),
+                    );
+                  },
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '$_actualPageNumber/$_allPagesCount',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.navigate_next),
+                  onPressed: () {
+                    _pdfController.nextPage(
+                      curve: Curves.ease,
+                      duration: Duration(milliseconds: 100),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    if (isSampleDoc) {
+                      _pdfController.loadDocument(PdfDocument.openData(
+                          Base64Decoder().convert(this.data['htmlPdf'])));
+                    } else {
+                      _pdfController.loadDocument(PdfDocument.openData(
+                          Base64Decoder().convert(this.data['htmlPdf'])));
+                    }
+                    isSampleDoc = !isSampleDoc;
+                  },
+                )
+              ]
+            : [],
       ),
       body: this.data['tipo_mime'] == 'pdf' ||
               this.data['tipo_mime'] == null ||

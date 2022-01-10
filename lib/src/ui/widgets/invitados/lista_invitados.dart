@@ -510,7 +510,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
               decoration: new InputDecoration(
                   hintText: 'Buscar...', border: InputBorder.none),
               onChanged: (value) async {
-                print(value);
                 setState(() {
                   _searchResult = value;
                   if (_searchResult == '') {
@@ -521,9 +520,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
                           .toLowerCase()
                           .contains(value.toLowerCase()))
                       .toList();
-                  buscador.forEach((element) {
-                    print(element.nombre);
-                  });
                 });
               },
             ),
@@ -637,7 +633,6 @@ class _DataSource extends DataTableSource {
                     title: Text('Se llamara al número $numero'),
                     trailing: Icon(Icons.phone),
                     onTap: () async {
-                      await print('object');
                       launch('tel://$numero');
                       Navigator.of(context).pop();
                     },
@@ -653,7 +648,6 @@ class _DataSource extends DataTableSource {
                               color: Colors.green)),
                       trailing: Icon(Icons.message),
                       onTap: () async {
-                        await print('objectsss');
                         launch('http://wa.me/521' + numero);
                       }),
                 )

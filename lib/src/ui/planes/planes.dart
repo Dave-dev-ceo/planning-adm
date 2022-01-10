@@ -1597,8 +1597,6 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                             if (fecha.isAfter(actividad.fechaFinActividad)) {
                               actividad.fechaFinActividad =
                                   fecha.add(Duration(hours: 1));
-                              print(fecha);
-                              print(actividad.fechaFinActividad);
                             }
                             actividad.fechaInicioActividad = fecha;
                             actividad.estadoCalendarioActividad = true;
@@ -1649,9 +1647,6 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                                 .isBefore(actividad.fechaInicioActividad)) {
                               actividad.fechaInicioActividad =
                                   fecha.subtract(Duration(hours: 1));
-                              print(fecha);
-
-                              print(actividad.fechaInicioActividad);
                             }
                             actividad.fechaFinActividad = fecha;
                             actividad.estadoCalendarioActividad = true;

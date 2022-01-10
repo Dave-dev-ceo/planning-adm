@@ -34,8 +34,8 @@ class ArchivosEspecialesBloc
     } else if (event is CreateArchivoEspecialEvent) {
       try {
         await logic.createArchivosEspecial(event.data);
-        print(event.data['id_proveedor'].runtimeType);
-        print(event.data['id_evento'].runtimeType);
+        //print(event.data['id_proveedor'].runtimeType);
+        //print(event.data['id_evento'].runtimeType);
 
         add(
           FechtArchivoEspecialEvent(

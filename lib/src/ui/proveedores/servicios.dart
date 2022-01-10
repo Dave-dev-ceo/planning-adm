@@ -193,7 +193,6 @@ class _ServiciosState extends State<Servicios> {
   }
 
   _editarDetalleLista(var item) {
-    print(item);
     nombreEditCtrl.text = item.nombre.toString();
     return AlertDialog(
       title: const Text('Editar servicio'),

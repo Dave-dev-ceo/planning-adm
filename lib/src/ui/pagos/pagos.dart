@@ -613,10 +613,6 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   }
 
   _crearHeader() {
-    print(totalpagosInternos);
-    print(totalpresupuestos);
-    print(totalpagosEventos);
-    print(totalsaldopresupuestoInterno);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -897,7 +893,6 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           label: 'Descargar PDF',
           child: Icon(Icons.download),
           onTap: () async {
-            print(index);
             final data = index == 0
                 ? await pagosLogic.downlooadPagosEvento('I')
                 : await pagosLogic.downlooadPagosEvento('E');

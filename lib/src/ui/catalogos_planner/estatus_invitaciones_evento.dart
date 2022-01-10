@@ -322,7 +322,6 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
   }
 
   Future<void> _showMyDialogEditar(int idEstatus, String estatus) async {
-    print(idEstatus);
     estatusCtrlEdit.text = estatus;
     return showDialog<void>(
       context: context,
