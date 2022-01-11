@@ -182,9 +182,18 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.black),
-              onPressed: isPressed && !isInvolucrado
+              onPressed: !isInvolucrado
                   ? () {
-                      _abrirDialog('E', false, HistorialPagosModel());
+                      if (isPressed) {
+                        _abrirDialog('E', false, HistorialPagosModel());
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Es necesario agregar presupuestos.'),
+                            backgroundColor: Colors.amber,
+                          ),
+                        );
+                      }
                     }
                   : null,
               child: Text(
@@ -224,9 +233,18 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.black),
-              onPressed: isPressed && !isInvolucrado
+              onPressed: !isInvolucrado
                   ? () {
-                      _abrirDialog('I', false, HistorialPagosModel());
+                      if (isPressed) {
+                        _abrirDialog('I', false, HistorialPagosModel());
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Es necesario agregar presupuestos.'),
+                            backgroundColor: Colors.amber,
+                          ),
+                        );
+                      }
                     }
                   : null,
               child: Text(
@@ -282,12 +300,27 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               return buildTablePagos(state.listaPagos, tipoPresupuesto);
             } else {
               return Center(
-                child: Text('Sin Datos'),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Container(
+                        height: 100.0,
+                        color: Colors.white,
+                        padding: EdgeInsets.symmetric(horizontal: 35.0),
+                        alignment: Alignment.centerLeft,
+                        child: Center(
+                          child: Text(
+                            'No existen pagos registrados.',
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        )),
+                  ],
+                ),
               );
             }
           } else {
             return Center(
-              child: Text('Sin Datos'),
+              child: Text('Sin Datos 2'),
             );
           }
         } else {
@@ -560,6 +593,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   }
 
   _bloc() {
+    setState(() {});
     return BlocBuilder<PagosBloc, PagosState>(
       builder: (context, state) {
         if (state is PagosInitial) {
@@ -571,16 +605,34 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             child: CircularProgressIndicator(),
           );
         } else if (state is PagosSelect) {
-          if (state.pagos != null) {
+          if (state.pagos != null && state.pagos.pagos.length > 0) {
+            isPressed = true;
             totalpresupuestos = 0;
             state.pagos.pagos.forEach((pago) {
               totalpresupuestos += pago.total;
             });
-
             return _stickyHeader(state.pagos);
           } else {
             return Center(
-              child: Text('Sin datos'),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  StickyHeader(
+                    header: _getHeader(),
+                    content: Container(
+                        height: 100.0,
+                        color: Colors.white,
+                        padding: EdgeInsets.symmetric(horizontal: 35.0),
+                        alignment: Alignment.centerLeft,
+                        child: Center(
+                          child: Text(
+                            'No existen presupuestos registrados.',
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        )),
+                  )
+                ],
+              ),
             );
           }
         } else {
@@ -906,7 +958,11 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   }
 
   _agregarPago() {
-    Navigator.pushNamed(context, '/addPagosForm');
+    Navigator.pushNamed(context, '/addPagosForm').then((value) => {
+          pagosBloc.add(SelectPagosEvent()),
+          historialPagosBloc.add(MostrarHistorialPagosEvent()),
+          setState(() {})
+        });
   }
 
   _editarPago(idConcepto) {
@@ -935,6 +991,12 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           ),
           actions: <Widget>[
             TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
               child: const Text('Confirmar'),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -943,12 +1005,6 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   isPressed = false;
                 });
                 _mensaje('Pago borrado');
-              },
-            ),
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],

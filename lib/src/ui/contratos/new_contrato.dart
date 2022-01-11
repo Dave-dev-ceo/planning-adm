@@ -1140,6 +1140,7 @@ class New_ContratoState extends State<NewContrato> {
           child: Icon(Icons.upload_file),
           message: 'Subir archivo',
         ),
+        label: 'Subir archivo',
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         onTap: _eventoUploadFile));
@@ -1148,6 +1149,7 @@ class New_ContratoState extends State<NewContrato> {
         child: Tooltip(
             child: Icon(Icons.send_and_archive_sharp),
             message: 'Crear plantilla'),
+        label: 'Crear plantilla',
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         onTap: () {
@@ -1447,7 +1449,7 @@ class New_ContratoState extends State<NewContrato> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Estás por borrar un documento.'),
+          title: const Text('Estás por borrar un documentos.'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
