@@ -194,7 +194,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     }
     return Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: 20.0,
+        vertical: 6.0,
         horizontal: 10.0,
       ),
       child: GridView.builder(

@@ -328,7 +328,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                       ),
                     ),
                     400.0,
-                    70),
+                    70.0),
                 formItemsDesign(
                     Icons.sick_outlined,
                     Padding(
@@ -359,8 +359,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                             InputDecoration(labelText: 'Asistencia especial'),
                       ),
                     ),
-                    400,
-                    70)
+                    400.0,
+                    70.0)
               ],
             ),
           ),
@@ -596,7 +596,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   }*/
   String gender;
   String edad;
-  formItemsDesign(icon, item, large, ancho) {
+  formItemsDesign(icon, item, double large, double ancho) {
     return Container(
       child: Card(
           shape:
@@ -963,8 +963,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                   child: Image.memory(
                                 base64Decode(_base64qr
                                     .substring(_base64qr.indexOf(',') + 1)),
-                                width: 250,
-                                height: 250,
+                                width: 250.0,
+                                height: 250.0,
                               )),
                             ]),
                             400.0,
@@ -1078,8 +1078,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                       InputDecoration(labelText: 'Alergias'),
                                 ),
                               ),
-                              500,
-                              100),
+                              500.0,
+                              100.0),
                           formItemsDesign(
                               Icons.wheelchair_pickup,
                               Padding(
@@ -1094,8 +1094,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                       labelText: 'Asistencia especial'),
                                 ),
                               ),
-                              500,
-                              100)
+                              500.0,
+                              100.0)
                         ],
                       ),
                     ),
