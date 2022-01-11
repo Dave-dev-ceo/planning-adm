@@ -12,6 +12,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:planning/src/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
@@ -394,7 +395,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
               actions: <Widget>[
                 CupertinoDialogAction(
                   child: Text('OK'),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => openAppSettings(),
                 )
               ],
             ));
@@ -621,7 +622,7 @@ class _DataSource extends DataTableSource {
       //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Telefono', textAlign: TextAlign.center),
+          title: Text('Teléfono', textAlign: TextAlign.center),
           content: Container(
             margin: const EdgeInsets.all(10.0),
             width: 400.0,
@@ -646,7 +647,7 @@ class _DataSource extends DataTableSource {
                               fontWeight: FontWeight.bold,
                               // fontSize: 20,
                               color: Colors.green)),
-                      trailing: Icon(Icons.message),
+                      trailing: FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
                         launch('http://wa.me/521' + numero);
                       }),

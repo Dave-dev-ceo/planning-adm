@@ -134,63 +134,70 @@ class _BookInspiracion extends State<BookInspiracion> {
   }
 
   Widget _viewFile(List<LayoutBookModel> layoutBookModel) {
-    return GridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-        itemCount: layoutBookModel.length,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 500,
-          mainAxisExtent: 300,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          final bytes = base64Decode(layoutBookModel[index].file);
-          return Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: Image.memory(
-                  bytes,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                decoration: BoxDecoration(color: Colors.black.withOpacity(0.3)),
-                width: double.infinity,
-                height: 30.0,
-                child: FittedBox(
-                  child: IconButton(
-                    onPressed: () async {
-                      bookInspiracionService
-                          .deleteBookInspiracion(
-                              layoutBookModel[index].idBookInspiracion)
-                          .then((value) => {
-                                if (value)
-                                  {
-                                    _mostrarMensaje(
-                                        'Se ha eliminado correctamente',
-                                        Colors.green),
-                                    bookInspiracionService
-                                        .getBookInspiracion()
-                                        .then((value) => setState(() {})),
-                                  }
-                                else
-                                  {
-                                    _mostrarMensaje(
-                                        'Ocurrio un error', Colors.red)
-                                  }
-                              });
-                    },
-                    icon: FaIcon(FontAwesomeIcons.trash, color: Colors.white),
+    if (layoutBookModel.length <= 0) {
+      return Center(
+        child: Text('Sin datos'),
+      );
+    } else {
+      return GridView.builder(
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+          itemCount: layoutBookModel.length,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 500,
+            mainAxisExtent: 300,
+            childAspectRatio: 3 / 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            final bytes = base64Decode(layoutBookModel[index].file);
+            return Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
                   ),
                 ),
-              )
-            ],
-          );
-        });
+                Container(
+                  alignment: Alignment.centerRight,
+                  decoration:
+                      BoxDecoration(color: Colors.black.withOpacity(0.3)),
+                  width: double.infinity,
+                  height: 30.0,
+                  child: FittedBox(
+                    child: IconButton(
+                      onPressed: () async {
+                        bookInspiracionService
+                            .deleteBookInspiracion(
+                                layoutBookModel[index].idBookInspiracion)
+                            .then((value) => {
+                                  if (value)
+                                    {
+                                      _mostrarMensaje(
+                                          'Se ha eliminado correctamente',
+                                          Colors.green),
+                                      bookInspiracionService
+                                          .getBookInspiracion()
+                                          .then((value) => setState(() {})),
+                                    }
+                                  else
+                                    {
+                                      _mostrarMensaje(
+                                          'Ocurrio un error', Colors.red)
+                                    }
+                                });
+                      },
+                      icon: FaIcon(FontAwesomeIcons.trash, color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            );
+          });
+    }
   }
 
   _mostrarMensaje(String msj, Color color) {

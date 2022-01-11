@@ -46,7 +46,7 @@ dependencies:
   table_sticky_headers: ^2.0.0
   table_calendar: ^3.0.3
   multi_select_flutter: ^4.0.0
-  file_picker: ^4.2.4
+  file_picker: ^4.3.1
   syncfusion_flutter_pdfviewer: ^19.3.54-beta
   mime_type: ^1.0.0
   screenshot: ^1.2.3

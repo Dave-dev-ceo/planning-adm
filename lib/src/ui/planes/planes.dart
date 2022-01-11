@@ -1409,39 +1409,71 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             );
           }
         }
-        return Row(
-          children: [
-            Spacer(),
-            Theme(
-              data: ThemeData(disabledColor: Colors.green),
-              child: Checkbox(
-                value: true,
-                onChanged: null,
-                hoverColor: Colors.transparent,
+        if (size.width > 400) {
+          return Row(
+            children: [
+              Spacer(),
+              Theme(
+                data: ThemeData(disabledColor: Colors.green),
+                child: Checkbox(
+                  value: true,
+                  onChanged: null,
+                  hoverColor: Colors.transparent,
+                ),
               ),
-            ),
-            Text('Completadas'),
-            Spacer(),
-            Theme(
-              data: ThemeData(disabledColor: Colors.yellow[800]),
-              child: Checkbox(
-                value: false,
-                onChanged: null,
+              Text('Completadas'),
+              Spacer(),
+              Theme(
+                data: ThemeData(disabledColor: Colors.yellow[800]),
+                child: Checkbox(
+                  value: false,
+                  onChanged: null,
+                ),
               ),
-            ),
-            Text('Pendientes'),
-            Spacer(),
-            Theme(
-              data: ThemeData(disabledColor: Colors.red),
-              child: Checkbox(
-                value: false,
-                onChanged: null,
+              Text('Pendientes'),
+              Spacer(),
+              Theme(
+                data: ThemeData(disabledColor: Colors.red),
+                child: Checkbox(
+                  value: false,
+                  onChanged: null,
+                ),
               ),
-            ),
-            Text('Atrasadas'),
-            Spacer(),
-          ],
-        );
+              Text('Atrasadas'),
+              Spacer(),
+            ],
+          );
+        } else {
+          return Column(
+            children: [
+              Theme(
+                data: ThemeData(disabledColor: Colors.green),
+                child: Checkbox(
+                  value: true,
+                  onChanged: null,
+                  hoverColor: Colors.transparent,
+                ),
+              ),
+              Text('Completadas'),
+              Theme(
+                data: ThemeData(disabledColor: Colors.yellow[800]),
+                child: Checkbox(
+                  value: false,
+                  onChanged: null,
+                ),
+              ),
+              Text('Pendientes'),
+              Theme(
+                data: ThemeData(disabledColor: Colors.red),
+                child: Checkbox(
+                  value: false,
+                  onChanged: null,
+                ),
+              ),
+              Text('Atrasadas'),
+            ],
+          );
+        }
       },
     );
   }
@@ -1961,7 +1993,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     // }
   }
 
-  void _updateYselect() {
+  void _updateYselect() async {
     List<EventoActividadModel> send = [];
 
     listaTimings.forEach((tarea) {
@@ -1975,8 +2007,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
         isEnableButton = false;
       }); // reset
       _planesBloc.add(UpdateActividadesEventoEvent(send));
-      _planesLogic.getAllPlannes();
-      _planesLogic.getContadorValues(isInvolucrado);
+      await _planesLogic.getAllPlannes();
+      await _planesLogic.getContadorValues(isInvolucrado);
 
       // cambiamos x updateevent
     }

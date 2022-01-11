@@ -1,7 +1,9 @@
 // ignore_for_file: unused_element
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:planning/src/utils/utils.dart';
 
 import 'package:flutter/material.dart';
@@ -353,45 +355,89 @@ class _TimingState extends State<Timing> {
                                           }
                                         }
                                       },
-                                      child: AlertDialog(
-                                        content: RichText(
-                                          text: TextSpan(
-                                            text:
-                                                '¿Esta seguro de eliminar el cronograma?\n',
-                                            style: TextStyle(
-                                              decorationStyle:
-                                                  TextDecorationStyle.dotted,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text:
-                                                    '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
-                                                style: TextStyle(
-                                                  fontStyle: FontStyle.italic,
+                                      child: !Platform.isIOS
+                                          ? AlertDialog(
+                                              content: RichText(
+                                                text: TextSpan(
+                                                  text:
+                                                      '¿Esta seguro de eliminar el cronograma?\n',
+                                                  style: TextStyle(
+                                                    decorationStyle:
+                                                        TextDecorationStyle
+                                                            .dotted,
+                                                  ),
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
+                                                      style: TextStyle(
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('Cancelar'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () async {
-                                              await timingBloc.add(
-                                                  DeleteTimingPlannerEvent(
-                                                      listItemModelTimings
-                                                          .results[index]
-                                                          .id_timing));
-                                            },
-                                            child: Text('Aceptar'),
-                                          )
-                                        ],
-                                      ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Cancelar'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    await timingBloc.add(
+                                                        DeleteTimingPlannerEvent(
+                                                            listItemModelTimings
+                                                                .results[index]
+                                                                .id_timing));
+                                                  },
+                                                  child: Text('Aceptar'),
+                                                )
+                                              ],
+                                            )
+                                          : CupertinoAlertDialog(
+                                              content: RichText(
+                                                text: TextSpan(
+                                                  text:
+                                                      '¿Esta seguro de eliminar el cronograma?\n',
+                                                  style: TextStyle(
+                                                    decorationStyle:
+                                                        TextDecorationStyle
+                                                            .dotted,
+                                                  ),
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
+                                                      style: TextStyle(
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: [
+                                                CupertinoDialogAction(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Cancelar'),
+                                                ),
+                                                CupertinoDialogAction(
+                                                  child: Text('Aceptar'),
+                                                  onPressed: () async {
+                                                    await timingBloc.add(
+                                                        DeleteTimingPlannerEvent(
+                                                            listItemModelTimings
+                                                                .results[index]
+                                                                .id_timing));
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                     ));
                           },
                           icon: Icon(Icons.delete_forever),
