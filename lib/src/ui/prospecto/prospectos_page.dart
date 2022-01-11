@@ -307,11 +307,12 @@ class _ProspectosPageState extends State<ProspectosPage> {
                 return AlertDialog(
                   title: Text(!isEdit ? 'Insertar etapa' : 'Editar etapa'),
                   content: SizedBox(
-                    width: size.width * 0.3,
-                    height: size.height * 0.5,
+                    // width: size.width * 0.3,
+                    // height: size.height * 0.5,
                     child: Form(
                       key: _keyFormNewEtapa,
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
