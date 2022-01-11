@@ -1179,7 +1179,7 @@ class New_ContratoState extends State<NewContrato> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Crear plantilla', textAlign: TextAlign.center),
+          title: Text('Subir Archivo', textAlign: TextAlign.center),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Form(
@@ -1229,7 +1229,7 @@ class New_ContratoState extends State<NewContrato> {
               },
             ),
             SizedBox(
-              width: 10.0,
+              width: 5.0,
             ),
             TextButton(
               child: Text('Seleccionar Archivo'),
