@@ -71,6 +71,7 @@ dependency_overrides:
   flutter_colorpicker: ^0.6.0
 
 dev_dependencies:
+  flutter_native_splash: ^1.3.2
   flutter_test:
     sdk: flutter
 
@@ -153,3 +154,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+
+  color: "#FFFFFF"
+  image: assets/new_logo.png
