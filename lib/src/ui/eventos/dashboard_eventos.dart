@@ -64,10 +64,10 @@ class _DashboardEventosState extends State<DashboardEventos> {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 400,
-            mainAxisExtent: 200,
+            mainAxisExtent: 150,
             childAspectRatio: 3 / 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 0),
         itemCount: snapshot.results.length,
         itemBuilder: (BuildContext ctx, index) {
           return miCard(
@@ -86,7 +86,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(8.0),
         elevation: 10,
         child: SingleChildScrollView(
           child: Column(
@@ -185,7 +185,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                            padding: const EdgeInsets.only(bottom: 20.0),
+                            padding: const EdgeInsets.only(bottom: 5.0),
                             child: SwitchListTile(
                                 title: const Text('Ver todos los eventos.'),
                                 value: _lights,

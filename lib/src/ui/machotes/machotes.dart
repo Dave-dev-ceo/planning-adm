@@ -92,21 +92,21 @@ class _MachotesState extends State<Machotes> {
                           barrierDismissible: false,
                           context: context,
                           builder: (context) => AlertDialog(
+                            buttonPadding: EdgeInsets.zero,
                             title: Center(
                               child: Text('Editar nombre de la plantilla'),
                             ),
-                            content: ResponsiveGridRow(
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                ResponsiveGridCol(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Nombre de la plantilla'),
-                                    initialValue: temp,
-                                    onChanged: (value) {
-                                      temp = value;
-                                    },
-                                  ),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Nombre de la plantilla'),
+                                  initialValue: temp,
+                                  onChanged: (value) {
+                                    temp = value;
+                                  },
                                 ),
                               ],
                             ),

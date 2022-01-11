@@ -171,11 +171,12 @@ class _ResumenEventoState extends State<ResumenEvento> {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(20),
-        elevation: 10,
+        margin: EdgeInsets.all(10),
+        elevation: 6,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(4.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
             child: Column(
               children: <Widget>[
                 ListTile(

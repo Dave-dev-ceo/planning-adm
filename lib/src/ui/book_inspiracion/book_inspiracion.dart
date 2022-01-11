@@ -44,7 +44,7 @@ class _BookInspiracion extends State<BookInspiracion> {
     return Scaffold(
       appBar: (isInvolucrado)
           ? AppBar(
-              title: Text('Boook Inspiración'),
+              title: Text('Book Inspiración'),
               centerTitle: true,
             )
           : null,

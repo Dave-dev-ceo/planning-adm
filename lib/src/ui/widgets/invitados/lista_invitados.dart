@@ -542,7 +542,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           columns: [
             DataColumn(label: Text('Nombre', style: estiloTxt)),
             DataColumn(
-                label: Center(child: Text('Telefono', style: estiloTxt))),
+                label: Center(child: Text('Teléfono', style: estiloTxt))),
             DataColumn(label: Text('Grupo', style: estiloTxt)),
             DataColumn(label: Text('Asistencia', style: estiloTxt)),
             DataColumn(label: Text('Acción', style: estiloTxt)),

@@ -313,10 +313,17 @@ class _TimingState extends State<Timing> {
                                 estatus:
                                     listItemModelTimings.results[index].estatus,
                               ),
-                            );
-                            await timingBloc
-                                .add(FetchTimingsPorPlannerEvent('A'));
-                            setState(() {});
+                            ).then((value) async => {
+                                  if (value != null)
+                                    {
+                                      if (value)
+                                        {
+                                          await timingBloc.add(
+                                              FetchTimingsPorPlannerEvent('A')),
+                                          setState(() {})
+                                        }
+                                    }
+                                });
                           },
                           icon: Icon(
                             Icons.edit,
@@ -355,89 +362,47 @@ class _TimingState extends State<Timing> {
                                           }
                                         }
                                       },
-                                      child: !Platform.isIOS
-                                          ? AlertDialog(
-                                              content: RichText(
-                                                text: TextSpan(
-                                                  text:
-                                                      '¿Esta seguro de eliminar el cronograma?\n',
-                                                  style: TextStyle(
-                                                    decorationStyle:
-                                                        TextDecorationStyle
-                                                            .dotted,
-                                                  ),
-                                                  children: [
-                                                    TextSpan(
-                                                      text:
-                                                          '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
-                                                      style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Cancelar'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    await timingBloc.add(
-                                                        DeleteTimingPlannerEvent(
-                                                            listItemModelTimings
-                                                                .results[index]
-                                                                .id_timing));
-                                                  },
-                                                  child: Text('Aceptar'),
-                                                )
-                                              ],
-                                            )
-                                          : CupertinoAlertDialog(
-                                              content: RichText(
-                                                text: TextSpan(
-                                                  text:
-                                                      '¿Esta seguro de eliminar el cronograma?\n',
-                                                  style: TextStyle(
-                                                    decorationStyle:
-                                                        TextDecorationStyle
-                                                            .dotted,
-                                                  ),
-                                                  children: [
-                                                    TextSpan(
-                                                      text:
-                                                          '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
-                                                      style: TextStyle(
-                                                        fontStyle:
-                                                            FontStyle.italic,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              actions: [
-                                                CupertinoDialogAction(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Cancelar'),
-                                                ),
-                                                CupertinoDialogAction(
-                                                  child: Text('Aceptar'),
-                                                  onPressed: () async {
-                                                    await timingBloc.add(
-                                                        DeleteTimingPlannerEvent(
-                                                            listItemModelTimings
-                                                                .results[index]
-                                                                .id_timing));
-                                                  },
-                                                ),
-                                              ],
+                                      child: CupertinoAlertDialog(
+                                        content: RichText(
+                                          text: TextSpan(
+                                            text:
+                                                '¿Esta seguro de eliminar el cronograma?\n',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              decorationStyle:
+                                                  TextDecorationStyle.dotted,
                                             ),
+                                            children: [
+                                              TextSpan(
+                                                text:
+                                                    '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontStyle: FontStyle.italic,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Cancelar'),
+                                          ),
+                                          CupertinoDialogAction(
+                                            child: Text('Aceptar'),
+                                            onPressed: () async {
+                                              await timingBloc.add(
+                                                  DeleteTimingPlannerEvent(
+                                                      listItemModelTimings
+                                                          .results[index]
+                                                          .id_timing));
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ));
                           },
                           icon: Icon(Icons.delete_forever),
@@ -659,6 +624,7 @@ class _EditTimingDialogState extends State<EditTimingDialog> {
           minWidth: size.width * 0.4,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Form(
               key: keyFormCrono,
