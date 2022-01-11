@@ -367,7 +367,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                             ),
                     )),
                 width: double.infinity,
-                height: 200,
+                height: double.infinity,
                 child: ClipRect(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
@@ -380,8 +380,9 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
+              Positioned(
+                top: 20.0,
+                left: 8.0,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
