@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -92,16 +93,16 @@ class _BookInspiracion extends State<BookInspiracion> {
               child: Icon(Icons.upload),
               label: 'Subir archivo',
               onTap: () async {
-                const extensiones = ['jpg', 'png', 'jpeg'];
-
                 FilePickerResult pickedFile =
                     await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: extensiones,
+                  type: FileType.image,
                   allowMultiple: false,
                 );
                 if (pickedFile != null) {
-                  final bytes = pickedFile.files.first.bytes;
+                  var bytes = await pickedFile.files.first.bytes;
+                  if (bytes == null) {
+                    bytes = File(pickedFile.files.first.path).readAsBytesSync();
+                  }
                   String _extension = pickedFile.files.first.extension;
                   String file64 = base64Encode(bytes);
                   bookInspiracionService
@@ -110,10 +111,7 @@ class _BookInspiracion extends State<BookInspiracion> {
                             if (value == 'Ok')
                               {
                                 await bookInspiracionService
-                                    .getBookInspiracion()
-                                    .then(
-                                      (value) => setState(() {}),
-                                    ),
+                                    .getBookInspiracion(),
                                 _mostrarMensaje(
                                     'Se subio correctamente.', Colors.green)
                               }
@@ -173,7 +171,7 @@ class _BookInspiracion extends State<BookInspiracion> {
                                 if (value)
                                   {
                                     _mostrarMensaje(
-                                        'Se ha elimina correctamente',
+                                        'Se ha eliminado correctamente',
                                         Colors.green),
                                     bookInspiracionService
                                         .getBookInspiracion()
