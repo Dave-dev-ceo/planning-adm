@@ -31,7 +31,8 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         // metodo update
-        await logic.updateContratoEvento(event.id, event.archivo);
+        await logic.updateContratoEvento(
+            event.id, event.archivo, event.tipo_doc, event.tipo_mime);
         yield VerContratosSubir();
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');

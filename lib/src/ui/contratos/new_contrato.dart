@@ -382,7 +382,8 @@ class New_ContratoState extends State<NewContrato> {
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
                                           downloadFile(contrato.original,
-                                              contrato.description)
+                                              contrato.description,
+                                              extensionFile: contrato.tipo_mime)
                                         }),
                               ],
                             ),
@@ -516,7 +517,8 @@ class New_ContratoState extends State<NewContrato> {
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
                                           downloadFile(contrato.original,
-                                              contrato.description)
+                                              contrato.description,
+                                              extensionFile: contrato.tipo_mime)
                                         }),
                               ],
                             ),
@@ -650,7 +652,8 @@ class New_ContratoState extends State<NewContrato> {
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
                                           downloadFile(contrato.original,
-                                              contrato.description)
+                                              contrato.description,
+                                              extensionFile: contrato.tipo_mime)
                                         }),
                               ],
                             ),
@@ -784,7 +787,8 @@ class New_ContratoState extends State<NewContrato> {
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
                                           downloadFile(contrato.original,
-                                              contrato.description)
+                                              contrato.description,
+                                              extensionFile: contrato.tipo_mime)
                                         }),
                               ],
                             ),
@@ -918,7 +922,8 @@ class New_ContratoState extends State<NewContrato> {
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
                                           downloadFile(contrato.original,
-                                              contrato.description)
+                                              contrato.description,
+                                              extensionFile: contrato.tipo_mime)
                                         }),
                               ],
                             ),
@@ -1052,7 +1057,8 @@ class New_ContratoState extends State<NewContrato> {
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
                                           downloadFile(contrato.original,
-                                              contrato.description)
+                                              contrato.description,
+                                              extensionFile: contrato.tipo_mime)
                                         }),
                               ],
                             ),
@@ -1351,7 +1357,7 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   _uploadFile(int idContrato) async {
-    const extensiones = ['pdf'];
+    const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -1360,8 +1366,9 @@ class New_ContratoState extends State<NewContrato> {
     );
 
     if (pickedFile != null) {
-      verContratos.add(
-          SubirContrato(idContrato, base64.encode(pickedFile.files[0].bytes)));
+      String _extension = pickedFile.files.first.extension;
+      verContratos.add(SubirContrato(idContrato,
+          base64.encode(pickedFile.files[0].bytes), 'html', _extension));
     }
   }
 

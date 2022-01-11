@@ -18,7 +18,8 @@ abstract class AddContratosLogic {
   Future<ItemModelAddContratos> selectContratosEvento();
   Future<bool> borrarContratoEvento(int id);
   Future<String> fetchContratosPdf(Map<String, dynamic> data);
-  Future<bool> updateContratoEvento(int id, String archivo);
+  Future<bool> updateContratoEvento(
+      int id, String archivo, String tipo_doc, String tipo_mime);
   Future<String> updateValContratos(Map<String, dynamic> data);
   Future<String> fetchValContratos(String _machote);
 }
@@ -209,7 +210,8 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
   }
 
   @override
-  Future<bool> updateContratoEvento(int id, String archivo) async {
+  Future<bool> updateContratoEvento(
+      int id, String archivo, String tipo_doc, String tipo_mime) async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
@@ -222,7 +224,9 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
         body: {
           'id_planner': idPlanner.toString(),
           'id_contrato': id.toString(),
-          'archivo': archivo
+          'archivo': archivo,
+          'tipo_doc': tipo_doc,
+          'tipo_mime': tipo_mime
         },
         headers: {
           HttpHeaders.authorizationHeader: token

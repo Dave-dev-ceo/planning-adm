@@ -14,8 +14,10 @@ class BorrarContrato extends VerContratosEvent {
 class SubirContrato extends VerContratosEvent {
   final int id;
   final String archivo;
+  final String tipo_doc;
+  final String tipo_mime;
 
-  SubirContrato(this.id, this.archivo);
+  SubirContrato(this.id, this.archivo, this.tipo_doc, this.tipo_mime);
 
   int get pro => id;
   String get prop => archivo;
