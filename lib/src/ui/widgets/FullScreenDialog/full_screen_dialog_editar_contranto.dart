@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:planning/src/models/item_model_etiquetas.dart';
@@ -77,7 +78,7 @@ class _FullScreenDialogEditContratoState
                   child: BlocBuilder<EtiquetasBloc, EtiquetasState>(
                     builder: (context, state) {
                       if (state is LoadingEtiquetasState) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: LoadingCustom());
                       } else if (state is MostrarEtiquetasState) {
                         itemModelET = state.etiquetas;
                         return _constructorLista(state.etiquetas);
@@ -86,7 +87,7 @@ class _FullScreenDialogEditContratoState
                           child: Text(state.message),
                         );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: LoadingCustom());
                         // return _constructorLista(itemModelET);
                       }
                     },

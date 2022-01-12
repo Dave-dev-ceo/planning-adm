@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/logic/proveedores_evento_logic.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -79,7 +80,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                     ],
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingCustom());
                 }
               }),
             ),
@@ -124,7 +125,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                   ],
                 );
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               }
             }),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/models/item_model_reporte_evento.dart';
 
@@ -35,7 +36,7 @@ class _ReporteEventoState extends State<ReporteEvento> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }

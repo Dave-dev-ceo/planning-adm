@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -55,7 +56,7 @@ class _FullScreenDialogAgregarProveedorEvent
         child: BlocBuilder<ServiciosBloc, ServiciosState>(
             builder: (context, state) {
           if (state is LoadingServiciosState) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is MostrarServiciosState) {
             this._items = [];
             _optItem = [];
@@ -69,7 +70,7 @@ class _FullScreenDialogAgregarProveedorEvent
                 .toList();
             return _formInit();
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           }
         }),
       )),

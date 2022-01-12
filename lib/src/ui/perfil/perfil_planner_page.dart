@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/perfil/perfil_planner_model.dart';
@@ -42,7 +43,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
           return buildPerfilPlanner(state.perfilPlanner);
         } else {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         }
       }),

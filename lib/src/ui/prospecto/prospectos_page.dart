@@ -4,6 +4,7 @@ import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 
@@ -48,7 +49,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
               );
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               );
             }
           },
@@ -289,7 +290,6 @@ class _ProspectosPageState extends State<ProspectosPage> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          final size = MediaQuery.of(context).size;
           return BlocListener<ProspectoBloc, ProspectoState>(
             listener: (context, state) {
               if (state is AddedEtapaState) {

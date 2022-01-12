@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:planning/src/models/item_model-acompanante.dart';
@@ -109,7 +110,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -134,7 +135,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -409,7 +410,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -537,7 +538,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }

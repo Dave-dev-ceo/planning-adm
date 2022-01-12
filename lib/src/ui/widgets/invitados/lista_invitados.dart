@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
@@ -417,7 +418,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         },
       ),
     );
@@ -478,7 +479,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
   }
 
   _dialogSpinner(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -785,7 +786,7 @@ class _DataSource extends DataTableSource {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }*/

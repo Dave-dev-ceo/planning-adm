@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/usuarios/usuarios_bloc.dart';
 import 'package:planning/src/logic/usuarios.logic.dart';
 import 'package:planning/src/models/item_model_usuarios.dart';
@@ -37,9 +38,9 @@ class _UsuariosState extends State<Usuarios> {
       BlocBuilder<UsuariosBloc, UsuariosState>(
         builder: (context, state) {
           if (state is UsuariosInitialState) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is LoadingUsuariosState) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is MostrarUsuariosState) {
             if (state.usuarios != null) {
               if (itemModelUsuarios != state.usuarios) {
@@ -52,7 +53,7 @@ class _UsuariosState extends State<Usuarios> {
             } else {
               crt = true;
               usuariosBloc.add(FetchUsuariosPorPlannerEvent());
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             }
             if (filterUsuarios.usuarios != null) {
               return buildList(filterUsuarios);

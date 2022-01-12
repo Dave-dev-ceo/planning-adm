@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:planning/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
@@ -99,7 +100,9 @@ class _AgregarMachoteState extends State<AgregarMachote> {
                 child: BlocBuilder<EtiquetasBloc, EtiquetasState>(
                   builder: (context, state) {
                     if (state is LoadingEtiquetasState) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(
+                        child: LoadingCustom(),
+                      );
                     } else if (state is MostrarEtiquetasState) {
                       itemModelET = state.etiquetas;
                       return _constructorLista(state.etiquetas);
@@ -108,7 +111,7 @@ class _AgregarMachoteState extends State<AgregarMachote> {
                         child: Text(state.message),
                       );
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: LoadingCustom());
                       //return _constructorLista(itemModelET);
                     }
                   },

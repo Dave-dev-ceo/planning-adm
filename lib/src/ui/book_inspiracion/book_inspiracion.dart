@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
 import 'package:planning/src/utils/utils.dart' as utils;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BookInspiracion extends StatefulWidget {
   const BookInspiracion({Key key}) : super(key: key);
@@ -54,27 +54,21 @@ class _BookInspiracion extends State<BookInspiracion> {
               AsyncSnapshot<List<LayoutBookModel>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               );
             }
             if (snapshot.hasData) {
               if (snapshot.data != null) {
-                return _viewFile(snapshot.data);
+                if (snapshot.data.length > 0) {
+                  return _viewFile(snapshot.data);
+                } else {
+                  return sinDatos();
+                }
               } else {
-                return Align(
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Text('No se encontraron datos'),
-                  ),
-                );
+                return sinDatos();
               }
             } else {
-              return Align(
-                alignment: Alignment.center,
-                child: Center(
-                  child: Text('No se encontraron datos'),
-                ),
-              );
+              return sinDatos();
             }
           }),
       floatingActionButton: SpeedDial(
@@ -130,6 +124,15 @@ class _BookInspiracion extends State<BookInspiracion> {
                 }
               })
         ],
+      ),
+    );
+  }
+
+  Align sinDatos() {
+    return Align(
+      alignment: Alignment.center,
+      child: Center(
+        child: Text('No se encontraron datos'),
       ),
     );
   }

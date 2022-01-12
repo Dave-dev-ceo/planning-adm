@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
@@ -69,21 +70,21 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is ErrorTokenPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is LoadingPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is PermisosOk) {
             return Scaffold(

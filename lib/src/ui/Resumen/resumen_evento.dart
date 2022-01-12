@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart' as EvtBloc;
@@ -67,7 +68,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -82,7 +83,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -139,7 +140,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
     return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
       builder: (context, state) {
         if (state is EvtBloc.LoadingEventoPorIdState) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is EvtBloc.MostrarEventoPorIdState) {
           evento = state.evento;
           eventosBloc.add(EvtBloc.FechtEventosEvent('A'));
@@ -158,7 +159,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 height: 200,
                 child: miCardReporteDetallesEvento(evento));
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           }
         }
       },
@@ -258,7 +259,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
               elevation: 10.0,
               child: Align(
                 alignment: Alignment.center,
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               ),
             ),
           );

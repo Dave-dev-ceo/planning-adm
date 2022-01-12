@@ -5,13 +5,12 @@ import 'dart:convert';
 // import 'package:universal_html/html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 
 // imports
 import 'package:file_picker/file_picker.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/utils/utils.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 // imports from wedding
@@ -31,7 +30,7 @@ class New_ContratoState extends State<NewContrato> {
   VerContratosBloc verContratos;
 
   // vaiables clase
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
   List<Contratos> itemModel = [];
 
   // Variable involucrado
@@ -123,11 +122,11 @@ class New_ContratoState extends State<NewContrato> {
             builder: (context, state) {
       if (state is ContratosInitial) {
         return Center(
-          child: CircularProgressIndicator(),
+          child: LoadingCustom(),
         );
       } else if (state is ContratosLogging) {
         return Center(
-          child: CircularProgressIndicator(),
+          child: LoadingCustom(),
         );
       } else if (state is SelectContratoState) {
         if (itemModel.length == 0) {
@@ -165,7 +164,7 @@ class New_ContratoState extends State<NewContrato> {
             child: _showContratos());
       } else {
         return Center(
-          child: CircularProgressIndicator(),
+          child: LoadingCustom(),
         );
       }
     }));
@@ -254,22 +253,22 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   // select lista
-  _itemsContratos() {
-    switch (_selectedIndex) {
-      case 0:
-        return _contratosItem();
-      case 1:
-        return _recibosItem();
-      case 2:
-        return _pagosItem();
-      case 3:
-        return _minutasItem();
-      case 4:
-        return _ordenPagos();
-      default:
-        return _autorizaciones();
-    }
-  }
+  // _itemsContratos() {
+  //   switch (_selectedIndex) {
+  //     case 0:
+  //       return _contratosItem();
+  //     case 1:
+  //       return _recibosItem();
+  //     case 2:
+  //       return _pagosItem();
+  //     case 3:
+  //       return _minutasItem();
+  //     case 4:
+  //       return _ordenPagos();
+  //     default:
+  //       return _autorizaciones();
+  //   }
+  // }
 
   // ini items
   _contratosItem() {
@@ -1083,39 +1082,39 @@ class New_ContratoState extends State<NewContrato> {
   }
   // fin items
 
-  _showNavigationBar() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.gavel),
-          label: 'Contratos',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.receipt),
-          label: 'Recibos',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.request_page),
-          label: 'Pagos',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.receipt),
-          label: 'Minutas',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.list_alt),
-          label: 'Orden de pedido',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.description_outlined),
-          label: 'Autorizaciones',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      onTap: (index) => setState(() => _selectedIndex = index),
-    );
-  }
+  // _showNavigationBar() {
+  //   return BottomNavigationBar(
+  //     type: BottomNavigationBarType.fixed,
+  //     items: [
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.gavel),
+  //         label: 'Contratos',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.receipt),
+  //         label: 'Recibos',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.request_page),
+  //         label: 'Pagos',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.receipt),
+  //         label: 'Minutas',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.list_alt),
+  //         label: 'Orden de pedido',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(Icons.description_outlined),
+  //         label: 'Autorizaciones',
+  //       ),
+  //     ],
+  //     currentIndex: _selectedIndex,
+  //     onTap: (index) => setState(() => _selectedIndex = index),
+  //   );
+  // }
 
   _showButton() {
     return SpeedDial(
@@ -1426,7 +1425,7 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   _dialogMSG(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,

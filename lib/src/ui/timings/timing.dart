@@ -1,9 +1,6 @@
 // ignore_for_file: unused_element
-
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/utils/utils.dart';
 
 import 'package:flutter/material.dart';
@@ -60,30 +57,31 @@ class _TimingState extends State<Timing> {
           timingBloc.add(FetchTimingsPorPlannerEvent('A'));
         },
         child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            child: BlocBuilder<TimingsBloc, TimingsState>(
-              builder: (context, state) {
-                if (state is TimingsInitial) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (state is LoadingTimingsState) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (state is MostrarTimingsState) {
-                  if (crt) {
-                    itemModelTimings = state.usuarios;
-                    filterTimings = itemModelTimings; //.copy()
-                  }
-                  return _constructorTable(filterTimings);
-                } else if (state is ErrorMostrarTimingsState) {
-                  return Center(
-                    child: Text(state.message),
-                  );
-                  //_showError(context, state.message);
-                } else {
-                  return buildList(filterTimings);
+          child: BlocBuilder<TimingsBloc, TimingsState>(
+            builder: (context, state) {
+              if (state is TimingsInitial) {
+                return Center(
+                  child: LoadingCustom(),
+                );
+              } else if (state is LoadingTimingsState) {
+                return Center(
+                  child: LoadingCustom(),
+                );
+              } else if (state is MostrarTimingsState) {
+                if (crt) {
+                  itemModelTimings = state.usuarios;
+                  filterTimings = itemModelTimings; //.copy()
                 }
-              },
-            ),
+                return _constructorTable(filterTimings);
+              } else if (state is ErrorMostrarTimingsState) {
+                return Center(
+                  child: Text(state.message),
+                );
+                //_showError(context, state.message);
+              } else {
+                return buildList(filterTimings);
+              }
+            },
           ),
         ),
       ),

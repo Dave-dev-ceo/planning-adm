@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 
@@ -36,11 +37,11 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
       builder: (context, state) {
         if (state is InvolucradosInitial) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is InvolucradosLogging) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is InvolucradosSelect) {
           if (state.autorizacion.contrato.length > 0) {
@@ -65,7 +66,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
           return viewForm();
         } else {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         }
       },

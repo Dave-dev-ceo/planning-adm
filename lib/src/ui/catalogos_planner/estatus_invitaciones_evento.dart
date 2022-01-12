@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/estatus/estatus_bloc.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -50,7 +51,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );*/
   }
@@ -222,7 +223,9 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                   child: BlocBuilder<EstatusBloc, EstatusState>(
                     builder: (context, state) {
                       if (state is LoadingEstatusState) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: LoadingCustom(),
+                        );
                       } else if (state is MostrarEstatusState) {
                         //itemModelEI = state.estatus;
                         return _constructorTable(state.estatus);
@@ -232,7 +235,9 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                           child: Text(state.message),
                         );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: LoadingCustom(),
+                        );
                       }
                     },
                   ),

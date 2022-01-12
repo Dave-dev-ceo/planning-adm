@@ -2,6 +2,7 @@
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
@@ -65,10 +66,10 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
     return BlocBuilder<PlanesBloc, PlanesState>(builder: (context, state) {
       // state ini
       if (state is InitiaPlaneslState)
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       // state log
       else if (state is LodingPlanesState)
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       // state select
       else if (state is SelectPlanesState) {
         // evita que se reescriba la lista
@@ -84,7 +85,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
           }
         } else {
           _planesBloc.add(SelectPlanesEvent());
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         }
         if (_itemModel != null) {
           return _crearStickyHeader(_itemModel);
@@ -99,7 +100,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       }
       // no state
       else {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       }
     });
   }
@@ -375,7 +376,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
               );
             } else
               return Center(
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               );
           });
     } else

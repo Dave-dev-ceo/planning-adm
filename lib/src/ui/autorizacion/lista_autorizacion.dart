@@ -1,5 +1,6 @@
 // imports flutter/dart
 import 'package:flutter/material.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:file_picker/file_picker.dart';
@@ -77,12 +78,12 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
         // state ini
         if (state is AutorizacionInitialState)
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         // state log
         else if (state is AutorizacionLodingState)
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         else if (state is AutorizacionSelectState) {
           if (state.autorizacion != null) {
@@ -108,7 +109,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
         // not knowing
         else
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
       },
     );

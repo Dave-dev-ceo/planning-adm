@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
@@ -319,9 +320,13 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     return BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
       builder: (context, state) {
         if (state is ActividadestimingInitial) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: LoadingCustom(),
+          );
         } else if (state is LoadingActividadesTimingsState) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: LoadingCustom(),
+          );
         } else if (state is MostrarActividadesTimingsState) {
           return _dropDownActividades(state.actividadesTimings);
         } else if (state is ErrorMostrarActividadesTimingsState) {
@@ -330,7 +335,9 @@ class _AgregarActividadesState extends State<AgregarActividades> {
           );
           //_showError(context, state.message);
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: LoadingCustom(),
+          );
         }
       },
     );
@@ -348,9 +355,13 @@ class _AgregarActividadesState extends State<AgregarActividades> {
         child: BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
           builder: (context, state) {
             if (state is ActividadestimingInitial) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingCustom(),
+              );
             } else if (state is LoadingActividadesTimingsState) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingCustom(),
+              );
             } else if (state is MostrarActividadesTimingsState) {
               return _constructorListView(state.actividadesTimings);
             } else if (state is ErrorMostrarActividadesTimingsState) {
@@ -359,7 +370,9 @@ class _AgregarActividadesState extends State<AgregarActividades> {
               );
               //_showError(context, state.message);
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingCustom(),
+              );
             }
           },
         ),
@@ -621,6 +634,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
         width: double.infinity,
         child: AlertDialog(
@@ -690,42 +704,13 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               icon: Icons.date_range_outlined,
                               ancho: 80.0,
                               large: 363.0,
-                              item: Row(
-                                children: [
-                                  Expanded(child: Text("Duración en días:")),
-                                  IconButton(
-                                    icon: Icon(Icons.remove),
-                                    onPressed: actividad.diasActividad == 0
-                                        ? null
-                                        : () => setState(() {
-                                              actividad.diasActividad--;
-                                              diasController.text = actividad
-                                                  .diasActividad
-                                                  .toString();
-                                            }),
-                                  ),
-                                  Container(
-                                    width: 45,
-                                    height: 45,
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 3),
-                                      child: TextFormField(
-                                        controller: diasController,
-                                        textAlign: TextAlign.center,
-                                      ),
+                              item: (size.width > 400)
+                                  ? Row(
+                                      children: durationDaysChildren(false),
+                                    )
+                                  : Column(
+                                      children: durationDaysChildren(true),
                                     ),
-                                  ),
-                                  IconButton(
-                                      icon: Icon(Icons.add),
-                                      onPressed: () => setState(() {
-                                            actividad.diasActividad++;
-                                            diasController.text = actividad
-                                                .diasActividad
-                                                .toString();
-                                          })),
-                                ],
-                              ),
                             ),
                             TextFormFields(
                               icon: null,
@@ -757,7 +742,9 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                                     hint: Text('Seleccione el predecesor'),
                                     menuMaxHeight: 450,
                                     style: TextStyle(
-                                        overflow: TextOverflow.ellipsis),
+                                      color: Colors.black,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                     onChanged: (valor) {
                                       setState(() {
                                         if (valor != -1) {
@@ -806,5 +793,41 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                 child: Text('Aceptar')),
           ],
         ));
+  }
+
+  List<Widget> durationDaysChildren(bool isMovil) {
+    return [
+      Text("Duración en días:"),
+      Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.remove),
+            onPressed: actividad.diasActividad == 0
+                ? null
+                : () => setState(() {
+                      actividad.diasActividad--;
+                      diasController.text = actividad.diasActividad.toString();
+                    }),
+          ),
+          Container(
+            width: 45,
+            height: 45,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 3),
+              child: TextFormField(
+                controller: diasController,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () => setState(() {
+                    actividad.diasActividad++;
+                    diasController.text = actividad.diasActividad.toString();
+                  })),
+        ],
+      )
+    ];
   }
 }

@@ -33,11 +33,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       int prov, int serv) async {
     try {
       int id_planner = await _sharedPreferences.getIdPlanner();
-      final data = {
-        "id_planner": id_planner,
-        "id_proveedor": prov,
-        "id_servicio": serv,
-      };
+
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
@@ -59,6 +55,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       }
     } catch (e) {
       print(e);
+      throw ArchivoProveedoresException();
     }
   }
 
@@ -88,6 +85,8 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       } else {
         throw CreateArchivoProveedorException();
       }
+    } else {
+      return -1;
     }
   }
 
@@ -139,6 +138,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       }
     } catch (e) {
       print(e);
+      throw ArchivoProveedoresException();
     }
   }
 
@@ -146,11 +146,6 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       int prov, int event) async {
     try {
       int id_planner = await _sharedPreferences.getIdPlanner();
-      final data = {
-        "id_planner": id_planner,
-        "id_proveedor": prov,
-        "id_evento": event,
-      };
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
@@ -172,6 +167,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       }
     } catch (e) {
       print(e);
+      throw ArchivoProveedoresException();
     }
   }
 
@@ -229,6 +225,8 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       } else {
         throw CreateArchivoProveedorException();
       }
+    } else {
+      return -1;
     }
   }
 
@@ -255,6 +253,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
       }
     } catch (e) {
       print(e);
+      throw ArchivoProveedoresException();
     }
   }
 }

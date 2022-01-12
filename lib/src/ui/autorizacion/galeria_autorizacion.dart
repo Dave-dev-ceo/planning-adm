@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 // bloc
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
 
 // model
@@ -85,12 +86,12 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
         // state ini
         if (state is AutorizacionInitialState)
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         // state log
         else if (state is AutorizacionLodingState)
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         else if (state is SelectEvidenciaState) {
           if (state.evidencia != null) {
@@ -108,7 +109,7 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
         // not knowing
         else
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
       },
     );

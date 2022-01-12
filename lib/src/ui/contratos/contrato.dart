@@ -86,7 +86,7 @@ class _ContratosState extends State<Contratos> {
         child: BlocBuilder<ContratosBloc, ContratosState>(
           builder: (context, state) {
             if (state is LoadingContratosState) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             } else if (state is MostrarContratosState) {
               itemModelC = state.contratos;
               return _constructorLista(state.contratos);
@@ -95,7 +95,7 @@ class _ContratosState extends State<Contratos> {
                 child: Text(state.message),
               );
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
               //return _constructorLista(itemModelET);
             }
           },

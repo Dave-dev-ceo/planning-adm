@@ -26,7 +26,7 @@ class ArchivosEspecialesBloc
       }
     } else if (event is DeleteArchivoEspecialEvent) {
       try {
-        int service = await logic.deleteArchivoEspecial(event.idArchivo);
+        await logic.deleteArchivoEspecial(event.idArchivo);
         add(FechtArchivoEspecialEvent(event.idProveedor, event.idEvento));
       } catch (e) {
         print(e);

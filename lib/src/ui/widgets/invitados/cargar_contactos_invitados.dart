@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:multi_select_item/multi_select_item.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 
 class CargarContactosInvitados extends StatefulWidget {
   @override
@@ -176,7 +177,7 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
                   );*/
               },
             )
-          : Center(child: const CircularProgressIndicator()),
+          : Center(child: LoadingCustom()),
     );
   }
 }

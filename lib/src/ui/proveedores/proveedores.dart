@@ -1,3 +1,4 @@
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
 import 'package:planning/src/ui/widgets/editProveedorDialog/edit_proveedor_dialog.dart';
 import 'package:planning/src/utils/utils.dart';
@@ -148,7 +149,7 @@ class _ProveedoresState extends State<Proveedores> {
               ],
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           }
         }),
       ),

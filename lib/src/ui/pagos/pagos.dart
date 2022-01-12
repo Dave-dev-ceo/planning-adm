@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/historialPagos/historialpagos_bloc.dart';
 import 'package:planning/src/logic/historial_pagos/historial_pagos_logic.dart';
 import 'package:planning/src/logic/pagos_logic.dart';
@@ -270,7 +271,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
       builder: (context, state) {
         if (state is LoadingHistorialPagosState) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is MostrarHistorialPagosState) {
           totalsaldopresupuestoInterno = 0;
@@ -598,11 +599,11 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
       builder: (context, state) {
         if (state is PagosInitial) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is PagosLogging) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is PagosSelect) {
           if (state.pagos != null && state.pagos.pagos.length > 0) {
@@ -637,7 +638,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           }
         } else {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         }
       },
