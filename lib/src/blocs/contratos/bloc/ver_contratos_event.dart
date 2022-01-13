@@ -24,32 +24,64 @@ class SubirContrato extends VerContratosEvent {
 }
 
 class VerContrato extends VerContratosEvent {
-  final String archivo;
+  final int id_contrato;
   final String tipo_mime;
-  VerContrato(this.archivo, this.tipo_mime);
+  final String tipo_doc;
+  VerContrato(this.id_contrato, this.tipo_mime, this.tipo_doc);
 
-  String get prop => archivo;
+  int get prod => id_contrato;
   String get propp => tipo_mime;
 }
 
 class VerContratoSubido extends VerContratosEvent {
-  final String archivo;
+  final int id_contrato;
   final String tipo_mime;
+  final String tipo_doc;
 
-  VerContratoSubido(this.archivo, this.tipo_mime);
+  VerContratoSubido(this.id_contrato, this.tipo_mime, this.tipo_doc);
 
-  String get prop => archivo;
+  int get prop => id_contrato;
+}
+
+class DescargarArchivoSubidoEvent extends VerContratosEvent {
+  final int id_contrato;
+  final String tipo_mime;
+  final String nombre;
+  DescargarArchivoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
+  int get prop => id_contrato;
+  String get propd => tipo_mime;
+  String get propds => nombre;
+}
+
+class DescargarContratoSubidoEvent extends VerContratosEvent {
+  final int id_contrato;
+  final String tipo_mime;
+  final String nombre;
+  DescargarContratoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
+  int get prop => id_contrato;
+  String get propd => tipo_mime;
+  String get propds => nombre;
+}
+
+class VerContratoSubidoEvent extends VerContratosEvent {
+  final int id_contrato;
+  final String tipo_mime;
+  final String nombre;
+  VerContratoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
+  int get prop => id_contrato;
+  String get propd => tipo_mime;
+  String get propds => nombre;
 }
 
 class DescargarContrato extends VerContratosEvent {
   final String nombre;
-  final String archivo;
+  final int id_contrato;
   final String tipo_mime;
 
-  DescargarContrato(this.nombre, this.archivo, this.tipo_mime);
+  DescargarContrato(this.nombre, this.id_contrato, this.tipo_mime);
 
   String get props => nombre;
-  String get prop => archivo;
+  int get prop => id_contrato;
   String get propsd => tipo_mime;
 }
 

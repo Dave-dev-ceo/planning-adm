@@ -43,8 +43,9 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
       yield VerContratosLoggin();
 
       try {
-        String pdf = await logic.fetchContratosPdf({'machote': event.archivo});
-        yield VerContratosVer(pdf, event.tipo_mime);
+        String pdf = await logic
+            .fetchContratosPdf({'id_contrato': event.id_contrato.toString()});
+        yield VerContratosVer(pdf, event.tipo_mime, event.tipo_doc);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -54,7 +55,49 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
       yield VerContratosLoggin();
 
       try {
-        yield VerContratosVer(event.archivo, event.tipo_mime);
+        String archivo =
+            await logic.obtenerContratoById({'id_contrato': event.id_contrato});
+        yield VerContratosVer(archivo, event.tipo_mime, event.tipo_doc);
+      } on AutorizacionException {
+        yield AutorizacionErrorState('Error en consulta');
+      } on TokenException {
+        yield AutorizacionTokenErrorState('Error token');
+      }
+    } else if (event is DescargarArchivoSubidoEvent) {
+      yield VerContratosLoggin();
+
+      try {
+        String archivo =
+            await logic.obtenerContratoById({'id_contrato': event.id_contrato});
+        yield DescargarArchivoSubidoState(
+            archivo, event.tipo_mime, event.nombre);
+      } on AutorizacionException {
+        yield AutorizacionErrorState('Error en consulta');
+      } on TokenException {
+        yield AutorizacionTokenErrorState('Error token');
+      }
+    } else if (event is VerContratoSubidoEvent) {
+      yield VerContratosLoggin();
+
+      try {
+        String archivo = await logic
+            .obtenerContratoSubidoById({'id_contrato': event.id_contrato});
+
+        yield VerContratoSubidoState(archivo, event.tipo_mime, event.nombre);
+      } on AutorizacionException {
+        yield AutorizacionErrorState('Error en consulta');
+      } on TokenException {
+        yield AutorizacionTokenErrorState('Error token');
+      }
+    } else if (event is DescargarContratoSubidoEvent) {
+      yield VerContratosLoggin();
+
+      try {
+        String archivo = await logic
+            .obtenerContratoSubidoById({'id_contrato': event.id_contrato});
+
+        yield DescargarContratoSubidoState(
+            archivo, event.tipo_mime, event.nombre);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -64,7 +107,8 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
       yield VerContratosLoggin();
 
       try {
-        String pdf = await logic.fetchContratosPdf({'machote': event.archivo});
+        String pdf = await logic
+            .fetchContratosPdf({'id_contrato': event.id_contrato.toString()});
         yield DescargarContratoState(event.nombre, pdf, event.tipo_mime);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');

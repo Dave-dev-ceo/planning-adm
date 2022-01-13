@@ -214,8 +214,8 @@ class _AddMachoteState extends State<AddMachote> {
         'titulo': titulo,
         'archivo': archivo,
         'clave': clave,
-        'tipo_doc': widget.map['tipo_doc'],
-        'tipo_mime': ''
+        'tipo_doc': 'html',
+        'tipo_mime': 'pdf'
       }));
     } else {
       _mensaje('Descripcion vacia.');

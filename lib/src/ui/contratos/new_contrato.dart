@@ -5,6 +5,7 @@ import 'dart:convert';
 // import 'package:universal_html/html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 
 // imports
 import 'package:file_picker/file_picker.dart';
@@ -30,7 +31,7 @@ class New_ContratoState extends State<NewContrato> {
   VerContratosBloc verContratos;
 
   // vaiables clase
-  // int _selectedIndex = 0;
+  int _selectedIndex = 0;
   List<Contratos> itemModel = [];
 
   // Variable involucrado
@@ -107,16 +108,47 @@ class New_ContratoState extends State<NewContrato> {
         _mensaje('Se ha subido el documento.');
       } else if (state is VerContratosVer) {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/viewContrato', arguments: {
-          'htmlPdf': state.archivo,
-          'tipo_mime': state.tipo_mime
-        });
+        var tipo_file = state.tipo_mime;
+        if (state.archivo != null && state.archivo != '') {
+          // state.tipo_doc == 'html'
+          //     ? tipo_file = 'pdf'
+          //     : tipo_file = state.tipo_mime;
+          Navigator.pushNamed(context, '/viewContrato',
+              arguments: {'htmlPdf': state.archivo, 'tipo_mime': tipo_file});
+        } else {
+          _mensaje('No se encuentra ningún archivo.');
+        }
       } else if (state is DescargarContratoState) {
         Navigator.pop(context);
         _descargarFile(state.archivo, state.nombre, state.extencion);
       } else if (state is CrearContratoState) {
         Navigator.pop(context);
         contratosBloc.add(ContratosSelect());
+      } else if (state is DescargarArchivoSubidoState) {
+        if (state.subido != null) {
+          downloadFile(state.subido, state.nombre,
+              extensionFile: state.tipo_mime);
+        } else {
+          _mensaje('No se encuentra ningún archivo para descargar.');
+        }
+        Navigator.pop(context);
+      } else if (state is VerContratoSubidoState) {
+        if (state.subido != null) {
+          Navigator.pushReplacementNamed(context, '/viewContrato', arguments: {
+            'htmlPdf': state.subido,
+            'tipo_mime': state.tipo_mime
+          });
+        } else {
+          _mensaje('No se encuentra ningún archivo para descargar.');
+        }
+      } else if (state is DescargarContratoSubidoState) {
+        if (state.subido != null) {
+          downloadFile(state.subido, state.nombre,
+              extensionFile: state.tipo_mime);
+        } else {
+          _mensaje('No se encuentra ningún archivo para descargar.');
+        }
+        Navigator.pop(context);
       }
     }, child: BlocBuilder<ContratosDosBloc, ContratosState>(
             builder: (context, state) {
@@ -135,12 +167,14 @@ class New_ContratoState extends State<NewContrato> {
                   idContrato: item.idContrato,
                   idMachote: item.idMachote,
                   description: item.descripcion,
-                  original: item.original,
-                  archivo: item.archivo,
+                  //original: item.original,
+                  //archivo: item.archivo,
                   clave: item.clavePlantilla,
-                  valida: item.original != null ? true : false,
+                  valida: true, // Hay que cambiar el valor.
+                  //  valida: item.original != null ? true : false, // Hay que cambiar el valor.
                   tipo_doc: item.tipo_doc,
-                  tipo_mime: item.tipo_mime))
+                  tipo_mime: item.tipo_mime,
+                  tipo_mime_original: item.tipo_mime_original))
               .toList();
         } else if (itemModel.length != state.contrato.contrato) {
           itemModel = state.contrato.contrato
@@ -148,12 +182,14 @@ class New_ContratoState extends State<NewContrato> {
                   idContrato: item.idContrato,
                   idMachote: item.idMachote,
                   description: item.descripcion,
-                  original: item.original,
-                  archivo: item.archivo,
+                  // original: item.original,
+                  // archivo: item.archivo,
                   clave: item.clavePlantilla,
-                  valida: item.original != null ? true : false,
+                  valida: true, // Hay que cambiar el valor.
+                  // valida: item.original != null ? true : false, // Hay que cambiar el valor.
                   tipo_doc: item.tipo_doc,
-                  tipo_mime: item.tipo_mime))
+                  tipo_mime: item.tipo_mime,
+                  tipo_mime_original: item.tipo_mime_original))
               .toList();
         }
         return RefreshIndicator(
@@ -253,22 +289,22 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   // select lista
-  // _itemsContratos() {
-  //   switch (_selectedIndex) {
-  //     case 0:
-  //       return _contratosItem();
-  //     case 1:
-  //       return _recibosItem();
-  //     case 2:
-  //       return _pagosItem();
-  //     case 3:
-  //       return _minutasItem();
-  //     case 4:
-  //       return _ordenPagos();
-  //     default:
-  //       return _autorizaciones();
-  //   }
-  // }
+  //_itemsContratos() {
+  //  switch (_selectedIndex) {
+  //    case 0:
+  //      return _contratosItem();
+  //    case 1:
+  //      return _recibosItem();
+  //    case 2:
+  //      return _pagosItem();
+  //    case 3:
+  //      return _minutasItem();
+  //    case 4:
+  //      return _ordenPagos();
+  //    default:
+  //      return _autorizaciones();
+  //  }
+  //}
 
   // ini items
   _contratosItem() {
@@ -294,8 +330,12 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,
-                                contrato.archivo, contrato.tipo_mime),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote,
+                                contrato.idContrato,
+                                contrato.tipo_mime,
+                                contrato.tipo_doc,
+                                contrato.description),
                           )
                         ],
                       ),
@@ -312,7 +352,7 @@ class New_ContratoState extends State<NewContrato> {
                                     Navigator.pushNamed(
                                         context, '/editarContratos',
                                         arguments: {
-                                          'archivo': contrato.archivo,
+                                          'archivo': '',
                                           'id_contrato': contrato.idContrato
                                         }).then((value) =>
                                         contratosBloc.add(ContratosSelect()));
@@ -334,8 +374,9 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(
                                 contrato.idMachote,
-                                contrato.archivo,
+                                contrato.idContrato,
                                 contrato.description,
+                                contrato.tipo_doc,
                                 contrato.tipo_mime),
                           )
                         ],
@@ -365,7 +406,9 @@ class New_ContratoState extends State<NewContrato> {
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
                                   onPressed: () => _verNewFile(
-                                      contrato.original, contrato.tipo_mime),
+                                      contrato.idContrato,
+                                      contrato.tipo_mime_original,
+                                      contrato.tipo_doc),
                                 )
                               ],
                             ),
@@ -380,9 +423,10 @@ class New_ContratoState extends State<NewContrato> {
                                     icon: Icon(Icons.cloud_download_outlined),
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
-                                          downloadFile(contrato.original,
-                                              contrato.description,
-                                              extensionFile: contrato.tipo_mime)
+                                          _descargaArchivoSubido(
+                                              contrato.idContrato,
+                                              contrato.tipo_mime_original,
+                                              contrato.description)
                                         }),
                               ],
                             ),
@@ -429,8 +473,12 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,
-                                contrato.archivo, contrato.tipo_mime),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote,
+                                contrato.idContrato,
+                                contrato.tipo_mime,
+                                contrato.tipo_doc,
+                                contrato.description),
                           )
                         ],
                       ),
@@ -447,7 +495,7 @@ class New_ContratoState extends State<NewContrato> {
                                     Navigator.pushNamed(
                                         context, '/editarContratos',
                                         arguments: {
-                                          'archivo': contrato.archivo,
+                                          'archivo': '',
                                           'id_contrato': contrato.idContrato
                                         }).then((value) =>
                                         contratosBloc.add(ContratosSelect()));
@@ -469,8 +517,9 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(
                                 contrato.idMachote,
-                                contrato.archivo,
+                                contrato.idContrato,
                                 contrato.description,
+                                contrato.tipo_doc,
                                 contrato.tipo_mime),
                           )
                         ],
@@ -500,7 +549,9 @@ class New_ContratoState extends State<NewContrato> {
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
                                   onPressed: () => _verNewFile(
-                                      contrato.original, contrato.tipo_mime),
+                                      contrato.idContrato,
+                                      contrato.tipo_mime,
+                                      contrato.tipo_doc),
                                 )
                               ],
                             ),
@@ -515,9 +566,10 @@ class New_ContratoState extends State<NewContrato> {
                                     icon: Icon(Icons.cloud_download_outlined),
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
-                                          downloadFile(contrato.original,
-                                              contrato.description,
-                                              extensionFile: contrato.tipo_mime)
+                                          _descargaArchivoSubido(
+                                              contrato.idContrato,
+                                              contrato.tipo_mime_original,
+                                              contrato.description)
                                         }),
                               ],
                             ),
@@ -564,8 +616,12 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,
-                                contrato.archivo, contrato.tipo_mime),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote,
+                                contrato.idContrato,
+                                contrato.tipo_mime,
+                                contrato.tipo_doc,
+                                contrato.description),
                           )
                         ],
                       ),
@@ -582,7 +638,7 @@ class New_ContratoState extends State<NewContrato> {
                                     Navigator.pushNamed(
                                         context, '/editarContratos',
                                         arguments: {
-                                          'archivo': contrato.archivo,
+                                          'archivo': '',
                                           'id_contrato': contrato.idContrato
                                         }).then((value) =>
                                         contratosBloc.add(ContratosSelect()));
@@ -604,8 +660,9 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(
                                 contrato.idMachote,
-                                contrato.archivo,
+                                contrato.idContrato,
                                 contrato.description,
+                                contrato.tipo_doc,
                                 contrato.tipo_mime),
                           )
                         ],
@@ -635,7 +692,9 @@ class New_ContratoState extends State<NewContrato> {
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
                                   onPressed: () => _verNewFile(
-                                      contrato.original, contrato.tipo_mime),
+                                      contrato.idContrato,
+                                      contrato.tipo_mime,
+                                      contrato.tipo_doc),
                                 )
                               ],
                             ),
@@ -650,9 +709,10 @@ class New_ContratoState extends State<NewContrato> {
                                     icon: Icon(Icons.cloud_download_outlined),
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
-                                          downloadFile(contrato.original,
-                                              contrato.description,
-                                              extensionFile: contrato.tipo_mime)
+                                          _descargaArchivoSubido(
+                                              contrato.idContrato,
+                                              contrato.tipo_mime_original,
+                                              contrato.description)
                                         }),
                               ],
                             ),
@@ -699,8 +759,12 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,
-                                contrato.archivo, contrato.tipo_mime),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote,
+                                contrato.idContrato,
+                                contrato.tipo_mime,
+                                contrato.tipo_doc,
+                                contrato.description),
                           )
                         ],
                       ),
@@ -717,7 +781,7 @@ class New_ContratoState extends State<NewContrato> {
                                     Navigator.pushNamed(
                                         context, '/editarContratos',
                                         arguments: {
-                                          'archivo': contrato.archivo,
+                                          'archivo': '',
                                           'id_contrato': contrato.idContrato
                                         }).then((value) =>
                                         contratosBloc.add(ContratosSelect()));
@@ -739,8 +803,9 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(
                                 contrato.idMachote,
-                                contrato.archivo,
+                                contrato.idContrato,
                                 contrato.description,
+                                contrato.tipo_doc,
                                 contrato.tipo_mime),
                           )
                         ],
@@ -770,7 +835,9 @@ class New_ContratoState extends State<NewContrato> {
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
                                   onPressed: () => _verNewFile(
-                                      contrato.original, contrato.tipo_mime),
+                                      contrato.idContrato,
+                                      contrato.tipo_mime,
+                                      contrato.tipo_doc),
                                 )
                               ],
                             ),
@@ -785,9 +852,10 @@ class New_ContratoState extends State<NewContrato> {
                                     icon: Icon(Icons.cloud_download_outlined),
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
-                                          downloadFile(contrato.original,
-                                              contrato.description,
-                                              extensionFile: contrato.tipo_mime)
+                                          _descargaArchivoSubido(
+                                              contrato.idContrato,
+                                              contrato.tipo_mime_original,
+                                              contrato.description)
                                         }),
                               ],
                             ),
@@ -834,8 +902,12 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,
-                                contrato.archivo, contrato.tipo_mime),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote,
+                                contrato.idContrato,
+                                contrato.tipo_mime,
+                                contrato.tipo_doc,
+                                contrato.description),
                           )
                         ],
                       ),
@@ -852,7 +924,7 @@ class New_ContratoState extends State<NewContrato> {
                                     Navigator.pushNamed(
                                         context, '/editarContratos',
                                         arguments: {
-                                          'archivo': contrato.archivo,
+                                          'archivo': '',
                                           'id_contrato': contrato.idContrato
                                         }).then((value) =>
                                         contratosBloc.add(ContratosSelect()));
@@ -874,8 +946,9 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(
                                 contrato.idMachote,
-                                contrato.archivo,
+                                contrato.idContrato,
                                 contrato.description,
+                                contrato.tipo_doc,
                                 contrato.tipo_mime),
                           )
                         ],
@@ -905,7 +978,9 @@ class New_ContratoState extends State<NewContrato> {
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
                                   onPressed: () => _verNewFile(
-                                      contrato.original, contrato.tipo_mime),
+                                      contrato.idContrato,
+                                      contrato.tipo_mime,
+                                      contrato.tipo_doc),
                                 )
                               ],
                             ),
@@ -920,9 +995,10 @@ class New_ContratoState extends State<NewContrato> {
                                     icon: Icon(Icons.cloud_download_outlined),
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
-                                          downloadFile(contrato.original,
-                                              contrato.description,
-                                              extensionFile: contrato.tipo_mime)
+                                          _descargaArchivoSubido(
+                                              contrato.idContrato,
+                                              contrato.tipo_mime_original,
+                                              contrato.description)
                                         }),
                               ],
                             ),
@@ -969,8 +1045,12 @@ class New_ContratoState extends State<NewContrato> {
                           TextButton.icon(
                             icon: Icon(Icons.remove_red_eye_rounded),
                             label: Text('Ver'),
-                            onPressed: () => _verOldFile(contrato.idMachote,
-                                contrato.archivo, contrato.tipo_mime),
+                            onPressed: () => _verOldFile(
+                                contrato.idMachote,
+                                contrato.idContrato,
+                                contrato.tipo_mime,
+                                contrato.tipo_doc,
+                                contrato.description),
                           )
                         ],
                       ),
@@ -987,7 +1067,7 @@ class New_ContratoState extends State<NewContrato> {
                                     Navigator.pushNamed(
                                         context, '/editarContratos',
                                         arguments: {
-                                          'archivo': contrato.archivo,
+                                          'archivo': '',
                                           'id_contrato': contrato.idContrato
                                         }).then((value) =>
                                         contratosBloc.add(ContratosSelect()));
@@ -1009,8 +1089,9 @@ class New_ContratoState extends State<NewContrato> {
                             label: Text('Descargar archivo'),
                             onPressed: () => _crearPDF(
                                 contrato.idMachote,
-                                contrato.archivo,
+                                contrato.idContrato,
                                 contrato.description,
+                                contrato.tipo_doc,
                                 contrato.tipo_mime),
                           )
                         ],
@@ -1040,7 +1121,9 @@ class New_ContratoState extends State<NewContrato> {
                                   icon: Icon(Icons.remove_red_eye_rounded),
                                   label: Text('Ver archivo subido'),
                                   onPressed: () => _verNewFile(
-                                      contrato.original, contrato.tipo_mime),
+                                      contrato.idContrato,
+                                      contrato.tipo_mime,
+                                      contrato.tipo_doc),
                                 )
                               ],
                             ),
@@ -1055,9 +1138,10 @@ class New_ContratoState extends State<NewContrato> {
                                     icon: Icon(Icons.cloud_download_outlined),
                                     label: Text('Descarga Archivo Firmado.'),
                                     onPressed: () => {
-                                          downloadFile(contrato.original,
-                                              contrato.description,
-                                              extensionFile: contrato.tipo_mime)
+                                          _descargaArchivoSubido(
+                                              contrato.idContrato,
+                                              contrato.tipo_mime_original,
+                                              contrato.description)
                                         }),
                               ],
                             ),
@@ -1285,7 +1369,8 @@ class New_ContratoState extends State<NewContrato> {
                                     _clave = {
                                       'clave': radioB.elementAt(i)['clave'],
                                       'clave_t': radioB.elementAt(i)['clave_t'],
-                                      'tipo_doc': tipo_doc
+                                      'tipo_doc': tipo_doc,
+                                      'tipo_mime': 'pdf'
                                     };
                                   });
                                 },
@@ -1349,11 +1434,14 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   // ini eventos Cards
-  _verOldFile(int id, String archivo, String tipo_mime) {
-    if (id != 0) {
-      verContratos.add(VerContrato(archivo, tipo_mime));
-    } else {
-      _verNewFile(archivo, tipo_mime);
+  _verOldFile(int idMachote, int idContrato, String tipo_mime, String tipo_doc,
+      String descripcion) {
+    // if (idMachote != 0) {
+    if (tipo_doc == 'html') {
+      verContratos.add(VerContrato(idContrato, tipo_mime, tipo_doc));
+    } else if (tipo_doc == 'file') {
+      verContratos
+          .add(VerContratoSubidoEvent(idContrato, tipo_mime, descripcion));
     }
   }
 
@@ -1373,20 +1461,29 @@ class New_ContratoState extends State<NewContrato> {
     }
   }
 
-  _verNewFile(String original, String tipo_mime) {
+  _verNewFile(int id_contrato, String tipo_mime, String tipo_doc) {
     // Navigator.pushNamed(context, '/viewContrato', arguments: original);
-    verContratos.add(VerContratoSubido(original, tipo_mime));
+    verContratos.add(VerContratoSubido(id_contrato, tipo_mime, tipo_doc));
+  }
+
+  _descargaArchivoSubido(int id_contrato, String tipo_mime, String nombre) {
+    verContratos
+        .add(DescargarArchivoSubidoEvent(id_contrato, tipo_mime, nombre));
   }
 
   _borrarContratos(int idContrato) {
     _alertaBorrar(idContrato);
   }
 
-  _crearPDF(int id, String contrato, String nombreDocumento, String extencion) {
+  _crearPDF(int id, int idContrato, String nombreDocumento, String tipo_doc,
+      String extencion) {
     if (id != 0) {
-      verContratos.add(DescargarContrato(nombreDocumento, contrato, extencion));
-    } else {
-      _descargarFile(contrato, nombreDocumento, extencion);
+      verContratos
+          .add(DescargarContrato(nombreDocumento, idContrato, extencion));
+    } else if (tipo_doc == 'file') {
+      //_descargarFile(contrato, nombreDocumento, extencion);
+      verContratos.add(
+          DescargarContratoSubidoEvent(idContrato, extencion, nombreDocumento));
     }
   }
 
@@ -1486,21 +1583,23 @@ class Contratos {
   int idContrato;
   int idMachote;
   String description;
-  String original;
-  String archivo;
+  // String original;
+  // String archivo;
   String clave;
   bool valida;
   String tipo_doc;
   String tipo_mime;
+  String tipo_mime_original;
 
   Contratos(
       {this.idContrato,
       this.idMachote,
       this.description,
-      this.original,
-      this.archivo,
+      // this.original,
+      // this.archivo,
       this.clave,
       this.valida,
       this.tipo_doc,
-      this.tipo_mime});
+      this.tipo_mime,
+      this.tipo_mime_original});
 }

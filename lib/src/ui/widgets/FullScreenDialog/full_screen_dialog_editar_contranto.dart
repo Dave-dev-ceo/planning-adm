@@ -35,7 +35,8 @@ class _FullScreenDialogEditContratoState
     etiquetasBloc = BlocProvider.of<EtiquetasBloc>(context);
     etiquetasBloc.add(FechtEtiquetasEvent());
     contratosBlocDos = BlocProvider.of<ContratosDosBloc>(context);
-    contratosBlocDos.add(FectValContratoEvent(this.data['archivo'].toString()));
+    contratosBlocDos
+        .add(FectValContratoEvent(this.data['id_contrato'].toString()));
 
     super.initState();
   }
@@ -110,7 +111,7 @@ class _FullScreenDialogEditContratoState
                                 autoAdjustHeight: true,
                                 adjustHeightForKeyboard: true,
                                 hint: "Escribe aquí...",
-                                initialText: this.data['archivo'].toString()),
+                                initialText: state.valor.toString()),
                             otherOptions: OtherOptions(
                               height: size.height * 0.8,
                             ));
