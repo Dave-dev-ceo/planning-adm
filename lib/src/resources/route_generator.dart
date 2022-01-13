@@ -45,13 +45,13 @@ class RouteGenerator {
     final ruta = Uri.parse(settings.name);
     switch (ruta.path) {
       case '/':
-        //return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
-        //return MaterialPageRoute(builder: (context) => Landing());
-        //return MaterialPageRoute(builder: (context) => HomeAdmin());
-        return MaterialPageRoute(builder: (context) => Login());
+        //return CustomPageRouter(child: ScannerQrInvitado());
+        //return CustomPageRouter(child: Landing());
+        //return CustomPageRouter(child: HomeAdmin());
+        return CustomPageRouter(child: Login());
       case '/homeAdmin':
-        return MaterialPageRoute(
-          builder: (context) => HomeAdmin(),
+        return CustomPageRouter(
+          child: HomeAdmin(),
         );
       case '/home':
         return CustomPageRouter(
@@ -59,7 +59,7 @@ class RouteGenerator {
           data: args,
         ));
       case '/dasboard':
-        return MaterialPageRoute(builder: (context) => DashboardEventos());
+        return CustomPageRouter(child: DashboardEventos());
       case '/eventos':
         return CustomPageRouter(
             child: Invitados(
@@ -67,7 +67,7 @@ class RouteGenerator {
         ));
 
       case '/lectorQr':
-        return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
+        return CustomPageRouter(child: ScannerQrInvitado());
       case '/addInvitados':
         return CustomPageRouter(
             child: FullScreenDialogAdd(
@@ -161,13 +161,16 @@ class RouteGenerator {
           map: args,
         ));
       case '/perfil':
-        return MaterialPageRoute(builder: (context) => Perfil());
+        return CustomPageRouter(child: Perfil());
       case '/addContratos':
-        return MaterialPageRoute(builder: (context) => AddMachote(map: args));
+        return CustomPageRouter(child: AddMachote(map: args));
       case '/addPagosForm':
-        return MaterialPageRoute(builder: (context) => FormPago());
+        return CustomPageRouter(
+            child: FormPago(
+          tipoPresupuesto: args,
+        ));
       case '/editPagosForm':
-        return MaterialPageRoute(builder: (context) => FormEditPago(id: args));
+        return CustomPageRouter(child: FormEditPago(id: args));
       case '/verWeb':
         return CustomPageRouter(child: FullScreenViewWEB(data: args));
       case '/editarContratos':
@@ -179,7 +182,7 @@ class RouteGenerator {
           lastnumMesas: args,
         ));
       case '/perfilPlanner':
-        return MaterialPageRoute(builder: (context) => PerfilPlannerPage());
+        return CustomPageRouter(child: PerfilPlannerPage());
       case '/recoverPassword':
         final token = ruta.queryParameters['token'];
         return CustomPageRouter(
@@ -197,16 +200,15 @@ class RouteGenerator {
   }
 
   static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('ERROR'),
-          centerTitle: true,
-        ),
-        body: Center(
-          child: Text('La Página no funciona!'),
-        ),
-      );
-    });
+    return CustomPageRouter(
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text('ERROR'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text('La Página no funciona!'),
+      ),
+    ));
   }
 }

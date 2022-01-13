@@ -6,7 +6,8 @@ import 'package:planning/src/models/item_model_pagos.dart';
 import 'package:flutter/services.dart';
 
 class FormPago extends StatefulWidget {
-  FormPago({Key key}) : super(key: key);
+  final String tipoPresupuesto;
+  FormPago({Key key, @required this.tipoPresupuesto}) : super(key: key);
 
   @override
   _FormPagoState createState() => _FormPagoState();
@@ -248,6 +249,7 @@ class _FormPagoState extends State<FormPago> {
         itemPago['precio'] == '') {
       _mensaje('Todos los campos son obligatorios.');
     } else {
+      itemPago['tipoPresupuesto'] = widget.tipoPresupuesto;
       pagosBloc.add(CrearPagosEvent(itemPago));
       _mensaje('Pago agregado');
     }

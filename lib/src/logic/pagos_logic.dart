@@ -1,5 +1,6 @@
 // imports from flutter/dart
 import 'package:http/http.dart' show Client;
+import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'dart:io';
 import 'dart:convert';
 
@@ -12,7 +13,7 @@ import 'package:planning/src/models/item_model_pagos.dart';
 
 abstract class PagosLogic {
   Future<bool> insertPagos(Map pago);
-  Future<ItemModelPagos> selectPagos();
+  Future<Map<String, dynamic>> selectPagos();
   Future<bool> updatePagos(Map pago);
   Future<bool> deletePagos(int id);
   Future<ItemModelPagos> selectProveedor();
@@ -56,7 +57,7 @@ class ConsultasPagosLogic extends PagosLogic {
   }
 
   @override
-  Future<ItemModelPagos> selectPagos() async {
+  Future<Map<String, dynamic>> selectPagos() async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -76,7 +77,22 @@ class ConsultasPagosLogic extends PagosLogic {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      return ItemModelPagos.fromJson(data['data']);
+      ItemModelPagos presupuestos =
+          ItemModelPagos.fromJson(data['data']['presupuestos']);
+      List<HistorialPagosModel> historialPagos = List<HistorialPagosModel>.from(
+          data['data']['pagos'].map((p) => HistorialPagosModel.fromJson(p)));
+      historialPagos.forEach((element) {
+        print('${element.concepto} == ${element.runtimeType}');
+      });
+
+      presupuestos.pagos.forEach((element) {
+        print('${element.descripcion} === ${element.runtimeType}');
+      });
+      Map<String, dynamic> datos = {};
+      datos['presupuestos'] = presupuestos;
+      datos['pagos'] = historialPagos;
+
+      return datos;
     } else if (response.statusCode == 401) {
       throw TokenException();
     } else {
