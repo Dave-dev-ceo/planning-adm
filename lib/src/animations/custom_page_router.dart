@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum TypeTransicionRouter {
   slideRouterTransition,
-  // scaleRouterTransition,
+  scaleRouterTransition,
   fadeRouterTransition,
 }
 
@@ -34,6 +34,9 @@ class CustomPageRouter extends PageRouteBuilder {
       case TypeTransicionRouter.fadeRouterTransition:
         return fadeTransition(curvedAnimation);
         break;
+      case TypeTransicionRouter.scaleRouterTransition:
+        return scaleTransition(curvedAnimation);
+        break;
       default:
         return slideTransition(curvedAnimation);
 
@@ -54,6 +57,13 @@ class CustomPageRouter extends PageRouteBuilder {
         begin: getBeginOffset(),
         end: Offset.zero,
       ).animate(curvedAnimation),
+      child: child,
+    );
+  }
+
+  ScaleTransition scaleTransition(CurvedAnimation curvedAnimation) {
+    return ScaleTransition(
+      scale: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
       child: child,
     );
   }

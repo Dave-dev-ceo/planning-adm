@@ -80,6 +80,9 @@ import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
 import 'package:planning/src/logic/autorizacion_logic.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
+final GlobalKey<ScaffoldMessengerState> scaffoldMessegerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class MyApp extends StatelessWidget {
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
@@ -108,6 +111,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: scaffoldMessegerKey,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
