@@ -81,13 +81,6 @@ class ConsultasPagosLogic extends PagosLogic {
           ItemModelPagos.fromJson(data['data']['presupuestos']);
       List<HistorialPagosModel> historialPagos = List<HistorialPagosModel>.from(
           data['data']['pagos'].map((p) => HistorialPagosModel.fromJson(p)));
-      historialPagos.forEach((element) {
-        print('${element.concepto} == ${element.runtimeType}');
-      });
-
-      presupuestos.pagos.forEach((element) {
-        print('${element.descripcion} === ${element.runtimeType}');
-      });
       Map<String, dynamic> datos = {};
       datos['presupuestos'] = presupuestos;
       datos['pagos'] = historialPagos;

@@ -50,6 +50,7 @@ class New_ContratoState extends State<NewContrato> {
 
   int _grupoRadio = 0;
   Map _clave = {'clave': 'CT', 'clave_t': 'CT_T'};
+  Size size;
 
   @override
   void initState() {
@@ -77,6 +78,7 @@ class New_ContratoState extends State<NewContrato> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: (isInvolucrado)
           ? AppBar(
@@ -317,137 +319,267 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: ListTile(
-                contentPadding: EdgeInsets.all(20.0),
-                leading: Icon(Icons.gavel),
-                title: Text(contrato.description),
-                subtitle: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.tipo_mime,
-                                contrato.tipo_doc,
-                                contrato.description),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado && contrato.tipo_doc == 'html'
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.edit),
-                                  label: Text('Editar'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/editarContratos',
-                                        arguments: {
-                                          'archivo': '',
-                                          'id_contrato': contrato.idContrato
-                                        }).then((value) =>
-                                        contratosBloc.add(ContratosSelect()));
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.description,
-                                contrato.tipo_doc,
-                                contrato.tipo_mime),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.cloud_upload_outlined),
-                                  label: Text('Subir archivo'),
-                                  onPressed: () =>
-                                      _uploadFile(contrato.idContrato),
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.remove_red_eye_rounded),
-                                  label: Text('Ver archivo subido'),
-                                  onPressed: () => _verNewFile(
-                                      contrato.idContrato,
-                                      contrato.tipo_mime_original,
-                                      contrato.tipo_doc),
-                                )
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                    icon: Icon(Icons.cloud_download_outlined),
-                                    label: Text('Descarga Archivo Firmado.'),
-                                    onPressed: () => {
-                                          _descargaArchivoSubido(
-                                              contrato.idContrato,
-                                              contrato.tipo_mime_original,
-                                              contrato.description)
-                                        }),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                  ],
-                ),
-                trailing: !isInvolucrado
-                    ? GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onTap: () => _borrarContratos(contrato.idContrato),
-                      )
-                    : Text('')),
+            child: (size.width > 400)
+                ? buildWeb(contrato)
+                : contratosMovil(contrato),
           ));
         }
       });
     }
     return item;
+  }
+
+  ListTile buildWeb(Contratos contrato) {
+    return ListTile(
+      contentPadding: EdgeInsets.all(20.0),
+      leading: Icon(Icons.gavel),
+      title: Text(contrato.description),
+      subtitle: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton.icon(
+                  icon: Icon(Icons.remove_red_eye_rounded),
+                  label: Text('Ver'),
+                  onPressed: () => _verOldFile(
+                      contrato.idMachote,
+                      contrato.idContrato,
+                      contrato.tipo_mime,
+                      contrato.tipo_doc,
+                      contrato.description),
+                )
+              ],
+            ),
+          ),
+          !isInvolucrado && contrato.tipo_doc == 'html'
+              ? Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton.icon(
+                        icon: Icon(Icons.edit),
+                        label: Text('Editar'),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/editarContratos',
+                              arguments: {
+                                'archivo': '',
+                                'id_contrato': contrato.idContrato
+                              }).then(
+                              (value) => contratosBloc.add(ContratosSelect()));
+                          setState(() {
+                            contratosBloc.add(ContratosSelect());
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                )
+              : Text(''),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton.icon(
+                  icon: Icon(Icons.cloud_download_outlined),
+                  label: Text('Descargar archivo'),
+                  onPressed: () => _crearPDF(
+                      contrato.idMachote,
+                      contrato.idContrato,
+                      contrato.description,
+                      contrato.tipo_doc,
+                      contrato.tipo_mime),
+                )
+              ],
+            ),
+          ),
+          !isInvolucrado
+              ? Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton.icon(
+                        icon: Icon(Icons.cloud_upload_outlined),
+                        label: Text('Subir archivo'),
+                        onPressed: () => _uploadFile(contrato.idContrato),
+                      )
+                    ],
+                  ),
+                )
+              : Text(''),
+          contrato.valida
+              ? Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton.icon(
+                        icon: Icon(Icons.remove_red_eye_rounded),
+                        label: Text('Ver archivo subido'),
+                        onPressed: () => _verNewFile(contrato.idContrato,
+                            contrato.tipo_mime_original, contrato.tipo_doc),
+                      )
+                    ],
+                  ),
+                )
+              : SizedBox(),
+          contrato.valida
+              ? Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton.icon(
+                          icon: Icon(Icons.cloud_download_outlined),
+                          label: Text('Descarga Archivo Firmado.'),
+                          onPressed: () => {
+                                _descargaArchivoSubido(
+                                    contrato.idContrato,
+                                    contrato.tipo_mime_original,
+                                    contrato.description)
+                              }),
+                    ],
+                  ),
+                )
+              : SizedBox(),
+        ],
+      ),
+      trailing: !isInvolucrado
+          ? GestureDetector(
+              child: Icon(
+                Icons.delete,
+                color: Colors.black,
+              ),
+              onTap: () => _borrarContratos(contrato.idContrato),
+            )
+          : Text(''),
+    );
+  }
+
+  ExpansionTile contratosMovil(Contratos contrato) {
+    return ExpansionTile(
+      trailing: !isInvolucrado
+          ? GestureDetector(
+              child: Icon(
+                Icons.delete,
+                color: Colors.black,
+              ),
+              onTap: () => _borrarContratos(contrato.idContrato),
+            )
+          : Text(''),
+      leading: Icon(
+        Icons.gavel,
+        color: Colors.black,
+      ),
+      title: Text(
+        contrato.description,
+        style: TextStyle(color: Colors.black),
+        overflow: TextOverflow.ellipsis,
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 15.0),
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton.icon(
+                    icon: Icon(Icons.remove_red_eye_rounded),
+                    label: Text('Ver'),
+                    onPressed: () => _verOldFile(
+                        contrato.idMachote,
+                        contrato.idContrato,
+                        contrato.tipo_mime,
+                        contrato.tipo_doc,
+                        contrato.description),
+                  )
+                ],
+              ),
+              if (!isInvolucrado && contrato.tipo_doc == 'html')
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                      icon: Icon(Icons.edit),
+                      label: Text('Editar'),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/editarContratos',
+                            arguments: {
+                              'archivo': '',
+                              'id_contrato': contrato.idContrato
+                            }).then(
+                            (value) => contratosBloc.add(ContratosSelect()));
+                        setState(() {
+                          contratosBloc.add(ContratosSelect());
+                        });
+                      },
+                    )
+                  ],
+                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton.icon(
+                    icon: Icon(Icons.cloud_download_outlined),
+                    label: Text('Descargar archivo'),
+                    onPressed: () => _crearPDF(
+                        contrato.idMachote,
+                        contrato.idContrato,
+                        contrato.description,
+                        contrato.tipo_doc,
+                        contrato.tipo_mime),
+                  )
+                ],
+              ),
+              !isInvolucrado
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextButton.icon(
+                          icon: Icon(Icons.cloud_upload_outlined),
+                          label: Text('Subir archivo'),
+                          onPressed: () => _uploadFile(contrato.idContrato),
+                        )
+                      ],
+                    )
+                  : Text(''),
+              contrato.valida
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextButton.icon(
+                          icon: Icon(Icons.remove_red_eye_rounded),
+                          label: Text('Ver archivo subido'),
+                          onPressed: () => _verNewFile(contrato.idContrato,
+                              contrato.tipo_mime_original, contrato.tipo_doc),
+                        )
+                      ],
+                    )
+                  : SizedBox(),
+              contrato.valida
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextButton.icon(
+                            icon: Icon(Icons.cloud_download_outlined),
+                            label: Text(
+                              'Descargar archivo firmado',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            onPressed: () => {
+                                  _descargaArchivoSubido(
+                                      contrato.idContrato,
+                                      contrato.tipo_mime_original,
+                                      contrato.description)
+                                }),
+                      ],
+                    )
+                  : SizedBox(),
+            ],
+          ),
+        )
+      ],
+    );
   }
 
   _recibosItem() {
@@ -460,132 +592,9 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: ListTile(
-                contentPadding: EdgeInsets.all(20.0),
-                leading: Icon(Icons.gavel),
-                title: Text(contrato.description),
-                subtitle: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.tipo_mime,
-                                contrato.tipo_doc,
-                                contrato.description),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado && contrato.tipo_doc == 'html'
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.edit),
-                                  label: Text('Editar'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/editarContratos',
-                                        arguments: {
-                                          'archivo': '',
-                                          'id_contrato': contrato.idContrato
-                                        }).then((value) =>
-                                        contratosBloc.add(ContratosSelect()));
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.description,
-                                contrato.tipo_doc,
-                                contrato.tipo_mime),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.cloud_upload_outlined),
-                                  label: Text('Subir archivo'),
-                                  onPressed: () =>
-                                      _uploadFile(contrato.idContrato),
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.remove_red_eye_rounded),
-                                  label: Text('Ver archivo subido'),
-                                  onPressed: () => _verNewFile(
-                                      contrato.idContrato,
-                                      contrato.tipo_mime,
-                                      contrato.tipo_doc),
-                                )
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                    icon: Icon(Icons.cloud_download_outlined),
-                                    label: Text('Descarga Archivo Firmado.'),
-                                    onPressed: () => {
-                                          _descargaArchivoSubido(
-                                              contrato.idContrato,
-                                              contrato.tipo_mime_original,
-                                              contrato.description)
-                                        }),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                  ],
-                ),
-                trailing: !isInvolucrado
-                    ? GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onTap: () => _borrarContratos(contrato.idContrato),
-                      )
-                    : Text('')),
+            child: (size.width > 400)
+                ? buildWeb(contrato)
+                : contratosMovil(contrato),
           ));
         }
       });
@@ -603,132 +612,9 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: ListTile(
-                contentPadding: EdgeInsets.all(20.0),
-                leading: Icon(Icons.gavel),
-                title: Text(contrato.description),
-                subtitle: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.tipo_mime,
-                                contrato.tipo_doc,
-                                contrato.description),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado && contrato.tipo_doc == 'html'
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.edit),
-                                  label: Text('Editar'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/editarContratos',
-                                        arguments: {
-                                          'archivo': '',
-                                          'id_contrato': contrato.idContrato
-                                        }).then((value) =>
-                                        contratosBloc.add(ContratosSelect()));
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.description,
-                                contrato.tipo_doc,
-                                contrato.tipo_mime),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.cloud_upload_outlined),
-                                  label: Text('Subir archivo'),
-                                  onPressed: () =>
-                                      _uploadFile(contrato.idContrato),
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.remove_red_eye_rounded),
-                                  label: Text('Ver archivo subido'),
-                                  onPressed: () => _verNewFile(
-                                      contrato.idContrato,
-                                      contrato.tipo_mime,
-                                      contrato.tipo_doc),
-                                )
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                    icon: Icon(Icons.cloud_download_outlined),
-                                    label: Text('Descarga Archivo Firmado.'),
-                                    onPressed: () => {
-                                          _descargaArchivoSubido(
-                                              contrato.idContrato,
-                                              contrato.tipo_mime_original,
-                                              contrato.description)
-                                        }),
-                              ],
-                            ),
-                          )
-                        : SizedBox()
-                  ],
-                ),
-                trailing: !isInvolucrado
-                    ? GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onTap: () => _borrarContratos(contrato.idContrato),
-                      )
-                    : Text('')),
+            child: (size.width > 400)
+                ? buildWeb(contrato)
+                : contratosMovil(contrato),
           ));
         }
       });
@@ -746,132 +632,9 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: ListTile(
-                contentPadding: EdgeInsets.all(20.0),
-                leading: Icon(Icons.gavel),
-                title: Text(contrato.description),
-                subtitle: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.tipo_mime,
-                                contrato.tipo_doc,
-                                contrato.description),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado && contrato.tipo_doc == 'html'
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.edit),
-                                  label: Text('Editar'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/editarContratos',
-                                        arguments: {
-                                          'archivo': '',
-                                          'id_contrato': contrato.idContrato
-                                        }).then((value) =>
-                                        contratosBloc.add(ContratosSelect()));
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.description,
-                                contrato.tipo_doc,
-                                contrato.tipo_mime),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.cloud_upload_outlined),
-                                  label: Text('Subir archivo'),
-                                  onPressed: () =>
-                                      _uploadFile(contrato.idContrato),
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.remove_red_eye_rounded),
-                                  label: Text('Ver archivo subido'),
-                                  onPressed: () => _verNewFile(
-                                      contrato.idContrato,
-                                      contrato.tipo_mime,
-                                      contrato.tipo_doc),
-                                )
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                    icon: Icon(Icons.cloud_download_outlined),
-                                    label: Text('Descarga Archivo Firmado.'),
-                                    onPressed: () => {
-                                          _descargaArchivoSubido(
-                                              contrato.idContrato,
-                                              contrato.tipo_mime_original,
-                                              contrato.description)
-                                        }),
-                              ],
-                            ),
-                          )
-                        : SizedBox()
-                  ],
-                ),
-                trailing: !isInvolucrado
-                    ? GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onTap: () => _borrarContratos(contrato.idContrato),
-                      )
-                    : Text('')),
+            child: (size.width > 400)
+                ? buildWeb(contrato)
+                : contratosMovil(contrato),
           ));
         }
       });
@@ -889,132 +652,9 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: ListTile(
-                contentPadding: EdgeInsets.all(20.0),
-                leading: Icon(Icons.gavel),
-                title: Text(contrato.description),
-                subtitle: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.tipo_mime,
-                                contrato.tipo_doc,
-                                contrato.description),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado && contrato.tipo_doc == 'html'
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.edit),
-                                  label: Text('Editar'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/editarContratos',
-                                        arguments: {
-                                          'archivo': '',
-                                          'id_contrato': contrato.idContrato
-                                        }).then((value) =>
-                                        contratosBloc.add(ContratosSelect()));
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.description,
-                                contrato.tipo_doc,
-                                contrato.tipo_mime),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.cloud_upload_outlined),
-                                  label: Text('Subir archivo'),
-                                  onPressed: () =>
-                                      _uploadFile(contrato.idContrato),
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.remove_red_eye_rounded),
-                                  label: Text('Ver archivo subido'),
-                                  onPressed: () => _verNewFile(
-                                      contrato.idContrato,
-                                      contrato.tipo_mime,
-                                      contrato.tipo_doc),
-                                )
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                    icon: Icon(Icons.cloud_download_outlined),
-                                    label: Text('Descarga Archivo Firmado.'),
-                                    onPressed: () => {
-                                          _descargaArchivoSubido(
-                                              contrato.idContrato,
-                                              contrato.tipo_mime_original,
-                                              contrato.description)
-                                        }),
-                              ],
-                            ),
-                          )
-                        : SizedBox()
-                  ],
-                ),
-                trailing: !isInvolucrado
-                    ? GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onTap: () => _borrarContratos(contrato.idContrato),
-                      )
-                    : Text('')),
+            child: (size.width > 400)
+                ? buildWeb(contrato)
+                : contratosMovil(contrato),
           ));
         }
       });
@@ -1032,132 +672,9 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: ListTile(
-                contentPadding: EdgeInsets.all(20.0),
-                leading: Icon(Icons.gavel),
-                title: Text(contrato.description),
-                subtitle: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.remove_red_eye_rounded),
-                            label: Text('Ver'),
-                            onPressed: () => _verOldFile(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.tipo_mime,
-                                contrato.tipo_doc,
-                                contrato.description),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado && contrato.tipo_doc == 'html'
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.edit),
-                                  label: Text('Editar'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/editarContratos',
-                                        arguments: {
-                                          'archivo': '',
-                                          'id_contrato': contrato.idContrato
-                                        }).then((value) =>
-                                        contratosBloc.add(ContratosSelect()));
-                                    setState(() {
-                                      contratosBloc.add(ContratosSelect());
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text('Descargar archivo'),
-                            onPressed: () => _crearPDF(
-                                contrato.idMachote,
-                                contrato.idContrato,
-                                contrato.description,
-                                contrato.tipo_doc,
-                                contrato.tipo_mime),
-                          )
-                        ],
-                      ),
-                    ),
-                    !isInvolucrado
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.cloud_upload_outlined),
-                                  label: Text('Subir archivo'),
-                                  onPressed: () =>
-                                      _uploadFile(contrato.idContrato),
-                                )
-                              ],
-                            ),
-                          )
-                        : Text(''),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.remove_red_eye_rounded),
-                                  label: Text('Ver archivo subido'),
-                                  onPressed: () => _verNewFile(
-                                      contrato.idContrato,
-                                      contrato.tipo_mime,
-                                      contrato.tipo_doc),
-                                )
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
-                    contrato.valida
-                        ? Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextButton.icon(
-                                    icon: Icon(Icons.cloud_download_outlined),
-                                    label: Text('Descarga Archivo Firmado.'),
-                                    onPressed: () => {
-                                          _descargaArchivoSubido(
-                                              contrato.idContrato,
-                                              contrato.tipo_mime_original,
-                                              contrato.description)
-                                        }),
-                              ],
-                            ),
-                          )
-                        : SizedBox()
-                  ],
-                ),
-                trailing: !isInvolucrado
-                    ? GestureDetector(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onTap: () => _borrarContratos(contrato.idContrato),
-                      )
-                    : Text('')),
+            child: (size.width > 400)
+                ? buildWeb(contrato)
+                : contratosMovil(contrato),
           ));
         }
       });
