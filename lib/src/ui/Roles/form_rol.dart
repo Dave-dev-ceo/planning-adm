@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/roles/formRol/formRol_bloc.dart';
 import 'package:planning/src/blocs/roles/rol/rol_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -290,7 +291,7 @@ class _FormRolState extends State<FormRol> {
     if (type == "msg") {
       child = Text(msg);
     } else if (type == "loading") {
-      child = Center(child: CircularProgressIndicator());
+      child = Center(child: LoadingCustom());
     }
     showDialog(
         context: context,
@@ -318,7 +319,7 @@ class _FormRolState extends State<FormRol> {
   }
 
   _dialogSpinner(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -367,11 +368,11 @@ class _FormRolState extends State<FormRol> {
     return BlocBuilder<FormRolBloc, FormRolState>(
       builder: (context, state) {
         if (state is FormRolInitial) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is ErrorTokenFormRolState) {
           return _showDialogMsg(context);
         } else if (state is LoadingMostrarFormRol) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is MostrarFormRol) {
           _formRoles = null;
           _formRoles = state.form;

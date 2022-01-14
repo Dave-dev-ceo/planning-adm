@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 
 class ViewPdfContrato extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -94,8 +95,8 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
               this.data['tipo_mime'] == null ||
               this.data['tipo_mime'] == ''
           ? PdfView(
-              documentLoader: Center(child: CircularProgressIndicator()),
-              pageLoader: Center(child: CircularProgressIndicator()),
+              documentLoader: Center(child: LoadingCustom()),
+              pageLoader: Center(child: LoadingCustom()),
               controller: _pdfController,
               onDocumentLoaded: (document) {
                 setState(() {

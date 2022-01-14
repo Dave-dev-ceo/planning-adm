@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:multi_select_item/multi_select_item.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/grupos_bloc.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/resources/api_provider.dart';
@@ -37,7 +38,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -368,7 +369,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
                       );
                     },
                   )
-                : Center(child: const CircularProgressIndicator()),
+                : Center(child: LoadingCustom()),
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 // * Comentar el mobile
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:universal_html/html.dart' hide Text;
 // import 'dart:ui' as ui;
 import 'package:universal_ui/universal_ui.dart';
@@ -68,7 +69,7 @@ class _FullScreenViewWEBState extends State<FullScreenViewWEB> {
                   ));
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               );
             }
           }),
@@ -161,7 +162,7 @@ class _FullScreenViewWEBState extends State<FullScreenViewWEB> {
 //                 ));
 //           } else {
 //             return Center(
-//               child: CircularProgressIndicator(),
+//               child: LoadingCustom(),
 //             );
 //           }
 //         },

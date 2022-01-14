@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
 import 'package:planning/src/blocs/tiposEventos/tiposeventos_bloc.dart';
@@ -74,7 +75,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   _dialogMSG(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,
@@ -462,9 +463,9 @@ class _AgregarEventoState extends State<AgregarEvento> {
                     //     BlocBuilder<TiposEventosBloc, TiposEventosState>(
                     //   builder: (context, state) {
                     //     if (state is TiposEventosInitial) {
-                    //       return Center(child: CircularProgressIndicator());
+                    //       return Center(child: LoadingCustom());
                     //     } else if (state is LoadingTiposEventosState) {
-                    //       return Center(child: CircularProgressIndicator());
+                    //       return Center(child: LoadingCustom());
                     //     } else if (state is MostrarTiposEventosState) {
                     //       itemModelTipoEvento = state.tiposEventos;
                     //       return SizedBox.shrink();
@@ -487,7 +488,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                     //       );
                     //       //_showError(context, state.message);
                     //     } else {
-                    //       return Center(child: CircularProgressIndicator());
+                    //       return Center(child: LoadingCustom());
                     //     }
                     //   },
                     // ))

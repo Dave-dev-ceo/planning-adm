@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
 import 'package:flutter/services.dart';
 
 class FormPago extends StatefulWidget {
-  FormPago({Key key}) : super(key: key);
+  final String tipoPresupuesto;
+  FormPago({Key key, @required this.tipoPresupuesto}) : super(key: key);
 
   @override
   _FormPagoState createState() => _FormPagoState();
@@ -56,11 +58,11 @@ class _FormPagoState extends State<FormPago> {
         builder: (context, state) {
           if (state is PagosInitial) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingCustom(),
             );
           } else if (state is PagosLogging) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingCustom(),
             );
           } else if (state is PagosSelectFormState) {
             if (bandera) {
@@ -74,7 +76,7 @@ class _FormPagoState extends State<FormPago> {
             return _formPagos(state.proveedor, state.servicios);
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingCustom(),
             );
           }
         },
@@ -247,6 +249,7 @@ class _FormPagoState extends State<FormPago> {
         itemPago['precio'] == '') {
       _mensaje('Todos los campos son obligatorios.');
     } else {
+      itemPago['tipoPresupuesto'] = widget.tipoPresupuesto;
       pagosBloc.add(CrearPagosEvent(itemPago));
       _mensaje('Pago agregado');
     }

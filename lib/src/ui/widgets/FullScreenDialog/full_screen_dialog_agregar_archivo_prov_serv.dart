@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 // import 'package:planning/src/blocs/archivosEspeciales/archivosespeciales_bloc.dart';
 import 'package:planning/src/blocs/proveedores/archivo_proveedor/bloc/archivo_proveedor_bloc.dart';
 import 'package:planning/src/blocs/proveedores/archivos_especiales/archivos_especiales_bloc.dart';
@@ -264,11 +265,11 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             BlocBuilder<ArchivoProveedorBloc, ArchivoProveedorState>(
                 builder: (context, state) {
               if (state is LoadingArchivoProveedorState) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               } else if (state is MostrarArchivoProvServState) {
                 return _form(state.detlistas);
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               }
             }),
             if (this.provsrv['isEvento']) _archivosEspecilesWidget(),
@@ -345,11 +346,11 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         BlocBuilder<ArchivosEspecialesBloc, ArchivosEspecialesState>(
             builder: (context, state) {
           if (state is LoadingArchivoEspecialState) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is MostrarArchivoProvEventState) {
             return _formEspecial(state.detlistas);
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           }
         }),
       ],

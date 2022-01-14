@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/lista/listas_bloc.dart';
 import 'package:planning/src/logic/listas_logic.dart';
 import 'package:planning/src/models/item_model_listas.dart';
@@ -79,7 +80,7 @@ class _ListaState extends State<Listas> {
                   child: BlocBuilder<ListasBloc, ListasState>(
                     builder: (context, state) {
                       if (state is LoadingListasState) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: LoadingCustom());
                       } else if (state is MostrarListasState) {
                         if (state.listas != null) {
                           return getLista(state.listas);
@@ -91,7 +92,9 @@ class _ListaState extends State<Listas> {
                       } else if (state is ErrorCreateListasrState) {
                         return Center(child: Text(state.message));
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: LoadingCustom(),
+                        );
                       }
                     },
                   ),

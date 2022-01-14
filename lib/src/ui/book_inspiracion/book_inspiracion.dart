@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
 import 'package:planning/src/utils/utils.dart' as utils;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BookInspiracion extends StatefulWidget {
   const BookInspiracion({Key key}) : super(key: key);
@@ -54,27 +54,21 @@ class _BookInspiracion extends State<BookInspiracion> {
               AsyncSnapshot<List<LayoutBookModel>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               );
             }
             if (snapshot.hasData) {
               if (snapshot.data != null) {
-                return _viewFile(snapshot.data);
+                if (snapshot.data.length > 0) {
+                  return _viewFile(snapshot.data);
+                } else {
+                  return sinDatos();
+                }
               } else {
-                return Align(
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Text('No se encontraron datos'),
-                  ),
-                );
+                return sinDatos();
               }
             } else {
-              return Align(
-                alignment: Alignment.center,
-                child: Center(
-                  child: Text('No se encontraron datos'),
-                ),
-              );
+              return sinDatos();
             }
           }),
       floatingActionButton: SpeedDial(
@@ -113,7 +107,8 @@ class _BookInspiracion extends State<BookInspiracion> {
                                 await bookInspiracionService
                                     .getBookInspiracion(),
                                 _mostrarMensaje(
-                                    'Se subio correctamente.', Colors.green)
+                                    'La imagen se agrego correctamente.',
+                                    Colors.green)
                               }
                           });
                 }
@@ -133,71 +128,91 @@ class _BookInspiracion extends State<BookInspiracion> {
     );
   }
 
+  Align sinDatos() {
+    return Align(
+      alignment: Alignment.center,
+      child: Center(
+        child: Text('No se encontraron datos'),
+      ),
+    );
+  }
+
   Widget _viewFile(List<LayoutBookModel> layoutBookModel) {
-    if (layoutBookModel.length <= 0) {
-      return Center(
-        child: Text('Sin datos'),
-      );
-    } else {
-      return GridView.builder(
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-          itemCount: layoutBookModel.length,
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 500,
-            mainAxisExtent: 300,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            final bytes = base64Decode(layoutBookModel[index].file);
-            return Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Image.memory(
-                    bytes,
-                    fit: BoxFit.cover,
+    return GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+        itemCount: layoutBookModel.length,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 500,
+          mainAxisExtent: 300,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final bytes = base64Decode(layoutBookModel[index].file);
+          return Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Image.memory(
+                  bytes,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.3)),
+                width: double.infinity,
+                height: 30.0,
+                child: FittedBox(
+                  child: IconButton(
+                    onPressed: () async => showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) => _eliminarArchivo(
+                            layoutBookModel[index].idBookInspiracion)),
+                    icon: const Icon(Icons.delete, color: Colors.white),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  decoration:
-                      BoxDecoration(color: Colors.black.withOpacity(0.3)),
-                  width: double.infinity,
-                  height: 30.0,
-                  child: FittedBox(
-                    child: IconButton(
-                      onPressed: () async {
-                        bookInspiracionService
-                            .deleteBookInspiracion(
-                                layoutBookModel[index].idBookInspiracion)
-                            .then((value) => {
-                                  if (value)
-                                    {
-                                      _mostrarMensaje(
-                                          'Se ha eliminado correctamente',
-                                          Colors.green),
-                                      bookInspiracionService
-                                          .getBookInspiracion()
-                                          .then((value) => setState(() {})),
-                                    }
-                                  else
-                                    {
-                                      _mostrarMensaje(
-                                          'Ocurrio un error', Colors.red)
-                                    }
-                                });
-                      },
-                      icon: FaIcon(FontAwesomeIcons.trash, color: Colors.white),
-                    ),
-                  ),
-                )
-              ],
-            );
-          });
-    }
+              )
+            ],
+          );
+        });
+  }
+
+  _eliminarArchivo(int idArchivo) {
+    return AlertDialog(
+      title: const Text('Eliminar Imagen'),
+      content: const Text('¿Desea eliminar la imagen del Book de Inspiración?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () {
+            bookInspiracionService
+                .deleteBookInspiracion(idArchivo)
+                .then((value) => {
+                      if (value)
+                        {
+                          _mostrarMensaje(
+                              'La imagen se ha eliminado correctamente.',
+                              Colors.green),
+                          bookInspiracionService.getBookInspiracion().then(
+                              (value) => {
+                                    setState(() {}),
+                                    Navigator.pop(context, 'Aceptar')
+                                  }),
+                        }
+                      else
+                        {_mostrarMensaje('Ocurrio un error', Colors.red)}
+                    });
+          },
+          child: const Text('Aceptar'),
+        ),
+      ],
+    );
   }
 
   _mostrarMensaje(String msj, Color color) {

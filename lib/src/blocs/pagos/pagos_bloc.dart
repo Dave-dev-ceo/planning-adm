@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:planning/src/logic/pagos_logic.dart';
+import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
 
 part 'pagos_event.dart';
@@ -20,8 +21,8 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
       yield PagosLogging();
 
       try {
-        ItemModelPagos pagos = await logic.selectPagos();
-        yield PagosSelect(pagos);
+        final pagos = await logic.selectPagos();
+        yield PagosSelect(pagos['presupuestos'], pagos['pagos']);
       } on AutorizacionException {
         yield PagosErrorState('Error en select');
       } on TokenException {
@@ -56,8 +57,7 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
 
       try {
         await logic.deletePagos(event.id);
-        ItemModelPagos pagos = await logic.selectPagos();
-        yield PagosSelect(pagos);
+        add(SelectPagosEvent());
       } on AutorizacionException {
         yield PagosErrorState('Error en delete');
       } on TokenException {

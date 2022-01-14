@@ -4,14 +4,17 @@ part of 'pagos_bloc.dart';
 abstract class PagosState {}
 
 class PagosInitial extends PagosState {}
+
 class PagosLogging extends PagosState {}
 
 class PagosSelect extends PagosState {
   final ItemModelPagos pagos;
+  final List<HistorialPagosModel> listaPagos;
 
-  PagosSelect(this.pagos);
+  PagosSelect(this.pagos, this.listaPagos);
 
   ItemModelPagos get prop => pagos;
+  List<HistorialPagosModel> get props => listaPagos;
 }
 
 class PagosSelectId extends PagosState {
@@ -19,7 +22,7 @@ class PagosSelectId extends PagosState {
   final ItemModelPagos proveedor;
   final ItemModelPagos servicio;
 
-  PagosSelectId(this.pagos,this.proveedor,this.servicio);
+  PagosSelectId(this.pagos, this.proveedor, this.servicio);
 
   ItemModelPagos get prop => pagos;
   ItemModelPagos get pro => proveedor;
@@ -46,7 +49,6 @@ class PagosSelectFormState extends PagosState {
 
   ItemModelPagos get props => proveedor;
   ItemModelPagos get prop => servicios;
-
 }
 
 // estado - errores

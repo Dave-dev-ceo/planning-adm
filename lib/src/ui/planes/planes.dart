@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -79,10 +80,10 @@ import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 //     return BlocBuilder<PlanesBloc, PlanesState>(builder: (context, state) {
 //       // state ini
 //       if (state is InitiaPlaneslState)
-//         return Center(child: CircularProgressIndicator());
+//         return Center(child: LoadingCustom());
 //       // state log
 //       else if (state is LodingPlanesState)
-//         return Center(child: CircularProgressIndicator());
+//         return Center(child: LoadingCustom());
 //       // state select
 //       else if (state is SelectEventoState) {
 //         // evita que se reescriba la lista
@@ -96,7 +97,7 @@ import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 //           }
 //         } else {
 //           _planesBloc.add(SelectPlanesEventoEvent(_condicionQuery));
-//           return Center(child: CircularProgressIndicator());
+//           return Center(child: LoadingCustom());
 //         }
 //         if (_itemModel != null) {
 //           return _crearStickyHeader(_itemModel);
@@ -111,7 +112,7 @@ import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 //       }
 //       // no state
 //       else
-//         return Center(child: CircularProgressIndicator());
+//         return Center(child: LoadingCustom());
 //     });
 //   }
 
@@ -781,7 +782,7 @@ import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 //               );
 //             } else
 //               return Center(
-//                 child: CircularProgressIndicator(),
+//                 child: LoadingCustom(),
 //               );
 //           });
 //     } else
@@ -1271,17 +1272,17 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 BlocBuilder<PlanesBloc, PlanesState>(
                   builder: (context, state) {
                     if (state is InitiaPlaneslState)
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: LoadingCustom());
                     // state log
                     else if (state is LodingPlanesState)
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: LoadingCustom());
                     else if (state is ShowAllPlannesState) {
                       if (state.listTimings != null) {
                         listaTimings = state.listTimings;
                       }
                       return buildActividadesEvento();
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: LoadingCustom());
                     }
                   },
                 ),
@@ -1952,13 +1953,13 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
   void _saveActividades() {
     List<ActividadPlanner> send = [];
 
-    bool sinFechas = false;
+    // bool sinFechas = false;
 
-    listaTimings.forEach((tarea) {
-      tarea.actividades.forEach((actividad) {
-        if (actividad.estadoCalendarioActividad) sinFechas = true;
-      });
-    });
+    // listaTimings.forEach((tarea) {
+    //   tarea.actividades.forEach((actividad) {
+    //     if (actividad.estadoCalendarioActividad) sinFechas = true;
+    //   });
+    // });
 
     // if (sinFechas) {
     listaTimings.forEach((tarea) {

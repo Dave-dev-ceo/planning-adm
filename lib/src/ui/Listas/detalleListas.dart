@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
 import 'package:planning/src/logic/detalle_listas_logic.dart';
 import 'package:planning/src/models/item_model_detalle_listas.dart';
@@ -76,7 +77,9 @@ class _DetalleListasState extends State<DetalleListas> {
             detalleListasBloc.add(FechtDetalleListaEvent(state.id_lista));
             return Text('');
           } else if (this.listas['id_lista'] != null) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: LoadingCustom(),
+            );
           } else {
             return Text('');
           }

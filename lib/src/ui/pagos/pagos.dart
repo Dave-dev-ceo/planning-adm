@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/historialPagos/historialpagos_bloc.dart';
 import 'package:planning/src/logic/historial_pagos/historial_pagos_logic.dart';
 import 'package:planning/src/logic/pagos_logic.dart';
@@ -45,13 +46,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
   bool isInvolucrado = false;
   bool isPressed = false;
-
-  int totalpresupuestos = 0;
-  int totalsaldopresupuestoInterno = 0;
-  int totalsaldopresupuestoEvento = 0;
-  double totalpagosInternos = 0;
-  double totalpagosEventos = 0;
   int index = 0;
+  Size size;
 
   var myGroup = AutoSizeGroup();
 
@@ -62,7 +58,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     pagosBloc = BlocProvider.of<PagosBloc>(context);
     historialPagosBloc = BlocProvider.of<HistorialPagosBloc>(context);
     pagosBloc.add(SelectPagosEvent());
-    historialPagosBloc.add(MostrarHistorialPagosEvent());
+    // historialPagosBloc.add(MostrarHistorialPagosEvent());
 
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
@@ -93,6 +89,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     if (isInvolucrado) {
       return Scaffold(
         appBar: AppBar(
@@ -100,13 +97,14 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
+          controller: ScrollController(),
           child: RefreshIndicator(
             color: Colors.blue,
             onRefresh: () async {
               await pagosBloc.add(SelectPagosEvent());
               await historialPagosBloc.add(MostrarHistorialPagosEvent());
             },
-            child: pagosEventos(),
+            child: _bloc('E'),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -119,6 +117,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           controller: _tabController,
           children: [
             SingleChildScrollView(
+                controller: ScrollController(),
                 child: RefreshIndicator(
                     color: Colors.blue,
                     onRefresh: () async {
@@ -126,8 +125,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                       await historialPagosBloc
                           .add(MostrarHistorialPagosEvent());
                     },
-                    child: bodyPagosPlanner())),
+                    child: _bloc('I'))),
             SingleChildScrollView(
+                controller: ScrollController(),
                 child: RefreshIndicator(
                     color: Colors.blue,
                     onRefresh: () async {
@@ -135,7 +135,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                       await historialPagosBloc
                           .add(MostrarHistorialPagosEvent());
                     },
-                    child: pagosEventos()))
+                    child: _bloc('E')))
           ],
         ),
         bottomNavigationBar: TabBar(
@@ -163,143 +163,125 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     }
   }
 
-  Widget pagosEventos() {
-    return Column(
-      children: [
-        _bloc(),
-        SizedBox(height: 10.0),
-        Row(
-          children: [
-            SizedBox(
-              width: 20.0,
-            ),
-            Text(
-              'Pagos',
-              style: TextStyle(fontSize: 20.0),
-            ),
-            SizedBox(
-              width: 100,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.black),
-              onPressed: isPressed && !isInvolucrado
-                  ? () {
-                      _abrirDialog('E', false, HistorialPagosModel());
-                    }
-                  : null,
-              child: Text(
-                'Agregar Pago',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
-          ],
-        ),
-        SizedBox(
-          height: 10.0,
-        ),
-        _historialDePagos('E'),
-        SizedBox(
-          height: 100.0,
-        )
-      ],
-    );
-  }
+  // Widget pagosEventos() {
+  //   return Column(
+  //     children: [
+  //       _bloc('E'),
+  //       SizedBox(height: 10.0),
+  //       Row(
+  //         children: [
+  //           SizedBox(
+  //             width: 20.0,
+  //           ),
+  //           Text(
+  //             'Pagos',
+  //             style: TextStyle(fontSize: 20.0),
+  //           ),
+  //           SizedBox(
+  //             width: 100,
+  //           ),
+  //           ElevatedButton(
+  //             style: ElevatedButton.styleFrom(primary: Colors.black),
+  //             onPressed: !isInvolucrado
+  //                 ? () {
+  //                     if (isPressed) {
+  //                       _abrirDialog('E', false, HistorialPagosModel());
+  //                     } else {
+  //                       ScaffoldMessenger.of(context).showSnackBar(
+  //                         SnackBar(
+  //                           content: Text('Es necesario agregar presupuestos.'),
+  //                           backgroundColor: Colors.amber,
+  //                         ),
+  //                       );
+  //                     }
+  //                   }
+  //                 : null,
+  //             child: Text(
+  //               'Agregar Pago',
+  //               style: TextStyle(color: Colors.white),
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //       SizedBox(
+  //         height: 10.0,
+  //       ),
+  //       _historialDePagos('E'),
+  //       SizedBox(
+  //         height: 100.0,
+  //       )
+  //     ],
+  //   );
+  // }
 
-  Widget bodyPagosPlanner() {
-    return Column(
-      children: [
-        _bloc(),
-        SizedBox(height: 10.0),
-        Row(
-          children: [
-            SizedBox(
-              width: 20.0,
-            ),
-            Text(
-              'Pagos',
-              style: TextStyle(fontSize: 20.0),
-            ),
-            SizedBox(
-              width: 100,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.black),
-              onPressed: isPressed && !isInvolucrado
-                  ? () {
-                      _abrirDialog('I', false, HistorialPagosModel());
-                    }
-                  : null,
-              child: Text(
-                'Agregar Pago',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
-          ],
-        ),
-        SizedBox(
-          height: 10.0,
-        ),
-        _historialDePagos('I'),
-        SizedBox(
-          height: 100.0,
-        )
-      ],
-    );
-  }
+  // Widget _historialDePagos(String tipoPresupuesto) {
+  //   return BlocBuilder<HistorialPagosBloc, HistorialPagosState>(
+  //     builder: (context, state) {
+  //       if (state is LoadingHistorialPagosState) {
+  //         return Center(
+  //           child: LoadingCustom(),
+  //         );
+  //       } else if (state is MostrarHistorialPagosState) {
+  //         totalsaldopresupuestoInterno = 0;
+  //         totalsaldopresupuestoEvento = 0;
+  //         totalpagosInternos = 0;
+  //         totalpagosEventos = 0;
+  //         if (state.listaPagos != null) {
+  //           if (state.listaPagos.length > 0) {
+  //             state.listaPagos.forEach((pago) {
+  //               if ('E' == pago.tipoPresupuesto) {
+  //                 totalpagosEventos += pago.pago;
+  //               } else {
+  //                 totalpagosInternos += pago.pago;
+  //               }
+  //             });
 
-  Widget _historialDePagos(String tipoPresupuesto) {
-    return BlocBuilder<HistorialPagosBloc, HistorialPagosState>(
-      builder: (context, state) {
-        if (state is LoadingHistorialPagosState) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is MostrarHistorialPagosState) {
-          totalsaldopresupuestoInterno = 0;
-          totalsaldopresupuestoEvento = 0;
-          totalpagosInternos = 0;
-          totalpagosEventos = 0;
-          if (state.listaPagos != null) {
-            if (state.listaPagos.length > 0) {
-              state.listaPagos.forEach((pago) {
-                if ('E' == pago.tipoPresupuesto) {
-                  totalpagosEventos += pago.pago;
-                } else {
-                  totalpagosInternos += pago.pago;
-                }
-              });
+  //             totalsaldopresupuestoEvento =
+  //                 totalpresupuestos - totalpagosEventos != null
+  //                     ? (int.tryParse(totalpagosEventos.toString()))
+  //                     : 0;
 
-              totalsaldopresupuestoEvento =
-                  totalpresupuestos - totalpagosEventos != null
-                      ? (int.tryParse(totalpagosEventos.toString()))
-                      : 0;
+  //             totalsaldopresupuestoInterno =
+  //                 totalpresupuestos - totalpagosInternos != null
+  //                     ? int.tryParse(totalpagosInternos.toString())
+  //                     : 0;
 
-              totalsaldopresupuestoInterno =
-                  totalpresupuestos - totalpagosInternos != null
-                      ? int.tryParse(totalpagosInternos.toString())
-                      : 0;
-
-              return buildTablePagos(state.listaPagos, tipoPresupuesto);
-            } else {
-              return Center(
-                child: Text('Sin Datos'),
-              );
-            }
-          } else {
-            return Center(
-              child: Text('Sin Datos'),
-            );
-          }
-        } else {
-          totalsaldopresupuestoInterno = 0;
-          totalsaldopresupuestoEvento = 0;
-          totalpagosInternos = 0;
-          totalpagosEventos = 0;
-          return Container();
-        }
-      },
-    );
-  }
+  //             return buildTablePagos(state.listaPagos, tipoPresupuesto);
+  //           } else {
+  //             return Center(
+  //               child: ListView(
+  //                 shrinkWrap: true,
+  //                 children: [
+  //                   Container(
+  //                       height: 100.0,
+  //                       color: Colors.white,
+  //                       padding: EdgeInsets.symmetric(horizontal: 35.0),
+  //                       alignment: Alignment.centerLeft,
+  //                       child: Center(
+  //                         child: Text(
+  //                           'No existen pagos registrados.',
+  //                           style: TextStyle(fontSize: 15.0),
+  //                         ),
+  //                       )),
+  //                 ],
+  //               ),
+  //             );
+  //           }
+  //         } else {
+  //           return Center(
+  //             child: Text('Sin Datos 2'),
+  //           );
+  //         }
+  //       } else {
+  //         totalsaldopresupuestoInterno = 0;
+  //         totalsaldopresupuestoEvento = 0;
+  //         totalpagosInternos = 0;
+  //         totalpagosEventos = 0;
+  //         return Container();
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget buildTablePagos(
       List<HistorialPagosModel> pagos, String tipoPresupuesto) {
@@ -344,105 +326,117 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   List<List<DataCell>> _crearListaPagos(List<HistorialPagosModel> pagos) {
     List<List<DataCell>> pagosEventosList = [];
 
-    pagos.forEach((pago) {
-      if ('I' == pago.tipoPresupuesto) {
-        List<DataCell> pagosListTemp = [
-          DataCell(
-              Center(
-                child: Icon(
-                  Icons.delete,
-                ),
-              ), onTap: () async {
-            if (!isInvolucrado) {
-              await showDialog(
-                context: _scaffoldKey.currentContext,
-                builder: (context) => AlertDialog(
-                  title: Text('Eliminar pago'),
-                  content: Text(
-                      '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Cancelar'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        final resp =
-                            await logicPagos.eliminarPagoEvento(pago.idPago);
+    if (pagos.length > 0) {
+      pagos.forEach((pago) {
+        if ('I' == pago.tipoPresupuesto) {
+          List<DataCell> pagosListTemp = [
+            DataCell(
+                Center(
+                  child: Icon(
+                    Icons.delete,
+                  ),
+                ), onTap: () async {
+              if (!isInvolucrado) {
+                await showDialog(
+                  context: _scaffoldKey.currentContext,
+                  builder: (context) => AlertDialog(
+                    title: Text('Eliminar pago'),
+                    content: Text(
+                        '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          final resp =
+                              await logicPagos.eliminarPagoEvento(pago.idPago);
 
-                        if (resp == 'Ok') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Se ha eliminado el pago'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                          Navigator.of(context, rootNavigator: true).pop(true);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(resp),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      },
-                      child: Text('Aceptar'),
-                    ),
-                  ],
-                ),
-              ).then((value) => {
-                    if (value != null)
-                      {
-                        context
-                            .read<HistorialPagosBloc>()
-                            .add(MostrarHistorialPagosEvent()),
-                        if (value)
-                          {
-                            pagosBloc.add(SelectPagosEvent()),
+                          if (resp == 'Ok') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Se ha eliminado el pago'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            Navigator.of(context, rootNavigator: true)
+                                .pop(true);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(resp),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                           }
-                      }
-                  });
-            }
-          }),
-          DataCell(
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
-              ),
-            ),
-            onTap: () {
-              if (!isInvolucrado) {
-                _abrirDialog('I', true, pago);
+                        },
+                        child: Text('Aceptar'),
+                      ),
+                    ],
+                  ),
+                ).then((value) => {
+                      if (value != null)
+                        {
+                          context
+                              .read<HistorialPagosBloc>()
+                              .add(MostrarHistorialPagosEvent()),
+                          if (value)
+                            {
+                              pagosBloc.add(SelectPagosEvent()),
+                            }
+                        }
+                    });
               }
-            },
-          ),
-          DataCell(
-            Align(alignment: Alignment.centerLeft, child: Text(pago.concepto)),
-            onTap: () {
-              if (!isInvolucrado) {
-                _abrirDialog('I', true, pago);
-              }
-            },
-          ),
-          DataCell(
+            }),
+            DataCell(
               Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.centerLeft,
                 child: Text(
-                  '\$${f.format(pago.pago)}',
+                  '${pago.fecha.day}-${pago.fecha.month}-${pago.fecha.year}',
                 ),
-              ), onTap: () {
-            if (!isInvolucrado) {
-              _abrirDialog('I', true, pago);
-            }
-          }),
-        ];
-        pagosEventosList.add(pagosListTemp);
-      }
-    });
+              ),
+              onTap: () {
+                if (!isInvolucrado) {
+                  _abrirDialog('I', true, pago);
+                }
+              },
+            ),
+            DataCell(
+              Align(
+                  alignment: Alignment.centerLeft, child: Text(pago.concepto)),
+              onTap: () {
+                if (!isInvolucrado) {
+                  _abrirDialog('I', true, pago);
+                }
+              },
+            ),
+            DataCell(
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '\$${f.format(pago.pago)}',
+                  ),
+                ), onTap: () {
+              if (!isInvolucrado) {
+                _abrirDialog('I', true, pago);
+              }
+            }),
+          ];
+          pagosEventosList.add(pagosListTemp);
+        }
+      });
+    } else {
+      List<DataCell> pagosListWitoutData = [
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+        DataCell(Text('Sin datos')),
+      ];
+      pagosEventosList.add(pagosListWitoutData);
+    }
 
     return pagosEventosList;
   }
@@ -559,161 +553,347 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     return pagosEventosList;
   }
 
-  _bloc() {
+  _bloc(String tipoPage) {
+    setState(() {});
     return BlocBuilder<PagosBloc, PagosState>(
       builder: (context, state) {
         if (state is PagosInitial) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is PagosLogging) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is PagosSelect) {
-          if (state.pagos != null) {
-            totalpresupuestos = 0;
+          int totalsaldopresupuesto = 0;
+          int totalpagos = 0;
+          int totalpresupuestos = 0;
+          if (state.pagos != null && state.pagos.pagos.length > 0 ||
+              state.listaPagos != null && state.listaPagos.length > 0) {
+            isPressed = true;
             state.pagos.pagos.forEach((pago) {
-              totalpresupuestos += pago.total;
+              if (tipoPage == pago.tipoPresupuesto) {
+                totalpresupuestos += pago.total;
+              }
             });
 
-            return _stickyHeader(state.pagos);
+            state.listaPagos.forEach((pago) {
+              if (tipoPage == pago.tipoPresupuesto) {
+                totalpagos += pago.pago.toInt();
+              }
+            });
+
+            totalsaldopresupuesto = totalpresupuestos - totalpagos;
+
+            bool canAddPay = false;
+
+            if (totalpresupuestos > 0) {
+              canAddPay = true;
+            }
+
+            return Column(
+              children: [
+                _stickyHeader(
+                  state.pagos,
+                  tipoPage,
+                  totalsaldopresupuesto,
+                  totalpagos,
+                  totalpresupuestos,
+                ),
+                SizedBox(height: 10.0),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 20.0,
+                    ),
+                    Text(
+                      'Pagos',
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                    SizedBox(
+                      width: 100,
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.black),
+                      onPressed: !isInvolucrado
+                          ? () {
+                              if (canAddPay) {
+                                _abrirDialog(
+                                    tipoPage, false, HistorialPagosModel());
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Es necesario agregar presupuestos.'),
+                                    backgroundColor: Colors.amber,
+                                  ),
+                                );
+                              }
+                            }
+                          : null,
+                      child: Text(
+                        'Agregar Pago',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                buildTablePagos(state.listaPagos, tipoPage),
+                SizedBox(
+                  height: 100.0,
+                )
+              ],
+            );
           } else {
             return Center(
-              child: Text('Sin datos'),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  StickyHeader(
+                    header: _getHeader(
+                        totalsaldopresupuesto, totalpagos, totalpresupuestos),
+                    content: Container(
+                        height: 100.0,
+                        color: Colors.white,
+                        padding: EdgeInsets.symmetric(horizontal: 35.0),
+                        alignment: Alignment.centerLeft,
+                        child: Center(
+                          child: Text(
+                            'No existen presupuestos registrados.',
+                            style: TextStyle(fontSize: 15.0),
+                          ),
+                        )),
+                  )
+                ],
+              ),
             );
           }
         } else {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         }
       },
     );
   }
 
-  _stickyHeader(itemPago) {
+  _stickyHeader(itemPago, String tipoPage, int totalsaldopresupuesto,
+      int totalpagos, int totalpresupuestos) {
     return Center(
       child: ListView(
         shrinkWrap: true,
         children: [
-          StickyHeader(header: _getHeader(), content: _getContent(itemPago))
+          StickyHeader(
+              header: _getHeader(
+                  totalsaldopresupuesto, totalpagos, totalpresupuestos),
+              content: _getContent(itemPago, tipoPage))
         ],
       ),
     );
   }
 
-  _getHeader() {
+  _getHeader(int totalsaldopresupuesto, int totalpagos, int totalpresupuestos) {
     return Container(
-        height: 100.0,
+        height: size.width > 500 ? 100.0 : 120.0,
         color: Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 35.0),
         alignment: Alignment.centerLeft,
-        child: _crearHeader());
+        child:
+            _crearHeader(totalsaldopresupuesto, totalpagos, totalpresupuestos));
   }
 
-  _crearHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Text(
+  _crearHeader(
+      int totalsaldopresupuesto, int totalpagos, int totalpresupuestos) {
+    if (size.width > 500) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text(
+                  index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
+                  style: TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
+                  maxLines: 2,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AutoSizeText.rich(
+                    TextSpan(
+                      text: 'Total: ',
+                      style: TextStyle(
+                          color: Colors.black, fontFamily: 'Comfortaa'),
+                      children: [
+                        TextSpan(
+                          text:
+                              '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: 'Comfortaa'),
+                        )
+                      ],
+                    ),
+                    minFontSize: 5.0,
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 15),
+                    group: myGroup,
+                  ),
+                  SizedBox(
+                    width: 8.0,
+                  ),
+                  AutoSizeText.rich(
+                    TextSpan(
+                      text: 'Pagos: ',
+                      style: TextStyle(
+                          color: Colors.black, fontFamily: 'Comfortaa'),
+                      children: [
+                        TextSpan(
+                          text:
+                              '\$${totalpagos > 0 ? f.format(totalpagos) : totalpagos}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: 'Comfortaa'),
+                        ),
+                      ],
+                    ),
+                    minFontSize: 10.0,
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 15),
+                    group: myGroup,
+                  ),
+                  SizedBox(
+                    width: 8.0,
+                  ),
+                  AutoSizeText.rich(
+                    TextSpan(
+                      text: 'Saldo: ',
+                      style: TextStyle(
+                          color: Colors.black, fontFamily: 'Comfortaa'),
+                      children: [
+                        TextSpan(
+                          text:
+                              '\$${totalsaldopresupuesto > 0 ? f.format(totalsaldopresupuesto) : totalsaldopresupuesto}',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Comfortaa'),
+                        )
+                      ],
+                    ),
+                    group: myGroup,
+                    minFontSize: 10.0,
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
               index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
               style: TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
               maxLines: 2,
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              AutoSizeText.rich(
-                TextSpan(
-                  text: 'Total: ',
-                  style:
-                      TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
-                  children: [
-                    TextSpan(
-                      text:
-                          '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontFamily: 'Comfortaa'),
-                    )
-                  ],
-                ),
-                minFontSize: 5.0,
-                maxLines: 2,
-                style: TextStyle(fontSize: 15),
-                group: myGroup,
+            SizedBox(
+              height: 10.0,
+            ),
+            AutoSizeText.rich(
+              TextSpan(
+                text: 'Total: ',
+                style: TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                children: [
+                  TextSpan(
+                    text:
+                        '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'Comfortaa'),
+                  )
+                ],
               ),
-              SizedBox(
-                width: 8.0,
+              minFontSize: 5.0,
+              maxLines: 2,
+              style: TextStyle(fontSize: 15),
+              group: myGroup,
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            AutoSizeText.rich(
+              TextSpan(
+                text: 'Saldo: ',
+                style: TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                children: [
+                  TextSpan(
+                    text:
+                        '\$${totalsaldopresupuesto > 0 ? f.format(totalsaldopresupuesto) : totalsaldopresupuesto}',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Comfortaa'),
+                  )
+                ],
               ),
-              AutoSizeText.rich(
-                TextSpan(
-                  text: 'Pagos: ',
-                  style:
-                      TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
-                  children: [
-                    TextSpan(
-                      text: index == 0
-                          ? '\$${totalpagosInternos > 0 ? f.format(totalpagosInternos) : totalpagosInternos}'
-                          : '\$${totalpagosEventos > 0 ? f.format(totalpagosEventos) : totalpagosEventos}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontFamily: 'Comfortaa'),
-                    ),
-                  ],
-                ),
-                minFontSize: 10.0,
-                maxLines: 2,
-                style: TextStyle(fontSize: 15),
-                group: myGroup,
+              group: myGroup,
+              minFontSize: 10.0,
+              maxLines: 2,
+              style: TextStyle(fontSize: 15),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            AutoSizeText.rich(
+              TextSpan(
+                text: 'Pagos: ',
+                style: TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                children: [
+                  TextSpan(
+                    text:
+                        '\$${totalpagos > 0 ? f.format(totalpagos) : totalpagos}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'Comfortaa'),
+                  ),
+                ],
               ),
-              SizedBox(
-                width: 8.0,
-              ),
-              AutoSizeText.rich(
-                TextSpan(
-                  text: 'Saldo: ',
-                  style:
-                      TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
-                  children: [
-                    TextSpan(
-                      text: index == 0
-                          ? '\$${totalsaldopresupuestoInterno > 0 ? f.format(totalsaldopresupuestoInterno) : totalsaldopresupuestoInterno}'
-                          : '\$${totalsaldopresupuestoEvento > 0 ? f.format(totalsaldopresupuestoEvento) : totalsaldopresupuestoEvento}',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Comfortaa'),
-                    )
-                  ],
-                ),
-                group: myGroup,
-                minFontSize: 10.0,
-                maxLines: 2,
-                style: TextStyle(fontSize: 15),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+              minFontSize: 10.0,
+              maxLines: 2,
+              style: TextStyle(fontSize: 15),
+              group: myGroup,
+            ),
+          ],
+        ),
+      );
+    }
   }
 
-  _getContent(itemPago) {
+  _getContent(itemPago, String tipoPage) {
     return Container(
       alignment: Alignment.center,
       child: PaginatedDataTable(
         // header: _crearHeader(asistencia),
         columns: _crearColumna(),
-        source: DTS(pago: _crearLista(itemPago)),
+        source: DTS(pago: _crearLista(itemPago, tipoPage)),
         onRowsPerPageChanged: null,
         rowsPerPage: itemPago.pagos.length == 0 ? 1 : itemPago.pagos.length + 1,
         dataRowHeight: 25.0,
@@ -778,7 +958,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     );
   }
 
-  _crearLista(ItemModelPagos itemPago) {
+  _crearLista(ItemModelPagos itemPago, String tipoPage) {
     List<List<DataCell>> pagosList = [];
     if (itemPago.pagos.length > 0) {
       isPressed = true;
@@ -842,26 +1022,21 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             }
           }),
         ];
-        pagosList.add(pagosListTemp);
+        if (tipoPage == element.tipoPresupuesto) {
+          pagosList.add(pagosListTemp);
+        }
       });
-      List<DataCell> pagosLast = [
-        DataCell(
-          Center(),
-        ),
-        DataCell(
-          Center(),
-        ),
-        DataCell(
-          Center(),
-        ),
-        DataCell(
-          Center(),
-        ),
-        DataCell(
-          Center(),
-        ),
-      ];
-      pagosList.add(pagosLast);
+
+      if (pagosList.isEmpty) {
+        List<DataCell> pagosListNoData = [
+          DataCell(Text('Sin datos')),
+          DataCell(Text('Sin datos')),
+          DataCell(Text('Sin datos')),
+          DataCell(Text('Sin datos')),
+          DataCell(Text('Sin datos')),
+        ];
+        pagosList.add(pagosListNoData);
+      }
     } else {
       List<DataCell> pagosListNoData = [
         DataCell(Text('Sin datos')),
@@ -906,7 +1081,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   }
 
   _agregarPago() {
-    Navigator.pushNamed(context, '/addPagosForm');
+    Navigator.pushNamed(context, '/addPagosForm',
+            arguments: index == 0 ? 'I' : 'E')
+        .then((value) => {pagosBloc.add(SelectPagosEvent()), setState(() {})});
   }
 
   _editarPago(idConcepto) {
@@ -935,6 +1112,12 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           ),
           actions: <Widget>[
             TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
               child: const Text('Confirmar'),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -943,12 +1126,6 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   isPressed = false;
                 });
                 _mensaje('Pago borrado');
-              },
-            ),
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],

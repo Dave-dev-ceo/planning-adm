@@ -3,6 +3,7 @@
 import 'dart:typed_data';
 import 'dart:convert';
 
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/mesasAsignadas/mesasasignadas_bloc.dart';
 
 // * Comentar cuando se Utilice en movil
@@ -98,7 +99,7 @@ class _MesasPageState extends State<MesasPage> {
         builder: (context, state) {
           if (state is LoadingMesasAsignadasState) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingCustom(),
             );
           } else if (state is MostrarMesasAsignadasState) {
             if (state.listaMesasAsignadas != null &&
@@ -306,7 +307,7 @@ class _MesasPageState extends State<MesasPage> {
       builder: (context, state) {
         if (state is LoadingMesasState) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is MostrarMesasState) {
           if (state.listaMesas.isNotEmpty && state.listaMesas != null) {
@@ -329,7 +330,7 @@ class _MesasPageState extends State<MesasPage> {
             child: Center(child: Text(state.message)),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         }
       },
     );
@@ -530,7 +531,7 @@ class _MesasPageState extends State<MesasPage> {
                   if (state is LoadingInvitadoMesasState) {
                     return Align(
                       alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
+                      child: LoadingCustom(),
                     );
                   } else if (state is MostraListaInvitadosMesaState) {
                     state.listaInvitadoMesa.length > 0
@@ -553,7 +554,7 @@ class _MesasPageState extends State<MesasPage> {
                   } else {
                     return Align(
                       alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
+                      child: LoadingCustom(),
                     );
                   }
                 },
@@ -598,7 +599,7 @@ class _MesasPageState extends State<MesasPage> {
                 builder: (context, state) {
                   if (state is LoadingMesasState) {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: LoadingCustom(),
                     );
                   } else if (state is MostrarMesasState) {
                     if (state.listaMesas != null) {
@@ -667,7 +668,7 @@ class _MesasPageState extends State<MesasPage> {
                     builder: (context, state) {
                       if (state is LoadingMesasState) {
                         return Center(
-                          child: CircularProgressIndicator(),
+                          child: LoadingCustom(),
                         );
                       } else if (state is MostrarMesasState) {
                         if (state.listaMesas != null &&
@@ -720,33 +721,35 @@ class _MesasPageState extends State<MesasPage> {
           Column(
             children: [
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 5.0,
+                  minimumSize: Size(10.0, 8.0),
+                ),
                 onPressed: asignarMesas,
                 // child: Text('Regresar'),
                 child: Icon(Icons.arrow_back),
               ),
               SizedBox(
-                height: 10.0,
+                height: 4.0,
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(),
                 onPressed: _deleteAsignadoToMesa,
                 // child: Text('Asignar'),
                 child: Icon(Icons.arrow_forward),
               ),
-              Spacer(),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   elevation: 5.0,
+                  minimumSize: Size(10.0, 8.0),
                 ),
                 onPressed: _asignarAutoMesas,
                 child: Text('Asignar auto.'),
               ),
-              SizedBox(
-                height: 20.0,
-              )
             ],
           ),
           SizedBox(
-            width: 8.0,
+            width: 4.0,
           ),
           Expanded(
               child: Card(
@@ -760,7 +763,7 @@ class _MesasPageState extends State<MesasPage> {
                     if (state is LoadingInvitadoMesasState) {
                       return Align(
                         alignment: Alignment.center,
-                        child: CircularProgressIndicator(),
+                        child: LoadingCustom(),
                       );
                     } else if (state is MostraListaInvitadosMesaState) {
                       state.listaInvitadoMesa.length > 0
@@ -783,7 +786,7 @@ class _MesasPageState extends State<MesasPage> {
                     } else {
                       return Align(
                         alignment: Alignment.center,
-                        child: CircularProgressIndicator(),
+                        child: LoadingCustom(),
                       );
                     }
                   },
@@ -914,6 +917,10 @@ class _MesasPageState extends State<MesasPage> {
     Widget dropMenuSelectMesas = Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: DropdownButtonFormField(
+          style: TextStyle(
+            color: Colors.black,
+            overflow: TextOverflow.ellipsis,
+          ),
           decoration: InputDecoration(
               labelText: 'Mesas',
               border: OutlineInputBorder(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planning/src/animations/custom_page_router.dart';
 import 'package:planning/src/ui/autorizacion/galeria_autorizacion.dart';
 import 'package:planning/src/ui/contratos/add_contrato.dart';
 import 'package:planning/src/ui/contratos/view_contrato_pdf.dart';
@@ -44,177 +45,170 @@ class RouteGenerator {
     final ruta = Uri.parse(settings.name);
     switch (ruta.path) {
       case '/':
-        //return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
-        //return MaterialPageRoute(builder: (context) => Landing());
-        //return MaterialPageRoute(builder: (context) => HomeAdmin());
-        return MaterialPageRoute(builder: (context) => Login());
+        //return CustomPageRouter(child: ScannerQrInvitado());
+        //return CustomPageRouter(child: Landing());
+        //return CustomPageRouter(child: HomeAdmin());
+        return CustomPageRouter(child: Login());
       case '/homeAdmin':
-        return MaterialPageRoute(builder: (context) => HomeAdmin());
+        return CustomPageRouter(
+          child: HomeAdmin(),
+        );
       case '/home':
-        return MaterialPageRoute(
-            builder: (context) => Home(
-                  data: args,
-                ));
+        return CustomPageRouter(
+            child: Home(
+          data: args,
+        ));
       case '/dasboard':
-        return MaterialPageRoute(builder: (context) => DashboardEventos());
+        return CustomPageRouter(child: DashboardEventos());
       case '/eventos':
-        return MaterialPageRoute(
-            builder: (context) => Invitados(
-                  detalleEvento: args,
-                ));
+        return CustomPageRouter(
+            child: Invitados(
+          detalleEvento: args,
+        ));
 
       case '/lectorQr':
-        return MaterialPageRoute(builder: (context) => ScannerQrInvitado());
+        return CustomPageRouter(child: ScannerQrInvitado());
       case '/addInvitados':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAdd(
-                  id: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialogAdd(
+          id: args,
+        ));
       case '/addContrato':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddContrato());
+        return CustomPageRouter(child: FullScreenDialogAddContrato());
       case '/viewContrato':
-        return MaterialPageRoute(
-            builder: (context) => ViewPdfContrato(data: args));
+        return CustomPageRouter(child: ViewPdfContrato(data: args));
       case '/addMachote':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddMachote(
-                  dataMachote: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialogAddMachote(
+          dataMachote: args,
+        ));
       case '/editPlantilla':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogEditPlantilla(
-                  dataPlantilla: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialogEditPlantilla(
+          dataPlantilla: args,
+        ));
       case '/addPlanners':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddPlanners());
+        return CustomPageRouter(child: FullScreenDialogAddPlanners());
       case '/addEvento':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddEvento(
-                  prospecto: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialogAddEvento(
+          prospecto: args,
+        ));
       case '/editarEvento':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogEditEvento(
-                  evento: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialogEditEvento(
+          evento: args,
+        ));
       case '/addActividadesTiming':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddActividades(
-                  idTiming: args,
-                ));
+        return CustomPageRouter(
+          transicionRouter: TypeTransicionRouter.fadeRouterTransition,
+          child: FullScreenDialogAddActividades(
+            idTiming: args,
+          ),
+        );
       case '/addContactos':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialog(
-                  id: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialog(
+          id: args,
+        ));
       case '/addContratoPdf':
-        return MaterialPageRoute(
-            builder: (context) => ViewPdfContrato(
-                  data: args,
-                ));
+        return CustomPageRouter(
+            child: ViewPdfContrato(
+          data: args,
+        ));
       case '/editInvitado':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogEdit(
-                  idInvitado: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialogEdit(
+          idInvitado: args,
+        ));
       case '/reporteEvento':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogReporte(
-                  reporte: args,
-                ));
+        return CustomPageRouter(
+            child: FullScreenDialogReporte(
+          reporte: args,
+        ));
       case '/crearUsuario':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddUsuario(datos: args));
+        return CustomPageRouter(child: FullScreenDialogAddUsuario(datos: args));
       case '/editarUsuario':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddUsuario(datos: args));
+        return CustomPageRouter(child: FullScreenDialogAddUsuario(datos: args));
       case '/crearRol':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddRol(datos: args));
+        return CustomPageRouter(child: FullScreenDialogAddRol(datos: args));
       case '/editarRol':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogAddRol(datos: args));
+        return CustomPageRouter(child: FullScreenDialogAddRol(datos: args));
       case '/eventoCalendario':
-        return MaterialPageRoute(
-            builder: (context) => TableEventsExample(
-                  actividadesLista: args,
-                ));
+        return CustomPageRouter(
+            child: TableEventsExample(
+          actividadesLista: args,
+        ));
       case '/detalleListas':
-        return MaterialPageRoute(
-            builder: (context) =>
-                FullScreenDialogDetalleListasEvent(lista: args));
+        return CustomPageRouter(
+            child: FullScreenDialogDetalleListasEvent(lista: args));
       case '/agregarPlan':
-        return MaterialPageRoute(
-            builder: (context) => AgregarPlanes(lista: args));
+        return CustomPageRouter(child: AgregarPlanes(lista: args));
       case '/calendarPlan':
-        return MaterialPageRoute(
-            builder: (context) => CalendarioPlan(actividadesLista: args));
+        return CustomPageRouter(child: CalendarioPlan(actividadesLista: args));
       case '/agregarProveedores':
-        return MaterialPageRoute(
-            builder: (context) =>
-                FullScreenDialogAgregarProveedorEvent(proveedor: args));
+        return CustomPageRouter(
+            child: FullScreenDialogAgregarProveedorEvent(proveedor: args));
       case '/agregarArchivo':
-        return MaterialPageRoute(
-            builder: (context) =>
-                FullScreenDialogAgregarArchivoProvServEvent(provsrv: args));
+        return CustomPageRouter(
+            child: FullScreenDialogAgregarArchivoProvServEvent(provsrv: args));
       case '/viewArchivo':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogViewFileEvent(archivo: args));
+        return CustomPageRouter(
+            child: FullScreenDialogViewFileEvent(archivo: args));
       case '/galeriaEvidencia':
-        return MaterialPageRoute(
-            builder: (context) => GaleriaEvidencia(
-                  map: args,
-                ));
+        return CustomPageRouter(
+            child: GaleriaEvidencia(
+          map: args,
+        ));
       case '/perfil':
-        return MaterialPageRoute(builder: (context) => Perfil());
+        return CustomPageRouter(child: Perfil());
       case '/addContratos':
-        return MaterialPageRoute(builder: (context) => AddMachote(map: args));
+        return CustomPageRouter(child: AddMachote(map: args));
       case '/addPagosForm':
-        return MaterialPageRoute(builder: (context) => FormPago());
+        return CustomPageRouter(
+            child: FormPago(
+          tipoPresupuesto: args,
+        ));
       case '/editPagosForm':
-        return MaterialPageRoute(builder: (context) => FormEditPago(id: args));
+        return CustomPageRouter(child: FormEditPago(id: args));
       case '/verWeb':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenViewWEB(data: args));
+        return CustomPageRouter(child: FullScreenViewWEB(data: args));
       case '/editarContratos':
-        return MaterialPageRoute(
-            builder: (context) => FullScreenDialogEditContrato(data: args));
+        return CustomPageRouter(
+            child: FullScreenDialogEditContrato(data: args));
       case '/asignarMesas':
-        return MaterialPageRoute(
-            builder: (context) => CrearMesasDialog(
-                  lastnumMesas: args,
-                ));
+        return CustomPageRouter(
+            child: CrearMesasDialog(
+          lastnumMesas: args,
+        ));
       case '/perfilPlanner':
-        return MaterialPageRoute(builder: (context) => PerfilPlannerPage());
+        return CustomPageRouter(child: PerfilPlannerPage());
       case '/recoverPassword':
         final token = ruta.queryParameters['token'];
-        return MaterialPageRoute(
-            builder: (context) => RecoverPasswordPage(
-                  token: token,
-                ));
+        return CustomPageRouter(
+            child: RecoverPasswordPage(
+          token: token,
+        ));
       case '/dashboardInvolucrado':
-        return MaterialPageRoute(
-            builder: (context) => DashboardInvolucradoPage(
-                  detalleEvento: args,
-                ));
+        return CustomPageRouter(
+            child: DashboardInvolucradoPage(
+          detalleEvento: args,
+        ));
       default:
         return _errorRoute();
     }
   }
 
   static Route<dynamic> _errorRoute() {
-    return MaterialPageRoute(builder: (context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('ERROR'),
-          centerTitle: true,
-        ),
-        body: Center(
-          child: Text('La Página no funciona!'),
-        ),
-      );
-    });
+    return CustomPageRouter(
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text('ERROR'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text('La Página no funciona!'),
+      ),
+    ));
   }
 }

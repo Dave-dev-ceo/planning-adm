@@ -11,8 +11,6 @@ class ServiceBookInspiracionLogic {
   SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
   Client client = Client();
-  LayoutBookModel _layoutMesa;
-  List<LayoutBookModel> _layoutBookImages = [];
 
   final _layoutBookInspiracionStreamController =
       StreamController<List<LayoutBookModel>>.broadcast();

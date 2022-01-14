@@ -22,6 +22,8 @@ abstract class AddContratosLogic {
       int id, String archivo, String tipo_doc, String tipo_mime);
   Future<String> updateValContratos(Map<String, dynamic> data);
   Future<String> fetchValContratos(String _machote);
+  Future<String> obtenerContratoById(Map<String, dynamic> data);
+  Future<String> obtenerContratoSubidoById(Map<String, dynamic> data);
 }
 
 class ConsultasAddContratosLogic extends AddContratosLogic {
@@ -287,6 +289,67 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
       return data['data'].toString();
     } else if (response.statusCode == 401) {
       throw TokenException();
+    }
+  }
+
+  @override
+  Future<String> obtenerContratoById(Map<String, dynamic> data) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
+    String token = await _sharedPreferences.getToken();
+
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ADDCONTRATOS/obtenerContratoById'),
+        body: {
+          'id_contrato': data['id_contrato'].toString(),
+          'id_planner': data['id_planner'].toString(),
+          'id_evento': data['id_evento'].toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return data['data'][0]['original'];
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<String> obtenerContratoSubidoById(Map<String, dynamic> data) async {
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    data['id_planner'] = idPlanner.toString();
+    data['id_evento'] = idEvento.toString();
+    String token = await _sharedPreferences.getToken();
+    final response = await client.post(
+        Uri.parse(confiC.url +
+            confiC.puerto +
+            '/wedding/ADDCONTRATOS/obtenerContratoById'),
+        body: {
+          'id_contrato': data['id_contrato'].toString(),
+          'id_planner': data['id_planner'].toString(),
+          'id_evento': data['id_evento'].toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: token
+        });
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      await _sharedPreferences.setToken(data['token']);
+      return data['data'][0]['archivo'];
+    } else if (response.statusCode == 401) {
+      throw TokenException();
+    } else {
+      throw Exception();
     }
   }
 }

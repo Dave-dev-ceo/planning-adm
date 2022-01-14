@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/asistencia_logic.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/utils/utils.dart';
@@ -57,10 +58,14 @@ class _AsistenciaState extends State<Asistencia> {
           builder: (context, state) {
             // state Iniciando
             if (state is AsistenciaInitialState)
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingCustom(),
+              );
             // state Loading
             else if (state is LodingAsistenciaState)
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingCustom(),
+              );
             // state Data
             else if (state is MostrarAsistenciaState) {
               // buscador en header
@@ -73,7 +78,9 @@ class _AsistenciaState extends State<Asistencia> {
                 }
               } else {
                 asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: LoadingCustom(),
+                );
               }
               if (copyItemFinal != null) {
                 return getAsistencia(copyItemFinal);

@@ -31,6 +31,7 @@ class _Contratos {
   String _clavePlantilla;
   String _tipoDoc;
   String _tipoMime;
+  String _tipoMimeOriginal;
 
   // constructor
   _Contratos(consulta) {
@@ -43,6 +44,7 @@ class _Contratos {
     _clavePlantilla = consulta['clave_plantilla'];
     _tipoDoc = consulta['tipo_doc'];
     _tipoMime = consulta['tipo_mime'];
+    _tipoMimeOriginal = consulta['tipo_mime_original'];
   }
 
   // ini getters
@@ -55,6 +57,7 @@ class _Contratos {
   String get clavePlantilla => this._clavePlantilla;
   String get tipo_doc => this._tipoDoc;
   String get tipo_mime => this._tipoMime;
+  String get tipo_mime_original => this._tipoMimeOriginal;
 
   // ini setters
   set idMachote(value) => this._idMachote;
@@ -66,4 +69,5 @@ class _Contratos {
   set clavePlantilla(value) => this._clavePlantilla;
   set tipo_doc(value) => this._tipoDoc;
   set tipo_mime(value) => this._tipoMime;
+  set tipo_mime_original(value) => this._tipoMimeOriginal;
 }

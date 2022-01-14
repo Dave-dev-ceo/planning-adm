@@ -1,3 +1,4 @@
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );*/
   }
@@ -175,8 +176,11 @@ class _DashboardEventosState extends State<DashboardEventos> {
           },
           child: BlocBuilder<EventosBloc, EventosState>(
             builder: (context, state) {
+              if (state is EventosInitial) {
+                return Center(child: LoadingCustom());
+              }
               if (state is LoadingEventosState) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               } else if (state is MostrarEventosState) {
                 eventos = state.eventos;
                 return Container(
@@ -215,7 +219,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
                     child: buildList(eventos),
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingCustom());
                 }
               }
             },

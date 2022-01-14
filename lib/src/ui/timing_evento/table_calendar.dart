@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 // imports from wedding
@@ -71,9 +72,9 @@ class _TableEventsExampleState extends State<TableEventsExample> {
       return BlocBuilder<ComentariosactividadesBloc,
           ComentariosactividadesState>(builder: (context, state) {
         if (state is ComentarioInitialState) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is LodingComentarioState) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is SelectComentarioState) {
           // buscador en header
           if (state.comentario != null) {
@@ -86,7 +87,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
             }
           } else {
             eventoComentario.add(SelectComentarioPorIdEvent());
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           }
           if (copyItemModel != null) {
             return _consulta(copyItemModel, actividades);

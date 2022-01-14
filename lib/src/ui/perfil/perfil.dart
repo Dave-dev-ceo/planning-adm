@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/logic/login_logic.dart';
@@ -78,11 +79,11 @@ class _PerfilState extends State<Perfil> {
             builder: (context, state) {
               if (state is PerfilInitial) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingCustom(),
                 );
               } else if (state is PerfilLogging) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingCustom(),
                 );
               } else if (state is PerfilSelect) {
                 if (state.perfil != null) {
@@ -101,7 +102,7 @@ class _PerfilState extends State<Perfil> {
                   }
                 } else {
                   perfilBloc.add(SelectPerfilEvent());
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingCustom());
                 }
                 if (perfil != null) {
                   return _showPerfil();
@@ -122,7 +123,7 @@ class _PerfilState extends State<Perfil> {
                 return _showPerfil();
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingCustom(),
                 );
               }
             },

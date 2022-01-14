@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/roles/roles_bloc.dart';
 import 'package:planning/src/models/model_roles.dart';
 
@@ -36,9 +37,9 @@ class _RolesState extends State<Roles> {
       body: BlocBuilder<RolesBloc, RolesState>(
         builder: (context, state) {
           if (state is RolesInitial) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is LoadingRolesPlanner) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is MostrarRolesPlanner) {
             if (state.roles != null) {
               if (itemModelRoles != state.roles) {
@@ -51,7 +52,7 @@ class _RolesState extends State<Roles> {
             } else {
               crt = true;
               rolesBloc.add(ObtenerRolesPlannerEvent());
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             }
             if (filterRoles.roles != null) {
               return buildList(filterRoles);
