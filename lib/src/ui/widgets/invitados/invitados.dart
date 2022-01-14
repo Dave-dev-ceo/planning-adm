@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
@@ -33,6 +34,8 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   ItemModelPerfil permisoPantallas;
   bool isInvolucrado = false;
   TabController _tabController;
+  bool _tapped = false;
+  Size size;
 
   _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
@@ -58,6 +61,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Container(
       width: double.infinity,
       child: BlocBuilder<PermisosBloc, PermisosState>(
@@ -94,8 +98,9 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
             _tabController = TabController(length: _pages, vsync: this);
 
             _tabController.addListener(() {
-              print(_tabController.index);
-              if (_tabController.index == 5) {
+              if (_tabController.index == 5 &&
+                  ((!_tapped && !_tabController.indexIsChanging) ||
+                      _tabController.indexIsChanging)) {
                 showDialog(
                     context: context,
                     builder: (context) => ListaInvitados(
@@ -107,9 +112,10 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                           WP_EVT_INV_ENV: permisoPantallas.pantallas
                               .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
                           nameEvento: widget.detalleEvento['nEvento'],
-                        )).then((value) =>
-                    _tabController.index = _tabController.previousIndex);
+                        )).then(
+                    (_) => _tabController.index = _tabController.previousIndex);
               }
+              _tapped = false;
             });
             return crearPantallas(context, tabs, pantallas);
           } else if (state is ErrorPermisos) {
@@ -129,54 +135,89 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         leading: (!isInvolucrado)
-            ? IconButton(
-                tooltip: 'Inicio',
-                icon: Icon(Icons.home),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
+            ? (size.width > 500)
+                ? IconButton(
+                    tooltip: 'Inicio',
+                    icon: Icon(Icons.home),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                : GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Tooltip(
+                      message: 'Inicio',
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Image.asset(
+                          'assets/new_logo.png',
+                          height: 100.0,
+                          width: 250.0,
+                        ),
+                      ),
+                    ),
+                  )
             : null,
         automaticallyImplyLeading: widget.detalleEvento['boton'],
         title: Center(
-          child: Row(
-            children: [
-              Flexible(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'CONFIGURACIÓN EVENTO',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12.0),
+          child: (size.width > 500)
+              ? Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'CONFIGURACIÓN EVENTO',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 12.0),
+                            ),
+                            Text(
+                              '${widget.detalleEvento['nEvento']}',
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        '${widget.detalleEvento['nEvento']}',
-                        style: TextStyle(fontSize: 12.0),
+                    ),
+                    SizedBox(
+                      width: 100.0,
+                    ),
+                    Flexible(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: FittedBox(
+                            child: Image.asset(
+                          'assets/new_logo.png',
+                          height: 100.0,
+                          width: 250.0,
+                        )),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'CONFIGURACIÓN EVENTO',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12.0),
+                    ),
+                    AutoSizeText(
+                      '${widget.detalleEvento['nEvento']}',
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      // '${widget.detalleEvento['nEvento']}',
+                      style: TextStyle(fontSize: 10.0),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(
-                width: 100.0,
-              ),
-              Flexible(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: FittedBox(
-                      child: Image.asset(
-                    'assets/new_logo.png',
-                    height: 100.0,
-                    width: 250.0,
-                  )),
-                ),
-              ),
-            ],
-          ),
         ),
-        toolbarHeight: 150.0,
+        toolbarHeight: (size.width > 500) ? 150.0 : 80,
         backgroundColor: hexToColor('#fdf4e5'),
         actions: <Widget>[
           Container(
@@ -217,24 +258,9 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         ],
         bottom: TabBar(
           controller: _tabController,
-          // onTap: (int index) {
-          //   if (index == 5) {
-          //     _tabController.index = _tabController.previousIndex;
-
-          //     showDialog(
-          //         context: context,
-          //         builder: (context) => ListaInvitados(
-          //               idEvento: detalleEvento['idEvento'],
-          //               WP_EVT_INV_CRT: permisoPantallas.pantallas
-          //                   .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-          //               WP_EVT_INV_EDT: permisoPantallas.pantallas
-          //                   .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-          //               WP_EVT_INV_ENV: permisoPantallas.pantallas
-          //                   .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-          //               nameEvento: widget.detalleEvento['nEvento'],
-          //             ));
-          //   }
-          // },
+          onTap: (int index) {
+            _tapped = true;
+          },
           indicatorColor: Colors.black,
           isScrollable: true,
           tabs: pantallasTabs,
@@ -338,7 +364,9 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
       //  temp.add(AutorizacionLista());
       //}
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
-        temp.add(Container());
+        temp.add(Center(
+          child: LoadingCustom(),
+        ));
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {

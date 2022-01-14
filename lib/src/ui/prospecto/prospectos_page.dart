@@ -7,6 +7,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class ProspectosPage extends StatefulWidget {
   @override
@@ -32,10 +33,13 @@ class _ProspectosPageState extends State<ProspectosPage> {
         listener: (context, state) {
           if (state is AddedEtapaState) {
             if (state.wasAdded) {
-              _showSnackBar(
-                  'Se añadio correctamente un nueva etapa', Colors.green);
+              MostrarAlerta(
+                  mensaje: 'Se añadio correctamente un nueva etapa',
+                  tipoMensaje: TipoMensaje.correcto);
             } else {
-              _showSnackBar('Ocurrio un error', Colors.red);
+              MostrarAlerta(
+                  mensaje: 'Ocurrio un error al intentar crear una etapa',
+                  tipoMensaje: TipoMensaje.error);
             }
           }
         },
@@ -262,14 +266,6 @@ class _ProspectosPageState extends State<ProspectosPage> {
     );
   }
 
-  void _showSnackBar(String content, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(content),
-      backgroundColor: color,
-      duration: Duration(seconds: 2),
-    ));
-  }
-
   void _openDetailProspecto(
       ProspectoModel prospecto, String nameEtapa, String claveEtapa) {
     showDialog(
@@ -294,11 +290,14 @@ class _ProspectosPageState extends State<ProspectosPage> {
             listener: (context, state) {
               if (state is AddedEtapaState) {
                 if (state.wasAdded) {
-                  _showSnackBar(
-                      'Se añadio correctamente la etapa', Colors.green);
+                  MostrarAlerta(
+                      mensaje: 'Se añadio correctamente la etapa',
+                      tipoMensaje: TipoMensaje.correcto);
                   Navigator.of(context).pop();
                 } else {
-                  _showSnackBar('Ocurrio un erro', Colors.red);
+                  MostrarAlerta(
+                      mensaje: 'Ocurrio un error',
+                      tipoMensaje: TipoMensaje.error);
                 }
               }
             },

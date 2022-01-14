@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/ui/planes/planes.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 // imports from wedding
@@ -413,9 +414,8 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
   // v9
   Future<void> _mensajeComentario(Actividad actividad) async {
     _caomentariosEvents(actividad);
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("Comentario guardado..."),
-    ));
+    MostrarAlerta(
+        mensaje: "Comentario guardado...", tipoMensaje: TipoMensaje.correcto);
   }
 
   // crear&actualizar

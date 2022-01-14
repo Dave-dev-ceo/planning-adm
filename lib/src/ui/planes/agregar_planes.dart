@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 // blocs
@@ -385,13 +386,6 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       );
   }
 
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
-
   /* seccion de evento */
 
   // creamos lista con las tareas & actividades que van al evento
@@ -436,9 +430,12 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
       _planesBloc.add(GetTimingsAndActivitiesEvent());
       Navigator.pop(context);
-      _mensaje('Planes agregados.');
+      MostrarAlerta(
+          mensaje: 'Planes agregados.', tipoMensaje: TipoMensaje.correcto);
     } else
-      _mensaje('Agrege un plan por favor...');
+      MostrarAlerta(
+          mensaje: 'Agrege un plan por favor...',
+          tipoMensaje: TipoMensaje.advertencia);
   }
 
   //  creamos lista con las tareas & actividades que van al evento sin repetir || revisar en el metodo anterior se puede hacer esto
@@ -483,9 +480,12 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
       _planesBloc.add(GetTimingsAndActivitiesEvent());
       Navigator.pop(context);
-      _mensaje('Planes agregados.');
+      MostrarAlerta(
+          mensaje: 'Planes agregados.', tipoMensaje: TipoMensaje.correcto);
     } else
-      _mensaje('Agrege un plan por favor...');
+      MostrarAlerta(
+          mensaje: 'Agrege un plan por favor...',
+          tipoMensaje: TipoMensaje.advertencia);
   }
 }
 

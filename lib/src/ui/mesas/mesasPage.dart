@@ -16,6 +16,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -195,11 +196,15 @@ class _MesasPageState extends State<MesasPage> {
                         setState(() {
                           mesasAsignadasService.getLayoutMesa();
                         }),
-                        _mostrarMensaje(
-                            'Se subio correctamente el layout', Colors.green)
+                        MostrarAlerta(
+                            mensaje: 'Se subio correctamente el layout',
+                            tipoMensaje: TipoMensaje.correcto)
                       }
                     else
-                      {_mostrarMensaje(value, Colors.red)}
+                      {
+                        MostrarAlerta(
+                            mensaje: value, tipoMensaje: TipoMensaje.error)
+                      }
                   });
             } else {}
           },
@@ -247,7 +252,9 @@ class _MesasPageState extends State<MesasPage> {
                 downloadFile(datosMesas, 'Mesas Asignadas');
               }
             } else {
-              _mostrarMensaje('No se encontraron datos', Colors.red);
+              MostrarAlerta(
+                  mensaje: 'No se encontraron datos',
+                  tipoMensaje: TipoMensaje.advertencia);
             }
           },
         ),
@@ -484,11 +491,15 @@ class _MesasPageState extends State<MesasPage> {
                         await BlocProvider.of<InvitadosMesasBloc>(context)
                             .add(MostrarInvitadosMesasEvent());
 
-                        _mostrarMensaje(
-                            'La mesa se elimino correctamente', Colors.green);
+                        MostrarAlerta(
+                            mensaje: 'La mesa se elimino correctamente',
+                            tipoMensaje: TipoMensaje.correcto);
                         Navigator.of(context).pop();
                       } else {
-                        _mostrarMensaje(data, Colors.red);
+                        MostrarAlerta(
+                            mensaje:
+                                'Ocurrio un error al intentar eliminar la mesa',
+                            tipoMensaje: TipoMensaje.error);
                       }
                     },
                     child: Text('Aceptar'))
@@ -802,15 +813,17 @@ class _MesasPageState extends State<MesasPage> {
   _deleteAsignadoToMesa() async {
     if (mesaModelData != null) {
       if (listAsigandosToDelete.isEmpty) {
-        _mostrarMensaje(
-          'Seleccione alguna opcion de la lista',
-          Colors.red,
+        MostrarAlerta(
+          mensaje: 'Seleccione alguna opcion de la lista',
+          tipoMensaje: TipoMensaje.advertencia,
         );
       } else {
         final data = await mesasAsignadasService
             .deleteAsignadoFromMesa(listAsigandosToDelete);
         if (data == 'Ok') {
-          _mostrarMensaje('Se agrego correctamente', Colors.green);
+          MostrarAlerta(
+              mensaje: 'Se agrego correctamente',
+              tipoMensaje: TipoMensaje.correcto);
           await invitadosBloc.add(MostrarInvitadosMesasEvent());
 
           await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
@@ -841,11 +854,14 @@ class _MesasPageState extends State<MesasPage> {
           BlocProvider.of<MesasAsignadasBloc>(context)
               .add(GetMesasAsignadasEvent());
         } else {
-          _mostrarMensaje('Ocurrio un error', Colors.red);
+          MostrarAlerta(
+              mensaje: 'Ocurrio un error al intentar desasignar al invitado',
+              tipoMensaje: TipoMensaje.error);
         }
       }
     } else {
-      _mostrarMensaje('Seleccione un mesa', Colors.red);
+      MostrarAlerta(
+          mensaje: 'Seleccione un mesa', tipoMensaje: TipoMensaje.advertencia);
     }
   }
 
@@ -866,14 +882,16 @@ class _MesasPageState extends State<MesasPage> {
     }
 
     if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
-      _mostrarMensaje(
-          'Seleccione la mesa y los invitados ha asignar', Colors.red);
+      MostrarAlerta(
+          mensaje: 'Seleccione la mesa y los invitados ha asignar',
+          tipoMensaje: TipoMensaje.advertencia);
     } else {
       if (listToAsignarForAdd.length >
           (mesaModelData.dimension - listTemp.length)) {
-        _mostrarMensaje(
-            'El número de invitados es mayor al numero de sillas disponibles',
-            Colors.red);
+        MostrarAlerta(
+            mensaje:
+                'El número de invitados es mayor al numero de sillas disponibles',
+            tipoMensaje: TipoMensaje.advertencia);
       } else {
         for (var i = 0; i < listToAsignarForAdd.length; i++) {
           listToAsignarForAdd[i].posicion = listPosicionDisponible[i];
@@ -900,14 +918,16 @@ class _MesasPageState extends State<MesasPage> {
             });
           });
 
-          _mostrarMensaje('Se agrego correctamente', Colors.green);
+          MostrarAlerta(
+              mensaje: 'Se agrego correctamente',
+              tipoMensaje: TipoMensaje.correcto);
           setState(() {
             listToAsignarForAdd.clear();
           });
           BlocProvider.of<MesasAsignadasBloc>(context)
               .add(GetMesasAsignadasEvent());
         } else {
-          _mostrarMensaje(data, Colors.red);
+          MostrarAlerta(mensaje: data, tipoMensaje: TipoMensaje.error);
         }
       }
     }
@@ -1148,12 +1168,14 @@ class _MesasPageState extends State<MesasPage> {
             });
           });
 
-          _mostrarMensaje('Se agrego correctamente', Colors.green);
+          MostrarAlerta(
+              mensaje: 'Se agrego correctamente',
+              tipoMensaje: TipoMensaje.correcto);
           setState(() {
             listToAsignarForAdd.clear();
           });
         } else {
-          _mostrarMensaje(data, Colors.red);
+          MostrarAlerta(mensaje: data, tipoMensaje: TipoMensaje.error);
         }
       }
     }
@@ -1228,14 +1250,6 @@ class _MesasPageState extends State<MesasPage> {
       );
     }
   }
-
-  _mostrarMensaje(String msj, Color color) {
-    SnackBar snackBar = SnackBar(
-      content: Text(msj),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
 }
 
 class EditMesaDialog extends StatefulWidget {
@@ -1267,9 +1281,12 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
           if (state is MesasEditedState) {
             if (state.wasEdited) {
               Navigator.of(context).pop();
-              _mostrarMensaje('Mesa editada', Colors.green);
+              MostrarAlerta(
+                  mensaje: 'Mesa editada', tipoMensaje: TipoMensaje.correcto);
             } else {
-              _mostrarMensaje('Ocurrio un error', Colors.red);
+              MostrarAlerta(
+                  mensaje: 'Ocurrio un error al interntar editar la mesa',
+                  tipoMensaje: TipoMensaje.error);
             }
           }
         },
@@ -1334,19 +1351,13 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
                 BlocProvider.of<MesasBloc>(context)
                     .add(EditMesaEvent(widget.mesaModel));
               } else {
-                _mostrarMensaje('Los campos son necesarios', Colors.red);
+                MostrarAlerta(
+                    mensaje: 'Los campos son necesarios',
+                    tipoMensaje: TipoMensaje.advertencia);
               }
             },
             child: Text('Aceptar'))
       ],
     );
-  }
-
-  _mostrarMensaje(String msj, Color color) {
-    SnackBar snackBar = SnackBar(
-      content: Text(msj),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

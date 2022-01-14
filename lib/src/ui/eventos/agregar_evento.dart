@@ -10,6 +10,7 @@ import 'package:planning/src/models/item_model_eventos.dart';
 import 'package:planning/src/models/item_model_tipo_evento.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class AgregarEvento extends StatefulWidget {
   final ProspectoModel prospecto;
@@ -106,34 +107,16 @@ class _AgregarEventoState extends State<AgregarEvento> {
                   .add(EventoFromProspectoEvent(widget.prospecto.idProspecto));
             }
             Navigator.pop(_ingresando);
-            // final snackBar = SnackBar(
-            //   content: Container(
-            //     height: 30,
-            //     child: Center(
-            //       child: Text('Evento agregardo'),
-            //     ),
-            //     //color: Colors.red,
-            //   ),
-            //   backgroundColor: Colors.green,
-            // );
-            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Evento agregado'),
-            ));
+
+            MostrarAlerta(
+                mensaje: 'Evento agregado', tipoMensaje: TipoMensaje.error);
+
             _clearController();
           } else if (state is ErrorCreateEventosState) {
             Navigator.pop(_ingresando);
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Error al crear evento'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.red,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            MostrarAlerta(
+                mensaje: 'Error al crear evento.',
+                tipoMensaje: TipoMensaje.error);
           }
         },
         child: Container(

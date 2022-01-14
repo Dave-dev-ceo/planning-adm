@@ -12,6 +12,7 @@ import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
 // model
 import 'package:planning/src/models/item_model_autorizacion.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class GaleriaEvidencia extends StatefulWidget {
   final Map map;
@@ -62,9 +63,9 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
               if (!isInvolucrado) {
                 _addImage(widget.map['id']);
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Permisos Insuficientes.')),
-                );
+                MostrarAlerta(
+                    mensaje: 'Permisos Insuficientes.',
+                    tipoMensaje: TipoMensaje.advertencia);
               }
             }),
       ),
@@ -223,13 +224,6 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
     return temp;
   }
 
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
-
   /** EVENTOS **/
 
   // add image
@@ -256,14 +250,16 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
     if (temp.length > 0) {
       mapTemp = {'id_autorizacion': widget.map['id'], 'lista': temp};
       autorizacionBloc.add(CrearImagenEvent(mapTemp));
-      _mensaje('Imagen agregada.');
+      MostrarAlerta(
+          mensaje: 'Imagen agregada.', tipoMensaje: TipoMensaje.correcto);
     }
   }
 
   // delete image
   _borrarImage(int idEvidencia) {
     autorizacionBloc.add(DeleteEvidenciaEvent(idEvidencia, widget.map['id']));
-    _mensaje('Imagen borrada.');
+    MostrarAlerta(
+        mensaje: 'Imagen borrada.', tipoMensaje: TipoMensaje.correcto);
   }
 
   List<Evidencia> _copyModel(ItemModelAutorizacion item) {

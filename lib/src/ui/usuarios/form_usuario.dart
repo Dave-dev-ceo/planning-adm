@@ -8,6 +8,7 @@ import 'package:planning/src/blocs/usuarios/usuario/usuario_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_usuarios.dart';
 import 'package:planning/src/models/model_roles.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormUsuario extends StatefulWidget {
   final Map<String, dynamic> datos;
@@ -278,9 +279,10 @@ class _FormUsuarioState extends State<FormUsuario> {
           usuarioBloc.add(EditarUsuarioEvent(jsonUsuario));
         }
       } else {
-        ScaffoldMessenger.of(contextSB).showSnackBar(SnackBar(
-            content: Text(
-                'Seleccione un rol para poder ${datos['accion'] == 0 ? 'agregar' : 'editar'} usuario')));
+        MostrarAlerta(
+            mensaje:
+                'Seleccione un rol para poder ${datos['accion'] == 0 ? 'agregar' : 'editar'} usuario',
+            tipoMensaje: TipoMensaje.advertencia);
       }
     }
   }

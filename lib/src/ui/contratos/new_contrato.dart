@@ -387,7 +387,7 @@ class New_ContratoState extends State<NewContrato> {
               children: [
                 TextButton.icon(
                   icon: Icon(Icons.cloud_download_outlined),
-                  label: Text('Descargar archivo'),
+                  label: Text('Descargar'),
                   onPressed: () => _crearPDF(
                       contrato.idMachote,
                       contrato.idContrato,
@@ -405,7 +405,7 @@ class New_ContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                         icon: Icon(Icons.cloud_upload_outlined),
-                        label: Text('Subir archivo'),
+                        label: Text('Subir firmado'),
                         onPressed: () => _uploadFile(contrato.idContrato),
                       )
                     ],
@@ -419,7 +419,7 @@ class New_ContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                         icon: Icon(Icons.remove_red_eye_rounded),
-                        label: Text('Ver archivo subido'),
+                        label: Text('Ver firmado'),
                         onPressed: () => _verNewFile(contrato.idContrato,
                             contrato.tipo_mime_original, contrato.tipo_doc),
                       )
@@ -525,7 +525,7 @@ class New_ContratoState extends State<NewContrato> {
                 children: [
                   TextButton.icon(
                     icon: Icon(Icons.cloud_download_outlined),
-                    label: Text('Descargar archivo'),
+                    label: Text('Descargar'),
                     onPressed: () => _crearPDF(
                         contrato.idMachote,
                         contrato.idContrato,
@@ -535,50 +535,47 @@ class New_ContratoState extends State<NewContrato> {
                   )
                 ],
               ),
-              !isInvolucrado
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextButton.icon(
-                          icon: Icon(Icons.cloud_upload_outlined),
-                          label: Text('Subir archivo'),
-                          onPressed: () => _uploadFile(contrato.idContrato),
-                        )
-                      ],
+              if (!isInvolucrado)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                      icon: Icon(Icons.cloud_upload_outlined),
+                      label: Text('Subir firmado'),
+                      onPressed: () => _uploadFile(contrato.idContrato),
                     )
-                  : Text(''),
-              contrato.valida
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextButton.icon(
-                          icon: Icon(Icons.remove_red_eye_rounded),
-                          label: Text('Ver archivo subido'),
-                          onPressed: () => _verNewFile(contrato.idContrato,
-                              contrato.tipo_mime_original, contrato.tipo_doc),
-                        )
-                      ],
+                  ],
+                ),
+              if (contrato.valida)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                      icon: Icon(Icons.remove_red_eye_rounded),
+                      label: Text('Ver firmado'),
+                      onPressed: () => _verNewFile(contrato.idContrato,
+                          contrato.tipo_mime_original, contrato.tipo_doc),
                     )
-                  : SizedBox(),
-              contrato.valida
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextButton.icon(
-                            icon: Icon(Icons.cloud_download_outlined),
-                            label: Text(
-                              'Descargar archivo firmado',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            onPressed: () => {
-                                  _descargaArchivoSubido(
-                                      contrato.idContrato,
-                                      contrato.tipo_mime_original,
-                                      contrato.description)
-                                }),
-                      ],
-                    )
-                  : SizedBox(),
+                  ],
+                ),
+              if (contrato.valida)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                        icon: Icon(Icons.cloud_download_outlined),
+                        label: Text(
+                          'Descargar firmado',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onPressed: () => {
+                              _descargaArchivoSubido(
+                                  contrato.idContrato,
+                                  contrato.tipo_mime_original,
+                                  contrato.description)
+                            }),
+                  ],
+                ),
             ],
           ),
         )
@@ -741,9 +738,9 @@ class New_ContratoState extends State<NewContrato> {
     temp.add(SpeedDialChild(
         child: Tooltip(
           child: Icon(Icons.upload_file),
-          message: 'Subir archivo',
+          message: 'Subir firmado',
         ),
-        label: 'Subir archivo',
+        label: 'Subir firmado',
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         onTap: _eventoUploadFile));
@@ -790,7 +787,7 @@ class New_ContratoState extends State<NewContrato> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Subir Archivo', textAlign: TextAlign.center),
+          title: Text('Subir firmado', textAlign: TextAlign.center),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Form(

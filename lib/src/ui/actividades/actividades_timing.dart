@@ -4,6 +4,7 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
 class AgregarActividades extends StatefulWidget {
@@ -645,10 +646,9 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
             listener: (context, state) {
               if (state is EditedActividadEvent) {
                 if (state.isOk) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Se ha editado correctamente la actividad'),
-                    backgroundColor: Colors.green,
-                  ));
+                  MostrarAlerta(
+                      mensaje: 'Se ha editado correctamente la actividad',
+                      tipoMensaje: TipoMensaje.correcto);
                   Navigator.of(context).pop();
                 }
               }

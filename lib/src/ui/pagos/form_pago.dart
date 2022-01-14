@@ -4,6 +4,7 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
 import 'package:flutter/services.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormPago extends StatefulWidget {
   final String tipoPresupuesto;
@@ -247,18 +248,17 @@ class _FormPagoState extends State<FormPago> {
         itemPago['cantidad'] == '' ||
         itemPago['concepto'] == '' ||
         itemPago['precio'] == '') {
-      _mensaje('Todos los campos son obligatorios.');
+      MostrarAlerta(
+          mensaje: 'Todos los campos son obligatorios.',
+          tipoMensaje: TipoMensaje.error);
     } else {
       itemPago['tipoPresupuesto'] = widget.tipoPresupuesto;
       pagosBloc.add(CrearPagosEvent(itemPago));
-      _mensaje('Pago agregado');
+      MostrarAlerta(
+          mensaje: 'Pago agregado', tipoMensaje: TipoMensaje.correcto);
     }
   }
 
   // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
+
 }

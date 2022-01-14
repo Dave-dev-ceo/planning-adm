@@ -44,6 +44,9 @@ class _DialogAlertState extends State<DialogAlert> {
   _DialogAlertState({@required this.dataInfo});
   @override
   Widget build(BuildContext context) {
+    lista.forEach((element) {
+      print(element);
+    });
     return AlertDialog(
       scrollable: false,
       title: Center(child: Text('Datos de invitado')),
@@ -98,6 +101,11 @@ class _DialogAlertState extends State<DialogAlert> {
                           : 'Sin teléfono'))),
               padding: EdgeInsets.all(10),
             ),
+            if (lista.elementAt(7) != null)
+              Padding(
+                child: Center(child: Text('Invitados: ' + lista.elementAt(7))),
+                padding: EdgeInsets.all(10),
+              ),
           ],
         ),
       ),

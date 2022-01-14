@@ -6,6 +6,7 @@ import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:planning/src/models/item_model_etiquetas.dart';
 import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class FullScreenDialogEditContrato extends StatefulWidget {
@@ -135,8 +136,9 @@ class _FullScreenDialogEditContratoState
               };
               contratosBlocDos.add(UpdateValContratoEvent(dataJson));
               Navigator.of(context).pop();
-              _mostrarMensaje(
-                  'El contrato se actualizó corractamente.', Colors.green);
+              MostrarAlerta(
+                  mensaje: 'El contrato se actualizó correctamente.',
+                  tipoMensaje: TipoMensaje.correcto);
             },
           ),
         ));
@@ -168,13 +170,5 @@ class _FullScreenDialogEditContratoState
         },
       ),
     );
-  }
-
-  _mostrarMensaje(String msj, Color color) {
-    SnackBar snackBar = SnackBar(
-      content: Text(msj),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
