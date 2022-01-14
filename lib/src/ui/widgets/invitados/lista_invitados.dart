@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
@@ -178,44 +179,20 @@ class _ListaInvitadosState extends State<ListaInvitados>
             bandera = response == true ? true : false;
           }
         } else {
-          final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-                child: Text('Estructura del excel es incorrecta.'),
-              ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.red,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          MostrarAlerta(
+              mensaje: 'Estructura del excel es incorrecta.',
+              tipoMensaje: TipoMensaje.error);
         }
       }
       if (bandera) {
         blocInvitados.fetchAllInvitados(context);
-        final snackBar = SnackBar(
-          content: Container(
-            height: 30,
-            child: Center(
-              child: Text('Se importó el archivo con éxito.'),
-            ),
-            //color: Colors.red,
-          ),
-          backgroundColor: Colors.green,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        MostrarAlerta(
+            mensaje: 'Se importó el archivo con éxito.',
+            tipoMensaje: TipoMensaje.correcto);
       } else {
-        final snackBar = SnackBar(
-          content: Container(
-            height: 30,
-            child: Center(
-              child: Text('Error: No se pudo realizar el registro.'),
-            ),
-            //color: Colors.red,
-          ),
-          backgroundColor: Colors.orange,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        MostrarAlerta(
+            mensaje: 'Error: No se pudo realizar el registro.',
+            tipoMensaje: TipoMensaje.advertencia);
       }
     } else {
       print('El file is null');
@@ -370,17 +347,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
           Map<String, dynamic> response =
               await api.enviarInvitacionesPorEvento();
           Navigator.pop(_dialogContext);
-          SnackBar sb = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-                child: Text(response['msg']),
-              ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.green,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(sb);
+          MostrarAlerta(
+              mensaje: response['msg'], tipoMensaje: TipoMensaje.correcto);
         },
       ));
     }
@@ -603,19 +571,6 @@ class _DataSource extends DataTableSource {
     }
     _cont = cont;
   }
-  _msgSnackBar(String error, Color color) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(error),
-        ),
-        //color: Colors.red,
-      ),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
-  }
 
   Future<void> _showMyDialogLlamada(String numero) async {
     return showDialog<void>(
@@ -756,7 +711,9 @@ class _DataSource extends DataTableSource {
               idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
           .listaInvitados(_cont);
     } else {
-      _msgSnackBar("Error al actualizar el estatus", Colors.red);
+      MostrarAlerta(
+          mensaje: 'Error al actualizar el estatus.',
+          tipoMensaje: TipoMensaje.error);
     }
   }
 
@@ -927,7 +884,9 @@ class _DataSource extends DataTableSource {
               idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
           .listaInvitados(_cont);
     } else {
-      _msgSnackBar("Error al actualizar el grupo", Colors.red);
+      MostrarAlerta(
+          mensaje: 'Error al actualizar el grupo.',
+          tipoMensaje: TipoMensaje.error);
     }
   }
 

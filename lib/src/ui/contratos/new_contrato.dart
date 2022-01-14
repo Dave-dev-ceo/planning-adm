@@ -107,7 +107,9 @@ class New_ContratoState extends State<NewContrato> {
       } else if (state is VerContratosSubir) {
         Navigator.pop(context);
         contratosBloc.add(ContratosSelect());
-        _mensaje('Se ha subido el documento.');
+        MostrarAlerta(
+            mensaje: 'Se ha subido el documento.',
+            tipoMensaje: TipoMensaje.correcto);
       } else if (state is VerContratosVer) {
         Navigator.pop(context);
         var tipo_file = state.tipo_mime;
@@ -1029,13 +1031,6 @@ class New_ContratoState extends State<NewContrato> {
     }
   }
   // fin eventos Cards
-
-  // ini mensajes
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
 
   _dialogMSG(String title) {
     Widget child = LoadingCustom();

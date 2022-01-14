@@ -231,13 +231,6 @@ class _AddMachoteState extends State<AddMachote> {
         .add(verlitener.FechtContratosPdfViewEvent({'machote': archivo}));
   }
 
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
-
   //
   _dialogMSG(String title) {
     Widget child = LoadingCustom();
