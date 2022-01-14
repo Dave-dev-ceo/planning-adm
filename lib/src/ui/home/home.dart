@@ -174,22 +174,19 @@ class _HomeState extends State<Home> {
                 // ],
               ),
             ),
-            body: SafeArea(
-              child: IndexedStack(
-                index: _pageIndex,
-                children: pantallas,
-                // <Widget>[
-                //   DashboardEventos(),
-                //   ListaEstatusInvitaciones(),
-                //   Timing(),
-                //   Construccion(),
-                //   Construccion(),
-                //   Construccion(),
-                //   Construccion(),
-                //   Machotes(),
-                //   Usuarios()
-                // ],
-              ),
+            body: TabBarView(
+              children: pantallas,
+              // <Widget>[
+              //   DashboardEventos(),
+              //   ListaEstatusInvitaciones(),
+              //   Timing(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Machotes(),
+              //   Usuarios()
+              // ],
             ),
           ),
         ));

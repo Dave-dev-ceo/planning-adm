@@ -176,6 +176,9 @@ class _DashboardEventosState extends State<DashboardEventos> {
           },
           child: BlocBuilder<EventosBloc, EventosState>(
             builder: (context, state) {
+              if (state is EventosInitial) {
+                return Center(child: LoadingCustom());
+              }
               if (state is LoadingEventosState) {
                 return Center(child: LoadingCustom());
               } else if (state is MostrarEventosState) {
