@@ -8,6 +8,7 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart' as utils;
 
 class BookInspiracion extends StatefulWidget {
@@ -106,9 +107,10 @@ class _BookInspiracion extends State<BookInspiracion> {
                               {
                                 await bookInspiracionService
                                     .getBookInspiracion(),
-                                _mostrarMensaje(
-                                    'La imagen se agrego correctamente.',
-                                    Colors.green)
+                                MostrarAlerta(
+                                    mensaje:
+                                        'La imagen se agrego correctamente.',
+                                    tipoMensaje: TipoMensaje.correcto)
                               }
                           });
                 }
@@ -196,9 +198,10 @@ class _BookInspiracion extends State<BookInspiracion> {
                 .then((value) => {
                       if (value)
                         {
-                          _mostrarMensaje(
-                              'La imagen se ha eliminado correctamente.',
-                              Colors.green),
+                          MostrarAlerta(
+                              mensaje:
+                                  'La imagen se ha eliminado correctamente.',
+                              tipoMensaje: TipoMensaje.correcto),
                           bookInspiracionService.getBookInspiracion().then(
                               (value) => {
                                     setState(() {}),
@@ -206,20 +209,16 @@ class _BookInspiracion extends State<BookInspiracion> {
                                   }),
                         }
                       else
-                        {_mostrarMensaje('Ocurrio un error', Colors.red)}
+                        {
+                          MostrarAlerta(
+                              mensaje: 'No se pudo eliminar la imagen.',
+                              tipoMensaje: TipoMensaje.error)
+                        }
                     });
           },
           child: const Text('Aceptar'),
         ),
       ],
     );
-  }
-
-  _mostrarMensaje(String msj, Color color) {
-    SnackBar snackBar = SnackBar(
-      content: Text(msj),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

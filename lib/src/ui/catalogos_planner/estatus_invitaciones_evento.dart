@@ -71,33 +71,8 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     );
   }
 
-  /*_msgSnackBar(String error, Color color) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(error),
-        ),
-      ),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }*/
-
   Future<Map<String, dynamic>> _saveEstatusD(BuildContext context) async {
-    /*if (estatusCtrl.text.trim() == "" || estatusCtrl.text.trim() == null) {
-      _msgSnackBar('El campo esta vacío', Color(0x64E032));
-    } else {*/
     Map<String, dynamic> json = {"descripcion": estatusCtrl.text};
-    //json.
-    //bool response = await api.createEstatus(json, context);
-    /*if (response) {
-        //_mySelection = "0";
-        _msgSnackBar('Estatus agregado', Colors.green[300]);
-        //_listaGrupos();
-      } else {
-        _msgSnackBar('Error no se pudo agregar el estatus', Colors.red[300]);
-      }*/
     return json;
     // }
   }

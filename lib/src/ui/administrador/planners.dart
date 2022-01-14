@@ -19,19 +19,6 @@ class _PlannersState extends State<Planners> {
     plannerBloc.add(FechtPlannersEvent());
     super.initState();
   }
-  /*void _showError(BuildContext context, String message) {
-    //Navigator.pop(_ingresando);
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(message),
-        ),
-      ),
-      backgroundColor: Colors.red,  
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }*/
 
   Widget buildList(ItemModelPlanners snapshot) {
     return ListView(

@@ -8,6 +8,7 @@ import 'package:planning/src/blocs/login/login_bloc.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 // Padilla
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
@@ -387,12 +388,16 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
         if (state is CorreoSentState) {
           correoRecuperacionCtrl.clear();
 
-          _showMessage('Se ha enviado el correo', Colors.green);
+          MostrarAlerta(
+              mensaje: 'Se ha enviado el correo',
+              tipoMensaje: TipoMensaje.correcto);
           Navigator.of(context).pop();
         } else if (state is CorreoNotFoundState) {
           correoRecuperacionCtrl.clear();
 
-          _showMessage('Este correo no esta registrado', Colors.red);
+          MostrarAlerta(
+              mensaje: 'Este correo no esta registrado',
+              tipoMensaje: TipoMensaje.correcto);
         }
       },
       child: AlertDialog(
@@ -455,22 +460,8 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
     if (regExpEmail.hasMatch(correoRecuperacionCtrl.text)) {
       await loginBloc.add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
     } else {
-      _showMessage('Ingrese un correo valido', Colors.red);
+      MostrarAlerta(
+          mensaje: 'Ingrese un correo valido', tipoMensaje: TipoMensaje.error);
     }
-  }
-
-  void _showMessage(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: color,
-        duration: Duration(seconds: 2),
-      ),
-    );
   }
 }

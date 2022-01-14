@@ -10,6 +10,7 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/perfil/perfil_planner_model.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class PerfilPlannerPage extends StatefulWidget {
   PerfilPlannerPage({Key key}) : super(key: key);
@@ -239,18 +240,14 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                         perfilBloc.stream.listen((state) {
                           if (state is PerfilPlannerEditadoState) {
                             if (state.message == 'Ok') {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content:
-                                    Text('Los Datos se editaron correctamente'),
-                                backgroundColor: Colors.green,
-                              ));
+                              MostrarAlerta(
+                                  mensaje:
+                                      'Los Datos se editaron correctamente',
+                                  tipoMensaje: TipoMensaje.correcto);
                             } else {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(state.message),
-                                backgroundColor: Colors.red,
-                              ));
+                              MostrarAlerta(
+                                  mensaje: state.message,
+                                  tipoMensaje: TipoMensaje.error);
                             }
                           }
                         });

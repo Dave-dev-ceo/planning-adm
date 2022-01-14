@@ -12,6 +12,7 @@ import 'package:planning/src/logic/pagos_logic.dart';
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/ui/pagos/agregar_pago_dialog.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
@@ -163,126 +164,6 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     }
   }
 
-  // Widget pagosEventos() {
-  //   return Column(
-  //     children: [
-  //       _bloc('E'),
-  //       SizedBox(height: 10.0),
-  //       Row(
-  //         children: [
-  //           SizedBox(
-  //             width: 20.0,
-  //           ),
-  //           Text(
-  //             'Pagos',
-  //             style: TextStyle(fontSize: 20.0),
-  //           ),
-  //           SizedBox(
-  //             width: 100,
-  //           ),
-  //           ElevatedButton(
-  //             style: ElevatedButton.styleFrom(primary: Colors.black),
-  //             onPressed: !isInvolucrado
-  //                 ? () {
-  //                     if (isPressed) {
-  //                       _abrirDialog('E', false, HistorialPagosModel());
-  //                     } else {
-  //                       ScaffoldMessenger.of(context).showSnackBar(
-  //                         SnackBar(
-  //                           content: Text('Es necesario agregar presupuestos.'),
-  //                           backgroundColor: Colors.amber,
-  //                         ),
-  //                       );
-  //                     }
-  //                   }
-  //                 : null,
-  //             child: Text(
-  //               'Agregar Pago',
-  //               style: TextStyle(color: Colors.white),
-  //             ),
-  //           )
-  //         ],
-  //       ),
-  //       SizedBox(
-  //         height: 10.0,
-  //       ),
-  //       _historialDePagos('E'),
-  //       SizedBox(
-  //         height: 100.0,
-  //       )
-  //     ],
-  //   );
-  // }
-
-  // Widget _historialDePagos(String tipoPresupuesto) {
-  //   return BlocBuilder<HistorialPagosBloc, HistorialPagosState>(
-  //     builder: (context, state) {
-  //       if (state is LoadingHistorialPagosState) {
-  //         return Center(
-  //           child: LoadingCustom(),
-  //         );
-  //       } else if (state is MostrarHistorialPagosState) {
-  //         totalsaldopresupuestoInterno = 0;
-  //         totalsaldopresupuestoEvento = 0;
-  //         totalpagosInternos = 0;
-  //         totalpagosEventos = 0;
-  //         if (state.listaPagos != null) {
-  //           if (state.listaPagos.length > 0) {
-  //             state.listaPagos.forEach((pago) {
-  //               if ('E' == pago.tipoPresupuesto) {
-  //                 totalpagosEventos += pago.pago;
-  //               } else {
-  //                 totalpagosInternos += pago.pago;
-  //               }
-  //             });
-
-  //             totalsaldopresupuestoEvento =
-  //                 totalpresupuestos - totalpagosEventos != null
-  //                     ? (int.tryParse(totalpagosEventos.toString()))
-  //                     : 0;
-
-  //             totalsaldopresupuestoInterno =
-  //                 totalpresupuestos - totalpagosInternos != null
-  //                     ? int.tryParse(totalpagosInternos.toString())
-  //                     : 0;
-
-  //             return buildTablePagos(state.listaPagos, tipoPresupuesto);
-  //           } else {
-  //             return Center(
-  //               child: ListView(
-  //                 shrinkWrap: true,
-  //                 children: [
-  //                   Container(
-  //                       height: 100.0,
-  //                       color: Colors.white,
-  //                       padding: EdgeInsets.symmetric(horizontal: 35.0),
-  //                       alignment: Alignment.centerLeft,
-  //                       child: Center(
-  //                         child: Text(
-  //                           'No existen pagos registrados.',
-  //                           style: TextStyle(fontSize: 15.0),
-  //                         ),
-  //                       )),
-  //                 ],
-  //               ),
-  //             );
-  //           }
-  //         } else {
-  //           return Center(
-  //             child: Text('Sin Datos 2'),
-  //           );
-  //         }
-  //       } else {
-  //         totalsaldopresupuestoInterno = 0;
-  //         totalsaldopresupuestoEvento = 0;
-  //         totalpagosInternos = 0;
-  //         totalpagosEventos = 0;
-  //         return Container();
-  //       }
-  //     },
-  //   );
-  // }
-
   Widget buildTablePagos(
       List<HistorialPagosModel> pagos, String tipoPresupuesto) {
     return PaginatedDataTable(
@@ -356,21 +237,14 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                               await logicPagos.eliminarPagoEvento(pago.idPago);
 
                           if (resp == 'Ok') {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Se ha eliminado el pago'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
+                            MostrarAlerta(
+                                mensaje: 'Se ha eliminado el pago',
+                                tipoMensaje: TipoMensaje.correcto);
                             Navigator.of(context, rootNavigator: true)
                                 .pop(true);
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(resp),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
+                            MostrarAlerta(
+                                mensaje: resp, tipoMensaje: TipoMensaje.error);
                           }
                         },
                         child: Text('Aceptar'),
@@ -475,21 +349,14 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                               await logicPagos.eliminarPagoEvento(pago.idPago);
 
                           if (resp == 'Ok') {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Se ha eliminado el pago'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
+                            MostrarAlerta(
+                                mensaje: 'Se ha eliminado el pago',
+                                tipoMensaje: TipoMensaje.correcto);
                             Navigator.of(context, rootNavigator: true)
                                 .pop(true);
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(resp),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
+                            MostrarAlerta(
+                                mensaje: resp, tipoMensaje: TipoMensaje.error);
                           }
                         },
                         child: Text('Aceptar'),
@@ -622,13 +489,10 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                                 _abrirDialog(
                                     tipoPage, false, HistorialPagosModel());
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'Es necesario agregar presupuestos.'),
-                                    backgroundColor: Colors.amber,
-                                  ),
-                                );
+                                MostrarAlerta(
+                                    mensaje:
+                                        'Es necesario agregar presupuestos.',
+                                    tipoMensaje: TipoMensaje.advertencia);
                               }
                             }
                           : null,
@@ -1125,20 +989,14 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 setState(() {
                   isPressed = false;
                 });
-                _mensaje('Pago borrado');
+                MostrarAlerta(
+                    mensaje: 'Pago borrado', tipoMensaje: TipoMensaje.correcto);
               },
             ),
           ],
         );
       },
     );
-  }
-
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
   }
 }
 

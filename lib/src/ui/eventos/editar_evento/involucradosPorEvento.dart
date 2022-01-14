@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class InvolucradosPorEvento extends StatefulWidget {
   const InvolucradosPorEvento({Key key}) : super(key: key);
@@ -196,23 +197,25 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
         validateCorreo(item.email) &&
         validateTelefono(item.telefono)) {
       involucradosBloc.add(InsertInvolucrado(item));
-      _mensaje('Involucrado actualizado.');
+      MostrarAlerta(
+          mensaje: 'Involucrado actualizado.',
+          tipoMensaje: TipoMensaje.correcto);
     } else if (!validateNombre(item.nombre)) {
-      _mensaje('Inserta un nombre valido.');
+      MostrarAlerta(
+          mensaje: 'Inserta un nombre valido.',
+          tipoMensaje: TipoMensaje.advertencia);
     } else if (!validateTelefono(item.telefono)) {
-      _mensaje('Inserta un telefono valido.');
+      MostrarAlerta(
+          mensaje: 'Inserta un telefono valido.',
+          tipoMensaje: TipoMensaje.advertencia);
     } else if (!validateCorreo(item.email)) {
-      _mensaje('Inserta un correo electronico valido.');
+      MostrarAlerta(
+          mensaje: 'Inserta un correo electronico valido.',
+          tipoMensaje: TipoMensaje.advertencia);
     } else {
-      _mensaje('Inserta valores validos.');
+      MostrarAlerta(
+          mensaje: 'Inserta valores validos.', tipoMensaje: TipoMensaje.error);
     }
-  }
-
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
   }
 }
 

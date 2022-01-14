@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 import 'package:flutter/cupertino.dart';
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart';
 
 import 'package:flutter/material.dart';
@@ -188,13 +189,9 @@ class _TimingState extends State<Timing> {
                                 {"timing": timingCtrl.text}));
                             timingCtrl.clear();
                           } else {
-                            final snakcbar = SnackBar(
-                              content: Text('El Campo esta vacio'),
-                              backgroundColor: Colors.red,
-                              duration: Duration(milliseconds: 500),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snakcbar);
+                            MostrarAlerta(
+                                mensaje: 'El Campo esta vacio',
+                                tipoMensaje: TipoMensaje.advertencia);
                           }
                         },
                       ),
@@ -339,24 +336,16 @@ class _TimingState extends State<Timing> {
                                         if (state is TimingDeletedState) {
                                           if (state.wasDeletedTiming) {
                                             Navigator.of(context).pop();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'El cronograma se eliminar corecctamente'),
-                                                backgroundColor: Colors.green,
-                                              ),
-                                            );
+                                            MostrarAlerta(
+                                                mensaje:
+                                                    'El cronograma se elimino correctamente',
+                                                tipoMensaje:
+                                                    TipoMensaje.correcto);
                                           } else {
                                             Navigator.of(context).pop();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content:
-                                                    Text('Ocurrio un error'),
-                                                backgroundColor: Colors.red,
-                                              ),
-                                            );
+                                            MostrarAlerta(
+                                                mensaje: 'Ocurrio un error',
+                                                tipoMensaje: TipoMensaje.error);
                                           }
                                         }
                                       },

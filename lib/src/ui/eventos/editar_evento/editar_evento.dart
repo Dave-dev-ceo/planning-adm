@@ -11,6 +11,7 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_tipo_evento.dart';
 import 'package:planning/src/ui/eventos/editar_evento/involucradosPorEvento.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class EditarEvento extends StatefulWidget {
   final ItemModelEvento evento;
@@ -169,29 +170,15 @@ class _EditarEventoState extends State<EditarEvento> {
             return _dialogMSG('Actualizando info. de evento');
           } else if (state is EditarEventosOkState) {
             Navigator.pop(_ingresando);
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Evento actualizado'),
-                ),
-              ),
-              backgroundColor: Colors.green,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            MostrarAlerta(
+                mensaje: 'Evento actualizado.', tipoMensaje: TipoMensaje.error);
+
             // _clearControllerEvtCont();
           } else if (state is ErrorEditarEventosState) {
             Navigator.pop(_ingresando);
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Error al editar evento'),
-                ),
-              ),
-              backgroundColor: Colors.red,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            MostrarAlerta(
+                mensaje: 'Error al editar evento.',
+                tipoMensaje: TipoMensaje.error);
           }
         },
         child: Container(
@@ -694,9 +681,9 @@ class _EditarEventoState extends State<EditarEvento> {
                   if (!isInvolucrado) {
                     _save();
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Permisos Insuficientes.')),
-                    );
+                    MostrarAlerta(
+                        mensaje: 'Permisos Insuficientes.',
+                        tipoMensaje: TipoMensaje.advertencia);
                   }
                 },
                 child: CallToAction('Guardar'))

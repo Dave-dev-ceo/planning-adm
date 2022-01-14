@@ -9,6 +9,7 @@ import 'package:planning/src/blocs/roles/rol/rol_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_form.dart';
 import 'package:planning/src/models/model_roles.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormRol extends StatefulWidget {
   final Map<String, dynamic> datos;
@@ -277,9 +278,10 @@ class _FormRolState extends State<FormRol> {
           rolBloc.add(EditarRolEvent(jsonRol));
         }
       } else {
-        ScaffoldMessenger.of(contextSB).showSnackBar(SnackBar(
-            content: Text(
-                'Ingrese todos los datos requeridos para ${datos['accion'] == 0 ? 'agregar' : 'editar'} rol')));
+        MostrarAlerta(
+            mensaje:
+                'Ingrese todos los datos requeridos para ${datos['accion'] == 0 ? 'agregar' : 'editar'} rol',
+            tipoMensaje: TipoMensaje.advertencia);
       }
     } catch (e) {
       print(e);

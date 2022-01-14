@@ -81,8 +81,11 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                             child: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return Text(
-                                    'Flash: ${snapshot.data ? "Encendido" : "Apagado"}');
+                                if (snapshot.hasData) {
+                                  return Text(
+                                      'Flash: ${snapshot.data ? "Encendido" : "Apagado"}');
+                                }
+                                return Container();
                               },
                             )),
                       ),

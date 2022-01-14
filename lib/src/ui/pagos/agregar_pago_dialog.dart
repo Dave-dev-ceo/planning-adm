@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:planning/src/blocs/historialPagos/historialpagos_bloc.dart';
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 import 'package:planning/src/logic/historial_pagos/historial_pagos_logic.dart';
@@ -209,12 +210,12 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
 
         if (resp == 'Ok') {
           context.read<HistorialPagosBloc>().add(MostrarHistorialPagosEvent());
-          _mostrarMensaje(
-              titulo: 'Se ha agregado el pago correctamente',
-              color: Colors.green);
+          MostrarAlerta(
+              mensaje: 'Se ha agregado el pago correctamente',
+              tipoMensaje: TipoMensaje.correcto);
           Navigator.of(context).pop(true);
         } else {
-          _mostrarMensaje(titulo: resp, color: Colors.red);
+          MostrarAlerta(mensaje: resp, tipoMensaje: TipoMensaje.error);
         }
       } else {
         final resp = await logic.editarPagoEvento(hitorialPagoModel);
@@ -222,25 +223,17 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
         if (resp == 'Ok') {
           context.read<HistorialPagosBloc>().add(MostrarHistorialPagosEvent());
 
-          _mostrarMensaje(
-              titulo: 'Se ha editado el pago correctamente',
-              color: Colors.green);
+          MostrarAlerta(
+              mensaje: 'Se ha editado el pago correctamente',
+              tipoMensaje: TipoMensaje.correcto);
           Navigator.of(context).pop(true);
         } else {
-          _mostrarMensaje(titulo: resp, color: Colors.red);
+          MostrarAlerta(mensaje: resp, tipoMensaje: TipoMensaje.error);
         }
       }
     } else {
-      _mostrarMensaje(titulo: 'Los campos son requeridos', color: Colors.red);
+      MostrarAlerta(
+          mensaje: 'Los campos son requeridos', tipoMensaje: TipoMensaje.error);
     }
-  }
-
-  _mostrarMensaje({@required String titulo, @required Color color}) {
-    final snackBar = SnackBar(
-      content: Text(titulo),
-      backgroundColor: color,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

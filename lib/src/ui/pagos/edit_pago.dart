@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormEditPago extends StatefulWidget {
   final int id;
@@ -50,10 +51,12 @@ class _FormEditPagoState extends State<FormEditPago> {
     return BlocListener<PagosBloc, PagosState>(
       listener: (context, state) {
         if (state is PagosUpdateState) {
-          _mensaje('Pago actualizado');
+          MostrarAlerta(
+              mensaje: 'Pago actualizado', tipoMensaje: TipoMensaje.correcto);
           pagosBloc.add(SelectIdEvent(widget.id));
         } else if (state is PagosDeleteState) {
-          _mensaje('Pago eliminado');
+          MostrarAlerta(
+              mensaje: 'Pago eliminado', tipoMensaje: TipoMensaje.correcto);
           Navigator.pop(context);
           pagosBloc.add(SelectPagosEvent());
         }
@@ -251,7 +254,9 @@ class _FormEditPagoState extends State<FormEditPago> {
     if (itemPago['cantidad'] == '' ||
         itemPago['descripcion'] == '' ||
         itemPago['precio'] == '') {
-      _mensaje('Todos los campos son obligatorios.');
+      MostrarAlerta(
+          mensaje: 'Todos los campos son obligatorios.',
+          tipoMensaje: TipoMensaje.advertencia);
     } else {
       itemPago['id_concepto'] = widget.id.toString();
       pagosBloc.add(UpdatePagosEvent(itemPago));
@@ -262,10 +267,4 @@ class _FormEditPagoState extends State<FormEditPago> {
   //   pagosBloc.add(DeletePagosEvent(widget.id));
   // }
 
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
 }
