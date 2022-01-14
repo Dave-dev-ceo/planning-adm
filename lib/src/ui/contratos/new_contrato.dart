@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -38,7 +39,7 @@ class New_ContratoState extends State<NewContrato> {
   bool isInvolucrado = false;
 
   GlobalKey<FormState> keyForm;
-// arguments: {'clave': 'CT', 'clave_t': 'CT_T'});
+
   List<Map<String, String>> radioB = [
     {"nombre": "Contratos", "clave": "CT", 'clave_t': 'CT_T'},
     {"nombre": "Recibos", "clave": "RC", 'clave_t': 'RC_T'},
@@ -71,7 +72,6 @@ class New_ContratoState extends State<NewContrato> {
     }
   }
 
-  //_HomeState(this.idPlanner);
   Color hexToColor(String code) {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -112,13 +112,12 @@ class New_ContratoState extends State<NewContrato> {
         Navigator.pop(context);
         var tipo_file = state.tipo_mime;
         if (state.archivo != null && state.archivo != '') {
-          // state.tipo_doc == 'html'
-          //     ? tipo_file = 'pdf'
-          //     : tipo_file = state.tipo_mime;
           Navigator.pushNamed(context, '/viewContrato',
               arguments: {'htmlPdf': state.archivo, 'tipo_mime': tipo_file});
         } else {
-          _mensaje('No se encuentra ningún archivo.');
+          MostrarAlerta(
+              mensaje: 'No se encuentra ningún archivo.',
+              tipoMensaje: TipoMensaje.advertencia);
         }
       } else if (state is DescargarContratoState) {
         Navigator.pop(context);
@@ -131,7 +130,9 @@ class New_ContratoState extends State<NewContrato> {
           downloadFile(state.subido, state.nombre,
               extensionFile: state.tipo_mime);
         } else {
-          _mensaje('No se encuentra ningún archivo para descargar.');
+          MostrarAlerta(
+              mensaje: 'No se encuentra ningún archivo para descargar.',
+              tipoMensaje: TipoMensaje.advertencia);
         }
         Navigator.pop(context);
       } else if (state is VerContratoSubidoState) {
@@ -141,14 +142,18 @@ class New_ContratoState extends State<NewContrato> {
             'tipo_mime': state.tipo_mime
           });
         } else {
-          _mensaje('No se encuentra ningún archivo para descargar.');
+          MostrarAlerta(
+              mensaje: 'No se encuentra ningún archivo para descargar.',
+              tipoMensaje: TipoMensaje.advertencia);
         }
       } else if (state is DescargarContratoSubidoState) {
         if (state.subido != null) {
           downloadFile(state.subido, state.nombre,
               extensionFile: state.tipo_mime);
         } else {
-          _mensaje('No se encuentra ningún archivo para descargar.');
+          MostrarAlerta(
+              mensaje: 'No se encuentra ningún archivo para descargar.',
+              tipoMensaje: TipoMensaje.advertencia);
         }
         Navigator.pop(context);
       }
@@ -217,7 +222,6 @@ class New_ContratoState extends State<NewContrato> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            // children: _itemsContratos(),
             children: [
               Column(
                 children: [
@@ -319,7 +323,7 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: (size.width > 400)
+            child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
@@ -592,7 +596,7 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: (size.width > 400)
+            child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
@@ -612,7 +616,7 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: (size.width > 400)
+            child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
@@ -632,7 +636,7 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: (size.width > 400)
+            child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
@@ -652,7 +656,7 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: (size.width > 400)
+            child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
@@ -672,7 +676,7 @@ class New_ContratoState extends State<NewContrato> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             margin: EdgeInsets.all(20),
             elevation: 10,
-            child: (size.width > 400)
+            child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
@@ -734,7 +738,6 @@ class New_ContratoState extends State<NewContrato> {
 
   _childrenButtons() {
     List<SpeedDialChild> temp = [];
-    // 2do
     temp.add(SpeedDialChild(
         child: Tooltip(
           child: Icon(Icons.upload_file),
@@ -964,7 +967,6 @@ class New_ContratoState extends State<NewContrato> {
 
   _uploadFile(int idContrato) async {
     const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
-
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: extensiones,
@@ -1042,7 +1044,6 @@ class New_ContratoState extends State<NewContrato> {
     Widget child = LoadingCustom();
     showDialog(
         context: context,
-        //barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
@@ -1084,7 +1085,9 @@ class New_ContratoState extends State<NewContrato> {
               onPressed: () {
                 Navigator.of(context).pop();
                 verContratos.add(BorrarContrato(idContrato));
-                _mensaje('Contrato borrado');
+                MostrarAlerta(
+                    mensaje: 'Contrato Borrado.',
+                    tipoMensaje: TipoMensaje.correcto);
               },
             ),
           ],
@@ -1092,8 +1095,6 @@ class New_ContratoState extends State<NewContrato> {
       },
     );
   }
-  // fin mensajes
-
 }
 
 class Contratos {

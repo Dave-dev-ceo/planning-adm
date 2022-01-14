@@ -55,7 +55,7 @@ void MostrarAlerta(
     ),
     backgroundColor: color,
     elevation: 3.0,
-    duration: const Duration(milliseconds: 1500),
+    duration: const Duration(milliseconds: 2000),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(4.0),
