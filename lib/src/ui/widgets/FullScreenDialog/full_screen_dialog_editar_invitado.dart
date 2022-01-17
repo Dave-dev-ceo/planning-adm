@@ -221,6 +221,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
               await api.updateAcompanante(editAcompanante);
               await blocInvitado.fetchAllAcompanante(idInvitado, context);
               Navigator.pop(context, 'Agregado');
+              MostrarAlerta(
+                  mensaje: 'El acompañante se actualizó correctamente.',
+                  tipoMensaje: TipoMensaje.correcto);
             }
           },
           child: Text(
@@ -1112,7 +1115,14 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                               };
 
                               if (_keyFormAcomp.currentState.validate()) {
-                                await api.agregarAcompanante(json, context);
+                                await api
+                                    .agregarAcompanante(json, context)
+                                    .then((value) => {
+                                          alergiasAcompCtrl.text = '',
+                                          asisEspAcompContrl.text = '',
+                                          alimentAcompContrl.text = '',
+                                          nombreAcompananteCtrl.text = ''
+                                        });
                                 await blocInvitado.fetchAllAcompanante(
                                     idInvitado, context);
                               }
