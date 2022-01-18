@@ -407,7 +407,7 @@ class New_ContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                         icon: Icon(Icons.cloud_upload_outlined),
-                        label: Text('Subir firmado'),
+                        label: Text('Subir Firmado'),
                         onPressed: () => _uploadFile(contrato.idContrato),
                       )
                     ],
@@ -421,7 +421,7 @@ class New_ContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                         icon: Icon(Icons.remove_red_eye_rounded),
-                        label: Text('Ver firmado'),
+                        label: Text('Ver Firmado'),
                         onPressed: () => _verNewFile(contrato.idContrato,
                             contrato.tipo_mime_original, contrato.tipo_doc),
                       )
@@ -436,7 +436,7 @@ class New_ContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                           icon: Icon(Icons.cloud_download_outlined),
-                          label: Text('Descarga Archivo Firmado.'),
+                          label: Text('Descarga Firmado.'),
                           onPressed: () => {
                                 _descargaArchivoSubido(
                                     contrato.idContrato,
