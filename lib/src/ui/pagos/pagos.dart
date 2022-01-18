@@ -575,94 +575,92 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     if (size.width > 500) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: Text(
-                  index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
-                  style: TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
-                  maxLines: 2,
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Text(
+                index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
+                style: TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
+                maxLines: 2,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AutoSizeText.rich(
-                    TextSpan(
-                      text: 'Total: ',
-                      style: TextStyle(
-                          color: Colors.black, fontFamily: 'Comfortaa'),
-                      children: [
-                        TextSpan(
-                          text:
-                              '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontFamily: 'Comfortaa'),
-                        )
-                      ],
-                    ),
-                    minFontSize: 5.0,
-                    maxLines: 2,
-                    style: TextStyle(fontSize: 15),
-                    group: myGroup,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                AutoSizeText.rich(
+                  TextSpan(
+                    text: 'Total: ',
+                    style:
+                        TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                    children: [
+                      TextSpan(
+                        text:
+                            '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontFamily: 'Comfortaa'),
+                      )
+                    ],
                   ),
-                  SizedBox(
-                    width: 8.0,
+                  minFontSize: 5.0,
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 15),
+                  group: myGroup,
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                AutoSizeText.rich(
+                  TextSpan(
+                    text: 'Pagos: ',
+                    style:
+                        TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                    children: [
+                      TextSpan(
+                        text:
+                            '\$${totalpagos > 0 ? f.format(totalpagos) : totalpagos}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontFamily: 'Comfortaa'),
+                      ),
+                    ],
                   ),
-                  AutoSizeText.rich(
-                    TextSpan(
-                      text: 'Pagos: ',
-                      style: TextStyle(
-                          color: Colors.black, fontFamily: 'Comfortaa'),
-                      children: [
-                        TextSpan(
-                          text:
-                              '\$${totalpagos > 0 ? f.format(totalpagos) : totalpagos}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontFamily: 'Comfortaa'),
-                        ),
-                      ],
-                    ),
-                    minFontSize: 10.0,
-                    maxLines: 2,
-                    style: TextStyle(fontSize: 15),
-                    group: myGroup,
+                  minFontSize: 10.0,
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 15),
+                  group: myGroup,
+                ),
+                SizedBox(
+                  width: 8.0,
+                ),
+                AutoSizeText.rich(
+                  TextSpan(
+                    text: 'Saldo: ',
+                    style:
+                        TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                    children: [
+                      TextSpan(
+                        text:
+                            '\$${totalsaldopresupuesto > 0 ? f.format(totalsaldopresupuesto) : totalsaldopresupuesto}',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Comfortaa'),
+                      )
+                    ],
                   ),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  AutoSizeText.rich(
-                    TextSpan(
-                      text: 'Saldo: ',
-                      style: TextStyle(
-                          color: Colors.black, fontFamily: 'Comfortaa'),
-                      children: [
-                        TextSpan(
-                          text:
-                              '\$${totalsaldopresupuesto > 0 ? f.format(totalsaldopresupuesto) : totalsaldopresupuesto}',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Comfortaa'),
-                        )
-                      ],
-                    ),
-                    group: myGroup,
-                    minFontSize: 10.0,
-                    maxLines: 2,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
-              )
-            ],
-          ),
+                  group: myGroup,
+                  minFontSize: 10.0,
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
+            )
+          ],
         ),
       );
     } else {
