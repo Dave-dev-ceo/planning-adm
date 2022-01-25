@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/estatus/estatus_bloc.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -50,7 +51,7 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );*/
   }
@@ -70,33 +71,8 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
     );
   }
 
-  /*_msgSnackBar(String error, Color color) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(error),
-        ),
-      ),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }*/
-
   Future<Map<String, dynamic>> _saveEstatusD(BuildContext context) async {
-    /*if (estatusCtrl.text.trim() == "" || estatusCtrl.text.trim() == null) {
-      _msgSnackBar('El campo esta vacío', Color(0x64E032));
-    } else {*/
     Map<String, dynamic> json = {"descripcion": estatusCtrl.text};
-    //json.
-    //bool response = await api.createEstatus(json, context);
-    /*if (response) {
-        //_mySelection = "0";
-        _msgSnackBar('Estatus agregado', Colors.green[300]);
-        //_listaGrupos();
-      } else {
-        _msgSnackBar('Error no se pudo agregar el estatus', Colors.red[300]);
-      }*/
     return json;
     // }
   }
@@ -222,7 +198,9 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                   child: BlocBuilder<EstatusBloc, EstatusState>(
                     builder: (context, state) {
                       if (state is LoadingEstatusState) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: LoadingCustom(),
+                        );
                       } else if (state is MostrarEstatusState) {
                         //itemModelEI = state.estatus;
                         return _constructorTable(state.estatus);
@@ -232,7 +210,9 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
                           child: Text(state.message),
                         );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: LoadingCustom(),
+                        );
                       }
                     },
                   ),
@@ -322,7 +302,6 @@ class _ListaEstatusInvitacionesState extends State<ListaEstatusInvitaciones> {
   }
 
   Future<void> _showMyDialogEditar(int idEstatus, String estatus) async {
-    print(idEstatus);
     estatusCtrlEdit.text = estatus;
     return showDialog<void>(
       context: context,

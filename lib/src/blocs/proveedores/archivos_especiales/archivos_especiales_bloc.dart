@@ -26,7 +26,7 @@ class ArchivosEspecialesBloc
       }
     } else if (event is DeleteArchivoEspecialEvent) {
       try {
-        int service = await logic.deleteArchivoEspecial(event.idArchivo);
+        await logic.deleteArchivoEspecial(event.idArchivo);
         add(FechtArchivoEspecialEvent(event.idProveedor, event.idEvento));
       } catch (e) {
         print(e);
@@ -34,8 +34,8 @@ class ArchivosEspecialesBloc
     } else if (event is CreateArchivoEspecialEvent) {
       try {
         await logic.createArchivosEspecial(event.data);
-        print(event.data['id_proveedor'].runtimeType);
-        print(event.data['id_evento'].runtimeType);
+        //print(event.data['id_proveedor'].runtimeType);
+        //print(event.data['id_evento'].runtimeType);
 
         add(
           FechtArchivoEspecialEvent(

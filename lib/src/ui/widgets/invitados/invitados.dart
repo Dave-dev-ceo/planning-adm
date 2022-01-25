@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
@@ -14,7 +16,6 @@ import 'package:planning/src/ui/planes/planes.dart';
 import 'package:planning/src/ui/proveedores_evento/proveedores_evento.dart';
 import 'package:planning/src/ui/widgets/invitados/lista_invitados.dart';
 import 'package:planning/src/ui/widgets/tab/tab_item.dart';
-import 'package:planning/src/ui/autorizacion/lista_autorizacion.dart';
 
 class Invitados extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -25,14 +26,16 @@ class Invitados extends StatefulWidget {
   _InvitadosState createState() => _InvitadosState(detalleEvento);
 }
 
-class _InvitadosState extends State<Invitados> {
+class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   final Map<dynamic, dynamic> detalleEvento;
-  int _pageIndex = 0;
   int _pages = 0;
   PermisosBloc permisosBloc;
   ItemModelPerfil permisoPantallas;
   bool isInvolucrado = false;
+  TabController _tabController;
+  bool _tapped = false;
+  Size size;
 
   _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
@@ -44,6 +47,7 @@ class _InvitadosState extends State<Invitados> {
     permisosBloc.add(obtenerPermisosEvent());
 
     getIdInvolucrado();
+
     super.initState();
   }
 
@@ -57,6 +61,7 @@ class _InvitadosState extends State<Invitados> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Container(
       width: double.infinity,
       child: BlocBuilder<PermisosBloc, PermisosState>(
@@ -66,21 +71,21 @@ class _InvitadosState extends State<Invitados> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is ErrorTokenPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is LoadingPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is PermisosOk) {
             permisoPantallas = state.permisos;
@@ -89,6 +94,29 @@ class _InvitadosState extends State<Invitados> {
             List<Widget> pantallas = obtenerPantallasContent(state.permisos
                 .pantallas); /* <Widget>[Center(child: Text('Test'))]; */
             // Navigator.pop(_dialogContext);
+
+            _tabController = TabController(length: _pages, vsync: this);
+
+            _tabController.addListener(() {
+              if (_tabController.index == 5 &&
+                  ((!_tapped && !_tabController.indexIsChanging) ||
+                      _tabController.indexIsChanging)) {
+                showDialog(
+                    context: context,
+                    builder: (context) => ListaInvitados(
+                          idEvento: detalleEvento['idEvento'],
+                          WP_EVT_INV_CRT: permisoPantallas.pantallas
+                              .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+                          WP_EVT_INV_EDT: permisoPantallas.pantallas
+                              .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+                          WP_EVT_INV_ENV: permisoPantallas.pantallas
+                              .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+                          nameEvento: widget.detalleEvento['nEvento'],
+                        )).then(
+                    (_) => _tabController.index = _tabController.previousIndex);
+              }
+              _tapped = false;
+            });
             return crearPantallas(context, tabs, pantallas);
           } else if (state is ErrorPermisos) {
             return Center(
@@ -104,11 +132,10 @@ class _InvitadosState extends State<Invitados> {
 
   Widget crearPantallas(BuildContext context, List<TabItem> pantallasTabs,
       List<Widget> PantallasCOntent) {
-    return DefaultTabController(
-        length: _pages,
-        child: Scaffold(
-          appBar: AppBar(
-            leading: (!isInvolucrado)
+    return Scaffold(
+      appBar: AppBar(
+        leading: (!isInvolucrado)
+            ? (size.width > 500)
                 ? IconButton(
                     tooltip: 'Inicio',
                     icon: Icon(Icons.home),
@@ -116,144 +143,134 @@ class _InvitadosState extends State<Invitados> {
                       Navigator.of(context).pop();
                     },
                   )
-                : null,
-            automaticallyImplyLeading: widget.detalleEvento['boton'],
-            title: Center(
-              child: Row(
-                children: [
-                  Flexible(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            'CONFIGURACIÓN EVENTO',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 12.0),
-                          ),
-                          Text(
-                            '${widget.detalleEvento['nEvento']}',
-                            style: TextStyle(fontSize: 12.0),
-                          ),
-                        ],
+                : GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Tooltip(
+                      message: 'Inicio',
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Image.asset(
+                          'assets/new_logo.png',
+                          height: 100.0,
+                          width: 250.0,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 100.0,
-                  ),
-                  Flexible(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: FittedBox(
-                          child: Image.asset(
-                        'assets/new_logo.png',
-                        height: 100.0,
-                        width: 250.0,
-                      )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            toolbarHeight: 150.0,
-            backgroundColor: hexToColor('#fdf4e5'),
-            actions: <Widget>[
-              Container(
-                  margin: EdgeInsets.only(right: 10.0),
-                  child: CircleAvatar(
-                    backgroundColor: hexToColor('#d39942'),
-                    child: PopupMenuButton(
-                      child: widget.detalleEvento['imag'] == null
-                          ? Icon(Icons.person)
-                          : CircleAvatar(
-                              backgroundImage: MemoryImage(
-                                  base64Decode(widget.detalleEvento['imag'])),
+                  )
+            : null,
+        automaticallyImplyLeading: widget.detalleEvento['boton'],
+        title: Center(
+          child: (size.width > 500)
+              ? Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'CONFIGURACIÓN EVENTO',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 12.0),
                             ),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text("Perfil"),
+                            Text(
+                              '${widget.detalleEvento['nEvento']}',
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                          ],
                         ),
-                        if (!isInvolucrado)
-                          PopupMenuItem(value: 2, child: Text("Planner")),
-                        PopupMenuItem(
-                          value: 3,
-                          child: Text("Cerrar sesión"),
-                        )
-                      ],
-                      onSelected: (valor) async {
-                        if (valor == 1) {
-                          Navigator.pushNamed(context, '/perfil');
-                        } else if (valor == 2) {
-                          Navigator.of(context).pushNamed('/perfilPlanner');
-                        } else if (valor == 3) {
-                          await _sharedPreferences.clear();
-                          Navigator.pushReplacementNamed(context, '/');
-                        }
-                      },
+                      ),
                     ),
-                  ))
-            ],
-            bottom: TabBar(
-                onTap: (int index) {
-                  if (index == 5) {
-                    showDialog(
-                        context: context,
-                        builder: (context) => ListaInvitados(
-                              idEvento: detalleEvento['idEvento'],
-                              WP_EVT_INV_CRT: permisoPantallas.pantallas
-                                  .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-                              WP_EVT_INV_EDT: permisoPantallas.pantallas
-                                  .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-                              WP_EVT_INV_ENV: permisoPantallas.pantallas
-                                  .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-                              nameEvento: widget.detalleEvento['nEvento'],
-                            ));
-                  } else {
-                    setState(
-                      () {
-                        _pageIndex = index;
-                      },
-                    );
-                  }
-                },
-                indicatorColor: Colors.black,
-                isScrollable: true,
-                tabs: pantallasTabs
-                //  [
-                // TabItem(titulo: 'Resumen', icono: Icons.list),
-                // TabItem(titulo: 'Invitados', icono: Icons.people),
-                // TabItem(titulo: 'Timings', icono: Icons.access_time_sharp),
-                // TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined),
-                // TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined),
-                // TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
-                // TabItem(titulo: 'Autorizaciones', icono: Icons.lock_open),
-                // TabItem(titulo: 'Contratos', icono: Icons.description_outlined),
-                // TabItem(titulo: 'Asistencia', icono: Icons.accessibility),
-                // ],
+                    SizedBox(
+                      width: 100.0,
+                    ),
+                    Flexible(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: FittedBox(
+                            child: Image.asset(
+                          'assets/new_logo.png',
+                          height: 100.0,
+                          width: 250.0,
+                        )),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'CONFIGURACIÓN EVENTO',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12.0),
+                    ),
+                    AutoSizeText(
+                      '${widget.detalleEvento['nEvento']}',
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      // '${widget.detalleEvento['nEvento']}',
+                      style: TextStyle(fontSize: 10.0),
+                    ),
+                  ],
                 ),
-          ),
-          body: SafeArea(
-            child: IndexedStack(index: _pageIndex, children: PantallasCOntent
-                // <Widget> [
-                // ResumenEvento(
-                //   detalleEvento: detalleEvento,
-                // ),
-                // ListaInvitados(
-                //   idEvento: detalleEvento['idEvento'],
-                // ),
-                // TimingsEventos(),
-                // Construccion(),
-                // Construccion(),
-                // Construccion(),
-                // Construccion(),
-                // Contratos(),
-                // Asistencia()
-                // ],
+        ),
+        toolbarHeight: (size.width > 500) ? 150.0 : 80,
+        backgroundColor: hexToColor('#fdf4e5'),
+        actions: <Widget>[
+          Container(
+              margin: EdgeInsets.only(right: 10.0),
+              child: CircleAvatar(
+                backgroundColor: hexToColor('#d39942'),
+                child: PopupMenuButton(
+                  child: widget.detalleEvento['imag'] == null
+                      ? Icon(Icons.person)
+                      : CircleAvatar(
+                          backgroundImage: MemoryImage(
+                              base64Decode(widget.detalleEvento['imag'])),
+                        ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 1,
+                      child: Text("Perfil"),
+                    ),
+                    if (!isInvolucrado)
+                      PopupMenuItem(value: 2, child: Text("Planner")),
+                    PopupMenuItem(
+                      value: 3,
+                      child: Text("Cerrar sesión"),
+                    )
+                  ],
+                  onSelected: (valor) async {
+                    if (valor == 1) {
+                      Navigator.pushNamed(context, '/perfil');
+                    } else if (valor == 2) {
+                      Navigator.of(context).pushNamed('/perfilPlanner');
+                    } else if (valor == 3) {
+                      await _sharedPreferences.clear();
+                      Navigator.pushReplacementNamed(context, '/');
+                    }
+                  },
                 ),
-          ),
-        ));
+              ))
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          onTap: (int index) {
+            _tapped = true;
+          },
+          indicatorColor: Colors.black,
+          isScrollable: true,
+          tabs: pantallasTabs,
+        ),
+      ),
+      body: TabBarView(
+        children: PantallasCOntent,
+        controller: _tabController,
+      ),
+    );
   }
 
   List<TabItem> obtenerTabsPantallas(ItemModelPantallas pantallas) {
@@ -347,15 +364,9 @@ class _InvitadosState extends State<Invitados> {
       //  temp.add(AutorizacionLista());
       //}
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
-        temp.add(ListaInvitados(
-            idEvento: detalleEvento['idEvento'],
-            WP_EVT_INV_CRT:
-                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-            WP_EVT_INV_EDT:
-                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-            WP_EVT_INV_ENV:
-                pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-            nameEvento: widget.detalleEvento['nEvento']));
+        temp.add(Center(
+          child: LoadingCustom(),
+        ));
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {

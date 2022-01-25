@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -55,7 +57,7 @@ class _FullScreenDialogAgregarProveedorEvent
         child: BlocBuilder<ServiciosBloc, ServiciosState>(
             builder: (context, state) {
           if (state is LoadingServiciosState) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is MostrarServiciosState) {
             this._items = [];
             _optItem = [];
@@ -69,7 +71,7 @@ class _FullScreenDialogAgregarProveedorEvent
                 .toList();
             return _formInit();
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           }
         }),
       )),
@@ -153,41 +155,15 @@ class _FullScreenDialogAgregarProveedorEvent
                                 await _jsonAgregarProveedor(context);
                             await proveedorBloc.add(
                                 CreateProveedorEvent(json, itemProveedores));
-                            final snackBar = SnackBar(
-                              content: Container(
-                                height: 30,
-                                child: Center(
-                                  child: Text(
-                                      'EL proveedor se agrego correctamente.'),
-                                ),
-                              ),
-                              backgroundColor: Colors.green,
-                            );
-                            await ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            MostrarAlerta(
+                                mensaje:
+                                    'EL proveedor se agrego correctamente.',
+                                tipoMensaje: TipoMensaje.correcto);
                           } else {
-                            await ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                action: SnackBarAction(
-                                  label: 'Action',
-                                  onPressed: () {
-                                    // Code to execute.
-                                  },
-                                ),
-                                content: const Text(
-                                    'Es necessario seleccionar al menos un servicio.'),
-                                duration: const Duration(milliseconds: 2000),
-                                width: 290.0, // Width of the SnackBar.
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal:
-                                      8.0, // Inner padding for SnackBar content.
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            );
+                            MostrarAlerta(
+                                mensaje:
+                                    'Es necesario seleccionar al menos un servicio.',
+                                tipoMensaje: TipoMensaje.advertencia);
                           }
                         },
                       ),

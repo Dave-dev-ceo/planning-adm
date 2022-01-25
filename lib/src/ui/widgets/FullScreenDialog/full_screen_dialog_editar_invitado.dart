@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:planning/src/models/item_model-acompanante.dart';
@@ -15,6 +16,7 @@ import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/resources/my_flutter_app_icons.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FullScreenDialogEdit extends StatefulWidget {
   final int idInvitado;
@@ -109,7 +111,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -134,7 +136,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -219,6 +221,9 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
               await api.updateAcompanante(editAcompanante);
               await blocInvitado.fetchAllAcompanante(idInvitado, context);
               Navigator.pop(context, 'Agregado');
+              MostrarAlerta(
+                  mensaje: 'El acompañante se actualizó correctamente.',
+                  tipoMensaje: TipoMensaje.correcto);
             }
           },
           child: Text(
@@ -328,7 +333,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                       ),
                     ),
                     400.0,
-                    70),
+                    70.0),
                 formItemsDesign(
                     Icons.sick_outlined,
                     Padding(
@@ -359,8 +364,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                             InputDecoration(labelText: 'Asistencia especial'),
                       ),
                     ),
-                    400,
-                    70)
+                    400.0,
+                    70.0)
               ],
             ),
           ),
@@ -372,26 +377,12 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   _eliminarAcompanante(int idAcompanante) async {
     final data = await api.deleteAcompanante(idAcompanante.toString());
     if (data == 'Ok') {
-      final snackbar = SnackBar(
-          backgroundColor: Colors.green,
-          content: Container(
-            width: 30,
-            child: Center(
-              child: Text('El acompañante se ha eliminado'),
-            ),
-          ));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
-//
+      MostrarAlerta(
+          mensaje: 'El acompañante se ha eliminado.',
+          tipoMensaje: TipoMensaje.correcto);
     } else {
-      final snackbar = SnackBar(
-          backgroundColor: Colors.red,
-          content: Container(
-            width: 30,
-            child: Center(
-              child: Text('Ocurrio un error: $data'),
-            ),
-          ));
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      MostrarAlerta(
+          mensaje: 'Ocurrio un error: $data.', tipoMensaje: TipoMensaje.error);
     }
 
     await blocInvitado.fetchAllAcompanante(idInvitado, context);
@@ -409,7 +400,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -495,20 +486,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     );
   }
 
-  _msgSnackBar(String error, Color color) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(error),
-        ),
-        //color: Colors.red,
-      ),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
   _save(BuildContext context) async {
     if (keyFormG.currentState.validate()) {
       Map<String, String> json = {"nombre_grupo": grupo.text};
@@ -517,7 +494,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       if (response) {
         //_mySelection = "0";
         Navigator.of(context).pop();
-        _msgSnackBar('Grupo agregado', Colors.green);
+        MostrarAlerta(
+            mensaje: 'Grupo agregado.', tipoMensaje: TipoMensaje.correcto);
         _listaGrupos();
       } else {
         print('error');
@@ -537,7 +515,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -596,7 +574,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   }*/
   String gender;
   String edad;
-  formItemsDesign(icon, item, large, ancho) {
+  formItemsDesign(icon, item, double large, double ancho) {
     return Container(
       child: Card(
           shape:
@@ -963,8 +941,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                   child: Image.memory(
                                 base64Decode(_base64qr
                                     .substring(_base64qr.indexOf(',') + 1)),
-                                width: 250,
-                                height: 250,
+                                width: 250.0,
+                                height: 250.0,
                               )),
                             ]),
                             400.0,
@@ -1078,8 +1056,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                       InputDecoration(labelText: 'Alergias'),
                                 ),
                               ),
-                              500,
-                              100),
+                              500.0,
+                              100.0),
                           formItemsDesign(
                               Icons.wheelchair_pickup,
                               Padding(
@@ -1094,8 +1072,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                       labelText: 'Asistencia especial'),
                                 ),
                               ),
-                              500,
-                              100)
+                              500.0,
+                              100.0)
                         ],
                       ),
                     ),
@@ -1137,7 +1115,14 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                               };
 
                               if (_keyFormAcomp.currentState.validate()) {
-                                await api.agregarAcompanante(json, context);
+                                await api
+                                    .agregarAcompanante(json, context)
+                                    .then((value) => {
+                                          alergiasAcompCtrl.text = '',
+                                          asisEspAcompContrl.text = '',
+                                          alimentAcompContrl.text = '',
+                                          nombreAcompananteCtrl.text = ''
+                                        });
                                 await blocInvitado.fetchAllAcompanante(
                                     idInvitado, context);
                               }
@@ -1252,33 +1237,13 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       BlocProvider.of<InvitadosMesasBloc>(context)
           .add(MostrarInvitadosMesasEvent());
       Navigator.of(context).pop();
-
-      final snackBar = SnackBar(
-        content: Container(
-          height: 30,
-          child: Center(
-            child: Text('Invitado actualizado'),
-          ),
-          //color: Colors.red,
-        ),
-        backgroundColor: Colors.green,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      MostrarAlerta(
+          mensaje: 'Invitado actualizado.', tipoMensaje: TipoMensaje.correcto);
     } else {
-      final snackBar = SnackBar(
-        content: Container(
-          height: 30,
-          child: Center(
-            child: Text('Error: No se pudo realizar la actualización'),
-          ),
-          //color: Colors.red,
-        ),
-        backgroundColor: Colors.red,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      MostrarAlerta(
+          mensaje: 'Error: No se pudo realizar la actualización.',
+          tipoMensaje: TipoMensaje.correcto);
     }
-
-    //}
   }
 
   Color hexToColor(String code) {

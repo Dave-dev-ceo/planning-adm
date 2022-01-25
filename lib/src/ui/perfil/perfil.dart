@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 
 import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/logic/login_logic.dart';
@@ -14,6 +15,7 @@ import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_perfil.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -78,11 +80,11 @@ class _PerfilState extends State<Perfil> {
             builder: (context, state) {
               if (state is PerfilInitial) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingCustom(),
                 );
               } else if (state is PerfilLogging) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingCustom(),
                 );
               } else if (state is PerfilSelect) {
                 if (state.perfil != null) {
@@ -101,7 +103,7 @@ class _PerfilState extends State<Perfil> {
                   }
                 } else {
                   perfilBloc.add(SelectPerfilEvent());
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingCustom());
                 }
                 if (perfil != null) {
                   return _showPerfil();
@@ -122,7 +124,7 @@ class _PerfilState extends State<Perfil> {
                 return _showPerfil();
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingCustom(),
                 );
               }
             },
@@ -274,9 +276,9 @@ class _PerfilState extends State<Perfil> {
                               // It returns true if the form is valid, otherwise returns false
                               if (_formKey.currentState.validate()) {
                                 // If the form is valid, display a Snackbar.
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('Guardando cambios.')));
+                                MostrarAlerta(
+                                    mensaje: 'Guardando cambios.',
+                                    tipoMensaje: TipoMensaje.correcto);
                                 _guardarPerfil();
                               }
                             },
@@ -361,20 +363,19 @@ class _PerfilState extends State<Perfil> {
 
       if (statusCode == 200) {
         _sharedPreferences.setPortada(newPortada);
-        _showMessage('Se ha editado la foto de portada', Colors.green);
+        MostrarAlerta(
+            mensaje: 'Se ha editado la foto de portada',
+            tipoMensaje: TipoMensaje.correcto);
       } else {
-        _showMessage('Ocurrio un error', Colors.red);
+        MostrarAlerta(
+            mensaje: 'Ocurrio un error al subir la image',
+            tipoMensaje: TipoMensaje.error);
       }
     } else {
-      _showMessage('No se pudo seleccionar la imagen', Colors.red);
+      MostrarAlerta(
+          mensaje: 'No se pudo seleccionar la imagen',
+          tipoMensaje: TipoMensaje.error);
     }
-  }
-
-  _showMessage(String titulo, Color backgroundColor) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(titulo),
-      backgroundColor: backgroundColor,
-    ));
   }
 
   // ini validaciones
@@ -647,8 +648,9 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                                 borderSide: BorderSide(color: Colors.black)),
                             validador: (value) {
                               if (value != newPassword.text) {
-                                _mostrarMensaje(
-                                    'La contraseña no coincide', Colors.red);
+                                MostrarAlerta(
+                                    mensaje: 'La contraseña no coincide',
+                                    tipoMensaje: TipoMensaje.advertencia);
                                 return 'Debe coincidir con la contraseña.';
                               } else if (value.isEmpty) {
                                 return 'Campo requerido.';
@@ -678,19 +680,24 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                               await loginLogic.changePassword(newPassword.text);
                         }
                         if (data == 'Ok') {
-                          _mostrarMensaje(
-                              'Se ha cambiado la contraseña', Colors.green);
+                          MostrarAlerta(
+                              mensaje: 'Se ha cambiado la contraseña',
+                              tipoMensaje: TipoMensaje.correcto);
                           Navigator.of(context).pop();
                         } else {
-                          _mostrarMensaje('Ocurrio un error', Colors.red);
+                          MostrarAlerta(
+                              mensaje: 'Ocurrio un error',
+                              tipoMensaje: TipoMensaje.error);
                         }
                       } else {
-                        _mostrarMensaje('Los campos no coiciden o estan vacios',
-                            Colors.red);
+                        MostrarAlerta(
+                            mensaje: 'Los campos no coiciden o estan vacios',
+                            tipoMensaje: TipoMensaje.advertencia);
                       }
                     } else {
-                      _mostrarMensaje(
-                          'La contraseña es incorrecta', Colors.red);
+                      MostrarAlerta(
+                          mensaje: 'La contraseña es incorrecta',
+                          tipoMensaje: TipoMensaje.error);
                     }
                   },
                   child: Text('Guardar'),
@@ -734,13 +741,5 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
     if (txt.length > 7 && mayusculas && minusculas && numeros) temp = true;
 
     return temp;
-  }
-
-  void _mostrarMensaje(String descripcion, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(descripcion),
-      backgroundColor: color,
-      duration: Duration(seconds: 3),
-    ));
   }
 }

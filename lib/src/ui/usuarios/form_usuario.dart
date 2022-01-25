@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/roles/roles_bloc.dart';
 import 'package:planning/src/blocs/usuarios/usuario/usuario_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_usuarios.dart';
 import 'package:planning/src/models/model_roles.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormUsuario extends StatefulWidget {
   final Map<String, dynamic> datos;
@@ -277,9 +279,10 @@ class _FormUsuarioState extends State<FormUsuario> {
           usuarioBloc.add(EditarUsuarioEvent(jsonUsuario));
         }
       } else {
-        ScaffoldMessenger.of(contextSB).showSnackBar(SnackBar(
-            content: Text(
-                'Seleccione un rol para poder ${datos['accion'] == 0 ? 'agregar' : 'editar'} usuario')));
+        MostrarAlerta(
+            mensaje:
+                'Seleccione un rol para poder ${datos['accion'] == 0 ? 'agregar' : 'editar'} usuario',
+            tipoMensaje: TipoMensaje.advertencia);
       }
     }
   }
@@ -289,7 +292,7 @@ class _FormUsuarioState extends State<FormUsuario> {
     if (type == "msg") {
       child = Text(msg);
     } else if (type == "loading") {
-      child = Center(child: CircularProgressIndicator());
+      child = Center(child: LoadingCustom());
     }
     showDialog(
         context: context,
@@ -317,7 +320,7 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   _dialogSpinner(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -406,11 +409,11 @@ class _FormUsuarioState extends State<FormUsuario> {
     return BlocBuilder<RolesBloc, RolesState>(
       builder: (context, state) {
         if (state is RolesInitial) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is ErrorTokenRoles) {
           return _showDialogMsg(context);
         } else if (state is LoadingRoles) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is MostrarRoles) {
           _roles = state.roles;
           if (banderaSeleccion && _roles.roles != null) {

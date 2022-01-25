@@ -765,8 +765,7 @@ class ApiProvider {
               '/wedding/INVITADOS/agregarAcompanante'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
-
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return true;
       } else if (response.statusCode == 401) {
         _loadLogin(context);

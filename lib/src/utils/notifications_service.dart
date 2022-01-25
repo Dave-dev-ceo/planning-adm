@@ -3,11 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
-import 'package:planning/src/utils/utils.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:universal_html/html.dart';
 
 class NoticationsService {
   static final NoticationsService _noticationsService =
@@ -26,6 +24,8 @@ class NoticationsService {
   NoticationsService._internal();
 
   Future<void> initNotication() async {
+    tz.initializeTimeZones();
+
     final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -80,7 +80,7 @@ class NoticationsService {
           sound: true,
         );
 
-    final bool result = await flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             MacOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -100,7 +100,7 @@ class NoticationsService {
       id,
       title,
       body['message'],
-      tz.TZDateTime.now(tz.local).add(Duration(seconds: seconds)),
+      tz.TZDateTime.now(await tz.local).add(Duration(seconds: seconds)),
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'main_channel',
@@ -109,6 +109,7 @@ class NoticationsService {
           priority: Priority.max,
           importance: Importance.max,
           icon: '@mipmap/ic_launcher',
+          playSound: true,
         ),
         iOS: IOSNotificationDetails(
           sound: 'default.wav',
@@ -124,28 +125,6 @@ class NoticationsService {
     );
   }
 }
-
-// void onDidReceiveLocalNotification(
-//     int id, String title, String body, String payload) async {
-//   BuildContext context;
-//   // display a dialog with the notification details, tap ok to go to another page
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) => CupertinoAlertDialog(
-//       title: Text(title),
-//       content: Text(body),
-//       actions: [
-//         CupertinoDialogAction(
-//           isDefaultAction: true,
-//           child: Text('Ok'),
-//           onPressed: () async {
-//             await OpenFile.open(payload);
-//           },
-//         )
-//       ],
-//     ),
-//   );
-// }
 
 class ReceivedNotification {
   ReceivedNotification({

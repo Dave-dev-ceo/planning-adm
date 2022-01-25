@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/paises/paises_bloc.dart';
 import 'package:planning/src/models/item_model_paises.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
@@ -97,9 +98,9 @@ class _AgregarPlannersState extends State<AgregarPlanners> {
     return BlocBuilder<PaisesBloc, PaisesState>(
         builder: (context, state) {
           if(state is PaisesInitialState){
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               }else if(state is LoadingPaisesState) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               }else if (state is MostrarPaisesState){
                 itemModelPaises = state.paises;
                 return Column(
@@ -157,7 +158,7 @@ class _AgregarPlannersState extends State<AgregarPlanners> {
                 return Center(child: Text(state.message),);
                 //_showError(context, state.message);
               }else{
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               }
         },
       );
@@ -199,9 +200,9 @@ class _AgregarPlannersState extends State<AgregarPlanners> {
         Container(child: BlocBuilder<PaisesBloc, PaisesState>(
           builder: (context, state) {
             if (state is PaisesInitialState) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             } else if (state is LoadingPaisesState) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             } else if (state is MostrarPaisesState) {
               itemModelPaises = state.paises;
               return formItemsDesign(
@@ -221,7 +222,7 @@ class _AgregarPlannersState extends State<AgregarPlanners> {
               );
               //_showError(context, state.message);
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             }
           },
         )),

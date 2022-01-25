@@ -1,9 +1,11 @@
 // imports flutter/dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/contratos/bloc/add_contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/contratos_bloc.dart' as verlitener;
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class AddMachote extends StatefulWidget {
   final Map map;
@@ -83,11 +85,11 @@ class _AddMachoteState extends State<AddMachote> {
       builder: (context, state) {
         if (state is AddContratosInitialState) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is AddContratosLoggingState) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         } else if (state is SelectAddContratosState) {
           if (itemModel.length == 0) {
@@ -199,7 +201,8 @@ class _AddMachoteState extends State<AddMachote> {
   // evento - guarda
   _addContrato(int idContrato, String titulo, String archivo, String clave) {
     if (titulo.isNotEmpty) {
-      _mensaje('Contrato agregado.');
+      MostrarAlerta(
+          mensaje: 'Contrato Agregado.', tipoMensaje: TipoMensaje.correcto);
       setState(() {
         // itemModel.removeWhere((item) => item.idContrato == idContrato);
         itemModel.forEach((element) {
@@ -212,10 +215,13 @@ class _AddMachoteState extends State<AddMachote> {
         'id_machote': idContrato.toString(),
         'titulo': titulo,
         'archivo': archivo,
-        'clave': clave
+        'clave': clave,
+        'tipo_doc': 'html',
+        'tipo_mime': 'pdf'
       }));
     } else {
-      _mensaje('Descripcion vacia.');
+      MostrarAlerta(
+          mensaje: 'Descripcion vacía.', tipoMensaje: TipoMensaje.advertencia);
     }
   }
 
@@ -225,16 +231,9 @@ class _AddMachoteState extends State<AddMachote> {
         .add(verlitener.FechtContratosPdfViewEvent({'machote': archivo}));
   }
 
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
-
   //
   _dialogMSG(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,

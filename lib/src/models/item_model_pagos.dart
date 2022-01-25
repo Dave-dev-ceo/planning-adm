@@ -28,6 +28,7 @@ class _Pagos {
   int _total;
   int _anticipo;
   int _saldo;
+  String _tipoPresupuesto;
 
   _Pagos(data) {
     _idConcepto = data['id_concepto'];
@@ -41,6 +42,7 @@ class _Pagos {
     _total = data['total'];
     _anticipo = data['anticipo'];
     _saldo = data['saldo'];
+    _tipoPresupuesto = data['tipo_presupuesto'];
   }
 
   int get idConcepto => this._idConcepto;
@@ -54,16 +56,18 @@ class _Pagos {
   int get total => this._total;
   int get anticipo => this._anticipo;
   int get saldo => this._saldo;
+  String get tipoPresupuesto => this._tipoPresupuesto;
 
   set idConcepto(value) => this._idConcepto;
   set cantidad(value) => this._cantidad;
   set idServicio(value) => this._idServicio;
   set servicio(value) => this._servicio;
   set idProveedor(value) => this._idProveedor;
-  set proveedor(value) => this._proveedor;  
+  set proveedor(value) => this._proveedor;
   set descripcion(value) => this._descripcion;
   set precioUnitario(value) => this._precioUnitario;
   set total(value) => this._total;
   set anticipo(value) => this._anticipo;
   set saldo(value) => this._saldo;
+  set tipoPresupuesto(value) => this._tipoPresupuesto;
 }

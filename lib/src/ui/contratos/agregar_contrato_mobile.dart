@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/contratos/contratos_bloc.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
 import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
@@ -67,7 +68,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   }
 
   _dialogMSG(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,
@@ -224,7 +225,9 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
           child: BlocBuilder<MachotesBloc, MachotesState>(
             builder: (context, state) {
               if (state is LoadingMachotesState) {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: LoadingCustom(),
+                );
               } else if (state is MostrarMachotesState) {
                 itemModelMC = state.machotes;
                 return _constructorLista(state.machotes);
@@ -233,7 +236,9 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
                   child: Text(state.message),
                 );
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: LoadingCustom(),
+                );
                 //return _constructorLista(itemModelET);
               }
             },

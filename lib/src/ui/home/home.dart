@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
@@ -55,11 +56,13 @@ class _HomeState extends State<Home> {
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
           if (state is PermisosInitial) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: LoadingCustom(),
+            );
           } else if (state is ErrorTokenPermisos) {
             return _showDialogMsg(context);
           } else if (state is LoadingPermisos) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           } else if (state is PermisosOk) {
             permisos = state.permisos;
             List<TabItem> tabs = obtenerTabs(state.permisos
@@ -171,22 +174,19 @@ class _HomeState extends State<Home> {
                 // ],
               ),
             ),
-            body: SafeArea(
-              child: IndexedStack(
-                index: _pageIndex,
-                children: pantallas,
-                // <Widget>[
-                //   DashboardEventos(),
-                //   ListaEstatusInvitaciones(),
-                //   Timing(),
-                //   Construccion(),
-                //   Construccion(),
-                //   Construccion(),
-                //   Construccion(),
-                //   Machotes(),
-                //   Usuarios()
-                // ],
-              ),
+            body: TabBarView(
+              children: pantallas,
+              // <Widget>[
+              //   DashboardEventos(),
+              //   ListaEstatusInvitaciones(),
+              //   Timing(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Construccion(),
+              //   Machotes(),
+              //   Usuarios()
+              // ],
             ),
           ),
         ));
@@ -309,7 +309,7 @@ class _HomeState extends State<Home> {
   }
 
   // _dialogSpinner(String title) {
-  //   Widget child = CircularProgressIndicator();
+  //   Widget child = LoadingCustom();
   //   showDialog(
   //       barrierDismissible: false,
   //       context: context,

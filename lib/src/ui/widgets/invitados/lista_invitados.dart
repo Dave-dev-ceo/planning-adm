@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
@@ -12,6 +14,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:planning/src/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
@@ -176,44 +179,20 @@ class _ListaInvitadosState extends State<ListaInvitados>
             bandera = response == true ? true : false;
           }
         } else {
-          final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-                child: Text('Estructura del excel es incorrecta.'),
-              ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.red,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          MostrarAlerta(
+              mensaje: 'Estructura del excel es incorrecta.',
+              tipoMensaje: TipoMensaje.error);
         }
       }
       if (bandera) {
         blocInvitados.fetchAllInvitados(context);
-        final snackBar = SnackBar(
-          content: Container(
-            height: 30,
-            child: Center(
-              child: Text('Se importó el archivo con éxito.'),
-            ),
-            //color: Colors.red,
-          ),
-          backgroundColor: Colors.green,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        MostrarAlerta(
+            mensaje: 'Se importó el archivo con éxito.',
+            tipoMensaje: TipoMensaje.correcto);
       } else {
-        final snackBar = SnackBar(
-          content: Container(
-            height: 30,
-            child: Center(
-              child: Text('Error: No se pudo realizar el registro.'),
-            ),
-            //color: Colors.red,
-          ),
-          backgroundColor: Colors.orange,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        MostrarAlerta(
+            mensaje: 'Error: No se pudo realizar el registro.',
+            tipoMensaje: TipoMensaje.advertencia);
       }
     } else {
       print('El file is null');
@@ -368,17 +347,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
           Map<String, dynamic> response =
               await api.enviarInvitacionesPorEvento();
           Navigator.pop(_dialogContext);
-          SnackBar sb = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-                child: Text(response['msg']),
-              ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.green,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(sb);
+          MostrarAlerta(
+              mensaje: response['msg'], tipoMensaje: TipoMensaje.correcto);
         },
       ));
     }
@@ -394,7 +364,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
               actions: <Widget>[
                 CupertinoDialogAction(
                   child: Text('OK'),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => openAppSettings(),
                 )
               ],
             ));
@@ -416,7 +386,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         },
       ),
     );
@@ -477,7 +447,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
   }
 
   _dialogSpinner(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -510,7 +480,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
               decoration: new InputDecoration(
                   hintText: 'Buscar...', border: InputBorder.none),
               onChanged: (value) async {
-                print(value);
                 setState(() {
                   _searchResult = value;
                   if (_searchResult == '') {
@@ -521,9 +490,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
                           .toLowerCase()
                           .contains(value.toLowerCase()))
                       .toList();
-                  buscador.forEach((element) {
-                    print(element.nombre);
-                  });
                 });
               },
             ),
@@ -545,7 +511,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           columns: [
             DataColumn(label: Text('Nombre', style: estiloTxt)),
             DataColumn(
-                label: Center(child: Text('Telefono', style: estiloTxt))),
+                label: Center(child: Text('Teléfono', style: estiloTxt))),
             DataColumn(label: Text('Grupo', style: estiloTxt)),
             DataColumn(label: Text('Asistencia', style: estiloTxt)),
             DataColumn(label: Text('Acción', style: estiloTxt)),
@@ -605,19 +571,6 @@ class _DataSource extends DataTableSource {
     }
     _cont = cont;
   }
-  _msgSnackBar(String error, Color color) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(error),
-        ),
-        //color: Colors.red,
-      ),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(_cont).showSnackBar(snackBar);
-  }
 
   Future<void> _showMyDialogLlamada(String numero) async {
     return showDialog<void>(
@@ -625,7 +578,7 @@ class _DataSource extends DataTableSource {
       //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Telefono', textAlign: TextAlign.center),
+          title: Text('Teléfono', textAlign: TextAlign.center),
           content: Container(
             margin: const EdgeInsets.all(10.0),
             width: 400.0,
@@ -637,7 +590,6 @@ class _DataSource extends DataTableSource {
                     title: Text('Se llamara al número $numero'),
                     trailing: Icon(Icons.phone),
                     onTap: () async {
-                      await print('object');
                       launch('tel://$numero');
                       Navigator.of(context).pop();
                     },
@@ -651,9 +603,8 @@ class _DataSource extends DataTableSource {
                               fontWeight: FontWeight.bold,
                               // fontSize: 20,
                               color: Colors.green)),
-                      trailing: Icon(Icons.message),
+                      trailing: FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
-                        await print('objectsss');
                         launch('http://wa.me/521' + numero);
                       }),
                 )
@@ -760,7 +711,9 @@ class _DataSource extends DataTableSource {
               idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
           .listaInvitados(_cont);
     } else {
-      _msgSnackBar("Error al actualizar el estatus", Colors.red);
+      MostrarAlerta(
+          mensaje: 'Error al actualizar el estatus.',
+          tipoMensaje: TipoMensaje.error);
     }
   }
 
@@ -790,7 +743,7 @@ class _DataSource extends DataTableSource {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }*/
@@ -931,7 +884,9 @@ class _DataSource extends DataTableSource {
               idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV)
           .listaInvitados(_cont);
     } else {
-      _msgSnackBar("Error al actualizar el grupo", Colors.red);
+      MostrarAlerta(
+          mensaje: 'Error al actualizar el grupo.',
+          tipoMensaje: TipoMensaje.error);
     }
   }
 

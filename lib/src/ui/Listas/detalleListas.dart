@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
 import 'package:planning/src/logic/detalle_listas_logic.dart';
 import 'package:planning/src/models/item_model_detalle_listas.dart';
 import 'package:planning/src/models/item_model_listas.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:planning/src/utils/utils.dart';
 
@@ -76,7 +78,9 @@ class _DetalleListasState extends State<DetalleListas> {
             detalleListasBloc.add(FechtDetalleListaEvent(state.id_lista));
             return Text('');
           } else if (this.listas['id_lista'] != null) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: LoadingCustom(),
+            );
           } else {
             return Text('');
           }
@@ -159,55 +163,18 @@ class _DetalleListasState extends State<DetalleListas> {
                                 await _jsonAgregarLista(context);
                             detalleListasBloc.add(
                                 CreateListasEvent(json, itemModeDetallaLista));
-                            await ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                action: SnackBarAction(
-                                  label: 'Action',
-                                  onPressed: () {
-                                    // Code to execute.
-                                  },
-                                ),
-                                content: const Text(
-                                    'El elemento se actualizó correctamente.'),
-                                duration: const Duration(milliseconds: 1500),
-                                width: 290.0, // Width of the SnackBar.
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal:
-                                      8.0, // Inner padding for SnackBar content.
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            );
+                            MostrarAlerta(
+                                mensaje:
+                                    'El elemento se actualizó correctamente.',
+                                tipoMensaje: TipoMensaje.correcto);
                           } else if (this.listas['id_lista'] != null) {
                             Map<String, dynamic> json =
                                 await _jsonUpdateLista(context);
                             detalleListasBloc.add(
                                 UpdateListasEvent(json, itemModeDetallaLista));
-                            await ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                action: SnackBarAction(
-                                  label: 'Action',
-                                  onPressed: () {
-                                    // Code to execute.
-                                  },
-                                ),
-                                content: const Text(
-                                    'El elemento se agrego correctamente.'),
-                                duration: const Duration(milliseconds: 1500),
-                                width: 290.0, // Width of the SnackBar.
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal:
-                                      8.0, // Inner padding for SnackBar content.
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                            );
+                            MostrarAlerta(
+                                mensaje: 'El elemento se agrego correctamente.',
+                                tipoMensaje: TipoMensaje.correcto);
                           }
                         },
                       ),

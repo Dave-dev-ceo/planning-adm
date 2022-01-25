@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
 import 'package:planning/src/blocs/tiposEventos/tiposeventos_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:planning/src/models/item_model_eventos.dart';
 import 'package:planning/src/models/item_model_tipo_evento.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class AgregarEvento extends StatefulWidget {
   final ProspectoModel prospecto;
@@ -74,7 +76,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   _dialogMSG(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,
@@ -105,34 +107,16 @@ class _AgregarEventoState extends State<AgregarEvento> {
                   .add(EventoFromProspectoEvent(widget.prospecto.idProspecto));
             }
             Navigator.pop(_ingresando);
-            // final snackBar = SnackBar(
-            //   content: Container(
-            //     height: 30,
-            //     child: Center(
-            //       child: Text('Evento agregardo'),
-            //     ),
-            //     //color: Colors.red,
-            //   ),
-            //   backgroundColor: Colors.green,
-            // );
-            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Evento agregado'),
-            ));
+
+            MostrarAlerta(
+                mensaje: 'Evento agregado', tipoMensaje: TipoMensaje.error);
+
             _clearController();
           } else if (state is ErrorCreateEventosState) {
             Navigator.pop(_ingresando);
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Error al crear evento'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.red,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            MostrarAlerta(
+                mensaje: 'Error al crear evento.',
+                tipoMensaje: TipoMensaje.error);
           }
         },
         child: Container(
@@ -462,9 +446,9 @@ class _AgregarEventoState extends State<AgregarEvento> {
                     //     BlocBuilder<TiposEventosBloc, TiposEventosState>(
                     //   builder: (context, state) {
                     //     if (state is TiposEventosInitial) {
-                    //       return Center(child: CircularProgressIndicator());
+                    //       return Center(child: LoadingCustom());
                     //     } else if (state is LoadingTiposEventosState) {
-                    //       return Center(child: CircularProgressIndicator());
+                    //       return Center(child: LoadingCustom());
                     //     } else if (state is MostrarTiposEventosState) {
                     //       itemModelTipoEvento = state.tiposEventos;
                     //       return SizedBox.shrink();
@@ -487,7 +471,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
                     //       );
                     //       //_showError(context, state.message);
                     //     } else {
-                    //       return Center(child: CircularProgressIndicator());
+                    //       return Center(child: LoadingCustom());
                     //     }
                     //   },
                     // ))

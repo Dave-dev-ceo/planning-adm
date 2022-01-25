@@ -1,7 +1,7 @@
 // ignore_for_file: unused_element
-
-import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
+import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart';
 
 import 'package:flutter/material.dart';
@@ -58,30 +58,31 @@ class _TimingState extends State<Timing> {
           timingBloc.add(FetchTimingsPorPlannerEvent('A'));
         },
         child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            child: BlocBuilder<TimingsBloc, TimingsState>(
-              builder: (context, state) {
-                if (state is TimingsInitial) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (state is LoadingTimingsState) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (state is MostrarTimingsState) {
-                  if (crt) {
-                    itemModelTimings = state.usuarios;
-                    filterTimings = itemModelTimings; //.copy()
-                  }
-                  return _constructorTable(filterTimings);
-                } else if (state is ErrorMostrarTimingsState) {
-                  return Center(
-                    child: Text(state.message),
-                  );
-                  //_showError(context, state.message);
-                } else {
-                  return buildList(filterTimings);
+          child: BlocBuilder<TimingsBloc, TimingsState>(
+            builder: (context, state) {
+              if (state is TimingsInitial) {
+                return Center(
+                  child: LoadingCustom(),
+                );
+              } else if (state is LoadingTimingsState) {
+                return Center(
+                  child: LoadingCustom(),
+                );
+              } else if (state is MostrarTimingsState) {
+                if (crt) {
+                  itemModelTimings = state.usuarios;
+                  filterTimings = itemModelTimings; //.copy()
                 }
-              },
-            ),
+                return _constructorTable(filterTimings);
+              } else if (state is ErrorMostrarTimingsState) {
+                return Center(
+                  child: Text(state.message),
+                );
+                //_showError(context, state.message);
+              } else {
+                return buildList(filterTimings);
+              }
+            },
           ),
         ),
       ),
@@ -188,13 +189,9 @@ class _TimingState extends State<Timing> {
                                 {"timing": timingCtrl.text}));
                             timingCtrl.clear();
                           } else {
-                            final snakcbar = SnackBar(
-                              content: Text('El Campo esta vacio'),
-                              backgroundColor: Colors.red,
-                              duration: Duration(milliseconds: 500),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snakcbar);
+                            MostrarAlerta(
+                                mensaje: 'El Campo esta vacio',
+                                tipoMensaje: TipoMensaje.advertencia);
                           }
                         },
                       ),
@@ -311,10 +308,17 @@ class _TimingState extends State<Timing> {
                                 estatus:
                                     listItemModelTimings.results[index].estatus,
                               ),
-                            );
-                            await timingBloc
-                                .add(FetchTimingsPorPlannerEvent('A'));
-                            setState(() {});
+                            ).then((value) async => {
+                                  if (value != null)
+                                    {
+                                      if (value)
+                                        {
+                                          await timingBloc.add(
+                                              FetchTimingsPorPlannerEvent('A')),
+                                          setState(() {})
+                                        }
+                                    }
+                                });
                           },
                           icon: Icon(
                             Icons.edit,
@@ -332,33 +336,26 @@ class _TimingState extends State<Timing> {
                                         if (state is TimingDeletedState) {
                                           if (state.wasDeletedTiming) {
                                             Navigator.of(context).pop();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'El cronograma se eliminar corecctamente'),
-                                                backgroundColor: Colors.green,
-                                              ),
-                                            );
+                                            MostrarAlerta(
+                                                mensaje:
+                                                    'El cronograma se elimino correctamente',
+                                                tipoMensaje:
+                                                    TipoMensaje.correcto);
                                           } else {
                                             Navigator.of(context).pop();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content:
-                                                    Text('Ocurrio un error'),
-                                                backgroundColor: Colors.red,
-                                              ),
-                                            );
+                                            MostrarAlerta(
+                                                mensaje: 'Ocurrio un error',
+                                                tipoMensaje: TipoMensaje.error);
                                           }
                                         }
                                       },
-                                      child: AlertDialog(
+                                      child: CupertinoAlertDialog(
                                         content: RichText(
                                           text: TextSpan(
                                             text:
                                                 '¿Esta seguro de eliminar el cronograma?\n',
                                             style: TextStyle(
+                                              color: Colors.black,
                                               decorationStyle:
                                                   TextDecorationStyle.dotted,
                                             ),
@@ -367,6 +364,7 @@ class _TimingState extends State<Timing> {
                                                 text:
                                                     '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
                                                 style: TextStyle(
+                                                  color: Colors.black,
                                                   fontStyle: FontStyle.italic,
                                                 ),
                                               )
@@ -374,13 +372,14 @@ class _TimingState extends State<Timing> {
                                           ),
                                         ),
                                         actions: [
-                                          TextButton(
+                                          CupertinoDialogAction(
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
                                             child: Text('Cancelar'),
                                           ),
-                                          TextButton(
+                                          CupertinoDialogAction(
+                                            child: Text('Aceptar'),
                                             onPressed: () async {
                                               await timingBloc.add(
                                                   DeleteTimingPlannerEvent(
@@ -388,8 +387,7 @@ class _TimingState extends State<Timing> {
                                                           .results[index]
                                                           .id_timing));
                                             },
-                                            child: Text('Aceptar'),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ));
@@ -613,6 +611,7 @@ class _EditTimingDialogState extends State<EditTimingDialog> {
           minWidth: size.width * 0.4,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Form(
               key: keyFormCrono,

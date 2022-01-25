@@ -6,6 +6,7 @@ import 'package:planning/src/blocs/Mesas/mesas_bloc.dart';
 
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/mesas_model.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class CrearMesasDialog extends StatefulWidget {
   final int lastnumMesas;
@@ -94,10 +95,8 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
           Navigator.of(context)
               .pop(_lastNumMesas + (int.parse(numeroDeMesas.text) - 1));
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(state.response),
-            backgroundColor: Colors.red,
-          ));
+          MostrarAlerta(
+              mensaje: state.response, tipoMensaje: TipoMensaje.error);
         }
       }
     });

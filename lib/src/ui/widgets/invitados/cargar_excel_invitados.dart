@@ -10,6 +10,7 @@ import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 //import 'package:path/path.dart';
 class CargarExcel extends StatefulWidget {
@@ -95,42 +96,18 @@ class _CargarExcelState extends State<CargarExcel> {
             }
           }
           if (bandera) {
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Se importó el archivo con éxito'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.green,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            MostrarAlerta(
+                mensaje: 'Se importó el archivo con éxito.',
+                tipoMensaje: TipoMensaje.correcto);
           } else {
-            final snackBar = SnackBar(
-              content: Container(
-                height: 30,
-                child: Center(
-                  child: Text('Error: No se pudo realizar el registro'),
-                ),
-                //color: Colors.red,
-              ),
-              backgroundColor: Colors.red,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            MostrarAlerta(
+                mensaje: 'Error: No se pudo realizar el registro.',
+                tipoMensaje: TipoMensaje.error);
           }
         } else {
-          final snackBar = SnackBar(
-            content: Container(
-              height: 30,
-              child: Center(
-                child: Text('Estructura incorrecta'),
-              ),
-              //color: Colors.red,
-            ),
-            backgroundColor: Colors.red,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          MostrarAlerta(
+              mensaje: 'Estructura incorrecta.',
+              tipoMensaje: TipoMensaje.error);
         }
       }
     }

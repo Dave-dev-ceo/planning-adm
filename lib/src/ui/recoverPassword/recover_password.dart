@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/login/login_bloc.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -55,7 +57,9 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
               Navigator.of(context).pushReplacementNamed('/');
             });
           } else if (state is PasswordChangedState) {
-            _mostrarMensaje('Se ha cambiado la contraseña', Colors.green);
+            MostrarAlerta(
+                mensaje: 'Se ha cambiado la contraseña',
+                tipoMensaje: TipoMensaje.correcto);
             Navigator.of(context).pop();
 
             Navigator.of(context).pushReplacementNamed('/');
@@ -72,7 +76,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
               );
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               );
             }
           },
@@ -167,8 +171,10 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                             borderSide: BorderSide(color: Colors.black)),
                         validador: (value) {
                           if (value != newPassword.text) {
-                            _mostrarMensaje(
-                                'La contraseña no coincide', Colors.red);
+                            MostrarAlerta(
+                              mensaje: 'La contraseña no coincide',
+                              tipoMensaje: TipoMensaje.error,
+                            );
                             return 'Debe coincidir con la contraseña.';
                           } else if (value.isEmpty) {
                             return 'Campo requerido.';
@@ -190,8 +196,9 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                   loginBloc.add(
                       ChangeAndRecoverPassword(newPassword.text, widget.token));
                 } else {
-                  _mostrarMensaje(
-                      'Los campos no coiciden o estan vacios', Colors.red);
+                  MostrarAlerta(
+                      mensaje: 'Los campos no coiciden o estan vacios',
+                      tipoMensaje: TipoMensaje.advertencia);
                 }
               },
               child: Text('Guardar'),
@@ -223,13 +230,5 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
     if (txt.length > 7 && mayusculas && minusculas && numeros) temp = true;
 
     return temp;
-  }
-
-  void _mostrarMensaje(String descripcion, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(descripcion),
-      backgroundColor: color,
-      duration: Duration(seconds: 3),
-    ));
   }
 }

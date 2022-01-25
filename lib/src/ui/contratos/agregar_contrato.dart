@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:planning/src/blocs/contratos/contratos_bloc.dart';
 // import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
@@ -70,7 +72,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
   }
 
   _dialogMSG(String title) {
-    Widget child = CircularProgressIndicator();
+    Widget child = LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,
@@ -261,10 +263,14 @@ class _AgregarContratoState extends State<AgregarContrato> {
                     arguments: state.contratos);
               } else {
                 Navigator.pop(_ingresando);
-                _mensaje('No hay archivo');
+                MostrarAlerta(
+                    mensaje: 'No hay archivo',
+                    tipoMensaje: TipoMensaje.advertencia);
               }
             } else if (state is LoadingUploadFileState) {
-              _mensaje('Archivo subido');
+              MostrarAlerta(
+                  mensaje: 'Archivo subido',
+                  tipoMensaje: TipoMensaje.advertencia);
             } else {
               if (_ingresando != null) {
                 Navigator.pop(_ingresando);
@@ -274,7 +280,9 @@ class _AgregarContratoState extends State<AgregarContrato> {
           child: BlocBuilder<MachotesBloc, MachotesState>(
             builder: (context, state) {
               if (state is LoadingMachotesState) {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: LoadingCustom(),
+                );
               } else if (state is MostrarMachotesState) {
                 itemModelMC = state.machotes;
                 return _constructorLista(state.machotes);
@@ -283,7 +291,9 @@ class _AgregarContratoState extends State<AgregarContrato> {
                   child: Text(state.message),
                 );
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                  child: LoadingCustom(),
+                );
                 //return _constructorLista(itemModelET);
               }
             },
@@ -336,12 +346,5 @@ class _AgregarContratoState extends State<AgregarContrato> {
 
     contratosBloc.add(UploadFileEvent(id,
         base64.encode(pickedFile.files[0].bytes), pickedFile.files[0].name));
-  }
-
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
   }
 }

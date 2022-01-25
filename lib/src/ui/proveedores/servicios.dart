@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
 
@@ -75,11 +76,11 @@ class _ServiciosState extends State<Servicios> {
               80.0),
           BlocBuilder<ServiciosBloc, ServiciosState>(builder: (context, state) {
             if (state is LoadingServiciosState) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             } else if (state is MostrarServiciosState) {
               return _form(state.listServicios);
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             }
           })
         ]),
@@ -193,7 +194,6 @@ class _ServiciosState extends State<Servicios> {
   }
 
   _editarDetalleLista(var item) {
-    print(item);
     nombreEditCtrl.text = item.nombre.toString();
     return AlertDialog(
       title: const Text('Editar servicio'),

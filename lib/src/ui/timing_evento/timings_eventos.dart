@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:flutter/services.dart';
 
@@ -51,9 +52,9 @@ class _TimingsEventosState extends State<TimingsEventos> {
     return BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
       builder: (context, state) {
         if (state is ActividadestimingInitial) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is LoadingActividadesTimingsState) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         } else if (state is MostrarActividadesTimingsEventosState) {
           // buscador en header
           if (state.actividadesTimings != null) {
@@ -66,7 +67,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
             }
           } else {
             eventoTimingBloc.add(FetchActividadesTimingsPorIdPlannerEvent());
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoadingCustom());
           }
           if (copyItemModel != null) {
             return _crearVista(copyItemModel);
@@ -75,7 +76,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
           }
         } else if (state is AddActividadesState) {
           // eventoTimingBloc.add(FetchActividadesTimingsPorIdPlannerEvent());
-          // return Center(child: CircularProgressIndicator());
+          // return Center(child: LoadingCustom());
           _listFull.forEach((tarea) {
             tarea.actividad.forEach((actividad) {
               if (tarea.id_tarea == state.idTarea &&
@@ -90,7 +91,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
             child: Text(state.message),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: LoadingCustom());
         }
       },
     );
@@ -216,7 +217,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
               );
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: LoadingCustom(),
               );
             }
           });

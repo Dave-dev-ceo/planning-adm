@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 class EditProveedorDialog extends StatefulWidget {
@@ -206,7 +208,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                 BlocBuilder<ServiciosBloc, ServiciosState>(
                   builder: (context, state) {
                     if (state is LoadingServiciosState) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: LoadingCustom());
                     } else if (state is MostrarServiciosState) {
                       if (state.listServicios != null) {
                         return listToSelectServicios(
@@ -230,10 +232,10 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
           if (keyFormEditProveedor.currentState.validate()) {
             await proveedorBloc.add(UpdateProveedor(widget.proveedor));
 
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Se ha editado correctamente el invitado'),
-              backgroundColor: Colors.green,
-            ));
+            MostrarAlerta(
+                mensaje: 'Se ha editado correctamente el invitado',
+                tipoMensaje: TipoMensaje.correcto);
+
             Navigator.of(context).pop();
           }
         },

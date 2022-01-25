@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/logic/proveedores_evento_logic.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -24,6 +25,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   ItemModelProveedoresEvent provEvet;
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   var checkInvolucrado;
+  Size size;
   // plan a
   List<Servicios> servicio = [];
   // plan b
@@ -50,6 +52,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     if (checkInvolucrado == null) {
       return Scaffold(
         body: RefreshIndicator(
@@ -79,7 +82,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                     ],
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(child: LoadingCustom());
                 }
               }),
             ),
@@ -124,7 +127,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                   ],
                 );
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               }
             }),
           ),
@@ -215,67 +218,83 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   List<Widget> _listServicio(List<ItemProveedor> itemServicio, int idServi) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
-      final tempWidget = ListTile(
-          title: Text(opt.nombre),
-          subtitle: Text(opt.descripcion),
-          trailing: Wrap(
-            spacing: 12,
-            children: <Widget>[
-              SizedBox(),
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed('/agregarArchivo', arguments: {
-                      'id_proveedor': opt.id_proveedor,
-                      'id_servicio': idServi,
-                      'nombre': opt.nombre,
-                      'type': 0,
-                      'prvEv': 0,
-                      'isEvento': true,
-                    });
-                  },
-                  icon: Icon(Icons.file_present)),
-              opt.seleccion
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('Seleccionado'),
-                    )
-                  : SizedBox(),
-              opt.seleccion
-                  ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: opt.observacion != null
-                          ? Text('Observaciones: ${opt.observacion}')
-                          : null,
-                    )
-                  : SizedBox(),
-              Checkbox(
-                checkColor: Colors.black,
-                value: opt.isExpanded,
-                onChanged: !opt.seleccion
-                    ? (value) {
-                        setState(() {
-                          opt.isExpanded = value;
-                        });
-                        Map<String, dynamic> json = {
-                          'id_servicio': idServi,
-                          'id_proveedor': opt.id_proveedor
-                        };
-                        if (opt.isExpanded) {
-                          proveedoreventosBloc
-                              .add(CreateProveedorEventosEvent(json));
-                        } else if (!opt.isExpanded) {
-                          proveedoreventosBloc
-                              .add(DeleteProveedorEventosEvent(json));
-                        }
-                      }
-                    : null,
+      final tempWidget = (size.width > 500)
+          ? ListTile(
+              title: Text(opt.nombre),
+              subtitle: Text(opt.descripcion),
+              trailing: itemsProveedorWidgets(opt, idServi))
+          : Card(
+              elevation: 4.0,
+              child: ExpansionTile(
+                title: Text(
+                  opt.nombre,
+                  style: TextStyle(color: Colors.black),
+                ),
+                subtitle: Text(
+                  opt.descripcion,
+                  style: TextStyle(color: Colors.black),
+                ),
+                children: [
+                  itemsProveedorWidgets(opt, idServi),
+                ],
               ),
-            ],
-          ));
+            );
       lista.add(tempWidget);
     }
     return lista;
+  }
+
+  Wrap itemsProveedorWidgets(ItemProveedor opt, int idServi) {
+    return Wrap(
+      spacing: 12,
+      children: <Widget>[
+        SizedBox(),
+        IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/agregarArchivo', arguments: {
+                'id_proveedor': opt.id_proveedor,
+                'id_servicio': idServi,
+                'nombre': opt.nombre,
+                'type': 0,
+                'prvEv': 0,
+                'isEvento': true,
+              });
+            },
+            icon: Icon(Icons.file_present)),
+        if (opt.seleccion)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Seleccionado'),
+          ),
+        if (opt.seleccion)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: opt.observacion != null
+                ? Text('Observaciones: ${opt.observacion}')
+                : null,
+          ),
+        Checkbox(
+          checkColor: Colors.black,
+          value: opt.isExpanded,
+          onChanged: !opt.seleccion
+              ? (value) {
+                  setState(() {
+                    opt.isExpanded = value;
+                  });
+                  Map<String, dynamic> json = {
+                    'id_servicio': idServi,
+                    'id_proveedor': opt.id_proveedor
+                  };
+                  if (opt.isExpanded) {
+                    proveedoreventosBloc.add(CreateProveedorEventosEvent(json));
+                  } else if (!opt.isExpanded) {
+                    proveedoreventosBloc.add(DeleteProveedorEventosEvent(json));
+                  }
+                }
+              : null,
+        ),
+      ],
+    );
   }
 
   insert(opt) {

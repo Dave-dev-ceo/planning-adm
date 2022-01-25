@@ -29,6 +29,9 @@ class _Contratos {
   String _archivo;
   String _original;
   String _clavePlantilla;
+  String _tipoDoc;
+  String _tipoMime;
+  String _tipoMimeOriginal;
 
   // constructor
   _Contratos(consulta) {
@@ -39,6 +42,9 @@ class _Contratos {
     _archivo = consulta['archivo'];
     _original = consulta['original'];
     _clavePlantilla = consulta['clave_plantilla'];
+    _tipoDoc = consulta['tipo_doc'];
+    _tipoMime = consulta['tipo_mime'];
+    _tipoMimeOriginal = consulta['tipo_mime_original'];
   }
 
   // ini getters
@@ -49,6 +55,9 @@ class _Contratos {
   String get archivo => this._archivo;
   String get original => this._original;
   String get clavePlantilla => this._clavePlantilla;
+  String get tipo_doc => this._tipoDoc;
+  String get tipo_mime => this._tipoMime;
+  String get tipo_mime_original => this._tipoMimeOriginal;
 
   // ini setters
   set idMachote(value) => this._idMachote;
@@ -56,6 +65,9 @@ class _Contratos {
   set descripcion(value) => this._descripcion;
   set machote(value) => this._machote;
   set archivo(value) => this._archivo;
-  set original(value) => this._original  ;
+  set original(value) => this._original;
   set clavePlantilla(value) => this._clavePlantilla;
+  set tipo_doc(value) => this._tipoDoc;
+  set tipo_mime(value) => this._tipoMime;
+  set tipo_mime_original(value) => this._tipoMimeOriginal;
 }

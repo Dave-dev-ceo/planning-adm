@@ -26,20 +26,24 @@ class LayoutBookModel {
     this.file,
     this.mime,
     this.idEvento,
+    this.idBookInspiracion,
   });
   int idEvento;
   String file;
   String mime;
+  int idBookInspiracion;
 
   factory LayoutBookModel.fromJson(Map<String, dynamic> json) =>
       LayoutBookModel(
-        file: json['book_inspiracion'],
+        file: json['archivo'],
         mime: json['tipo_mime'],
         idEvento: json['id_evento'],
+        idBookInspiracion: json['id_book_inspiracion'],
       );
   Map<String, dynamic> toJson() => {
-        'archivo_layout': file,
+        'archivo': file,
         'tipo_mime': mime,
         'id_evento': idEvento,
+        'id_book_inspiracion': idBookInspiracion,
       };
 }

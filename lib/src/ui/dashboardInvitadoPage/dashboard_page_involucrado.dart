@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html_editor_enhanced/utils/shims/dart_ui_real.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
@@ -12,7 +13,7 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/ui/Listas/listas.dart';
 import 'package:planning/src/ui/Resumen/resumen_evento.dart';
-import 'package:planning/src/ui/autorizacion/lista_autorizacion.dart';
+import 'package:planning/src/ui/book_inspiracion/book_inspiracion.dart';
 import 'package:planning/src/ui/contratos/new_contrato.dart';
 import 'package:planning/src/ui/pagos/pagos.dart';
 import 'package:planning/src/ui/planes/planes.dart';
@@ -69,21 +70,21 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is ErrorTokenPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is LoadingPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: Center(child: LoadingCustom()),
             );
           } else if (state is PermisosOk) {
             return Scaffold(
@@ -182,11 +183,19 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
         FaIcon(FontAwesomeIcons.thList),
       ));
 
+      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
+        gridCard.add(_builCard(
+          'Book Inspiración',
+          BookInspiracion(),
+          FaIcon(FontAwesomeIcons.bookOpen),
+        ));
+      }
+
       // temp.add(Listas());
     }
     return Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: 20.0,
+        vertical: 6.0,
         horizontal: 10.0,
       ),
       child: GridView.builder(
@@ -359,7 +368,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                             ),
                     )),
                 width: double.infinity,
-                height: 200,
+                height: double.infinity,
                 child: ClipRect(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
@@ -372,8 +381,9 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
+              Positioned(
+                top: 20.0,
+                left: 8.0,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(

@@ -30,11 +30,8 @@ class ArchivoProveedorBloc
       }
     } else if (event is CreateArchivoProvServEvent) {
       try {
-        int proveedor = await logic.createArchivos(event.data);
+        await logic.createArchivos(event.data);
         //add(FechtArchivoProvServEvent(int.parse(event.data['id_proveedor']), 0));
-        event.data.forEach((key, value) {
-          print('$key == ${value.runtimeType}');
-        });
         add(FechtArchivoProvServEvent(
             (event.data['id_proveedor'].runtimeType is int)
                 ? event.data['id_proveedor']

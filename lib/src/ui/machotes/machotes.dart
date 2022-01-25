@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
 import 'package:planning/src/models/item_model_machotes.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Machotes extends StatefulWidget {
@@ -92,21 +92,21 @@ class _MachotesState extends State<Machotes> {
                           barrierDismissible: false,
                           context: context,
                           builder: (context) => AlertDialog(
+                            buttonPadding: EdgeInsets.zero,
                             title: Center(
                               child: Text('Editar nombre de la plantilla'),
                             ),
-                            content: ResponsiveGridRow(
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                ResponsiveGridCol(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Nombre de la plantilla'),
-                                    initialValue: temp,
-                                    onChanged: (value) {
-                                      temp = value;
-                                    },
-                                  ),
+                                TextFormField(
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Nombre de la plantilla'),
+                                  initialValue: temp,
+                                  onChanged: (value) {
+                                    temp = value;
+                                  },
                                 ),
                               ],
                             ),
@@ -352,7 +352,7 @@ class _MachotesState extends State<Machotes> {
           child: BlocBuilder<MachotesBloc, MachotesState>(
             builder: (context, state) {
               if (state is LoadingMachotesState) {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
               } else if (state is MostrarMachotesState) {
                 itemModelMC = state.machotes;
                 editsContratos = [];
@@ -362,7 +362,7 @@ class _MachotesState extends State<Machotes> {
                   child: Text(state.message),
                 );
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(child: LoadingCustom());
                 //return _constructorLista(itemModelET);
               }
             },

@@ -14,47 +14,90 @@ class BorrarContrato extends VerContratosEvent {
 class SubirContrato extends VerContratosEvent {
   final int id;
   final String archivo;
+  final String tipo_doc;
+  final String tipo_mime;
 
-  SubirContrato(this.id,this.archivo);
+  SubirContrato(this.id, this.archivo, this.tipo_doc, this.tipo_mime);
 
   int get pro => id;
   String get prop => archivo;
 }
 
 class VerContrato extends VerContratosEvent {
-  final String archivo;
+  final int id_contrato;
+  final String tipo_mime;
+  final String tipo_doc;
+  VerContrato(this.id_contrato, this.tipo_mime, this.tipo_doc);
 
-  VerContrato(this.archivo);
-
-  String get prop => archivo;
+  int get prod => id_contrato;
+  String get propp => tipo_mime;
 }
 
 class VerContratoSubido extends VerContratosEvent {
-  final String archivo;
+  final int id_contrato;
+  final String tipo_mime;
+  final String tipo_doc;
 
-  VerContratoSubido(this.archivo);
+  VerContratoSubido(this.id_contrato, this.tipo_mime, this.tipo_doc);
 
-  String get prop => archivo;
+  int get prop => id_contrato;
+}
+
+class DescargarArchivoSubidoEvent extends VerContratosEvent {
+  final int id_contrato;
+  final String tipo_mime;
+  final String nombre;
+  DescargarArchivoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
+  int get prop => id_contrato;
+  String get propd => tipo_mime;
+  String get propds => nombre;
+}
+
+class DescargarContratoSubidoEvent extends VerContratosEvent {
+  final int id_contrato;
+  final String tipo_mime;
+  final String nombre;
+  DescargarContratoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
+  int get prop => id_contrato;
+  String get propd => tipo_mime;
+  String get propds => nombre;
+}
+
+class VerContratoSubidoEvent extends VerContratosEvent {
+  final int id_contrato;
+  final String tipo_mime;
+  final String nombre;
+  VerContratoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
+  int get prop => id_contrato;
+  String get propd => tipo_mime;
+  String get propds => nombre;
 }
 
 class DescargarContrato extends VerContratosEvent {
   final String nombre;
-  final String archivo;
+  final int id_contrato;
+  final String tipo_mime;
 
-  DescargarContrato(this.nombre,this.archivo);
+  DescargarContrato(this.nombre, this.id_contrato, this.tipo_mime);
 
   String get props => nombre;
-  String get prop => archivo;
+  int get prop => id_contrato;
+  String get propsd => tipo_mime;
 }
 
 class CrearContrato extends VerContratosEvent {
   final String nombre;
   final String archivo;
   final String clave;
+  final String tipo_doc;
+  final String tipo_mime;
 
-  CrearContrato(this.nombre,this.archivo,this.clave);
+  CrearContrato(
+      this.nombre, this.archivo, this.clave, this.tipo_doc, this.tipo_mime);
 
   String get props => nombre;
   String get prop => archivo;
   String get pro => clave;
+  String get prod => tipo_doc;
+  String get prodd => tipo_mime;
 }

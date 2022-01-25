@@ -1,6 +1,8 @@
 // imports flutter/dart
 import 'package:flutter/material.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
@@ -77,12 +79,12 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
         // state ini
         if (state is AutorizacionInitialState)
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         // state log
         else if (state is AutorizacionLodingState)
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
         else if (state is AutorizacionSelectState) {
           if (state.autorizacion != null) {
@@ -108,7 +110,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
         // not knowing
         else
           return Center(
-            child: CircularProgressIndicator(),
+            child: LoadingCustom(),
           );
       },
     );
@@ -282,13 +284,6 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
     );
   }
 
-  // mensaje
-  Future<void> _mensaje(String txt) async {
-    return await ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(txt),
-    ));
-  }
-
   // creamos lista con la copia del model
   List<Autorizacion> _copyModel(ItemModelAutorizacion item) {
     List<Autorizacion> temp = [];
@@ -433,7 +428,9 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
   void _sendAutorizacion() {
     _autorizacion['lista'] = _archivos;
     autorizacionBloc.add(CrearAutorizacionEvent(_autorizacion));
-    _mensaje('Autorización agregada.');
+    MostrarAlerta(
+        mensaje: 'Autorización agregada.',
+        tipoMensaje: TipoMensaje.advertencia);
   }
 
   // vamos a la vista con las imagenes
@@ -452,7 +449,9 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
         if (autorizacion.validacion) {
           autorizacionBloc.add(UpdateAutorizacionEvent(idAutorizacion,
               autorizacion.descripcion, autorizacion.comentario));
-          _mensaje('Autorizacion actualizada.');
+          MostrarAlerta(
+              mensaje: 'Autorización actualizada.',
+              tipoMensaje: TipoMensaje.correcto);
         }
       }
     });
@@ -460,7 +459,8 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
 
   void _deleteAutorizacion(int idAutorizacion) {
     autorizacionBloc.add(DeleteAutorizacionEvent(idAutorizacion));
-    _mensaje('Autorizacion eliminada.');
+    MostrarAlerta(
+        mensaje: 'Autorización eliminada.', tipoMensaje: TipoMensaje.correcto);
   }
 }
 

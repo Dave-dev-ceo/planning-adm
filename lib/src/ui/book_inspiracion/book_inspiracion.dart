@@ -1,14 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
-import 'package:planning/src/utils/utils.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:planning/src/utils/utils.dart' as utils;
 
 class BookInspiracion extends StatefulWidget {
   const BookInspiracion({Key key}) : super(key: key);
@@ -19,47 +20,58 @@ class BookInspiracion extends StatefulWidget {
 
 class _BookInspiracion extends State<BookInspiracion> {
   final bookInspiracionService = ServiceBookInspiracionLogic();
+  bool isInvolucrado = false;
 
-  PdfViewerController _pdfViewerController;
   @override
-  void initState() {}
+  void initState() {
+    bookInspiracionService.getBookInspiracion();
+    checkIsInvolucrado();
+
+    super.initState();
+  }
+
+  checkIsInvolucrado() async {
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+
+    if (idInvolucrado != null) {
+      setState(() {
+        isInvolucrado = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: bookInspiracionService.getBookInspiracion(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<LayoutBookModel> snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data.file != null) {
-                      return _viewFile(snapshot.data);
-                    } else {
-                      return Align(
-                        alignment: Alignment.center,
-                        child: Center(
-                          child: Text('No se encontraron datos'),
-                        ),
-                      );
-                    }
-                  } else {
-                    return Align(
-                      alignment: Alignment.center,
-                      child: Center(
-                        child: Text('No se encontraron datos'),
-                      ),
-                    );
-                  }
-                },
-              )
-            ],
-          ),
-        ),
-      ),
+      appBar: (isInvolucrado)
+          ? AppBar(
+              title: Text('Book Inspiración'),
+              centerTitle: true,
+            )
+          : null,
+      body: StreamBuilder(
+          stream: bookInspiracionService.layoutBookImagesStream,
+          builder: (BuildContext context,
+              AsyncSnapshot<List<LayoutBookModel>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: LoadingCustom(),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                if (snapshot.data.length > 0) {
+                  return _viewFile(snapshot.data);
+                } else {
+                  return sinDatos();
+                }
+              } else {
+                return sinDatos();
+              }
+            } else {
+              return sinDatos();
+            }
+          }),
       floatingActionButton: SpeedDial(
         activeForegroundColor: Colors.blueGrey,
         icon: Icons.add,
@@ -76,29 +88,29 @@ class _BookInspiracion extends State<BookInspiracion> {
               child: Icon(Icons.upload),
               label: 'Subir archivo',
               onTap: () async {
-                const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
-
                 FilePickerResult pickedFile =
                     await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: extensiones,
+                  type: FileType.image,
                   allowMultiple: false,
                 );
                 if (pickedFile != null) {
-                  final bytes = pickedFile.files.first.bytes;
+                  var bytes = await pickedFile.files.first.bytes;
+                  if (bytes == null) {
+                    bytes = File(pickedFile.files.first.path).readAsBytesSync();
+                  }
                   String _extension = pickedFile.files.first.extension;
                   String file64 = base64Encode(bytes);
                   bookInspiracionService
                       .createBookInspiracion(file64, _extension)
-                      .then((value) => {
+                      .then((value) async => {
                             if (value == 'Ok')
                               {
-                                setState(() {
-                                  bookInspiracionService.getBookInspiracion();
-                                }),
-                                _mostrarMensaje(
-                                    'Se subio correctamente el PDF.',
-                                    Colors.green)
+                                await bookInspiracionService
+                                    .getBookInspiracion(),
+                                MostrarAlerta(
+                                    mensaje:
+                                        'La imagen se agrego correctamente.',
+                                    tipoMensaje: TipoMensaje.correcto)
                               }
                           });
                 }
@@ -108,10 +120,9 @@ class _BookInspiracion extends State<BookInspiracion> {
               label: 'Descargar Archivo',
               onTap: () async {
                 final datosBookIns =
-                    await bookInspiracionService.getBookInspiracion();
+                    await bookInspiracionService.downloadBookInspiracion();
                 if (datosBookIns != null) {
-                  downloadFile(datosBookIns.file, 'Book Inspiración',
-                      extensionFile: datosBookIns.mime.toString());
+                  utils.downloadFile(datosBookIns, 'Book-Inspiracion');
                 }
               })
         ],
@@ -119,45 +130,95 @@ class _BookInspiracion extends State<BookInspiracion> {
     );
   }
 
-  Widget _viewFile(LayoutBookModel layoutMesa) {
-    if (layoutMesa.mime == 'pdf') {
-      final bytes = base64Decode(layoutMesa.file);
-      return Center(
-        child: Container(
-          width: 500.0,
-          height: MediaQuery.of(context).size.height,
-          child: SfPdfViewer.memory(
-            bytes,
-            controller: _pdfViewerController,
-            canShowScrollStatus: true,
-            interactionMode: PdfInteractionMode.pan,
-          ),
-        ),
-      );
-    } else {
-      final bytes = base64Decode(layoutMesa.file);
-      final image = MemoryImage(bytes);
-      return Center(
-        child: Container(
-          width: 500.0,
-          height: MediaQuery.of(context).size.height,
-          child: ClipRect(
-            child: PhotoView(
-              tightMode: true,
-              backgroundDecoration: BoxDecoration(color: Colors.white),
-              imageProvider: image,
-            ),
-          ),
-        ),
-      );
-    }
+  Align sinDatos() {
+    return Align(
+      alignment: Alignment.center,
+      child: Center(
+        child: Text('No se encontraron datos'),
+      ),
+    );
   }
 
-  _mostrarMensaje(String msj, Color color) {
-    SnackBar snackBar = SnackBar(
-      content: Text(msj),
-      backgroundColor: color,
+  Widget _viewFile(List<LayoutBookModel> layoutBookModel) {
+    return GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+        itemCount: layoutBookModel.length,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 500,
+          mainAxisExtent: 300,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final bytes = base64Decode(layoutBookModel[index].file);
+          return Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Image.memory(
+                  bytes,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.3)),
+                width: double.infinity,
+                height: 30.0,
+                child: FittedBox(
+                  child: IconButton(
+                    onPressed: () async => showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) => _eliminarArchivo(
+                            layoutBookModel[index].idBookInspiracion)),
+                    icon: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  _eliminarArchivo(int idArchivo) {
+    return AlertDialog(
+      title: const Text('Eliminar Imagen'),
+      content: const Text('¿Desea eliminar la imagen del Book de Inspiración?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancelar'),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () {
+            bookInspiracionService
+                .deleteBookInspiracion(idArchivo)
+                .then((value) => {
+                      if (value)
+                        {
+                          MostrarAlerta(
+                              mensaje:
+                                  'La imagen se ha eliminado correctamente.',
+                              tipoMensaje: TipoMensaje.correcto),
+                          bookInspiracionService.getBookInspiracion().then(
+                              (value) => {
+                                    setState(() {}),
+                                    Navigator.pop(context, 'Aceptar')
+                                  }),
+                        }
+                      else
+                        {
+                          MostrarAlerta(
+                              mensaje: 'No se pudo eliminar la imagen.',
+                              tipoMensaje: TipoMensaje.error)
+                        }
+                    });
+          },
+          child: const Text('Aceptar'),
+        ),
+      ],
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/etiquetas/etiquetas_bloc.dart';
 import 'package:planning/src/models/item_model_etiquetas.dart';
 import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class FullScreenDialogEditContrato extends StatefulWidget {
@@ -34,7 +36,8 @@ class _FullScreenDialogEditContratoState
     etiquetasBloc = BlocProvider.of<EtiquetasBloc>(context);
     etiquetasBloc.add(FechtEtiquetasEvent());
     contratosBlocDos = BlocProvider.of<ContratosDosBloc>(context);
-    contratosBlocDos.add(FectValContratoEvent(this.data['archivo'].toString()));
+    contratosBlocDos
+        .add(FectValContratoEvent(this.data['id_contrato'].toString()));
 
     super.initState();
   }
@@ -77,7 +80,7 @@ class _FullScreenDialogEditContratoState
                   child: BlocBuilder<EtiquetasBloc, EtiquetasState>(
                     builder: (context, state) {
                       if (state is LoadingEtiquetasState) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: LoadingCustom());
                       } else if (state is MostrarEtiquetasState) {
                         itemModelET = state.etiquetas;
                         return _constructorLista(state.etiquetas);
@@ -86,7 +89,7 @@ class _FullScreenDialogEditContratoState
                           child: Text(state.message),
                         );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: LoadingCustom());
                         // return _constructorLista(itemModelET);
                       }
                     },
@@ -106,10 +109,10 @@ class _FullScreenDialogEditContratoState
                         return HtmlEditor(
                             controller: controller, //required
                             htmlEditorOptions: HtmlEditorOptions(
-                                autoAdjustHeight: false,
-                                adjustHeightForKeyboard: false,
+                                autoAdjustHeight: true,
+                                adjustHeightForKeyboard: true,
                                 hint: "Escribe aquí...",
-                                initialText: this.data['archivo'].toString()),
+                                initialText: state.valor.toString()),
                             otherOptions: OtherOptions(
                               height: size.height * 0.8,
                             ));
@@ -133,8 +136,9 @@ class _FullScreenDialogEditContratoState
               };
               contratosBlocDos.add(UpdateValContratoEvent(dataJson));
               Navigator.of(context).pop();
-              _mostrarMensaje(
-                  'El contrato se actualizó corractamente.', Colors.green);
+              MostrarAlerta(
+                  mensaje: 'El contrato se actualizó correctamente.',
+                  tipoMensaje: TipoMensaje.correcto);
             },
           ),
         ));
@@ -166,13 +170,5 @@ class _FullScreenDialogEditContratoState
         },
       ),
     );
-  }
-
-  _mostrarMensaje(String msj, Color color) {
-    SnackBar snackBar = SnackBar(
-      content: Text(msj),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

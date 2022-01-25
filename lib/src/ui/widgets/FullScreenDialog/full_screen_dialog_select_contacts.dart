@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:multi_select_item/multi_select_item.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/grupos_bloc.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FullScreenDialog extends StatefulWidget {
   final int id;
@@ -37,7 +39,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(child: LoadingCustom());
       },
     );
   }
@@ -142,7 +144,8 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       if (response) {
         //_mySelection = "0";
         Navigator.of(context).pop();
-        _msgSnackBar('Grupo agregado', Colors.green);
+        MostrarAlerta(
+            mensaje: 'Grupo agregado.', tipoMensaje: TipoMensaje.correcto);
         _listaGrupos();
       } else {
         print('error');
@@ -236,25 +239,15 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
     }
   }
 
-  _msgSnackBar(String error, Color color) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(error),
-        ),
-        //color: Colors.red,
-      ),
-      backgroundColor: color,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
   _saveContact() async {
     if (controller.selectedIndexes.length <= 0) {
-      _msgSnackBar('Seleccione un contacto', Colors.red);
+      MostrarAlerta(
+          mensaje: 'Seleccione un contacto.',
+          tipoMensaje: TipoMensaje.advertencia);
     } else if (_mySelection == "0") {
-      _msgSnackBar('Seleccione un grupo', Colors.red);
+      MostrarAlerta(
+          mensaje: 'Seleccione un grupo.',
+          tipoMensaje: TipoMensaje.advertencia);
     } else {
       ///////////Validar que no este vacio
       for (var i = 0; i < controller.selectedIndexes.length; i++) {
@@ -277,9 +270,13 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       }
       if (bandera) {
         controller.deselectAll();
-        _msgSnackBar('Se importaron los contactos con éxito', Colors.green);
+        MostrarAlerta(
+            mensaje: 'Se importaron los contactos con éxito.',
+            tipoMensaje: TipoMensaje.correcto);
       } else {
-        _msgSnackBar('Error: No se pudo realizar la importación', Colors.red);
+        MostrarAlerta(
+            mensaje: 'Error: No se pudo realizar la importación.',
+            tipoMensaje: TipoMensaje.error);
       }
     }
   }
@@ -368,7 +365,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
                       );
                     },
                   )
-                : Center(child: const CircularProgressIndicator()),
+                : Center(child: LoadingCustom()),
           ),
         ],
       ),

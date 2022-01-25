@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/planners/planners_bloc.dart';
 import 'package:planning/src/models/item_model_planners.dart';
 
@@ -18,19 +19,6 @@ class _PlannersState extends State<Planners> {
     plannerBloc.add(FechtPlannersEvent());
     super.initState();
   }
-  /*void _showError(BuildContext context, String message) {
-    //Navigator.pop(_ingresando);
-    final snackBar = SnackBar(
-      content: Container(
-        height: 30,
-        child: Center(
-          child: Text(message),
-        ),
-      ),
-      backgroundColor: Colors.red,  
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }*/
 
   Widget buildList(ItemModelPlanners snapshot) {
     return ListView(
@@ -64,7 +52,7 @@ class _PlannersState extends State<Planners> {
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
               }
-              return Center(child: CircularProgressIndicator());
+              return Center(child: LoadingCustom());
             },
           );*/
   }
@@ -83,9 +71,13 @@ class _PlannersState extends State<Planners> {
         child: BlocBuilder<PlannersBloc, PlannersState>(
           builder: (context, state) {
             if (state is PlannersInitialState) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingCustom(),
+              );
             } else if (state is LoadingPlannersState) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingCustom(),
+              );
             } else if (state is MostrarPlannersState) {
               itemModelPlanners = state.planners;
               return buildList(state.planners);
