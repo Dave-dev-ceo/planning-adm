@@ -622,19 +622,15 @@ class ApiProvider {
   Future<Map<String, dynamic>> enviarInvitacionesPorEvento() async {
     int idPlanner = await _sharedPreferences.getIdEvento();
     int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
     final response = await client.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/INVITADOS/enviarInvitacionesPorEvento'),
         body: {
+          // 'token': await _sharedPreferences.getToken(),
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
-        },
-        headers: {
-          HttpHeaders.authorizationHeader: token
         });
-
     int enviados = 0;
     // int total = 0;
     if (response.statusCode == 200) {
