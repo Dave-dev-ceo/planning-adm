@@ -78,7 +78,8 @@ class _ProveedoresState extends State<Proveedores> {
 
   Widget expasionFabButton() {
     return SpeedDial(
-      child: Icon(Icons.more_vert_outlined),
+      tooltip: 'Opciones',
+      child: Icon(Icons.more_vert),
       children: [
         SpeedDialChild(
           child: Icon(Icons.download),

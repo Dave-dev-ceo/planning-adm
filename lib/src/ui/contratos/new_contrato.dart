@@ -722,15 +722,8 @@ class New_ContratoState extends State<NewContrato> {
 
   _showButton() {
     return SpeedDial(
-      icon: Icons.add,
-      activeIcon: Icons.close,
-      //backgroundColor: hexToColor('#fdf4e5'),
-      backgroundColor: hexToColor('#fdf4e5'),
-      foregroundColor: Colors.black,
-      overlayColor: Colors.black,
-      overlayOpacity: 0.5,
+      icon: Icons.more_vert,
       tooltip: 'Opciones',
-      heroTag: UniqueKey().toString(),
       children: _childrenButtons(),
     );
   }
@@ -743,8 +736,6 @@ class New_ContratoState extends State<NewContrato> {
           message: 'Subir firmado',
         ),
         label: 'Subir firmado',
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
         onTap: _eventoUploadFile));
     // 1ro
     temp.add(SpeedDialChild(
@@ -752,8 +743,6 @@ class New_ContratoState extends State<NewContrato> {
             child: Icon(Icons.send_and_archive_sharp),
             message: 'Crear plantilla'),
         label: 'Crear plantilla',
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
         onTap: () {
           _eventoAdd('html');
         }));

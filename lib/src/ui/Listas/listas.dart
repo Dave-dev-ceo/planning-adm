@@ -126,7 +126,8 @@ class _ListaState extends State<Listas> {
 
   Widget expasionFab() {
     return SpeedDial(
-      icon: Icons.more_vert_outlined,
+      tooltip: 'Opciones',
+      icon: Icons.more_vert,
       children: [
         SpeedDialChild(
           label: 'Crear lista',

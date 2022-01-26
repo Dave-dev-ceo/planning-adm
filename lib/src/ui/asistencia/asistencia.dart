@@ -289,25 +289,8 @@ class _AsistenciaState extends State<Asistencia> {
   // boton flotante
   SpeedDial _crearBotonFlotante(double pHz) {
     return SpeedDial(
-      icon: Icons.more_vert_outlined,
-      buttonSize: 56.0,
-      visible: true,
-      closeManually: false,
-      curve: Curves.bounceIn,
-      overlayColor: Colors.black,
-      overlayOpacity: 0.5,
+      icon: Icons.more_vert,
       tooltip: 'Opciones',
-      heroTag: UniqueKey().toString(),
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
-      elevation: 8.0,
-      shape: CircleBorder(),
-      gradientBoxShape: BoxShape.circle,
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [hexToColor("#fdf4e5"), hexToColor("#fdf4e5")],
-      ),
       children: [
         SpeedDialChild(
             onTap: () async {

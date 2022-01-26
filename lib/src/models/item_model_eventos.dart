@@ -52,6 +52,15 @@ class Evento {
   String get tipoEvento => _tipoEvento;
   int get numeroInvitados => _numeroInvitados;
   List<Involucrados> get involucrados => _involucrados;
+
+  Map<String, dynamic> toJson() => {
+        'fechaInicio': _fechaInicio,
+        'fechaFin': _fechaFin,
+        'fechaEvento': _fechaEvento,
+        'tipoEvento': _tipoEvento,
+        'numeroInvitados': _numeroInvitados,
+        'involucrados': _involucrados.map((e) => e.toJson()).toList(),
+      };
 }
 
 class Involucrados {
@@ -65,4 +74,9 @@ class Involucrados {
 
   String get nombre => _nombre;
   String get tipoInvolucrado => _tipoInvolucrado;
+
+  Map<String, dynamic> toJson() => {
+        'nombre': nombre,
+        'tipoInvolucrado': tipoInvolucrado,
+      };
 }

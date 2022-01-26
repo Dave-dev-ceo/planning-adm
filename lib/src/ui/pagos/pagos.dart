@@ -918,6 +918,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   Widget _botonAction() {
     return SpeedDial(
       icon: Icons.more_vert,
+      tooltip: 'Opciones',
       children: [
         !isInvolucrado
             ? SpeedDialChild(

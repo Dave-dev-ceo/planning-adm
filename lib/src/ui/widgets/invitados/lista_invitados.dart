@@ -242,32 +242,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
   SpeedDial buildSpeedDial(double pHz) {
     return SpeedDial(
-      /// both default to 16
-      icon: Icons.add,
-      activeIcon: Icons.close_rounded,
-      buttonSize: 56.0,
-      visible: true,
-
-      closeManually: false,
-      curve: Curves.bounceIn,
-      overlayColor: Colors.black,
-      overlayOpacity: 0.5,
+      icon: Icons.more_vert,
       tooltip: 'Opciones',
-      heroTag: UniqueKey().toString(),
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.black,
-      elevation: 12.0,
-      shape: CircleBorder(),
-
-      // orientation: SpeedDialOrientation.Up,
-      // childMarginBottom: 2,
-      // childMarginTop: 2,
-      gradientBoxShape: BoxShape.circle,
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [hexToColor("#fdf4e5"), hexToColor("#fdf4e5")],
-      ),
       children: armarBotonesAcciones(),
     );
   }
@@ -294,7 +270,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
                 .listaInvitados(context);
           }
         },
-        onLongPress: () => print('FIRST CHILD LONG PRESS'),
       ));
 
       temp.add(SpeedDialChild(
@@ -307,7 +282,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
         //label: 'Importar excel',
         //labelStyle: TextStyle(fontSize: 14.0),
         onTap: () => _viewShowDialogExcel(),
-        onLongPress: () => print('SECOND CHILD LONG PRESS'),
       ));
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
@@ -319,7 +293,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
         //label: 'Importar contactos',
         //labelStyle: TextStyle(fontSize: 14.0),
         onTap: () => _viewContact(),
-        onLongPress: () => print('THIRD CHILD LONG PRESS'),
       ));
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
@@ -331,7 +304,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
         //label: 'Importar contactos',
         //labelStyle: TextStyle(fontSize: 14.0),
         onTap: downloadPDFListaInvitados,
-        onLongPress: () => print('FOUR CHILD LONG PRESS'),
       ));
     }
     if (WP_EVT_INV_ENV) {

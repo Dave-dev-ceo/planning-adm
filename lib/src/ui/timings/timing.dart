@@ -88,7 +88,7 @@ class _TimingState extends State<Timing> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        heroTag: '',
+        tooltip: 'Descargar PDF',
         child: Icon(Icons.file_download_sharp),
         onPressed: () async {
           final data = await timingsLogic.downloadPDFTiming();

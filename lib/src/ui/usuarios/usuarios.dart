@@ -114,6 +114,7 @@ class _UsuariosState extends State<Usuarios> {
 
   Widget _expasibleFab() {
     return SpeedDial(
+      tooltip: 'Opciones',
       icon: Icons.more_vert,
       children: [
         SpeedDialChild(

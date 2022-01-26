@@ -811,6 +811,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
 
   Widget _botonFlotante() {
     return SpeedDial(
+      tooltip: 'Opciones',
       icon: Icons.more_vert,
       children: [
         SpeedDialChild(

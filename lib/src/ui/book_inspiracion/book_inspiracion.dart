@@ -73,16 +73,8 @@ class _BookInspiracion extends State<BookInspiracion> {
             }
           }),
       floatingActionButton: SpeedDial(
-        activeForegroundColor: Colors.blueGrey,
-        icon: Icons.add,
-        activeIcon: Icons.close,
-        activeLabel: Text('Cerrar'),
-        animatedIconTheme: IconThemeData(size: 22.0),
-        curve: Curves.bounceIn,
-        animationSpeed: 200,
-        tooltip: 'Ver mas..',
-        elevation: 8.0,
-        shape: CircleBorder(),
+        icon: Icons.more_vert,
+        tooltip: 'Opciones',
         children: [
           SpeedDialChild(
               child: Icon(Icons.upload),

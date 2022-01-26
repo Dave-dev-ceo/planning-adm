@@ -149,13 +149,13 @@ class _MesasPageState extends State<MesasPage> {
   Widget _buttonUpdateLayout() {
     return SpeedDial(
       activeForegroundColor: Colors.blueGrey,
-      icon: Icons.add,
+      icon: Icons.more_vert,
       activeIcon: Icons.close,
       activeLabel: Text('Cerrar'),
       animatedIconTheme: IconThemeData(size: 22.0),
       curve: Curves.bounceIn,
       animationSpeed: 200,
-      tooltip: 'Ver mas..',
+      tooltip: 'Opciones',
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
@@ -216,13 +216,13 @@ class _MesasPageState extends State<MesasPage> {
   Widget _expandableButtonOptions() {
     return SpeedDial(
       activeForegroundColor: Colors.blueGrey,
-      icon: Icons.add,
+      icon: Icons.more_vert,
       activeIcon: Icons.close,
       activeLabel: Text('Cerrar'),
       animatedIconTheme: IconThemeData(size: 22.0),
       curve: Curves.bounceIn,
       animationSpeed: 200,
-      tooltip: 'Ver mas..',
+      tooltip: 'Opciones',
       elevation: 8.0,
       shape: CircleBorder(),
       children: [

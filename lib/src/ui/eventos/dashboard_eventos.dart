@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:http/http.dart';
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/resources/config_conection.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 
 import 'package:flutter/material.dart';
@@ -11,6 +16,7 @@ import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
 import 'package:planning/src/logic/permisos_logic.dart';
 import 'package:planning/src/models/item_model_eventos.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/utils/utils.dart' as utils;
 
 class DashboardEventos extends StatefulWidget {
   final bool WP_EVT_CRT;
@@ -241,7 +247,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
 
   Widget expadibleFab() {
     return SpeedDial(
-      child: Icon(Icons.more_vert_rounded),
+      tooltip: 'Opciones',
+      child: Icon(Icons.more_vert),
       children: [
         SpeedDialChild(
             child: Icon(Icons.event_available),
@@ -251,7 +258,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
         SpeedDialChild(
             child: Icon(Icons.download),
             onTap: () async {
-              print('PDF Download');
               await _buildEventosPDF();
             })
       ],
@@ -259,94 +265,126 @@ class _DashboardEventosState extends State<DashboardEventos> {
   }
 
   void _buildEventosPDF() async {
-    final pdf = pw.Document();
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    const endpoint = '/wedding/EVENTOS/descargarPDFEventos';
 
-    List<pw.Widget> listaGrid = [];
-    // List<pw.Widget> listaView = [];
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
 
-    for (var evento in eventos.results) {
-      // pw.Widget listaViewChild = pw.Column(children: [
-      //   pw.Text('Fecha evento: ${evento.fechaEvento}'),
-      //   pw.Text(
-      //       'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
-      //   for (var i = 0; i < evento.involucrados.length; i++)
-      //     evento.involucrados[0].tipoInvolucrado != 'Sin involucrado'
-      //         ? pw.Text(evento.involucrados[i].tipoInvolucrado +
-      //             ' : ' +
-      //             evento.involucrados[i].nombre)
-      //         : pw.Text('Sin involucrados'),
-      // ]);
-      // listaView.add(listaViewChild);
-
-      pw.Widget gridChild = pw.Container(
-        margin: const pw.EdgeInsets.only(bottom: 6.0),
-        decoration: pw.BoxDecoration(
-          boxShadow: [
-            pw.BoxShadow(
-              color: PdfColors.grey,
-              offset: PdfPoint(0.0, 0.1),
-              spreadRadius: 5.0,
-              blurRadius: 6.0,
-            ),
-          ],
-          border: pw.Border.all(),
-        ),
-        padding: pw.EdgeInsets.all(8.0),
-        child: pw.Column(children: [
-          pw.Center(
-            child: pw.Text(evento.tipoEvento),
-          ),
-          pw.SizedBox(
-            height: 10.0,
-          ),
-          pw.Text('Fecha evento: ${evento.fechaEvento}'),
-          pw.Text(
-              'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
-          for (var i = 0; i < evento.involucrados.length; i++)
-            evento.involucrados[0].tipoInvolucrado != 'Sin involucrado'
-                ? pw.Text(evento.involucrados[i].tipoInvolucrado +
-                    ' : ' +
-                    evento.involucrados[i].nombre)
-                : pw.Text('Sin involucrados'),
-        ]),
-      );
-      listaGrid.add(gridChild);
-    }
-    pdf.addPage(
-      pw.MultiPage(
-        build: (pw.Context context) => [
-          pw.Center(
-            child: pw.Text('Eventos:', style: pw.Theme.of(context).header4),
-          ),
-          pw.SizedBox(height: 15.0),
-          pw.GridView(
-            crossAxisCount: 3,
-            childAspectRatio: 1.0,
-            crossAxisSpacing: 8.0,
-            mainAxisSpacing: 8.0,
-            direction: pw.Axis.vertical,
-            children: listaGrid,
-          )
-        ],
-      ),
+    final data = {
+      'idPlanner': idPlanner,
+      'idEvento': idEvento,
+      'eventos': eventos.results.map((e) => e.toJson()).toList(),
+    };
+    Client client = Client();
+    ConfigConection confiC = new ConfigConection();
+    final resp = await client.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
     );
-    String titulotemp = 'Eventos';
 
-    final titulo = titulotemp.replaceAll(" ", "_");
+    if (resp.statusCode == 200) {
+      final pdf = json.decode(resp.body)['pdf'];
+      String titulotemp = 'Eventos';
+      final titulo = titulotemp.replaceAll(" ", "_");
+      final date = DateTime.now();
+      utils.downloadFile(pdf, '$titulo-$date');
+    }
 
-    final date = DateTime.now();
+    // final pdf = pw.Document();
 
-    final bytes = await pdf.save();
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
+    // List<pw.Widget> listaGrid = [];
+    // // List<pw.Widget> listaView = [];
 
-    final anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = '$titulo-$date.pdf';
-    html.document.body.children.add(anchor);
-    anchor.click();
-    html.document.body.children.remove(anchor);
-    html.Url.revokeObjectUrl(url);
+    // for (var evento in eventos.results) {
+    //   // pw.Widget listaViewChild = pw.Column(children: [
+    //   //   pw.Text('Fecha evento: ${evento.fechaEvento}'),
+    //   //   pw.Text(
+    //   //       'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
+    //   //   for (var i = 0; i < evento.involucrados.length; i++)
+    //   //     evento.involucrados[0].tipoInvolucrado != 'Sin involucrado'
+    //   //         ? pw.Text(evento.involucrados[i].tipoInvolucrado +
+    //   //             ' : ' +
+    //   //             evento.involucrados[i].nombre)
+    //   //         : pw.Text('Sin involucrados'),
+    //   // ]);
+    //   // listaView.add(listaViewChild);
+
+    //   pw.Widget gridChild = pw.Container(
+    //     margin: const pw.EdgeInsets.only(bottom: 6.0),
+    //     decoration: pw.BoxDecoration(
+    //       boxShadow: [
+    //         pw.BoxShadow(
+    //           color: PdfColors.grey,
+    //           offset: PdfPoint(0.0, 0.1),
+    //           spreadRadius: 5.0,
+    //           blurRadius: 6.0,
+    //         ),
+    //       ],
+    //       border: pw.Border.all(),
+    //     ),
+    //     padding: pw.EdgeInsets.all(8.0),
+    //     child: pw.Column(children: [
+    //       pw.Center(
+    //         child: pw.Text(evento.tipoEvento),
+    //       ),
+    //       pw.SizedBox(
+    //         height: 10.0,
+    //       ),
+    //       pw.Text('Fecha evento: ${evento.fechaEvento}'),
+    //       pw.Text(
+    //           'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
+    //       for (var i = 0; i < evento.involucrados.length; i++)
+    //         evento.involucrados[0].tipoInvolucrado != 'Sin involucrado'
+    //             ? pw.Text(evento.involucrados[i].tipoInvolucrado +
+    //                 ' : ' +
+    //                 evento.involucrados[i].nombre)
+    //             : pw.Text('Sin involucrados'),
+    //     ]),
+    //   );
+    //   listaGrid.add(gridChild);
+    // }
+    // pdf.addPage(
+    //   pw.MultiPage(
+    //     build: (pw.Context context) => [
+    //       pw.Center(
+    //         child: pw.Text('Eventos:', style: pw.Theme.of(context).header4),
+    //       ),
+    //       pw.SizedBox(height: 15.0),
+    //       pw.GridView(
+    //         crossAxisCount: 3,
+    //         childAspectRatio: 1.0,
+    //         crossAxisSpacing: 8.0,
+    //         mainAxisSpacing: 8.0,
+    //         direction: pw.Axis.vertical,
+    //         children: listaGrid,
+    //       )
+    //     ],
+    //   ),
+    // );
+    // String titulotemp = 'Eventos';
+
+    // final titulo = titulotemp.replaceAll(" ", "_");
+
+    // final date = DateTime.now();
+
+    // final bytes = await pdf.save();
+    // final blob = html.Blob([bytes]);
+    // final url = html.Url.createObjectUrlFromBlob(blob);
+
+    // final anchor = html.document.createElement('a') as html.AnchorElement
+    //   ..href = url
+    //   ..style.display = 'none'
+    //   ..download = '$titulo-$date.pdf';
+    // html.document.body.children.add(anchor);
+    // anchor.click();
+    // html.document.body.children.remove(anchor);
+    // html.Url.revokeObjectUrl(url);
   }
 }
