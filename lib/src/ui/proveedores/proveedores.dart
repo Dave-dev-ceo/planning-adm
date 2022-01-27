@@ -25,7 +25,9 @@ class _ProveedoresState extends State<Proveedores> {
   ItemModelProveedores itemModelProv;
   FetchProveedoresLogic proveedoresLogic = FetchProveedoresLogic();
 
-  List<ItemProveedor> _data = [];
+  // List<ItemProveedor> _data = [];
+  List<ServiciosModel> _data = [];
+  ItemModelProveedores _dataProveedores;
 
   @override
   void initState() {
@@ -119,29 +121,29 @@ class _ProveedoresState extends State<Proveedores> {
         padding: EdgeInsets.all(15),
         child: BlocBuilder<ProveedorBloc, ProveedorState>(
             builder: (context, state) {
-          if (state is MostrarProveedorState) {
-            if (state.detlistas != null) {
-              _data = _createDataListProv(state.detlistas);
-            }
-            return Text('');
-          } else if (state is MostrarSevicioByProveedorState) {
-            if (_data != null) {
-              // List<ServiciosModel> listaServ = [];
+          if (state is MostrarSevicioByProveedorState) {
+            _data = _createDataListServ(state.detlistas);
+            if (_dataProveedores != null && _data != null) {
               _data.forEach((elmProv) {
-                List<ServiciosModel> listaServ = [];
-                if (state.detlistas.results.length > 0) {
-                  state.detlistas.results.forEach((sev) {
-                    if (elmProv.id_proveedor == sev.id_proveedor) {
-                      listaServ.add(ServiciosModel(
-                          id_servicio: sev.id_servicio, nombre: sev.nombre));
-                    }
-                    elmProv.servicio = listaServ;
-                  });
-                }
+                List<ItemProveedor> listaProv = [];
+                _dataProveedores.results.forEach((prov) {
+                  if (elmProv.id_proveedor == prov.id_proveedor) {
+                    listaProv.add(ItemProveedor(
+                        id_proveedor: prov.id_proveedor,
+                        nombre: prov.nombre,
+                        descripcion: prov.descripcion,
+                        estatus: prov.estatus,
+                        correo: prov.correo,
+                        direccion: prov.direccion,
+                        telefono: prov.telefono));
+                  }
+
+                  elmProv.proveedores = listaProv;
+                });
               });
             }
-
             return Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _listaBuild(),
                 SizedBox(
@@ -149,6 +151,9 @@ class _ProveedoresState extends State<Proveedores> {
                 )
               ],
             );
+          } else if (state is MostrarProveedorState) {
+            _dataProveedores = state.detlistas;
+            return Text('');
           } else {
             return Center(child: LoadingCustom());
           }
@@ -158,94 +163,112 @@ class _ProveedoresState extends State<Proveedores> {
   }
 
   Widget _listaBuild() {
-    return Container(
-        child: ExpansionPanelList(
-      animationDuration: Duration(milliseconds: 500),
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _data[index].isExpanded = !isExpanded;
-        });
-      },
-      children: _data.map<ExpansionPanel>((ItemProveedor item) {
-        return ExpansionPanel(
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              leading: IconButton(
-                tooltip: 'Editar',
-                icon: Icon(
-                  Icons.edit,
-                  size: 14.0,
-                ),
-                onPressed: () async {
-                  showDialog(
-                      context: context,
-                      builder: (context) => EditProveedorDialog(
-                            proveedor: item,
-                          ));
-                },
-              ),
-              title: Text(item.nombre),
-              subtitle: Text(item.descripcion),
-              trailing: Wrap(spacing: 12, children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(
-                      '/agregarArchivo',
-                      arguments: {
-                        'id_proveedor': item.id_proveedor,
-                        'id_servicio': null,
-                        'nombre': item.nombre,
-                        'type': 0,
-                        'prvEv': 2,
-                        'isEvento': false,
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.file_present),
-                ),
-              ]),
-            );
-          },
-          body:
-              Column(children: _listServicio(item.servicio, item.id_proveedor)),
-          isExpanded: item.isExpanded,
-        );
-      }).toList(),
-    ));
+    return Flexible(
+        child: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            // animationDuration: Duration(milliseconds: 500),
+            children: _data.map<Card>((ServiciosModel item) {
+              return Card(
+                child: ExpansionTile(
+                    title: Text(item.nombre,
+                        style: TextStyle(
+                          color: Colors.black,
+                        )),
+                    children:
+                        _listServicio(item.proveedores, item.id_proveedor),
+                    trailing: Wrap(
+                      spacing: 12,
+                      children: <Widget>[
+                        IconButton(
+                            onPressed: () {
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      _eliminarDetalleLista(
+                                          item.id_servicio, item.id_proveedor));
+                            },
+                            icon:
+                                const Icon(Icons.delete, color: Colors.black)),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed('/agregarArchivo', arguments: {
+                                'id_proveedor': item.id_proveedor,
+                                'id_servicio': item.id_servicio,
+                                'nombre': item.nombre,
+                                'type': 0,
+                                'prvEv': 2,
+                                'isEvento': false,
+                              });
+                            },
+                            icon: const Icon(Icons.file_present,
+                                color: Colors.black))
+                      ],
+                    )),
+              );
+            }).toList()));
   }
 
   List<Widget> _listServicio(itemServicio, id_proveedor) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
       final tempWidget = ListTile(
-          title: Text(opt.nombre),
-          trailing: Wrap(
-            spacing: 12,
-            children: <Widget>[
-              IconButton(
-                  onPressed: () => showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          _eliminarDetalleLista(opt.id_servicio, id_proveedor)),
-                  icon: const Icon(Icons.delete)),
-              IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed('/agregarArchivo', arguments: {
-                      'id_proveedor': id_proveedor,
-                      'id_servicio': opt.id_servicio,
-                      'nombre': opt.nombre,
-                      'type': 0,
-                      'prvEv': 2,
-                      'isEvento': false,
-                    });
-                  },
-                  icon: const Icon(Icons.file_present))
-            ],
-          ));
+        leading: IconButton(
+          tooltip: 'Editar',
+          icon: Icon(
+            Icons.edit,
+            size: 14.0,
+            color: Colors.black,
+          ),
+          onPressed: () async {
+            showDialog(
+                context: context,
+                builder: (context) => EditProveedorDialog(
+                      proveedor: opt,
+                    ));
+          },
+        ),
+        title: Text(opt.nombre,
+            style: TextStyle(
+              color: Colors.black,
+            )),
+        trailing: Wrap(spacing: 12, children: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                '/agregarArchivo',
+                arguments: {
+                  'id_proveedor': opt.id_proveedor,
+                  'id_servicio': null,
+                  'nombre': opt.nombre,
+                  'type': 0,
+                  'prvEv': 2,
+                  'isEvento': false,
+                },
+              );
+            },
+            icon: const Icon(Icons.file_present, color: Colors.black),
+          ),
+        ]),
+      );
       lista.add(tempWidget);
     }
     return lista;
+  }
+
+  _createDataListServ(ItemModelServicioByProv serv) {
+    List<ServiciosModel> _listaServ = [];
+    List<ItemProveedor> dataProv = [];
+    serv.results.forEach((element) {
+      _listaServ.add(ServiciosModel(
+          id_servicio: element.id_servicio,
+          id_proveedor: element.id_proveedor,
+          isExpanded: false,
+          nombre: element.nombre,
+          proveedores: dataProv));
+    });
+    return _listaServ;
   }
 
   _createDataListProv(ItemModelProveedores prov) {
