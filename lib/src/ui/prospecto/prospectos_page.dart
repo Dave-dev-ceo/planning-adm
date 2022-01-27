@@ -491,6 +491,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
 
   bool isFocusDescripcion = false;
   bool isEditDescripcion = false;
+  TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -500,7 +501,6 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Dialog(
       child: BlocListener<ProspectoBloc, ProspectoState>(
         listener: (context, state) {
@@ -508,27 +508,21 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             Navigator.of(context).pop();
           }
         },
-        child: SingleChildScrollView(
-          child: Container(
-            height: size.height * 0.8,
-            width: size.width * 0.6,
-            margin: EdgeInsets.all(15.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  tituloWidget(context),
-                  namePredecesorWidget(),
-                  involucradoWidget(),
-                  phonePredecesorWidget(),
-                  emailPredecesorWidget(),
-                  descripcionPredecesorWidget(),
-                  actividadesWidget(),
-                  if (widget.claveEtapa == 'ACP') addEventoButton(context),
-                  spacerSizedBoxWidget(),
-                  deleteProspectoButton(),
-                ],
-              ),
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              tituloWidget(context),
+              namePredecesorWidget(),
+              involucradoWidget(),
+              phonePredecesorWidget(),
+              emailPredecesorWidget(),
+              descripcionPredecesorWidget(),
+              actividadesWidget(),
+              if (widget.claveEtapa == 'ACP') addEventoButton(context),
+              spacerSizedBoxWidget(),
+              deleteProspectoButton(),
+            ],
           ),
         ),
       ),
@@ -543,7 +537,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
 
   Align deleteProspectoButton() {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.center,
       child: ElevatedButton(
         onPressed: () {
           showDialog(
@@ -768,7 +762,6 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
         focusColor: Colors.transparent,
         selectedTileColor: Colors.transparent,
         hoverColor: Colors.transparent,
-        onLongPress: null,
         onTap: () {
           setState(() {
             canEditPhone = true;
@@ -818,7 +811,8 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
           initialValue: (widget.prospecto.telefono != null)
               ? widget.prospecto.telefono.toString()
               : null,
-          onChanged: (value) => {widget.prospecto.telefono = int.parse(value)},
+          onChanged: (value) =>
+              {widget.prospecto.telefono = int.tryParse(value)},
           onFieldSubmitted: (value) => {
             if (_keyPhoneForm.currentState.validate())
               {
@@ -835,27 +829,79 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
 
   Widget descripcionPredecesorWidget() {
     return ListTile(
+      focusColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      selectedTileColor: Colors.transparent,
+      onTap: () => setState(() {
+        isEditDescripcion = true;
+      }),
       leading: Icon(
-        Icons.description_outlined,
-        color: Color(0xFF172C4C),
+        Icons.person,
+        color: Colors.black,
       ),
       title: Text('Descripcion'),
-      subtitle: (widget.prospecto.descripcion != null)
-          ? !isEditDescripcion
-              ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    child: Text(widget.prospecto.descripcion),
-                    onTap: () {
-                      setState(() {
-                        isEditDescripcion = true;
-                      });
-                    },
+      subtitle: TextFormField(
+        decoration: InputDecoration(
+          suffixIcon: isEditDescripcion
+              ? IconButton(
+                  onPressed: () {
+                    _prospectoBloc
+                        .add(UpdateDescripcionProspecto(widget.prospecto));
+                    setState(() {
+                      isEditDescripcion = false;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.save,
+                    color: Colors.black,
                   ),
                 )
-              : textAreaWidgetEdit()
-          : textAreaWidgetEdit(),
+              : null,
+          hintText: 'Añadir una descripción más detallada...',
+          disabledBorder: InputBorder.none,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue, width: 1.0),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
+          ),
+          border: InputBorder.none,
+        ),
+        enabled: isEditDescripcion,
+        initialValue: (widget.prospecto.descripcion != null)
+            ? widget.prospecto.descripcion
+            : null,
+        onChanged: (value) => {widget.prospecto.descripcion = value},
+        onFieldSubmitted: (value) {
+          _prospectoBloc.add(UpdateDescripcionProspecto(widget.prospecto));
+          setState(() {
+            isEditDescripcion = false;
+          });
+        },
+      ),
     );
+    // return ListTile(
+    //   leading: Icon(
+    //     Icons.description_outlined,
+    //     color: Color(0xFF172C4C),
+    //   ),
+    //   title: Text('Descripcion'),
+    //   subtitle: (widget.prospecto.descripcion != null)
+    //       ? !isEditDescripcion
+    //           ? Padding(
+    //               padding: const EdgeInsets.all(8.0),
+    //               child: GestureDetector(
+    //                 child: Text(widget.prospecto.descripcion),
+    //                 onTap: () {
+    //                   setState(() {
+    //                     isEditDescripcion = true;
+    //                   });
+    //                 },
+    //               ),
+    //             )
+    //           : textAreaWidgetEdit()
+    //       : textAreaWidgetEdit(),
+    // );
   }
 
   Widget namePredecesorWidget() {
@@ -908,132 +954,141 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   }
 
   Widget actividadesWidget() {
-    TextEditingController textEditingController = TextEditingController();
-    return ListTile(
-      minVerticalPadding: 10.0,
-      leading: Icon(
-        Icons.wysiwyg,
-        color: Color(0xFF172C4C),
-      ),
-      title: Text('Actividades'),
-      subtitle: Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.comment_sharp),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: textEditingController,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                    hintText: 'Añadir comentario...',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(
-                  height: 6.0,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      if (textEditingController.text.length > 0) {
-                        ActividadProspectoModel newActividad =
-                            ActividadProspectoModel(
-                                descripcion: textEditingController.text,
-                                idProspecto: widget.prospecto.idProspecto);
-
-                        _prospectoBloc
-                            .add(InsertActividadProspecto(newActividad));
-                        setState(() {
-                          widget.prospecto.actividades.add(newActividad);
-                        });
-                      }
-                    },
-                    child: Text('Guarda'))
-              ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          leading: Icon(
+            Icons.wysiwyg,
+            color: Color(0xFF172C4C),
+          ),
+          title: Text('Actividades'),
+        ),
+        ListTile(
+          title: TextField(
+            controller: textEditingController,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+              ),
+              hintText: 'Añadir comentario..',
+              border: OutlineInputBorder(),
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: widget.prospecto.actividades.length,
-            itemBuilder: (BuildContext context, int index) {
+          trailing: IconButton(
+            onPressed: () {
+              if (textEditingController.text.length > 0) {
+                ActividadProspectoModel newActividad = ActividadProspectoModel(
+                  descripcion: textEditingController.text,
+                  idProspecto: widget.prospecto.idProspecto,
+                );
+                _prospectoBloc.add(InsertActividadProspecto(newActividad));
+                setState(() {
+                  textEditingController.clear();
+                });
+              }
+            },
+            icon: Icon(Icons.save),
+            color: Colors.black,
+          ),
+        ),
+        BlocBuilder<ProspectoBloc, ProspectoState>(
+          builder: (context, state) {
+            if (state is MostrarEtapasState) {
+              final etapas = state.etapas;
+              final etapa = etapas
+                  .firstWhere((e) => e.idEtapa == widget.prospecto.idEtapa);
+              final prospecto = etapa.prospectos.firstWhere(
+                  (p) => p.idProspecto == widget.prospecto.idProspecto);
               final List<ActividadProspectoModel> actividades =
-                  List.from(widget.prospecto.actividades.reversed);
-              return ListTile(
-                leading: Icon(Icons.messenger_sharp),
-                title: TextFormField(
-                  onTap: () {
-                    setState(() {
-                      actividades[index].isEdit = true;
-                    });
-                  },
-                  readOnly: !actividades[index].isEdit,
-                  initialValue: actividades[index].descripcion,
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue,
-                          width: 1.0,
-                        ),
+                  prospecto.actividades;
+              return Flexible(
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: actividades.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    for (var act in actividades) {
+                      print(act.descripcion);
+                    }
+                    return ListTile(
+                      onTap: () {
+                        setState(() {
+                          actividades[index].isEdit = true;
+                        });
+                      },
+                      key: UniqueKey(),
+                      leading: Icon(Icons.messenger_sharp),
+                      title: TextFormField(
+                        enabled: actividades[index].isEdit,
+                        initialValue: actividades[index].descripcion,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.blue,
+                                width: 1.0,
+                              ),
+                            ),
+                            suffixIcon: actividades[index].isEdit
+                                ? IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _prospectoBloc.add(UpdateActividadEvent(
+                                            actividades[index]));
+                                        actividades[index].isEdit = false;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.save,
+                                      color: Colors.black,
+                                    ))
+                                : null),
+                        onChanged: (value) {
+                          actividades[index].descripcion = value;
+                        },
                       ),
-                      suffixIcon: actividades[index].isEdit
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _prospectoBloc.add(
-                                      UpdateActividadEvent(actividades[index]));
-                                  actividades[index].isEdit = false;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.save,
-                                color: Colors.black,
-                              ))
-                          : null),
-                  onChanged: (value) {
-                    actividades[index].descripcion = value;
+                      trailing: IconButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    content:
+                                        Text('¿Desea eliminar la actividad?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _prospectoBloc.add(
+                                            DeleteActividadEvent(
+                                              actividades[index].idActividad,
+                                            ),
+                                          );
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Aceptar'),
+                                      )
+                                    ],
+                                  ));
+                        },
+                        icon: Icon(Icons.delete_forever),
+                      ),
+                    );
                   },
-                ),
-                trailing: IconButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              content: Text('¿Desea eliminar la actividad?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    _prospectoBloc.add(DeleteActividadEvent(
-                                        actividades[index].idActividad));
-                                    setState(() {
-                                      widget.prospecto.actividades
-                                          .remove(actividades[index]);
-                                    });
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Aceptar'),
-                                )
-                              ],
-                            ));
-                  },
-                  icon: Icon(Icons.delete_forever),
                 ),
               );
-            },
-          ),
-        ],
-      ),
+            }
+            return LinearProgressIndicator();
+          },
+        ),
+      ],
     );
   }
 

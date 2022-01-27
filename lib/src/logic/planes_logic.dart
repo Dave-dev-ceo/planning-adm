@@ -276,7 +276,6 @@ class ConsultasPlanesLogic extends PlanesLogic {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-
     // enviamos
     final response = await client.post(
         Uri.parse(confiC.url +

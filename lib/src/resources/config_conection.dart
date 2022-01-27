@@ -15,7 +15,7 @@ class ConfigConection {
   ConfigConection() {
     if (desarrollo) {
       addPuerto = "3005";
-      addUrl = "http://localhost:";
+      addUrl = "http://10.0.2.2:";
     } else {
       addPuerto = "9005";
       addUrl = "https://pruebas.grupotum.com:";
