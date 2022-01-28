@@ -27,7 +27,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
   List<bool> checkeds = [];
   List<int> listServiciostoAdd = [];
   bool isLoad = false;
-
+  ItemModuleServicios _listServicios;
   Future<List<Territorio>> peticionPaises;
   Future<List<Territorio>> peticionEstados;
   Future<List<Territorio>> peticionCiudades;
@@ -38,6 +38,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
     proveedorBloc = BlocProvider.of<ProveedorBloc>(context);
     servicioBloc = BlocProvider.of<ServiciosBloc>(context);
     servicioBloc.add(FechtServiciosEvent());
+
     peticionPaises = getPaises();
     if (widget.proveedor.idPais != null)
       peticionEstados = getEstados(widget.proveedor.idPais);
@@ -309,8 +310,24 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                       return Center(child: LoadingCustom());
                     } else if (state is MostrarServiciosState) {
                       if (state.listServicios != null) {
+                        _listServicios = state.listServicios;
+                        servicioBloc.add(FechtServiciosByProveedorEvent(
+                            widget.proveedor.id_proveedor));
+                        return Center(child: Text('Sin servicios'));
+                      } else {
+                        return Center(child: Text('Sin servicios'));
+                      }
+                    } else if (state is MostrarServiciosByProveedorState) {
+                      List<ServiciosModel> servicio = [];
+                      state.listServicios.results.forEach((element) {
+                        servicio.add(ServiciosModel(
+                            id_servicio: element.id_servicio,
+                            nombre: element.nombre));
+                      });
+                      widget.proveedor.servicio = servicio;
+                      if (_listServicios != null) {
                         return listToSelectServicios(
-                            state.listServicios, widget.proveedor);
+                            _listServicios, widget.proveedor);
                       } else {
                         return Center(child: Text('Sin servicios'));
                       }

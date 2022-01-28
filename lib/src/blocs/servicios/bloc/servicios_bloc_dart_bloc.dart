@@ -53,6 +53,16 @@ class ServiciosBloc extends Bloc<ServiciosEvent, ServiciosState> {
           add(FechtServiciosEvent());
         }
       } catch (e) {}
+    } else if (event is FechtServiciosByProveedorEvent) {
+      try {
+        ItemModuleServicios service =
+            await logic.fetchServiciosByProoveedor(event.id_proveedor);
+        yield MostrarServiciosByProveedorState(service);
+      } on ServiciosException {
+        yield ErrorMostrarServiciosState('Sin articulos');
+      } on TokenException {
+        yield ErrorMostrarServiciosState('Sesión caducada');
+      } catch (e) {}
     }
   }
 }
