@@ -17,6 +17,10 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
+ConfigConection _configC = new ConfigConection();
+SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+Client client = Client();
+
 class FullScreenDialogAgregarProveedorEvent extends StatefulWidget {
   final Map<String, dynamic> proveedor;
   const FullScreenDialogAgregarProveedorEvent(
@@ -32,7 +36,6 @@ class _FullScreenDialogAgregarProveedorEvent
     extends State<FullScreenDialogAgregarProveedorEvent> {
   final Map<String, dynamic> proveedor;
   _FullScreenDialogAgregarProveedorEvent(this.proveedor);
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   GlobalKey<FormState> keyForm = new GlobalKey();
   ItemModelProveedores itemProveedores;
   ProveedorBloc proveedorBloc;
@@ -47,9 +50,6 @@ class _FullScreenDialogAgregarProveedorEvent
   Future<List<Territorio>> peticionPaises;
   Future<List<Territorio>> peticionEstados;
   Future<List<Territorio>> peticionCiudades;
-
-  ConfigConection _configC = new ConfigConection();
-  Client client = Client();
 
   int idPais;
   int idEstado;
@@ -313,87 +313,6 @@ class _FullScreenDialogAgregarProveedorEvent
     print(json);
     return json;
   }
-
-  Future<List<Territorio>> getPaises() async {
-    String token = await _sharedPreferences.getToken();
-
-    const endpoint = '/wedding/CIUDADES/getPaises';
-
-    final headers = {
-      HttpHeaders.authorizationHeader: token,
-      'content-type': 'application/json',
-      'accept': 'application/json'
-    };
-
-    final response = await client.post(
-      Uri.parse(_configC.url + _configC.puerto + endpoint),
-      headers: headers,
-    );
-
-    List<Territorio> paises = [];
-    if (response.statusCode == 200) {
-      paises = List<Territorio>.from(
-          json.decode(response.body).map((e) => Territorio.fromJson(e)));
-      return paises;
-    }
-    return paises;
-  }
-
-  Future<List<Territorio>> getEstados(int idPais) async {
-    String token = await _sharedPreferences.getToken();
-
-    const endpoint = '/wedding/CIUDADES/getEstados';
-
-    final data = {'idPais': idPais};
-
-    final headers = {
-      HttpHeaders.authorizationHeader: token,
-      'content-type': 'application/json',
-      'accept': 'application/json'
-    };
-
-    final response = await client.post(
-      Uri.parse(_configC.url + _configC.puerto + endpoint),
-      body: json.encode(data),
-      headers: headers,
-    );
-
-    List<Territorio> estados = [];
-    if (response.statusCode == 200) {
-      estados = List<Territorio>.from(
-          json.decode(response.body).map((e) => Territorio.fromJson(e)));
-      return estados;
-    }
-    return estados;
-  }
-
-  Future<List<Territorio>> getCiudades(int idEstado) async {
-    String token = await _sharedPreferences.getToken();
-
-    const endpoint = '/wedding/CIUDADES/getCiudades';
-
-    final data = {'idEstado': idEstado};
-
-    final headers = {
-      HttpHeaders.authorizationHeader: token,
-      'content-type': 'application/json',
-      'accept': 'application/json'
-    };
-
-    final response = await client.post(
-      Uri.parse(_configC.url + _configC.puerto + endpoint),
-      body: json.encode(data),
-      headers: headers,
-    );
-
-    List<Territorio> ciudades = [];
-    if (response.statusCode == 200) {
-      ciudades = List<Territorio>.from(
-          json.decode(response.body).map((e) => Territorio.fromJson(e)));
-      return ciudades;
-    }
-    return ciudades;
-  }
 }
 
 class Territorio {
@@ -405,4 +324,85 @@ class Territorio {
   Territorio.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         nombre = json['name'];
+}
+
+Future<List<Territorio>> getPaises() async {
+  String token = await _sharedPreferences.getToken();
+
+  const endpoint = '/wedding/CIUDADES/getPaises';
+
+  final headers = {
+    HttpHeaders.authorizationHeader: token,
+    'content-type': 'application/json',
+    'accept': 'application/json'
+  };
+
+  final response = await client.post(
+    Uri.parse(_configC.url + _configC.puerto + endpoint),
+    headers: headers,
+  );
+
+  List<Territorio> paises = [];
+  if (response.statusCode == 200) {
+    paises = List<Territorio>.from(
+        json.decode(response.body).map((e) => Territorio.fromJson(e)));
+    return paises;
+  }
+  return paises;
+}
+
+Future<List<Territorio>> getEstados(int idPais) async {
+  String token = await _sharedPreferences.getToken();
+
+  const endpoint = '/wedding/CIUDADES/getEstados';
+
+  final data = {'idPais': idPais};
+
+  final headers = {
+    HttpHeaders.authorizationHeader: token,
+    'content-type': 'application/json',
+    'accept': 'application/json'
+  };
+
+  final response = await client.post(
+    Uri.parse(_configC.url + _configC.puerto + endpoint),
+    body: json.encode(data),
+    headers: headers,
+  );
+
+  List<Territorio> estados = [];
+  if (response.statusCode == 200) {
+    estados = List<Territorio>.from(
+        json.decode(response.body).map((e) => Territorio.fromJson(e)));
+    return estados;
+  }
+  return estados;
+}
+
+Future<List<Territorio>> getCiudades(int idEstado) async {
+  String token = await _sharedPreferences.getToken();
+
+  const endpoint = '/wedding/CIUDADES/getCiudades';
+
+  final data = {'idEstado': idEstado};
+
+  final headers = {
+    HttpHeaders.authorizationHeader: token,
+    'content-type': 'application/json',
+    'accept': 'application/json'
+  };
+
+  final response = await client.post(
+    Uri.parse(_configC.url + _configC.puerto + endpoint),
+    body: json.encode(data),
+    headers: headers,
+  );
+
+  List<Territorio> ciudades = [];
+  if (response.statusCode == 200) {
+    ciudades = List<Territorio>.from(
+        json.decode(response.body).map((e) => Territorio.fromJson(e)));
+    return ciudades;
+  }
+  return ciudades;
 }

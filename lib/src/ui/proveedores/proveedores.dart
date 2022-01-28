@@ -1,6 +1,8 @@
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
+import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_proveedor.dart';
 import 'package:planning/src/ui/widgets/editProveedorDialog/edit_proveedor_dialog.dart';
+import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:planning/src/utils/utils.dart';
 
 import 'package:flutter/material.dart';
@@ -29,11 +31,19 @@ class _ProveedoresState extends State<Proveedores> {
   List<ServiciosModel> _data = [];
   List<ItemProveedor> _dataProveedores;
 
+  Future<List<Territorio>> peticionPaises;
+  Future<List<Territorio>> peticionEstados;
+  Future<List<Territorio>> peticionCiudades;
+  int idPais;
+  int idEstado;
+  int idCiudad;
+
   @override
   void initState() {
     proveedorBloc = BlocProvider.of<ProveedorBloc>(context);
     proveedorBloc.add(FechtProveedorEvent());
     proveedorBloc.add(FechtSevicioByProveedorEvent());
+    peticionPaises = getPaises();
     super.initState();
   }
 
@@ -131,9 +141,10 @@ class _ProveedoresState extends State<Proveedores> {
                 _data.forEach((elmProv) {
                   if (elmProv.id_servicio == prov.id_servicio) {
                     _listaServ.add(ServiciosModel(
-                        id_servicio: elmProv.id_servicio,
-                        nombre: elmProv.nombre,
-                        proveedores: _prove));
+                      id_servicio: elmProv.id_servicio,
+                      nombre: elmProv.nombre,
+                      proveedores: _prove,
+                    ));
                   }
                   prov.servicio = _listaServ;
                 });
@@ -143,7 +154,10 @@ class _ProveedoresState extends State<Proveedores> {
                 List<ItemProveedor> listaProv = [];
                 _dataProveedores.forEach((prov) {
                   if (elmProv.id_servicio == prov.id_servicio) {
-                    listaProv.add(ItemProveedor(
+                    if ((idPais == null || prov.idPais == idPais) &&
+                        (idEstado == null || prov.idEstado == idEstado) &&
+                        (idCiudad == null || prov.idCiudad == idCiudad))
+                      listaProv.add(ItemProveedor(
                         id_proveedor: prov.id_proveedor,
                         nombre: prov.nombre,
                         descripcion: prov.descripcion,
@@ -151,7 +165,11 @@ class _ProveedoresState extends State<Proveedores> {
                         correo: prov.correo,
                         direccion: prov.direccion,
                         telefono: prov.telefono,
-                        servicio: prov.servicio));
+                        servicio: prov.servicio,
+                        idCiudad: prov.idCiudad,
+                        idEstado: prov.idEstado,
+                        idPais: prov.idPais,
+                      ));
                   }
 
                   elmProv.proveedores = listaProv;
@@ -161,6 +179,104 @@ class _ProveedoresState extends State<Proveedores> {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: <Widget>[
+                    TextFormFields(
+                      icon: Icons.flag,
+                      item: FutureBuilder(
+                        future: peticionPaises,
+                        builder: (context,
+                            AsyncSnapshot<List<Territorio>> snapshot) {
+                          if (snapshot.hasData) {
+                            final paises = snapshot.data;
+                            return DropdownButtonFormField<int>(
+                              onChanged: (value) => setState(() {
+                                if (idPais != value) idEstado = null;
+                                idPais = value;
+                                peticionEstados = getEstados(value);
+                              }),
+                              value: idPais,
+                              decoration: InputDecoration(label: Text('País')),
+                              items: paises
+                                  .map((p) => DropdownMenuItem<int>(
+                                        child: Text(p.nombre),
+                                        value: p.id,
+                                      ))
+                                  .toList(),
+                            );
+                          }
+
+                          return LinearProgressIndicator();
+                        },
+                      ),
+                      large: 520.0,
+                      ancho: 80.0,
+                    ),
+                    if (idPais != null)
+                      TextFormFields(
+                        icon: Icons.map,
+                        item: FutureBuilder(
+                          future: peticionEstados,
+                          builder: (context,
+                              AsyncSnapshot<List<Territorio>> snapshot) {
+                            if (snapshot.hasData) {
+                              final estados = snapshot.data;
+                              return DropdownButtonFormField<int>(
+                                value: idEstado,
+                                onChanged: (value) => setState(() {
+                                  if (idEstado != value) idCiudad = null;
+                                  idEstado = value;
+                                  peticionCiudades = getCiudades(value);
+                                }),
+                                decoration:
+                                    InputDecoration(label: Text('Estado')),
+                                items: estados
+                                    .map((e) => DropdownMenuItem(
+                                          child: Text(e.nombre),
+                                          value: e.id,
+                                        ))
+                                    .toList(),
+                              );
+                            }
+                            return LinearProgressIndicator();
+                          },
+                        ),
+                        large: 520.0,
+                        ancho: 80.0,
+                      ),
+                    if (idEstado != null)
+                      TextFormFields(
+                        icon: Icons.location_city,
+                        item: FutureBuilder(
+                          future: peticionCiudades,
+                          builder: (context,
+                              AsyncSnapshot<List<Territorio>> snapshot) {
+                            if (snapshot.hasData) {
+                              final ciudades = snapshot.data;
+                              return DropdownButtonFormField<int>(
+                                value: idCiudad,
+                                onChanged: (value) => setState(() {
+                                  idCiudad = value;
+                                }),
+                                decoration:
+                                    InputDecoration(label: Text('Ciudad')),
+                                items: ciudades
+                                    .map((c) => DropdownMenuItem(
+                                          child: Text(c.nombre),
+                                          value: c.id,
+                                        ))
+                                    .toList(),
+                              );
+                            }
+                            return LinearProgressIndicator();
+                          },
+                        ),
+                        large: 600.0,
+                        ancho: 80.0,
+                      ),
+                  ],
+                ),
                 _listaBuild(),
                 SizedBox(
                   height: 50.0,
@@ -184,7 +300,15 @@ class _ProveedoresState extends State<Proveedores> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             // animationDuration: Duration(milliseconds: 500),
-            children: _data.map<Card>((ServiciosModel item) {
+            children: _data
+                .where((s) =>
+                    (idPais == null ||
+                        s.proveedores.any((p) => p.idPais == idPais)) &&
+                    (idEstado == null ||
+                        s.proveedores.any((p) => p.idEstado == idEstado)) &&
+                    (idCiudad == null ||
+                        s.proveedores.any((p) => p.idCiudad == idCiudad)))
+                .map<Card>((ServiciosModel item) {
               return Card(
                 child: ExpansionTile(
                     title: Text(item.nombre,
@@ -226,7 +350,7 @@ class _ProveedoresState extends State<Proveedores> {
             }).toList()));
   }
 
-  List<Widget> _listServicio(itemServicio, id_proveedor) {
+  List<Widget> _listServicio(List<ItemProveedor> itemServicio, id_proveedor) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
       final tempWidget = ListTile(
@@ -278,11 +402,12 @@ class _ProveedoresState extends State<Proveedores> {
     List<ItemProveedor> dataProv = [];
     serv.results.forEach((element) {
       _listaServ.add(ServiciosModel(
-          id_servicio: element.id_servicio,
-          id_proveedor: element.id_proveedor,
-          isExpanded: false,
-          nombre: element.nombre,
-          proveedores: dataProv));
+        id_servicio: element.id_servicio,
+        id_proveedor: element.id_proveedor,
+        isExpanded: false,
+        nombre: element.nombre,
+        proveedores: dataProv,
+      ));
     });
     return _listaServ;
   }
@@ -302,6 +427,9 @@ class _ProveedoresState extends State<Proveedores> {
         correo: element.correo,
         direccion: element.direccion,
         telefono: element.telefono,
+        idCiudad: element.idCiudad,
+        idEstado: element.idEstado,
+        idPais: element.idPais,
       ));
     });
     return _dataProv;
