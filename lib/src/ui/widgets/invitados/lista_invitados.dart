@@ -148,6 +148,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
     /// Use FilePicker to pick files in Flutter Web
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: ['xlsx'],
       allowMultiple: false,
     );

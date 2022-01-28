@@ -180,6 +180,7 @@ class _MesasPageState extends State<MesasPage> {
 
             FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
               type: FileType.custom,
+              withData: true,
               allowedExtensions: extensiones,
               allowMultiple: false,
             );

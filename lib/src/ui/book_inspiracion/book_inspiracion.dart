@@ -83,6 +83,7 @@ class _BookInspiracion extends State<BookInspiracion> {
                 FilePickerResult pickedFile =
                     await FilePicker.platform.pickFiles(
                   type: FileType.image,
+                  withData: true,
                   allowMultiple: false,
                 );
                 if (pickedFile != null) {
