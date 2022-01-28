@@ -27,7 +27,7 @@ class _ProveedoresState extends State<Proveedores> {
 
   // List<ItemProveedor> _data = [];
   List<ServiciosModel> _data = [];
-  ItemModelProveedores _dataProveedores;
+  List<ItemProveedor> _dataProveedores;
 
   @override
   void initState() {
@@ -124,10 +124,25 @@ class _ProveedoresState extends State<Proveedores> {
           if (state is MostrarSevicioByProveedorState) {
             _data = _createDataListServ(state.detlistas);
             if (_dataProveedores != null && _data != null) {
+              _dataProveedores.forEach((prov) {
+                List<ServiciosModel> _listaServ = [];
+                List<ItemProveedor> _prove = [];
+
+                _data.forEach((elmProv) {
+                  if (elmProv.id_servicio == prov.id_servicio) {
+                    _listaServ.add(ServiciosModel(
+                        id_servicio: elmProv.id_servicio,
+                        nombre: elmProv.nombre,
+                        proveedores: _prove));
+                  }
+                  prov.servicio = _listaServ;
+                });
+              });
+
               _data.forEach((elmProv) {
                 List<ItemProveedor> listaProv = [];
-                _dataProveedores.results.forEach((prov) {
-                  if (elmProv.id_proveedor == prov.id_proveedor) {
+                _dataProveedores.forEach((prov) {
+                  if (elmProv.id_servicio == prov.id_servicio) {
                     listaProv.add(ItemProveedor(
                         id_proveedor: prov.id_proveedor,
                         nombre: prov.nombre,
@@ -135,7 +150,8 @@ class _ProveedoresState extends State<Proveedores> {
                         estatus: prov.estatus,
                         correo: prov.correo,
                         direccion: prov.direccion,
-                        telefono: prov.telefono));
+                        telefono: prov.telefono,
+                        servicio: prov.servicio));
                   }
 
                   elmProv.proveedores = listaProv;
@@ -152,7 +168,7 @@ class _ProveedoresState extends State<Proveedores> {
               ],
             );
           } else if (state is MostrarProveedorState) {
-            _dataProveedores = state.detlistas;
+            _dataProveedores = _createDataListProv(state.detlistas);
             return Text('');
           } else {
             return Center(child: LoadingCustom());
@@ -277,6 +293,7 @@ class _ProveedoresState extends State<Proveedores> {
     prov.results.forEach((element) {
       _dataProv.add(ItemProveedor(
         id_proveedor: element.id_proveedor,
+        id_servicio: element.id_servicio,
         nombre: element.nombre,
         descripcion: element.descripcion,
         servicio: listaServ,
