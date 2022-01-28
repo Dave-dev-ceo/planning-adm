@@ -181,6 +181,7 @@ class _ProveedoresState extends State<Proveedores> {
               children: [
                 Wrap(
                   alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: <Widget>[
                     TextFormFields(
                       icon: Icons.flag,
@@ -275,6 +276,19 @@ class _ProveedoresState extends State<Proveedores> {
                         large: 600.0,
                         ancho: 80.0,
                       ),
+                    if (idPais != null)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconButton(
+                          tooltip: 'Limpiar Filtros',
+                          onPressed: () => setState(() {
+                            idPais = null;
+                            idEstado = null;
+                            idCiudad = null;
+                          }),
+                          icon: Icon(Icons.clear_all),
+                        ),
+                      )
                   ],
                 ),
                 _listaBuild(),
