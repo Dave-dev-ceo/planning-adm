@@ -6,6 +6,7 @@ import 'package:planning/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
+import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_proveedor.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
@@ -27,12 +28,21 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
   List<int> listServiciostoAdd = [];
   bool isLoad = false;
 
+  Future<List<Territorio>> peticionPaises;
+  Future<List<Territorio>> peticionEstados;
+  Future<List<Territorio>> peticionCiudades;
+
   @override
   void initState() {
     (widget.proveedor.estatus == 'Activo') ? estatus = true : estatus = false;
     proveedorBloc = BlocProvider.of<ProveedorBloc>(context);
     servicioBloc = BlocProvider.of<ServiciosBloc>(context);
     servicioBloc.add(FechtServiciosEvent());
+    peticionPaises = getPaises();
+    if (widget.proveedor.idPais != null)
+      peticionEstados = getEstados(widget.proveedor.idPais);
+    if (widget.proveedor.idEstado != null)
+      peticionCiudades = getCiudades(widget.proveedor.idEstado);
     super.initState();
   }
 
@@ -177,6 +187,110 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                           ),
                         ),
                       ),
+                      ResponsiveGridCol(
+                        md: 6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FutureBuilder(
+                            future: peticionPaises,
+                            builder: (context,
+                                AsyncSnapshot<List<Territorio>> snapshot) {
+                              if (snapshot.hasData) {
+                                final paises = snapshot.data;
+                                return DropdownButtonFormField<int>(
+                                  onChanged: (value) => setState(() {
+                                    if (widget.proveedor.idPais != value)
+                                      widget.proveedor.idEstado = null;
+                                    widget.proveedor.idPais = value;
+                                    peticionEstados = getEstados(value);
+                                  }),
+                                  value: widget.proveedor.idPais,
+                                  decoration: InputDecoration(
+                                    label: Text('País'),
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  items: paises
+                                      .map((p) => DropdownMenuItem<int>(
+                                            child: Text(p.nombre),
+                                            value: p.id,
+                                          ))
+                                      .toList(),
+                                );
+                              }
+
+                              return LinearProgressIndicator();
+                            },
+                          ),
+                        ),
+                      ),
+                      if (widget.proveedor.idPais != null)
+                        ResponsiveGridCol(
+                          md: 6,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FutureBuilder(
+                              future: peticionEstados,
+                              builder: (context,
+                                  AsyncSnapshot<List<Territorio>> snapshot) {
+                                if (snapshot.hasData) {
+                                  final estados = snapshot.data;
+                                  return DropdownButtonFormField<int>(
+                                    value: widget.proveedor.idEstado,
+                                    onChanged: (value) => setState(() {
+                                      if (widget.proveedor.idEstado != value)
+                                        widget.proveedor.idCiudad = null;
+                                      widget.proveedor.idEstado = value;
+                                      peticionCiudades = getCiudades(value);
+                                    }),
+                                    decoration: InputDecoration(
+                                      label: Text('Estado'),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    items: estados
+                                        .map((e) => DropdownMenuItem(
+                                              child: Text(e.nombre),
+                                              value: e.id,
+                                            ))
+                                        .toList(),
+                                  );
+                                }
+                                return LinearProgressIndicator();
+                              },
+                            ),
+                          ),
+                        ),
+                      if (widget.proveedor.idEstado != null)
+                        ResponsiveGridCol(
+                          md: 6,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FutureBuilder(
+                              future: peticionCiudades,
+                              builder: (context,
+                                  AsyncSnapshot<List<Territorio>> snapshot) {
+                                if (snapshot.hasData) {
+                                  final ciudades = snapshot.data;
+                                  return DropdownButtonFormField<int>(
+                                    value: widget.proveedor.idCiudad,
+                                    onChanged: (value) =>
+                                        widget.proveedor.idCiudad = value,
+                                    decoration: InputDecoration(
+                                      label: Text('Ciudad'),
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    items: ciudades
+                                        .map((c) => DropdownMenuItem(
+                                              child: Text(c.nombre),
+                                              value: c.id,
+                                            ))
+                                        .toList(),
+                                  );
+                                }
+                                return LinearProgressIndicator();
+                              },
+                            ),
+                          ),
+                        ),
                       ResponsiveGridCol(
                         md: 6,
                         child: Padding(

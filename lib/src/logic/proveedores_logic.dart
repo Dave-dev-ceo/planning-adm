@@ -168,6 +168,7 @@ class FetchProveedoresLogic extends LogicProveedores {
       'telefono': proveedor.telefono,
       'correo': proveedor.correo,
       'direccion': proveedor.direccion,
+      'idCiudad': proveedor.idCiudad,
     };
 
     final headers = {
