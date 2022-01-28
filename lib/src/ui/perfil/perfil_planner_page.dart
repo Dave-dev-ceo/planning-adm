@@ -280,6 +280,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: false,
     );

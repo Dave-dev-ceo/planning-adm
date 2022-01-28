@@ -334,6 +334,7 @@ class _PerfilState extends State<Perfil> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: false,
     );
@@ -347,6 +348,7 @@ class _PerfilState extends State<Perfil> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: false,
     );

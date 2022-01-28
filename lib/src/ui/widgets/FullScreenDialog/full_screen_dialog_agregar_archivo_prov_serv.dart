@@ -380,6 +380,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     const extensiones = ['pdf', 'jpg', 'png', 'jpeg'];
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: false,
     );

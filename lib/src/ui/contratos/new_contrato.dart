@@ -957,6 +957,7 @@ class New_ContratoState extends State<NewContrato> {
     const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: false,
     );
@@ -1004,6 +1005,7 @@ class New_ContratoState extends State<NewContrato> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: false,
     );

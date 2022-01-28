@@ -340,6 +340,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: false,
     );

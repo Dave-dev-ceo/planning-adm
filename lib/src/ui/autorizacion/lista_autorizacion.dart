@@ -384,6 +384,7 @@ class _AutorizacionListaState extends State<AutorizacionLista> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
       allowMultiple: true,
     );

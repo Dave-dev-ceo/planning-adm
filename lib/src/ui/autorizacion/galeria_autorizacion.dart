@@ -235,8 +235,9 @@ class _GaleriaEvidenciaState extends State<GaleriaEvidencia> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: extensiones,
-      allowMultiple: true,
+      allowMultiple: false,
     );
 
     pickedFile.files.forEach((archivo) {

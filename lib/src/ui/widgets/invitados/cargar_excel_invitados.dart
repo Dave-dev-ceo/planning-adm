@@ -61,6 +61,7 @@ class _CargarExcelState extends State<CargarExcel> {
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
+      withData: true,
       allowedExtensions: ['xlsx'],
       allowMultiple: false,
     );
