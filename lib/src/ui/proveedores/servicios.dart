@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class Servicios extends StatefulWidget {
   const Servicios({Key key}) : super(key: key);
@@ -185,7 +186,10 @@ class _ServiciosState extends State<Servicios> {
         TextButton(
           onPressed: () => {
             Navigator.pop(context, 'Aceptar'),
-            servicioBloc.add(DeleteServicioEvent(item.id_servicio))
+            servicioBloc.add(DeleteServicioEvent(item.id_servicio)),
+            MostrarAlerta(
+                mensaje: 'Se elimino el servicio.',
+                tipoMensaje: TipoMensaje.correcto)
           },
           child: const Text('Aceptar'),
         ),

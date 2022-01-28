@@ -12,6 +12,7 @@ abstract class ServiciosLogic {
   Future<int> createServicio(Map<String, dynamic> data);
   Future<int> editarServicio(Map<String, dynamic> data);
   Future<int> deleteDetallaLista(int idServicio);
+  Future<ItemModuleServicios> fetchServiciosByProoveedor(int id_proveedor);
 }
 
 class ServiciosException implements Exception {}
@@ -125,6 +126,31 @@ class FetchServiciosLogic extends ServiciosLogic {
       throw TokenException();
     } else {
       throw CreateServiciosException();
+    }
+  }
+
+  @override
+  Future<ItemModuleServicios> fetchServiciosByProoveedor(
+      int id_proveedor) async {
+    try {
+      int id_planner = await _sharedPreferences.getIdPlanner();
+      String token = await _sharedPreferences.getToken();
+      final response = await client.get(
+          Uri.parse(configC.url +
+              configC.puerto +
+              '/wedding/SERVICIOS/obtenerServiciosByProveedor/$id_planner/$id_proveedor'),
+          headers: {HttpHeaders.authorizationHeader: token});
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        return ItemModuleServicios.fromJson(data["data"]);
+      } else if (response.statusCode == 401) {
+        throw TokenException();
+      } else {
+        throw ServiciosException();
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

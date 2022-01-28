@@ -5,6 +5,11 @@ abstract class ServiciosEvent {}
 
 class FechtServiciosEvent implements ServiciosEvent {}
 
+class FechtServiciosByProveedorEvent implements ServiciosEvent {
+  final int id_proveedor;
+  FechtServiciosByProveedorEvent(this.id_proveedor);
+}
+
 class CreateServiciosEvent extends ServiciosEvent {
   final Map<String, dynamic> data;
   final ItemModuleServicios servicios;
