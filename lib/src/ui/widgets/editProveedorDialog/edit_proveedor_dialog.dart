@@ -198,6 +198,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                               if (snapshot.hasData) {
                                 final paises = snapshot.data;
                                 return DropdownButtonFormField<int>(
+                                  isExpanded: true,
                                   onChanged: (value) => setState(() {
                                     if (widget.proveedor.idPais != value)
                                       widget.proveedor.idEstado = null;
@@ -235,6 +236,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                                 if (snapshot.hasData) {
                                   final estados = snapshot.data;
                                   return DropdownButtonFormField<int>(
+                                    isExpanded: true,
                                     value: widget.proveedor.idEstado,
                                     onChanged: (value) => setState(() {
                                       if (widget.proveedor.idEstado != value)
@@ -291,24 +293,6 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                             ),
                           ),
                         ),
-                      ResponsiveGridCol(
-                        md: 6,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CheckboxListTile(
-                            value: estatus,
-                            onChanged: (value) {
-                              setState(() {
-                                (estatus) ? estatus = false : estatus = true;
-                                (estatus)
-                                    ? widget.proveedor.estatus = 'Activo'
-                                    : widget.proveedor.estatus = 'Inactivo';
-                              });
-                            },
-                            title: Text(widget.proveedor.estatus),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

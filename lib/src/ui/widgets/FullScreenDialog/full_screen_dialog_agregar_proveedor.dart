@@ -162,6 +162,7 @@ class _FullScreenDialogAgregarProveedorEvent
                               if (snapshot.hasData) {
                                 final paises = snapshot.data;
                                 return DropdownButtonFormField<int>(
+                                  isExpanded: true,
                                   onChanged: (value) => setState(() {
                                     if (idPais != value) idEstado = null;
                                     idPais = value;
@@ -195,6 +196,7 @@ class _FullScreenDialogAgregarProveedorEvent
                                 if (snapshot.hasData) {
                                   final estados = snapshot.data;
                                   return DropdownButtonFormField<int>(
+                                    isExpanded: true,
                                     value: idEstado,
                                     onChanged: (value) => setState(() {
                                       if (idEstado != value) idCiudad = null;
@@ -227,6 +229,7 @@ class _FullScreenDialogAgregarProveedorEvent
                                 if (snapshot.hasData) {
                                   final ciudades = snapshot.data;
                                   return DropdownButtonFormField<int>(
+                                    isExpanded: true,
                                     value: idCiudad,
                                     onChanged: (value) => idCiudad = value,
                                     decoration:

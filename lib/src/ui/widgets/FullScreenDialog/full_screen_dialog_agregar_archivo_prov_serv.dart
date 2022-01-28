@@ -13,6 +13,7 @@ import 'package:planning/src/blocs/proveedores/archivos_especiales/archivos_espe
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -92,176 +93,6 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            if (widget.provsrv['type'] == 0)
-              Card(
-                color: Colors.white,
-                elevation: 12,
-                shadowColor: Colors.black12,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: new Form(
-                      key: keyForm,
-                      child: Column(
-                        children: <Widget>[
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            children: <Widget>[
-                              TextFormFields(
-                                icon: Icons.drive_file_rename_outline,
-                                item: TextFormField(
-                                  controller: descripcionCtrl,
-                                  decoration: new InputDecoration(
-                                    labelText: 'Descripción archivo',
-                                  ),
-                                ),
-                                large: 400.0,
-                                ancho: 80.0,
-                              ),
-                            ],
-                          ),
-                          Ink(
-                            padding: EdgeInsets.all(5),
-                            width: 100.0,
-                            decoration: const ShapeDecoration(
-                              color: Colors.black,
-                              shape: CircleBorder(),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: IconButton(
-                                icon: const Icon(Icons.upload_file),
-                                color: Colors.white,
-                                onPressed: () async {
-                                  _selectFile(false);
-                                },
-                              ),
-                            ),
-                          )
-                        ],
-                      )),
-                ),
-              ),
-            if (widget.provsrv['type'] == 0 && widget.provsrv['prvEv'] == 2)
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 500),
-                child: ExpansionPanelList(
-                  animationDuration: Duration(milliseconds: 1000),
-                  expansionCallback: (int index, bool expanded) {
-                    setState(() {
-                      if (index == 0) {
-                        _isExpanded = !_isExpanded;
-                      }
-                    });
-                  },
-                  children: [
-                    ExpansionPanel(
-                      headerBuilder: (BuildContext context, bool _isExpanded) {
-                        return Center(
-                          child: Text(
-                            'Agregar link',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 23),
-                          ),
-                        );
-                      },
-                      isExpanded: _isExpanded,
-                      body: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Form(
-                            key: _keyFormLink,
-                            child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 8.0,
-                                ),
-                                Wrap(
-                                  direction: Axis.vertical,
-                                  alignment: WrapAlignment.center,
-                                  children: <Widget>[
-                                    TextFormFields(
-                                      icon: Icons.add_link_outlined,
-                                      item: TextFormField(
-                                        controller: _textcontrollerDes,
-                                        onChanged: (value) {
-                                          descripcionLink = value;
-                                        },
-                                        validator: (value) {
-                                          if (value == null || value == '') {
-                                            return 'El Campo es requerido';
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        decoration: new InputDecoration(
-                                          labelText: 'Descripción del link',
-                                        ),
-                                      ),
-                                      large: 400.0,
-                                      ancho: 80.0,
-                                    ),
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    TextFormFields(
-                                      icon: Icons.add_link_outlined,
-                                      item: TextFormField(
-                                        controller: _textControllerUrl,
-                                        onChanged: (value) {
-                                          urlValue = value;
-                                        },
-                                        validator: (value) {
-                                          String patternUrl =
-                                              'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}';
-                                          RegExp regExp = RegExp(patternUrl);
-
-                                          if (value == null || value == '') {
-                                            return 'El Campo es requerido';
-                                          } else if (!regExp.hasMatch(value)) {
-                                            return 'No es un dirección web valida';
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        decoration: new InputDecoration(
-                                          labelText: 'Url o Dirección web',
-                                        ),
-                                      ),
-                                      large: 400.0,
-                                      ancho: 80.0,
-                                    ),
-                                  ],
-                                ),
-                                Ink(
-                                  padding: EdgeInsets.all(5),
-                                  width: 100.0,
-                                  decoration: const ShapeDecoration(
-                                    color: Colors.black,
-                                    shape: CircleBorder(),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: IconButton(
-                                      icon:
-                                          const Icon(Icons.add_circle_outline),
-                                      color: Colors.white,
-                                      onPressed: () {
-                                        _insertLink();
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             BlocBuilder<ArchivoProveedorBloc, ArchivoProveedorState>(
                 builder: (context, state) {
               if (state is LoadingArchivoProveedorState) {
@@ -376,7 +207,15 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     } else {}
   }
 
-  _selectFile(bool isArchivoEspecial) async {
+  _selectFile(bool isArchivoEspecial, [int idServicio]) async {
+    if (isArchivoEspecial && descripcionCtrlAE.text == '')
+      return MostrarAlerta(
+          mensaje: 'Ingresa una descripción',
+          tipoMensaje: TipoMensaje.advertencia);
+    if (!isArchivoEspecial && descripcionCtrl.text == '')
+      return MostrarAlerta(
+          mensaje: 'Ingresa una descripción',
+          tipoMensaje: TipoMensaje.advertencia);
     const extensiones = ['pdf', 'jpg', 'png', 'jpeg'];
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -400,7 +239,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             // files
             json = {
               'id_proveedor': this.provsrv['id_proveedor'],
-              'id_servicio': this.provsrv['id_servicio'],
+              'id_servicio': idServicio,
               // 'tipo_mime': 'data:application/pdf;base64,',
               'tipo_mime': mimeType,
               'archivo': fileBase64,
@@ -412,6 +251,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
 
         archivoProveedorBloc.add(CreateArchivoProvServEvent(json));
         descripcionCtrl.text = '';
+        Navigator.of(context).pop();
       } else {
         Map<String, dynamic> json = {};
         pickedFile.files.forEach((f) {
@@ -526,10 +366,12 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     List<Widget> lista = [];
     List<Widget> listaServicio = [];
     // Se agrega el titulo del card
-    final tituloServicio = Text('Archivos del servicio',
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 24));
+    final tituloServicio = Text(
+      'Archivos del servicio',
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(fontSize: 24),
+    );
     // final campos =
     final sizeSercicio = SizedBox(height: 20);
     listaServicio.add(tituloServicio);
@@ -586,9 +428,15 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     List<Widget> lista = [];
     List<Widget> listaServicio = [];
     // Se agrega el titulo del card
-    final titulo = Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text('Archivos del proveedor',
+    final titulo = ListTile(
+        trailing: IconButton(
+          tooltip: 'Agregar archivo del proveedor',
+          onPressed: () {
+            _dialogoAgregarArchivo();
+          },
+          icon: Icon(Icons.upload),
+        ),
+        title: Text('Archivos del proveedor',
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 24)));
@@ -598,10 +446,21 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     // lista.add(campos);
     lista.add(size);
 
-    final tituloServicio = Text('Archivos del servicio',
+    final tituloServicio = ListTile(
+      trailing: IconButton(
+        tooltip: 'Agregar archivo del servicio',
+        onPressed: () {
+          _dialogoAgregarArchivo(this.provsrv['id_servicio']);
+        },
+        icon: Icon(Icons.upload),
+      ),
+      title: Text(
+        'Archivos del servicio',
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 24));
+        style: TextStyle(fontSize: 24),
+      ),
+    );
     // final campos =
     final sizeSercicio = SizedBox(height: 20);
     listaServicio.add(tituloServicio);
@@ -721,6 +580,198 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           child: const Text('Aceptar'),
         ),
       ],
+    );
+  }
+
+  _dialogoAgregarArchivo([int idServicio]) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          height: 600,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                if (widget.provsrv['type'] == 0)
+                  Card(
+                    color: Colors.white,
+                    elevation: 12,
+                    shadowColor: Colors.black12,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: new Form(
+                          key: keyForm,
+                          child: Column(
+                            children: <Widget>[
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                children: <Widget>[
+                                  TextFormFields(
+                                    icon: Icons.drive_file_rename_outline,
+                                    item: TextFormField(
+                                      controller: descripcionCtrl,
+                                      decoration: new InputDecoration(
+                                        labelText: 'Descripción archivo',
+                                      ),
+                                    ),
+                                    large: 400.0,
+                                    ancho: 80.0,
+                                  ),
+                                ],
+                              ),
+                              Ink(
+                                padding: EdgeInsets.all(5),
+                                width: 100.0,
+                                decoration: const ShapeDecoration(
+                                  color: Colors.black,
+                                  shape: CircleBorder(),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.upload_file),
+                                    color: Colors.white,
+                                    onPressed: () async {
+                                      _selectFile(false, idServicio);
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                  ),
+                if (widget.provsrv['type'] == 0 && widget.provsrv['prvEv'] == 2)
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 500),
+                    child: ExpansionPanelList(
+                      animationDuration: Duration(milliseconds: 1000),
+                      expansionCallback: (int index, bool expanded) {
+                        setState(() {
+                          if (index == 0) {
+                            _isExpanded = !_isExpanded;
+                          }
+                        });
+                      },
+                      children: [
+                        ExpansionPanel(
+                          headerBuilder:
+                              (BuildContext context, bool _isExpanded) {
+                            return Center(
+                              child: Text(
+                                'Agregar link',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 23),
+                              ),
+                            );
+                          },
+                          isExpanded: _isExpanded,
+                          body: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Form(
+                                key: _keyFormLink,
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    Wrap(
+                                      direction: Axis.vertical,
+                                      alignment: WrapAlignment.center,
+                                      children: <Widget>[
+                                        TextFormFields(
+                                          icon: Icons.add_link_outlined,
+                                          item: TextFormField(
+                                            controller: _textcontrollerDes,
+                                            onChanged: (value) {
+                                              descripcionLink = value;
+                                            },
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value == '') {
+                                                return 'El Campo es requerido';
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            decoration: new InputDecoration(
+                                              labelText: 'Descripción del link',
+                                            ),
+                                          ),
+                                          large: 400.0,
+                                          ancho: 80.0,
+                                        ),
+                                        SizedBox(
+                                          height: 8.0,
+                                        ),
+                                        TextFormFields(
+                                          icon: Icons.add_link_outlined,
+                                          item: TextFormField(
+                                            controller: _textControllerUrl,
+                                            onChanged: (value) {
+                                              urlValue = value;
+                                            },
+                                            validator: (value) {
+                                              String patternUrl =
+                                                  'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}';
+                                              RegExp regExp =
+                                                  RegExp(patternUrl);
+
+                                              if (value == null ||
+                                                  value == '') {
+                                                return 'El Campo es requerido';
+                                              } else if (!regExp
+                                                  .hasMatch(value)) {
+                                                return 'No es un dirección web valida';
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            decoration: new InputDecoration(
+                                              labelText: 'Url o Dirección web',
+                                            ),
+                                          ),
+                                          large: 400.0,
+                                          ancho: 80.0,
+                                        ),
+                                      ],
+                                    ),
+                                    Ink(
+                                      padding: EdgeInsets.all(5),
+                                      width: 100.0,
+                                      decoration: const ShapeDecoration(
+                                        color: Colors.black,
+                                        shape: CircleBorder(),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                              Icons.add_circle_outline),
+                                          color: Colors.white,
+                                          onPressed: () {
+                                            _insertLink();
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -128,7 +128,7 @@ class _ProveedoresState extends State<Proveedores> {
       controller: ScrollController(),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(16),
         child: BlocBuilder<ProveedorBloc, ProveedorState>(
             builder: (context, state) {
           if (state is MostrarSevicioByProveedorState) {
@@ -176,6 +176,9 @@ class _ProveedoresState extends State<Proveedores> {
                 });
               });
             }
+            final size = MediaQuery.of(context).size.width < 520
+                ? MediaQuery.of(context).size.width
+                : 520;
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -192,6 +195,7 @@ class _ProveedoresState extends State<Proveedores> {
                           if (snapshot.hasData) {
                             final paises = snapshot.data;
                             return DropdownButtonFormField<int>(
+                              isExpanded: true,
                               onChanged: (value) => setState(() {
                                 if (idPais != value) idEstado = null;
                                 idPais = value;
@@ -211,7 +215,7 @@ class _ProveedoresState extends State<Proveedores> {
                           return LinearProgressIndicator();
                         },
                       ),
-                      large: 520.0,
+                      large: size,
                       ancho: 80.0,
                     ),
                     if (idPais != null)
@@ -224,6 +228,7 @@ class _ProveedoresState extends State<Proveedores> {
                             if (snapshot.hasData) {
                               final estados = snapshot.data;
                               return DropdownButtonFormField<int>(
+                                isExpanded: true,
                                 value: idEstado,
                                 onChanged: (value) => setState(() {
                                   if (idEstado != value) idCiudad = null;
@@ -243,7 +248,7 @@ class _ProveedoresState extends State<Proveedores> {
                             return LinearProgressIndicator();
                           },
                         ),
-                        large: 520.0,
+                        large: size,
                         ancho: 80.0,
                       ),
                     if (idEstado != null)
@@ -256,6 +261,7 @@ class _ProveedoresState extends State<Proveedores> {
                             if (snapshot.hasData) {
                               final ciudades = snapshot.data;
                               return DropdownButtonFormField<int>(
+                                isExpanded: true,
                                 value: idCiudad,
                                 onChanged: (value) => setState(() {
                                   idCiudad = value;
@@ -273,7 +279,7 @@ class _ProveedoresState extends State<Proveedores> {
                             return LinearProgressIndicator();
                           },
                         ),
-                        large: 600.0,
+                        large: size,
                         ancho: 80.0,
                       ),
                     if (idPais != null)
@@ -325,46 +331,19 @@ class _ProveedoresState extends State<Proveedores> {
                 .map<Card>((ServiciosModel item) {
               return Card(
                 child: ExpansionTile(
-                    title: Text(item.nombre,
-                        style: TextStyle(
-                          color: Colors.black,
-                        )),
-                    children:
-                        _listServicio(item.proveedores, item.id_proveedor),
-                    trailing: Wrap(
-                      spacing: 12,
-                      children: <Widget>[
-                        IconButton(
-                            onPressed: () {
-                              showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      _eliminarDetalleLista(
-                                          item.id_servicio, item.id_proveedor));
-                            },
-                            icon:
-                                const Icon(Icons.delete, color: Colors.black)),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed('/agregarArchivo', arguments: {
-                                'id_proveedor': item.id_proveedor,
-                                'id_servicio': item.id_servicio,
-                                'nombre': item.nombre,
-                                'type': 0,
-                                'prvEv': 2,
-                                'isEvento': false,
-                              });
-                            },
-                            icon: const Icon(Icons.file_present,
-                                color: Colors.black))
-                      ],
-                    )),
+                  title: Text(item.nombre,
+                      style: TextStyle(
+                        color: Colors.black,
+                      )),
+                  children: _listServicio(
+                      item.proveedores, item.id_proveedor, item.id_servicio),
+                ),
               );
             }).toList()));
   }
 
-  List<Widget> _listServicio(List<ItemProveedor> itemServicio, id_proveedor) {
+  List<Widget> _listServicio(
+      List<ItemProveedor> itemServicio, int id_proveedor, int idServicio) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
       final tempWidget = ListTile(
@@ -394,7 +373,7 @@ class _ProveedoresState extends State<Proveedores> {
                 '/agregarArchivo',
                 arguments: {
                   'id_proveedor': opt.id_proveedor,
-                  'id_servicio': null,
+                  'id_servicio': idServicio,
                   'nombre': opt.nombre,
                   'type': 0,
                   'prvEv': 2,
@@ -404,6 +383,14 @@ class _ProveedoresState extends State<Proveedores> {
             },
             icon: const Icon(Icons.file_present, color: Colors.black),
           ),
+          IconButton(
+              onPressed: () {
+                showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        _eliminarDetalleLista(opt));
+              },
+              icon: const Icon(Icons.delete, color: Colors.black)),
         ]),
       );
       lista.add(tempWidget);
@@ -449,7 +436,7 @@ class _ProveedoresState extends State<Proveedores> {
     return _dataProv;
   }
 
-  _eliminarDetalleLista(int idServ, int idProveedor) {
+  _eliminarDetalleLista(ItemProveedor proveedor) {
     return AlertDialog(
       title: const Text('Eliminar'),
       content: const Text('¿Desea eliminar el elemento?'),
@@ -459,9 +446,10 @@ class _ProveedoresState extends State<Proveedores> {
           child: const Text('Cancelar'),
         ),
         TextButton(
-          onPressed: () => {
-            proveedorBloc.add(DeleteServicioProvEvent(idServ, idProveedor)),
-            Navigator.pop(context, 'Aceptar')
+          onPressed: () async {
+            proveedor.estatus = 'I';
+            await proveedorBloc.add(UpdateProveedor(proveedor));
+            Navigator.pop(context, 'Aceptar');
           },
           child: const Text('Aceptar'),
         ),
