@@ -39,10 +39,11 @@ class FetchProveedoresLogic extends LogicProveedores {
       final _data = {
         'nombre': data['nombre'],
         'descripcion': data['descripcion'],
+        'idCiudad': data['idCiudad'],
         'id_planner': idPlanner.toString(),
         'creado_por': idUsuario.toString(),
         'modificado_por': idUsuario.toString(),
-        'servicios': listaTest
+        'servicios': listaTest,
       };
       final response = await client.post(
           Uri.parse(configC.url +
