@@ -167,19 +167,19 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() async {
+    controller.scannedDataStream.listen((scanData)  {
         controller.pauseCamera();
         result = scanData;
-        await _showDialog(scanData.code);
-        controller.resumeCamera();
+         _showDialog(scanData.code).then((_) => controller.resumeCamera());
+        
+      setState(()  {
       });
     });
   }
 
   @override
   void dispose() {
-    controller?.dispose();
     super.dispose();
+    controller?.dispose();
   }
 }

@@ -321,7 +321,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
               await api.enviarInvitacionesPorEvento();
           Navigator.pop(_dialogContext);
           MostrarAlerta(
-              mensaje: response['msg'], tipoMensaje: TipoMensaje.correcto);
+              mensaje: response['msg'], tipoMensaje: response['enviado'] ? TipoMensaje.correcto : TipoMensaje.error);
         },
       ));
     }
