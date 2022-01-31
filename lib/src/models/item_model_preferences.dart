@@ -164,8 +164,25 @@ class SharedPreferencesT {
     return _sharedPreferences.getStringList('dataWPlanner');
   }
 
+  setCorreo(String correo) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences.setString('correo', correo);
+  }
+
+  Future<String> getCorreo() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return await _sharedPreferences.getString('correo');
+  }
+
   clear() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    await _sharedPreferences.clear();
+    Set<dynamic> keyPreferens = await _sharedPreferences.getKeys();
+
+    for (var key in keyPreferens) {
+      if (key == 'correo') {
+        continue;
+      }
+      await _sharedPreferences.remove(key);
+    }
   }
 }

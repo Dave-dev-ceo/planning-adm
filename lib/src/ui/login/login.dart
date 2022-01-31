@@ -40,7 +40,17 @@ class _LoginState extends State<Login> {
     loginBloc = BlocProvider.of<LoginBloc>(context);
 
     super.initState();
+    _getCorreo();
     _checkSession();
+  }
+
+  // * Analiza si el correo existe en la preferencias y lo setea al controlador del texto
+  _getCorreo() async {
+    String correo = await _sharedPreferences.getCorreo();
+
+    if (correo != null) {
+      emailCtrl.text = correo;
+    }
   }
 
   void _checkSession() async {
@@ -165,6 +175,7 @@ class _LoginState extends State<Login> {
               'name': state.response['usuario']['nombre_completo'],
               'imag': state.response['usuario']['imagen']
             };
+            _sharedPreferences.setCorreo(emailCtrl.text);
             Navigator.pushReplacementNamed(context, '/home', arguments: data);
           } else {
             // Navigator.pushNamed(context, '/eventos', arguments: {
@@ -174,6 +185,7 @@ class _LoginState extends State<Login> {
             //   'boton': false,
             //   'imag': state.response['usuario']['imagen']
             // });
+            _sharedPreferences.setCorreo(emailCtrl.text);
 
             Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
                 arguments: EventoResumenModel(
@@ -248,6 +260,16 @@ class _LoginState extends State<Login> {
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
                     borderSide: BorderSide(color: Colors.black)),
+                onSubmit: (_) {
+                  if ((emailCtrl.text.trim() == '') ||
+                      (passwordCtrl.text.trim() == '')) {
+                    _dialogMSG('Datos inválidos', 'Correo o contraseña vacíos.',
+                        'msg');
+                  } else {
+                    loginBloc.add(LogginEvent(
+                        emailCtrl.text.trim(), passwordCtrl.text.trim()));
+                  }
+                },
               ),
             ),
             //FinPadilla
