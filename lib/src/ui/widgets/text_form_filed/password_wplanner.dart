@@ -179,6 +179,7 @@ class PasswordWplannerState extends State<PasswordWplanner> {
             // borderRadius: widget.backgroundBorderRadius
           ),
           child: TextFormField(
+            onFieldSubmitted: widget.onSubmit,
             cursorColor: widget.color,
             maxLength: widget.maxLength,
             controller: widget.controller,

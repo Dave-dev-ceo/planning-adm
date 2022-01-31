@@ -412,9 +412,6 @@ class _TimingState extends State<Timing> {
   }
 
   Widget buildList(ItemModelTimings snapshot) {
-    snapshot.results.forEach((element) {
-      print(element.toString());
-    });
     return ListView(
       shrinkWrap: true,
       padding: const EdgeInsets.all(16),

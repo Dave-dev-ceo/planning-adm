@@ -175,6 +175,7 @@ class _PerfilState extends State<Perfil> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    readOnly: true,
                     controller: TextEditingController(text: '${perfil.email}'),
                     maxLength: 250,
                     decoration: InputDecoration(

@@ -36,7 +36,7 @@ class _CargarExcelState extends State<CargarExcel> {
         builder: (BuildContext context) => CupertinoAlertDialog(
               title: Text('Importación de excel'),
               content: Text(
-                  'Procedera a abrir su explorador de archivos para seleccionar un archivo excel,¿Desea continuar?'),
+                  'Procedera a abrir su explorador de archivos para seleccionar un archivo excel, ¿Desea continuar?'),
               actions: <Widget>[
                 CupertinoDialogAction(
                   child: Text(
