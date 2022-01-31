@@ -28,27 +28,9 @@ class _DialogAlertState extends State<DialogAlert> {
   void initState() {
     qrBloc = BlocProvider.of<QrBloc>(context);
     qrBloc.add(QrValidation(dataInfo));
-    // _extraerData();
     super.initState();
   }
 
-  Future<void> _extraerData() {
-    String valor = "";
-    for (var i = 0; i < dataInfo.length; i++) {
-      if (dataInfo[i] == "|" && dataInfo[i + 1] == "|") {
-        i = i + 2;
-        valor = "";
-        for (var f = i; f < dataInfo.length; f++) {
-          if (dataInfo[f] != "|") {
-            valor = valor + dataInfo[f];
-          } else {
-            break;
-          }
-        }
-        lista.add(valor);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
