@@ -587,190 +587,195 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        child: Container(
-          height: 600,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                if (widget.provsrv['type'] == 0)
-                  Card(
-                    color: Colors.white,
-                    elevation: 12,
-                    shadowColor: Colors.black12,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: new Form(
-                          key: keyForm,
-                          child: Column(
-                            children: <Widget>[
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                children: <Widget>[
-                                  TextFormFields(
-                                    icon: Icons.drive_file_rename_outline,
-                                    item: TextFormField(
-                                      controller: descripcionCtrl,
-                                      decoration: new InputDecoration(
-                                        labelText: 'Descripción archivo',
-                                      ),
-                                    ),
-                                    large: 400.0,
-                                    ancho: 80.0,
-                                  ),
-                                ],
-                              ),
-                              Ink(
-                                padding: EdgeInsets.all(5),
-                                width: 100.0,
-                                decoration: const ShapeDecoration(
-                                  color: Colors.black,
-                                  shape: CircleBorder(),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.upload_file),
-                                    color: Colors.white,
-                                    onPressed: () async {
-                                      _selectFile(false, idServicio);
-                                    },
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
-                    ),
-                  ),
-                if (widget.provsrv['type'] == 0 && widget.provsrv['prvEv'] == 2)
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 500),
-                    child: ExpansionPanelList(
-                      animationDuration: Duration(milliseconds: 1000),
-                      expansionCallback: (int index, bool expanded) {
-                        setState(() {
-                          if (index == 0) {
-                            _isExpanded = !_isExpanded;
-                          }
-                        });
-                      },
-                      children: [
-                        ExpansionPanel(
-                          headerBuilder:
-                              (BuildContext context, bool _isExpanded) {
-                            return Center(
-                              child: Text(
-                                'Agregar link',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 23),
-                              ),
-                            );
-                          },
-                          isExpanded: _isExpanded,
-                          body: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Form(
-                                key: _keyFormLink,
-                                child: Column(
+        child: StatefulBuilder(builder: (context, innerState) {
+          return Container(
+            height: 600,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  if (widget.provsrv['type'] == 0)
+                    Card(
+                      color: Colors.white,
+                      elevation: 12,
+                      shadowColor: Colors.black12,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: new Form(
+                            key: keyForm,
+                            child: Column(
+                              children: <Widget>[
+                                Wrap(
+                                  alignment: WrapAlignment.center,
                                   children: <Widget>[
-                                    SizedBox(
-                                      height: 8.0,
-                                    ),
-                                    Wrap(
-                                      direction: Axis.vertical,
-                                      alignment: WrapAlignment.center,
-                                      children: <Widget>[
-                                        TextFormFields(
-                                          icon: Icons.add_link_outlined,
-                                          item: TextFormField(
-                                            controller: _textcontrollerDes,
-                                            onChanged: (value) {
-                                              descripcionLink = value;
-                                            },
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value == '') {
-                                                return 'El Campo es requerido';
-                                              } else {
-                                                return null;
-                                              }
-                                            },
-                                            decoration: new InputDecoration(
-                                              labelText: 'Descripción del link',
-                                            ),
-                                          ),
-                                          large: 400.0,
-                                          ancho: 80.0,
-                                        ),
-                                        SizedBox(
-                                          height: 8.0,
-                                        ),
-                                        TextFormFields(
-                                          icon: Icons.add_link_outlined,
-                                          item: TextFormField(
-                                            controller: _textControllerUrl,
-                                            onChanged: (value) {
-                                              urlValue = value;
-                                            },
-                                            validator: (value) {
-                                              String patternUrl =
-                                                  'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}';
-                                              RegExp regExp =
-                                                  RegExp(patternUrl);
-
-                                              if (value == null ||
-                                                  value == '') {
-                                                return 'El Campo es requerido';
-                                              } else if (!regExp
-                                                  .hasMatch(value)) {
-                                                return 'No es un dirección web valida';
-                                              } else {
-                                                return null;
-                                              }
-                                            },
-                                            decoration: new InputDecoration(
-                                              labelText: 'Url o Dirección web',
-                                            ),
-                                          ),
-                                          large: 400.0,
-                                          ancho: 80.0,
-                                        ),
-                                      ],
-                                    ),
-                                    Ink(
-                                      padding: EdgeInsets.all(5),
-                                      width: 100.0,
-                                      decoration: const ShapeDecoration(
-                                        color: Colors.black,
-                                        shape: CircleBorder(),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                              Icons.add_circle_outline),
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            _insertLink();
-                                          },
+                                    TextFormFields(
+                                      icon: Icons.drive_file_rename_outline,
+                                      item: TextFormField(
+                                        controller: descripcionCtrl,
+                                        decoration: new InputDecoration(
+                                          labelText: 'Descripción archivo',
                                         ),
                                       ),
-                                    )
+                                      large: 400.0,
+                                      ancho: 80.0,
+                                    ),
                                   ],
+                                ),
+                                Ink(
+                                  padding: EdgeInsets.all(5),
+                                  width: 100.0,
+                                  decoration: const ShapeDecoration(
+                                    color: Colors.black,
+                                    shape: CircleBorder(),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.upload_file),
+                                      color: Colors.white,
+                                      onPressed: () async {
+                                        _selectFile(false, idServicio);
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
+                      ),
+                    ),
+                  if (widget.provsrv['type'] == 0 &&
+                      widget.provsrv['prvEv'] == 2)
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 500),
+                      child: ExpansionPanelList(
+                        animationDuration: Duration(milliseconds: 1000),
+                        expansionCallback: (int index, bool expanded) {
+                          innerState(() {
+                            if (index == 0) {
+                              _isExpanded = !_isExpanded;
+                            }
+                          });
+                        },
+                        children: [
+                          ExpansionPanel(
+                            headerBuilder:
+                                (BuildContext context, bool _isExpanded) {
+                              return Center(
+                                child: Text(
+                                  'Agregar link',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 23),
+                                ),
+                              );
+                            },
+                            isExpanded: _isExpanded,
+                            body: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Form(
+                                  key: _keyFormLink,
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 8.0,
+                                      ),
+                                      Wrap(
+                                        direction: Axis.vertical,
+                                        alignment: WrapAlignment.center,
+                                        children: <Widget>[
+                                          TextFormFields(
+                                            icon: Icons.add_link_outlined,
+                                            item: TextFormField(
+                                              controller: _textcontrollerDes,
+                                              onChanged: (value) {
+                                                descripcionLink = value;
+                                              },
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value == '') {
+                                                  return 'El Campo es requerido';
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              decoration: new InputDecoration(
+                                                labelText:
+                                                    'Descripción del link',
+                                              ),
+                                            ),
+                                            large: 400.0,
+                                            ancho: 80.0,
+                                          ),
+                                          SizedBox(
+                                            height: 8.0,
+                                          ),
+                                          TextFormFields(
+                                            icon: Icons.add_link_outlined,
+                                            item: TextFormField(
+                                              controller: _textControllerUrl,
+                                              onChanged: (value) {
+                                                urlValue = value;
+                                              },
+                                              validator: (value) {
+                                                String patternUrl =
+                                                    'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}';
+                                                RegExp regExp =
+                                                    RegExp(patternUrl);
+
+                                                if (value == null ||
+                                                    value == '') {
+                                                  return 'El Campo es requerido';
+                                                } else if (!regExp
+                                                    .hasMatch(value)) {
+                                                  return 'No es un dirección web valida';
+                                                } else {
+                                                  return null;
+                                                }
+                                              },
+                                              decoration: new InputDecoration(
+                                                labelText:
+                                                    'Url o Dirección web',
+                                              ),
+                                            ),
+                                            large: 400.0,
+                                            ancho: 80.0,
+                                          ),
+                                        ],
+                                      ),
+                                      Ink(
+                                        padding: EdgeInsets.all(5),
+                                        width: 100.0,
+                                        decoration: const ShapeDecoration(
+                                          color: Colors.black,
+                                          shape: CircleBorder(),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                                Icons.add_circle_outline),
+                                            color: Colors.white,
+                                            onPressed: () {
+                                              _insertLink();
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
