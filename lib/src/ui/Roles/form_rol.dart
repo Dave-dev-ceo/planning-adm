@@ -63,13 +63,12 @@ class _FormRolState extends State<FormRol> {
     if (datos['accion'] == 0) {
       rolFormBloc.add(GetFormRolEvent());
     } else if (datos['accion'] == 1) {
-      rolFormBloc
-          .add(GetFormRolEvent(idRol0: datos['data'].result.id_rol.toString()));
+      ItemModelRol rol = datos['data'];
+      rolFormBloc.add(GetFormRolEvent(idRol0: rol.result.id_rol));
     }
     _setInitialController();
-    setState(() {});
-    super.initState();
     _data = [];
+    super.initState();
   }
 
   @override
@@ -166,7 +165,6 @@ class _FormRolState extends State<FormRol> {
           inputFormatters: inputF,
           obscureText: obscureT,
           maxLength: maxL,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
         ));
   }
 
@@ -342,10 +340,8 @@ class _FormRolState extends State<FormRol> {
   String validateNombre(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = new RegExp(pattern);
-    if (value.length < 5) {
-      return "El nombre debe tener al menos 5 caracteres";
-    } else if (!regExp.hasMatch(value)) {
-      return "El nombre debe de ser a-z y A-Z";
+    if (value == null || value == '') {
+      return "El campo es requerido";
     }
     return null;
   }
@@ -353,10 +349,8 @@ class _FormRolState extends State<FormRol> {
   String validateClave(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = new RegExp(pattern);
-    if (value.length < 5) {
-      return "La clave debe tener al menos 5 caracteres";
-    } else if (!regExp.hasMatch(value)) {
-      return "La clave debe de ser a-z y A-Z";
+    if (value == null || value == '') {
+      return "El campo es requerido";
     }
     return null;
   }
@@ -376,13 +370,8 @@ class _FormRolState extends State<FormRol> {
         } else if (state is LoadingMostrarFormRol) {
           return Center(child: LoadingCustom());
         } else if (state is MostrarFormRol) {
-          _formRoles = null;
           _formRoles = state.form;
-          if (state.form != null && _data.length == 0) {
-            state.form.form.forEach((element) {});
-            _data = _generateItems(state.form);
-          }
-
+          _data = _generateItems(_formRoles);
           //if (_formRoles == null) {
           //_formRoles = state.form;
           // if (_formRoles.form != null) {
@@ -558,11 +547,11 @@ class _FormRolState extends State<FormRol> {
                   trailing: Padding(
                     padding: EdgeInsets.only(left: 15),
                     child: Checkbox(
+                        key: UniqueKey(),
                         value: itemPantalla[index].seleccion,
                         onChanged: (value) {
                           setState(() {
                             itemPantalla[index].seleccion = value;
-
                             if (itemPantalla[index].seleccion) {
                               _data[positionHeader].selected = true;
                             } else if (!itemPantalla[index].seleccion) {

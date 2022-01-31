@@ -186,7 +186,7 @@ class ObtenerFormRolException implements Exception {}
 class TokenFormRolException implements Exception {}
 
 abstract class RolFormLogic {
-  Future<ItemModelFormRol> obtenerRolesForm({String idRol = '-1'});
+  Future<ItemModelFormRol> obtenerRolesForm({int idRol = -1});
 }
 
 class FormRolLogic implements RolFormLogic {
@@ -197,7 +197,7 @@ class FormRolLogic implements RolFormLogic {
   FormRolLogic();
 
   @override
-  Future<ItemModelFormRol> obtenerRolesForm({String idRol = '-1'}) async {
+  Future<ItemModelFormRol> obtenerRolesForm({int idRol = -1}) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 

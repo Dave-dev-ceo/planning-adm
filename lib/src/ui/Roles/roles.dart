@@ -77,9 +77,7 @@ class _RolesState extends State<Roles> {
         heroTag: null,
         child: Icon(Icons.add),
         onPressed: () {
-          setState(() {
-            mostrarForm(context, 0, null);
-          });
+          mostrarForm(context, 0, null);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -263,12 +261,8 @@ class _DataSource extends DataTableSource {
       },
       cells: [
         DataCell(Text(row.valueA), onTap: () async {
-          ItemModelRol rol;
-          ims.roles.forEach((rl) {
-            if (rl.id_rol == row.valueId) {
-              rol = new ItemModelRol(rl);
-            }
-          });
+          final _rol = ims.roles.firstWhere((rl) => rl.id_rol == row.valueId);
+          ItemModelRol rol = ItemModelRol(_rol);
           mostrarForm(_gridContext, 1, rol);
         }),
         DataCell(
