@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:planning/src/animations/loading_animation.dart';
@@ -24,6 +25,8 @@ import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/asistencia/asistencia.dart';
 import 'package:planning/src/ui/mesas/mesasPage.dart';
 import '../../../models/item_model_invitados.dart';
+
+import 'package:planning/src/utils/utils.dart' as utils;
 
 class ListaInvitados extends StatefulWidget {
   final int idEvento;
@@ -108,18 +111,10 @@ class _ListaInvitadosState extends State<ListaInvitados>
                       ByteData bytes =
                           await rootBundle.load("assets/Plantilla.xlsx");
                       ;
-                      final blob = html.Blob([bytes]);
-                      final url = html.Url.createObjectUrlFromBlob(blob);
-
-                      final anchor =
-                          html.document.createElement('a') as html.AnchorElement
-                            ..href = url
-                            ..style.display = 'none'
-                            ..download = 'Plantilla.xlsx';
-                      html.document.body.children.add(anchor);
-                      anchor.click();
-                      html.document.body.children.remove(anchor);
-                      html.Url.revokeObjectUrl(url);
+                      String base64 = base64Encode(bytes.buffer.asUint8List(
+                          bytes.offsetInBytes, bytes.lengthInBytes));
+                      utils.downloadFile(base64, 'Plantilla',
+                          extensionFile: 'xlsx');
                     },
                     child: Text('Descargar plantiila'),
                   ),
@@ -321,7 +316,10 @@ class _ListaInvitadosState extends State<ListaInvitados>
               await api.enviarInvitacionesPorEvento();
           Navigator.pop(_dialogContext);
           MostrarAlerta(
-              mensaje: response['msg'], tipoMensaje: response['enviado'] ? TipoMensaje.correcto : TipoMensaje.error);
+              mensaje: response['msg'],
+              tipoMensaje: response['enviado']
+                  ? TipoMensaje.correcto
+                  : TipoMensaje.error);
         },
       ));
     }

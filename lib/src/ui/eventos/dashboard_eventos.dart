@@ -294,7 +294,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       String titulotemp = 'Eventos';
       final titulo = titulotemp.replaceAll(" ", "_");
       final date = DateTime.now();
-      utils.downloadFile(pdf, '$titulo-$date');
+      utils.downloadFile(pdf, '$titulo');
     }
 
     // final pdf = pw.Document();

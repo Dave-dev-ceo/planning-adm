@@ -9,8 +9,16 @@ import 'package:universal_html/html.dart' as html hide Text;
 
 import 'notifications_service.dart';
 
-void downloadFile(String data, String titulo, {String extensionFile}) async {
+void downloadFile(String data, String tituloTemp,
+    {String extensionFile}) async {
   final date = DateTime.now();
+  String titulo;
+
+  if (tituloTemp == 'Plantilla') {
+    titulo = tituloTemp;
+  } else {
+    titulo = tituloTemp + '-' + date.toString();
+  }
 
   if (extensionFile == null) {
     extensionFile = 'pdf';
@@ -24,7 +32,7 @@ void downloadFile(String data, String titulo, {String extensionFile}) async {
     final anchor = html.document.createElement('a') as html.AnchorElement
       ..href = url
       ..style.display = 'none'
-      ..download = '$titulo-$date.$extensionFile';
+      ..download = '$titulo.$extensionFile';
     html.document.body.children.add(anchor);
     anchor.click();
     html.document.body.children.remove(anchor);
@@ -40,9 +48,9 @@ void downloadFile(String data, String titulo, {String extensionFile}) async {
         path = await getApplicationDocumentsDirectory()
             .then((value) => value.path);
       }
-      File f = File('$path/$titulo-$date.$extensionFile');
+      File f = File('$path/$titulo.$extensionFile');
       Map<String, dynamic> result = {
-        'message': '$titulo-$date.$extensionFile',
+        'message': '$titulo.$extensionFile',
         'filePath': null,
         'error': null,
       };
