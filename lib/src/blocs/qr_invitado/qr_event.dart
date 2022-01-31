@@ -10,3 +10,6 @@ class QrValidation extends QrEvent {
 
   QrValidation(this.token);
 }
+
+class QrInvitadoUpdateEvent extends QrEvent {
+}

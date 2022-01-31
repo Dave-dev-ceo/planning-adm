@@ -28,5 +28,7 @@ class QrBloc extends Bloc<QrEvent, QrState> {
         print(e);
       }
     });
+
+    on<QrInvitadoUpdateEvent>((event, emit) => emit(QrInvitadoUpdateState()));
   }
 }

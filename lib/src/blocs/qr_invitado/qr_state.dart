@@ -19,4 +19,6 @@ class QrValidState extends QrState {
 
 class QrValidAnotherState extends QrState {}
 
+class QrInvitadoUpdateState extends QrState{}
+
 class QrErrorState extends QrState {}

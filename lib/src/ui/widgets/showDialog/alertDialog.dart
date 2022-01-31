@@ -23,6 +23,8 @@ class _DialogAlertState extends State<DialogAlert> {
 
   List<String> lista = [];
   QrBloc qrBloc;
+  String nombreInvitado;
+  String eventoDescripcion;
 
   @override
   void initState() {
@@ -31,28 +33,29 @@ class _DialogAlertState extends State<DialogAlert> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: BlocListener<QrBloc, QrState>(
         listener: (context, state) {
           if (state is QrValidAnotherState) {
-              Navigator.of(context).pop();
-              MostrarAlerta(
-                  mensaje: 'El codigo Qr no es valido',
-                  tipoMensaje: TipoMensaje.error);
+            Navigator.of(context).pop();
+            MostrarAlerta(
+                mensaje: 'El codigo Qr no es valido',
+                tipoMensaje: TipoMensaje.error);
           } else if (state is QrErrorState) {
-              Navigator.of(context).pop();
-              MostrarAlerta(
-                  mensaje: 'Ocurrio un error al leer el QR',
-                  tipoMensaje: TipoMensaje.error);
+            Navigator.of(context).pop();
+            MostrarAlerta(
+                mensaje: 'Ocurrio un error al leer el QR',
+                tipoMensaje: TipoMensaje.error);
           }
         },
         child: BlocBuilder<QrBloc, QrState>(
           builder: (context, state) {
             if (state is QrValidState) {
               final invitado = state.qrData;
+              nombreInvitado = invitado.nombre;
+              eventoDescripcion = invitado.evento;
               return AlertDialog(
                 scrollable: false,
                 title: Center(child: Text('Datos de invitado')),
@@ -93,27 +96,42 @@ class _DialogAlertState extends State<DialogAlert> {
                               onPressed: () => {
                                     _guardarAsistencia(invitado.idInvitado,
                                         invitado.nombre, true, invitado.evento),
-                                    // Navigator.pop(context),
                                   },
                               child: Text('Aceptar'))),
                     ],
                   )
                 ],
               );
-            } else {
-
-            return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Center(
-                    child: LoadingCustom(),
-                  ),
+            } else if (state is QrInvitadoUpdateState) {
+              return AlertDialog(
+                title: Text('¡Bienvenido!'),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                        '$nombreInvitado estás en el evento $eventoDescripcion'),
+                    Text('Gracias por asistir.'),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('Ok')),
                 ],
-              ),
-            );
+              );
+            } else {
+              return AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
+                      child: LoadingCustom(),
+                    ),
+                  ],
+                ),
+              );
             }
-
           },
         ),
       ),
@@ -132,36 +150,37 @@ class _DialogAlertState extends State<DialogAlert> {
     );
   }
 
-  _guardarAsistencia(
-      int idInvitado, String nombre, bool asistenciaValor, String evento) {
+  _guardarAsistencia(int idInvitado, String nombre, bool asistenciaValor,
+      String evento) async {
     // BlocProvider - cargamos el evento
     AsistenciaBloc asistenciaBloc;
     asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
-    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
-    Navigator.pop(context, true);
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('¡Bienvenido!'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Center(child: Text('$nombre estás en el evento $evento')),
-                  Center(child: Text('Gracias por asistir.')),
-                ],
-              ),
-            ),
-            actions: [
-              Expanded(
-                  flex: 5,
-                  child: TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: Text('Ok'))),
-            ],
-          );
-        });
+    await asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
+    qrBloc.add(QrInvitadoUpdateEvent());
+    // showDialog(
+    //     barrierDismissible: false,
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //         title: Text('¡Bienvenido!'),
+    //         content:  Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           mainAxisSize: MainAxisSize.min,
+    //             children: [
+    //               Text('$nombre estás en el evento $evento'),
+    //               Text('Gracias por asistir.'),
+    //             ],
+    //           ),
+
+    //         actions: [
+    //           Expanded(
+    //               flex: 5,
+    //               child: TextButton(
+    //                   onPressed: () => Navigator.pop(context, true),
+    //                   child: Text('Ok'))),
+    //         ],
+    //       );
+    //     });
   }
 
   // @override
