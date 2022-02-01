@@ -6,6 +6,8 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/resources/config_conection.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -95,31 +97,50 @@ class _DashboardEventosState extends State<DashboardEventos> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: EdgeInsets.all(8.0),
         elevation: 10,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-                title: Text(titulo),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Fecha evento: ' + fevento),
-                    Text('Planeación de evento del: ' + inicio + ' al ' + fin),
-                    for (var i = 0; i < involucrados.length; i++)
-                      involucrados[0].tipoInvolucrado != 'Sin involucrado'
-                          ? Text(involucrados[i].tipoInvolucrado +
-                              ' : ' +
-                              involucrados[i].nombre)
-                          : Text('Sin involucrados'),
-                  ],
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFFFF0D6),
+                Color(0xfffef9f9),
+                Color(0xFFFFF0D6),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+                  title: Text(titulo),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Fecha evento: ' + fevento),
+                      Text(
+                          'Planeación de evento del: ' + inicio + ' al ' + fin),
+                      for (var i = 0; i < involucrados.length; i++)
+                        involucrados[0].tipoInvolucrado != 'Sin involucrado'
+                            ? Text(involucrados[i].tipoInvolucrado +
+                                ' : ' +
+                                involucrados[i].nombre)
+                            : Text('Sin involucrados'),
+                    ],
+                  ),
+                  trailing: FaIcon(
+                    FontAwesomeIcons.glassCheers,
+                    size: 18.0,
+                  ),
                 ),
-                leading: Icon(Icons.event),
-              ),
-              SizedBox(
-                height: 8.0,
-              )
-            ],
+                SizedBox(
+                  height: 8.0,
+                )
+              ],
+            ),
           ),
         ),
       ),

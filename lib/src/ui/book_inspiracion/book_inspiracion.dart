@@ -45,7 +45,7 @@ class _BookInspiracion extends State<BookInspiracion> {
     return Scaffold(
       appBar: (isInvolucrado)
           ? AppBar(
-              title: Text('Book Inspiración'),
+              title: Text('Book Inspiration'),
               centerTitle: true,
             )
           : null,
@@ -115,7 +115,7 @@ class _BookInspiracion extends State<BookInspiracion> {
                 final datosBookIns =
                     await bookInspiracionService.downloadBookInspiracion();
                 if (datosBookIns != null) {
-                  utils.downloadFile(datosBookIns, 'Book-Inspiracion');
+                  utils.downloadFile(datosBookIns, 'Book-Inspiration');
                 }
               })
         ],

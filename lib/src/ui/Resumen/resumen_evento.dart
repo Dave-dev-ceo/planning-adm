@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart' as EvtBloc;
@@ -89,19 +90,19 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   Widget buildList(AsyncSnapshot<ItemModelReporteInvitados> snapshot) {
-    double sizeHeight = 200;
     return Container(
         width: 400,
         //color: Colors.pink,
-        height: sizeHeight,
+        height: 150,
         child: miCardReportesInvitados(snapshot.data));
   }
 
   miCardReportesInvitados(ItemModelReporteInvitados reporte) {
     return GestureDetector(
       child: Card(
+        color: Color(0xFFfdf4e5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(10),
         elevation: 10,
         child: Column(
           children: <Widget>[
@@ -122,7 +123,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                           reporte.results.elementAt(index).cantidad.toString());
                     }),
               ),
-              leading: Icon(Icons.event),
+              trailing: FaIcon(FontAwesomeIcons.tasks),
             ),
           ],
         ),
@@ -146,7 +147,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           eventosBloc.add(EvtBloc.FechtEventosEvent('A'));
           return Container(
               width: 400,
-              height: 200,
+              height: 150,
               child: miCardReporteDetallesEvento(evento));
         } else if (state is EvtBloc.ErrorEventoPorIdState) {
           return Center(
@@ -156,7 +157,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
           if (evento != null) {
             return Container(
                 width: 400,
-                height: 200,
+                height: 150,
                 child: miCardReporteDetallesEvento(evento));
           } else {
             return Center(child: LoadingCustom());
@@ -171,13 +172,14 @@ class _ResumenEventoState extends State<ResumenEvento> {
   miCardReporteDetallesEvento(ItemModelEvento evtt) {
     return GestureDetector(
       child: Card(
+        color: Color(0xFFfdf4e5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: EdgeInsets.all(10),
         elevation: 6,
         child: SingleChildScrollView(
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             child: Column(
               children: <Widget>[
                 ListTile(
@@ -212,7 +214,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                         mostrarInvolucrado(inv),
                     ],
                   ),
-                  leading: Icon(Icons.event),
+                  trailing: Icon(Icons.event),
                 ),
               ],
             ),
@@ -250,9 +252,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
           (BuildContext context, AsyncSnapshot<List<PlannesModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
+            decoration: BoxDecoration(
+              color: Color(0xFFfdf4e5),
+            ),
             width: 500,
             height: 300,
             child: Card(
+              color: Color(0xFFfdf4e5),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
               margin: EdgeInsets.all(20.0),
@@ -268,9 +274,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
             return miCardActividades(snapshot.data);
           } else {
             return Container(
+              decoration: BoxDecoration(
+                color: Color(0xFFfdf4e5),
+              ),
               width: 500,
               height: 300,
               child: Card(
+                color: Color(0xFFfdf4e5),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
                 margin: EdgeInsets.all(20.0),
@@ -326,6 +336,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
       width: 500,
       height: 300,
       child: Card(
+        color: Color(0xFFfdf4e5),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         margin: EdgeInsets.all(20.0),

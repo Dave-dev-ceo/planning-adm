@@ -217,9 +217,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 100.0,
-                    ),
+                    Spacer(),
                     Flexible(
                       child: Align(
                         alignment: Alignment.center,
@@ -231,6 +229,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                         )),
                       ),
                     ),
+                    Spacer(),
                   ],
                 )
               : Column(
@@ -364,7 +363,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
 
       if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
         tabs.add(
-            TabItem(titulo: 'Book Inspiración', icono: Icons.edit_road_sharp));
+            TabItem(titulo: 'Book Inspiration', icono: Icons.edit_road_sharp));
         temp += 1;
       }
 
