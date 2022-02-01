@@ -165,13 +165,27 @@ class SharedPreferencesT {
   }
 
   setCorreo(String correo) async {
-    _sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
     _sharedPreferences.setString('correo', correo);
   }
 
   Future<String> getCorreo() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
     return await _sharedPreferences.getString('correo');
+  }
+
+  setClaveRol(String claveRol) async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    _sharedPreferences.setString('claveRol', claveRol);
+  }
+
+  Future<String> getClaveRol() async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    return await _sharedPreferences.getString('claveRol');
   }
 
   clear() async {

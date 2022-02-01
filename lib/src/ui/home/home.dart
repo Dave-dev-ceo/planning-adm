@@ -17,6 +17,7 @@ import 'package:planning/src/ui/proveedores/proveedores.dart';
 import 'package:planning/src/ui/timings/timing.dart';
 import 'package:planning/src/ui/usuarios/usuarios.dart';
 import 'package:planning/src/ui/widgets/tab/tab_item.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -34,13 +35,19 @@ class _HomeState extends State<Home> {
   int _pages = 0;
   PermisosBloc permisosBloc;
   BuildContext _dialogContext;
+  String claveRol;
 
   ItemModelPerfil permisos;
 
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
     permisosBloc.add(obtenerPermisosEvent());
+    getClaveRol();
     super.initState();
+  }
+
+  getClaveRol() async {
+    claveRol = await _sharedPreferences.getClaveRol();
   }
 
   //_HomeState(this.idPlanner);
@@ -113,20 +120,26 @@ class _HomeState extends State<Home> {
                   padding: EdgeInsets.all(15.0),
                   child: Center(
                     child: CircleAvatar(
-                      backgroundColor: hexToColor('#d39942'),
+                      backgroundColor: Colors.white,
                       child: PopupMenuButton(
-                        child: widget.data['imag'] == null
-                            ? Icon(Icons.person)
+                        child: widget.data['imag'] == null ||
+                                widget.data['imag'] == ''
+                            ? FaIcon(
+                                FontAwesomeIcons.user,
+                                color: Colors.black,
+                              )
                             : CircleAvatar(
                                 backgroundImage: MemoryImage(
-                                    base64Decode(widget.data['imag'])),
+                                  base64Decode(widget.data['imag']),
+                                ),
                               ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
                             value: 1,
                             child: Text("Perfil"),
                           ),
-                          PopupMenuItem(value: 2, child: Text("Planner")),
+                          if (claveRol == 'SU')
+                            PopupMenuItem(value: 2, child: Text("Planner")),
                           PopupMenuItem(
                             value: 3,
                             child: Text("Cerrar sesión"),

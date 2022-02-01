@@ -29,10 +29,4 @@ class PermisosBloc extends Bloc<PermisosEvent, PermisosState> {
       }
     }
   }
-
-  @override
-  void onTransition(Transition<PermisosEvent, PermisosState> transition) {
-    print(transition);
-    super.onTransition(transition);
-  }
 }

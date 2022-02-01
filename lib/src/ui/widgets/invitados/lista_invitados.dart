@@ -523,6 +523,9 @@ class _ListaInvitadosState extends State<ListaInvitados>
           source: _DataSource(buscador, context, idEvento, WP_EVT_INV_CRT,
               WP_EVT_INV_EDT, WP_EVT_INV_ENV),
         ),
+        SizedBox(
+          height: 35.0,
+        ),
       ],
     );
   }

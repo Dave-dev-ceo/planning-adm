@@ -36,6 +36,7 @@ class BackendLoginLogic implements LoginLogic {
         await _sharedPreferences.setNombre(data['usuario']['nombre_completo']);
         await _sharedPreferences.setImagen(
             data['usuario']['imagen'] == null ? '' : data['usuario']['imagen']);
+        await _sharedPreferences.setClaveRol(data['usuario']['clave_rol']);
 
         await _sharedPreferences.setSesion(true);
         await _sharedPreferences.setPermisoBoton(true);
@@ -73,6 +74,7 @@ class BackendLoginLogic implements LoginLogic {
           data['usuario']['admin'].toString(),
           data['token']
         ];
+        await _sharedPreferences.setClaveRol(data['usuario']['clave_rol']);
         await _sharedPreferences.setJsonData(dataJsonWPlanner);
         await _sharedPreferences.setPermisos(json.encode(data['permisos']));
       }

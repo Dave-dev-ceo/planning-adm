@@ -66,9 +66,4 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     }
   }
-
-  @override
-  void onTransition(Transition<LoginEvent, LoginState> transition) {
-    super.onTransition(transition);
-  }
 }

@@ -36,6 +36,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   TabController _tabController;
   bool _tapped = false;
   Size size;
+  String claveRol;
 
   _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
@@ -45,10 +46,15 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
     permisosBloc.add(obtenerPermisosEvent());
+    getClaveRol();
 
     getIdInvolucrado();
 
     super.initState();
+  }
+
+  getClaveRol() async {
+    claveRol = await _sharedPreferences.getClaveRol();
   }
 
   getIdInvolucrado() async {
@@ -253,7 +259,8 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
               child: CircleAvatar(
                 backgroundColor: hexToColor('#d39942'),
                 child: PopupMenuButton(
-                  child: widget.detalleEvento['imag'] == null
+                  child: widget.detalleEvento['imag'] == null ||
+                          widget.detalleEvento['imag'] == ''
                       ? Icon(Icons.person)
                       : CircleAvatar(
                           backgroundImage: MemoryImage(
@@ -264,7 +271,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                       value: 1,
                       child: Text("Perfil"),
                     ),
-                    if (!isInvolucrado)
+                    if (claveRol == 'SU')
                       PopupMenuItem(value: 2, child: Text("Planner")),
                     PopupMenuItem(
                       value: 3,
