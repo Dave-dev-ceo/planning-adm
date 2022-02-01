@@ -56,6 +56,8 @@ class _FormRolState extends State<FormRol> {
 
   _FormRolState(this.datos);
 
+  int contador = 0;
+
   @override
   void initState() {
     rolBloc = BlocProvider.of<RolBloc>(context);
@@ -73,7 +75,6 @@ class _FormRolState extends State<FormRol> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {});
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocListener<RolBloc, RolState>(
@@ -368,10 +369,14 @@ class _FormRolState extends State<FormRol> {
         } else if (state is ErrorTokenFormRolState) {
           return _showDialogMsg(context);
         } else if (state is LoadingMostrarFormRol) {
+          _formRoles = null;
           return Center(child: LoadingCustom());
         } else if (state is MostrarFormRol) {
-          _formRoles = state.form;
-          _data = _generateItems(_formRoles);
+          if (_formRoles == null && contador <= 1) {
+            _formRoles = state.form;
+            _data = _generateItems(_formRoles);
+            contador++;
+          }
           //if (_formRoles == null) {
           //_formRoles = state.form;
           // if (_formRoles.form != null) {
@@ -547,7 +552,6 @@ class _FormRolState extends State<FormRol> {
                   trailing: Padding(
                     padding: EdgeInsets.only(left: 15),
                     child: Checkbox(
-                        key: UniqueKey(),
                         value: itemPantalla[index].seleccion,
                         onChanged: (value) {
                           setState(() {
@@ -631,10 +635,11 @@ class _FormRolState extends State<FormRol> {
       if (element.pantallas != null) {
         element.pantallas.forEach((elementPant) {
           _pantallaTemp.add(ItemPantalla(
-              clave_pantalla: elementPant.clave_pantalla,
-              id_pantalla: elementPant.id_pantalla,
-              nombre_pantalla: elementPant.nombre_pantalla,
-              seleccion: elementPant.selected));
+            clave_pantalla: elementPant.clave_pantalla,
+            id_pantalla: elementPant.id_pantalla,
+            nombre_pantalla: elementPant.nombre_pantalla,
+            seleccion: elementPant.selected,
+          ));
         });
       }
       _dataTemp.add(Itemr(

@@ -1,7 +1,7 @@
 class ConfigConection {
   String _url;
   String _puerto;
-  bool desarrollo = false;
+  bool desarrollo = true;
   set addUrl(String data) {
     this._url = data;
   }
