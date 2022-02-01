@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/resources/config_conection.dart';
@@ -17,7 +17,6 @@ class TokenPermisosException implements Exception {}
 class PerfiladoLogic implements PermisosLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
-  Client client = Client();
 
   PerfiladoLogic();
 
@@ -26,7 +25,7 @@ class PerfiladoLogic implements PermisosLogic {
     String idUsuario = (await _sharedPreferences.getIdUsuario()).toString();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/USUARIOS/obtenerPermisosUsuario'),

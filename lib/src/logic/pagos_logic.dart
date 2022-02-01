@@ -1,5 +1,5 @@
 // imports from flutter/dart
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -27,7 +27,6 @@ class ConsultasPagosLogic extends PagosLogic {
   // variables de configuracion
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
-  Client client = Client();
 
   @override
   Future<bool> insertPagos(Map pago) async {
@@ -39,7 +38,7 @@ class ConsultasPagosLogic extends PagosLogic {
     pago['id_planner'] = idPlanner.toString();
     pago['id_evento'] = idEvento.toString();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/insertPagos'),
         body: pago,
         headers: {HttpHeaders.authorizationHeader: token});
@@ -63,7 +62,7 @@ class ConsultasPagosLogic extends PagosLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/selectPagos'),
         body: {
           'id_planner': idPlanner.toString(),
@@ -101,7 +100,7 @@ class ConsultasPagosLogic extends PagosLogic {
 
     pago['id_planner'] = idPlanner.toString();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/updatePagos'),
         body: pago,
         headers: {HttpHeaders.authorizationHeader: token});
@@ -124,7 +123,7 @@ class ConsultasPagosLogic extends PagosLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/deletePagos'),
         body: {
           'id_planner': idPlanner.toString(),
@@ -152,7 +151,7 @@ class ConsultasPagosLogic extends PagosLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/PAGOS/selectProveedor'),
         body: {'id_planner': idPlanner.toString()},
@@ -176,7 +175,7 @@ class ConsultasPagosLogic extends PagosLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/PAGOS/selectServicios'),
         body: {'id_planner': idPlanner.toString()},
@@ -200,7 +199,7 @@ class ConsultasPagosLogic extends PagosLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/selectPagosId'),
         body: {
           'id_planner': idPlanner.toString(),
@@ -242,7 +241,7 @@ class ConsultasPagosLogic extends PagosLogic {
       'tipoPresupuesto': tipoPresupueto
     };
 
-    final resp = await client.post(
+    final resp = await http.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,

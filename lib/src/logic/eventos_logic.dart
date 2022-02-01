@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/models/item_model_evento.dart';
 import 'package:planning/src/models/item_model_eventos.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -28,14 +28,13 @@ class TokenException implements Exception {}
 class FetchListaEventosLogic extends ListaEventosLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
-  Client client = Client();
 
   @override
   Future<ItemModelEventos> fetchEventos(String estatus) async {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventos/'),
         body: {
@@ -63,7 +62,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   Future<ItemModelEvento> fetchEventoPorId(String id_evento) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/EVENTOS/obtenerEventoPorId/'),
@@ -72,7 +71,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     // var uri = Uri.parse(
     //     confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventoPorId/');
     // var header = {HttpHeaders.authorizationHeader: token};
-    // final response = await client.post(uri, headers: header, body: data);
+    // final response = await http.post(uri, headers: header, body: data);
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
@@ -92,7 +91,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     dataEvento['id_planner'] = idPlanner.toString();
     dataEvento['id_usuario'] = idUsuario.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/EVENTOS/createEventos'),
         body: dataEvento,
@@ -118,7 +117,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     dataEvento['id_planner'] = idPlanner.toString();
     dataEvento['id_usuario'] = idUsuario.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/EVENTOS/editarEvento'),
         body: dataEvento,
         headers: {HttpHeaders.authorizationHeader: token});
@@ -152,7 +151,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
       'idEvento': idEvento,
     };
 
-    final resp = await client.post(
+    final resp = await http.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -184,7 +183,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
       'idEvento': idEvento,
     };
 
-    final resp = await client.post(
+    final resp = await http.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,

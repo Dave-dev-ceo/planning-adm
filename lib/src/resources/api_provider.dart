@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:async';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/models/item_model-acompanante.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_eventos.dart';
@@ -25,7 +25,6 @@ import '../models/item_model_invitados.dart';
 class ApiProvider {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
-  Client client = Client();
   _loadLogin(BuildContext context) async {
     await _sharedPreferences.clear();
     _showDialogMsg(context);
@@ -61,7 +60,7 @@ class ApiProvider {
   }
 
   Future<ItemModelPrueba> fetchPrueba() async {
-    final response = await client.get(Uri.parse(
+    final response = await http.get(Uri.parse(
         confiC.url + confiC.puerto + '/wedding/PRUEBA/obtenerDatos/'));
 
     if (response.statusCode == 200) {
@@ -81,7 +80,7 @@ class ApiProvider {
     if (res == 0) {
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/obtenerReporteInvitadosGrupo/$idEvento'),
@@ -112,7 +111,7 @@ class ApiProvider {
     if (res == 0) {
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/obtenerReporteInvitadosGenero/$idEvento'),
@@ -143,7 +142,7 @@ class ApiProvider {
     if (res == 0) {
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/obtenerReporteInvitados/$idEvento'),
@@ -176,7 +175,7 @@ class ApiProvider {
       int idEvento = await _sharedPreferences.getIdEvento();
       reporte['id_evento'] = idEvento.toString();
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(
               confiC.url + confiC.puerto + '/wedding/INVITADOS/obtenerReporte'),
           body: reporte,
@@ -205,7 +204,7 @@ class ApiProvider {
     if (res == 0) {
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/obtenerInvitados/$idEvento'),
@@ -234,7 +233,7 @@ class ApiProvider {
     if (res == 0) {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/EVENTOS/obtenerEventos/$idPlanner'),
@@ -264,7 +263,7 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/obtenerInvitado/$idInvitado'),
@@ -294,7 +293,7 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/createInvitados'),
@@ -326,7 +325,7 @@ class ApiProvider {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       data['id_planner'] = idPlanner.toString();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(
               confiC.url + confiC.puerto + '/wedding/ESTATUS/updateEstatus'),
           body: data,
@@ -355,7 +354,7 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/updateEstatusInvitados'),
@@ -385,7 +384,7 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/updateGrupoInvitados'),
@@ -415,7 +414,7 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(
               confiC.url + confiC.puerto + '/wedding/INVITADOS/updateInvitado'),
           body: data,
@@ -443,7 +442,7 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url + confiC.puerto + '/wedding/MESAS/obtenerMesas'),
           headers: {HttpHeaders.authorizationHeader: token});
 
@@ -471,7 +470,7 @@ class ApiProvider {
     if (res == 0) {
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/GRUPOS/obtenerGrupos/$idEvento'),
@@ -502,7 +501,7 @@ class ApiProvider {
     if (res == 0) {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/ESTATUS/obtenerEstatus/$idPlanner'),
@@ -535,7 +534,7 @@ class ApiProvider {
       int idEvento = await _sharedPreferences.getIdEvento();
       grupo['id_evento'] = idEvento.toString();
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(confiC.url + confiC.puerto + '/wedding/GRUPOS/createGrupo'),
           body: grupo,
           headers: {HttpHeaders.authorizationHeader: token});
@@ -565,7 +564,7 @@ class ApiProvider {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       estatus['id_planner'] = idPlanner.toString();
       String token = await _sharedPreferences.getToken();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(
               confiC.url + confiC.puerto + '/wedding/ESTATUS/createEstatus'),
           body: estatus,
@@ -589,7 +588,7 @@ class ApiProvider {
   }
 
   Future<int> registroPlanner(Map<String, String> auth) async {
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/PLANNER/registroPlanner'),
         body: auth);
@@ -603,7 +602,7 @@ class ApiProvider {
   }
 
   Future<int> loginPlanner(Map<String, String> auth) async {
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/ACCESO/loginPlanner'),
         body: auth);
     if (response.statusCode == 200) {
@@ -623,18 +622,19 @@ class ApiProvider {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdEvento();
     int idEvento = await _sharedPreferences.getIdEvento();
-    final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/INVITADOS/enviarInvitacionesPorEvento'),
-            headers: {
-              HttpHeaders.authorizationHeader: token,
-            },
-        body: {
-          // 'token': await _sharedPreferences.getToken(),
-          'id_planner': idPlanner.toString(),
-          'id_evento': idEvento.toString()
-        },);
+    final response = await http.post(
+      Uri.parse(confiC.url +
+          confiC.puerto +
+          '/wedding/INVITADOS/enviarInvitacionesPorEvento'),
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+      },
+      body: {
+        // 'token': await _sharedPreferences.getToken(),
+        'id_planner': idPlanner.toString(),
+        'id_evento': idEvento.toString()
+      },
+    );
     int enviados = 0;
     // int total = 0;
     if (response.statusCode == 200) {
@@ -654,9 +654,12 @@ class ApiProvider {
   }
 
   Future<int> renovarToken() async {
-    final response = await client.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/ACCESO/renovarToken'),
-        body: {"token": await _sharedPreferences.getToken()});
+    String token = await _sharedPreferences.getToken();
+
+    final response = await http.post(
+      Uri.parse(confiC.url + confiC.puerto + '/wedding/ACCESO/renovarToken'),
+      body: {"token": token},
+    );
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
@@ -676,7 +679,7 @@ class ApiProvider {
       String token = await _sharedPreferences.getToken();
       int planner = await _sharedPreferences.getIdPlanner();
       int evento = await _sharedPreferences.getIdEvento();
-      final response = await client.get(
+      final response = await http.get(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/obtenerAcompanante/$idInvitado/$planner/$evento'),
@@ -710,7 +713,7 @@ class ApiProvider {
 
       acompananteEditado['idUsuario'] = idUsuario.toString();
 
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(confiC.url + confiC.puerto + '/' + endPoint),
           body: acompananteEditado,
           headers: {HttpHeaders.authorizationHeader: token});
@@ -732,7 +735,7 @@ class ApiProvider {
 
       final data = {'idAcompanante': idAcompanante};
 
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(confiC.url + confiC.puerto + '/' + enpoint),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
@@ -759,7 +762,7 @@ class ApiProvider {
       data['id_evento'] = id_evento.toString();
       data['creado_por'] = creado_por.toString();
       data['modificado_por'] = modificado_por.toString();
-      final response = await client.post(
+      final response = await http.post(
           Uri.parse(confiC.url +
               confiC.puerto +
               '/wedding/INVITADOS/agregarAcompanante'),
@@ -799,7 +802,7 @@ class ApiProvider {
       'Accept': 'application/json',
       HttpHeaders.authorizationHeader: token,
     };
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -827,7 +830,7 @@ class ApiProvider {
       'Accept': 'application/json',
       HttpHeaders.authorizationHeader: token,
     };
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -843,7 +846,7 @@ class ApiProvider {
     data['id_evento'] = idEvento.toString();
     String token = await _sharedPreferences.getToken();
     print(data);
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/INVITADOS/deleteInvitados'),
         body: {
