@@ -178,7 +178,7 @@ class _BookInspiracion extends State<BookInspiracion> {
   _eliminarArchivo(int idArchivo) {
     return AlertDialog(
       title: const Text('Eliminar Imagen'),
-      content: const Text('¿Desea eliminar la imagen del Book de Inspiración?'),
+      content: const Text('¿Desea eliminar la imagen del Book de Inspiration?'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'Cancelar'),

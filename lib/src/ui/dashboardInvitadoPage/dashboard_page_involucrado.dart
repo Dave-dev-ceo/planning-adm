@@ -187,7 +187,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
 
       if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
         gridCard.add(_builCard(
-          'Book Inspiración',
+          'Book Inspiration',
           BookInspiracion(),
           FaIcon(FontAwesomeIcons.bookOpen),
         ));
