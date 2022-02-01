@@ -297,7 +297,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                 formItemsDesign(
                     MyFlutterApp.transgender,
                     Row(children: <Widget>[
-                      Text('Genero'),
+                      Text('Género'),
                       //SizedBox(width: 15,),
                       Expanded(
                         child: MaterialSegmentedControl(
@@ -738,7 +738,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                       formItemsDesign(
                           MyFlutterApp.transgender,
                           Row(children: <Widget>[
-                            Text('Genero'),
+                            Text('Género'),
                             //SizedBox(width: 15,),
                             Expanded(
                               child: MaterialSegmentedControl(
@@ -1013,7 +1013,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           formItemsDesign(
                               MyFlutterApp.transgender,
                               Row(children: <Widget>[
-                                Text('Genero'),
+                                Text('Género'),
                                 //SizedBox(width: 15,),
                                 Expanded(
                                   child: MaterialSegmentedControl(

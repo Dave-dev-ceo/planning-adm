@@ -127,7 +127,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             MyFlutterApp.transgender,
             Row(
               children: <Widget>[
-                Text('Genero'),
+                Text('Género'),
                 SizedBox(
                   width: 50,
                 ),
@@ -151,7 +151,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
              ],)*/
 
             /*Column(children: <Widget>[
-             Text("Genero"),
+             Text("Género"),
              RadioListTile<String>(
                title: const Text('Hombre'),
                value: 'H',
