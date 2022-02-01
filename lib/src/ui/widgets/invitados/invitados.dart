@@ -112,12 +112,40 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                           WP_EVT_INV_ENV: permisoPantallas.pantallas
                               .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
                           nameEvento: widget.detalleEvento['nEvento'],
+                          permisos: state.permisos,
                         )).then(
                     (_) => _tabController.index = _tabController.previousIndex);
               }
               _tapped = false;
             });
-            return crearPantallas(context, tabs, pantallas);
+
+            int bandera = 0;
+
+            for (var pantallla in state.permisos.pantallas.secciones) {
+              if ((pantallla.clavePantalla == 'WP-EVT-ASI' &&
+                      pantallla.acceso == true) ||
+                  (pantallla.clavePantalla == 'WP-EVT-INV' &&
+                      pantallla.acceso == true) ||
+                  (pantallla.clavePantalla == 'WP-EVT-MDE' &&
+                      pantallla.acceso == true)) {
+                bandera += 1;
+              }
+            }
+            if (bandera <= 3 && bandera != 0) {
+              return ListaInvitados(
+                idEvento: detalleEvento['idEvento'],
+                WP_EVT_INV_CRT: permisoPantallas.pantallas
+                    .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+                WP_EVT_INV_EDT: permisoPantallas.pantallas
+                    .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+                WP_EVT_INV_ENV: permisoPantallas.pantallas
+                    .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+                nameEvento: widget.detalleEvento['nEvento'],
+                permisos: state.permisos,
+              );
+            } else {
+              return crearPantallas(context, tabs, pantallas);
+            }
           } else if (state is ErrorPermisos) {
             return Center(
               child: Text(state.message),
@@ -304,7 +332,9 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
       //  tabs.add(TabItem(titulo: 'Autorizaciones', icono: Icons.brush));
       //  temp += 1;
       //}
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV') ||
+          pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI') ||
+          pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
         tabs.add(TabItem(titulo: 'Invitados', icono: Icons.people));
         temp += 1;
       }

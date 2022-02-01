@@ -371,12 +371,12 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
         heroTag: UniqueKey(),
         onPressed: () {
           _saveContact();
         },
         child: const Icon(Icons.cloud_upload_outlined),
-        backgroundColor: Color(0xFF000000),
       ),
     );
   }

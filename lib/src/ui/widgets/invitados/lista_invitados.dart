@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:universal_html/html.dart' as html hide Text;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
@@ -34,15 +35,17 @@ class ListaInvitados extends StatefulWidget {
   final bool WP_EVT_INV_CRT;
   final bool WP_EVT_INV_EDT;
   final bool WP_EVT_INV_ENV;
+  final ItemModelPerfil permisos;
 
-  const ListaInvitados(
-      {Key key,
-      this.idEvento,
-      this.WP_EVT_INV_CRT,
-      this.WP_EVT_INV_EDT,
-      this.WP_EVT_INV_ENV,
-      this.nameEvento})
-      : super(key: key);
+  const ListaInvitados({
+    Key key,
+    this.idEvento,
+    this.WP_EVT_INV_CRT,
+    this.WP_EVT_INV_EDT,
+    this.WP_EVT_INV_ENV,
+    this.nameEvento,
+    this.permisos,
+  }) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => ListaInvitados(),
       );
@@ -71,15 +74,34 @@ class _ListaInvitadosState extends State<ListaInvitados>
   TextEditingController controllerBuscar = TextEditingController();
   String _searchResult = '';
   List<dynamic> buscador = [];
+
+  int tabs = 0;
   @override
   void initState() {
-    _controller = TabController(length: 3, vsync: this);
+    _checkPermisos();
+
+    _controller = TabController(length: tabs, vsync: this);
     _controller.addListener(() {
       setState(() {
         currentIndex = _controller.index;
       });
     });
     super.initState();
+  }
+
+  _checkPermisos() {
+    if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+      tabs += 1;
+    }
+
+    if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
+      tabs += 1;
+    }
+
+    if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
+      tabs += 1;
+    }
+    setState(() {});
   }
 
   _ListaInvitadosState(this.idEvento, this.WP_EVT_INV_CRT, this.WP_EVT_INV_EDT,
@@ -366,9 +388,12 @@ class _ListaInvitadosState extends State<ListaInvitados>
   @override
   Widget build(BuildContext context) {
     final List<Widget> listWidget = [
-      listaInvitados(context),
-      Asistencia(),
-      MesasPage(nameEvento: widget.nameEvento),
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV'))
+        listaInvitados(context),
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI'))
+        Asistencia(),
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE'))
+        MesasPage(nameEvento: widget.nameEvento),
     ];
 
     double pHz = MediaQuery.of(context).size.width;
@@ -376,23 +401,31 @@ class _ListaInvitadosState extends State<ListaInvitados>
       appBar: AppBar(
         centerTitle: true,
         title: Text('Invitados'),
-        bottom: TabBar(
-          controller: _controller,
-          tabs: [
-            Tab(
-              icon: Icon(Icons.people),
-              text: 'Lista de Invitados',
-            ),
-            Tab(
-              icon: Icon(Icons.accessibility),
-              text: 'Asistencia',
-            ),
-            Tab(
-              icon: Icon(Icons.contact_mail_sharp),
-              text: 'Mesas',
-            ),
-          ],
-        ),
+        bottom: tabs == 1
+            ? null
+            : TabBar(
+                controller: _controller,
+                tabs: [
+                  if (widget.permisos.pantallas
+                      .hasAcceso(clavePantalla: 'WP-EVT-INV'))
+                    Tab(
+                      icon: Icon(Icons.people),
+                      text: 'Lista de Invitados',
+                    ),
+                  if (widget.permisos.pantallas
+                      .hasAcceso(clavePantalla: 'WP-EVT-ASI'))
+                    Tab(
+                      icon: Icon(Icons.accessibility),
+                      text: 'Asistencia',
+                    ),
+                  if (widget.permisos.pantallas
+                      .hasAcceso(clavePantalla: 'WP-EVT-MDE'))
+                    Tab(
+                      icon: Icon(Icons.contact_mail_sharp),
+                      text: 'Mesas',
+                    ),
+                ],
+              ),
       ),
 
       body: TabBarView(

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:planning/src/animations/custom_page_router.dart';
+import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/ui/autorizacion/galeria_autorizacion.dart';
 import 'package:planning/src/ui/contratos/add_contrato.dart';
 import 'package:planning/src/ui/contratos/view_contrato_pdf.dart';
@@ -48,7 +51,17 @@ class RouteGenerator {
         //return CustomPageRouter(child: ScannerQrInvitado());
         //return CustomPageRouter(child: Landing());
         //return CustomPageRouter(child: HomeAdmin());
-        return CustomPageRouter(child: Login());
+        return CustomPageRouter(
+            child: FutureBuilder(
+          future: checkSession(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data;
+            } else {
+              return LoadingCustom();
+            }
+          },
+        ));
       case '/homeAdmin':
         return CustomPageRouter(
           child: HomeAdmin(),
@@ -210,5 +223,40 @@ class RouteGenerator {
         child: Text('La Página no funciona!'),
       ),
     ));
+  }
+}
+
+Future<Widget> checkSession() async {
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+
+  bool sesion = await _sharedPreferences.getSession();
+  int involucrado = await _sharedPreferences.getIdInvolucrado();
+  int idEvento = await _sharedPreferences.getIdEvento();
+  String titulo = await _sharedPreferences.getEventoNombre();
+  String nombreUser = await _sharedPreferences.getNombre();
+  String image = await _sharedPreferences.getImagen();
+  String portada = await _sharedPreferences.getPortada();
+  String fechaEvento = await _sharedPreferences.getFechaEvento();
+
+  Map data = {'name': await _sharedPreferences.getNombre(), 'imag': image};
+
+  if (sesion) {
+    if (involucrado == null) {
+      return Home(data: data);
+    } else {
+      return DashboardInvolucradoPage(
+        detalleEvento: EventoResumenModel(
+          idEvento: idEvento,
+          descripcion: titulo,
+          nombreCompleto: nombreUser,
+          boton: false,
+          portada: portada != null ? portada : null,
+          img: image,
+          fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
+        ),
+      );
+    }
+  } else {
+    return Login();
   }
 }

@@ -89,7 +89,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           } else if (state is PermisosOk) {
             return Scaffold(
               appBar: appBarCustom(),
-              body: gridDasboarBody(state.permisos.pantallas),
+              body: gridDasboarBody(state.permisos.pantallas, state.permisos),
             );
           } else if (state is ErrorPermisos) {
             return Center(
@@ -103,7 +103,8 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     );
   }
 
-  Widget gridDasboarBody(ItemModelPantallas pantallas) {
+  Widget gridDasboarBody(
+      ItemModelPantallas pantallas, ItemModelPerfil permisos) {
     List<Widget> gridCard = [];
 
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES')) {
@@ -171,6 +172,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           WP_EVT_INV_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
           WP_EVT_INV_ENV: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
           nameEvento: detalleEvento.descripcion,
+          permisos: permisos,
         ),
         FaIcon(FontAwesomeIcons.users),
       ));
