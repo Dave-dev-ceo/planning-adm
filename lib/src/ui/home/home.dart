@@ -132,15 +132,14 @@ class _HomeState extends State<Home> {
                             child: Text("Cerrar sesión"),
                           )
                         ],
-                        onSelected: (valor) {
+                        onSelected: (valor) async {
                           if (valor == 1) {
                             Navigator.pushNamed(context, '/perfil');
                           } else if (valor == 2) {
                             Navigator.of(context).pushNamed('/perfilPlanner');
                           } else if (valor == 3) {
-                            _sharedPreferences.clear();
-                            Navigator.pop(context);
-                            Navigator.pushNamed(context, '/');
+                            await _sharedPreferences.clear();
+                            Navigator.pushReplacementNamed(context, '/');
                           }
                         },
                       ),
