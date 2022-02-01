@@ -101,12 +101,13 @@ class _DashboardEventosState extends State<DashboardEventos> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
             gradient: LinearGradient(
               colors: [
                 Color(0xFFFFF0D6),
-                Color(0xfffef9f9),
-                Color(0xFFFFF0D6),
+                Color(0xFFF3D8A9),
               ],
+              stops: [0.85, 0.85],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -129,12 +130,19 @@ class _DashboardEventosState extends State<DashboardEventos> {
                                 ' : ' +
                                 involucrados[i].nombre)
                             : Text('Sin involucrados'),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: FaIcon(
+                          FontAwesomeIcons.glassCheers,
+                          size: 18.0,
+                        ),
+                      )
                     ],
                   ),
-                  trailing: FaIcon(
-                    FontAwesomeIcons.glassCheers,
-                    size: 18.0,
-                  ),
+                  // trailing: FaIcon(
+                  //   FontAwesomeIcons.glassCheers,
+                  //   size: 18.0,
+                  // ),
                 ),
                 SizedBox(
                   height: 8.0,
