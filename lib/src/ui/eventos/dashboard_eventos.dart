@@ -38,6 +38,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
   ItemModelEventos eventos;
   PerfiladoLogic perfilado;
   final bool WP_EVT_CRT;
+  Size size;
   bool _lights = false;
   _DashboardEventosState(this.WP_EVT_CRT);
 
@@ -72,11 +73,11 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget buildList(ItemModelEventos snapshot) {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 400,
+            maxCrossAxisExtent: size.width <= 540 ? 550 : 400,
             mainAxisExtent: 150,
             childAspectRatio: 3 / 2,
             crossAxisSpacing: 8,
-            mainAxisSpacing: 0),
+            mainAxisSpacing: 2),
         itemCount: snapshot.results.length,
         itemBuilder: (BuildContext ctx, index) {
           return miCard(
@@ -196,6 +197,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     var valEstatus = _lights ? 'I' : 'A';
     return Scaffold(
       body: RefreshIndicator(

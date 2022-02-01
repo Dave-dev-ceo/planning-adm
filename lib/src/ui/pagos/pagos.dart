@@ -166,41 +166,44 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
   Widget buildTablePagos(
       List<HistorialPagosModel> pagos, String tipoPresupuesto) {
-    return PaginatedDataTable(
-      columns: [
-        DataColumn(
-          label: Text(
-            '',
-            style: _boldStyle,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: PaginatedDataTable(
+        columns: [
+          DataColumn(
+            label: Text(
+              '',
+              style: _boldStyle,
+            ),
           ),
-        ),
-        DataColumn(
-          label: Text(
-            'Fecha',
-            style: _boldStyle,
+          DataColumn(
+            label: Text(
+              'Fecha',
+              style: _boldStyle,
+            ),
           ),
-        ),
-        DataColumn(
-          label: Text(
-            'Concepto',
-            style: _boldStyle,
+          DataColumn(
+            label: Text(
+              'Concepto',
+              style: _boldStyle,
+            ),
           ),
-        ),
-        DataColumn(
-          label: Text(
-            'Monto',
-            style: _boldStyle,
+          DataColumn(
+            label: Text(
+              'Monto',
+              style: _boldStyle,
+            ),
+            numeric: true,
           ),
-          numeric: true,
-        ),
-      ],
-      source: DTS(
-          pago: (tipoPresupuesto == 'I')
-              ? _crearListaPagos(pagos)
-              : _crearListaPagosEventos(pagos)),
-      onRowsPerPageChanged: null,
-      rowsPerPage: pagos.length == 0 ? 1 : pagos.length + 1,
-      dataRowHeight: 25.0,
+        ],
+        source: DTS(
+            pago: (tipoPresupuesto == 'I')
+                ? _crearListaPagos(pagos)
+                : _crearListaPagosEventos(pagos)),
+        onRowsPerPageChanged: null,
+        rowsPerPage: pagos.length == 0 ? 1 : pagos.length + 1,
+        dataRowHeight: 25.0,
+      ),
     );
   }
 
@@ -459,58 +462,61 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               canAddPay = true;
             }
 
-            return Column(
-              children: [
-                _stickyHeader(
-                  state.pagos,
-                  tipoPage,
-                  totalsaldopresupuesto,
-                  totalpagos,
-                  totalpresupuestos,
-                ),
-                SizedBox(height: 10.0),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 20.0,
-                    ),
-                    Text(
-                      'Pagos',
-                      style: TextStyle(fontSize: 20.0),
-                    ),
-                    SizedBox(
-                      width: 100,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.black),
-                      onPressed: !isInvolucrado
-                          ? () {
-                              if (canAddPay) {
-                                _abrirDialog(
-                                    tipoPage, false, HistorialPagosModel());
-                              } else {
-                                MostrarAlerta(
-                                    mensaje:
-                                        'Es necesario agregar presupuestos.',
-                                    tipoMensaje: TipoMensaje.advertencia);
-                              }
-                            }
-                          : null,
-                      child: Text(
-                        'Agregar Pago',
-                        style: TextStyle(color: Colors.white),
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  _stickyHeader(
+                    state.pagos,
+                    tipoPage,
+                    totalsaldopresupuesto,
+                    totalpagos,
+                    totalpresupuestos,
+                  ),
+                  SizedBox(height: 10.0),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 20.0,
                       ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                buildTablePagos(state.listaPagos, tipoPage),
-                SizedBox(
-                  height: 100.0,
-                )
-              ],
+                      Text(
+                        'Pagos',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      SizedBox(
+                        width: 100,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: Colors.black),
+                        onPressed: !isInvolucrado
+                            ? () {
+                                if (canAddPay) {
+                                  _abrirDialog(
+                                      tipoPage, false, HistorialPagosModel());
+                                } else {
+                                  MostrarAlerta(
+                                      mensaje:
+                                          'Es necesario agregar presupuestos.',
+                                      tipoMensaje: TipoMensaje.advertencia);
+                                }
+                              }
+                            : null,
+                        child: Text(
+                          'Agregar Pago',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  buildTablePagos(state.listaPagos, tipoPage),
+                  SizedBox(
+                    height: 100.0,
+                  )
+                ],
+              ),
             );
           } else {
             return Center(

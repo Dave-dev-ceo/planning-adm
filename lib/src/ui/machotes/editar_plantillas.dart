@@ -51,7 +51,6 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
     etiquetasBloc = BlocProvider.of<EtiquetasBloc>(context);
     etiquetasBloc.add(FechtEtiquetasEvent());
     super.initState();
-    _controller.insertText(plantilla);
   }
 
   Color hexToColor(String code) {

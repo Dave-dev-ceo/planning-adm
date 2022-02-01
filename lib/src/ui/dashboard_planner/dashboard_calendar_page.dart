@@ -101,9 +101,9 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
       data: ThemeData.light(),
       child: SfCalendar(
         headerStyle: CalendarHeaderStyle(
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xFFFFF0D6),
           textStyle: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         initialDisplayDate: DateTime.now(),
