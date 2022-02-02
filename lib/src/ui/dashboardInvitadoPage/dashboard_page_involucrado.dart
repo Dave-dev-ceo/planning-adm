@@ -36,6 +36,8 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
 
   PermisosBloc permisosBloc;
   bool isInvolucrado = false;
+  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  BuildContext _dialogContext;
 
   _DashboardInvolucradoPageState(this.detalleEvento);
 
@@ -73,12 +75,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               body: Center(child: LoadingCustom()),
             );
           } else if (state is ErrorTokenPermisos) {
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-              ),
-              body: Center(child: LoadingCustom()),
-            );
+            return _showDialogMsg(context);
           } else if (state is LoadingPermisos) {
             return Scaffold(
               appBar: AppBar(
@@ -409,6 +406,30 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           ),
         ),
       ),
+    );
+  }
+
+  _showDialogMsg(BuildContext contextT) {
+    _dialogContext = contextT;
+    return AlertDialog(
+      title: Text(
+        "Sesión",
+        textAlign: TextAlign.center,
+      ),
+      content: Text(
+          'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(32.0))),
+      actions: <Widget>[
+        TextButton(
+          child: Text('Cerrar'),
+          onPressed: () async {
+            await _sharedPreferences.clear();
+            Navigator.of(contextT)
+                .pushNamedAndRemoveUntil('/', (route) => false);
+          },
+        ),
+      ],
     );
   }
 }
