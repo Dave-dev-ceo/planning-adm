@@ -724,7 +724,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                     ),
                   )
                 : null,
-            hintText: 'Añadir correo eléctronico...',
+            hintText: 'Añadir correo electrónico...',
             helperText: 'correo@dominio.com',
             disabledBorder: InputBorder.none,
             focusedBorder: OutlineInputBorder(
@@ -795,7 +795,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                     ),
                   )
                 : null,
-            hintText: 'Añadir teléfono',
+            hintText: 'Añadir teléfono...',
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 1.0),
             ),
