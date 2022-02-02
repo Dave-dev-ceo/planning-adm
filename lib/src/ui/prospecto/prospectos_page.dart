@@ -839,7 +839,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
         Icons.person,
         color: Colors.black,
       ),
-      title: Text('Descripcion'),
+      title: Text('Descripción'),
       subtitle: TextFormField(
         decoration: InputDecoration(
           suffixIcon: isEditDescripcion
@@ -1008,9 +1008,6 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                   shrinkWrap: true,
                   itemCount: actividades.length,
                   itemBuilder: (BuildContext context, int index) {
-                    for (var act in actividades) {
-                      print(act.descripcion);
-                    }
                     return ListTile(
                       onTap: () {
                         setState(() {
