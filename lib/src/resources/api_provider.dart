@@ -2,7 +2,6 @@ import 'dart:io';
 
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:planning/src/models/item_model-acompanante.dart';

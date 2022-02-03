@@ -4,15 +4,11 @@ import 'dart:io';
 import 'package:http/http.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/resources/config_conection.dart';
-import 'package:universal_html/html.dart' as html hide Text;
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
 import 'package:planning/src/logic/permisos_logic.dart';
@@ -324,98 +320,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       final pdf = json.decode(resp.body)['pdf'];
       String titulotemp = 'Eventos';
       final titulo = titulotemp.replaceAll(" ", "_");
-      final date = DateTime.now();
       utils.downloadFile(pdf, '$titulo');
     }
-
-    // final pdf = pw.Document();
-
-    // List<pw.Widget> listaGrid = [];
-    // // List<pw.Widget> listaView = [];
-
-    // for (var evento in eventos.results) {
-    //   // pw.Widget listaViewChild = pw.Column(children: [
-    //   //   pw.Text('Fecha evento: ${evento.fechaEvento}'),
-    //   //   pw.Text(
-    //   //       'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
-    //   //   for (var i = 0; i < evento.involucrados.length; i++)
-    //   //     evento.involucrados[0].tipoInvolucrado != 'Sin involucrado'
-    //   //         ? pw.Text(evento.involucrados[i].tipoInvolucrado +
-    //   //             ' : ' +
-    //   //             evento.involucrados[i].nombre)
-    //   //         : pw.Text('Sin involucrados'),
-    //   // ]);
-    //   // listaView.add(listaViewChild);
-
-    //   pw.Widget gridChild = pw.Container(
-    //     margin: const pw.EdgeInsets.only(bottom: 6.0),
-    //     decoration: pw.BoxDecoration(
-    //       boxShadow: [
-    //         pw.BoxShadow(
-    //           color: PdfColors.grey,
-    //           offset: PdfPoint(0.0, 0.1),
-    //           spreadRadius: 5.0,
-    //           blurRadius: 6.0,
-    //         ),
-    //       ],
-    //       border: pw.Border.all(),
-    //     ),
-    //     padding: pw.EdgeInsets.all(8.0),
-    //     child: pw.Column(children: [
-    //       pw.Center(
-    //         child: pw.Text(evento.tipoEvento),
-    //       ),
-    //       pw.SizedBox(
-    //         height: 10.0,
-    //       ),
-    //       pw.Text('Fecha evento: ${evento.fechaEvento}'),
-    //       pw.Text(
-    //           'Planeación de evento del: ${evento.fechaInicio} al ${evento.fechaFin}'),
-    //       for (var i = 0; i < evento.involucrados.length; i++)
-    //         evento.involucrados[0].tipoInvolucrado != 'Sin involucrado'
-    //             ? pw.Text(evento.involucrados[i].tipoInvolucrado +
-    //                 ' : ' +
-    //                 evento.involucrados[i].nombre)
-    //             : pw.Text('Sin involucrados'),
-    //     ]),
-    //   );
-    //   listaGrid.add(gridChild);
-    // }
-    // pdf.addPage(
-    //   pw.MultiPage(
-    //     build: (pw.Context context) => [
-    //       pw.Center(
-    //         child: pw.Text('Eventos:', style: pw.Theme.of(context).header4),
-    //       ),
-    //       pw.SizedBox(height: 15.0),
-    //       pw.GridView(
-    //         crossAxisCount: 3,
-    //         childAspectRatio: 1.0,
-    //         crossAxisSpacing: 8.0,
-    //         mainAxisSpacing: 8.0,
-    //         direction: pw.Axis.vertical,
-    //         children: listaGrid,
-    //       )
-    //     ],
-    //   ),
-    // );
-    // String titulotemp = 'Eventos';
-
-    // final titulo = titulotemp.replaceAll(" ", "_");
-
-    // final date = DateTime.now();
-
-    // final bytes = await pdf.save();
-    // final blob = html.Blob([bytes]);
-    // final url = html.Url.createObjectUrlFromBlob(blob);
-
-    // final anchor = html.document.createElement('a') as html.AnchorElement
-    //   ..href = url
-    //   ..style.display = 'none'
-    //   ..download = '$titulo-$date.pdf';
-    // html.document.body.children.add(anchor);
-    // anchor.click();
-    // html.document.body.children.remove(anchor);
-    // html.Url.revokeObjectUrl(url);
   }
 }

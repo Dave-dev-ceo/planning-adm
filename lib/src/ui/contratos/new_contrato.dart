@@ -5,7 +5,6 @@ import 'dart:convert';
 // import 'package:universal_html/html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 
 // imports
 import 'package:file_picker/file_picker.dart';
@@ -32,7 +31,6 @@ class New_ContratoState extends State<NewContrato> {
   VerContratosBloc verContratos;
 
   // vaiables clase
-  int _selectedIndex = 0;
   List<Contratos> itemModel = [];
 
   // Variable involucrado

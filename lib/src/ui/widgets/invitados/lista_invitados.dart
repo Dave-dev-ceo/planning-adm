@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
-import 'package:universal_html/html.dart' as html hide Text;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
 import 'package:excel/excel.dart';
@@ -404,6 +403,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
         bottom: tabs == 1
             ? null
             : TabBar(
+                indicatorColor: Colors.black,
                 controller: _controller,
                 tabs: [
                   if (widget.permisos.pantallas

@@ -70,6 +70,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                   actions: [],
                   automaticallyImplyLeading: true,
                   bottom: TabBar(
+                    indicatorColor: Colors.black,
                     onTap: (int index) {
                       //dataJson['reporte']="asistencia";
                       setState(() {
@@ -77,7 +78,6 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                         _pageIndex = index;
                       });
                     },
-                    indicatorColor: Colors.white,
                     isScrollable: true,
                     tabs: //tabs,
                         [

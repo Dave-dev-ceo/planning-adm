@@ -51,14 +51,6 @@ class _ReporteEventoState extends State<ReporteEvento> {
           child: listaReporte(context),
         ),
       ),
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () async{
-        },
-        child: const Icon(Icons.person_add),
-        
-        backgroundColor: hexToColor('#fdf4e5'),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,*/
     );
   }
 
@@ -131,8 +123,8 @@ class _DataSource extends DataTableSource {
       cells: [
         //DataCell(Text(row.valueId.toString())),
         DataCell(Text(row.valueA)),
-        DataCell(Text(row.valueB)),
-        DataCell(Text(row.valueC)),
+        DataCell(Text((row.valueB != null) ? row.valueB : 'Sin teléfono')),
+        DataCell(Text((row.valueC != null) ? row.valueC : 'Sin correo')),
         //DataCell(Icon(Icons.edit)),
         //DataCell(Icon(Icons.delete)),
       ],

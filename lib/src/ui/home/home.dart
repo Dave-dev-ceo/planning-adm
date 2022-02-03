@@ -173,32 +173,10 @@ class _HomeState extends State<Home> {
                 indicatorColor: Colors.black,
                 isScrollable: true,
                 tabs: tabs,
-                // [
-                // TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined),
-                // TabItem(titulo: 'Estatus de invitaciones', icono: Icons.card_membership_rounded),
-                // TabItem(titulo: 'Timing', icono: Icons.hourglass_bottom_rounded),
-                // TabItem(titulo: 'Tipos de eventos', icono: Icons.event_note_outlined),
-                // TabItem(titulo: 'Proveedores', icono: Icons.support_agent_outlined),
-                // TabItem(titulo: 'Inventario', icono: Icons.featured_play_list_outlined),
-                // TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp),
-                // TabItem(titulo: 'Plantillas', icono: Icons.copy),
-                // TabItem(titulo: 'Usuarios', icono: Icons.people),
-                // ],
               ),
             ),
             body: TabBarView(
               children: pantallas,
-              // <Widget>[
-              //   DashboardEventos(),
-              //   ListaEstatusInvitaciones(),
-              //   Timing(),
-              //   Construccion(),
-              //   Construccion(),
-              //   Construccion(),
-              //   Construccion(),
-              //   Machotes(),
-              //   Usuarios()
-              // ],
             ),
           ),
         ));
