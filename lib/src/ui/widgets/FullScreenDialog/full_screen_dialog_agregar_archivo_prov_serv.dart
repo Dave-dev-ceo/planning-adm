@@ -64,9 +64,9 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   checkisInvolucrado() async {
-    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    final idInvolucrado = await SharedPreferencesT().getClaveRol();
 
-    if (idInvolucrado != null) {
+    if (idInvolucrado == 'INVO') {
       setState(() {
         isInvolucrado = true;
       });
@@ -429,13 +429,15 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     List<Widget> listaServicio = [];
     // Se agrega el titulo del card
     final titulo = ListTile(
-        trailing: IconButton(
-          tooltip: 'Agregar archivo del proveedor',
-          onPressed: () {
-            _dialogoAgregarArchivo();
-          },
-          icon: Icon(Icons.upload),
-        ),
+        trailing: isInvolucrado
+            ? null
+            : IconButton(
+                tooltip: 'Agregar archivo del proveedor',
+                onPressed: () {
+                  _dialogoAgregarArchivo();
+                },
+                icon: Icon(Icons.upload),
+              ),
         title: Text('Archivos del proveedor',
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
@@ -447,13 +449,15 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     lista.add(size);
 
     final tituloServicio = ListTile(
-      trailing: IconButton(
-        tooltip: 'Agregar archivo del servicio',
-        onPressed: () {
-          _dialogoAgregarArchivo(this.provsrv['id_servicio']);
-        },
-        icon: Icon(Icons.upload),
-      ),
+      trailing: isInvolucrado
+          ? null
+          : IconButton(
+              tooltip: 'Agregar archivo del servicio',
+              onPressed: () {
+                _dialogoAgregarArchivo(this.provsrv['id_servicio']);
+              },
+              icon: Icon(Icons.upload),
+            ),
       title: Text(
         'Archivos del servicio',
         textAlign: TextAlign.center,
