@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/models/item_model_timings.dart';
 
 import 'package:planning/src/resources/config_conection.dart';
@@ -45,7 +45,6 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
 
   ConfigConection confiC = new ConfigConection();
-  Client client = Client();
 
   @override
   Future<ItemModelActividadesTimings> fetchActividadesTimingsPorPlanner(
@@ -53,7 +52,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsPorPlanner'),
@@ -86,7 +85,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_tipo_timing'] = idTiming.toString();
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/createActividadesTimings'),
@@ -111,7 +110,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/deleteActividadesTimings'),
@@ -143,7 +142,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsIdPorPlanner'),
@@ -172,7 +171,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/TIMINGS/obtenerTimingsPorPlanner'),
@@ -200,7 +199,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/createTimings'),
@@ -224,7 +223,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/TIMINGS/obtenerTimingsEvento'),
@@ -253,7 +252,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimings'),
@@ -281,7 +280,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/createActividadesEvento'),
@@ -305,7 +304,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesEventoPorEvento'),
@@ -335,7 +334,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerNoInEvento'),
@@ -365,7 +364,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/obtenerNoInEventoActividades'),
@@ -395,7 +394,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/actulizarTimingsEvent'),
@@ -438,7 +437,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataActividad['id_tarea'] = idTarea.toString();
 
     // send data
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ACTIVIDADESTIMINGS/createActividadesEnEvento'),
@@ -485,7 +484,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
       HttpHeaders.authorizationHeader: token
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
       body: json.encode(data),
       headers: headers,

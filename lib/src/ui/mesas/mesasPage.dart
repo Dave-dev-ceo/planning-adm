@@ -6,12 +6,6 @@ import 'dart:convert';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/mesasAsignadas/mesasasignadas_bloc.dart';
 
-// * Comentar cuando se Utilice en movil
-
-// * Descomentar en movil
-// import 'package:path_provider/path_provider.dart';
-// import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -282,20 +282,3 @@ class BackendLoginLogic implements LoginLogic {
     return resp.statusCode;
   }
 }
-
-// class SimpleLoginLogic extends LoginLogic {
-//   @override
-//   Future<String> login(String correo, String password) async {
-//     await Future.delayed(Duration(seconds: 2));
-
-//     if (correo != "demo@demo.com" || password != "1234") {
-//       throw LoginException();
-//     }
-//     return '';
-//   }
-
-//   @override
-//   Future<String> logout() async {
-//     return "";
-//   }
-// }

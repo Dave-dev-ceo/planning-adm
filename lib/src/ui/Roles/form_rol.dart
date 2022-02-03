@@ -178,31 +178,6 @@ class _FormRolState extends State<FormRol> {
         agregarInput(Icons.phone, TextInputType.name, nombreCtrl,
             'Nombre de rol', validateNombre, null, true,
             maxL: 75),
-        // datos['accion'] == 1
-        //     ? formItemsDesign(
-        //         Icons.bar_chart,
-        //         Row(
-        //           children: [
-        //             Expanded(child: Text('Estatus')),
-        //             Expanded(
-        //               child: MaterialSegmentedControl(
-        //                 children: _estatus,
-        //                 selectionIndex: _estatusSeleccionado,
-        //                 borderColor: Color(0xFF000000),
-        //                 selectedColor: Color(0xFF000000),
-        //                 unselectedColor: Colors.white,
-        //                 borderRadius: 32.0,
-        //                 horizontalPadding: EdgeInsets.all(8),
-        //                 onSegmentChosen: (index) {
-        //                   setState(() {
-        //                     _estatusSeleccionado = index;
-        //                   });
-        //                 },
-        //               ),
-        //             ),
-        //           ],
-        //         ))
-        //     : SizedBox.shrink(),
         _formPermisos(),
         SizedBox(
           height: 20.0,
@@ -377,50 +352,7 @@ class _FormRolState extends State<FormRol> {
             _data = _generateItems(_formRoles);
             contador++;
           }
-          //if (_formRoles == null) {
-          //_formRoles = state.form;
-          // if (_formRoles.form != null) {
-          // for (var seccion in _formRoles.form) {
-          //   List<Widget> pantallas = <Widget>[];
-          //   if (seccion.pantallas != null) {
-          //     for (var pantalla in seccion.pantallas) {
-          //       pantallas.add(CheckboxListTile(
-          //         title: Text(pantalla.nombre_pantalla),
-          //         value: pantalla.selected,
-          //         onChanged: (bool value) {
-          //           setState(() {
-          //             pantalla.selected = value;
-          //           });
-          //         },
-          //         secondary: Icon(Icons.preview),
-          //       ));
-          //     }
-          //   }
-          //   dataForm.add(
-          //     formItemsDesign(
-          //       Icons.view_module,
-          //       Center(
-          //         child: Column(
-          //           children: [
-          //             CheckboxListTile(
-          //                 title: Text(seccion.nombre_seccion),
-          //                 value: seccion.selected,
-          //                 onChanged: (bool value) {
-          //                   setState(() {
-          //                     seccion.selected = value;
-          //                   });
-          //                 }),
-          //             Column(
-          //                 children: pantallas.length > 0
-          //                     ? pantallas
-          //                     : [SizedBox.shrink()])
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   );
-          // }
-          // return Text('data');
+
           if (_data.length > 0) {
             return _listaBuild();
           } else {
@@ -428,60 +360,6 @@ class _FormRolState extends State<FormRol> {
               child: Text('No hay datos.'),
             );
           }
-          //} else {
-          //return Text('Error al obtener Form');
-          //}
-          // } else {
-          // if (_formRoles.form != null) {
-          //   for (var seccion in _formRoles.form) {
-          //     List<Widget> pantallas = <Widget>[];
-          //     if (seccion.pantallas != null) {
-          //       for (var pantalla in seccion.pantallas) {
-          //         pantallas.add(CheckboxListTile(
-          //           title: Text(pantalla.nombre_pantalla),
-          //           value: pantalla.selected,
-          //           onChanged: (bool value) {
-          //             setState(() {
-          //               pantalla.selected = value;
-          //             });
-          //           },
-          //           secondary: Icon(Icons.preview),
-          //         ));
-          //       }
-          //     }
-          //     dataForm.add(
-          //       formItemsDesign(
-          //         Icons.view_module,
-          //         Center(
-          //           child: Column(
-          //             children: [
-          //               CheckboxListTile(
-          //                   title: Text(seccion.nombre_seccion),
-          //                   value: seccion.selected,
-          //                   onChanged: (bool value) {
-          //                     setState(() {
-          //                       seccion.selected = value;
-          //                     });
-          //                   }),
-          //               Column(
-          //                   children: pantallas.length > 0
-          //                       ? pantallas
-          //                       : [SizedBox.shrink()])
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   }
-          //   return SingleChildScrollView(
-          //     child:
-          //         formItemsDesign(Icons.settings, Column(children: dataForm)),
-          //   );
-          // } else {
-          //   return Text('Error al obtener Form');
-          // }
-          // return Text('Entro al else');
-          // }
         } else if (state is ErrorMostrarFormRol) {
           return Center(
             child: Text(state.message),
@@ -576,30 +454,6 @@ class _FormRolState extends State<FormRol> {
         ),
       )
     ];
-    // if (itemPantalla != null) {
-    //   for (var opt in itemPantalla) {
-    //     final tempWidget = ListTile(
-    //       title: Text(opt.nombre_pantalla),
-    //       leading: Checkbox(
-    //           value: opt.seleccion,
-    //           onChanged: (value) {
-    //             setState(() {
-    //               opt.seleccion = value;
-    //             });
-    //           }),
-    //       trailing: Wrap(spacing: 12, children: <Widget>[
-    //         Checkbox(
-    //             value: opt.seleccion,
-    //             onChanged: (value) {
-    //               setState(() {
-    //                 opt.seleccion = value;
-    //               });
-    //             })
-    //       ]),
-    //     );
-    //     lista.add(tempWidget);
-    //   }
-    // }
     return lista;
   }
 

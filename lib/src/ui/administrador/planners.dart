@@ -42,20 +42,6 @@ class _PlannersState extends State<Planners> {
     );
   }
 
-  listaPlanners(BuildContext cont) {
-    /*blocPrueba.fetchAllPrueba(cont);
-    return StreamBuilder(
-            stream: blocPrueba.allPrueba,
-            builder: (context, AsyncSnapshot<ItemModelPrueba> snapshot) {
-              if (snapshot.hasData) {
-                return buildList(snapshot);
-              } else if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
-              return Center(child: LoadingCustom());
-            },
-          );*/
-  }
   formItemsDesign(icon, item) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 7),

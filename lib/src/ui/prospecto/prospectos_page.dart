@@ -880,28 +880,6 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
         },
       ),
     );
-    // return ListTile(
-    //   leading: Icon(
-    //     Icons.description_outlined,
-    //     color: Color(0xFF172C4C),
-    //   ),
-    //   title: Text('Descripcion'),
-    //   subtitle: (widget.prospecto.descripcion != null)
-    //       ? !isEditDescripcion
-    //           ? Padding(
-    //               padding: const EdgeInsets.all(8.0),
-    //               child: GestureDetector(
-    //                 child: Text(widget.prospecto.descripcion),
-    //                 onTap: () {
-    //                   setState(() {
-    //                     isEditDescripcion = true;
-    //                   });
-    //                 },
-    //               ),
-    //             )
-    //           : textAreaWidgetEdit()
-    //       : textAreaWidgetEdit(),
-    // );
   }
 
   Widget namePredecesorWidget() {

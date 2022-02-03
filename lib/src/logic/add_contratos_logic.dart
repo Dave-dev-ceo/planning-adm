@@ -1,7 +1,7 @@
 // imports flutter/dart
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/resources/config_conection.dart';
 
 // imports weeding
@@ -30,7 +30,6 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
   // variables configuracion
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
-  Client client = Client();
 
   @override
   Future<ItemModelAddContratos> selectContratosFromPlanner() async {
@@ -40,7 +39,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     String token = await _sharedPreferences.getToken();
 
     // pedido al servidor
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ADDCONTRATOS/selectContratosPlaner'),
@@ -72,7 +71,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     String token = await _sharedPreferences.getToken();
 
     // pedido al servidor
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ADDCONTRATOS/selectContratosArchivoPlaner'),
@@ -107,7 +106,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     contrato['id_evento'] = idEvento.toString();
 
     // pedido al servidor
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/ADDCONTRATOS/inserContrato'),
         body: contrato,
@@ -133,7 +132,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     String token = await _sharedPreferences.getToken();
 
     // pedido al servidor
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ADDCONTRATOS/selectContratosEvento'),
@@ -164,7 +163,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     String token = await _sharedPreferences.getToken();
 
     // pedido al servidor
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ADDCONTRATOS/borrarContratoEvento'),
@@ -195,7 +194,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/wedding/PDF/createPDF'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
@@ -219,7 +218,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     String token = await _sharedPreferences.getToken();
 
     // pedido al servidor
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ADDCONTRATOS/updateContratoEvento'),
@@ -253,7 +252,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_contrato'] = data['id_contrato'].toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/PDF/updateValContratos'),
         body: data,
@@ -278,7 +277,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
       'id_evento': idEvento.toString(),
       'machote': _machote
     };
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/PDF/generarValorEtiquetasContrato'),
@@ -300,7 +299,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     data['id_evento'] = idEvento.toString();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ADDCONTRATOS/obtenerContratoById'),
@@ -330,7 +329,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     String token = await _sharedPreferences.getToken();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/ADDCONTRATOS/obtenerContratoById'),

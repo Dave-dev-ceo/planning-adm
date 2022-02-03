@@ -133,48 +133,6 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
                         : new BoxDecoration(),
                   ),
                 );
-                ////////////////////////
-                /*return Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                      child: _avatarContact(contact),
-                    ),
-                    //SizedBox(height: 10,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _nameContact(contact),
-                          style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-                        Text(
-                          _phoneContact(contact),
-                          style: TextStyle(
-                            fontSize: 10, fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );*/
-                //////////////////////////////////////////////////
-                /*ListTile(
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 2, horizontal: 18),
-                  leading: (contact.avatar != null && contact.avatar.isNotEmpty)
-                      ? CircleAvatar(
-                          backgroundImage: MemoryImage(contact.avatar),
-                        )
-                      : CircleAvatar(
-                          child: Text(contact.initials()),
-                          backgroundColor: Theme.of(context).accentColor,
-                        ),
-                  title: Text(contact.displayName ?? ''),
-                  );*/
               },
             )
           : Center(child: LoadingCustom()),

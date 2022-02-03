@@ -734,46 +734,6 @@ class _DataSource extends DataTableSource {
     }
   }
 
-  /*_listaGrupos(int idInvitado) {
-    ///bloc.dispose();
-    blocGrupos.fetchAllGrupos(_cont);
-    return StreamBuilder(
-      stream: blocGrupos.allGrupos,
-      builder: (context, AsyncSnapshot<ItemModelGrupos> snapshot) {
-        if (snapshot.hasData) {
-          //_mySelection = ((snapshot.data.results.length - 1).toString());
-
-          return null;
-          //_viewShowDialogGrupo(idInvitado, snapshot.data);
-          //return _dataGrupo(snapshot.data);
-          //
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return Center(child: LoadingCustom());
-      },
-    );
-  }*/
-
-  /*_dataGrupo(ItemModelGrupos grupos) {
-
-    /*List<Text> lT;
-    for(int i = 0; i < grupos.results.length; i++){
-      Text(grupos.results.elementAt(i).nombreGrupo);
-      lT.
-    }
-    
-    return lT;*/
-    return ListView.builder(
-        itemCount: grupos.results.length,
-        //padding: const EdgeInsets.only(top: 10),
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-              child: Center(
-                  child: Text(grupos.results.elementAt(index).nombreGrupo)));
-        });
-  }*/
-
   _listaGruposEvento(int idInvitado) async {
     _grupos = await api.fetchGruposList(_cont);
     /*for (var data in _grupos.results) {
@@ -837,48 +797,6 @@ class _DataSource extends DataTableSource {
     );
   }
 
-  /*_viewShowDialogGrupo(int idInvitado){
-     
-      //
-      showDialog(
-          context: _cont,
-          builder: (BuildContext context) => CupertinoAlertDialog(
-                //title: Text('Seleccionar Grupo'),
-                content: Container(
-                    height: 120,
-                    child: //Column(
-                      //children: [
-                        CupertinoPicker(
-                          itemExtent: 32.0, 
-                          
-                          onSelectedItemChanged: (value){
-                            
-                            _grupoSelect = _grupos.results.elementAt(value).idGrupo.toString();
-                           
-                          }, 
-                          children: <Widget>[
-                            //for (var i = 0; i < _grupos.results.length; i++) 
-                            for(var data in _grupos.results) if(data.nombreGrupo!="Nuevo grupo") Text(data.nombreGrupo),
-                            ]),
-                           // _listaGrupos(),
-                     // ],
-                    //),
-                  ),
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    child: Text('Cancelar',style: TextStyle(color: Colors.red),),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  CupertinoDialogAction(
-                    child: Text('Confirmar'),
-                    onPressed: () async{
-                      await _updateGrupo(idInvitado);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ));
-  }*/
   _updateGrupo(int idInvitado) async {
     bool response;
     Map<String, String> json = {
@@ -951,88 +869,6 @@ class _DataSource extends DataTableSource {
       },
     );
   }
-
-  /* _viewShowDialogEstatus(int idInvitado) {
-    showDialog(
-        context: _cont,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-              //title: Text('Seleccionar Grupo'),
-              content: Container(
-                height: 120,
-                child: //Column(
-                    //children: [
-                    CupertinoPicker(
-                        itemExtent: 32.0,
-                        onSelectedItemChanged: (value) {
-                          _estatusSelect = _estatus.results
-                              .elementAt(value)
-                              .idEstatusInvitado
-                              .toString();
-                        },
-                        children: <Widget>[
-                      //for (var i = 0; i < _grupos.results.length; i++)
-                      if (_estatus.results != null)
-                        for (var data in _estatus.results)
-                          Text(data.descripcion)
-                      else
-                        (Text('Sin datos')),
-                    ]),
-                // _listaGrupos(),
-                // ],
-                //),
-              ),
-              actions: <Widget>[
-                CupertinoDialogAction(
-                  child: Text(
-                    'Cancelar',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                CupertinoDialogAction(
-                  child: Text('Confirmar'),
-                  onPressed: () async {
-                    await _updateEstatus(idInvitado);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
-    /*showDialog(
-          context: _cont,
-          builder: (BuildContext context) => CupertinoAlertDialog(
-                //title: Text('Llamada'),
-                //content: Text('Se llamara al numero $numero'),
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    child: Text('Confirmado'),
-                    onPressed: () {
-                      _updateEstatus(idInvitado, 1);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  CupertinoDialogAction(
-                    child: Text('Sin Confirmar'),
-                    onPressed: () {
-                      _updateEstatus(idInvitado, 2);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  CupertinoDialogAction(
-                    child: Text('No Asiste'),
-                    onPressed: () {
-                      _updateEstatus(idInvitado, 3);
-                      
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  CupertinoDialogAction(
-                    child: Text('Cerrar',style: TextStyle(color: Colors.red),),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ));*/
-  }*/
 
   List<_Row> _rows;
 

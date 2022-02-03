@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/models/item_model_machotes.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
@@ -24,13 +24,12 @@ class UpdateMachotesException implements Exception {}
 class FetchListaMachotesLogic extends ListaMachotesLogic {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   ConfigConection confiC = new ConfigConection();
-  Client client = Client();
 
   @override
   Future<ItemModelMachotes> fetchMachotes() async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    final response = await client.get(
+    final response = await http.get(
         Uri.parse(confiC.url +
             confiC.puerto +
             '/wedding/MACHOTES/obtenerMachotes/$idPlanner'),
@@ -54,7 +53,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_usuario'] = idUsuario.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/MACHOTES/updateMachotes'),
         body: data,
@@ -78,7 +77,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_usuario'] = idUsuario.toString();
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/MACHOTES/createMachotes'),
         body: data,
@@ -109,7 +108,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);
@@ -135,7 +134,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);

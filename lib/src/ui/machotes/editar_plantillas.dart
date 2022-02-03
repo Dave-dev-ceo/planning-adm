@@ -161,15 +161,6 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
               "id_machote": idMachote
             }, itemModelMC));
             Navigator.of(context).pop();
-            //await _showMyDialogGuardar(context);
-
-            //final txt = await controller.getText();
-            /*int i = 0;
-            String res;
-            while (i < datas.length) {
-              res =i==0?txt.replaceAll(datas.elementAt(i), dataInfo.elementAt(i)):res.replaceAll(datas.elementAt(i), dataInfo.elementAt(i));
-              i++;
-            }*/
           },
         ),
       ),

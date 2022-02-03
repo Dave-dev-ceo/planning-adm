@@ -49,7 +49,6 @@ class EtiquetasBloc extends Bloc<EtiquetasEvent, EtiquetasState> {
       bool response = await logic.updateEtiquetas(event.data);
       ItemModelEtiquetas model = event.etiquetas;
       if (response) {
-        //model.results[event.id].addDescripcion = event.data['descripcion'];
         for (int i = 0; i < model.results.length; i++) {
           if (model.results.elementAt(i).idEtiqueta == event.id) {
             model.results.elementAt(i).addNombreEtiqueta =

@@ -202,10 +202,8 @@ class _TimingState extends State<Timing> {
                 80.0),
           ),
           Center(
-            child:
-                Container(height: 400.0, width: 600.0, child: buildList2(model)
-                    //listaEstatusInvitaciones(context),
-                    ),
+            child: Container(
+                height: 400.0, width: 600.0, child: buildList2(model)),
           ),
         ],
       ),

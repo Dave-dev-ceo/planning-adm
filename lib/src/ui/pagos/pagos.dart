@@ -605,9 +605,10 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                         text:
                             '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontFamily: 'Comfortaa'),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Comfortaa',
+                        ),
                       )
                     ],
                   ),

@@ -28,15 +28,5 @@ class _FullScreenDialogDetalleListasState
   @override
   Widget build(BuildContext context) {
     return DetalleListas(lista: lista);
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text('Detallado de Listas'),
-    //     actions: [],
-    //     automaticallyImplyLeading: true,
-    //   ),
-    //   body: SingleChildScrollView(
-    //     child: DetalleListas(idLista: idLista),
-    //   ),
-    // );
   }
 }

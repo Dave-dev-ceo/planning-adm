@@ -110,30 +110,6 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                       )
                     ],
                   ),
-                  /*Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: Text('Pausar', style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: Text('Restaurar', style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),*/
                 ],
               ),
             ),
@@ -167,13 +143,12 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData)  {
-        controller.pauseCamera();
-        result = scanData;
-         _showDialog(scanData.code).then((_) => controller.resumeCamera());
-        
-      setState(()  {
-      });
+    controller.scannedDataStream.listen((scanData) {
+      controller.pauseCamera();
+      result = scanData;
+      _showDialog(scanData.code).then((_) => controller.resumeCamera());
+
+      setState(() {});
     });
   }
 

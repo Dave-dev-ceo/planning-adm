@@ -437,44 +437,9 @@ class _AgregarEventoState extends State<AgregarEvento> {
                           80.0),
                       onTap: () => _selectDateEvento(context),
                     ),
-
                     SizedBox(
                       height: 150.0,
                     )
-                    // Descomentar solo si el item drop tiene sus eventos de lo contrario truena
-                    // Expanded(child:
-                    //     BlocBuilder<TiposEventosBloc, TiposEventosState>(
-                    //   builder: (context, state) {
-                    //     if (state is TiposEventosInitial) {
-                    //       return Center(child: LoadingCustom());
-                    //     } else if (state is LoadingTiposEventosState) {
-                    //       return Center(child: LoadingCustom());
-                    //     } else if (state is MostrarTiposEventosState) {
-                    //       itemModelTipoEvento = state.tiposEventos;
-                    //       return SizedBox.shrink();
-                    //       /* formItemsDesign(
-                    //           Icons.event,
-                    //           Row(
-                    //             children: <Widget>[
-                    //               Text('Evento'),
-                    //               SizedBox(
-                    //                 width: 15,
-                    //               ),
-                    //               _dropDownTiposEventos(state.tiposEventos),
-                    //             ],
-                    //           ),
-                    //           450.0,
-                    //           80.0); */
-                    //     } else if (state is ErrorListaTiposEventosState) {
-                    //       return Center(
-                    //         child: Text(state.message),
-                    //       );
-                    //       //_showError(context, state.message);
-                    //     } else {
-                    //       return Center(child: LoadingCustom());
-                    //     }
-                    //   },
-                    // ))
                   ],
                 ),
               ),

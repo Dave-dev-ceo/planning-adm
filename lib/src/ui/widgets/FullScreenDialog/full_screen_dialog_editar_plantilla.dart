@@ -15,8 +15,6 @@ class _FullScreenDialogEditPlantillaState
     extends State<FullScreenDialogEditPlantilla> {
   final List<String> dataPlantilla;
 
-  //var claveMachote;
-  //final String claveMachote;
   _FullScreenDialogEditPlantillaState(this.dataPlantilla);
 
   @override

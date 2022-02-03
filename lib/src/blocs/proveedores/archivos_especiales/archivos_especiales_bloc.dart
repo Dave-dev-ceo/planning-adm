@@ -34,8 +34,6 @@ class ArchivosEspecialesBloc
     } else if (event is CreateArchivoEspecialEvent) {
       try {
         await logic.createArchivosEspecial(event.data);
-        //print(event.data['id_proveedor'].runtimeType);
-        //print(event.data['id_evento'].runtimeType);
 
         add(
           FechtArchivoEspecialEvent(
@@ -52,11 +50,4 @@ class ArchivosEspecialesBloc
       }
     }
   }
-
-  // @override
-  // void onTransition(
-  //     Transition<ArchivosEspecialesEvent, ArchivosEspecialesState> transition) {
-  //   print(transition);
-  //   super.onTransition(transition);
-  // }
 }

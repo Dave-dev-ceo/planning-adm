@@ -3,13 +3,11 @@ import 'package:planning/src/animations/custom_page_router.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
-import 'package:planning/src/ui/autorizacion/galeria_autorizacion.dart';
 import 'package:planning/src/ui/contratos/add_contrato.dart';
 import 'package:planning/src/ui/contratos/view_contrato_pdf.dart';
 import 'package:planning/src/ui/dashboardInvitadoPage/dashboard_page_involucrado.dart';
 import 'package:planning/src/ui/eventos/dashboard_eventos.dart';
 import 'package:planning/src/ui/home/home.dart';
-import 'package:planning/src/ui/home/home_admin.dart';
 import 'package:planning/src/ui/login/login.dart';
 import 'package:planning/src/ui/mesas/crearMesasDialog.dart';
 import 'package:planning/src/ui/pagos/edit_pago.dart';
@@ -25,7 +23,6 @@ import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agre
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_evento.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_machote.dart';
-import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_planners.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_rol.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_usuario.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_detalle_lista.dart';
@@ -48,9 +45,6 @@ class RouteGenerator {
     final ruta = Uri.parse(settings.name);
     switch (ruta.path) {
       case '/':
-        //return CustomPageRouter(child: ScannerQrInvitado());
-        //return CustomPageRouter(child: Landing());
-        //return CustomPageRouter(child: HomeAdmin());
         return CustomPageRouter(
             child: FutureBuilder(
           future: checkSession(),
@@ -62,10 +56,6 @@ class RouteGenerator {
             }
           },
         ));
-      case '/homeAdmin':
-        return CustomPageRouter(
-          child: HomeAdmin(),
-        );
       case '/home':
         return CustomPageRouter(
             child: Home(
@@ -100,8 +90,6 @@ class RouteGenerator {
             child: FullScreenDialogEditPlantilla(
           dataPlantilla: args,
         ));
-      case '/addPlanners':
-        return CustomPageRouter(child: FullScreenDialogAddPlanners());
       case '/addEvento':
         return CustomPageRouter(
             child: FullScreenDialogAddEvento(
@@ -168,11 +156,6 @@ class RouteGenerator {
       case '/viewArchivo':
         return CustomPageRouter(
             child: FullScreenDialogViewFileEvent(archivo: args));
-      case '/galeriaEvidencia':
-        return CustomPageRouter(
-            child: GaleriaEvidencia(
-          map: args,
-        ));
       case '/perfil':
         return CustomPageRouter(child: Perfil());
       case '/addContratos':
@@ -208,21 +191,18 @@ class RouteGenerator {
           detalleEvento: args,
         ));
       default:
-        return _errorRoute();
+        return CustomPageRouter(
+            child: FutureBuilder(
+          future: checkSession(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data;
+            } else {
+              return LoadingCustom();
+            }
+          },
+        ));
     }
-  }
-
-  static Route<dynamic> _errorRoute() {
-    return CustomPageRouter(
-        child: Scaffold(
-      appBar: AppBar(
-        title: Text('ERROR'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Text('La Página no funciona!'),
-      ),
-    ));
   }
 }
 

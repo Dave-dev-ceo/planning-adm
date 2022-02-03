@@ -35,42 +35,12 @@ class _FullScreenDialogAddState extends State<FullScreenDialogAdd> {
         backgroundColor: hexToColor('#fdf4e5'),
         actions: [],
         automaticallyImplyLeading: true,
-        /*bottom: TabBar(
-            onTap: (int index){
-              setState(() {
-                _pageIndex = index;  
-              });
-            },
-            indicatorColor: Colors.white,
-            //isScrollable: true,
-            tabs: [
-              Tab(
-                icon: Icon(Icons.person_add_alt),
-                //text: 'Resumen',
-                child: Text('Agregar invitado', style: TextStyle(fontSize: 15),),
-              ),
-              Tab(
-                icon: Icon(Icons.import_contacts),
-                //text: 'Invitados',
-                child: Text('Importar lista invitados', style: TextStyle(fontSize: 15),),
-              ),
-            ],
-          ),*/
       ),
       body: SafeArea(
-        child:
-            //IndexedStack(
-            //index: _pageIndex,
-            //children: <Widget>[
-            AgregarInvitados(
+        child: AgregarInvitados(
           id: id,
         ),
-        //CargarExcel(id: id,),
-        //],
       ),
-      // ),
-
-      //),
     );
   }
 }

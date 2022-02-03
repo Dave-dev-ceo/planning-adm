@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -260,7 +261,10 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                 child: PopupMenuButton(
                   child: widget.detalleEvento['imag'] == null ||
                           widget.detalleEvento['imag'] == ''
-                      ? Icon(Icons.person)
+                      ? FaIcon(
+                          FontAwesomeIcons.user,
+                          color: Colors.black,
+                        )
                       : CircleAvatar(
                           backgroundImage: MemoryImage(
                               base64Decode(widget.detalleEvento['imag'])),
@@ -396,9 +400,6 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
         temp.add(ProveedorEvento());
       }
-      //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-AUT')) {
-      //  temp.add(AutorizacionLista());
-      //}
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
         temp.add(Center(
           child: LoadingCustom(),

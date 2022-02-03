@@ -503,15 +503,15 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     }
   }
 
-  _listaEstatus() {
+  _listaEstatus(String value) {
     ///bloc.dispose();
     blocEstatus.fetchAllEstatus(context);
     return StreamBuilder(
       stream: blocEstatus.allEstatus,
       builder: (context, AsyncSnapshot<ItemModelEstatusInvitado> snapshot) {
         if (snapshot.hasData) {
-          //_mySelection = ((snapshot.data.results.length - 1).toString());
-          return _dropDownEstatusInvitado(snapshot.data);
+          _mySelection = ((snapshot.data.results.length - 1).toString());
+          return _dropDownEstatusInvitado(snapshot.data, value);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -520,9 +520,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     );
   }
 
-  _dropDownEstatusInvitado(ItemModelEstatusInvitado estatus) {
+  _dropDownEstatusInvitado(ItemModelEstatusInvitado estatus, String value) {
     return DropdownButton(
-      value: _mySelection,
+      hint: Text('Seleccionar estatus'),
+      value: value == 'null' ? null : value,
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
@@ -548,30 +549,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     );
   }
 
-  /*_dropDownGenero(){
-    return DropdownButton(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_drop_down_outlined),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Colors.pink),
-      underline: Container(
-        height: 2,
-        color: Colors.pink,
-      ),
-      onChanged: (newValue) {
-        setState(() {
-            dropdownValue = newValue;
-        });
-      },
-      items: <String>['Hombre', 'Mujer'].map((item) {
-        return DropdownMenuItem(
-          value: item,
-          child: Text(item, style: TextStyle(fontSize: 18),),
-        );
-      }).toList(),
-    );
-  }*/
   String gender;
   String edad;
   formItemsDesign(icon, item, double large, double ancho) {
@@ -701,7 +678,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                               width: 15,
                             ),
 
-                            _listaEstatus(),
+                            _listaEstatus(invitado.asistencia.toString()),
                             //_dropDownEstatusInvitado(),
                           ],
                         ),
@@ -909,27 +886,12 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                               controller: asistenciaEspecialCtrl,
                               keyboardType: TextInputType.multiline,
                               maxLines: 2,
-                              //initialValue: invitado.email,
                               decoration: new InputDecoration(
                                 labelText: 'Asistencia especial',
                               ),
-                              //validator: validateEmail,
                             ),
                             500.0,
                             100.0),
-                        // formItemsDesign(
-                        //     Icons.tablet_rounded,
-                        //     Row(
-                        //       children: <Widget>[
-                        //         Text('Mesa'),
-                        //         SizedBox(
-                        //           width: 15,
-                        //         ),
-                        //         _listaMesas(),
-                        //       ],
-                        //     ),
-                        //     500.0,
-                        //     100.0),
                       ],
                     ),
                     _base64qr != ''

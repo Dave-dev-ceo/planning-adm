@@ -17,7 +17,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) async* {
     if (event is LogginEvent) {
       try {
-        // yield MsgLogginState("Favor de ingresar correo y contraseña");
         yield LogginState();
         Map<dynamic, dynamic> response =
             await logic.login(event.correo, event.password);

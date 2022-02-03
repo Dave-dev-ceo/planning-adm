@@ -43,37 +43,6 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       },
     );
   }
-
-  /* _dropDown2(){
-    return DropdownButton(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_drop_down_outlined),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Colors.pink),
-      underline: Container(
-        height: 2,
-        color: Colors.pink,
-      ),
-      onChanged: (newValue) {
-        setState(() {
-          if(newValue == "Nuevo grupo"){
-            //
-            _showMyDialog();
-          }else{
-            dropdownValue = newValue;
-          }
-          
-        });
-      },
-      items: <String>['Seleccione un grupo', 'General', 'Familiares' ,'Nuevo grupo'].map((item) {
-        return DropdownMenuItem(
-          value: item,
-          child: Text(item, style: TextStyle(fontSize: 18),),
-        );
-      }).toList(),
-    );
-  }*/
   _dropDown(ItemModelGrupos grupos) {
     return DropdownButton(
       value: _mySelection,

@@ -202,34 +202,6 @@ class _EditarEventoState extends State<EditarEvento> {
     return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
-  // _dropDownTiposEventos(ItemModelTipoEvento tiposEventos) {
-  //   return DropdownButton(
-  //     value: _mySelectionTE,
-  //     icon: const Icon(Icons.arrow_drop_down_outlined),
-  //     iconSize: 24,
-  //     elevation: 16,
-  //     style: const TextStyle(color: Color(0xFF000000)),
-  //     underline: Container(
-  //       height: 2,
-  //       color: Color(0xFF000000),
-  //     ),
-  //     /*onChanged: (newValue) {
-  //       setState(() {
-  //         _mySelectionTE = newValue;
-  //       });
-  //     },*/
-  //     items: tiposEventos.results.map((item) {
-  //       return DropdownMenuItem(
-  //         value: item.idTipoEvento.toString(),
-  //         child: Text(
-  //           item.nombreEvento,
-  //           style: TextStyle(fontSize: 18),
-  //         ),
-  //       );
-  //     }).toList(),
-  //   );
-  // }
-
   formItemsDesign(icon, item, large, ancho) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 3),
@@ -274,9 +246,6 @@ class _EditarEventoState extends State<EditarEvento> {
   }
 
   String validateNombre(String value) {
-    /*if (value.length == 0) {
-      return "El nombre es necesario";
-    }*/
     return null;
   }
 
@@ -288,23 +257,14 @@ class _EditarEventoState extends State<EditarEvento> {
   }
 
   String validateTelefono(String value) {
-    /*if (value.length == 0) {
-      return "El télefono es necesario";
-    }*/
     return null;
   }
 
   String validateEmail(String value) {
-    /*if (value.length == 0) {
-      return "El correo es necesario";
-    }*/
     return null;
   }
 
   String validateDireccion(String value) {
-    /*if (value.length == 0) {
-      return "La dirección es necesaria";
-    }*/
     return null;
   }
 

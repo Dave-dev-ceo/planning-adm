@@ -195,13 +195,6 @@ class _CargarExcelState extends State<CargarExcel> {
                   onTap: () {
                     _viewContact();
                     /////////////
-                    /*Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) => FullScreenDialog(),
-                              fullscreenDialog: true,
-                            ),
-                          );*/
                   },
                   child: CallToAction('Importar Contactos'),
                 ),

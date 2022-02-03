@@ -70,30 +70,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
               : Container(child: calendar()),
         )
       ],
-    )
-        // } else {
-        //   return Row(
-        //     children: <Widget>[
-        //       Expanded(
-        //         child: _calendarController.view == CalendarView.month &&
-        //                 screenHeight < 800
-        //             ? Scrollbar(
-        //                 isAlwaysShown: true,
-        //                 controller: _controller,
-        //                 child: ListView(
-        //                   controller: _controller,
-        //                   children: <Widget>[
-        //                     Container(height: 600, child: calendar(false))
-        //                   ],
-        //                 ))
-        //             : Container(child: calendar(false)),
-        //       )
-        //     ],
-        //   );
-        // }
-        // },
-        // ),
-        );
+    ));
   }
 
   Widget calendar() {

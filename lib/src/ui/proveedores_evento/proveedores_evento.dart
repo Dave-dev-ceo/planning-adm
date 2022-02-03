@@ -192,14 +192,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           if (element2['seleccionado']) {
             servicios[element.idServicio] = element2['id_proveedor'];
           }
-
-          // if(checkInvolucrado != null) {
-          //   if(element2['check']) {
-          //     if(element2['seleccionado']) {
-          //       servicios[element.idServicio] = element2['id_proveedor'];
-          //     }
-          //   }
-          // }
         });
       }
 

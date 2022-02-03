@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 
@@ -34,6 +35,7 @@ class _PerfilState extends State<Perfil> {
   // variables de la classe
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   String portada = '';
+  String claveRol = '';
   final _formKey = GlobalKey<FormState>();
 
   ApiProvider logicApi = ApiProvider();
@@ -52,6 +54,7 @@ class _PerfilState extends State<Perfil> {
 
   getPortadaImage() async {
     portada = await _sharedPreferences.getPortada();
+    claveRol = await _sharedPreferences.getClaveRol();
     setState(() {});
   }
 
@@ -135,6 +138,7 @@ class _PerfilState extends State<Perfil> {
   }
 
   _showPerfil() {
+    print(perfil.image);
     return Form(
       key: _formKey,
       child: Container(
@@ -223,46 +227,56 @@ class _PerfilState extends State<Perfil> {
                     onChanged: (valor) => perfil.phone = valor,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Flexible(
-                          child: Container(
-                        height: 100.0,
-                        width: 100.0,
-                        color: Colors.black,
-                        child: perfil.image == null
-                            ? Image.asset('assets/user.png')
-                            : PhotoView(
-                                tightMode: true,
-                                backgroundDecoration:
-                                    BoxDecoration(color: Colors.white),
-                                imageProvider:
-                                    MemoryImage(base64Decode(perfil.image)),
-                              ),
-                      )),
-                      Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: ElevatedButton(
-                          child: Text('Agregar imagen'),
-                          onPressed: () => _addImage(),
-                        ),
+                if (claveRol != 'INVO')
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                              child: Container(
+                            height: 100.0,
+                            width: 100.0,
+                            child: perfil.image == null
+                                ? FittedBox(
+                                    fit: BoxFit.cover,
+                                    child: Container(
+                                        child: ClipRect(
+                                            child:
+                                                FaIcon(FontAwesomeIcons.user))))
+                                : Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: MemoryImage(
+                                              base64Decode(perfil.image)),
+                                        )),
+                                  ),
+                          )),
+                          Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: ElevatedButton(
+                              child: Text('Agregar imagen'),
+                              onPressed: () => _addImage(),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) =>
-                                      CambiarContrasenaDialog());
-                            },
-                            child: Text('Cambiar contraseña')),
-                      )
-                    ],
+                    ),
+                  ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          showDialog(
+                              context: context,
+                              builder: (context) => CambiarContrasenaDialog());
+                        },
+                        child: Text('Cambiar contraseña')),
                   ),
                 ),
                 Center(
@@ -469,13 +483,6 @@ class _PerfilState extends State<Perfil> {
               portada: portada != null ? portada : null,
               fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
             ));
-        //     Navigator.pushNamed(context, '/eventos', arguments: {
-        //       'idEvento': idEvento,
-        //       'nEvento': titulo,
-        //       'nombre': perfil.names,
-        //       'boton': false,
-        //       'imag': image
-        //     });
       }
     }
   }

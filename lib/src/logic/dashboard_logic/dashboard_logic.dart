@@ -5,12 +5,11 @@ import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/eventosModel/eventos_dashboard_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 
 class DashboardLogic {
   SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
-  Client client = Client();
 
   Future<List<DashboardEventoModel>> getAllFechasEventos(
       DateTime startDate, DateTime endDate) async {
@@ -32,7 +31,7 @@ class DashboardLogic {
       'Accept': 'application/json',
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       headers: headers,
       body: json.encode(data),
@@ -68,7 +67,7 @@ class DashboardLogic {
       'Accept': 'application/json',
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       headers: headers,
       body: json.encode(data),

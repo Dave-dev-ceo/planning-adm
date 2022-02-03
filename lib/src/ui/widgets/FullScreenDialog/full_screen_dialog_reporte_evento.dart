@@ -72,9 +72,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                   bottom: TabBar(
                     indicatorColor: Colors.black,
                     onTap: (int index) {
-                      //dataJson['reporte']="asistencia";
                       setState(() {
-                        //dataJson["id"]=modelEstatus.results.elementAt(index).idEstatusInvitado.toString();
                         _pageIndex = index;
                       });
                     },
@@ -106,13 +104,6 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                                 .idEstatusInvitado),
                     ],
                   ),
-                  /*IndexedStack(
-                        index: _pageIndex,
-                        children: <Widget>[
-                          //ReporteEvento(dataView: "asistencia",dataId: modelEstatus.results.elementAt(_pageIndex).idEstatusInvitado),
-                          for(int j = 0; j < lenghtTab; j++) ReporteEvento(dataView: "asistencia",dataId: modelEstatus.results.elementAt(_pageIndex).idEstatusInvitado),
-                        ],
-                      ),*/
                 ),
               ),
             );
@@ -219,16 +210,3 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
     );
   }
 }
-/*class ItemModelWidgetsListTab{
-  final List <Widget> tabs;
-  ItemModelWidgetsListTab.addWidget(Widget wt){
-    List<Widget> temp = [];
-    for (int i = 0; i < parsedJson.length; i++) {
-      _Grupos result = _Grupos(parsedJson[i]);
-      //
-      temp.add(result);
-    }
-    _results = temp;
-  }
-  List<_Grupos> get results => _results;
-}*/

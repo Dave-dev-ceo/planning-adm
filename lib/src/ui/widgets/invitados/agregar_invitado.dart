@@ -133,47 +133,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
                 ),
                 _dropDown2(),
               ],
-            )
-            /*Row(
-             children: <Widget>[
-               Column(
-                  children: <Widget>[
-                      Text('genero'),
-                      _dropDown2(),
-                  ],
-                ),
-                Column(
-             children: <Widget>[
-                Text('genero'),
-                _dropDown2(),
-             ],
-           )
-             ],)*/
-
-            /*Column(children: <Widget>[
-             Text("Género"),
-             RadioListTile<String>(
-               title: const Text('Hombre'),
-               value: 'H',
-               groupValue: gender,
-               onChanged: (value) {
-                 setState(() {
-                   gender = value;
-                 });
-               },
-             ),
-             RadioListTile<String>(
-               title: const Text('Mujer'),
-               value: 'M',
-               groupValue: gender,
-               onChanged: (value) {
-                 setState(() {
-                   gender = value;
-                 });
-               },
-             )
-           ])*/
-            ),
+            )),
         formItemsDesign(
             Icons.email,
             TextFormField(

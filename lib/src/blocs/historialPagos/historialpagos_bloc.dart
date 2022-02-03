@@ -47,11 +47,4 @@ class HistorialPagosBloc
       } catch (e) {}
     }
   }
-
-  // @override
-  // void onTransition(
-  //     Transition<HistorialPagosEvent, HistorialPagosState> transition) {
-  //   print(transition);
-  //   super.onTransition(transition);
-  // }
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
@@ -9,7 +9,6 @@ import 'package:planning/src/resources/config_conection.dart';
 class HistorialPagosLogic {
   SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
-  Client client = Client();
 
   Future<List<HistorialPagosModel>> getPagosByEvent() async {
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -27,7 +26,7 @@ class HistorialPagosLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);
@@ -61,7 +60,7 @@ class HistorialPagosLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);
@@ -93,7 +92,7 @@ class HistorialPagosLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);
@@ -122,7 +121,7 @@ class HistorialPagosLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);

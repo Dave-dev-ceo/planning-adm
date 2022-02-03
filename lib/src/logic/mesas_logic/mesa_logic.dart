@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 
 import 'package:planning/src/logic/estatus_logic.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -24,7 +24,6 @@ class MesasException implements Exception {}
 class ServiceMesasLogic extends MesasLogic {
   SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
-  Client client = Client();
 
   @override
   Future<List<MesaModel>> getAsignadasMesas() async {
@@ -33,7 +32,7 @@ class ServiceMesasLogic extends MesasLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
     final endpoint = 'wedding/EVENTOS/getMesasAsignadas';
-    final response = await client
+    final response = await http
         .post(Uri.parse(confiC.url + confiC.puerto + '/' + endpoint), body: {
       'idEvento': idEvento.toString(),
       'idPlanner': idPlanner.toString(),
@@ -67,7 +66,7 @@ class ServiceMesasLogic extends MesasLogic {
       'mesas': listasMesasToAdd.map((e) => e.toJson()).toList(),
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: jsonEncode(data),
         headers: {
@@ -101,7 +100,7 @@ class ServiceMesasLogic extends MesasLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);
@@ -135,7 +134,7 @@ class ServiceMesasLogic extends MesasLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
         body: json.encode(data),
         headers: headers);
@@ -166,7 +165,7 @@ class ServiceMesasLogic extends MesasLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -197,7 +196,7 @@ class ServiceMesasLogic extends MesasLogic {
       'Accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
       body: json.encode(data),
       headers: headers,

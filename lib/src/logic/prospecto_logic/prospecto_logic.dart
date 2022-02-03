@@ -4,12 +4,11 @@ import 'dart:io';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/resources/config_conection.dart';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 
 class ProspectoLogic {
   SharedPreferencesT _sharedPreferencesT = SharedPreferencesT();
   ConfigConection _configC = ConfigConection();
-  Client client = Client();
 
   Future<List<EtapasModel>> getEtapasAndProspectos() async {
     String token = await _sharedPreferencesT.getToken();
@@ -27,7 +26,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -62,7 +61,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -93,7 +92,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -123,7 +122,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -156,7 +155,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -187,7 +186,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -218,7 +217,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -249,7 +248,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -281,7 +280,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -313,7 +312,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -344,7 +343,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -374,7 +373,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -404,7 +403,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -435,7 +434,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -468,7 +467,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -499,7 +498,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -529,7 +528,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,
@@ -559,7 +558,7 @@ class ProspectoLogic {
       'accept': 'application/json'
     };
 
-    final response = await client.post(
+    final response = await http.post(
       Uri.parse(_configC.url + _configC.puerto + endpoint),
       body: json.encode(data),
       headers: headers,

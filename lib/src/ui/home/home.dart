@@ -8,7 +8,6 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
-import 'package:planning/src/ui/construccion/construccion.dart';
 import 'package:planning/src/ui/dashboard_planner/dashboard_calendar_page.dart';
 import 'package:planning/src/ui/eventos/dashboard_eventos.dart';
 import 'package:planning/src/ui/machotes/machotes.dart';
@@ -29,7 +28,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
   int _pageIndex = 0;
   int _pages = 0;
@@ -263,26 +262,16 @@ class _HomeState extends State<Home> {
                 permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-CRT'),
             data: widget.data));
       }
-      // if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
-      //   pan.add(ListaEstatusInvitaciones());
-      // }
+
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
         pan.add(Timing());
       }
-      if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
-        pan.add(Construccion());
-      }
+
       if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
         pan.add(Machotes());
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
         pan.add(Proveedores());
-      }
-      if (secciones.hasAcceso(claveSeccion: 'WP-IVT')) {
-        pan.add(Construccion());
-      }
-      if (secciones.hasAcceso(claveSeccion: 'WP-PRS')) {
-        pan.add(Construccion());
       }
 
       if (secciones.hasAcceso(claveSeccion: 'WP-USR')) {
@@ -297,24 +286,6 @@ class _HomeState extends State<Home> {
       ];
     }
   }
-
-  // _dialogSpinner(String title) {
-  //   Widget child = LoadingCustom();
-  //   showDialog(
-  //       barrierDismissible: false,
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         _dialogContext = context;
-  //         return AlertDialog(
-  //           title: Text(
-  //             title,
-  //             textAlign: TextAlign.center,
-  //           ),
-  //           content: child,
-  //           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(32.0))),
-  //         );
-  //       });
-  // }
 
   _showDialogMsg(BuildContext contextT) {
     _dialogContext = contextT;

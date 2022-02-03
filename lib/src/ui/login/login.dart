@@ -178,13 +178,6 @@ class _LoginState extends State<Login> {
             _sharedPreferences.setCorreo(emailCtrl.text);
             Navigator.pushReplacementNamed(context, '/home', arguments: data);
           } else {
-            // Navigator.pushNamed(context, '/eventos', arguments: {
-            //   'idEvento': state.response['usuario']['id_evento'],
-            //   'nEvento': state.response['usuario']['descripcion'],
-            //   'nombre': state.response['usuario']['nombre_completo'],
-            //   'boton': false,
-            //   'imag': state.response['usuario']['imagen']
-            // });
             _sharedPreferences.setCorreo(emailCtrl.text);
 
             Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
@@ -227,15 +220,6 @@ class _LoginState extends State<Login> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 20.0, 32.0, 4.0),
-            // child: TextFormField(
-            //   controller: passwordCtrl,
-            //   obscureText: true,
-            //   enableSuggestions: false,
-            //   autocorrect: false,
-            //   style: TextStyle(color: Colors.black),
-            //   decoration: _decorationText("Contraseña"),
-            //   cursorColor: Colors.purple[100],
-            // ),
             //Padilla
             child: Center(
               child: PasswordWplanner(

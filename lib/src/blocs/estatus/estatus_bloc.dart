@@ -31,16 +31,7 @@ class EstatusBloc extends Bloc<EstatusEvent, EstatusState> {
     } else if (event is CreateEstatusEvent) {
       try {
         int idEstatusInvitado = await logic.createEstatus(event.data);
-        //ItemModelEstatusInvitado model = event.estatus;
-        //String dato = event.data['descripcion'];
-        /*Map<String, dynamic> lista = {
-          'id_estatus_invitado': idEstatusInvitado,
-          'descripcion': dato
-        };*/
-        //Estatus est = new Estatus(lista);
-        //model.results.add(est);
-        //yield CreateEstatusState(estatus);
-        //yield MostrarEstatusState(model);
+
         if (idEstatusInvitado == 0) {
           add(FechtEstatusEvent());
         }
@@ -53,16 +44,6 @@ class EstatusBloc extends Bloc<EstatusEvent, EstatusState> {
       if (response == 0) {
         add(FechtEstatusEvent());
       }
-      // if (response) {
-      //   //model.results[event.id].addDescripcion = event.data['descripcion'];
-      //   for (int i = 0; i < model.results.length; i++) {
-      //     if (model.results.elementAt(i).idEstatusInvitado == event.id) {
-      //       model.results.elementAt(i).addDescripcion =
-      //           event.data['descripcion'];
-      //     }
-      //   }
-      // }
-      // yield MostrarEstatusState(model);
     } else if (event is DeleteEstatusEvent) {
       int response = await logic.deleteEstatus(event.idEstatus);
       if (response == 0) {

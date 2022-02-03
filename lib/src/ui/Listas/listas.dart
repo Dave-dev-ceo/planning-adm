@@ -304,10 +304,4 @@ class _ListaState extends State<Listas> {
       ),
     );
   }
-
-  // void _limpiarForm() {
-  //   claveCtrl.text = '';
-  //   nombreCtrl.text = '';
-  //   descripcionCtrl.text = '';
-  // }
 }

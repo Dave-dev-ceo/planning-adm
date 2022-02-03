@@ -77,8 +77,6 @@ import 'package:planning/src/blocs/proveedores/archivo_proveedor/bloc/archivo_pr
 import 'package:planning/src/blocs/proveedores/proveedor_bloc.dart';
 import 'package:planning/src/logic/archivos_proveedores_logic.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
-import 'package:planning/src/blocs/autorizacion/autorizacion_bloc.dart';
-import 'package:planning/src/logic/autorizacion_logic.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessegerKey =
@@ -221,9 +219,6 @@ class AppState extends StatelessWidget {
       BlocProvider<ProveedoreventosBloc>(
           create: (_) =>
               ProveedoreventosBloc(logic: FetchProveedoresEventoLogic())),
-      BlocProvider<AutorizacionBloc>(
-        create: (_) => AutorizacionBloc(logic: ConsultasAutorizacionLogic()),
-      ),
       BlocProvider<AddContratosBloc>(
           create: (_) => AddContratosBloc(logic: ConsultasAddContratosLogic())),
       BlocProvider<ContratosDosBloc>(
@@ -248,7 +243,7 @@ class AppState extends StatelessWidget {
           create: (_) => DashboardBloc(logic: DashboardLogic())),
       BlocProvider<ProspectoBloc>(
         create: (context) => ProspectoBloc(logic: ProspectoLogic()),
-      ), 
+      ),
       BlocProvider<QrBloc>(create: (_) => QrBloc())
     ], child: MyApp());
   }

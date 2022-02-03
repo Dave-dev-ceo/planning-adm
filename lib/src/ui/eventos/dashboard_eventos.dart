@@ -50,21 +50,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
     super.initState();
   }
 
-  listaEventos(ItemModelEventos eventos) {
-    /*bloc.fetchAllEventos(context);
-    return StreamBuilder(
-      stream: bloc.allEventos,
-      builder: (context, AsyncSnapshot<ItemModelEventos> snapshot) {
-        if (snapshot.hasData) {
-          return buildList(snapshot);
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        return Center(child: LoadingCustom());
-      },
-    );*/
-  }
-
   String titulo = "";
   Widget buildList(ItemModelEventos snapshot) {
     return GridView.builder(
@@ -259,15 +244,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
           ),
         ),
       ),
-      floatingActionButton: WP_EVT_CRT
-          ? expadibleFab()
-          // FloatingActionButton(
-          // child: Icon(Icons.event_available),
-          // backgroundColor: hexToColor('#fdf4e5'),
-          // onPressed: () {
-          // Navigator.of(context).pushNamed('/addEvento');
-          // })
-          : SizedBox.shrink(),
+      floatingActionButton: WP_EVT_CRT ? expadibleFab() : SizedBox.shrink(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

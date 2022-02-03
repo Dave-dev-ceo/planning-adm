@@ -20,11 +20,8 @@ class ArchivoProveedorBloc
       try {
         ItemModelArchivoProvServ proveedor = await logic.fetchArchivosProvServ(
             event.id_proveedor, event.id_servicio);
-        print('EntreAqui traer archivos');
         yield MostrarArchivoProvServState(proveedor);
       } catch (e) {
-        print('error obtener datos');
-
         print(e);
         yield ErrorMostrarArchivoProvServState('No se pudo insertar');
       }
@@ -43,7 +40,6 @@ class ArchivoProveedorBloc
                     : int.parse(event.data['id_proveedor']),
             false));
       } catch (e) {
-        print('error crear evento');
         print(e);
         yield ErrorCreateArchivoProvServState('No se pudo insertar');
       }

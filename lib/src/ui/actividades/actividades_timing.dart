@@ -449,50 +449,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                             idTiming: idTiming,
                             actividades: listaActividades,
                           );
-                          // return Container(
-                          //     width: double.infinity,
-                          //     child: AlertDialog(
-                          //       title: Text('Editar actividad'),
-                          //       content: SingleChildScrollView(
-                          //           child: ListBody(
-                          //         children: [_formIu(false)],
-                          //       )),
-                          //       actions: [
-                          //         TextButton(
-                          //             onPressed: () {
-                          //               EventoActividadModel actividadModel =
-                          //                   EventoActividadModel(
-                          //                 idActividad: item.results
-                          //                     .elementAt(i)
-                          //                     .idActividad,
-                          //                 descripcionActividad: item.results
-                          //                     .elementAt(i)
-                          //                     .descripcion,
-                          //                 diasActividad:
-                          //                     item.results.elementAt(i).dia,
-                          //                 visibleInvolucrado: item.results
-                          //                     .elementAt(i)
-                          //                     .visibleInvolucrados,
-                          //                 predecesorActividad: item.results
-                          //                     .elementAt(i)
-                          //                     .predecesor,
-                          //               );
-                          //               setState(() {
-                          //                 actividadestimingBloc.add(
-                          //                     UpdateActividadEvent(
-                          //                         actividadModel, idTiming));
-                          //                 //item.results.removeAt(i);
-                          //               });
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //             child: Text('Sí')),
-                          //         TextButton(
-                          //             onPressed: () {
-                          //               Navigator.of(context).pop();
-                          //             },
-                          //             child: Text('No')),
-                          //       ],
-                          //     ));
                         });
                   } else {
                     return await showDialog(
