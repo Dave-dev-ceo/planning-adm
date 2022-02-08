@@ -360,7 +360,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     large: 500.0,
                     ancho: 80,
                     item: CheckboxListTile(
-                      title: const Text('Visible para novios:'),
+                      title: const Text('Visible para involucrados:'),
                       controlAffinity: ListTileControlAffinity.platform,
                       value: _listFull[i].actividad[j].visibleActividad,
                       onChanged: (valor) {
@@ -853,7 +853,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     large: 500.0,
                     ancho: 80,
                     item: CheckboxListTile(
-                      title: const Text('Visible para novios:'),
+                      title: const Text('Visible para involucradossssss:'),
                       controlAffinity: ListTileControlAffinity.platform,
                       value: false,
                       onChanged: (valor) {},

@@ -220,7 +220,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     ? TextFormFields(
                         icon: null,
                         item: CheckboxListTile(
-                          title: const Text('Visible para novios'),
+                          title: const Text('Visible para involucrados'),
                           //secondary: Icon(Icons.be),
                           controlAffinity: ListTileControlAffinity.platform,
                           value: _actVisible,
@@ -238,7 +238,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     : TextFormFields(
                         icon: null,
                         item: CheckboxListTile(
-                          title: const Text('Visible para novios'),
+                          title: const Text('Visible para involucrados'),
                           //secondary: Icon(Icons.be),
                           controlAffinity: ListTileControlAffinity.platform,
                           value: _actVisibleEdit,
@@ -499,8 +499,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                       children: [
                         Text(item.results.elementAt(i).descripcion ?? ''),
                         Text(item.results.elementAt(i).visibleInvolucrados
-                            ? 'Visible para los novios'
-                            : 'No visible para los novios')
+                            ? 'Visible para involucrados'
+                            : 'No visible para involucrados')
                       ],
                     ),
                   ),
@@ -665,7 +665,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                             TextFormFields(
                               icon: null,
                               item: CheckboxListTile(
-                                title: const Text('Visible para novios'),
+                                title: const Text('Visible para involucrados'),
                                 //secondary: Icon(Icons.be),
                                 controlAffinity:
                                     ListTileControlAffinity.platform,

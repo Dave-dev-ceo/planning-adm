@@ -1437,7 +1437,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       large: 500.0,
                       ancho: 80,
                       item: CheckboxListTile(
-                        title: const Text('Visible para novios:'),
+                        title: const Text('Visible para involucrados:'),
                         controlAffinity: ListTileControlAffinity.platform,
                         value: actividad.visibleInvolucrado,
                         onChanged: (valor) {
