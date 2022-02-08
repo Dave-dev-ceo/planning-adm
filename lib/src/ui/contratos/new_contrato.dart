@@ -269,7 +269,7 @@ class NewContratoState extends State<NewContrato> {
                   ),
                   Card(
                     child: ExpansionTile(
-                        title: const Text('Orden de Pedido',
+                        title: const Text('Orden de pedido',
                             style: TextStyle(color: Colors.black)),
                         children: _ordenPagos(),
                         trailing: const Icon(
@@ -405,7 +405,7 @@ class NewContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                         icon: const Icon(Icons.cloud_upload_outlined),
-                        label: const Text('Subir Firmado'),
+                        label: const Text('Subir firmado'),
                         onPressed: () => _uploadFile(contrato.idContrato),
                       )
                     ],
@@ -419,7 +419,7 @@ class NewContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                         icon: const Icon(Icons.remove_red_eye_rounded),
-                        label: const Text('Ver Firmado'),
+                        label: const Text('Ver firmado'),
                         onPressed: () {
                           _verNewFile(contrato.idContrato,
                               contrato.tipoMimeOriginal, contrato.tipoDoc);
@@ -436,7 +436,7 @@ class NewContratoState extends State<NewContrato> {
                     children: [
                       TextButton.icon(
                           icon: const Icon(Icons.cloud_download_outlined),
-                          label: const Text('Descarga Firmado.'),
+                          label: const Text('Descarga firmado.'),
                           onPressed: () => {
                                 _descargaArchivoSubido(
                                     contrato.idContrato,

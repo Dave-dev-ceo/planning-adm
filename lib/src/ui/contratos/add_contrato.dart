@@ -64,7 +64,7 @@ class _AddMachoteState extends State<AddMachote> {
       case 'MT':
         return const Text('Selecciona Minutas');
       case 'OP':
-        return const Text('Selecciona Orden de Pedido');
+        return const Text('Selecciona Orden de pedido');
       default:
         return const Text('Selecciona Autorizaciones');
     }

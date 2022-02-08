@@ -120,7 +120,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           height: 2.0,
         ),
         Text(
-          'Archivos Especiales',
+          'Archivos especiales',
           style: Theme.of(context).textTheme.headline5,
         ),
         if (widget.provsrv['type'] == 0)
