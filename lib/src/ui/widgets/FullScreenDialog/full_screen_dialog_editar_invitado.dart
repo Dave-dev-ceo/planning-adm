@@ -1199,7 +1199,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
     Map<String, String> json = {
       "id_invitado": idInvitado.toString(),
-      "id_estatus_invitado": _mySelection,
+      "id_estatus_invitado": seleccionEstatus,
       "nombre": nombreCtrl.text,
       "edad": edad,
       "telefono": telefonoCtrl.text,
