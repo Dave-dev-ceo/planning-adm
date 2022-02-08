@@ -9,7 +9,7 @@ import 'package:planning/src/ui/dashboardInvitadoPage/dashboard_page_involucrado
 import 'package:planning/src/ui/eventos/dashboard_eventos.dart';
 import 'package:planning/src/ui/home/home.dart';
 import 'package:planning/src/ui/login/login.dart';
-import 'package:planning/src/ui/mesas/crearMesasDialog.dart';
+import 'package:planning/src/ui/mesas/crear_mesas_dialog.dart';
 import 'package:planning/src/ui/pagos/edit_pago.dart';
 import 'package:planning/src/ui/pagos/form_pago.dart';
 import 'package:planning/src/ui/perfil/perfil.dart';
@@ -17,7 +17,7 @@ import 'package:planning/src/ui/perfil/perfil_planner_page.dart';
 import 'package:planning/src/ui/planes/agregar_planes.dart';
 import 'package:planning/src/ui/planes/calendario.dart';
 import 'package:planning/src/ui/recoverPassword/recover_password.dart';
-import 'package:planning/src/ui/scannerQr/scannerQr.dart';
+import 'package:planning/src/ui/scannerQr/scanner_qr.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_actividades.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_contrato.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_evento.dart';
@@ -32,7 +32,6 @@ import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_edit
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_editar_plantilla.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_reporte_evento.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
-import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_verPaginaWeb.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_view_file.dart';
 import 'package:planning/src/ui/widgets/invitados/invitados.dart';
 import 'package:planning/src/ui/timing_evento/table_calendar.dart';
@@ -52,7 +51,7 @@ class RouteGenerator {
             if (snapshot.hasData) {
               return snapshot.data;
             } else {
-              return LoadingCustom();
+              return const LoadingCustom();
             }
           },
         ));
@@ -62,7 +61,7 @@ class RouteGenerator {
           data: args,
         ));
       case '/dasboard':
-        return CustomPageRouter(child: DashboardEventos());
+        return CustomPageRouter(child: const DashboardEventos());
       case '/eventos':
         return CustomPageRouter(
             child: Invitados(
@@ -70,14 +69,14 @@ class RouteGenerator {
         ));
 
       case '/lectorQr':
-        return CustomPageRouter(child: ScannerQrInvitado());
+        return CustomPageRouter(child: const ScannerQrInvitado());
       case '/addInvitados':
         return CustomPageRouter(
             child: FullScreenDialogAdd(
           id: args,
         ));
       case '/addContrato':
-        return CustomPageRouter(child: FullScreenDialogAddContrato());
+        return CustomPageRouter(child: const FullScreenDialogAddContrato());
       case '/viewContrato':
         return CustomPageRouter(child: ViewPdfContrato(data: args));
       case '/addMachote':
@@ -157,7 +156,7 @@ class RouteGenerator {
         return CustomPageRouter(
             child: FullScreenDialogViewFileEvent(archivo: args));
       case '/perfil':
-        return CustomPageRouter(child: Perfil());
+        return CustomPageRouter(child: const Perfil());
       case '/addContratos':
         return CustomPageRouter(child: AddMachote(map: args));
       case '/addPagosForm':
@@ -167,8 +166,6 @@ class RouteGenerator {
         ));
       case '/editPagosForm':
         return CustomPageRouter(child: FormEditPago(id: args));
-      case '/verWeb':
-        return CustomPageRouter(child: FullScreenViewWEB(data: args));
       case '/editarContratos':
         return CustomPageRouter(
             child: FullScreenDialogEditContrato(data: args));
@@ -178,7 +175,7 @@ class RouteGenerator {
           lastnumMesas: args,
         ));
       case '/perfilPlanner':
-        return CustomPageRouter(child: PerfilPlannerPage());
+        return CustomPageRouter(child: const PerfilPlannerPage());
       case '/recoverPassword':
         final token = ruta.queryParameters['token'];
         return CustomPageRouter(
@@ -198,7 +195,7 @@ class RouteGenerator {
             if (snapshot.hasData) {
               return snapshot.data;
             } else {
-              return LoadingCustom();
+              return const LoadingCustom();
             }
           },
         ));
@@ -207,7 +204,7 @@ class RouteGenerator {
 }
 
 Future<Widget> checkSession() async {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
   bool sesion = await _sharedPreferences.getSession();
   int involucrado = await _sharedPreferences.getIdInvolucrado();
@@ -230,13 +227,13 @@ Future<Widget> checkSession() async {
           descripcion: titulo,
           nombreCompleto: nombreUser,
           boton: false,
-          portada: portada != null ? portada : null,
+          portada: portada,
           img: image,
           fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
         ),
       );
     }
   } else {
-    return Login();
+    return const Login();
   }
 }

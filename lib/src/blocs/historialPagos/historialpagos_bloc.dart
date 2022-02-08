@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/historial_pagos/historial_pagos_logic.dart';
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 
@@ -22,7 +22,11 @@ class HistorialPagosBloc
         final data = await logic.getPagosByEvent();
 
         yield MostrarHistorialPagosState(data);
-      } on PagosException {}
+      } on PagosException catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is AgregarPagosEvent) {
       try {
         final resp = await logic.agregarPagoEvento(event.pago);
@@ -30,21 +34,33 @@ class HistorialPagosBloc
         yield PagoAgregadostate(resp);
 
         add(MostrarHistorialPagosEvent());
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is EditarPagosEvent) {
       try {
         final resp = await logic.editarPagoEvento(event.pago);
 
         yield PagoEditadostate(resp);
         add(MostrarHistorialPagosEvent());
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is EliminarPagoEvent) {
       try {
         final resp = await logic.eliminarPagoEvento(event.idPago);
 
         yield EliminarPagoState(resp);
         add(MostrarHistorialPagosEvent());
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
   }
 }

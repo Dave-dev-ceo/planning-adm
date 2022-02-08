@@ -9,9 +9,9 @@ class ItemModelInvolucrados {
     List<_Involucrados> temp = []; // lista temp
 
     // extramos los datos | llenamos lista - metodo forEach
-    pardedJson.forEach((data) {
+    for (var data in pardedJson) {
       temp.add(_Involucrados(data));
-    });
+    }
 
     _involucrados = temp;
   }
@@ -36,14 +36,14 @@ class _Involucrados {
   }
 
   // ini getters
-  int get idInvolucrado => this._idInvolucrado;
-  String get nombreCompleto => this._nombreCompleto;
-  String get email => this._email;
-  String get telefono => this._telefono;
+  int get idInvolucrado => _idInvolucrado;
+  String get nombreCompleto => _nombreCompleto;
+  String get email => _email;
+  String get telefono => _telefono;
 
   // ini setters
-  set idMachote(value) => this._idInvolucrado;
-  set descripcion(value) => this._nombreCompleto;
-  set machote(value) => this._email;
-  set archivo(value) => this._telefono;
+  set idMachote(value) => _idInvolucrado;
+  set descripcion(value) => _nombreCompleto;
+  set machote(value) => _email;
+  set archivo(value) => _telefono;
 }

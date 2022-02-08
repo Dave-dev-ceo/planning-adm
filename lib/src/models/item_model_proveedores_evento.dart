@@ -16,9 +16,9 @@ class ItemModelProveedoresEvento {
 }
 
 class ProveedoresEvento {
-  int _id_servicio;
-  int _id_proveedor;
-  int _id_planner;
+  int _idServicio;
+  int _idProveedor;
+  int _idPlanner;
   String _nombre;
   List _prov;
   //
@@ -26,8 +26,8 @@ class ProveedoresEvento {
   String _observacion;
 
   ProveedoresEvento(datos) {
-    _id_servicio = datos['id_servicio'];
-    _id_planner = datos['id_planner'];
+    _idServicio = datos['id_servicio'];
+    _idPlanner = datos['id_planner'];
     _nombre = datos['nombre'];
     _prov = datos['prov'];
     //
@@ -35,9 +35,9 @@ class ProveedoresEvento {
     _observacion = datos['observacion'];
   }
 
-  int get idServicio => _id_servicio;
-  int get idProveedor => _id_proveedor;
-  int get idPlanner => _id_planner;
+  int get idServicio => _idServicio;
+  int get idProveedor => _idProveedor;
+  int get idPlanner => _idPlanner;
   String get nombre => _nombre;
   List get prov => _prov;
   //
@@ -47,15 +47,15 @@ class ProveedoresEvento {
 
 class ItemProveedorEvento {
   ItemProveedorEvento(
-      {this.id_servicio,
-      this.id_planner,
+      {this.idServicio,
+      this.idPlanner,
       this.nombre,
       this.prov,
       this.isExpanded = true,
       this.seleccion,
       this.observacion});
-  int id_servicio;
-  int id_planner;
+  int idServicio;
+  int idPlanner;
   String nombre;
   List<ItemProveedor> prov;
   bool isExpanded;
@@ -80,25 +80,25 @@ class ItemModelProveedoresEvent {
 }
 
 class ProveedoresEvent {
-  int _id_planner;
-  int _id_servicio;
-  int _id_proveedor;
+  int _idPlanner;
+  int _idServicio;
+  int _idProveedor;
   //
   bool _seleccionado;
   String _observacion;
 
   ProveedoresEvent(datos) {
-    _id_planner = datos['id_planner'];
-    _id_servicio = datos['id_servicio'];
-    _id_proveedor = datos['id_proveedor'];
+    _idPlanner = datos['id_planner'];
+    _idServicio = datos['id_servicio'];
+    _idProveedor = datos['id_proveedor'];
     //
     _seleccionado = datos['seleccionado'];
     _observacion = datos['observacion'];
   }
 
-  int get idPlanner => _id_planner;
-  int get idServicio => _id_servicio;
-  int get idProveedor => _id_proveedor;
+  int get idPlanner => _idPlanner;
+  int get idServicio => _idServicio;
+  int get idProveedor => _idProveedor;
   //
   bool get seleccionado => _seleccionado;
   String get observacion => _observacion;

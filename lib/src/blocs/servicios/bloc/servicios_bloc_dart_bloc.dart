@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/servicios_logic.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
 
@@ -33,7 +33,9 @@ class ServiciosBloc extends Bloc<ServiciosEvent, ServiciosState> {
           add(FechtServiciosEvent());
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorMostrarServiciosState('No se pudo insertar');
       }
     } else if (event is UpdateServicioEvent) {
@@ -43,7 +45,9 @@ class ServiciosBloc extends Bloc<ServiciosEvent, ServiciosState> {
           add(FechtServiciosEvent());
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorMostrarServiciosState('No se pudo insertar');
       }
     } else if (event is DeleteServicioEvent) {
@@ -52,17 +56,31 @@ class ServiciosBloc extends Bloc<ServiciosEvent, ServiciosState> {
         if (service == 0) {
           add(FechtServiciosEvent());
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is FechtServiciosByProveedorEvent) {
       try {
+        ItemModuleServicios listServicios = await logic.fetchServicios();
         ItemModuleServicios service =
-            await logic.fetchServiciosByProoveedor(event.id_proveedor);
-        yield MostrarServiciosByProveedorState(service);
+            await logic.fetchServiciosByProoveedor(event.idProveedor);
+        yield MostrarServiciosByProveedorState(service, listServicios);
       } on ServiciosException {
         yield ErrorMostrarServiciosState('Sin articulos');
       } on TokenException {
         yield ErrorMostrarServiciosState('Sesión caducada');
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
+  }
+
+  @override
+  void onTransition(Transition<ServiciosEvent, ServiciosState> transition) {
+    super.onTransition(transition);
   }
 }

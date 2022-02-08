@@ -9,13 +9,13 @@ import 'package:planning/src/models/item_model_involucrados.dart';
 
 abstract class Involucrados {
   Future<ItemModelInvolucrados> selectInvolucrado();
-  Future<bool> insertInvolucrados(Objectinvolucrado);
+  Future<bool> insertInvolucrados(objectinvolucrado);
 }
 
 class ConsultasInvolucradosLogic extends Involucrados {
   // variables configuracion
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override
@@ -51,7 +51,7 @@ class ConsultasInvolucradosLogic extends Involucrados {
   }
 
   @override
-  Future<bool> insertInvolucrados(Object involucrado) async {
+  Future<bool> insertInvolucrados(Object objectinvolucrado) async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -65,7 +65,7 @@ class ConsultasInvolucradosLogic extends Involucrados {
         body: {
           'id_evento': idEvento.toString(),
           'id_planner': idPlanner.toString(),
-          'involucrado': jsonEncode(involucrado)
+          'involucrado': jsonEncode(objectinvolucrado)
         },
         headers: {
           HttpHeaders.authorizationHeader: token

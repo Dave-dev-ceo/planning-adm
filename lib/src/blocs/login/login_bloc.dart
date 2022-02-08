@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/login_logic.dart';
 
 part 'login_event.dart';
@@ -36,7 +36,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           yield ErrorLogginState('Ocurrio un error');
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is ValidateTokenEvent) {
       try {
@@ -48,7 +50,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           yield TokenExpiradoState();
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is ChangeAndRecoverPassword) {
       try {
@@ -61,7 +65,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           yield TokenExpiradoState();
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }

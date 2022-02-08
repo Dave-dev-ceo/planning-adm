@@ -14,9 +14,9 @@ class MostrarProveedorEventoState extends ProveedoreventosState {
 }
 
 class CreateProveedorEventoState extends ProveedoreventosState {
-  final int id_lista;
-  CreateProveedorEventoState(this.id_lista);
-  List<Object> get props => [id_lista];
+  final int idLista;
+  CreateProveedorEventoState(this.idLista);
+  List<Object> get props => [idLista];
 }
 
 class ErrorMostrarProveedorEventoState extends ProveedoreventosState {

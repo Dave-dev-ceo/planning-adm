@@ -1,4 +1,4 @@
-// ignore_for_file: missing_return
+// ignore_for_file: missing_return, unnecessary_getters_setters
 
 class ItemModelTimings {
   List<_Result> _results = [];
@@ -23,7 +23,7 @@ class ItemModelTimings {
       temp.add(result);
     }
 
-    return new ItemModelTimings(temp);
+    return ItemModelTimings(temp);
   }
 
   ItemModelTimings copyWith(ItemModelTimings obj) {
@@ -50,8 +50,9 @@ class _Result {
     _nombreTiming = result['nombre_timing'];
     _idEventoTiming = result['id_evento_timing'];
     _estatus = result['estatus'];
-    if (result['fecha_inicio'] != null)
+    if (result['fecha_inicio'] != null) {
       _fechaInicio = DateTime.parse(result['fecha_inicio']);
+    }
   }
 
   _Result.fromModel(dataObj) {
@@ -62,15 +63,15 @@ class _Result {
     _estatus = dataObj._estatus;
   }
 
-  int get id_timing => this._idTiming;
-  String get nombre_timing => this._nombreTiming;
-  int get idEventoTiming => this._idEventoTiming;
-  DateTime get fechaInicio => this._fechaInicio;
-  String get estatus => this._estatus;
+  int get idTiming => _idTiming;
+  String get nombreTiming => _nombreTiming;
+  int get idEventoTiming => _idEventoTiming;
+  DateTime get fechaInicio => _fechaInicio;
+  String get estatus => _estatus;
 
-  set id_timing(int value) => this._idTiming = value;
-  set nombre_timing(value) => this._nombreTiming = value;
-  set idEventoTiming(int value) => this._idEventoTiming = value;
-  set estatus(String value) => this._estatus = value;
-  set fechaInicio(DateTime value) => this._fechaInicio = value;
+  set idTiming(int value) => _idTiming = value;
+  set nombreTiming(value) => _nombreTiming = value;
+  set idEventoTiming(int value) => _idEventoTiming = value;
+  set estatus(String value) => _estatus = value;
+  set fechaInicio(DateTime value) => _fechaInicio = value;
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/machotes_logic.dart';
 import 'package:planning/src/models/item_model_machotes.dart';
 
@@ -50,12 +50,20 @@ class MachotesBloc extends Bloc<MachotesEvent, MachotesState> {
       try {
         await logic.updateNameMachote(event.idMachote, event.nuevoombre);
         add(FechtMachotesEvent());
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is EliminarMachoteEvent) {
       try {
         await logic.eliminarMachote(event.idMachote);
         add(FechtMachotesEvent());
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
   }
 }

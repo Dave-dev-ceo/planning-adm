@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
@@ -9,7 +11,7 @@ class AgregarInvitados extends StatefulWidget {
 
   const AgregarInvitados({Key key, this.id}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => AgregarInvitados(),
+        builder: (context) => const AgregarInvitados(),
       );
 
   @override
@@ -18,18 +20,18 @@ class AgregarInvitados extends StatefulWidget {
 
 class _AgregarInvitadosState extends State<AgregarInvitados> {
   final int id;
-  GlobalKey<FormState> keyForm = new GlobalKey();
+  GlobalKey<FormState> keyForm = GlobalKey();
 
-  TextEditingController nombreCtrl = new TextEditingController();
+  TextEditingController nombreCtrl = TextEditingController();
 
-  TextEditingController emailCtrl = new TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
 
   //TextEditingController  apellidosCtrl = new TextEditingController();
 
-  TextEditingController telefonoCtrl = new TextEditingController();
-  TextEditingController numeroAcomp = new TextEditingController();
+  TextEditingController telefonoCtrl = TextEditingController();
+  TextEditingController numeroAcomp = TextEditingController();
 
-  ApiProvider api = new ApiProvider();
+  ApiProvider api = ApiProvider();
 
   int acompanantes = 0;
 
@@ -38,7 +40,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
   _AgregarInvitadosState(this.id);
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
 /*_borderTextForm(){
@@ -61,10 +63,10 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
         width: double.infinity,
         alignment: Alignment.center,
         //child: Expanded(
-        child: new Container(
+        child: Container(
           width: 800,
-          margin: new EdgeInsets.all(10.0),
-          child: new Form(
+          margin: const EdgeInsets.all(10.0),
+          child: Form(
             key: keyForm,
             child: formUI(),
           ),
@@ -76,7 +78,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
 
   formItemsDesign(icon, item) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Card(child: ListTile(leading: Icon(icon), title: item)),
     );
   }
@@ -90,7 +92,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
       style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF000000),
+        color: const Color(0xFF000000),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -102,7 +104,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
           value: item,
           child: Text(
             item,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         );
       }).toList(),
@@ -118,7 +120,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             Icons.person,
             TextFormField(
               controller: nombreCtrl,
-              decoration: new InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nombre completo',
               ),
               validator: validateNombre,
@@ -127,8 +129,8 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             MyFlutterApp.transgender,
             Row(
               children: <Widget>[
-                Text('Género'),
-                SizedBox(
+                const Text('Género'),
+                const SizedBox(
                   width: 50,
                 ),
                 _dropDown2(),
@@ -138,7 +140,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             Icons.email,
             TextFormField(
               controller: emailCtrl,
-              decoration: new InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Correo',
               ),
               keyboardType: TextInputType.emailAddress,
@@ -149,7 +151,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             Icons.phone,
             TextFormField(
               controller: telefonoCtrl,
-              decoration: new InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Teléfono',
               ),
               keyboardType: TextInputType.phone,
@@ -162,7 +164,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
               title: TextFormField(
                 controller: numeroAcomp,
                 enabled: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Número de acompañantes',
                   contentPadding: EdgeInsets.symmetric(
                     vertical: 2.0,
@@ -184,7 +186,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
                           }
                         });
                       },
-                      icon: Icon(Icons.keyboard_arrow_down)),
+                      icon: const Icon(Icons.keyboard_arrow_down)),
                   IconButton(
                       onPressed: () {
                         setState(() {
@@ -192,7 +194,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
                           numeroAcomp.text = acompanantes.toString();
                         });
                       },
-                      icon: Icon(Icons.keyboard_arrow_up))
+                      icon: const Icon(Icons.keyboard_arrow_up))
                 ],
               ),
             )),
@@ -200,7 +202,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             onTap: () {
               save();
             },
-            child: CallToAction('Guardar'))
+            child: const CallToAction('Guardar'))
       ],
     );
   }
@@ -215,8 +217,8 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
 
   String validateNombre(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
-    if (value.length == 0) {
+    RegExp regExp = RegExp(pattern);
+    if (value.isEmpty) {
       return "El nombre es necesario";
     } else if (!regExp.hasMatch(value)) {
       return "El nombre debe de ser a-z y A-Z";
@@ -226,8 +228,8 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
 
   String validateTelefono(String value) {
     String patttern = r'(^[0-9]*$)';
-    RegExp regExp = new RegExp(patttern);
-    if (value.length == 0) {
+    RegExp regExp = RegExp(patttern);
+    if (value.isEmpty) {
       return "El telefono es necesario";
     } else if (value.length != 10) {
       return "El numero debe tener 10 digitos";
@@ -240,8 +242,8 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
   String validateEmail(String value) {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp = new RegExp(pattern);
-    if (value.length == 0) {
+    RegExp regExp = RegExp(pattern);
+    if (value.isEmpty) {
       return "El correo es necesario";
     } else if (!regExp.hasMatch(value)) {
       return "Correo invalido";

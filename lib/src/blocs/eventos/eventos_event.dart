@@ -23,8 +23,8 @@ class EditarEventosEvent extends EventosEvent {
 }
 
 class FetchEventoPorIdEvent extends EventosEvent {
-  final String id_evento;
+  final String idEvento;
 
-  FetchEventoPorIdEvent(this.id_evento);
-  List<Object> get props => [id_evento];
+  FetchEventoPorIdEvent(this.idEvento);
+  List<Object> get props => [idEvento];
 }

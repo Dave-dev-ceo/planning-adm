@@ -21,9 +21,9 @@ class TokenException implements Exception {}
 class CreateTimingException implements Exception {}
 
 class FetchListaTimingsLogic extends TimingsLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override
@@ -79,7 +79,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
 
-    final endpoint = '/wedding/TIMINGS/updateTimings';
+    const endpoint = '/wedding/TIMINGS/updateTimings';
 
     final data = {
       'idTiming': idTiming,
@@ -112,7 +112,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
 
-    final endpoint = '/wedding/TIMINGS/downloadPDFTiming';
+    const endpoint = '/wedding/TIMINGS/downloadPDFTiming';
 
     final data = {
       'idPlanner': idPlanner,
@@ -142,7 +142,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
 
-    final endpoint = '/wedding/TIMINGS/deleteTimingPlanner';
+    const endpoint = '/wedding/TIMINGS/deleteTimingPlanner';
 
     final data = {
       'idPlanner': idPlanner,

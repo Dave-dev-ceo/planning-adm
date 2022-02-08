@@ -16,7 +16,7 @@ class AgregarEvento extends StatefulWidget {
   final ProspectoModel prospecto;
   const AgregarEvento({Key key, this.prospecto}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => AgregarEvento(),
+        builder: (context) => const AgregarEvento(),
       );
 
   @override
@@ -24,7 +24,7 @@ class AgregarEvento extends StatefulWidget {
 }
 
 class _AgregarEventoState extends State<AgregarEvento> {
-  GlobalKey<FormState> keyForm = new GlobalKey();
+  GlobalKey<FormState> keyForm = GlobalKey();
   BuildContext _ingresando;
   TextEditingController descripcionCtrl;
   TextEditingController nombreCtrl;
@@ -46,7 +46,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   ItemModelTipoEvento itemModelTipoEvento;
   ItemModelEventos itemModelEventos;
   EventosBloc eventosBloc;
-  String _mySelectionTE = "1";
+  final String _mySelectionTE = "1";
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   _dialogMSG(String title) {
-    Widget child = LoadingCustom();
+    Widget child = const LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,
@@ -88,7 +88,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
@@ -98,6 +98,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: BlocListener<EventosBloc, EventosState>(
+        // ignore: void_checks
         listener: (context, state) {
           if (state is CreateEventosState) {
             return _dialogMSG('Creando evento');
@@ -109,7 +110,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
             Navigator.pop(_ingresando);
 
             MostrarAlerta(
-                mensaje: 'Evento agregado', tipoMensaje: TipoMensaje.error);
+                mensaje: 'Evento agregado', tipoMensaje: TipoMensaje.correcto);
 
             _clearController();
           } else if (state is ErrorCreateEventosState) {
@@ -122,10 +123,10 @@ class _AgregarEventoState extends State<AgregarEvento> {
         child: Container(
           width: double.infinity,
           alignment: Alignment.center,
-          child: new Container(
+          child: Container(
             width: 1200,
-            margin: new EdgeInsets.all(10.0),
-            child: new Form(
+            margin: const EdgeInsets.all(10.0),
+            child: Form(
               key: keyForm,
               child: formUI(),
             ),
@@ -137,7 +138,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   _dropDownTiposEventos(ItemModelTipoEvento tiposEventos) {
@@ -150,7 +151,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
       style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF000000),
+        color: const Color(0xFF000000),
       ),
       /*onChanged: (newValue) {
         setState(() {
@@ -162,7 +163,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
           value: item.idTipoEvento.toString(),
           child: Text(
             item.nombreEvento,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         );
       }).toList(),
@@ -171,8 +172,8 @@ class _AgregarEventoState extends State<AgregarEvento> {
 
   formItemsDesign(icon, item, large, ancho) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -185,99 +186,99 @@ class _AgregarEventoState extends State<AgregarEvento> {
   }
 
   String validateDescripcion(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "La descripción es necesaria";
     }
     return null;
   }
 
   String validateFechaInicio(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "La fecha de inicio es necesaria";
     }
     return null;
   }
 
   String validateFechaFin(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "La fecha final es necesaria";
     }
     return null;
   }
 
   String validateFechaEvento(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "La fecha del evento es necesaria";
     }
     return null;
   }
 
   String validateNombre(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "El nombre es necesario";
     }
     return null;
   }
 
   String validateApellido(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "El apellido es necesario";
     }
     return null;
   }
 
   String validateTelefono(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "El télefono es necesario";
     }
     return null;
   }
 
   String validateEmail(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "El correo es necesario";
     }
     return null;
   }
 
   String validateDireccion(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "La dirección es necesaria";
     }
     return null;
   }
 
   String validateEstado(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "El estado es necesario";
     }
     return null;
   }
 
   _setInitialController() {
-    descripcionCtrl = new TextEditingController(
+    descripcionCtrl = TextEditingController(
         text: (widget.prospecto != null)
             ? widget.prospecto.nombreProspecto
             : null);
-    fechaInicioCtrl = new TextEditingController();
-    fechaFinCtrl = new TextEditingController();
-    fechaEventoCtrl = new TextEditingController();
-    nombreCtrl = new TextEditingController(
+    fechaInicioCtrl = TextEditingController();
+    fechaFinCtrl = TextEditingController();
+    fechaEventoCtrl = TextEditingController();
+    nombreCtrl = TextEditingController(
         text: (widget.prospecto != null)
             ? widget.prospecto.involucradoProspecto
             : null);
-    apellidoCtrl = new TextEditingController();
-    telefonoCtrl = new TextEditingController(
+    apellidoCtrl = TextEditingController();
+    telefonoCtrl = TextEditingController(
         text: (widget.prospecto != null)
             ? (widget.prospecto.telefono != null)
                 ? widget.prospecto.telefono.toString()
                 : null
             : null);
-    emailCtrl = new TextEditingController(
+    emailCtrl = TextEditingController(
         text: (widget.prospecto != null) ? widget.prospecto.correo : null);
-    direccionCtrl = new TextEditingController();
-    estadoCtrl = new TextEditingController();
-    numbInvitadosContrl = new TextEditingController();
+    direccionCtrl = TextEditingController();
+    estadoCtrl = TextEditingController();
+    numbInvitadosContrl = TextEditingController();
   }
 
   _setDate() {
@@ -293,11 +294,12 @@ class _AgregarEventoState extends State<AgregarEvento> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != fechaInicio)
+    if (picked != null && picked != fechaInicio) {
       setState(() {
         fechaInicio = picked;
         fechaInicioCtrl.text = fechaInicio.toLocal().toString().split(' ')[0];
       });
+    }
   }
 
   _selectDateFin(BuildContext context) async {
@@ -308,11 +310,12 @@ class _AgregarEventoState extends State<AgregarEvento> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != fechaFin)
+    if (picked != null && picked != fechaFin) {
       setState(() {
         fechaFin = picked;
         fechaFinCtrl.text = fechaFin.toLocal().toString().split(' ')[0];
       });
+    }
   }
 
   _selectDateEvento(BuildContext context) async {
@@ -323,11 +326,12 @@ class _AgregarEventoState extends State<AgregarEvento> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != fechaEvento)
+    if (picked != null && picked != fechaEvento) {
       setState(() {
         fechaEvento = picked;
         fechaEventoCtrl.text = fechaEvento.toLocal().toString().split(' ')[0];
       });
+    }
   }
 
   _save() async {
@@ -347,7 +351,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
         "numeroInvitados": numbInvitadosContrl.text
       };
 
-      await eventosBloc.add(CreateEventosEvent(jsonEvento, itemModelEventos));
+      eventosBloc.add(CreateEventosEvent(jsonEvento, itemModelEventos));
     }
   }
 
@@ -355,7 +359,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
     return Column(
       children: <Widget>[
         ExpansionPanelList(
-          animationDuration: Duration(milliseconds: 1000),
+          animationDuration: const Duration(milliseconds: 1000),
           expansionCallback: (int index, bool expaned) {
             setState(() {
               if (index == 0) {
@@ -368,7 +372,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
           children: [
             ExpansionPanel(
               headerBuilder: (BuildContext context, bool isExpaned) {
-                return Center(
+                return const Center(
                     child: Text(
                   'Información general',
                   style: TextStyle(fontSize: 20.0),
@@ -376,77 +380,75 @@ class _AgregarEventoState extends State<AgregarEvento> {
               },
               canTapOnHeader: true,
               isExpanded: isExpaned,
-              body: Container(
-                child: Wrap(
-                  children: <Widget>[
-                    formItemsDesign(
-                        Icons.notes,
+              body: Wrap(
+                children: <Widget>[
+                  formItemsDesign(
+                      Icons.notes,
+                      TextFormField(
+                        controller: descripcionCtrl,
+                        decoration: const InputDecoration(
+                          labelText: 'Descripción del evento',
+                        ),
+                        validator: validateDescripcion,
+                      ),
+                      450.0,
+                      80.0),
+                  GestureDetector(
+                    child: formItemsDesign(
+                        Icons.date_range_outlined,
                         TextFormField(
-                          controller: descripcionCtrl,
-                          decoration: new InputDecoration(
-                            labelText: 'Descripción del evento',
+                          readOnly: true,
+                          onTap: () => _selectDateInicio(context),
+                          controller: fechaInicioCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Fecha inicio',
                           ),
-                          validator: validateDescripcion,
+                          validator: validateFechaInicio,
                         ),
                         450.0,
                         80.0),
-                    GestureDetector(
-                      child: formItemsDesign(
-                          Icons.date_range_outlined,
-                          TextFormField(
-                            readOnly: true,
-                            onTap: () => _selectDateInicio(context),
-                            controller: fechaInicioCtrl,
-                            decoration: new InputDecoration(
-                              labelText: 'Fecha inicio',
-                            ),
-                            validator: validateFechaInicio,
+                    onTap: () => _selectDateInicio(context),
+                  ),
+                  GestureDetector(
+                    child: formItemsDesign(
+                        Icons.date_range_outlined,
+                        TextFormField(
+                          readOnly: true,
+                          onTap: () => _selectDateFin(context),
+                          controller: fechaFinCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Fecha fin',
                           ),
-                          450.0,
-                          80.0),
-                      onTap: () => _selectDateInicio(context),
-                    ),
-                    GestureDetector(
-                      child: formItemsDesign(
-                          Icons.date_range_outlined,
-                          TextFormField(
-                            readOnly: true,
-                            onTap: () => _selectDateFin(context),
-                            controller: fechaFinCtrl,
-                            decoration: new InputDecoration(
-                              labelText: 'Fecha fin',
-                            ),
-                            validator: validateFechaFin,
+                          validator: validateFechaFin,
+                        ),
+                        450.0,
+                        80.0),
+                    onTap: () => _selectDateFin(context),
+                  ),
+                  GestureDetector(
+                    child: formItemsDesign(
+                        Icons.date_range_outlined,
+                        TextFormField(
+                          onTap: () => _selectDateEvento(context),
+                          controller: fechaEventoCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Fecha evento',
                           ),
-                          450.0,
-                          80.0),
-                      onTap: () => _selectDateFin(context),
-                    ),
-                    GestureDetector(
-                      child: formItemsDesign(
-                          Icons.date_range_outlined,
-                          TextFormField(
-                            onTap: () => _selectDateEvento(context),
-                            controller: fechaEventoCtrl,
-                            decoration: new InputDecoration(
-                              labelText: 'Fecha evento',
-                            ),
-                            validator: validateFechaEvento,
-                          ),
-                          450.0,
-                          80.0),
-                      onTap: () => _selectDateEvento(context),
-                    ),
-                    SizedBox(
-                      height: 150.0,
-                    )
-                  ],
-                ),
+                          validator: validateFechaEvento,
+                        ),
+                        450.0,
+                        80.0),
+                    onTap: () => _selectDateEvento(context),
+                  ),
+                  const SizedBox(
+                    height: 150.0,
+                  )
+                ],
               ),
             ),
             ExpansionPanel(
                 headerBuilder: (BuildContext context, bool isExpaned) {
-                  return Center(
+                  return const Center(
                       child: Text(
                     'Datos contrato',
                     style: TextStyle(fontSize: 20.0),
@@ -454,92 +456,90 @@ class _AgregarEventoState extends State<AgregarEvento> {
                 },
                 canTapOnHeader: true,
                 isExpanded: isExpanedT,
-                body: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Wrap(
-                        children: <Widget>[
-                          formItemsDesign(
-                              Icons.person,
-                              TextFormField(
-                                controller: nombreCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Nombre completo',
-                                ),
-                                validator: validateNombre,
+                body: Column(
+                  children: <Widget>[
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                            Icons.person,
+                            TextFormField(
+                              controller: nombreCtrl,
+                              decoration: const InputDecoration(
+                                labelText: 'Nombre completo',
                               ),
-                              900.0,
-                              80.0),
-                        ],
-                      ),
-                      Wrap(
-                        children: <Widget>[
-                          formItemsDesign(
-                              Icons.phone,
-                              TextFormField(
-                                controller: telefonoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Teléfono',
-                                ),
-                                validator: validateTelefono,
+                              validator: validateNombre,
+                            ),
+                            900.0,
+                            80.0),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                            Icons.phone,
+                            TextFormField(
+                              controller: telefonoCtrl,
+                              decoration: const InputDecoration(
+                                labelText: 'Teléfono',
                               ),
-                              450.0,
-                              80.0),
-                          formItemsDesign(
-                              Icons.email,
-                              TextFormField(
-                                controller: emailCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Correo',
-                                ),
-                                validator: validateEmail,
+                              validator: validateTelefono,
+                            ),
+                            450.0,
+                            80.0),
+                        formItemsDesign(
+                            Icons.email,
+                            TextFormField(
+                              controller: emailCtrl,
+                              decoration: const InputDecoration(
+                                labelText: 'Correo',
                               ),
-                              450.0,
-                              80.0),
-                        ],
-                      ),
-                      Wrap(
-                        children: <Widget>[
-                          formItemsDesign(
-                              Icons.home,
-                              TextFormField(
-                                controller: direccionCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Dirección completa',
-                                ),
-                                validator: validateDireccion,
+                              validator: validateEmail,
+                            ),
+                            450.0,
+                            80.0),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                            Icons.home,
+                            TextFormField(
+                              controller: direccionCtrl,
+                              decoration: const InputDecoration(
+                                labelText: 'Dirección completa',
                               ),
-                              450.0,
-                              80.0),
-                          formItemsDesign(
-                              Icons.map,
-                              TextFormField(
-                                controller: estadoCtrl,
-                                decoration: new InputDecoration(
-                                  labelText: 'Estado',
-                                ),
-                                validator: validateEstado,
+                              validator: validateDireccion,
+                            ),
+                            450.0,
+                            80.0),
+                        formItemsDesign(
+                            Icons.map,
+                            TextFormField(
+                              controller: estadoCtrl,
+                              decoration: const InputDecoration(
+                                labelText: 'Estado',
                               ),
-                              450.0,
-                              80.0),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 50.0,
-                      )
-                    ],
-                  ),
+                              validator: validateEstado,
+                            ),
+                            450.0,
+                            80.0),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 50.0,
+                    )
+                  ],
                 ))
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 30.0,
         ),
         GestureDetector(
             onTap: () {
               _save();
             },
-            child: CallToAction('Guardar'))
+            child: const CallToAction('Guardar'))
       ],
     );
   }

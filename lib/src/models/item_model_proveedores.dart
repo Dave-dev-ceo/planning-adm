@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
 
 class ItemModelProveedores {
@@ -10,14 +11,18 @@ class ItemModelProveedores {
         temp.add(result);
       }
       _results = temp;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
   List<ProveedoresModel> get results => _results;
 }
 
 class ProveedoresModel {
-  int _id_proveedor;
-  int _id_servicio;
+  int _idProveedor;
+  int _idServicio;
   String _nombre;
   String _descripcion;
   String _estatus;
@@ -29,8 +34,8 @@ class ProveedoresModel {
   int _idPais;
 
   ProveedoresModel(datos) {
-    _id_proveedor = datos['id_proveedor'];
-    _id_servicio = datos['id_servicio'];
+    _idProveedor = datos['id_proveedor'];
+    _idServicio = datos['id_servicio'];
     _nombre = datos['nombre'];
     _descripcion = datos['descripcion'];
     _estatus = datos['estatus'];
@@ -41,8 +46,8 @@ class ProveedoresModel {
     _idEstado = datos['id_estado'];
     _idPais = datos['id_pais'];
   }
-  int get id_proveedor => _id_proveedor;
-  int get id_servicio => _id_servicio;
+  int get idProveedor => _idProveedor;
+  int get idServicio => _idServicio;
   String get nombre => _nombre;
   String get descripcion => _descripcion;
   String get estatus => _estatus;
@@ -56,8 +61,8 @@ class ProveedoresModel {
 
 class ItemProveedor {
   ItemProveedor({
-    this.id_proveedor,
-    this.id_servicio,
+    this.idProveedor,
+    this.idServicio,
     this.nombre,
     this.descripcion,
     this.servicio,
@@ -72,8 +77,8 @@ class ItemProveedor {
     this.idEstado,
     this.idPais,
   });
-  int id_proveedor;
-  int id_servicio;
+  int idProveedor;
+  int idServicio;
   String nombre;
   String descripcion;
   List<ServiciosModel> servicio;
@@ -99,7 +104,11 @@ class ItemProveedorServicio {
         temp.add(result);
       }
       _results = temp;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
   List<ItemProveedor> get results => _results;
 }
@@ -114,22 +123,26 @@ class ItemModelServicioByProv {
         temp.add(result);
       }
       _results = temp;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
   List<ServicioByProvModel> get results => _results;
 }
 
 class ServicioByProvModel {
-  int _id_proveedor;
-  int _id_servicio;
+  int _idProveedor;
+  int _idServicio;
   String _nombre;
 
   ServicioByProvModel(datos) {
-    _id_proveedor = datos['id_proveedor'];
-    _id_servicio = datos['id_servicio'];
+    _idProveedor = datos['id_proveedor'];
+    _idServicio = datos['id_servicio'];
     _nombre = datos['nombre'];
   }
-  int get id_proveedor => _id_proveedor;
-  int get id_servicio => _id_servicio;
+  int get idProveedor => _idProveedor;
+  int get idServicio => _idServicio;
   String get nombre => _nombre;
 }

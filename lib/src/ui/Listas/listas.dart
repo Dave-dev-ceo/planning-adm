@@ -13,14 +13,14 @@ import 'package:planning/src/utils/utils.dart';
 class Listas extends StatefulWidget {
   const Listas({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => Listas(),
+        builder: (context) => const Listas(),
       );
   @override
   _ListaState createState() => _ListaState();
 }
 
 class _ListaState extends State<Listas> {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   final listaLogic = FetchListaLogic();
   // Id del Planner.
   int idPlanner;
@@ -28,13 +28,13 @@ class _ListaState extends State<Listas> {
   ItemModelListas itemModelListas;
   bool isInvolucrado = false;
   //stilos
-  final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
-  final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
+  final TextStyle _boldStyle = const TextStyle(fontWeight: FontWeight.bold);
+  final TextStyle estiloTxt = const TextStyle(fontWeight: FontWeight.bold);
   // TextEditingController claveCtrl = new TextEditingController();
   // TextEditingController nombreCtrl = new TextEditingController();
   // TextEditingController descripcionCtrl = new TextEditingController();
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -65,12 +65,13 @@ class _ListaState extends State<Listas> {
             return Scaffold(
               appBar: (isInvolucrado)
                   ? AppBar(
-                      title: Text('Listas'),
+                      title: const Text('Listas'),
                       centerTitle: true,
                     )
                   : null,
               body: SingleChildScrollView(
                 child: BlocListener<ListasBloc, ListasState>(
+                  // ignore: void_checks
                   listener: (context, state) {
                     if (state is ErrorTokenListaState) {
                       return _showDialogMsg(context);
@@ -80,19 +81,19 @@ class _ListaState extends State<Listas> {
                   child: BlocBuilder<ListasBloc, ListasState>(
                     builder: (context, state) {
                       if (state is LoadingListasState) {
-                        return Center(child: LoadingCustom());
+                        return const Center(child: LoadingCustom());
                       } else if (state is MostrarListasState) {
                         if (state.listas != null) {
                           return getLista(state.listas);
                         } else {
-                          return Center(
+                          return const Center(
                             child: Text('Sin datos'),
                           );
                         }
                       } else if (state is ErrorCreateListasrState) {
                         return Center(child: Text(state.message));
                       } else {
-                        return Center(
+                        return const Center(
                           child: LoadingCustom(),
                         );
                       }
@@ -105,19 +106,15 @@ class _ListaState extends State<Listas> {
               floatingActionButton: expasionFab(),
             );
           } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Container(
-                child: Center(
-                  child: Text('No cuenta con acceso'),
-                ),
+            return const Scaffold(
+              body: Center(
+                child: Text('No cuenta con acceso'),
               ),
             );
           } else {
-            return Scaffold(
-              body: Container(
-                child: Center(
-                  child: Text('El sistema tiene un error'),
-                ),
+            return const Scaffold(
+              body: Center(
+                child: Text('El sistema tiene un error'),
               ),
             );
           }
@@ -131,7 +128,7 @@ class _ListaState extends State<Listas> {
       children: [
         SpeedDialChild(
           label: 'Crear lista',
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           onTap: () async {
             final result = await Navigator.of(context).pushNamed(
                 '/detalleListas',
@@ -146,7 +143,7 @@ class _ListaState extends State<Listas> {
         ),
         SpeedDialChild(
             label: 'Descargar PDF',
-            child: Icon(Icons.download),
+            child: const Icon(Icons.download),
             onTap: () async {
               final data = await listaLogic.downloadPDFListas();
 
@@ -163,17 +160,17 @@ class _ListaState extends State<Listas> {
       child: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await listasBloc.add(FechtListasEvent());
+          listasBloc.add(FechtListasEvent());
           await _getId();
         },
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(height: 400.0, width: 650.0, child: buildList(model)),
-              SizedBox(
+              SizedBox(height: 400.0, width: 650.0, child: buildList(model)),
+              const SizedBox(
                 height: 20,
               ),
             ],
@@ -183,9 +180,6 @@ class _ListaState extends State<Listas> {
     );
   }
 
-  /**
-   * 
-   */
   _showDialogMsg(BuildContext context) {
     showDialog(
         barrierDismissible: false,
@@ -194,17 +188,17 @@ class _ListaState extends State<Listas> {
         builder: (BuildContext context) {
           //_ingresando = context;
           return AlertDialog(
-            title: Text(
+            title: const Text(
               "Sesión",
               textAlign: TextAlign.center,
             ),
-            content: Text(
+            content: const Text(
                 'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
             actions: <Widget>[
               TextButton(
-                child: Text('Cerrar'),
+                child: const Text('Cerrar'),
                 onPressed: () {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil('/', (route) => false);
@@ -237,7 +231,7 @@ class _ListaState extends State<Listas> {
     // Creación de lista de Widget.
     List<Widget> lista = [];
     // Se agrega el titulo del card
-    final titulo = Text('Listas',
+    const titulo = Text('Listas',
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 24));
@@ -292,8 +286,8 @@ class _ListaState extends State<Listas> {
 
   formItemsDesign(icon, item, large, ancho) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

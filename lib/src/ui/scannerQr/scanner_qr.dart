@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:planning/src/ui/widgets/showDialog/alertDialog.dart';
+import 'package:planning/src/ui/widgets/showDialog/alert_dialog.dart';
 
 class ScannerQrInvitado extends StatefulWidget {
   const ScannerQrInvitado({Key key}) : super(key: key);
@@ -31,7 +31,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return Container(
+          return SizedBox(
               width: double.infinity,
               child: DialogAlert(
                 dataInfo: datos,
@@ -43,9 +43,9 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Scanner de Invitados"),
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back),
+        title: const Text("Scanner de Invitados"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             dispose();
             Navigator.pop(context);
@@ -72,7 +72,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             onPressed: () async {
                               await controller?.toggleFlash();
@@ -90,7 +90,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                             )),
                       ),
                       Container(
-                        margin: EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             onPressed: () async {
                               await controller?.flipCamera();
@@ -103,7 +103,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                                   return Text(
                                       'Cambiar a camara ${describeEnum(snapshot.data) == "back" ? "Delantera" : "Trasera"}');
                                 } else {
-                                  return Text('loading');
+                                  return const Text('loading');
                                 }
                               },
                             )),

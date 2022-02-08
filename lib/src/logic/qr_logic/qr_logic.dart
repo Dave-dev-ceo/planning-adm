@@ -7,8 +7,8 @@ import 'package:planning/src/resources/config_conection.dart';
 import 'package:http/http.dart' as http;
 
 class QrLogic {
-  SharedPreferencesT _sharedPreferencesT = SharedPreferencesT();
-  ConfigConection _configC = ConfigConection();
+  final SharedPreferencesT _sharedPreferencesT = SharedPreferencesT();
+  final ConfigConection _configC = ConfigConection();
 
   Future<QrInvitadoModel> validarQr(String qrData) async {
     String token = await _sharedPreferencesT.getToken();

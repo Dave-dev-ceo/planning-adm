@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -28,7 +30,7 @@ class Invitados extends StatefulWidget {
 }
 
 class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   final Map<dynamic, dynamic> detalleEvento;
   int _pages = 0;
   PermisosBloc permisosBloc;
@@ -41,12 +43,13 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
 
   _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
+  @override
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
-    permisosBloc.add(obtenerPermisosEvent());
+    permisosBloc.add(ObtenerPermisosEvent());
     getClaveRol();
 
     getIdInvolucrado();
@@ -69,7 +72,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
@@ -78,21 +81,21 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: LoadingCustom()),
+              body: const Center(child: LoadingCustom()),
             );
           } else if (state is ErrorTokenPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: LoadingCustom()),
+              body: const Center(child: LoadingCustom()),
             );
           } else if (state is LoadingPermisos) {
             return Scaffold(
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: LoadingCustom()),
+              body: const Center(child: LoadingCustom()),
             );
           } else if (state is PermisosOk) {
             permisoPantallas = state.permisos;
@@ -158,7 +161,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
               child: Text(state.message),
             );
           } else {
-            return Center(child: Text('Sin permisos'));
+            return const Center(child: Text('Sin permisos'));
           }
         },
       ),
@@ -166,14 +169,14 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   }
 
   Widget crearPantallas(BuildContext context, List<TabItem> pantallasTabs,
-      List<Widget> PantallasCOntent) {
+      List<Widget> pantallasCOntent) {
     return Scaffold(
       appBar: AppBar(
         leading: (!isInvolucrado)
             ? (size.width > 500)
                 ? IconButton(
                     tooltip: 'Inicio',
-                    icon: Icon(Icons.home),
+                    icon: const Icon(Icons.home),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -202,23 +205,23 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                   children: [
                     Flexible(
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
                           children: [
-                            Text(
+                            const Text(
                               'CONFIGURACIÓN EVENTO',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 12.0),
                             ),
                             Text(
                               '${widget.detalleEvento['nEvento']}',
-                              style: TextStyle(fontSize: 12.0),
+                              style: const TextStyle(fontSize: 12.0),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Flexible(
                       child: Align(
                         alignment: Alignment.center,
@@ -230,15 +233,15 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                         )),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 )
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
+                    const Text(
                       'CONFIGURACIÓN EVENTO',
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 12.0),
                     ),
                     AutoSizeText(
@@ -246,7 +249,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                       maxLines: 2,
                       textAlign: TextAlign.center,
                       // '${widget.detalleEvento['nEvento']}',
-                      style: TextStyle(fontSize: 10.0),
+                      style: const TextStyle(fontSize: 10.0),
                     ),
                   ],
                 ),
@@ -255,13 +258,13 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         backgroundColor: hexToColor('#fdf4e5'),
         actions: <Widget>[
           Container(
-              margin: EdgeInsets.only(right: 10.0),
+              margin: const EdgeInsets.only(right: 10.0),
               child: CircleAvatar(
-                backgroundColor: hexToColor('#d39942'),
+                backgroundColor: Colors.white,
                 child: PopupMenuButton(
                   child: widget.detalleEvento['imag'] == null ||
                           widget.detalleEvento['imag'] == ''
-                      ? FaIcon(
+                      ? const FaIcon(
                           FontAwesomeIcons.user,
                           color: Colors.black,
                         )
@@ -270,13 +273,13 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                               base64Decode(widget.detalleEvento['imag'])),
                         ),
                   itemBuilder: (context) => [
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 1,
                       child: Text("Perfil"),
                     ),
                     if (claveRol == 'SU')
-                      PopupMenuItem(value: 2, child: Text("Planner")),
-                    PopupMenuItem(
+                      const PopupMenuItem(value: 2, child: Text("Planner")),
+                    const PopupMenuItem(
                       value: 3,
                       child: Text("Cerrar sesión"),
                     )
@@ -305,7 +308,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         ),
       ),
       body: TabBarView(
-        children: PantallasCOntent,
+        children: pantallasCOntent,
         controller: _tabController,
       ),
     );
@@ -316,25 +319,26 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
     int temp = 0;
     if (pantallas != null) {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES')) {
-        tabs.add(TabItem(titulo: 'Resumen', icono: Icons.list));
+        tabs.add(const TabItem(titulo: 'Resumen', icono: Icons.list));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-        tabs.add(
-            TabItem(titulo: 'Actividades', icono: Icons.access_time_sharp));
+        tabs.add(const TabItem(
+            titulo: 'Actividades', icono: Icons.access_time_sharp));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
-        tabs.add(
-            TabItem(titulo: 'Documentos', icono: Icons.description_outlined));
+        tabs.add(const TabItem(
+            titulo: 'Documentos', icono: Icons.description_outlined));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG')) {
-        tabs.add(TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
+        tabs.add(
+            const TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
-        tabs.add(TabItem(
+        tabs.add(const TabItem(
             titulo: 'Proveedores', icono: Icons.support_agent_outlined));
         temp += 1;
       }
@@ -345,29 +349,29 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV') ||
           pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI') ||
           pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
-        tabs.add(TabItem(titulo: 'Invitados', icono: Icons.people));
+        tabs.add(const TabItem(titulo: 'Invitados', icono: Icons.people));
         temp += 1;
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-IVT')) {
-        tabs.add(TabItem(
+        tabs.add(const TabItem(
             titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
         temp += 1;
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRS')) {
-        tabs.add(
-            TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
+        tabs.add(const TabItem(
+            titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-        tabs.add(TabItem(titulo: 'Listas', icono: Icons.list));
+        tabs.add(const TabItem(titulo: 'Listas', icono: Icons.list));
         temp += 1;
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
-        tabs.add(
-            TabItem(titulo: 'Book Inspiration', icono: Icons.edit_road_sharp));
+        tabs.add(const TabItem(
+            titulo: 'Book Inspiration', icono: Icons.edit_road_sharp));
         temp += 1;
       }
 
@@ -375,7 +379,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
       return tabs;
     } else {
       _pages += 1;
-      return [TabItem(titulo: 'Sin permisos', icono: Icons.block)];
+      return [const TabItem(titulo: 'Sin permisos', icono: Icons.block)];
     }
   }
 
@@ -389,35 +393,35 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         ));
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-        temp.add(PlanesPage());
+        temp.add(const PlanesPage());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
-        temp.add(NewContrato());
+        temp.add(const NewContrato());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG')) {
-        temp.add(Pagos());
+        temp.add(const Pagos());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
-        temp.add(ProveedorEvento());
+        temp.add(const ProveedorEvento());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
-        temp.add(Center(
+        temp.add(const Center(
           child: LoadingCustom(),
         ));
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-        temp.add(Listas());
+        temp.add(const Listas());
       }
 
       if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
-        temp.add(BookInspiracion());
+        temp.add(const BookInspiracion());
       }
 
       return temp;
     } else {
       return [
-        Center(
+        const Center(
           child: Text('Sin permisos.'),
         )
       ];

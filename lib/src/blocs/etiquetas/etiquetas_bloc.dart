@@ -38,7 +38,7 @@ class EtiquetasBloc extends Bloc<EtiquetasEvent, EtiquetasState> {
           'nombre_etiqueta': dato,
           'tipo_etiqueta': tipo
         };
-        Etiquetas est = new Etiquetas(lista);
+        Etiquetas est = Etiquetas(lista);
         model.results.add(est);
         //yield CreateEtiquetasState(etiquetas);
         yield MostrarEtiquetasState(model);

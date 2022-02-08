@@ -46,7 +46,7 @@ class ErrorCreateListasState extends DetalleListasState {
 }
 
 class CreateListasState extends DetalleListasState {
-  final int id_lista;
-  CreateListasState(this.id_lista);
-  List<Object> get props => [id_lista];
+  final int idLista;
+  CreateListasState(this.idLista);
+  List<Object> get props => [idLista];
 }

@@ -6,6 +6,7 @@ import 'package:planning/src/blocs/usuarios/usuarios_bloc.dart';
 import 'package:planning/src/logic/usuarios.logic.dart';
 import 'package:planning/src/models/item_model_usuarios.dart';
 import 'package:planning/src/ui/Roles/roles.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart';
 
 class Usuarios extends StatefulWidget {
@@ -18,7 +19,7 @@ class Usuarios extends StatefulWidget {
 UsuariosBloc usuariosBloc;
 
 class _UsuariosState extends State<Usuarios> {
-  final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
+  final TextStyle estiloTxt = const TextStyle(fontWeight: FontWeight.bold);
   ItemModelUsuarios itemModelUsuarios;
   ItemModelUsuarios filterUsuarios;
   UsuarioCrud usuariosLogic = UsuarioCrud();
@@ -38,9 +39,9 @@ class _UsuariosState extends State<Usuarios> {
       BlocBuilder<UsuariosBloc, UsuariosState>(
         builder: (context, state) {
           if (state is UsuariosInitialState) {
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           } else if (state is LoadingUsuariosState) {
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           } else if (state is MostrarUsuariosState) {
             if (state.usuarios != null) {
               if (itemModelUsuarios != state.usuarios) {
@@ -53,12 +54,12 @@ class _UsuariosState extends State<Usuarios> {
             } else {
               crt = true;
               usuariosBloc.add(FetchUsuariosPorPlannerEvent());
-              return Center(child: LoadingCustom());
+              return const Center(child: LoadingCustom());
             }
             if (filterUsuarios.usuarios != null) {
               return buildList(filterUsuarios);
             } else {
-              return Center(child: Text('Sin datos'));
+              return const Center(child: Text('Sin datos'));
             }
           } else if (state is ErrorMostrarUsuariosState) {
             return Center(
@@ -69,12 +70,12 @@ class _UsuariosState extends State<Usuarios> {
             if (filterUsuarios.usuarios != null) {
               return buildList(filterUsuarios);
             } else {
-              return Center(child: Text('Sin datos'));
+              return const Center(child: Text('Sin datos'));
             }
           }
         },
       ),
-      Roles()
+      const Roles()
       // Center(child: Text('En construccin'))
     ];
     super.initState();
@@ -86,9 +87,9 @@ class _UsuariosState extends State<Usuarios> {
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await usuariosBloc.add(FetchUsuariosPorPlannerEvent());
+          usuariosBloc.add(FetchUsuariosPorPlannerEvent());
         },
-        child: Container(
+        child: SizedBox(
             width: double.infinity,
             child: IndexedStack(index: _selectedIndex, children: footerTabs)),
       ),
@@ -126,11 +127,11 @@ class _UsuariosState extends State<Usuarios> {
               downloadFile(data, 'Usuarios');
             }
           },
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
         ),
         SpeedDialChild(
           label: 'Añadir Usuario',
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           onTap: () {
             setState(() {
               mostrarForm(context, 0, null);
@@ -155,7 +156,7 @@ class _UsuariosState extends State<Usuarios> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
+                const Expanded(
                   flex: 3,
                   child: Text('Usuarios'),
                 ),
@@ -163,7 +164,7 @@ class _UsuariosState extends State<Usuarios> {
                   /* height: 30, */
                   flex: 5,
                   child: TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         prefixIcon: Icon(
                           Icons.search,
                         ),
@@ -172,7 +173,7 @@ class _UsuariosState extends State<Usuarios> {
                       if (value.length > 2) {
                         List<dynamic> usrs = itemModelUsuarios.usuarios
                             .where((imu) =>
-                                imu.nombre_completo
+                                imu.nombreCompleto
                                     .toLowerCase()
                                     .contains(value.toLowerCase()) ||
                                 imu.correo
@@ -184,7 +185,7 @@ class _UsuariosState extends State<Usuarios> {
                             .toList();
                         setState(() {
                           filterUsuarios.usuarios.clear();
-                          if (usrs.length > 0) {
+                          if (usrs.isNotEmpty) {
                             for (var usr in usrs) {
                               filterUsuarios.usuarios.add(usr);
                             }
@@ -205,46 +206,46 @@ class _UsuariosState extends State<Usuarios> {
           ),
           rowsPerPage: snapshot.usuarios.length > 8
               ? 8
-              : snapshot.usuarios.length < 1
+              : snapshot.usuarios.isEmpty
                   ? 1
                   : snapshot.usuarios.length,
           showCheckboxColumn: bandera,
           columns: [
             DataColumn(
-                label: Text('Nombre'),
+                label: const Text('Nombre'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0
+                    snapshot.usuarios.isNotEmpty
                         ? filterUsuarios =
                             onSortColum(columnIndex, ascending, filterUsuarios)
                         : null;
                   });
                 }),
             DataColumn(
-                label: Text('Teléfono'),
+                label: const Text('Teléfono'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0
+                    snapshot.usuarios.isNotEmpty
                         ? filterUsuarios =
                             onSortColum(columnIndex, ascending, filterUsuarios)
                         : null;
                   });
                 }),
             DataColumn(
-                label: Text('Correo'),
+                label: const Text('Correo'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0
+                    snapshot.usuarios.isNotEmpty
                         ? filterUsuarios =
                             onSortColum(columnIndex, ascending, filterUsuarios)
                         : null;
                   });
                 }),
             DataColumn(
-                label: Text('Estatus'),
+                label: const Text('Estatus'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.usuarios.length > 0
+                    snapshot.usuarios.isNotEmpty
                         ? filterUsuarios =
                             onSortColum(columnIndex, ascending, filterUsuarios)
                         : null;
@@ -264,10 +265,10 @@ class _UsuariosState extends State<Usuarios> {
     switch (columnIndex) {
       case 0:
         sort[columnIndex]
-            ? sortData.usuarios.sort(
-                (a, b) => a.nombre_completo.compareTo((b.nombre_completo)))
+            ? sortData.usuarios
+                .sort((a, b) => a.nombreCompleto.compareTo((b.nombreCompleto)))
             : sortData.usuarios
-                .sort((a, b) => b.nombre_completo.compareTo(a.nombre_completo));
+                .sort((a, b) => b.nombreCompleto.compareTo(a.nombreCompleto));
         break;
       case 1:
         sort[columnIndex]
@@ -315,17 +316,18 @@ bool crt = true;
 
 Future<bool> mostrarForm(formContext, accion, usr) async {
   dynamic usuario = await Navigator.pushNamed(
-      formContext, '${accion == 0 ? '/crearUsuario' : '/editarUsuario'}',
+      formContext, accion == 0 ? '/crearUsuario' : '/editarUsuario',
       arguments: {'accion': accion, 'data': usr});
   if (usuario != null) {
-    ScaffoldMessenger.of(formContext).showSnackBar(SnackBar(
-      content: Text(
-          '${usuario.result.nombre_completo} ${accion == 0 ? 'Agregado a Usuarios' : 'editado'}'),
+    MostrarAlerta(
+      mensaje:
+          '${usuario.result.nombreCompleto} ${accion == 0 ? 'Agregado a Usuarios' : 'editado'}',
       onVisible: () {
         usuariosBloc.add(FetchUsuariosPorPlannerEvent());
         crt = true;
       },
-    ));
+      tipoMensaje: TipoMensaje.correcto,
+    );
     return true;
   } else {
     return false;
@@ -334,15 +336,15 @@ Future<bool> mostrarForm(formContext, accion, usr) async {
 
 class _DataSource extends DataTableSource {
   ItemModelUsuarios ims;
-  BuildContext _gridContext;
+  final BuildContext _gridContext;
   _DataSource(context, this._gridContext) {
     _rows = <_Row>[];
     if (context.length > 0) {
-      ims = new ItemModelUsuarios(context);
+      ims = ItemModelUsuarios(context);
       for (int i = 0; i < context.length; i++) {
         _rows.add(_Row(
-            context[i].id_usuario,
-            context[i].nombre_completo,
+            context[i].idUsuario,
+            context[i].nombreCompleto,
             context[i].telefono,
             context[i].correo,
             context[i].estatus == 'A' ? 'Activo' : 'Inactivo'));
@@ -375,11 +377,11 @@ class _DataSource extends DataTableSource {
       cells: [
         DataCell(Text(row.valueA), onTap: () async {
           ItemModelUsuario user;
-          ims.usuarios.forEach((usr) {
-            if (usr.id_usuario == row.valueId) {
-              user = new ItemModelUsuario(usr);
+          for (var usr in ims.usuarios) {
+            if (usr.idUsuario == row.valueId) {
+              user = ItemModelUsuario(usr);
             }
-          });
+          }
           mostrarForm(_gridContext, 1, user);
         }),
         DataCell(

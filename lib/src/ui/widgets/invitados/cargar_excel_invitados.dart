@@ -1,5 +1,7 @@
 //import 'dart:js';
 
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ class CargarExcel extends StatefulWidget {
 
   const CargarExcel({Key key, this.id}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => CargarExcel(),
+        builder: (context) => const CargarExcel(),
       );
 
   @override
@@ -26,7 +28,7 @@ class CargarExcel extends StatefulWidget {
 }
 
 class _CargarExcelState extends State<CargarExcel> {
-  ApiProvider api = new ApiProvider();
+  ApiProvider api = ApiProvider();
   final int id;
 
   _CargarExcelState(this.id);
@@ -34,19 +36,19 @@ class _CargarExcelState extends State<CargarExcel> {
     showDialog(
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(
-              title: Text('Importación de excel'),
-              content: Text(
+              title: const Text('Importación de excel'),
+              content: const Text(
                   'Procedera a abrir su explorador de archivos para seleccionar un archivo excel, ¿Desea continuar?'),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  child: Text(
+                  child: const Text(
                     'No',
                     style: TextStyle(color: Colors.red),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 CupertinoDialogAction(
-                  child: Text('Sí'),
+                  child: const Text('Sí'),
                   onPressed: () {
                     _readExcel();
                     Navigator.of(context).pop();
@@ -71,9 +73,7 @@ class _CargarExcelState extends State<CargarExcel> {
     if (pickedFile != null) {
       var bytes = pickedFile.files.single.bytes;
 
-      if (bytes == null) {
-        bytes = File(pickedFile.files[0].path).readAsBytesSync();
-      }
+      bytes ??= File(pickedFile.files[0].path).readAsBytesSync();
 
       var excel = Excel.decodeBytes(bytes);
       bool bandera = true;
@@ -139,11 +139,11 @@ class _CargarExcelState extends State<CargarExcel> {
       showDialog(
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
-                title: Text('Permisos denegados'),
-                content: Text('Por favor habilitar el acceso a contactos'),
+                title: const Text('Permisos denegados'),
+                content: const Text('Por favor habilitar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () => Navigator.of(context).pop(),
                   )
                 ],
@@ -155,15 +155,15 @@ class _CargarExcelState extends State<CargarExcel> {
   Widget build(BuildContext context) {
     //_ReadExcel();
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
           width: double.infinity,
           child: Center(
             child: Column(
               children: <Widget>[
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
-                Text(
+                const Text(
                   'Estructura del excel',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                 ),
@@ -173,22 +173,22 @@ class _CargarExcelState extends State<CargarExcel> {
                   child: Image.asset('assets/AreaExcelLista.png'),
                 ),
                 TextButton(
-                  child: Text('Descargar plantilla'),
+                  child: const Text('Descargar plantilla'),
                   style: TextButton.styleFrom(
                     primary: Colors.teal,
                   ),
                   onPressed: () {},
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 GestureDetector(
                   onTap: () {
                     _viewShowDialogExcel();
                   },
-                  child: CallToAction('Importar Excel'),
+                  child: const CallToAction('Importar Excel'),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 GestureDetector(
@@ -196,7 +196,7 @@ class _CargarExcelState extends State<CargarExcel> {
                     _viewContact();
                     /////////////
                   },
-                  child: CallToAction('Importar Contactos'),
+                  child: const CallToAction('Importar Contactos'),
                 ),
               ],
             ),

@@ -12,7 +12,7 @@ class LoadingCrearUsuarioState extends UsuarioState {}
 class UsuarioCreadoState extends UsuarioState {
   final ItemModelUsuario usuario;
   UsuarioCreadoState(this.usuario);
-  ItemModelUsuario get data => this.usuario;
+  ItemModelUsuario get data => usuario;
 }
 
 class ErrorCrearUsuarioState extends UsuarioState {
@@ -29,7 +29,7 @@ class LoadingEditarUsuarioState extends UsuarioState {}
 class UsuarioEditadoState extends UsuarioState {
   final ItemModelUsuario usuario;
   UsuarioEditadoState(this.usuario);
-  ItemModelUsuario get data => this.usuario;
+  ItemModelUsuario get data => usuario;
 }
 
 class ErrorEditarUsuarioState extends UsuarioState {

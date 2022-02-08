@@ -19,7 +19,7 @@ import 'package:planning/src/models/item_model_machotes.dart';
 class AgregarContratoMobile extends StatefulWidget {
   const AgregarContratoMobile({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => AgregarContratoMobile(),
+        builder: (context) => const AgregarContratoMobile(),
       );
 
   @override
@@ -46,7 +46,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   /*Future<String> _insertEtiquetas(String html){
@@ -68,7 +68,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   }
 
   _dialogMSG(String title) {
-    Widget child = LoadingCustom();
+    Widget child = const LoadingCustom();
     showDialog(
         context: context,
         //barrierDismissible: false,
@@ -80,7 +80,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
@@ -97,12 +97,12 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
       child:*/
         Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       elevation: 10,
       child: Column(
         children: <Widget>[
           ListTile(
-            contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+            contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
             title: Container(
                 alignment: Alignment.topLeft,
                 height: 25,
@@ -110,9 +110,9 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
                 child: FittedBox(
                     child: Text(
                   itemModelMC.results.elementAt(element).descripcion,
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 ))),
-            subtitle: Container(
+            subtitle: SizedBox(
                 height: 80,
                 //color: Colors.purple,
                 child: Column(
@@ -131,8 +131,8 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
                                       itemMC.results.elementAt(element).machote
                                 }));
                               },
-                              icon: Icon(Icons.cloud_download_outlined),
-                              label: Text('Descargar')),
+                              icon: const Icon(Icons.cloud_download_outlined),
+                              label: const Text('Descargar')),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -146,14 +146,14 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
                                       itemMC.results.elementAt(element).machote
                                 }));
                               },
-                              icon: Icon(Icons.remove_red_eye_rounded),
-                              label: Text('Ver')),
+                              icon: const Icon(Icons.remove_red_eye_rounded),
+                              label: const Text('Ver')),
                         ),
                       ],
                     ),
                   ],
                 )),
-            leading: Icon(Icons.event),
+            leading: const Icon(Icons.event),
           ),
         ],
       ),
@@ -164,7 +164,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   _constructorLista(ItemModelMachotes modelMC) {
     return IndexedStack(index: _selectedIndex, children: [
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -175,7 +175,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
         ),
       ),
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -186,7 +186,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
         ),
       ),
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -202,47 +202,46 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: BlocListener<ContratosBloc, ContratosState>(
-          listener: (context, state) {
-            if (state is LoadingContratosPdfState) {
-              return _dialogMSG('Descargando contrato');
-            } else if (state is MostrarContratosPdfState) {
+      body: BlocListener<ContratosBloc, ContratosState>(
+        // ignore: void_checks
+        listener: (context, state) {
+          if (state is LoadingContratosPdfState) {
+            return _dialogMSG('Descargando contrato');
+          } else if (state is MostrarContratosPdfState) {
+            Navigator.pop(_ingresando);
+            _createPDF(state.contratos);
+          } else if (state is LoadingContratosPdfViewState) {
+            return _dialogMSG('Espere un momento');
+          } else if (state is MostrarContratosPdfViewState) {
+            Navigator.pop(_ingresando);
+            Navigator.pushNamed(context, '/viewContrato',
+                arguments: state.contratos);
+          } else {
+            if (_ingresando != null) {
               Navigator.pop(_ingresando);
-              _createPDF(state.contratos);
-            } else if (state is LoadingContratosPdfViewState) {
-              return _dialogMSG('Espere un momento');
-            } else if (state is MostrarContratosPdfViewState) {
-              Navigator.pop(_ingresando);
-              Navigator.pushNamed(context, '/viewContrato',
-                  arguments: state.contratos);
+            }
+          }
+        },
+        child: BlocBuilder<MachotesBloc, MachotesState>(
+          builder: (context, state) {
+            if (state is LoadingMachotesState) {
+              return const Center(
+                child: LoadingCustom(),
+              );
+            } else if (state is MostrarMachotesState) {
+              itemModelMC = state.machotes;
+              return _constructorLista(state.machotes);
+            } else if (state is ErrorListaMachotesState) {
+              return Center(
+                child: Text(state.message),
+              );
             } else {
-              if (_ingresando != null) {
-                Navigator.pop(_ingresando);
-              }
+              return const Center(
+                child: LoadingCustom(),
+              );
+              //return _constructorLista(itemModelET);
             }
           },
-          child: BlocBuilder<MachotesBloc, MachotesState>(
-            builder: (context, state) {
-              if (state is LoadingMachotesState) {
-                return Center(
-                  child: LoadingCustom(),
-                );
-              } else if (state is MostrarMachotesState) {
-                itemModelMC = state.machotes;
-                return _constructorLista(state.machotes);
-              } else if (state is ErrorListaMachotesState) {
-                return Center(
-                  child: Text(state.message),
-                );
-              } else {
-                return Center(
-                  child: LoadingCustom(),
-                );
-                //return _constructorLista(itemModelET);
-              }
-            },
-          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

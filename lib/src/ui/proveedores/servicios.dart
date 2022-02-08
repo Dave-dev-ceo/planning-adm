@@ -8,15 +8,15 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 class Servicios extends StatefulWidget {
   const Servicios({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => Servicios(),
+        builder: (context) => const Servicios(),
       );
   @override
   _ServiciosState createState() => _ServiciosState();
 }
 
 class _ServiciosState extends State<Servicios> {
-  TextEditingController nombreCtrl = new TextEditingController();
-  TextEditingController nombreEditCtrl = new TextEditingController();
+  TextEditingController nombreCtrl = TextEditingController();
+  TextEditingController nombreEditCtrl = TextEditingController();
   ItemModuleServicios itemModuleServicios;
   ServiciosBloc servicioBloc;
   @override
@@ -38,7 +38,7 @@ class _ServiciosState extends State<Servicios> {
                   Expanded(
                     child: TextFormField(
                       controller: nombreCtrl,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Servicio',
                       ),
                     ),
@@ -49,7 +49,7 @@ class _ServiciosState extends State<Servicios> {
                         margin: const EdgeInsets.all(15),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 5, vertical: 12),
-                        child: FittedBox(
+                        child: const FittedBox(
                           child: Text(
                             "Agregar",
                             style: TextStyle(
@@ -77,11 +77,11 @@ class _ServiciosState extends State<Servicios> {
               80.0),
           BlocBuilder<ServiciosBloc, ServiciosState>(builder: (context, state) {
             if (state is LoadingServiciosState) {
-              return Center(child: LoadingCustom());
+              return const Center(child: LoadingCustom());
             } else if (state is MostrarServiciosState) {
               return _form(state.listServicios);
             } else {
-              return Center(child: LoadingCustom());
+              return const Center(child: LoadingCustom());
             }
           })
         ]),
@@ -90,21 +90,21 @@ class _ServiciosState extends State<Servicios> {
   }
 
   Widget _form(ItemModuleServicios moduleServicios) {
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: Column(children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 50.0,
           ),
           Center(
             child: SingleChildScrollView(
                 child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Container(width: 650.0, child: _list(moduleServicios))
+                        SizedBox(width: 650.0, child: _list(moduleServicios))
                       ],
                     ))),
           )
@@ -113,8 +113,8 @@ class _ServiciosState extends State<Servicios> {
 
   formItemsDesign(icon, item, large, ancho) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -141,12 +141,12 @@ class _ServiciosState extends State<Servicios> {
     // Creación de lista de Widget.
     List<Widget> lista = [];
     // Se agrega el titulo del card
-    final titulo = Text('Servicios',
+    const titulo = Text('Servicios',
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 24));
     // final campos =
-    final size = SizedBox(height: 20);
+    const size = SizedBox(height: 20);
     lista.add(titulo);
     // lista.add(campos);
     lista.add(size);
@@ -186,7 +186,7 @@ class _ServiciosState extends State<Servicios> {
         TextButton(
           onPressed: () => {
             Navigator.pop(context, 'Aceptar'),
-            servicioBloc.add(DeleteServicioEvent(item.id_servicio)),
+            servicioBloc.add(DeleteServicioEvent(item.idServicio)),
             MostrarAlerta(
                 mensaje: 'Se elimino el servicio.',
                 tipoMensaje: TipoMensaje.correcto)
@@ -201,14 +201,14 @@ class _ServiciosState extends State<Servicios> {
     nombreEditCtrl.text = item.nombre.toString();
     return AlertDialog(
       title: const Text('Editar servicio'),
-      content: Container(
+      content: SizedBox(
         width: 200.0,
         height: 130.0,
         child: Column(
           children: [
             TextFormField(
               controller: nombreEditCtrl,
-              decoration: new InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nombre',
               ),
             ),
@@ -224,7 +224,7 @@ class _ServiciosState extends State<Servicios> {
           onPressed: () async {
             Map<String, dynamic> json = {
               'nombre': nombreEditCtrl.text,
-              'id_servicio': item.id_servicio.toString()
+              'id_servicio': item.idServicio.toString()
             };
             servicioBloc.add(UpdateServicioEvent(json, itemModuleServicios));
             Navigator.pop(context, 'Aceptar');
@@ -236,7 +236,7 @@ class _ServiciosState extends State<Servicios> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   void _limpiarForm() {

@@ -37,7 +37,7 @@ class PlannersBloc extends Bloc<PlannersEvent, PlannersState> {
           'telefono': event.data['telefono'],
           'pais': event.data['pais']
         };
-        ResultsPlanners res = new ResultsPlanners(lista);
+        ResultsPlanners res = ResultsPlanners(lista);
         /*Estatus est = new Estatus(lista);*/
         model.results.add(res);
         //yield CreateEstatusState(estatus);

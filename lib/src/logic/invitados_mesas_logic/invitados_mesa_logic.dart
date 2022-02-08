@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
+import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_model.dart';
 
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
@@ -14,7 +14,7 @@ abstract class InvitadosConfirmadosLogic {
 class InvitadosMesasException implements Exception {}
 
 class ServiceInvitadosMesasLogic extends InvitadosConfirmadosLogic {
-  SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
 
   @override
@@ -30,7 +30,7 @@ class ServiceInvitadosMesasLogic extends InvitadosConfirmadosLogic {
       HttpHeaders.authorizationHeader: token
     };
 
-    final endpoint = 'wedding/INVITADOS/obtenerInvitadosConfirmados';
+    const endpoint = 'wedding/INVITADOS/obtenerInvitadosConfirmados';
 
     final response = await http.post(
         Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),

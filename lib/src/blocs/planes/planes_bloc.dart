@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
@@ -108,19 +108,29 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
 
         yield ShowAllPlannesState(data);
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is BorrarActividadPlanEvent) {
       try {
         await logic.deleteActividadEvento(event.idActividad);
         add(GetTimingsAndActivitiesEvent());
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is UpdateActividadesEventoEvent) {
       try {
         await logic.updateEventoActividades(event.actividades);
 
         add(GetTimingsAndActivitiesEvent());
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is AddNewActividadEvent) {
       try {
         final data = await logic.addNewActividadEvento(
@@ -128,7 +138,9 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
         yield AddedActividadState(data);
         add(GetTimingsAndActivitiesEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is EditActividadEvent) {
       try {
@@ -136,7 +148,9 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
         yield AddedActividadState(data);
         add(GetTimingsAndActivitiesEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }

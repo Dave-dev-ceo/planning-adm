@@ -16,16 +16,16 @@ class _FullScreenDialogAddContratoState
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Seleccione una plantilla'),
+        title: const Text('Seleccione una plantilla'),
         backgroundColor: hexToColor('#fdf4e5'),
-        actions: [],
+        actions: const [],
         automaticallyImplyLeading: true,
       ),
       body: SafeArea(

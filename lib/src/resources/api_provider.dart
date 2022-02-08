@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:planning/src/models/item_model-acompanante.dart';
+import 'package:planning/src/models/item_model_acompanante.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_eventos.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
@@ -22,8 +22,8 @@ import '../models/item_model_invitados.dart';
 //import '../models/item_model_response.dart';
 
 class ApiProvider {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   _loadLogin(BuildContext context) async {
     await _sharedPreferences.clear();
     _showDialogMsg(context);
@@ -37,17 +37,17 @@ class ApiProvider {
         builder: (BuildContext context) {
           //_ingresando = context;
           return AlertDialog(
-            title: Text(
+            title: const Text(
               "Sesión 2",
               textAlign: TextAlign.center,
             ),
-            content: Text(
+            content: const Text(
                 'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
             actions: <Widget>[
               TextButton(
-                child: Text('Cerrar'),
+                child: const Text('Cerrar'),
                 onPressed: () {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil('/', (route) => false);
@@ -638,11 +638,11 @@ class ApiProvider {
     // int total = 0;
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      data.forEach((dato) {
+      for (var dato in data) {
         if (dato['enviado']) {
           enviados += 1;
         }
-      });
+      }
     } else {
       return {'msg': 'Error al enviar invitaciones', 'enviado': false};
     }
@@ -703,24 +703,28 @@ class ApiProvider {
     }
   }
 
-  Future<void> updateAcompanante(Map<String, String> acompananteEditado) async {
+  Future<String> updateAcompanante(
+      Map<String, String> acompananteEditado) async {
     int res = await renovarToken();
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
       int idUsuario = await _sharedPreferences.getIdUsuario();
-      final endPoint = 'wedding/INVITADOS/updateAcompanante';
+      const endpoint = 'wedding/INVITADOS/updateAcompanante';
 
       acompananteEditado['idUsuario'] = idUsuario.toString();
 
       final response = await http.post(
-          Uri.parse(confiC.url + confiC.puerto + '/' + endPoint),
+          Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
           body: acompananteEditado,
           headers: {HttpHeaders.authorizationHeader: token});
 
-      if (response == 200) {
+      if (response.statusCode == 200) {
+        return 'Ok';
       } else {
-        print(response.body);
+        return (json.decode(response.body));
       }
+    } else {
+      return 'Error';
     }
   }
 
@@ -730,7 +734,7 @@ class ApiProvider {
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
 
-      final enpoint = 'wedding/INVITADOS/deleteAcompanante';
+      const enpoint = 'wedding/INVITADOS/deleteAcompanante';
 
       final data = {'idAcompanante': idAcompanante};
 
@@ -753,14 +757,14 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      int id_planner = await _sharedPreferences.getIdUsuario();
-      int id_evento = await _sharedPreferences.getIdEvento();
-      int creado_por = await _sharedPreferences.getIdUsuario();
-      int modificado_por = await _sharedPreferences.getIdUsuario();
-      data['id_planner'] = id_planner.toString();
-      data['id_evento'] = id_evento.toString();
-      data['creado_por'] = creado_por.toString();
-      data['modificado_por'] = modificado_por.toString();
+      int idPlanner = await _sharedPreferences.getIdUsuario();
+      int idEvento = await _sharedPreferences.getIdEvento();
+      int creadoPor = await _sharedPreferences.getIdUsuario();
+      int modificadoPor = await _sharedPreferences.getIdUsuario();
+      data['id_planner'] = idPlanner.toString();
+      data['id_evento'] = idEvento.toString();
+      data['creado_por'] = creadoPor.toString();
+      data['modificado_por'] = modificadoPor.toString();
       final response = await http.post(
           Uri.parse(confiC.url +
               confiC.puerto +
@@ -789,7 +793,7 @@ class ApiProvider {
     int idEvento = await _sharedPreferences.getIdEvento();
     int idPlanner = await _sharedPreferences.getIdPlanner();
 
-    final endpoint = '/wedding/INVITADOS/downloadPDFInvitados';
+    const endpoint = '/wedding/INVITADOS/downloadPDFInvitados';
 
     final data = {
       'idPlanner': idPlanner,
@@ -817,7 +821,7 @@ class ApiProvider {
     String token = await _sharedPreferences.getToken();
     int idEvento = await _sharedPreferences.getIdEvento();
 
-    final endpoint = '/wedding/EVENTOS/updatePortadaImage';
+    const endpoint = '/wedding/EVENTOS/updatePortadaImage';
 
     final data = {
       'idEvento': idEvento,
@@ -844,7 +848,6 @@ class ApiProvider {
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     String token = await _sharedPreferences.getToken();
-    print(data);
     final response = await http.post(
         Uri.parse(
             confiC.url + confiC.puerto + '/wedding/INVITADOS/deleteInvitados'),

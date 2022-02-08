@@ -47,24 +47,41 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Text('Asignar mesas a los invitados'),
+        title: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          child: Text('Crear mesas'),
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            formularioAsignarMesas(size),
-            if (listaMesas.isNotEmpty) _SaveDataMesas(),
-            if (listaMesas.isNotEmpty) _buildFormMesas(size),
-          ],
+        child: BlocListener<MesasBloc, MesasState>(
+          listener: (context, state) {
+            if (state is CreatedMesasState) {
+              if (state.response == 'Ok') {
+                Navigator.of(context)
+                    .pop(_lastNumMesas + (int.parse(numeroDeMesas.text) - 1));
+                BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+                MostrarAlerta(
+                    mensaje: 'Se han creado las mesas correctamente',
+                    tipoMensaje: TipoMensaje.correcto);
+              } else {
+                MostrarAlerta(
+                    mensaje: state.response, tipoMensaje: TipoMensaje.error);
+              }
+            }
+          },
+          child: Column(
+            children: [
+              formularioAsignarMesas(size),
+              if (listaMesas.isNotEmpty) _saveDataMesas(),
+              if (listaMesas.isNotEmpty) _buildFormMesas(size),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Align _SaveDataMesas() {
+  Align _saveDataMesas() {
     return Align(
       alignment: Alignment.center,
       child: Padding(
@@ -74,7 +91,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
               onPressed: () async {
                 await _submit();
               },
-              child: Text(
+              child: const Text(
                 'Guardar',
                 style: TextStyle(fontWeight: FontWeight.bold),
               )),
@@ -86,20 +103,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
   _submit() async {
     final mesaBloc = BlocProvider.of<MesasBloc>(context);
 
-    await mesaBloc.add(CreateMesasEvent(listaMesas));
-
-    mesaBloc.stream.listen((state) {
-      if (state is CreatedMesasState) {
-        if (state.response == 'Ok') {
-          BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
-          Navigator.of(context)
-              .pop(_lastNumMesas + (int.parse(numeroDeMesas.text) - 1));
-        } else {
-          MostrarAlerta(
-              mensaje: state.response, tipoMensaje: TipoMensaje.error);
-        }
-      }
-    });
+    mesaBloc.add(CreateMesasEvent(listaMesas));
   }
 
   Widget formularioAsignarMesas(Size size) {
@@ -117,7 +121,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
             child: Column(
               children: [
                 ExpansionPanelList(
-                  animationDuration: Duration(milliseconds: 1000),
+                  animationDuration: const Duration(milliseconds: 1000),
                   expansionCallback: (int index, bool expanded) {
                     setState(() {
                       if (index == 0) {
@@ -132,7 +136,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Crear mesas',
+                                'Datos de la mesa',
                                 style: Theme.of(context).textTheme.headline4,
                               ),
                             ),
@@ -147,7 +151,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                 decoration: InputDecoration(
                                     constraints: BoxConstraints(
                                         maxWidth: size.width * 0.2),
-                                    prefixIcon: Icon(Icons.table_chart),
+                                    prefixIcon: const Icon(Icons.table_chart),
                                     hintText: 'Tipo de mesa'),
                                 items: listTipoDeMesa
                                     .map((m) => DropdownMenuItem(
@@ -177,7 +181,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     constraints: BoxConstraints(
                                         maxWidth: size.width * 0.2),
                                     labelText: 'Número de mesas',
-                                    border: OutlineInputBorder()),
+                                    border: const OutlineInputBorder()),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
@@ -207,7 +211,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     constraints: BoxConstraints(
                                         maxWidth: size.width * 0.2),
                                     labelText: 'Número de sillas por mesa',
-                                    border: OutlineInputBorder()),
+                                    border: const OutlineInputBorder()),
                                 validator: (value) {
                                   if (value == null || value == '') {
                                     return 'El número de sillas es requerido';
@@ -225,14 +229,14 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                               constraints:
                                   BoxConstraints(maxWidth: size.width * 0.4),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 15),
                                 child: Center(
                                   child: ElevatedButton(
                                       onPressed: () async {
                                         await _crearMesas();
                                       },
-                                      child: Text('Crear')),
+                                      child: const Text('Crear')),
                                 ),
                               ),
                             )
@@ -263,7 +267,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 initialValue: listaMesas.elementAt(index).descripcion,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Nombre de la mesa',
                     border: OutlineInputBorder()),
                 onChanged: (value) {
@@ -290,7 +294,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
         MesaModel mesa = MesaModel(
           descripcion: 'Mesa ${_lastNumMesas + i}',
           idTipoDeMesa: idTipoMesa,
-          numDeMesa: _lastNumMesas + 1,
+          numDeMesa: _lastNumMesas + i,
           dimension: numSilla,
           idEvento: idEvento,
         );

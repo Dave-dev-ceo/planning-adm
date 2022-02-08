@@ -6,8 +6,8 @@ abstract class ServiciosEvent {}
 class FechtServiciosEvent implements ServiciosEvent {}
 
 class FechtServiciosByProveedorEvent implements ServiciosEvent {
-  final int id_proveedor;
-  FechtServiciosByProveedorEvent(this.id_proveedor);
+  final int idProveedor;
+  FechtServiciosByProveedorEvent(this.idProveedor);
 }
 
 class CreateServiciosEvent extends ServiciosEvent {

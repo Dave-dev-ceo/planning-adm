@@ -24,8 +24,8 @@ class _ContratosState extends State<Contratos> {
   void initState() {
     contratosBloc = BlocProvider.of<ContratosBloc>(context);
     contratosBloc.add(FechtContratosEvent());
-    keyForm = new GlobalKey();
-    descripcionMachote = new TextEditingController();
+    keyForm = GlobalKey();
+    descripcionMachote = TextEditingController();
     super.initState();
   }
 
@@ -68,8 +68,8 @@ class _ContratosState extends State<Contratos> {
 
   String validateDescripcion(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
-    if (value.length == 0) {
+    RegExp regExp = RegExp(pattern);
+    if (value.isEmpty) {
       return "La descripción es necesaria";
     } else if (!regExp.hasMatch(value)) {
       return "La descripción debe de ser a-z y A-Z";
@@ -79,7 +79,7 @@ class _ContratosState extends State<Contratos> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: kIsWeb ? AgregarContrato() : AgregarContratoMobile(),
       //  //  //  //  //  //  //// Descomentar siguiente linea para generar apk y comentar la de arriba //  //  //  //  //  //  ////  //  //  //  //  //  //  ////
       /*Container(

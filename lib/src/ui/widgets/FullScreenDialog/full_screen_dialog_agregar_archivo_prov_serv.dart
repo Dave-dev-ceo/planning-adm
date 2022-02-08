@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, unused_local_variable
+// ignore_for_file: unused_field, unused_local_variable, no_logic_in_create_state
 
 import 'dart:convert';
 import 'dart:io';
@@ -34,17 +34,17 @@ class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
 
 class _FullScreenDialogAgregarArchivoProvServEvent
     extends State<FullScreenDialogAgregarArchivoProvServEvent> {
-  GlobalKey<FormState> keyForm = new GlobalKey();
-  GlobalKey<FormState> keyFormAE = new GlobalKey();
+  GlobalKey<FormState> keyForm = GlobalKey();
+  GlobalKey<FormState> keyFormAE = GlobalKey();
   final _keyFormLink = GlobalKey<FormState>();
   final Map<String, dynamic> provsrv;
   final _textcontrollerDes = TextEditingController();
   final _textControllerUrl = TextEditingController();
   bool _isExpanded = false;
-  String _fileBase64 = '';
+  final String _fileBase64 = '';
   _FullScreenDialogAgregarArchivoProvServEvent(this.provsrv);
-  TextEditingController descripcionCtrl = new TextEditingController();
-  TextEditingController descripcionCtrlAE = new TextEditingController();
+  TextEditingController descripcionCtrl = TextEditingController();
+  TextEditingController descripcionCtrlAE = TextEditingController();
   ArchivoProveedorBloc archivoProveedorBloc;
   ArchivosEspecialesBloc archivoEspecialBloc;
   ItemModelProveedores itemModelProveedores;
@@ -57,7 +57,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   void initState() {
     archivoProveedorBloc = BlocProvider.of<ArchivoProveedorBloc>(context);
     archivoProveedorBloc.add(FechtArchivoProvServEvent(
-        this.provsrv['id_proveedor'], this.provsrv['id_servicio'], false));
+        provsrv['id_proveedor'], provsrv['id_servicio'], false));
     checkIsEvent();
     checkisInvolucrado();
     super.initState();
@@ -74,36 +74,36 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   checkIsEvent() async {
-    if (this.provsrv['isEvento']) {
+    if (provsrv['isEvento']) {
       idEvento = await SharedPreferencesT().getIdEvento();
       archivoEspecialBloc = BlocProvider.of<ArchivosEspecialesBloc>(context);
-      archivoEspecialBloc.add(
-          FechtArchivoEspecialEvent(this.provsrv['id_proveedor'], idEvento));
+      archivoEspecialBloc
+          .add(FechtArchivoEspecialEvent(provsrv['id_proveedor'], idEvento));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(this.provsrv['nombre'].toString())),
+      appBar: AppBar(title: Text(provsrv['nombre'].toString())),
       body: SingleChildScrollView(
           child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             BlocBuilder<ArchivoProveedorBloc, ArchivoProveedorState>(
                 builder: (context, state) {
               if (state is LoadingArchivoProveedorState) {
-                return Center(child: LoadingCustom());
+                return const Center(child: LoadingCustom());
               } else if (state is MostrarArchivoProvServState) {
                 return _form(state.detlistas);
               } else {
-                return Center(child: LoadingCustom());
+                return const Center(child: LoadingCustom());
               }
             }),
-            if (this.provsrv['isEvento']) _archivosEspecilesWidget(),
+            if (provsrv['isEvento']) _archivosEspecilesWidget(),
           ],
         ),
       )),
@@ -113,10 +113,10 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   Widget _archivosEspecilesWidget() {
     return Column(
       children: [
-        Divider(
+        const Divider(
           color: Colors.grey,
         ),
-        SizedBox(
+        const SizedBox(
           height: 2.0,
         ),
         Text(
@@ -132,7 +132,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: new Form(
+              child: Form(
                   key: keyFormAE,
                   child: Column(
                     children: <Widget>[
@@ -143,7 +143,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                             icon: Icons.drive_file_rename_outline,
                             item: TextFormField(
                               controller: descripcionCtrlAE,
-                              decoration: new InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Descripción del archivo',
                               ),
                             ),
@@ -153,7 +153,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                         ],
                       ),
                       Ink(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         width: 100.0,
                         decoration: const ShapeDecoration(
                           color: Colors.black,
@@ -177,11 +177,11 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         BlocBuilder<ArchivosEspecialesBloc, ArchivosEspecialesState>(
             builder: (context, state) {
           if (state is LoadingArchivoEspecialState) {
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           } else if (state is MostrarArchivoProvEventState) {
             return _formEspecial(state.detlistas);
           } else {
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           }
         }),
       ],
@@ -192,8 +192,8 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     Map<String, dynamic> jsonLink = {};
     if (_keyFormLink.currentState.validate()) {
       jsonLink = {
-        'id_proveedor': this.provsrv['id_proveedor'],
-        'id_servicio': this.provsrv['id_servicio'],
+        'id_proveedor': provsrv['id_proveedor'],
+        'id_servicio': provsrv['id_servicio'],
         'tipo_mime': 'url',
         'archivo': urlValue,
         'nombre': descripcionLink,
@@ -208,14 +208,16 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   _selectFile(bool isArchivoEspecial, [int idServicio]) async {
-    if (isArchivoEspecial && descripcionCtrlAE.text == '')
+    if (isArchivoEspecial && descripcionCtrlAE.text == '') {
       return MostrarAlerta(
           mensaje: 'Ingresa una descripción',
           tipoMensaje: TipoMensaje.advertencia);
-    if (!isArchivoEspecial && descripcionCtrl.text == '')
+    }
+    if (!isArchivoEspecial && descripcionCtrl.text == '') {
       return MostrarAlerta(
           mensaje: 'Ingresa una descripción',
           tipoMensaje: TipoMensaje.advertencia);
+    }
     const extensiones = ['pdf', 'jpg', 'png', 'jpeg'];
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -227,18 +229,16 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       if (!isArchivoEspecial) {
         List files = [];
         Map<String, dynamic> json = {};
-        pickedFile.files.forEach((f) {
+        for (var f in pickedFile.files) {
           if (extensiones.contains(f.extension)) {
             var bytes = f.bytes;
-            if (bytes == null) {
-              bytes = File(f.path).readAsBytesSync();
-            }
+            bytes ??= File(f.path).readAsBytesSync();
             String fileBase64 = base64.encode(bytes);
             String mimeType = mime(f.name.replaceAll(' ', ''));
             String fileName = f.name;
             // files
             json = {
-              'id_proveedor': this.provsrv['id_proveedor'],
+              'id_proveedor': provsrv['id_proveedor'],
               'id_servicio': idServicio,
               // 'tipo_mime': 'data:application/pdf;base64,',
               'tipo_mime': mimeType,
@@ -247,26 +247,24 @@ class _FullScreenDialogAgregarArchivoProvServEvent
               'descripcion': descripcionCtrl.text
             };
           }
-        });
+        }
 
         archivoProveedorBloc.add(CreateArchivoProvServEvent(json));
         descripcionCtrl.text = '';
         Navigator.of(context).pop();
       } else {
         Map<String, dynamic> json = {};
-        pickedFile.files.forEach((f) {
+        for (var f in pickedFile.files) {
           if (extensiones.contains(f.extension)) {
             var bytes = f.bytes;
-            if (bytes == null) {
-              bytes = File(f.path).readAsBytesSync();
-            }
+            bytes ??= File(f.path).readAsBytesSync();
             String fileBase64 = base64.encode(bytes);
             String mimeType = mime(f.name.replaceAll(' ', ''));
             String fileName = f.name;
             // files
             json = {
-              'id_proveedor': this.provsrv['id_proveedor'],
-              'id_servicio': this.provsrv['id_servicio'],
+              'id_proveedor': provsrv['id_proveedor'],
+              'id_servicio': provsrv['id_servicio'],
               'id_evento': idEvento,
               // 'tipo_mime': 'data:application/pdf;base64,',
               'tipo_mime': mimeType,
@@ -275,7 +273,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
               'descripcion': descripcionCtrlAE.text
             };
           }
-        });
+        }
         archivoEspecialBloc.add(CreateArchivoEspecialEvent(json));
         descripcionCtrlAE.text = '';
       }
@@ -283,26 +281,26 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   Widget _form(ItemModelArchivoProvServ moduleServicios) {
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: Column(children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 2.0,
           ),
           Center(
             child: SingleChildScrollView(
                 child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Container(
+                        SizedBox(
                           width: 650.0,
                           child: _list(moduleServicios, false),
                         ),
                         if (provsrv['id_servicio'] != null)
-                          Container(
+                          SizedBox(
                             width: 650.0,
                             child: _list(moduleServicios, true),
                           ),
@@ -313,21 +311,21 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   Widget _formEspecial(ItemModelArchivoEspecial moduleServicios) {
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: Column(children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 2.0,
           ),
           Center(
             child: SingleChildScrollView(
                 child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Container(
+                        SizedBox(
                           width: 650.0,
                           child: _listEspecial(moduleServicios, false),
                         ),
@@ -366,25 +364,25 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     List<Widget> lista = [];
     List<Widget> listaServicio = [];
     // Se agrega el titulo del card
-    final tituloServicio = Text(
+    const tituloServicio = Text(
       'Archivos del servicio',
       textAlign: TextAlign.center,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(fontSize: 24),
     );
     // final campos =
-    final sizeSercicio = SizedBox(height: 20);
+    const sizeSercicio = SizedBox(height: 20);
     listaServicio.add(tituloServicio);
     // lista.add(campos);
     listaServicio.add(sizeSercicio);
     for (var opt in item.results) {
       Icon _icon;
       if (opt.tipoMime == 'application/pdf') {
-        _icon = Icon(Icons.picture_as_pdf);
+        _icon = const Icon(Icons.picture_as_pdf);
       } else if (opt.tipoMime == 'url') {
-        _icon = Icon(Icons.web);
+        _icon = const Icon(Icons.web);
       } else {
-        _icon = Icon(Icons.image);
+        _icon = const Icon(Icons.image);
       }
 
       final tempWidget = ListTile(
@@ -436,14 +434,14 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                 onPressed: () {
                   _dialogoAgregarArchivo();
                 },
-                icon: Icon(Icons.upload),
+                icon: const Icon(Icons.upload),
               ),
-        title: Text('Archivos del proveedor',
+        title: const Text('Archivos del proveedor',
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 24)));
     // final campos =
-    final size = SizedBox(height: 20);
+    const size = SizedBox(height: 20);
     lista.add(titulo);
     // lista.add(campos);
     lista.add(size);
@@ -454,11 +452,11 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           : IconButton(
               tooltip: 'Agregar archivo del servicio',
               onPressed: () {
-                _dialogoAgregarArchivo(this.provsrv['id_servicio']);
+                _dialogoAgregarArchivo(provsrv['id_servicio']);
               },
-              icon: Icon(Icons.upload),
+              icon: const Icon(Icons.upload),
             ),
-      title: Text(
+      title: const Text(
         'Archivos del servicio',
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
@@ -466,18 +464,18 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       ),
     );
     // final campos =
-    final sizeSercicio = SizedBox(height: 20);
+    const sizeSercicio = SizedBox(height: 20);
     listaServicio.add(tituloServicio);
     // lista.add(campos);
     listaServicio.add(sizeSercicio);
     for (var opt in item.results) {
       Icon _icon;
       if (opt.tipoMime == 'application/pdf') {
-        _icon = Icon(Icons.picture_as_pdf);
+        _icon = const Icon(Icons.picture_as_pdf);
       } else if (opt.tipoMime == 'url') {
-        _icon = Icon(Icons.web);
+        _icon = const Icon(Icons.web);
       } else {
-        _icon = Icon(Icons.image);
+        _icon = const Icon(Icons.image);
       }
 
       final tempWidget = ListTile(
@@ -556,8 +554,8 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             Navigator.pop(context, 'Aceptar'),
             archivoProveedorBloc.add(DeleteArchivoEvent(
                 idArchivo,
-                this.provsrv['id_proveedor'],
-                this.provsrv['id_servicio'],
+                provsrv['id_proveedor'],
+                provsrv['id_servicio'],
                 widget.isServicio))
           },
           child: const Text('Aceptar'),
@@ -577,8 +575,8 @@ class _FullScreenDialogAgregarArchivoProvServEvent
         ),
         TextButton(
           onPressed: () async => {
-            await archivoEspecialBloc.add(DeleteArchivoEspecialEvent(
-                idArchivo, this.provsrv['id_proveedor'], idEvento)),
+            archivoEspecialBloc.add(DeleteArchivoEspecialEvent(
+                idArchivo, provsrv['id_proveedor'], idEvento)),
             Navigator.pop(context, 'Aceptar'),
           },
           child: const Text('Aceptar'),
@@ -592,7 +590,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
       context: context,
       builder: (context) => Dialog(
         child: StatefulBuilder(builder: (context, innerState) {
-          return Container(
+          return SizedBox(
             height: 600,
             child: SingleChildScrollView(
               child: Column(
@@ -606,7 +604,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                           borderRadius: BorderRadius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: new Form(
+                        child: Form(
                             key: keyForm,
                             child: Column(
                               children: <Widget>[
@@ -617,7 +615,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                       icon: Icons.drive_file_rename_outline,
                                       item: TextFormField(
                                         controller: descripcionCtrl,
-                                        decoration: new InputDecoration(
+                                        decoration: const InputDecoration(
                                           labelText: 'Descripción archivo',
                                         ),
                                       ),
@@ -627,7 +625,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                   ],
                                 ),
                                 Ink(
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   width: 100.0,
                                   decoration: const ShapeDecoration(
                                     color: Colors.black,
@@ -651,9 +649,9 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                   if (widget.provsrv['type'] == 0 &&
                       widget.provsrv['prvEv'] == 2)
                     ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 500),
+                      constraints: const BoxConstraints(maxWidth: 500),
                       child: ExpansionPanelList(
-                        animationDuration: Duration(milliseconds: 1000),
+                        animationDuration: const Duration(milliseconds: 1000),
                         expansionCallback: (int index, bool expanded) {
                           innerState(() {
                             if (index == 0) {
@@ -665,7 +663,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                           ExpansionPanel(
                             headerBuilder:
                                 (BuildContext context, bool _isExpanded) {
-                              return Center(
+                              return const Center(
                                 child: Text(
                                   'Agregar link',
                                   textAlign: TextAlign.center,
@@ -681,7 +679,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                   key: _keyFormLink,
                                   child: Column(
                                     children: <Widget>[
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 8.0,
                                       ),
                                       Wrap(
@@ -703,7 +701,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                                   return null;
                                                 }
                                               },
-                                              decoration: new InputDecoration(
+                                              decoration: const InputDecoration(
                                                 labelText:
                                                     'Descripción del link',
                                               ),
@@ -711,7 +709,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                             large: 400.0,
                                             ancho: 80.0,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 8.0,
                                           ),
                                           TextFormFields(
@@ -723,7 +721,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                               },
                                               validator: (value) {
                                                 String patternUrl =
-                                                    'https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}';
+                                                    'https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,}';
                                                 RegExp regExp =
                                                     RegExp(patternUrl);
 
@@ -737,7 +735,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                                   return null;
                                                 }
                                               },
-                                              decoration: new InputDecoration(
+                                              decoration: const InputDecoration(
                                                 labelText:
                                                     'Url o Dirección web',
                                               ),
@@ -748,7 +746,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                         ],
                                       ),
                                       Ink(
-                                        padding: EdgeInsets.all(5),
+                                        padding: const EdgeInsets.all(5),
                                         width: 100.0,
                                         decoration: const ShapeDecoration(
                                           color: Colors.black,

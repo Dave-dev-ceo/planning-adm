@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' show Client;
 import 'package:planning/src/models/Planes/planes_model.dart';
 
@@ -34,8 +35,8 @@ abstract class PlanesLogic {
 
 class ConsultasPlanesLogic extends PlanesLogic {
   // variables de configuracion
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override
@@ -83,7 +84,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
     bool done;
 
     // creamos tareas
-    listaPlanner.forEach((tarea) async {
+    Future.forEach(listaPlanner, (tarea) async {
       // validamos que no se repita
       if (!tarea.isEvento) {
         final response = await client.post(
@@ -249,26 +250,37 @@ class ConsultasPlanesLogic extends PlanesLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
     // pedido al servidor - hay que ciclar
-    listaPlanner.forEach((actividad) async {
-      await client.post(
-          Uri.parse(confiC.url +
-              confiC.puerto +
-              '/wedding/PLANES/updateActividadEvento'),
-          body: {
-            'id_planner': idPlanner.toString(),
-            'id_usuario': idUsuario.toString(),
-            'id_actividad': actividad.idActividadPlanner.toString(),
-            'fecha': actividad.fechaInicioActividad.toString(),
-            'progreso': actividad.checkActividadPlanner.toString(),
-            'status': actividad.calendarActividad.toString(),
-            'responsable': actividad.nombreResponsable.toString(),
-          },
-          headers: {
-            HttpHeaders.authorizationHeader: token
-          });
-    });
 
-    return true; // no debe ser asi
+    try {
+      Future.forEach(
+          listaPlanner,
+          (actividad) async => {
+                await client.post(
+                    Uri.parse(confiC.url +
+                        confiC.puerto +
+                        '/wedding/PLANES/updateActividadEvento'),
+                    body: {
+                      'id_planner': idPlanner.toString(),
+                      'id_usuario': idUsuario.toString(),
+                      'id_actividad': actividad.idActividadPlanner.toString(),
+                      'fecha': actividad.fechaInicioActividad.toString(),
+                      'progreso': actividad.checkActividadPlanner.toString(),
+                      'status': actividad.calendarActividad.toString(),
+                      'responsable': actividad.nombreResponsable.toString(),
+                    },
+                    headers: {
+                      HttpHeaders.authorizationHeader: token
+                    })
+              });
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
+    }
+
+    // return true; // no debe ser asi
   }
 
   @override
@@ -547,8 +559,8 @@ class ActividadesEvento {
   }
 
   Future<List<PlannesModel>> getAllPlannes() async {
-    SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-    ConfigConection confiC = new ConfigConection();
+    final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+    ConfigConection confiC = ConfigConection();
     Client client = Client();
 
     String token = await _sharedPreferences.getToken();
@@ -586,8 +598,8 @@ class ActividadesEvento {
   }
 
   Future<ContadorActividadesModel> getContadorValues(bool isInvolucrado) async {
-    SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-    ConfigConection confiC = new ConfigConection();
+    SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+    ConfigConection confiC = ConfigConection();
     Client client = Client();
 
     String token = await _sharedPreferences.getToken();

@@ -8,7 +8,7 @@ import 'package:planning/src/models/mesa/layout_mesa_model.dart';
 import 'package:planning/src/resources/config_conection.dart';
 
 class ServiceBookInspiracionLogic {
-  SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
   Client client = Client();
 
@@ -33,7 +33,7 @@ class ServiceBookInspiracionLogic {
       'idEvento': idEvento,
     };
 
-    final endpoint = '/wedding/';
+    const endpoint = '/wedding/';
 
     final headers = {
       'Content-type': 'application/json',
@@ -71,7 +71,7 @@ class ServiceBookInspiracionLogic {
       'mime': extension,
     };
 
-    final endpoint = 'wedding/BOOK/uploadBookInspiracion';
+    const endpoint = 'wedding/BOOK/uploadBookInspiracion';
 
     final headers = {
       HttpHeaders.authorizationHeader: token,
@@ -102,7 +102,7 @@ class ServiceBookInspiracionLogic {
       'idPlanner': idPlanner,
     };
 
-    final endpoint = 'wedding/BOOK/downloadBookInspiracion';
+    const endpoint = 'wedding/BOOK/downloadBookInspiracion';
 
     final headers = {
       HttpHeaders.authorizationHeader: token,
@@ -130,7 +130,7 @@ class ServiceBookInspiracionLogic {
       'idbookInspiracion': idbookInspiracion,
     };
 
-    final endpoint = 'wedding/BOOK/deleteBookInspiracion';
+    const endpoint = 'wedding/BOOK/deleteBookInspiracion';
 
     final headers = {
       HttpHeaders.authorizationHeader: token,

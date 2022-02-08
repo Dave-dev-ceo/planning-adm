@@ -10,8 +10,8 @@ class TextFormFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

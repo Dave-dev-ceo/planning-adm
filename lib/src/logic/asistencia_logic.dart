@@ -18,8 +18,8 @@ class ListaAsistenciaException implements Exception {}
 class TokenException implements Exception {}
 
 class FetchListaAsistenciaLogic extends AsistenciaLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override
@@ -41,8 +41,6 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
           HttpHeaders.authorizationHeader: token
         });
 
-    print({response});
-
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
       Map<String, dynamic> data = json.decode(response.body);
@@ -55,6 +53,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
     }
   }
 
+  @override
   Future<int> saveAsistencia(int idInvitado, bool asistencia) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();

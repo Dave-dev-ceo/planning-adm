@@ -4,6 +4,8 @@ import 'package:multi_select_item/multi_select_item.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 
 class CargarContactosInvitados extends StatefulWidget {
+  const CargarContactosInvitados({Key key}) : super(key: key);
+
   @override
   _CargarContactosInvitadosState createState() =>
       _CargarContactosInvitadosState();
@@ -14,7 +16,7 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
 
   @override
   void initState() {
-    controller = new MultiSelectController();
+    controller = MultiSelectController();
     getContacts();
     super.initState();
   }
@@ -37,7 +39,7 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
       );
     } else {
       return CircleAvatar(
-        child: Icon(Icons.person),
+        child: const Icon(Icons.person),
         backgroundColor: Theme.of(context).colorScheme.secondary,
         radius: 25,
       );
@@ -71,13 +73,13 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: (Text(controller.selectedIndexes.length > 0
+        title: (Text(controller.selectedIndexes.isNotEmpty
             ? 'Seleccionados ${controller.selectedIndexes.length}'
             : 'Contactos')),
         actions: (controller.isSelecting)
             ? <Widget>[
                 IconButton(
-                  icon: Icon(Icons.select_all),
+                  icon: const Icon(Icons.select_all),
                   onPressed: selectAll,
                 )
               ]
@@ -111,15 +113,15 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
                           children: [
                             Text(
                               _nameContact(contact),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Text(
                               _phoneContact(contact),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -129,13 +131,13 @@ class _CargarContactosInvitadosState extends State<CargarContactosInvitados> {
                       ],
                     ),
                     decoration: controller.isSelected(index)
-                        ? new BoxDecoration(color: Colors.grey[300])
-                        : new BoxDecoration(),
+                        ? BoxDecoration(color: Colors.grey[300])
+                        : const BoxDecoration(),
                   ),
                 );
               },
             )
-          : Center(child: LoadingCustom()),
+          : const Center(child: LoadingCustom()),
     );
   }
 }

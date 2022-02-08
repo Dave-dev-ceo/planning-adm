@@ -5,6 +5,8 @@ import 'package:planning/src/blocs/planners/planners_bloc.dart';
 import 'package:planning/src/models/item_model_planners.dart';
 
 class Planners extends StatefulWidget {
+  const Planners({Key key}) : super(key: key);
+
   @override
   _PlannersState createState() => _PlannersState();
 }
@@ -25,10 +27,10 @@ class _PlannersState extends State<Planners> {
       padding: const EdgeInsets.all(16),
       children: [
         PaginatedDataTable(
-          header: Text('Planners'),
+          header: const Text('Planners'),
           rowsPerPage: 8,
           showCheckboxColumn: false,
-          columns: [
+          columns: const [
             DataColumn(label: Text('Empresa')),
             DataColumn(label: Text('Correo')),
             DataColumn(label: Text('Teléfono')),
@@ -44,7 +46,7 @@ class _PlannersState extends State<Planners> {
 
   formItemsDesign(icon, item) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Card(child: ListTile(leading: Icon(icon), title: item)),
     );
   }
@@ -52,16 +54,16 @@ class _PlannersState extends State<Planners> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: BlocBuilder<PlannersBloc, PlannersState>(
           builder: (context, state) {
             if (state is PlannersInitialState) {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             } else if (state is LoadingPlannersState) {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             } else if (state is MostrarPlannersState) {
@@ -80,7 +82,7 @@ class _PlannersState extends State<Planners> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: UniqueKey(),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.of(context).pushNamed('/addPlanners');
         },

@@ -13,7 +13,7 @@ class AgregarPagoDialog extends StatefulWidget {
   final String tipoPresupuesto;
   final bool isEdit;
   final HistorialPagosModel pagoModel;
-  AgregarPagoDialog(
+  const AgregarPagoDialog(
       {Key key,
       @required this.tipoPresupuesto,
       @required this.isEdit,
@@ -60,23 +60,23 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar pago'),
+        title: const Text('Agregar pago'),
       ),
       body: Form(
           key: _keyForm,
           child: Card(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
-                Center(
+                const Center(
                   child: Text(
                     'Ingresar datos del pago',
                     style: TextStyle(fontSize: 20.0),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 SizedBox(
@@ -89,7 +89,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                           child: TextFormField(
                             readOnly: true,
                             controller: fechaEdit,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Fecha',
                               labelText: 'Fecha',
@@ -126,7 +126,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                               FocusScope.of(context)
                                   .requestFocus(_conceptoNode);
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Concepto',
                               border: OutlineInputBorder(),
                               labelText: 'Concepto',
@@ -161,7 +161,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                             onFieldSubmitted: (value) {
                               _submit();
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Monto',
                               border: OutlineInputBorder(),
                               labelText: 'Monto',
@@ -192,7 +192,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                   child: ElevatedButton(
                     focusNode: _button,
                     onPressed: _submit,
-                    child: Text('Guardar'),
+                    child: const Text('Guardar'),
                   ),
                 )
               ],

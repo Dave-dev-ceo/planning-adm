@@ -106,6 +106,8 @@ class ActividadPlanner {
 }
 
 class PlanesPage extends StatefulWidget {
+  const PlanesPage({Key key}) : super(key: key);
+
   @override
   _PlanesPageState createState() => _PlanesPageState();
 }
@@ -113,7 +115,7 @@ class PlanesPage extends StatefulWidget {
 class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
   PlanesBloc _planesBloc;
   ConsultasPlanesLogic planesLogic = ConsultasPlanesLogic();
-  ActividadesEvento _planesLogic = ActividadesEvento();
+  final ActividadesEvento _planesLogic = ActividadesEvento();
 
   List<TimingModel> listaTimings = [];
 
@@ -152,13 +154,13 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: (isInvolucrado)
           ? AppBar(
-              title: Text('Actividades'),
+              title: const Text('Actividades'),
               centerTitle: true,
             )
           : null,
       body: RefreshIndicator(
         onRefresh: () async {
-          await _planesBloc.add(GetTimingsAndActivitiesEvent());
+          _planesBloc.add(GetTimingsAndActivitiesEvent());
         },
         color: Colors.blue,
         child: SingleChildScrollView(
@@ -167,7 +169,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           child: Card(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 if (!isInvolucrado)
@@ -175,11 +177,11 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                     'Actividades',
                     style: Theme.of(context).textTheme.headline5,
                   ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 contadorActividadesWidget(size),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 if (!isInvolucrado)
@@ -192,43 +194,42 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                                 _updateYselect();
                               }
                             : null,
-                        icon: Icon(Icons.save),
-                        label: Text('Guardar'),
+                        icon: const Icon(Icons.save),
+                        label: const Text('Guardar'),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 8.0,
                       ),
                       ElevatedButton.icon(
                         onPressed: _goAddingPlanes,
-                        icon: Icon(Icons.add),
-                        label: Text('Añadir'),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Añadir'),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5.0,
                       ),
                     ],
                   ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 BlocBuilder<PlanesBloc, PlanesState>(
                   builder: (context, state) {
-                    if (state is InitiaPlaneslState)
-                      return Center(child: LoadingCustom());
-                    // state log
-                    else if (state is LodingPlanesState)
-                      return Center(child: LoadingCustom());
-                    else if (state is ShowAllPlannesState) {
+                    if (state is InitiaPlaneslState) {
+                      return const Center(child: LoadingCustom());
+                    } else if (state is LodingPlanesState) {
+                      return const Center(child: LoadingCustom());
+                    } else if (state is ShowAllPlannesState) {
                       if (state.listTimings != null) {
                         listaTimings = state.listTimings;
                       }
                       return buildActividadesEvento();
                     } else {
-                      return Center(child: LoadingCustom());
+                      return const Center(child: LoadingCustom());
                     }
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30.0,
                 )
               ],
@@ -254,10 +255,10 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 if (size.width > 400)
                   Row(
                     children: [
-                      Spacer(),
+                      const Spacer(),
                       Theme(
                         data: ThemeData(disabledColor: Colors.green),
-                        child: Checkbox(
+                        child: const Checkbox(
                           value: true,
                           onChanged: null,
                           hoverColor: Colors.transparent,
@@ -265,67 +266,67 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       ),
                       Text(
                           '${snapshot.data.completadas.toString()} Completadas'),
-                      Spacer(),
+                      const Spacer(),
                       Theme(
                         data: ThemeData(disabledColor: Colors.yellow[800]),
-                        child: Checkbox(
+                        child: const Checkbox(
                           value: false,
                           onChanged: null,
                         ),
                       ),
                       Text('${snapshot.data.pendientes.toString()} Pendientes'),
-                      Spacer(),
+                      const Spacer(),
                       Theme(
                         data: ThemeData(disabledColor: Colors.red),
-                        child: Checkbox(
+                        child: const Checkbox(
                           value: false,
                           onChanged: null,
                         ),
                       ),
                       Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
-                      Spacer(),
+                      const Spacer(),
                     ],
                   )
                 else
                   Column(children: [
                     Theme(
                       data: ThemeData(disabledColor: Colors.green),
-                      child: Checkbox(
+                      child: const Checkbox(
                         value: true,
                         onChanged: null,
                         hoverColor: Colors.transparent,
                       ),
                     ),
                     Text('${snapshot.data.completadas.toString()} Completadas'),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     Theme(
                       data: ThemeData(disabledColor: Colors.yellow[800]),
-                      child: Checkbox(
+                      child: const Checkbox(
                         value: false,
                         onChanged: null,
                       ),
                     ),
                     Text('${snapshot.data.pendientes.toString()} Pendientes'),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     Theme(
                       data: ThemeData(disabledColor: Colors.red),
-                      child: Checkbox(
+                      child: const Checkbox(
                         value: false,
                         onChanged: null,
                       ),
                     ),
                     Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
                   ]),
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Text(
                     'Progreso ${((snapshot.data.completadas / snapshot.data.total) * 100).toStringAsFixed(0)}%'),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Theme(
@@ -335,7 +336,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       maxWidth: size.width > 400 ? 400 : 200,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: LinearProgressIndicator(
                         minHeight: 5.0,
                         value: snapshot.data.completadas / snapshot.data.total,
@@ -344,7 +345,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 Text('Total: ${snapshot.data.total}')
@@ -355,35 +356,35 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
         if (size.width > 400) {
           return Row(
             children: [
-              Spacer(),
+              const Spacer(),
               Theme(
                 data: ThemeData(disabledColor: Colors.green),
-                child: Checkbox(
+                child: const Checkbox(
                   value: true,
                   onChanged: null,
                   hoverColor: Colors.transparent,
                 ),
               ),
-              Text('Completadas'),
-              Spacer(),
+              const Text('Completadas'),
+              const Spacer(),
               Theme(
                 data: ThemeData(disabledColor: Colors.yellow[800]),
-                child: Checkbox(
+                child: const Checkbox(
                   value: false,
                   onChanged: null,
                 ),
               ),
-              Text('Pendientes'),
-              Spacer(),
+              const Text('Pendientes'),
+              const Spacer(),
               Theme(
                 data: ThemeData(disabledColor: Colors.red),
-                child: Checkbox(
+                child: const Checkbox(
                   value: false,
                   onChanged: null,
                 ),
               ),
-              Text('Atrasadas'),
-              Spacer(),
+              const Text('Atrasadas'),
+              const Spacer(),
             ],
           );
         } else {
@@ -391,29 +392,29 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             children: [
               Theme(
                 data: ThemeData(disabledColor: Colors.green),
-                child: Checkbox(
+                child: const Checkbox(
                   value: true,
                   onChanged: null,
                   hoverColor: Colors.transparent,
                 ),
               ),
-              Text('Completadas'),
+              const Text('Completadas'),
               Theme(
                 data: ThemeData(disabledColor: Colors.yellow[800]),
-                child: Checkbox(
+                child: const Checkbox(
                   value: false,
                   onChanged: null,
                 ),
               ),
-              Text('Pendientes'),
+              const Text('Pendientes'),
               Theme(
                 data: ThemeData(disabledColor: Colors.red),
-                child: Checkbox(
+                child: const Checkbox(
                   value: false,
                   onChanged: null,
                 ),
               ),
-              Text('Atrasadas'),
+              const Text('Atrasadas'),
             ],
           );
         }
@@ -426,9 +427,9 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     // List<FocusNode> focusNode = [];
     index = 0;
 
-    if (listaTimings.length <= 0) {
-      return Padding(
-        padding: const EdgeInsets.all(15.0),
+    if (listaTimings.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(15.0),
         child: Center(
           child: Text('No se encontraron planes'),
         ),
@@ -441,10 +442,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           // FocusNode tempFocus = FocusNode();
           // focusNode.add(tempFocus);
 
-          if (actividad.fechaFinActividad == null) {
-            actividad.fechaFinActividad =
-                actividad.fechaInicioActividad.add(Duration(days: 1));
-          }
+          actividad.fechaFinActividad ??=
+              actividad.fechaInicioActividad.add(const Duration(days: 1));
           if (!isInvolucrado) {
             Widget actividadWidget = ListTile(
               leading: Theme(
@@ -505,7 +504,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   Expanded(
                     flex: 2,
                     child: Tooltip(
-                      showDuration: Duration(
+                      showDuration: const Duration(
                         milliseconds: 3,
                       ),
                       message: 'Click para editar',
@@ -522,9 +521,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                             maxWidth: size.width * 0.06,
                           ),
                         ),
-                        initialValue: actividad.responsable != null
-                            ? actividad.responsable
-                            : null,
+                        initialValue: actividad.responsable,
                         onChanged: (value) {
                           actividad.responsable = value;
                         },
@@ -571,7 +568,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                             }
                             if (fecha.isAfter(actividad.fechaFinActividad)) {
                               actividad.fechaFinActividad =
-                                  fecha.add(Duration(hours: 1));
+                                  fecha.add(const Duration(hours: 1));
                             }
                             actividad.fechaInicioActividad = fecha;
                             actividad.estadoCalendarioActividad = true;
@@ -621,7 +618,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                             if (fecha
                                 .isBefore(actividad.fechaInicioActividad)) {
                               actividad.fechaInicioActividad =
-                                  fecha.subtract(Duration(hours: 1));
+                                  fecha.subtract(const Duration(hours: 1));
                             }
                             actividad.fechaFinActividad = fecha;
                             actividad.estadoCalendarioActividad = true;
@@ -634,7 +631,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   Expanded(
                     child: (!isInvolucrado)
                         ? GestureDetector(
-                            child: Tooltip(
+                            child: const Tooltip(
                               message: 'Eliminar Actividad',
                               child: Icon(Icons.delete),
                             ),
@@ -682,9 +679,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                     Expanded(
                         flex: 2,
                         child: Text(
-                          actividad.responsable != null
-                              ? actividad.responsable
-                              : 'Sin responsable',
+                          actividad.responsable ?? 'Sin responsable',
                         )),
                     Expanded(
                       child: Padding(
@@ -739,20 +734,20 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       setState(() {});
                     });
                   },
-                  icon: Icon(Icons.add),
-                  label: Text('Agregar actividad'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Agregar actividad'),
                 ),
               ),
             );
           }
         }
 
-        if (tempActividadesTiming.length > 0) {
+        if (tempActividadesTiming.isNotEmpty) {
           Widget timingWidget = ExpansionTile(
             iconColor: Colors.black,
             title: Text(
               timing.nombrePlaner,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
               ),
             ),
@@ -762,17 +757,17 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           listPlanesWidget.add(timingWidget);
         }
       }
-      if (listPlanesWidget.length > 0) {
+      if (listPlanesWidget.isNotEmpty) {
         return Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          margin: EdgeInsets.all(20.0),
+          margin: const EdgeInsets.all(20.0),
           elevation: 10.0,
           child: Padding(
             padding: const EdgeInsets.all(4.0),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 ListView(
@@ -784,9 +779,9 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           ),
         );
       } else {
-        return Center(
+        return const Center(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(20.0),
             child: Text('No se encontraron actividades'),
           ),
         );
@@ -815,12 +810,12 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
       icon: Icons.more_vert,
       children: [
         SpeedDialChild(
-          child: Icon(Icons.calendar_today),
+          child: const Icon(Icons.calendar_today),
           onTap: () => _saveActividades(),
           label: 'Ver calendario',
         ),
         SpeedDialChild(
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
           onTap: () async {
             final data = await planesLogic.donwloadPDFPlanesEvento();
 
@@ -856,10 +851,10 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             child: ListBody(
               children: <Widget>[
                 Center(child: Text('La actividad: $nombre')),
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
-                Center(child: Text('¿Deseas confirmar?')),
+                const Center(child: Text('¿Deseas confirmar?')),
               ],
             ),
           ),
@@ -901,8 +896,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     // });
 
     // if (sinFechas) {
-    listaTimings.forEach((tarea) {
-      tarea.actividades.forEach((actividad) {
+    for (var tarea in listaTimings) {
+      for (var actividad in tarea.actividades) {
         // if (actividad.estadoCalendarioActividad == true)
         send.add(ActividadPlanner(
             fechaInicioActividad: actividad.fechaInicioActividad,
@@ -920,8 +915,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             checkActividadPlanner: actividad.estatusProgreso,
             nombreValida: true,
             descriValida: true));
-      });
-    });
+      }
+    }
 
     // agregamos a la base de datos
     Navigator.of(context).pushNamed('/calendarPlan', arguments: send);
@@ -936,13 +931,13 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
   void _updateYselect() async {
     List<EventoActividadModel> send = [];
 
-    listaTimings.forEach((tarea) {
+    for (var tarea in listaTimings) {
       send += [...tarea.actividades];
-    });
+    }
     // fin ciclosi
 
     // filtro para enviar
-    if (send.length > 0) {
+    if (send.isNotEmpty) {
       setState(() {
         isEnableButton = false;
       }); // reset
@@ -1014,7 +1009,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Añadir actividad'),
+        title: const Text('Añadir actividad'),
       ),
       body: SingleChildScrollView(
         child: BlocListener<PlanesBloc, PlanesState>(
@@ -1038,7 +1033,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Wrap(
@@ -1059,7 +1054,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                               return 'El campo es requerido';
                             }
                           },
-                          decoration: new InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Nombre:',
                           ),
                           onChanged: (valor) {
@@ -1073,7 +1068,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       large: 500.0,
                       ancho: 80.0,
                       item: TextFormField(
-                        decoration: new InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Responsable:',
                         ),
                         initialValue: actividad.responsable,
@@ -1084,7 +1079,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
                 Wrap(
@@ -1106,7 +1101,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                           },
                           readOnly: true,
                           controller: fechaInicioController,
-                          decoration: new InputDecoration(
+                          decoration: InputDecoration(
                               focusColor: Colors.black,
                               labelText: 'Fecha de Inicio',
                               suffixIcon: Row(
@@ -1193,7 +1188,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                         }
                                       }
                                     },
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.date_range,
                                       color: Colors.black,
                                     ),
@@ -1225,8 +1220,10 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                             .isAfter(
                                                 actividad.fechaFinActividad)) {
                                           actividad.fechaFinActividad =
-                                              actividad.fechaInicioActividad
-                                                  .add(Duration(hours: 1));
+                                              actividad
+                                                  .fechaInicioActividad
+                                                  .add(
+                                                      const Duration(hours: 1));
                                           fechaFinController.text =
                                               DateFormat.yMd().add_jm().format(
                                                   actividad.fechaFinActividad);
@@ -1237,7 +1234,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                                 actividad.fechaInicioActividad);
                                       }
                                     },
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.more_time,
                                       color: Colors.black,
                                     ),
@@ -1263,7 +1260,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                           },
                           readOnly: true,
                           controller: fechaFinController,
-                          decoration: new InputDecoration(
+                          decoration: InputDecoration(
                               focusColor: Colors.black,
                               labelText: 'Fecha final',
                               suffixIcon: Row(
@@ -1344,7 +1341,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                                 actividad.fechaFinActividad);
                                       }
                                     },
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.date_range,
                                       color: Colors.black,
                                     ),
@@ -1417,7 +1414,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                                 actividad.fechaFinActividad);
                                       }
                                     },
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.more_time,
                                       color: Colors.black,
                                     ),
@@ -1429,7 +1426,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
                 Wrap(
@@ -1440,7 +1437,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       large: 500.0,
                       ancho: 80,
                       item: CheckboxListTile(
-                        title: Text('Visible para novios:'),
+                        title: const Text('Visible para novios:'),
                         controlAffinity: ListTileControlAffinity.platform,
                         value: actividad.visibleInvolucrado,
                         onChanged: (valor) {
@@ -1458,16 +1455,14 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       ancho: 80,
                       item: DropdownButton(
                         isExpanded: true,
-                        value: actividad.predecesorActividad == null
-                            ? -1
-                            : actividad.predecesorActividad,
+                        value: actividad.predecesorActividad ?? -1,
                         icon: const Icon(Icons.arrow_drop_down_outlined),
                         iconSize: 24,
                         elevation: 16,
                         style: const TextStyle(color: Color(0xFF000000)),
                         underline: Container(
                           height: 2,
-                          color: Color(0xFF000000),
+                          color: const Color(0xFF000000),
                         ),
                         onChanged: (valor) {
                           setState(() {
@@ -1484,7 +1479,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                               value: item.idActividad,
                               child: Text(
                                 item.nombreActividad,
-                                style: TextStyle(fontSize: 18),
+                                style: const TextStyle(fontSize: 18),
                               ),
                             );
                           },
@@ -1502,7 +1497,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       ancho: 80.0,
                       item: TextFormField(
                         initialValue: actividad.descripcionActividad,
-                        decoration: new InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Descripción:',
                         ),
                         onChanged: (valor) {
@@ -1512,25 +1507,25 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30.0,
                 ),
                 Center(
                   child: Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: PointerInterceptor(
                       child: ElevatedButton(
-                        child: Tooltip(
+                        child: const Tooltip(
                           child: Icon(Icons.save_sharp),
                           message: "Agregar actividad.",
                         ),
                         onPressed: () async {
                           if (keyForm.currentState.validate()) {
                             if (widget.actividadModel.idActividad != null) {
-                              await BlocProvider.of<PlanesBloc>(context)
+                              BlocProvider.of<PlanesBloc>(context)
                                   .add(EditActividadEvent(actividad));
                             } else {
-                              await BlocProvider.of<PlanesBloc>(context).add(
+                              BlocProvider.of<PlanesBloc>(context).add(
                                 AddNewActividadEvent(
                                     actividad, widget.plan.idPlanner),
                               );

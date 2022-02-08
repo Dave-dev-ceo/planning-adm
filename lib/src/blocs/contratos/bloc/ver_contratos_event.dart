@@ -14,90 +14,90 @@ class BorrarContrato extends VerContratosEvent {
 class SubirContrato extends VerContratosEvent {
   final int id;
   final String archivo;
-  final String tipo_doc;
-  final String tipo_mime;
+  final String tipoDoc;
+  final String tipoMime;
 
-  SubirContrato(this.id, this.archivo, this.tipo_doc, this.tipo_mime);
+  SubirContrato(this.id, this.archivo, this.tipoDoc, this.tipoMime);
 
   int get pro => id;
   String get prop => archivo;
 }
 
 class VerContrato extends VerContratosEvent {
-  final int id_contrato;
-  final String tipo_mime;
-  final String tipo_doc;
-  VerContrato(this.id_contrato, this.tipo_mime, this.tipo_doc);
+  final int idContrato;
+  final String tipoMime;
+  final String tipoDoc;
+  VerContrato(this.idContrato, this.tipoMime, this.tipoDoc);
 
-  int get prod => id_contrato;
-  String get propp => tipo_mime;
+  int get prod => idContrato;
+  String get propp => tipoMime;
 }
 
 class VerContratoSubido extends VerContratosEvent {
-  final int id_contrato;
-  final String tipo_mime;
-  final String tipo_doc;
+  final int idContrato;
+  final String tipoMime;
+  final String tipoDoc;
 
-  VerContratoSubido(this.id_contrato, this.tipo_mime, this.tipo_doc);
+  VerContratoSubido(this.idContrato, this.tipoMime, this.tipoDoc);
 
-  int get prop => id_contrato;
+  int get prop => idContrato;
 }
 
 class DescargarArchivoSubidoEvent extends VerContratosEvent {
-  final int id_contrato;
-  final String tipo_mime;
+  final int idContrato;
+  final String tipoMime;
   final String nombre;
-  DescargarArchivoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
-  int get prop => id_contrato;
-  String get propd => tipo_mime;
+  DescargarArchivoSubidoEvent(this.idContrato, this.tipoMime, this.nombre);
+  int get prop => idContrato;
+  String get propd => tipoMime;
   String get propds => nombre;
 }
 
 class DescargarContratoSubidoEvent extends VerContratosEvent {
-  final int id_contrato;
-  final String tipo_mime;
+  final int idContrato;
+  final String tipoMime;
   final String nombre;
-  DescargarContratoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
-  int get prop => id_contrato;
-  String get propd => tipo_mime;
+  DescargarContratoSubidoEvent(this.idContrato, this.tipoMime, this.nombre);
+  int get prop => idContrato;
+  String get propd => tipoMime;
   String get propds => nombre;
 }
 
 class VerContratoSubidoEvent extends VerContratosEvent {
-  final int id_contrato;
-  final String tipo_mime;
+  final int idContrato;
+  final String tipoMime;
   final String nombre;
-  VerContratoSubidoEvent(this.id_contrato, this.tipo_mime, this.nombre);
-  int get prop => id_contrato;
-  String get propd => tipo_mime;
+  VerContratoSubidoEvent(this.idContrato, this.tipoMime, this.nombre);
+  int get prop => idContrato;
+  String get propd => tipoMime;
   String get propds => nombre;
 }
 
 class DescargarContrato extends VerContratosEvent {
   final String nombre;
-  final int id_contrato;
-  final String tipo_mime;
+  final int idContrato;
+  final String tipoMime;
 
-  DescargarContrato(this.nombre, this.id_contrato, this.tipo_mime);
+  DescargarContrato(this.nombre, this.idContrato, this.tipoMime);
 
   String get props => nombre;
-  int get prop => id_contrato;
-  String get propsd => tipo_mime;
+  int get prop => idContrato;
+  String get propsd => tipoMime;
 }
 
 class CrearContrato extends VerContratosEvent {
   final String nombre;
   final String archivo;
   final String clave;
-  final String tipo_doc;
-  final String tipo_mime;
+  final String tipoDoc;
+  final String tipoMime;
 
   CrearContrato(
-      this.nombre, this.archivo, this.clave, this.tipo_doc, this.tipo_mime);
+      this.nombre, this.archivo, this.clave, this.tipoDoc, this.tipoMime);
 
   String get props => nombre;
   String get prop => archivo;
   String get pro => clave;
-  String get prod => tipo_doc;
-  String get prodd => tipo_mime;
+  String get prod => tipoDoc;
+  String get prodd => tipoMime;
 }

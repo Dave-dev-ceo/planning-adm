@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 class ItemModelAcompanante {
   List<_ItemModelAcompanante> _results = [];
 
@@ -13,58 +15,58 @@ class ItemModelAcompanante {
 }
 
 class _ItemModelAcompanante {
-  int _id_acompanante;
+  int _idAcompanante;
   String _nombre;
   String _edad;
-  int _id_evento;
-  int _id_invitado;
-  int _id_planner;
+  int _idEvento;
+  int _idInvitado;
+  int _idPlanner;
   String _alimentacion;
   String _alergias;
   String _asistenciaEspecial;
 
   _ItemModelAcompanante(result) {
-    _id_acompanante = result['id_acompanante'];
+    _idAcompanante = result['id_acompanante'];
     _nombre = result['nombre'];
     _edad = result['edad'];
-    _id_evento = result['id_evento'];
-    _id_invitado = result['id_invitado'];
-    _id_planner = result['id_planner'];
+    _idEvento = result['id_evento'];
+    _idInvitado = result['id_invitado'];
+    _idPlanner = result['id_planner'];
     _alimentacion = result['alimentacion'];
     _alergias = result['alergias'];
     _asistenciaEspecial = result['asistencia_especial'];
   }
-  int get idAcompanne => _id_acompanante;
+  int get idAcompanne => _idAcompanante;
   String get nombre => _nombre;
   String get edad => _edad;
-  int get idEvento => _id_evento;
-  int get idInvitado => _id_invitado;
-  int get idPlanner => _id_planner;
+  int get idEvento => _idEvento;
+  int get idInvitado => _idInvitado;
+  int get idPlanner => _idPlanner;
   String get alimentacion => _alimentacion;
   String get alergias => _alergias;
   String get asistenciaEspecial => _asistenciaEspecial;
 
-  void set idAcompanne(int idAcompanante) {
-    _id_acompanante = idAcompanante;
+  set idAcompanne(int idAcompanante) {
+    _idAcompanante = idAcompanante;
   }
 
-  void set nombre(String nombre) {
+  set nombre(String nombre) {
     _nombre = nombre;
   }
 
-  void set edad(String edad) {
+  set edad(String edad) {
     _edad = edad;
   }
 
-  void set alimentacion(String alimentacion) {
+  set alimentacion(String alimentacion) {
     _alimentacion = alimentacion;
   }
 
-  void set alergias(String alergias) {
+  set alergias(String alergias) {
     _alergias = alergias;
   }
 
-  void set asistenciaEspecial(String asistenciaEspecial) {
+  set asistenciaEspecial(String asistenciaEspecial) {
     _asistenciaEspecial = asistenciaEspecial;
   }
 }

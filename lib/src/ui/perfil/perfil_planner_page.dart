@@ -13,7 +13,7 @@ import 'package:planning/src/models/perfil/perfil_planner_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class PerfilPlannerPage extends StatefulWidget {
-  PerfilPlannerPage({Key key}) : super(key: key);
+  const PerfilPlannerPage({Key key}) : super(key: key);
 
   @override
   _PerfilPlannerPageState createState() => _PerfilPlannerPageState();
@@ -21,7 +21,7 @@ class PerfilPlannerPage extends StatefulWidget {
 
 class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
   final _formPlannerKey = GlobalKey<FormState>();
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
   PerfilBloc perfilBloc;
 
@@ -37,13 +37,13 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar perfil planner'),
+        title: const Text('Editar perfil planner'),
       ),
       body: BlocBuilder<PerfilBloc, PerfilState>(builder: (context, state) {
         if (state is PerfilPlannerState) {
           return buildPerfilPlanner(state.perfilPlanner);
         } else {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         }
@@ -63,7 +63,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
                 Center(
@@ -73,7 +73,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
                 Padding(
@@ -104,7 +104,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     initialValue: perfil.correo,
                     maxLength: 250,
@@ -122,7 +122,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     initialValue: perfil.telefono,
                     maxLength: 250,
@@ -149,7 +149,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     initialValue: perfil.nombreDeLaEmpresa,
                     maxLength: 250,
@@ -169,7 +169,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     initialValue: perfil.direccion,
                     maxLength: 250,
@@ -189,7 +189,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -211,9 +211,9 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                               ),
                       )),
                       Padding(
-                        padding: EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: ElevatedButton(
-                          child: Text('Agregar imagen'),
+                          child: const Text('Agregar imagen'),
                           onPressed: () async {
                             perfil.logo = await _addImagePlanner();
                             image = base64Decode(perfil.logo);
@@ -230,7 +230,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     child: const Text('Guardar'),
                     onPressed: () async {

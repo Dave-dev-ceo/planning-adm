@@ -13,7 +13,7 @@ class ItemModelFormRol {
   }
 
   ItemModelFormRol copy() {
-    return new ItemModelFormRol(_form);
+    return ItemModelFormRol(_form);
   }
 
   List<SeccionRol> get form => _form;
@@ -89,17 +89,17 @@ class SeccionRol {
     }
   }
 
-  int get id_seccion => this._idSeccion;
+  int get idSeccion => _idSeccion;
 
-  String get clave_seccion => this._claveSeccion;
+  String get claveSeccion => _claveSeccion;
 
-  String get nombre_seccion => this._nombreSeccion;
+  String get nombreSeccion => _nombreSeccion;
 
-  bool get selected => this._selected;
+  bool get selected => _selected;
 
-  set selected(value) => this._selected = value;
+  set selected(value) => _selected = value;
 
-  List<PantallaRol> get pantallas => this._pantallasSeccion;
+  List<PantallaRol> get pantallas => _pantallasSeccion;
 }
 
 class PantallaRol {
@@ -109,10 +109,12 @@ class PantallaRol {
   bool _selected;
 
   PantallaRol(result) {
-    if (result['id_pantalla'].runtimeType == String)
+    if (result['id_pantalla'].runtimeType == String) {
       _idPantalla = int.parse(result['id_pantalla']);
-    if (result['id_pantalla'].runtimeType == int)
+    }
+    if (result['id_pantalla'].runtimeType == int) {
       _idPantalla = result['id_pantalla'];
+    }
     _clavePantalla = result['clave_pantalla'];
     _nombrePantalla = result['nombre_pantalla'];
     _selected = result['selected'];
@@ -139,13 +141,13 @@ class PantallaRol {
         '"selected"': _selected
       };
 
-  int get id_pantalla => this._idPantalla;
+  int get idPantalla => _idPantalla;
 
-  String get clave_pantalla => this._clavePantalla;
+  String get clavePantalla => _clavePantalla;
 
-  String get nombre_pantalla => this._nombrePantalla;
+  String get nombrePantalla => _nombrePantalla;
 
-  bool get selected => this._selected;
+  bool get selected => _selected;
 
-  set selected(value) => this._selected = value;
+  set selected(value) => _selected = value;
 }

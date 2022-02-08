@@ -9,9 +9,9 @@ class ItemModelPerfil {
     List<_Perfil> temp = []; // lista temporal
 
     // extramos los datos | llenamos lista - metodo forEach
-    pardedJson.forEach((data) {
+    for (var data in pardedJson) {
       temp.add(_Perfil(data));
-    });
+    }
 
     _perfil = temp; // guardamos en la lista
   }
@@ -36,16 +36,16 @@ class _Perfil {
   }
 
   // ini getters
-  String get nombreCompleto => this._nombreCompleto;
-  String get correo => this._correo;
-  String get telefono => this._telefono;
-  String get imagen => this._imagen;
+  String get nombreCompleto => _nombreCompleto;
+  String get correo => _correo;
+  String get telefono => _telefono;
+  String get imagen => _imagen;
   // fin getters
 
   // ini setters
-  set nombreCompleto(value) => this._nombreCompleto;
-  set correo(value) => this._correo;
-  set telefono(value) => this._telefono;
-  set imagen(value) => this._imagen;
+  set nombreCompleto(value) => _nombreCompleto;
+  set correo(value) => _correo;
+  set telefono(value) => _telefono;
+  set imagen(value) => _imagen;
   // fin setters
 }

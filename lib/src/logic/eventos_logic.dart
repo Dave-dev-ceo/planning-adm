@@ -9,8 +9,8 @@ import 'package:planning/src/resources/config_conection.dart';
 abstract class ListaEventosLogic {
   Future<ItemModelEventos> fetchEventos(String estatus);
   Future<int> createEventos(Map<String, dynamic> dataEvento);
-  Future<int> EditarEvento(Map<String, dynamic> dataEvento);
-  Future<ItemModelEvento> fetchEventoPorId(String id_evento);
+  Future<int> editarEvento(Map<String, dynamic> dataEvento);
+  Future<ItemModelEvento> fetchEventoPorId(String idEvento);
   Future<String> donwloadPDFEvento();
   Future<String> getFechaEvento();
 }
@@ -26,8 +26,8 @@ class EventoPorIdException implements Exception {}
 class TokenException implements Exception {}
 
 class FetchListaEventosLogic extends ListaEventosLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
 
   @override
   Future<ItemModelEventos> fetchEventos(String estatus) async {
@@ -59,7 +59,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   }
 
   @override
-  Future<ItemModelEvento> fetchEventoPorId(String id_evento) async {
+  Future<ItemModelEvento> fetchEventoPorId(String idEvento) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await http.post(
@@ -67,7 +67,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
             confiC.puerto +
             '/wedding/EVENTOS/obtenerEventoPorId/'),
         headers: {HttpHeaders.authorizationHeader: token},
-        body: {'id_planner': idPlanner.toString(), 'id_evento': id_evento});
+        body: {'id_planner': idPlanner.toString(), 'id_evento': idEvento});
     // var uri = Uri.parse(
     //     confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventoPorId/');
     // var header = {HttpHeaders.authorizationHeader: token};
@@ -97,8 +97,6 @@ class FetchListaEventosLogic extends ListaEventosLogic {
         body: dataEvento,
         headers: {HttpHeaders.authorizationHeader: token});
 
-    print(response.body);
-
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
       await _sharedPreferences.setToken(responseEvento['token']);
@@ -111,7 +109,7 @@ class FetchListaEventosLogic extends ListaEventosLogic {
   }
 
   @override
-  Future<int> EditarEvento(Map<String, dynamic> dataEvento) async {
+  Future<int> editarEvento(Map<String, dynamic> dataEvento) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     int idUsuario = await _sharedPreferences.getIdUsuario();

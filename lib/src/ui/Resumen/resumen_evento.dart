@@ -1,10 +1,12 @@
+// ignore_for_file: non_constant_identifier_names, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
-import 'package:planning/src/blocs/eventos/eventos_bloc.dart' as EvtBloc;
+import 'package:planning/src/blocs/eventos/eventos_bloc.dart' as evt_bloc;
 import 'package:planning/src/logic/eventos_logic.dart';
 import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
@@ -28,16 +30,16 @@ class ResumenEvento extends StatefulWidget {
 class _ResumenEventoState extends State<ResumenEvento> {
   final Map<dynamic, dynamic> detalleEvento;
   final bool WP_EVT_RES_EDT;
-  EvtBloc.EventosBloc eventosBloc;
+  evt_bloc.EventosBloc eventosBloc;
   FetchListaEventosLogic eventoLogic = FetchListaEventosLogic();
-  ActividadesEvento _planesLogic = ActividadesEvento();
+  final ActividadesEvento _planesLogic = ActividadesEvento();
   bool isInvolucrado = false;
 
   @override
   void initState() {
-    eventosBloc = BlocProvider.of<EvtBloc.EventosBloc>(context);
+    eventosBloc = BlocProvider.of<evt_bloc.EventosBloc>(context);
     eventosBloc.add(
-        EvtBloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
+        evt_bloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
     _checkIsInvolucrado();
 
     super.initState();
@@ -69,7 +71,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: LoadingCustom());
+        return const Center(child: LoadingCustom());
       },
     );
   }
@@ -84,13 +86,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: LoadingCustom());
+        return const Center(child: LoadingCustom());
       },
     );
   }
 
   Widget buildList(AsyncSnapshot<ItemModelReporteInvitados> snapshot) {
-    return Container(
+    return SizedBox(
         width: 400,
         //color: Colors.pink,
         height: 150,
@@ -100,19 +102,19 @@ class _ResumenEventoState extends State<ResumenEvento> {
   miCardReportesInvitados(ItemModelReporteInvitados reporte) {
     return GestureDetector(
       child: Card(
-        color: Color(0xFFfdf4e5),
+        color: const Color(0xFFfdf4e5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         elevation: 10,
         child: Column(
           children: <Widget>[
             ListTile(
-              contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
-              title: Text(
+              contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
+              title: const Text(
                 'Asistencia',
                 style: TextStyle(fontSize: 20),
               ),
-              subtitle: Container(
+              subtitle: SizedBox(
                 height: 70,
                 //color: Colors.purple,
                 child: ListView.builder(
@@ -123,7 +125,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                           reporte.results.elementAt(index).cantidad.toString());
                     }),
               ),
-              trailing: FaIcon(FontAwesomeIcons.tasks),
+              trailing: const FaIcon(FontAwesomeIcons.tasks),
             ),
           ],
         ),
@@ -138,29 +140,29 @@ class _ResumenEventoState extends State<ResumenEvento> {
   ItemModelEvento evento;
 
   Widget reporteEvento() {
-    return BlocBuilder<EvtBloc.EventosBloc, EvtBloc.EventosState>(
+    return BlocBuilder<evt_bloc.EventosBloc, evt_bloc.EventosState>(
       builder: (context, state) {
-        if (state is EvtBloc.LoadingEventoPorIdState) {
-          return Center(child: LoadingCustom());
-        } else if (state is EvtBloc.MostrarEventoPorIdState) {
+        if (state is evt_bloc.LoadingEventoPorIdState) {
+          return const Center(child: LoadingCustom());
+        } else if (state is evt_bloc.MostrarEventoPorIdState) {
           evento = state.evento;
-          eventosBloc.add(EvtBloc.FechtEventosEvent('A'));
-          return Container(
+          eventosBloc.add(evt_bloc.FechtEventosEvent('A'));
+          return SizedBox(
               width: 400,
               height: 150,
               child: miCardReporteDetallesEvento(evento));
-        } else if (state is EvtBloc.ErrorEventoPorIdState) {
+        } else if (state is evt_bloc.ErrorEventoPorIdState) {
           return Center(
             child: Text(state.message),
           );
         } else {
           if (evento != null) {
-            return Container(
+            return SizedBox(
                 width: 400,
                 height: 150,
                 child: miCardReporteDetallesEvento(evento));
           } else {
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           }
         }
       },
@@ -172,9 +174,9 @@ class _ResumenEventoState extends State<ResumenEvento> {
   miCardReporteDetallesEvento(ItemModelEvento evtt) {
     return GestureDetector(
       child: Card(
-        color: Color(0xFFfdf4e5),
+        color: const Color(0xFFfdf4e5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         elevation: 6,
         child: SingleChildScrollView(
           child: Padding(
@@ -184,8 +186,8 @@ class _ResumenEventoState extends State<ResumenEvento> {
               children: <Widget>[
                 ListTile(
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                  title: Text(
+                      const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                  title: const Text(
                     'Detalles del evento',
                     style: TextStyle(fontSize: 16),
                   ),
@@ -196,25 +198,25 @@ class _ResumenEventoState extends State<ResumenEvento> {
                     children: <Widget>[
                       Text(
                         'Evento: ' + evtt.results.elementAt(0).evento,
-                        style: TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 14),
                       ),
                       Text(
                         'Fecha evento: ' +
                             evtt.results.elementAt(0).fechaEvento,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       Text(
                         'Planeación: Del ' +
                             evtt.results.elementAt(0).fechaInicio +
                             ' al ' +
                             evtt.results.elementAt(0).fechaFin,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                       for (var inv in evtt.results.elementAt(0).involucrados)
                         mostrarInvolucrado(inv),
                     ],
                   ),
-                  trailing: Icon(Icons.event),
+                  trailing: const Icon(Icons.event),
                 ),
               ],
             ),
@@ -234,11 +236,11 @@ class _ResumenEventoState extends State<ResumenEvento> {
 
   mostrarInvolucrado(dynamic involucrado) {
     if (involucrado.nombre == 'Sin nombre') {
-      return Text('Sin involucrados', style: TextStyle(fontSize: 12));
+      return const Text('Sin involucrados', style: TextStyle(fontSize: 12));
     } else {
       return Text(
         involucrado.tipoInvolucrado + ': ' + involucrado.nombre,
-        style: TextStyle(fontSize: 12),
+        style: const TextStyle(fontSize: 12),
       );
     }
   }
@@ -252,18 +254,18 @@ class _ResumenEventoState extends State<ResumenEvento> {
           (BuildContext context, AsyncSnapshot<List<PlannesModel>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFFfdf4e5),
             ),
             width: 500,
             height: 300,
             child: Card(
-              color: Color(0xFFfdf4e5),
+              color: const Color(0xFFfdf4e5),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              margin: EdgeInsets.all(20.0),
+              margin: const EdgeInsets.all(20.0),
               elevation: 10.0,
-              child: Align(
+              child: const Align(
                 alignment: Alignment.center,
                 child: LoadingCustom(),
               ),
@@ -274,20 +276,20 @@ class _ResumenEventoState extends State<ResumenEvento> {
             return miCardActividades(snapshot.data);
           } else {
             return Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFFfdf4e5),
               ),
               width: 500,
               height: 300,
               child: Card(
-                color: Color(0xFFfdf4e5),
+                color: const Color(0xFFfdf4e5),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0)),
-                margin: EdgeInsets.all(20.0),
+                margin: const EdgeInsets.all(20.0),
                 elevation: 10.0,
-                child: SingleChildScrollView(
+                child: const SingleChildScrollView(
                     child: Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding: EdgeInsets.all(4.0),
                         child: Center(
                             child: Text('No se encontraron actividades')))),
               ),
@@ -309,12 +311,12 @@ class _ResumenEventoState extends State<ResumenEvento> {
     for (var plan in planes) {
       Widget planWidget = ListTile(
         title: Text(
-          '${plan.nombreActividad}',
-          style: TextStyle(fontSize: 15.0),
+          plan.nombreActividad,
+          style: const TextStyle(fontSize: 15.0),
         ),
         subtitle: Text(
-          '${plan.descripcionActividad}',
-          style: TextStyle(fontSize: 12.0),
+          plan.descripcionActividad,
+          style: const TextStyle(fontSize: 12.0),
         ),
       );
 
@@ -332,14 +334,14 @@ class _ResumenEventoState extends State<ResumenEvento> {
       }
     }
 
-    return Container(
+    return SizedBox(
       width: 500,
       height: 300,
       child: Card(
-        color: Color(0xFFfdf4e5),
+        color: const Color(0xFFfdf4e5),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        margin: EdgeInsets.all(20.0),
+        margin: const EdgeInsets.all(20.0),
         elevation: 10.0,
         child: SingleChildScrollView(
             child: Padding(
@@ -349,17 +351,17 @@ class _ResumenEventoState extends State<ResumenEvento> {
               ExpansionTile(
                 textColor: Colors.black,
                 subtitle: Text('Progreso: $completadas/$total'),
-                title: Text('Actividades completadas'),
+                title: const Text('Actividades completadas'),
                 children: actividadeCompletas,
               ),
               ExpansionTile(
                 textColor: Colors.black,
-                title: Text('Actividades pedientes'),
+                title: const Text('Actividades pedientes'),
                 children: actividadesPedientes,
               ),
               ExpansionTile(
                 textColor: Colors.black,
-                title: Text('Actividades atrasadas'),
+                title: const Text('Actividades atrasadas'),
                 children: actividadesAtrasadas,
               ),
             ],
@@ -375,13 +377,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
       appBar: (isInvolucrado)
           ? AppBar(
               centerTitle: true,
-              title: Text('Resumen del evento'),
+              title: const Text('Resumen del evento'),
             )
           : null,
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await eventosBloc.add(EvtBloc.FetchEventoPorIdEvent(
+          eventosBloc.add(evt_bloc.FetchEventoPorIdEvent(
               detalleEvento['idEvento'].toString()));
           await _planesLogic.getAllPlannes();
           await blocInvitados.fetchAllReporteGrupos(context);
@@ -410,7 +412,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: UniqueKey(),
-        child: Icon(Icons.download),
+        child: const Icon(Icons.download),
         onPressed: () async {
           final data = await eventoLogic.donwloadPDFEvento();
 

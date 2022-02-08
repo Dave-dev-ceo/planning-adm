@@ -32,7 +32,7 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
       try {
         // metodo update
         await logic.updateContratoEvento(
-            event.id, event.archivo, event.tipo_doc, event.tipo_mime);
+            event.id, event.archivo, event.tipoDoc, event.tipoMime);
         yield VerContratosSubir();
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
@@ -44,8 +44,8 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String pdf = await logic
-            .fetchContratosPdf({'id_contrato': event.id_contrato.toString()});
-        yield VerContratosVer(pdf, event.tipo_mime, event.tipo_doc);
+            .fetchContratosPdf({'id_contrato': event.idContrato.toString()});
+        yield VerContratosVer(pdf, event.tipoMime, event.tipoDoc);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -56,8 +56,8 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String archivo =
-            await logic.obtenerContratoById({'id_contrato': event.id_contrato});
-        yield VerContratosVer(archivo, event.tipo_mime, event.tipo_doc);
+            await logic.obtenerContratoById({'id_contrato': event.idContrato});
+        yield VerContratosVer(archivo, event.tipoMime, event.tipoDoc);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -68,9 +68,9 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String archivo =
-            await logic.obtenerContratoById({'id_contrato': event.id_contrato});
+            await logic.obtenerContratoById({'id_contrato': event.idContrato});
         yield DescargarArchivoSubidoState(
-            archivo, event.tipo_mime, event.nombre);
+            archivo, event.tipoMime, event.nombre);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -81,9 +81,9 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String archivo = await logic
-            .obtenerContratoSubidoById({'id_contrato': event.id_contrato});
+            .obtenerContratoSubidoById({'id_contrato': event.idContrato});
 
-        yield VerContratoSubidoState(archivo, event.tipo_mime, event.nombre);
+        yield VerContratoSubidoState(archivo, event.tipoMime, event.nombre);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -94,10 +94,10 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String archivo = await logic
-            .obtenerContratoSubidoById({'id_contrato': event.id_contrato});
+            .obtenerContratoSubidoById({'id_contrato': event.idContrato});
 
         yield DescargarContratoSubidoState(
-            archivo, event.tipo_mime, event.nombre);
+            archivo, event.tipoMime, event.nombre);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -108,8 +108,8 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
 
       try {
         String pdf = await logic
-            .fetchContratosPdf({'id_contrato': event.id_contrato.toString()});
-        yield DescargarContratoState(event.nombre, pdf, event.tipo_mime);
+            .fetchContratosPdf({'id_contrato': event.idContrato.toString()});
+        yield DescargarContratoState(event.nombre, pdf, event.tipoMime);
       } on AutorizacionException {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
@@ -124,8 +124,8 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
           'titulo': event.nombre,
           'archivo': event.archivo,
           'clave': event.clave,
-          'tipo_doc': event.tipo_doc,
-          'tipo_mime': event.tipo_mime
+          'tipo_doc': event.tipoDoc,
+          'tipo_mime': event.tipoMime
         };
         await logic.inserContrato(data);
         yield CrearContratoState();

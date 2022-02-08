@@ -8,7 +8,7 @@ import 'package:planning/src/resources/config_conection.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardLogic {
-  SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
 
   Future<List<DashboardEventoModel>> getAllFechasEventos(
@@ -17,7 +17,7 @@ class DashboardLogic {
     String token = await _sharedPreferences.getToken();
     List<DashboardEventoModel> listaFechaEventos = [];
 
-    final endpoint = '/wedding/DASHBOARD/getFechasEventos';
+    const endpoint = '/wedding/DASHBOARD/getFechasEventos';
 
     final data = {
       'idPlanner': idPlanner,
@@ -53,7 +53,7 @@ class DashboardLogic {
     String token = await _sharedPreferences.getToken();
     List<EventoActividadModel> listaActividades = [];
 
-    final endpoint = '/wedding/DASHBOARD/getAllActividadesPlanner';
+    const endpoint = '/wedding/DASHBOARD/getAllActividadesPlanner';
 
     final data = {
       'idPlanner': idPlanner,
@@ -79,9 +79,6 @@ class DashboardLogic {
           .decode(response.body)
           .map((f) => EventoActividadModel.fromJson(f)));
 
-      listaActividades.forEach((element) {
-        (element.toJson());
-      });
       return listaActividades;
     } else {
       throw DashboardException;

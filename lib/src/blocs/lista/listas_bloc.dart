@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/logic/listas_logic.dart';
 
@@ -32,7 +32,11 @@ class ListasBloc extends Bloc<ListasEvent, ListasState> {
         if (idLista == 0) {
           add(FechtListasEvent());
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
   }
 }

@@ -1,5 +1,7 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
-import 'package:planning/src/ui/Listas/detalleListas.dart';
+import 'package:planning/src/ui/Listas/detalle_listas.dart';
 
 class FullScreenDialogDetalleListasEvent extends StatefulWidget {
   final Map<String, dynamic> lista;
@@ -22,7 +24,7 @@ class _FullScreenDialogDetalleListasState
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override

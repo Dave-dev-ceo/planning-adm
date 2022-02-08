@@ -44,7 +44,7 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
     } else if (event is EditarEventosEvent) {
       try {
         yield EditarEventosState();
-        int data = await logic.EditarEvento(event.data);
+        int data = await logic.editarEvento(event.data);
         yield EditarEventosOkState();
         if (data >= 0) {
           add(FetchEventoPorIdEvent(data.toString()));
@@ -57,7 +57,7 @@ class EventosBloc extends Bloc<EventosEvent, EventosState> {
     } else if (event is FetchEventoPorIdEvent) {
       yield LoadingEventoPorIdState();
       try {
-        ItemModelEvento evento = await logic.fetchEventoPorId(event.id_evento);
+        ItemModelEvento evento = await logic.fetchEventoPorId(event.idEvento);
         yield MostrarEventoPorIdState(evento);
       } on EventoPorIdException {
         yield ErrorEventoPorIdState("Sin eventos");

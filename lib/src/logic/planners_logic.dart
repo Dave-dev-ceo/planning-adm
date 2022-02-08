@@ -13,7 +13,7 @@ class ListaPlannersException implements Exception {}
 class CreatePlannersException implements Exception {}
 
 class FetchListaPlannersLogic extends ListaPlannersLogic {
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override

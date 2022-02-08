@@ -11,7 +11,7 @@ abstract class ListaInvitadosLogic {
 class ListaInvitadosException implements Exception {}
 
 class FetchListaInvitadosLogic extends ListaInvitadosLogic {
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override

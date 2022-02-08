@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/blocs.dart';
@@ -8,21 +10,21 @@ class ReporteEvento extends StatefulWidget {
   final int dataId;
   const ReporteEvento({Key key, this.dataView, this.dataId}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => ReporteEvento(),
+        builder: (context) => const ReporteEvento(),
       );
   @override
   _ReporteEventoState createState() => _ReporteEventoState(dataView, dataId);
 }
 
 class _ReporteEventoState extends State<ReporteEvento> {
-  final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
+  final TextStyle estiloTxt = const TextStyle(fontWeight: FontWeight.bold);
   final String dataView;
   final int dataId;
   bool dialVisible = true;
 
   _ReporteEventoState(this.dataView, this.dataId);
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   listaReporte(BuildContext cont) {
@@ -36,7 +38,7 @@ class _ReporteEventoState extends State<ReporteEvento> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: LoadingCustom());
+        return const Center(child: LoadingCustom());
       },
     );
   }
@@ -45,7 +47,7 @@ class _ReporteEventoState extends State<ReporteEvento> {
   Widget build(BuildContext context) {
     //double pHz = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: Center(
           child: listaReporte(context),
@@ -59,7 +61,7 @@ class _ReporteEventoState extends State<ReporteEvento> {
       padding: const EdgeInsets.all(16),
       children: [
         PaginatedDataTable(
-          header: Text('Invitados'),
+          header: const Text('Invitados'),
           rowsPerPage: 8,
           showCheckboxColumn: false,
           columns: [

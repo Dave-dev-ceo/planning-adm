@@ -9,7 +9,7 @@ import 'package:planning/src/resources/config_conection.dart';
 import 'package:http/http.dart' as http;
 
 class MesasAsignadasService {
-  SharedPreferencesT _sharedPreferencesT = SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferencesT = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
 
   List<MesasAsignadasModel> mesasAsignadas = [];
@@ -46,7 +46,7 @@ class MesasAsignadasService {
       'idEvento': idEvento,
     };
 
-    final endpoint = 'wedding/MESAS/getLayoutMesa';
+    const endpoint = 'wedding/MESAS/getLayoutMesa';
 
     final headers = {
       'Content-type': 'application/json',
@@ -83,7 +83,7 @@ class MesasAsignadasService {
       HttpHeaders.authorizationHeader: token
     };
 
-    final endpoint = 'wedding/EVENTOS/getMesasAsignadas';
+    const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
 
     final response = await http.post(Uri.parse(url + '/' + endpoint),
         body: jsonEncode(data), headers: headers);
@@ -102,11 +102,11 @@ class MesasAsignadasService {
   Future<String> deleteAsignadoFromMesa(
       List<MesasAsignadasModel> asignadosToDelete) async {
     String token = await _sharedPreferencesT.getToken();
-    int id_planner = await _sharedPreferencesT.getIdPlanner();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
     final url = confiC.url + confiC.puerto;
 
     final data = {
-      'id_planner': id_planner,
+      'id_planner': idPlanner,
       'asignadosToDelete':
           asignadosToDelete.map((e) => e.idMesaAsignada).toList(),
     };
@@ -117,7 +117,7 @@ class MesasAsignadasService {
       HttpHeaders.authorizationHeader: token
     };
 
-    final endpoint = 'wedding/EVENTOS/deleteAsignadosOnMesas';
+    const endpoint = 'wedding/EVENTOS/deleteAsignadosOnMesas';
 
     final response = await http.post(Uri.parse(url + '/' + endpoint),
         body: json.encode(data), headers: headers);
@@ -132,11 +132,11 @@ class MesasAsignadasService {
   Future<String> asignarPersonasMesas(
       List<MesasAsignadasModel> listAsignarMesaModel) async {
     String token = await _sharedPreferencesT.getToken();
-    int id_planner = await _sharedPreferencesT.getIdPlanner();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
     final url = confiC.url + confiC.puerto;
 
     final data = {
-      'id_planner': id_planner,
+      'id_planner': idPlanner,
       'mesasAsignadas': listAsignarMesaModel.map((e) => e.toJson()).toList()
     };
 
@@ -146,7 +146,7 @@ class MesasAsignadasService {
       HttpHeaders.authorizationHeader: token
     };
 
-    final endpoint = 'wedding/EVENTOS/createMesasAsignadas';
+    const endpoint = 'wedding/EVENTOS/createMesasAsignadas';
 
     final response = await http.post(Uri.parse(url + '/' + endpoint),
         body: json.encode(data), headers: headers);
@@ -163,11 +163,11 @@ class MesasAsignadasService {
 
   Future<String> getLogoPlanner() async {
     String token = await _sharedPreferencesT.getToken();
-    int id_planner = await _sharedPreferencesT.getIdPlanner();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
     final url = confiC.url + confiC.puerto;
 
     final data = {
-      'idPlanner': id_planner,
+      'idPlanner': idPlanner,
     };
 
     final headers = {
@@ -176,7 +176,7 @@ class MesasAsignadasService {
       HttpHeaders.authorizationHeader: token
     };
 
-    final endpoint = 'wedding/PLANNER/getLogoPlanner';
+    const endpoint = 'wedding/PLANNER/getLogoPlanner';
 
     final response = await http.post(Uri.parse(url + '/' + endpoint),
         body: json.encode(data), headers: headers);
@@ -190,11 +190,11 @@ class MesasAsignadasService {
 
   Future<String> getPDFMesasAsiganadas() async {
     String token = await _sharedPreferencesT.getToken();
-    int id_planner = await _sharedPreferencesT.getIdPlanner();
-    int id_evento = await _sharedPreferencesT.getIdEvento();
+    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    int idEvento = await _sharedPreferencesT.getIdEvento();
     final url = confiC.url + confiC.puerto;
 
-    final data = {'idPlanner': id_planner, 'idEvento': id_evento};
+    final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
 
     final headers = {
       'Content-type': 'application/json',
@@ -202,7 +202,7 @@ class MesasAsignadasService {
       HttpHeaders.authorizationHeader: token
     };
 
-    final endpoint = 'wedding/INVITADOS/getPDFMesasAsiganadas';
+    const endpoint = 'wedding/INVITADOS/getPDFMesasAsiganadas';
 
     final response = await http.post(Uri.parse(url + '/' + endpoint),
         body: json.encode(data), headers: headers);

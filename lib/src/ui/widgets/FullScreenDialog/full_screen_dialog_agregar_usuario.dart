@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:planning/src/ui/usuarios/form_usuario.dart';
 
@@ -7,7 +9,7 @@ class FullScreenDialogAddUsuario extends StatefulWidget {
       : super(key: key);
   @override
   _FullScreenDialogAddUsuarioState createState() =>
-      _FullScreenDialogAddUsuarioState(this.datos);
+      _FullScreenDialogAddUsuarioState(datos);
 }
 
 class _FullScreenDialogAddUsuarioState
@@ -21,7 +23,7 @@ class _FullScreenDialogAddUsuarioState
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -31,7 +33,7 @@ class _FullScreenDialogAddUsuarioState
         title: Text(datos['accion'] == 0
             ? 'Agregar usuario'
             : 'Editar datos de usuario'),
-        actions: [],
+        actions: const [],
         automaticallyImplyLeading: true,
       ),
       body: SafeArea(

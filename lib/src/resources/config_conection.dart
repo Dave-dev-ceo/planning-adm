@@ -3,11 +3,11 @@ class ConfigConection {
   String _puerto;
   bool desarrollo = true;
   set addUrl(String data) {
-    this._url = data;
+    _url = data;
   }
 
   set addPuerto(String data) {
-    this._puerto = data;
+    _puerto = data;
   }
 
   String get url => _url;

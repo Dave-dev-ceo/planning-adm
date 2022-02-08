@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/detalle_listas_logic.dart';
 import 'package:planning/src/models/item_model_detalle_listas.dart';
 part 'detalle_listas_event.dart';
@@ -21,8 +21,10 @@ class DetalleListasBloc extends Bloc<DetalleListasEvent, DetalleListasState> {
         yield MostrarDetalleListasState(detListas);
       } on DetalleListasException {
         yield ErrorMostrarDetalleListasState('Sin articulos');
-      } on TokenException {
-        print('Error');
+      } on TokenException catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is CreateDetalleListasEvent) {
       try {
@@ -40,7 +42,11 @@ class DetalleListasBloc extends Bloc<DetalleListasEvent, DetalleListasState> {
         if (idArticulo == 0) {
           add(FechtDetalleListaEvent(event.idLista));
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is UpdateDetalleListasEvent) {
       try {
         int idArticulo = await logic.editarDetalleLista(event.data);
@@ -48,7 +54,9 @@ class DetalleListasBloc extends Bloc<DetalleListasEvent, DetalleListasState> {
           add(FechtDetalleListaEvent(int.parse(event.data['id_lista'])));
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorCreateDetalleListasrState('No se pudo insertar');
       }
     } else if (event is CreateListasEvent) {

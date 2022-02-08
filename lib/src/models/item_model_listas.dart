@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class ItemModelListas {
   List<Listas> _results = [];
   ItemModelListas.fromJson(List<dynamic> parsedJson) {
@@ -8,7 +10,11 @@ class ItemModelListas {
         temp.add(result);
       }
       _results = temp;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
   List<Listas> get results => _results;
 }

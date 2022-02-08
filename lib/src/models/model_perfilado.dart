@@ -19,16 +19,16 @@ class ItemModelSecciones {
       _Seccion result = _Seccion.fromModel(_secciones[i]);
       temp.add(result);
     }
-    return new ItemModelSecciones(temp);
+    return ItemModelSecciones(temp);
   }
 
   bool hasAcceso({String claveSeccion}) {
     bool acceso = false;
-    _secciones.forEach((sec) {
+    for (var sec in _secciones) {
       if (sec.claveSeccion == claveSeccion) {
         acceso = sec.acceso;
       }
-    });
+    }
     return acceso;
   }
 
@@ -75,16 +75,16 @@ class ItemModelPantallas {
       _Pantalla result = _Pantalla.fromModel(_pantallas[i]);
       temp.add(result);
     }
-    return new ItemModelPantallas(temp);
+    return ItemModelPantallas(temp);
   }
 
   bool hasAcceso({String clavePantalla}) {
     bool acceso = false;
-    _pantallas.forEach((pan) {
+    for (var pan in _pantallas) {
       if (pan.clavePantalla == clavePantalla) {
         acceso = pan.acceso;
       }
-    });
+    }
     return acceso;
   }
 
@@ -108,14 +108,14 @@ class _Pantalla {
     _acceso = dataObj._acceso;
   }
 
-  int get id_seccion => _idSeccion;
+  int get idSeccion => _idSeccion;
   String get clavePantalla => _clavePantalla;
   bool get acceso => _acceso;
 }
 
 class ItemModelPerfil {
-  ItemModelSecciones _secciones;
-  ItemModelPantallas _pantallas;
+  final ItemModelSecciones _secciones;
+  final ItemModelPantallas _pantallas;
 
   ItemModelPerfil(this._secciones, this._pantallas);
 

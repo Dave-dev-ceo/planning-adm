@@ -9,9 +9,9 @@ class ItemModelAddContratos {
     List<_Contratos> temp = []; // lista temp
 
     // extramos los datos | llenamos lista - metodo forEach
-    pardedJson.forEach((data) {
+    for (var data in pardedJson) {
       temp.add(_Contratos(data));
-    });
+    }
 
     _contratos = temp;
   }
@@ -48,26 +48,26 @@ class _Contratos {
   }
 
   // ini getters
-  int get idMachote => this._idMachote;
-  int get idContrato => this._idContrato;
-  String get descripcion => this._descripcion;
-  String get machote => this._machote;
-  String get archivo => this._archivo;
-  String get original => this._original;
-  String get clavePlantilla => this._clavePlantilla;
-  String get tipo_doc => this._tipoDoc;
-  String get tipo_mime => this._tipoMime;
-  String get tipo_mime_original => this._tipoMimeOriginal;
+  int get idMachote => _idMachote;
+  int get idContrato => _idContrato;
+  String get descripcion => _descripcion;
+  String get machote => _machote;
+  String get archivo => _archivo;
+  String get original => _original;
+  String get clavePlantilla => _clavePlantilla;
+  String get tipoDoc => _tipoDoc;
+  String get tipoMime => _tipoMime;
+  String get tipoMimeOriginal => _tipoMimeOriginal;
 
   // ini setters
-  set idMachote(value) => this._idMachote;
-  set idContrato(value) => this._idContrato;
-  set descripcion(value) => this._descripcion;
-  set machote(value) => this._machote;
-  set archivo(value) => this._archivo;
-  set original(value) => this._original;
-  set clavePlantilla(value) => this._clavePlantilla;
-  set tipo_doc(value) => this._tipoDoc;
-  set tipo_mime(value) => this._tipoMime;
-  set tipo_mime_original(value) => this._tipoMimeOriginal;
+  set idMachote(value) => _idMachote;
+  set idContrato(value) => _idContrato;
+  set descripcion(value) => _descripcion;
+  set machote(value) => _machote;
+  set archivo(value) => _archivo;
+  set original(value) => _original;
+  set clavePlantilla(value) => _clavePlantilla;
+  set tipoDoc(value) => _tipoDoc;
+  set tipoMime(value) => _tipoMime;
+  set tipoMimeOriginal(value) => _tipoMimeOriginal;
 }

@@ -10,10 +10,10 @@ class ItemModelComentarios {
     List<_Comentarios> temp = []; // variable temp para ir agregando
 
     // extraemos los datos - metodo forEach
-    pardedJson.forEach((data) {
+    for (var data in pardedJson) {
       temp.add(_Comentarios(data));
-    });
-    
+    }
+
     _comentarios = temp; // guardamos en variable
   }
 
@@ -22,6 +22,7 @@ class ItemModelComentarios {
   // data que recuperamos
   List<_Comentarios> get comentarios => _comentarios;
 }
+
 // objeto
 class _Comentarios {
   // mis variables
@@ -47,17 +48,19 @@ class _Comentarios {
   // }
 
   /// creamos getter
-  int get idComentario => this._idComentario;
-  String get comentarioActividad => this._comentarioActividad;
-  bool get estadoComentario => this._estadoComentario;
-  int get idEventoActividad => this._idEventoActividad;
+  int get idComentario => _idComentario;
+  String get comentarioActividad => _comentarioActividad;
+  bool get estadoComentario => _estadoComentario;
+  int get idEventoActividad => _idEventoActividad;
+
   /// fin getter
 
   /// creamos setter
-  set idComentario(value) => this._idComentario;
-  set comentarioActividad(value) => this._comentarioActividad;
-  set estadoComentario(value) => this._estadoComentario;
-  set idEventoActividad(value) => this._idEventoActividad;
+  set idComentario(value) => _idComentario;
+  set comentarioActividad(value) => _comentarioActividad;
+  set estadoComentario(value) => _estadoComentario;
+  set idEventoActividad(value) => _idEventoActividad;
+
   /// fin setter
 
 }

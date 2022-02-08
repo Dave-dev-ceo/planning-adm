@@ -19,7 +19,7 @@ abstract class AddContratosLogic {
   Future<bool> borrarContratoEvento(int id);
   Future<String> fetchContratosPdf(Map<String, dynamic> data);
   Future<bool> updateContratoEvento(
-      int id, String archivo, String tipo_doc, String tipo_mime);
+      int id, String archivo, String tipoDoc, String tipoMime);
   Future<String> updateValContratos(Map<String, dynamic> data);
   Future<String> fetchValContratos(String _machote);
   Future<String> obtenerContratoById(Map<String, dynamic> data);
@@ -28,8 +28,8 @@ abstract class AddContratosLogic {
 
 class ConsultasAddContratosLogic extends AddContratosLogic {
   // variables configuracion
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
 
   @override
   Future<ItemModelAddContratos> selectContratosFromPlanner() async {
@@ -212,7 +212,7 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
 
   @override
   Future<bool> updateContratoEvento(
-      int id, String archivo, String tipo_doc, String tipo_mime) async {
+      int id, String archivo, String tipoDoc, String tipoMime) async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
@@ -226,8 +226,8 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
           'id_planner': idPlanner.toString(),
           'id_contrato': id.toString(),
           'archivo': archivo,
-          'tipo_doc': tipo_doc,
-          'tipo_mime': tipo_mime
+          'tipo_doc': tipoDoc,
+          'tipo_mime': tipoMime
         },
         headers: {
           HttpHeaders.authorizationHeader: token

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:planning/src/models/item_model-acompanante.dart';
+import 'package:planning/src/models/item_model_acompanante.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_eventos.dart';
 import 'package:planning/src/models/item_model_grupos.dart';

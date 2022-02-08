@@ -42,9 +42,9 @@ class CreateActividadesTimingException implements Exception {}
 class DeleteActividadesTimingException implements Exception {}
 
 class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
 
   @override
   Future<ItemModelActividadesTimings> fetchActividadesTimingsPorPlanner(
@@ -388,6 +388,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     }
   }
 
+  @override
   Future<int> updateEventoActividades(
       int idActividad, bool addActividad, DateTime addDate) async {
     //aqui
@@ -465,7 +466,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/ACTIVIDADESTIMINGS/updateActividadTiming';
+    const endpoint = 'wedding/ACTIVIDADESTIMINGS/updateActividadTiming';
 
     final data = {
       'idPlanner': idPlanner,

@@ -48,7 +48,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
     _focusedDay =
         DateTime.now().isBefore(widget.actividadesLista.first.fechaFinalEvento)
             ? widget.actividadesLista.first.fechaFinalEvento
-                .subtract(Duration(days: 1))
+                .subtract(const Duration(days: 1))
             : DateTime.now();
 
     eventoComentario = BlocProvider.of<ComentariosactividadesBloc>(context);
@@ -68,7 +68,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calendario de actividades'),
+        title: const Text('Calendario de actividades'),
       ),
       body: _mostrarActividades(widget.actividadesLista),
     );
@@ -80,9 +80,9 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
       return BlocBuilder<ComentariosactividadesBloc,
           ComentariosactividadesState>(builder: (context, state) {
         if (state is ComentarioInitialState) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is LodingComentarioState) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is SelectComentarioState) {
           // buscador en header
           if (state.comentario != null) {
@@ -95,12 +95,12 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
             }
           } else {
             eventoComentario.add(SelectComentarioPorIdEvent());
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           }
           if (copyItemModel != null) {
             return _consulta(copyItemModel, actividades);
           } else {
-            return Center(child: Text('Sin datos'));
+            return const Center(child: Text('Sin datos'));
           }
         } else if (state is CreateComentariosState) {
           _idComentario = state.idComentario;
@@ -108,13 +108,13 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
         } else if (state is UpdateComentariosState) {
           return _consulta(copyItemModel, actividades);
         } else {
-          return Center(
+          return const Center(
             child: Text('Error En Data'),
           );
         }
       });
     } else {
-      return Center(
+      return const Center(
         child: Text('Sin actividades'),
       );
     }
@@ -123,14 +123,14 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
   // v2
   Widget _consulta(comentario, actividades) {
     return Container(
-      padding: EdgeInsets.all(30.0),
+      padding: const EdgeInsets.all(30.0),
       child: Card(
         color: Colors.white,
         child: Column(
           children: [
             TableCalendar<Event>(
               locale: 'es_ES',
-              headerStyle: HeaderStyle(
+              headerStyle: const HeaderStyle(
                 formatButtonVisible: false,
                 titleCentered: true,
               ),
@@ -150,7 +150,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
               rangeSelectionMode: _rangeSelectionMode,
               eventLoader: _getEventsForDay,
               startingDayOfWeek: StartingDayOfWeek.monday,
-              calendarStyle: CalendarStyle(
+              calendarStyle: const CalendarStyle(
                 // Use `CalendarStyle` to customize the UI
                 outsideDaysVisible: false,
                 // markerDecoration: BoxDecoration(
@@ -203,7 +203,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
       child: Center(
         child: Text(
           '${events.length}',
-          style: TextStyle().copyWith(
+          style: const TextStyle().copyWith(
             color: Colors.white,
             fontSize: 12.0,
           ),
@@ -221,9 +221,9 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
           itemCount: value.length,
           itemBuilder: (context, index) {
             return Container(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: ExpansionPanelList(
-                animationDuration: Duration(milliseconds: 500),
+                animationDuration: const Duration(milliseconds: 500),
                 expansionCallback: (int i, bool isExpanded) {
                   setState(() {
                     value[index].actividad.isExpanded = !isExpanded;
@@ -242,8 +242,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
                         //     });
                         //   },
                         // ),
-                        title:
-                            Text("${value[index].actividad.nombreActividad}"),
+                        title: Text(value[index].actividad.nombreActividad),
                         subtitle: Text(
                             "${value[index].actividad.descripcionActividad} \n La actividad finaliza el: ${DateFormat('yyyy-MM-dd').format(value[index].actividad.fechaActividad.add(Duration(days: value[index].actividad.duracion)))}"),
                       );
@@ -253,21 +252,23 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
                       children: [
                         ListTile(
                           title: TextField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Agrega un comentario',
                             ),
                             maxLines: 6,
                             controller: TextEditingController(
-                                text:
-                                    '${value[index].actividad.comentario.comentarioTxt}'),
+                                text: value[index]
+                                    .actividad
+                                    .comentario
+                                    .comentarioTxt),
                             onChanged: (valor) {
                               value[index].actividad.comentario.comentarioTxt =
                                   valor;
                             },
                           ),
                           trailing: GestureDetector(
-                            child: Icon(
+                            child: const Icon(
                               Icons.save_sharp,
                               color: Colors.black,
                             ),
@@ -279,7 +280,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
                             },
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15.0,
                         )
                       ],
@@ -309,10 +310,11 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
 
           // hay un bug no muestra 1 actividad agregada pasa solo si es agregada en las primeras 2 fechas
           // si es la primera o la 3 no pasa nada es una actividad con el nombre igual a otra
-          _listFull.forEach((actividad) {
-            if (actividad.fechaActividad == item.fechaInicioActividad)
-              temp.add(Event(('${actividad.nombreActividad}'), actividad));
-          });
+          for (var actividad in _listFull) {
+            if (actividad.fechaActividad == item.fechaInicioActividad) {
+              temp.add(Event((actividad.nombreActividad), actividad));
+            }
+          }
 
           return temp;
         }));
@@ -379,7 +381,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
     actividades.forEach((actividad) {
       Comentario tempComentario;
 
-      modelo.comentarios.forEach((comentarios) {
+      for (var comentarios in modelo.comentarios) {
         if (actividad.idActividadPlanner == comentarios.idEventoActividad) {
           tempComentario = Comentario(
             idComentario: comentarios.idComentario,
@@ -387,15 +389,13 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
             estadoComentario: comentarios.estadoComentario,
           );
         }
-      });
-
-      if (tempComentario == null) {
-        tempComentario = Comentario(
-          idComentario: 0,
-          comentarioTxt: '',
-          estadoComentario: false,
-        );
       }
+
+      tempComentario ??= Comentario(
+        idComentario: 0,
+        comentarioTxt: '',
+        estadoComentario: false,
+      );
 
       tempActividad.add(Actividad(
         idActividad: actividad.idActividadPlanner,
@@ -420,10 +420,11 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
 
   // crear&actualizar
   _caomentariosEvents(actividad) async {
-    if (actividad.comentario.idComentario == null)
-      actividad.comentario.idComentario = await _idComentario;
-    else
+    if (actividad.comentario.idComentario == null) {
+      actividad.comentario.idComentario = _idComentario;
+    } else {
       _idComentario = null;
+    }
     // guardamos en BD cambios
     if (actividad.comentario.idComentario == 0) {
       eventoComentario.add(CreateComentarioEvent(
@@ -433,8 +434,9 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
 
       actividad.comentario.idComentario = null;
 
-      if (_idComentario != null)
-        actividad.comentario.idComentario = await _idComentario;
+      if (_idComentario != null) {
+        actividad.comentario.idComentario = _idComentario;
+      }
     } else {
       // update
       eventoComentario.add(UpdateComentarioEvent(

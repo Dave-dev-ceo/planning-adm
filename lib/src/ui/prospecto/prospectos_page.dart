@@ -10,6 +10,8 @@ import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class ProspectosPage extends StatefulWidget {
+  const ProspectosPage({Key key}) : super(key: key);
+
   @override
   _ProspectosPageState createState() => _ProspectosPageState();
 }
@@ -17,7 +19,7 @@ class ProspectosPage extends StatefulWidget {
 class _ProspectosPageState extends State<ProspectosPage> {
   ProspectoBloc _prospectoBloc;
   List<EtapasModel> etapas = [];
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -48,11 +50,11 @@ class _ProspectosPageState extends State<ProspectosPage> {
             if (state is MostrarEtapasState) {
               etapas = state.etapas;
               return Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(15.0),
                 child: buildEtapas(),
               );
             } else {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             }
@@ -62,7 +64,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
       floatingActionButton: FloatingActionButton(
         heroTag: UniqueKey(),
         tooltip: 'Añadir Etapa',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           _addEtapaSubmit(
               EtapasModel(
@@ -80,11 +82,11 @@ class _ProspectosPageState extends State<ProspectosPage> {
       controller: _scrollController,
       isAlwaysShown: true,
       child: DragAndDropLists(
-        contentsWhenEmpty: Text('Sin datos'),
+        contentsWhenEmpty: const Text('Sin datos'),
         scrollController: _scrollController,
         listWidth: 300,
         listDraggingWidth: 200,
-        listDecoration: BoxDecoration(
+        listDecoration: const BoxDecoration(
           color: Color(0xFFfdf4e5),
           borderRadius: BorderRadius.all(Radius.circular(7.0)),
           boxShadow: <BoxShadow>[
@@ -96,7 +98,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
             ),
           ],
         ),
-        listPadding: EdgeInsets.all(8.0),
+        listPadding: const EdgeInsets.all(8.0),
         axis: Axis.horizontal,
         onItemReorder: _onItemReorder,
         onListReorder: _onListReorder,
@@ -118,10 +120,10 @@ class _ProspectosPageState extends State<ProspectosPage> {
             child: Container(
                 decoration: BoxDecoration(
                   borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(7.0)),
+                      const BorderRadius.vertical(top: Radius.circular(7.0)),
                   color: Color(int.parse(etapa.color)),
                 ),
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: ListTile(
                   title: Text(
                     etapa.nombreEtapa,
@@ -141,7 +143,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                       ),
                       onSelected: (value) {
                         if (value == 2) {
-                          _prospectoBloc.add(DeleteEtapaEvent(etapa.idEtapa));
+                          deleteDialogEtapa(etapa.idEtapa);
                         } else {
                           _addEtapaSubmit(etapa, true);
                         }
@@ -153,7 +155,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                               value: 1,
                             ),
                             if (etapa.claveEtapa == null)
-                              PopupMenuItem(
+                              const PopupMenuItem(
                                 child: Text('Eliminar'),
                                 value: 2,
                               ),
@@ -164,8 +166,8 @@ class _ProspectosPageState extends State<ProspectosPage> {
       ),
       footer: (!etapa.isAdd)
           ? ListTile(
-              title: Text('Añadir prospecto'),
-              leading: Icon(Icons.add),
+              title: const Text('Añadir prospecto'),
+              leading: const Icon(Icons.add),
               hoverColor: Colors.white,
               onTap: () {
                 setState(() {
@@ -174,7 +176,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
               },
             )
           : Card(
-              margin: EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   Form(
@@ -182,7 +184,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Nombre del prospecto',
                             labelText: 'Nombrel del prospecto'),
@@ -199,7 +201,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 12.0,
                   ),
                   Padding(
@@ -210,11 +212,11 @@ class _ProspectosPageState extends State<ProspectosPage> {
                         ElevatedButton(
                             onPressed: () async {
                               if (keyForm.currentState.validate()) {
-                                await _prospectoBloc
+                                _prospectoBloc
                                     .add(AddProspectoEvent(newProspecto));
                               }
                             },
-                            child: Text('Añadir prospecto')),
+                            child: const Text('Añadir prospecto')),
                         IconButton(
                           tooltip: 'Cancelar',
                           hoverColor: Colors.transparent,
@@ -223,7 +225,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                               etapa.isAdd = false;
                             });
                           },
-                          icon: Icon(Icons.close),
+                          icon: const Icon(Icons.close),
                         )
                       ],
                     ),
@@ -231,18 +233,18 @@ class _ProspectosPageState extends State<ProspectosPage> {
                 ],
               ),
             ),
-      leftSide: VerticalDivider(
+      leftSide: const VerticalDivider(
         color: Color(0xFFEBECF0),
         width: 1.5,
         thickness: 1.5,
       ),
-      rightSide: VerticalDivider(
+      rightSide: const VerticalDivider(
         color: Color(0xFFEBECF0),
         width: 1.5,
         thickness: 1.5,
       ),
-      contentsWhenEmpty: Padding(
-        padding: const EdgeInsets.all(8.0),
+      contentsWhenEmpty: const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Text('Sin datos'),
       ),
       children: etapa.prospectos
@@ -252,11 +254,36 @@ class _ProspectosPageState extends State<ProspectosPage> {
     );
   }
 
+  void deleteDialogEtapa(int idEtapa) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('¿Desea eliminar la etapa?'),
+              content: const Text(
+                  'Los prospectos que contiene la etapa también seran eliminados.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _prospectoBloc.add(DeleteEtapaEvent(idEtapa));
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Aceptar'),
+                ),
+              ],
+            ));
+  }
+
   DragAndDropItem _buildItem(
       ProspectoModel prospecto, String nameEtapa, String claveEtapa) {
     return DragAndDropItem(
       child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 5.0),
+        margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 5.0),
         elevation: 3,
         child: ListTile(
           title: Text(prospecto.nombreProspecto),
@@ -317,7 +344,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
                               initialValue: etapa.nombreEtapa,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 hintText: 'Nombre de la etapa',
                                 labelText: 'Nombre de la etapa',
@@ -338,7 +365,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
                               initialValue: etapa.descripcionEtapa,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 hintText: 'Descripción de la etapa',
                                 labelText: 'Descripción de la etapa',
@@ -352,8 +379,8 @@ class _ProspectosPageState extends State<ProspectosPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               children: [
-                                Text('Seleccione el color'),
-                                SizedBox(
+                                const Text('Seleccione el color'),
+                                const SizedBox(
                                   width: 5.0,
                                 ),
                                 GestureDetector(
@@ -386,7 +413,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text('Cancelar'),
+                      child: const Text('Cancelar'),
                     ),
                     TextButton(
                       onPressed: () {
@@ -400,7 +427,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
                           }
                         }
                       },
-                      child: Text('Aceptar'),
+                      child: const Text('Aceptar'),
                     )
                   ],
                 );
@@ -414,7 +441,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
     return showDialog(
         context: context,
         builder: (contex) => AlertDialog(
-              title: Text('Seleccionar color'),
+              title: const Text('Seleccionar color'),
               content: SingleChildScrollView(
                 child: ColorPicker(
                   pickerColor: selectedColor,
@@ -430,33 +457,32 @@ class _ProspectosPageState extends State<ProspectosPage> {
                     onPressed: () {
                       Navigator.of(context).pop(selectedColor);
                     },
-                    child: Text('Aceptar'))
+                    child: const Text('Aceptar'))
               ],
             ));
   }
 
   _onItemReorder(
       int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
-    setState(() {
-      _prospectoBloc.add(
-        UpdateEtapaProspectoEvent(
-            idEtapa: etapas[newListIndex].idEtapa,
-            idProspecto:
-                etapas[oldListIndex].prospectos[oldItemIndex].idProspecto),
-      );
-      ProspectoModel movedItem =
-          etapas[oldListIndex].prospectos.removeAt(oldItemIndex);
-      etapas[newListIndex].prospectos.insert(newItemIndex, movedItem);
-    });
+    _prospectoBloc.add(
+      UpdateEtapaProspectoEvent(
+          idEtapa: etapas[newListIndex].idEtapa,
+          idProspecto:
+              etapas[oldListIndex].prospectos[oldItemIndex].idProspecto),
+    );
+    ProspectoModel movedItem =
+        etapas[oldListIndex].prospectos.removeAt(oldItemIndex);
+    movedItem.idEtapa = etapas[newListIndex].idEtapa;
+    etapas[newListIndex].prospectos.insert(newItemIndex, movedItem);
+    setState(() {});
   }
 
   _onListReorder(int oldListIndex, int newListIndex) async {
     List<UpdateEtapaModel> etapasToUpdate = [];
 
-    setState(() {
-      EtapasModel movedList = etapas.removeAt(oldListIndex);
-      etapas.insert(newListIndex, movedList);
-    });
+    EtapasModel movedList = etapas.removeAt(oldListIndex);
+    etapas.insert(newListIndex, movedList);
+
     for (var i = 0; i < etapas.length; i++) {
       etapas[i].ordenEtapa = i + 1;
       etapasToUpdate.add(UpdateEtapaModel(
@@ -465,6 +491,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
       ));
     }
     _prospectoBloc.add(UpdateEtapaEvent(listEtapasUpdate: etapasToUpdate));
+    setState(() {});
   }
 }
 
@@ -530,7 +557,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   }
 
   SizedBox spacerSizedBoxWidget() {
-    return SizedBox(
+    return const SizedBox(
       height: 10.0,
     );
   }
@@ -544,25 +571,25 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
-              content: Text('¿Esta seguro de eliminar el prospecto?'),
+              content: const Text('¿Esta seguro de eliminar el prospecto?'),
               actions: [
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancelar')),
+                    child: const Text('Cancelar')),
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                       _prospectoBloc.add(
                           DeleteProspectoEvent(widget.prospecto.idProspecto));
                     },
-                    child: Text('Aceptar')),
+                    child: const Text('Aceptar')),
               ],
             ),
           );
         },
-        child: Text('Eliminar prospecto'),
+        child: const Text('Eliminar prospecto'),
       ),
     );
   }
@@ -577,11 +604,11 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
           canEditInvolucrado = true;
         },
       ),
-      leading: Icon(
+      leading: const Icon(
         Icons.person,
         color: Colors.black,
       ),
-      title: Text('Involucrado'),
+      title: const Text('Involucrado'),
       subtitle: TextFormField(
         decoration: InputDecoration(
           suffixIcon: canEditInvolucrado
@@ -592,7 +619,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                       canEditInvolucrado = false;
                     });
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.save,
                     color: Colors.black,
                   ),
@@ -600,10 +627,10 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
               : null,
           hintText: 'Añadir involucrado...',
           disabledBorder: InputBorder.none,
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.blue, width: 1.0),
           ),
-          focusedErrorBorder: OutlineInputBorder(
+          focusedErrorBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.red, width: 1.0),
           ),
           border: InputBorder.none,
@@ -624,8 +651,8 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   }
 
   Widget addEventoButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return Align(
+      alignment: Alignment.center,
       child: ElevatedButton(
           onPressed: () {
             Navigator.of(context)
@@ -634,17 +661,17 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
               Navigator.of(context).pop();
             });
           },
-          child: Text('Crear Evento')),
+          child: const Text('Crear Evento')),
     );
   }
 
   Widget tituloWidget(BuildContext context) {
     return Row(
       children: [
-        Spacer(),
+        const Spacer(),
         Column(
           children: [
-            AutoSizeText(
+            const AutoSizeText(
               'Datos del prospecto',
               maxFontSize: 18.0,
               style: TextStyle(
@@ -657,12 +684,12 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             )
           ],
         ),
-        Spacer(),
+        const Spacer(),
         IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
         )
       ],
     );
@@ -682,11 +709,11 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             canEditEmail = true;
           },
         ),
-        leading: Icon(
+        leading: const Icon(
           Icons.email_outlined,
           color: Colors.black,
         ),
-        title: Text('Correo'),
+        title: const Text('Correo'),
         subtitle: TextFormField(
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
@@ -718,7 +745,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                         canEditEmail = false;
                       });
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.save,
                       color: Colors.black,
                     ),
@@ -727,10 +754,10 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             hintText: 'Añadir correo electrónico...',
             helperText: 'correo@dominio.com',
             disabledBorder: InputBorder.none,
-            focusedBorder: OutlineInputBorder(
+            focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 1.0),
             ),
-            focusedErrorBorder: OutlineInputBorder(
+            focusedErrorBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.red, width: 1.0),
             ),
             border: InputBorder.none,
@@ -767,11 +794,11 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             canEditPhone = true;
           });
         },
-        leading: Icon(
+        leading: const Icon(
           Icons.phone,
           color: Colors.black,
         ),
-        title: Text('Teléfono'),
+        title: const Text('Teléfono'),
         subtitle: TextFormField(
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
@@ -789,20 +816,20 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                         });
                       }
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.save,
                       color: Colors.black,
                     ),
                   )
                 : null,
             hintText: 'Añadir teléfono...',
-            focusedBorder: OutlineInputBorder(
+            focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 1.0),
             ),
             border: InputBorder.none,
           ),
           validator: (value) {
-            if (value.length < 11 && value.length > 0) {
+            if (value.length < 11 && value.isNotEmpty) {
               return null;
             }
             return 'El numero debe tener 10 digitos';
@@ -835,11 +862,11 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
       onTap: () => setState(() {
         isEditDescripcion = true;
       }),
-      leading: Icon(
+      leading: const Icon(
         Icons.person,
         color: Colors.black,
       ),
-      title: Text('Descripción'),
+      title: const Text('Descripción'),
       subtitle: TextFormField(
         decoration: InputDecoration(
           suffixIcon: isEditDescripcion
@@ -851,7 +878,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                       isEditDescripcion = false;
                     });
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.save,
                     color: Colors.black,
                   ),
@@ -859,10 +886,10 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
               : null,
           hintText: 'Añadir una descripción más detallada...',
           disabledBorder: InputBorder.none,
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.blue, width: 1.0),
           ),
-          focusedErrorBorder: OutlineInputBorder(
+          focusedErrorBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.red, width: 1.0),
           ),
           border: InputBorder.none,
@@ -884,7 +911,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
 
   Widget namePredecesorWidget() {
     return ListTile(
-      leading: Icon(Icons.article_outlined, color: Color(0xFF172C4C)),
+      leading: const Icon(Icons.article_outlined, color: Color(0xFF172C4C)),
       title: GestureDetector(
         onTap: () => setState(
           () {
@@ -892,7 +919,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
           },
         ),
         child: TextFormField(
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16.0,
           ),
@@ -906,13 +933,13 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                         canEditName = false;
                       });
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.save,
                       color: Colors.black,
                     ),
                   )
                 : null,
-            focusedBorder: OutlineInputBorder(
+            focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 1.0),
             ),
             border: InputBorder.none,
@@ -935,7 +962,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ListTile(
+        const ListTile(
           leading: Icon(
             Icons.wysiwyg,
             color: Color(0xFF172C4C),
@@ -945,7 +972,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
         ListTile(
           title: TextField(
             controller: textEditingController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.blue, width: 1.0),
               ),
@@ -955,7 +982,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
           ),
           trailing: IconButton(
             onPressed: () {
-              if (textEditingController.text.length > 0) {
+              if (textEditingController.text.isNotEmpty) {
                 ActividadProspectoModel newActividad = ActividadProspectoModel(
                   descripcion: textEditingController.text,
                   idProspecto: widget.prospecto.idProspecto,
@@ -966,7 +993,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                 });
               }
             },
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
             color: Colors.black,
           ),
         ),
@@ -976,13 +1003,13 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
               final etapas = state.etapas;
               final etapa = etapas
                   .firstWhere((e) => e.idEtapa == widget.prospecto.idEtapa);
-              final prospecto = etapa.prospectos.firstWhere(
+              final prospecto = etapa?.prospectos?.firstWhere(
                   (p) => p.idProspecto == widget.prospecto.idProspecto);
               final List<ActividadProspectoModel> actividades =
                   prospecto.actividades;
               return Flexible(
                 child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: actividades.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -993,7 +1020,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                         });
                       },
                       key: UniqueKey(),
-                      leading: Icon(Icons.messenger_sharp),
+                      leading: const Icon(Icons.messenger_sharp),
                       title: TextFormField(
                         enabled: actividades[index].isEdit,
                         initialValue: actividades[index].descripcion,
@@ -1001,7 +1028,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                             border: InputBorder.none,
                             disabledBorder: InputBorder.none,
                             enabledBorder: InputBorder.none,
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.blue,
                                 width: 1.0,
@@ -1016,7 +1043,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                                         actividades[index].isEdit = false;
                                       });
                                     },
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.save,
                                       color: Colors.black,
                                     ))
@@ -1030,14 +1057,14 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                    content:
-                                        Text('¿Desea eliminar la actividad?'),
+                                    content: const Text(
+                                        '¿Desea eliminar la actividad?'),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text('Cancelar'),
+                                        child: const Text('Cancelar'),
                                       ),
                                       TextButton(
                                         onPressed: () {
@@ -1048,19 +1075,19 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                                           );
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text('Aceptar'),
+                                        child: const Text('Aceptar'),
                                       )
                                     ],
                                   ));
                         },
-                        icon: Icon(Icons.delete_forever),
+                        icon: const Icon(Icons.delete_forever),
                       ),
                     );
                   },
                 ),
               );
             }
-            return LinearProgressIndicator();
+            return const LinearProgressIndicator();
           },
         ),
       ],
@@ -1082,7 +1109,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             child: TextFormField(
               enabled: isFocusDescripcion,
               keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue, width: 1.0),
                   ),
@@ -1112,8 +1139,8 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                       isEditDescripcion = false;
                     });
                   },
-                  child: Text('Guardar')),
-              SizedBox(
+                  child: const Text('Guardar')),
+              const SizedBox(
                 width: 6.0,
               ),
               IconButton(
@@ -1126,7 +1153,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                     }
                   });
                 },
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
               ),
             ],
           )

@@ -15,8 +15,8 @@ class PermisosException implements Exception {}
 class TokenPermisosException implements Exception {}
 
 class PerfiladoLogic implements PermisosLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
 
   PerfiladoLogic();
 
@@ -40,7 +40,7 @@ class PerfiladoLogic implements PermisosLogic {
           ItemModelSecciones.fromJson(data['secciones']);
       ItemModelPantallas pantallas =
           ItemModelPantallas.fromJson(data['pantallas']);
-      return new ItemModelPerfil(secciones, pantallas);
+      return ItemModelPerfil(secciones, pantallas);
     } else if (response.statusCode == 401) {
       throw TokenPermisosException();
     } else {

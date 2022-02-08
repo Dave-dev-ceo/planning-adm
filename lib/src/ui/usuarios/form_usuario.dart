@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,19 +16,19 @@ class FormUsuario extends StatefulWidget {
   final Map<String, dynamic> datos;
   const FormUsuario({Key key, this.datos}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => FormUsuario(),
+        builder: (context) => const FormUsuario(),
       );
   @override
-  _FormUsuarioState createState() => _FormUsuarioState(this.datos);
+  _FormUsuarioState createState() => _FormUsuarioState(datos);
 }
 
 class _FormUsuarioState extends State<FormUsuario> {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   final Map<String, dynamic> datos;
   RolesBloc rolesBloc;
 
   ItemModelRoles _roles;
-  GlobalKey<FormState> formKey = new GlobalKey();
+  GlobalKey<FormState> formKey = GlobalKey();
 
   BuildContext _dialogContext;
 
@@ -39,12 +41,12 @@ class _FormUsuarioState extends State<FormUsuario> {
 
   bool valid = false;
 
-  Map<int, Widget> _estatus = {
-    0: Text(
+  final Map<int, Widget> _estatus = {
+    0: const Text(
       'Activo',
       style: TextStyle(fontSize: 12),
     ),
-    1: Text(
+    1: const Text(
       'Inactivo',
       style: TextStyle(fontSize: 12),
     ),
@@ -72,6 +74,7 @@ class _FormUsuarioState extends State<FormUsuario> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: ScrollController(),
       child: BlocListener<UsuarioBloc, UsuarioState>(
         listener: (context, state) {
           // Alta de usuario
@@ -105,10 +108,10 @@ class _FormUsuarioState extends State<FormUsuario> {
           width: double.infinity,
           alignment: Alignment.center,
           //child: Expanded(
-          child: new Container(
+          child: Container(
             width: 800,
-            margin: new EdgeInsets.all(10.0),
-            child: new Form(
+            margin: const EdgeInsets.all(10.0),
+            child: Form(
               key: formKey,
               child: formUI(context),
             ),
@@ -119,16 +122,16 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   _setInitialController() {
-    nombreCtrl = new TextEditingController(
-        text: datos['accion'] == 1 ? datos['data'].result.nombre_completo : '');
-    correoCtrl = new TextEditingController(
+    nombreCtrl = TextEditingController(
+        text: datos['accion'] == 1 ? datos['data'].result.nombreCompleto : '');
+    correoCtrl = TextEditingController(
         text: datos['accion'] == 1 ? datos['data'].result.correo : '');
-    telefonoCtrl = new TextEditingController(
+    telefonoCtrl = TextEditingController(
         text: datos['accion'] == 1
             ? datos['data'].result.telefono.toString()
             : '');
-    pwdCtrl = new TextEditingController();
-    confirmPwdCtrl = new TextEditingController();
+    pwdCtrl = TextEditingController();
+    confirmPwdCtrl = TextEditingController();
     _estatusSeleccionado = datos['accion'] == 1
         ? datos['data'].result.estatus == 'A'
             ? 0
@@ -138,20 +141,21 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   agregarInput(
-      IconData icono,
-      TextInputType inputType,
-      TextEditingController controller,
-      String titulo,
-      Function validator,
-      List<TextInputFormatter> inputF,
-      {bool obscureT: false,
-      int maxL: 0}) {
+    IconData icono,
+    TextInputType inputType,
+    TextEditingController controller,
+    String titulo,
+    Function validator,
+    List<TextInputFormatter> inputF, {
+    bool obscureT = false,
+    int maxL = 0,
+  }) {
     return formItemsDesign(
         icono,
         TextFormField(
           keyboardType: inputType,
           controller: controller,
-          decoration: new InputDecoration(
+          decoration: InputDecoration(
             labelText: titulo,
           ),
           validator: validator,
@@ -179,7 +183,7 @@ class _FormUsuarioState extends State<FormUsuario> {
             ? agregarInput(Icons.lock, TextInputType.visiblePassword, pwdCtrl,
                 'Contraseña', validatePwd, null,
                 obscureT: true, maxL: 30)
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         datos['accion'] == 0
             ? agregarInput(
                 Icons.lock,
@@ -190,22 +194,22 @@ class _FormUsuarioState extends State<FormUsuario> {
                 null,
                 obscureT: true,
                 maxL: 30)
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         datos['accion'] == 1
             ? formItemsDesign(
                 Icons.bar_chart,
                 Row(
                   children: [
-                    Expanded(child: Text('Estatus')),
+                    const Expanded(child: Text('Estatus')),
                     Expanded(
                       child: MaterialSegmentedControl(
                         children: _estatus,
                         selectionIndex: _estatusSeleccionado,
-                        borderColor: Color(0xFF000000),
-                        selectedColor: Color(0xFF000000),
+                        borderColor: const Color(0xFF000000),
+                        selectedColor: const Color(0xFF000000),
                         unselectedColor: Colors.white,
                         borderRadius: 32.0,
-                        horizontalPadding: EdgeInsets.all(8),
+                        horizontalPadding: const EdgeInsets.all(8),
                         onSegmentChosen: (index) {
                           setState(() {
                             _estatusSeleccionado = index;
@@ -215,13 +219,13 @@ class _FormUsuarioState extends State<FormUsuario> {
                     ),
                   ],
                 ))
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         formItemsDesign(
             Icons.group,
             Row(
               children: <Widget>[
-                Text('Rol a asignar'),
-                SizedBox(
+                const Text('Rol a asignar'),
+                const SizedBox(
                   width: 15,
                 ),
                 _listaRoles(),
@@ -232,11 +236,11 @@ class _FormUsuarioState extends State<FormUsuario> {
             _save(contextForm);
           },
           child: Text(datos['accion'] == 0 ? 'Crear usuario' : 'Editar usuario',
-              style: TextStyle(fontSize: 18, color: Colors.white)),
+              style: const TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
             primary: hexToColor('#000000'), // background
             onPrimary: Colors.white, // foreground
-            padding: EdgeInsets.symmetric(horizontal: 68, vertical: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 25),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
@@ -249,7 +253,7 @@ class _FormUsuarioState extends State<FormUsuario> {
 
   formItemsDesign(icon, item) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Card(child: ListTile(leading: Icon(icon), title: item)),
     );
   }
@@ -269,7 +273,7 @@ class _FormUsuarioState extends State<FormUsuario> {
           usuarioBloc.add(CrearUsuarioEvent(jsonUsuario));
         } else {
           Map<String, dynamic> jsonUsuario = {
-            'id_usuario': datos['data'].result.id_usuario,
+            'id_usuario': datos['data'].result.idUsuario,
             'nombre_completo': nombreCtrl.text,
             'correo': correoCtrl.text,
             'telefono': telefonoCtrl.text,
@@ -292,7 +296,7 @@ class _FormUsuarioState extends State<FormUsuario> {
     if (type == "msg") {
       child = Text(msg);
     } else if (type == "loading") {
-      child = Center(child: LoadingCustom());
+      child = const Center(child: LoadingCustom());
     }
     showDialog(
         context: context,
@@ -304,12 +308,12 @@ class _FormUsuarioState extends State<FormUsuario> {
                 textAlign: TextAlign.center,
               ),
               content: child,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(32.0))),
               actions: type != "log"
                   ? <Widget>[
                       TextButton(
-                        child: Text('Cerrar'),
+                        child: const Text('Cerrar'),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -320,7 +324,7 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   _dialogSpinner(String title) {
-    Widget child = LoadingCustom();
+    Widget child = const LoadingCustom();
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -332,7 +336,7 @@ class _FormUsuarioState extends State<FormUsuario> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
@@ -340,7 +344,7 @@ class _FormUsuarioState extends State<FormUsuario> {
 
   String validateNombre(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (value.length < 5) {
       return "El nombre es necesario";
     } else if (!regExp.hasMatch(value)) {
@@ -350,9 +354,9 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   String validateCorreo(String value) {
-    RegExp regExp = new RegExp(
+    RegExp regExp = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return 'Dato requerido';
     } else if (!regExp.hasMatch(value)) {
       return 'Formato de correo inválido';
@@ -362,8 +366,8 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   String validateTelefono(String value) {
-    RegExp regExp = new RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$');
-    if (value.length == 0) {
+    RegExp regExp = RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$');
+    if (value.isEmpty) {
       return 'Dato requerido';
     } else if (!regExp.hasMatch(value)) {
       return 'Número telefónico inválido';
@@ -373,8 +377,8 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   String validatePwd(String value) {
-    RegExp regExp = new RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
-    if (value.length == 0) {
+    RegExp regExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
+    if (value.isEmpty) {
       return 'Dato requerido';
     } else if (!regExp.hasMatch(value)) {
       return 'La contraseña debe tener al menos 8 dígitos, una letra mayúscula, una letra minúscula y un número';
@@ -384,8 +388,8 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   String validateConfirmPwd(String value) {
-    RegExp regExp = new RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
-    if (value.length == 0) {
+    RegExp regExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
+    if (value.isEmpty) {
       return 'Dato requerido';
     } else {
       if (!regExp.hasMatch(value)) {
@@ -399,7 +403,7 @@ class _FormUsuarioState extends State<FormUsuario> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   // INPUT SELECT PARA ROL DE USUARIO
@@ -409,16 +413,16 @@ class _FormUsuarioState extends State<FormUsuario> {
     return BlocBuilder<RolesBloc, RolesState>(
       builder: (context, state) {
         if (state is RolesInitial) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is ErrorTokenRoles) {
           return _showDialogMsg(context);
         } else if (state is LoadingRoles) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is MostrarRoles) {
           _roles = state.roles;
           if (banderaSeleccion && _roles.roles != null) {
-            _rolSelect = datos['accion'] == 1 ? datos['data'].result.id_rol : 0;
-            _roles.roles.any((rol) => rol.id_rol == _rolSelect)
+            _rolSelect = datos['accion'] == 1 ? datos['data'].result.idRol : 0;
+            _roles.roles.any((rol) => rol.idRol == _rolSelect)
                 ? _mySelectionG = _rolSelect
                 : _mySelectionG = 0;
             banderaSeleccion = false;
@@ -431,7 +435,7 @@ class _FormUsuarioState extends State<FormUsuario> {
             child: Text(state.message),
           );
         } else {
-          return Center(child: Text('Sin permisos'));
+          return const Center(child: Text('Sin permisos'));
         }
       },
     );
@@ -446,7 +450,7 @@ class _FormUsuarioState extends State<FormUsuario> {
       style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF000000),
+        color: const Color(0xFF000000),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -455,10 +459,10 @@ class _FormUsuarioState extends State<FormUsuario> {
       },
       items: roles.roles.map((rol) {
         return DropdownMenuItem(
-          value: rol.id_rol,
+          value: rol.idRol,
           child: Text(
-            rol.nombre_rol,
-            style: TextStyle(fontSize: 18),
+            rol.nombreRol,
+            style: const TextStyle(fontSize: 18),
           ),
         );
       }).toList(),
@@ -468,17 +472,17 @@ class _FormUsuarioState extends State<FormUsuario> {
   _showDialogMsg(BuildContext contextT) {
     _dialogContext = contextT;
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Sesión",
         textAlign: TextAlign.center,
       ),
-      content: Text(
+      content: const Text(
           'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[
         TextButton(
-          child: Text('Cerrar'),
+          child: const Text('Cerrar'),
           onPressed: () async {
             await _sharedPreferences.clear();
             Navigator.of(contextT)

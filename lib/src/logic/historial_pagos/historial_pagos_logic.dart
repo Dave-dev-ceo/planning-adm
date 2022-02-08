@@ -7,14 +7,14 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
 
 class HistorialPagosLogic {
-  SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
 
   Future<List<HistorialPagosModel>> getPagosByEvent() async {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/PAGOS/getPagosByEvento';
+    const endpoint = 'wedding/PAGOS/getPagosByEvento';
 
     final data = {
       'idEvento': idEvento,
@@ -45,7 +45,7 @@ class HistorialPagosLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/PAGOS/agregarPagosByEvento';
+    const endpoint = 'wedding/PAGOS/agregarPagosByEvento';
 
     final data = {
       'idEvento': idEvento,
@@ -76,7 +76,7 @@ class HistorialPagosLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/PAGOS/editarHistorialPagoByEvento';
+    const endpoint = 'wedding/PAGOS/editarHistorialPagoByEvento';
 
     final data = {
       'idEvento': idEvento,
@@ -108,7 +108,7 @@ class HistorialPagosLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/PAGOS/eliminarPagoByEvento';
+    const endpoint = 'wedding/PAGOS/eliminarPagoByEvento';
 
     final data = {
       'idEvento': idEvento,

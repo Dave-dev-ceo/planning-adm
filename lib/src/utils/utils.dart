@@ -20,9 +20,7 @@ void downloadFile(String data, String tituloTemp,
     titulo = tituloTemp + '-' + date.toString();
   }
 
-  if (extensionFile == null) {
-    extensionFile = 'pdf';
-  }
+  extensionFile ??= 'pdf';
 
   final bytes = base64Decode(data);
   if (kIsWeb) {
@@ -58,13 +56,17 @@ void downloadFile(String data, String tituloTemp,
         f.writeAsBytesSync(bytes);
         result['filePath'] = f.path;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       } finally {
         NoticationsService()
             .showNotification(1, 'Se descargó el archivo', result, 2);
       }
     } else {
-      print('NO HAY PERMISO');
+      if (kDebugMode) {
+        print('NO HAY PERMISO');
+      }
     }
   }
 }

@@ -12,7 +12,7 @@ import 'package:responsive_grid/responsive_grid.dart';
 
 class EditProveedorDialog extends StatefulWidget {
   final ItemProveedor proveedor;
-  EditProveedorDialog({Key key, this.proveedor}) : super(key: key);
+  const EditProveedorDialog({Key key, this.proveedor}) : super(key: key);
 
   @override
   _EditProveedorDialogState createState() => _EditProveedorDialogState();
@@ -37,13 +37,16 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
     (widget.proveedor.estatus == 'Activo') ? estatus = true : estatus = false;
     proveedorBloc = BlocProvider.of<ProveedorBloc>(context);
     servicioBloc = BlocProvider.of<ServiciosBloc>(context);
-    servicioBloc.add(FechtServiciosEvent());
+    servicioBloc
+        .add(FechtServiciosByProveedorEvent(widget.proveedor.idProveedor));
 
     peticionPaises = getPaises();
-    if (widget.proveedor.idPais != null)
+    if (widget.proveedor.idPais != null) {
       peticionEstados = getEstados(widget.proveedor.idPais);
-    if (widget.proveedor.idEstado != null)
+    }
+    if (widget.proveedor.idEstado != null) {
       peticionCiudades = getCiudades(widget.proveedor.idEstado);
+    }
     super.initState();
   }
 
@@ -52,7 +55,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Proveedor'),
+        title: const Text('Editar Proveedor'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -64,7 +67,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
             ),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Form(
@@ -87,7 +90,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                               widget.proveedor.nombre = value;
                             },
                             initialValue: widget.proveedor.nombre,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Nombre proveedor'),
                           ),
@@ -115,7 +118,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                               }
                             },
                             initialValue: widget.proveedor.correo,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Correo electrónico',
                               hintText: 'Correo electrónico',
@@ -143,7 +146,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                               }
                             },
                             initialValue: widget.proveedor.telefono,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Teléfono',
                               hintText: 'Teléfono',
@@ -163,7 +166,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                               widget.proveedor.direccion = value;
                             },
                             initialValue: widget.proveedor.direccion,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Dirección',
                               hintText: 'Dirección',
@@ -180,7 +183,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                               widget.proveedor.descripcion = value;
                             },
                             initialValue: widget.proveedor.descripcion,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Descripción del proveedor',
                             ),
@@ -201,13 +204,14 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                                 return DropdownButtonFormField<int>(
                                   isExpanded: true,
                                   onChanged: (value) => setState(() {
-                                    if (widget.proveedor.idPais != value)
+                                    if (widget.proveedor.idPais != value) {
                                       widget.proveedor.idEstado = null;
+                                    }
                                     widget.proveedor.idPais = value;
                                     peticionEstados = getEstados(value);
                                   }),
                                   value: widget.proveedor.idPais,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     label: Text('País'),
                                     border: OutlineInputBorder(),
                                   ),
@@ -220,7 +224,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                                 );
                               }
 
-                              return LinearProgressIndicator();
+                              return const LinearProgressIndicator();
                             },
                           ),
                         ),
@@ -240,12 +244,13 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                                     isExpanded: true,
                                     value: widget.proveedor.idEstado,
                                     onChanged: (value) => setState(() {
-                                      if (widget.proveedor.idEstado != value)
+                                      if (widget.proveedor.idEstado != value) {
                                         widget.proveedor.idCiudad = null;
+                                      }
                                       widget.proveedor.idEstado = value;
                                       peticionCiudades = getCiudades(value);
                                     }),
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       label: Text('Estado'),
                                       border: OutlineInputBorder(),
                                     ),
@@ -257,7 +262,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                                         .toList(),
                                   );
                                 }
-                                return LinearProgressIndicator();
+                                return const LinearProgressIndicator();
                               },
                             ),
                           ),
@@ -274,10 +279,12 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                                 if (snapshot.hasData) {
                                   final ciudades = snapshot.data;
                                   return DropdownButtonFormField<int>(
+                                    style: const TextStyle(
+                                        overflow: TextOverflow.ellipsis),
                                     value: widget.proveedor.idCiudad,
                                     onChanged: (value) =>
                                         widget.proveedor.idCiudad = value,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       label: Text('Ciudad'),
                                       border: OutlineInputBorder(),
                                     ),
@@ -289,7 +296,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                                         .toList(),
                                   );
                                 }
-                                return LinearProgressIndicator();
+                                return const LinearProgressIndicator();
                               },
                             ),
                           ),
@@ -297,7 +304,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 Text(
@@ -307,32 +314,25 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
                 BlocBuilder<ServiciosBloc, ServiciosState>(
                   builder: (context, state) {
                     if (state is LoadingServiciosState) {
-                      return Center(child: LoadingCustom());
-                    } else if (state is MostrarServiciosState) {
-                      if (state.listServicios != null) {
-                        _listServicios = state.listServicios;
-                        servicioBloc.add(FechtServiciosByProveedorEvent(
-                            widget.proveedor.id_proveedor));
-                        return Center(child: Text('Sin servicios'));
-                      } else {
-                        return Center(child: Text('Sin servicios'));
-                      }
+                      return const Center(child: LoadingCustom());
                     } else if (state is MostrarServiciosByProveedorState) {
+                      _listServicios = state.servicios;
+
                       List<ServiciosModel> servicio = [];
-                      state.listServicios.results.forEach((element) {
+                      for (var element in state.listServiciosEvent.results) {
                         servicio.add(ServiciosModel(
-                            id_servicio: element.id_servicio,
+                            idServicio: element.idServicio,
                             nombre: element.nombre));
-                      });
+                      }
                       widget.proveedor.servicio = servicio;
                       if (_listServicios != null) {
                         return listToSelectServicios(
                             _listServicios, widget.proveedor);
                       } else {
-                        return Center(child: Text('Sin servicios'));
+                        return const Center(child: Text('Sin servicios'));
                       }
                     } else {
-                      return Center(child: Text('Sin servicios'));
+                      return const Center(child: Text('Sin servicios'));
                     }
                   },
                 )
@@ -345,7 +345,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
         heroTag: UniqueKey(),
         onPressed: () async {
           if (keyFormEditProveedor.currentState.validate()) {
-            await proveedorBloc.add(UpdateProveedor(widget.proveedor));
+            proveedorBloc.add(UpdateProveedor(widget.proveedor));
 
             MostrarAlerta(
                 mensaje: 'Se ha editado correctamente el invitado',
@@ -354,7 +354,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
             Navigator.of(context).pop();
           }
         },
-        child: Icon(Icons.save),
+        child: const Icon(Icons.save),
       ),
     );
   }
@@ -367,11 +367,11 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
       itemBuilder: (context, index) {
         bool temp = false;
 
-        proveedor.servicio.forEach((element) {
-          if (element.id_servicio == servicios.results[index].id_servicio) {
+        for (var element in proveedor.servicio) {
+          if (element.idServicio == servicios.results[index].idServicio) {
             temp = true;
           }
-        });
+        }
         checkeds.add(temp);
         return CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
@@ -381,17 +381,17 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
             setState(() {
               if (checkeds[index]) {
                 listServiciostoAdd.removeWhere((idServicio) =>
-                    idServicio == servicios.results[index].id_servicio);
+                    idServicio == servicios.results[index].idServicio);
                 proveedorBloc.add(DeleteServicioProvEvent(
-                    servicios.results[index].id_servicio,
-                    proveedor.id_proveedor));
+                    servicios.results[index].idServicio,
+                    proveedor.idProveedor));
 
                 checkeds[index] = false;
               } else {
-                listServiciostoAdd.add(servicios.results[index].id_servicio);
+                listServiciostoAdd.add(servicios.results[index].idServicio);
                 proveedorBloc.add(InsertServicioProvEvent(
-                    servicios.results[index].id_servicio,
-                    proveedor.id_proveedor));
+                    servicios.results[index].idServicio,
+                    proveedor.idProveedor));
                 checkeds[index] = true;
               }
             });

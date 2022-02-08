@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
@@ -17,7 +19,7 @@ class FullScreenDialogEditContrato extends StatefulWidget {
 
   @override
   _FullScreenDialogEditContratoState createState() =>
-      _FullScreenDialogEditContratoState(this.data);
+      _FullScreenDialogEditContratoState(data);
 }
 
 class _FullScreenDialogEditContratoState
@@ -26,7 +28,7 @@ class _FullScreenDialogEditContratoState
   ItemModelEtiquetas itemModelET;
   EtiquetasBloc etiquetasBloc;
   ContratosDosBloc contratosBlocDos;
-  ApiProvider api = new ApiProvider();
+  ApiProvider api = ApiProvider();
   String machote = '';
   final Map<String, dynamic> data;
   _FullScreenDialogEditContratoState(this.data);
@@ -37,13 +39,13 @@ class _FullScreenDialogEditContratoState
     etiquetasBloc.add(FechtEtiquetasEvent());
     contratosBlocDos = BlocProvider.of<ContratosDosBloc>(context);
     contratosBlocDos
-        .add(FectValContratoEvent(this.data['id_contrato'].toString()));
+        .add(FectValContratoEvent(data['id_contrato'].toString()));
 
     super.initState();
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -52,82 +54,80 @@ class _FullScreenDialogEditContratoState
     setState(() {});
     return Scaffold(
         appBar: AppBar(
-          title: Text('Editar contrato'),
+          title: const Text('Editar contrato'),
           backgroundColor: hexToColor('#fdf4e5'),
-          actions: [],
+          actions: const [],
           automaticallyImplyLeading: true,
         ),
         body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      'Variables',
-                      style: TextStyle(fontSize: 25),
-                    ),
+          child: Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 20,
+              ),
+              const SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Center(
+                  child: Text(
+                    'Variables',
+                    style: TextStyle(fontSize: 25),
                   ),
                 ),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: BlocBuilder<EtiquetasBloc, EtiquetasState>(
-                    builder: (context, state) {
-                      if (state is LoadingEtiquetasState) {
-                        return Center(child: LoadingCustom());
-                      } else if (state is MostrarEtiquetasState) {
-                        itemModelET = state.etiquetas;
-                        return _constructorLista(state.etiquetas);
-                      } else if (state is ErrorListaEtiquetasState) {
-                        return Center(
-                          child: Text(state.message),
-                        );
-                      } else {
-                        return Center(child: LoadingCustom());
-                        // return _constructorLista(itemModelET);
-                      }
-                    },
+              ),
+              SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: BlocBuilder<EtiquetasBloc, EtiquetasState>(
+                  builder: (context, state) {
+                    if (state is LoadingEtiquetasState) {
+                      return const Center(child: LoadingCustom());
+                    } else if (state is MostrarEtiquetasState) {
+                      itemModelET = state.etiquetas;
+                      return _constructorLista(state.etiquetas);
+                    } else if (state is ErrorListaEtiquetasState) {
+                      return Center(
+                        child: Text(state.message),
+                      );
+                    } else {
+                      return const Center(child: LoadingCustom());
+                      // return _constructorLista(itemModelET);
+                    }
+                  },
+                ),
+              ),
+              const Divider(
+                height: 20,
+                thickness: 5,
+              ),
+              ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: size.width * 0.8,
                   ),
-                ),
-                const Divider(
-                  height: 20,
-                  thickness: 5,
-                ),
-                ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: size.width * 0.8,
-                    ),
-                    child: BlocBuilder<ContratosDosBloc, ContratosState>(
-                        builder: (context, state) {
-                      if (state is FectValContratoState) {
-                        return HtmlEditor(
-                            controller: controller, //required
-                            htmlEditorOptions: HtmlEditorOptions(
-                                autoAdjustHeight: true,
-                                adjustHeightForKeyboard: true,
-                                hint: "Escribe aquí...",
-                                initialText: state.valor.toString()),
-                            otherOptions: OtherOptions(
-                              height: size.height * 0.8,
-                            ));
-                      } else {
-                        return Text('data');
-                      }
-                    })),
-              ],
-            ),
+                  child: BlocBuilder<ContratosDosBloc, ContratosState>(
+                      builder: (context, state) {
+                    if (state is FectValContratoState) {
+                      return HtmlEditor(
+                          controller: controller, //required
+                          htmlEditorOptions: HtmlEditorOptions(
+                              autoAdjustHeight: true,
+                              adjustHeightForKeyboard: true,
+                              hint: "Escribe aquí...",
+                              initialText: state.valor.toString()),
+                          otherOptions: OtherOptions(
+                            height: size.height * 0.8,
+                          ));
+                    } else {
+                      return const Text('data');
+                    }
+                  })),
+            ],
           ),
         ),
         floatingActionButton: PointerInterceptor(
           child: FloatingActionButton(
             heroTag: UniqueKey(),
-            child: Icon(Icons.save),
+            child: const Icon(Icons.save),
             onPressed: () async {
               String editArchivo = await controller.getText();
               Map<String, dynamic> dataJson = {
@@ -155,11 +155,11 @@ class _FullScreenDialogEditContratoState
   }
 
   _contectCont(String etiqueta) {
-    return Container(
+    return SizedBox(
       height: 20,
       child: GestureDetector(
         child: Card(
-          margin: EdgeInsets.fromLTRB(12, 0, 12, 0),
+          margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
             child: Center(child: Text(etiqueta)),

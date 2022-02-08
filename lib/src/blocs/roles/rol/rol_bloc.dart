@@ -21,7 +21,7 @@ class RolBloc extends Bloc<RolEvent, RolState> {
       yield LoadingCrearRolState();
       try {
         ItemModelRol rol = await logic.crearRol(event.data);
-        yield RolCreadoState(new ItemModelRol(rol.result));
+        yield RolCreadoState(ItemModelRol(rol.result));
       } on CrearRolException {
         yield ErrorCrearRolState("Error al crear rol");
       } on TokenRolException {
@@ -32,7 +32,7 @@ class RolBloc extends Bloc<RolEvent, RolState> {
       yield LoadingEditarRolState();
       try {
         ItemModelRol rol = await logic.editarRol(event.data);
-        yield RolEditadoState(new ItemModelRol(rol.result));
+        yield RolEditadoState( ItemModelRol(rol.result));
       } on EditarRolException {
         yield ErrorEditarRolState("Error al editar rol");
       } on TokenRolException {

@@ -45,29 +45,29 @@ class _Pagos {
     _tipoPresupuesto = data['tipo_presupuesto'];
   }
 
-  int get idConcepto => this._idConcepto;
-  int get cantidad => this._cantidad;
-  int get idServicio => this._idServicio;
-  String get servicio => this._servicio;
-  int get idProveedor => this._idProveedor;
-  String get proveedor => this._proveedor;
-  String get descripcion => this._descripcion;
-  int get precioUnitario => this._precioUnitario;
-  int get total => this._total;
-  int get anticipo => this._anticipo;
-  int get saldo => this._saldo;
-  String get tipoPresupuesto => this._tipoPresupuesto;
+  int get idConcepto => _idConcepto;
+  int get cantidad => _cantidad;
+  int get idServicio => _idServicio;
+  String get servicio => _servicio;
+  int get idProveedor => _idProveedor;
+  String get proveedor => _proveedor;
+  String get descripcion => _descripcion;
+  int get precioUnitario => _precioUnitario;
+  int get total => _total;
+  int get anticipo => _anticipo;
+  int get saldo => _saldo;
+  String get tipoPresupuesto => _tipoPresupuesto;
 
-  set idConcepto(value) => this._idConcepto;
-  set cantidad(value) => this._cantidad;
-  set idServicio(value) => this._idServicio;
-  set servicio(value) => this._servicio;
-  set idProveedor(value) => this._idProveedor;
-  set proveedor(value) => this._proveedor;
-  set descripcion(value) => this._descripcion;
-  set precioUnitario(value) => this._precioUnitario;
-  set total(value) => this._total;
-  set anticipo(value) => this._anticipo;
-  set saldo(value) => this._saldo;
-  set tipoPresupuesto(value) => this._tipoPresupuesto;
+  set idConcepto(value) => _idConcepto;
+  set cantidad(value) => _cantidad;
+  set idServicio(value) => _idServicio;
+  set servicio(value) => _servicio;
+  set idProveedor(value) => _idProveedor;
+  set proveedor(value) => _proveedor;
+  set descripcion(value) => _descripcion;
+  set precioUnitario(value) => _precioUnitario;
+  set total(value) => _total;
+  set anticipo(value) => _anticipo;
+  set saldo(value) => _saldo;
+  set tipoPresupuesto(value) => _tipoPresupuesto;
 }

@@ -29,7 +29,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
   void initState() {
     loginBloc = BlocProvider.of<LoginBloc>(context);
     loginBloc.add(ValidateTokenEvent(widget.token));
-    timer = Timer.periodic(Duration(minutes: 1), (timer) {
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       loginBloc.add(ValidateTokenEvent(widget.token));
     });
     super.initState();
@@ -48,12 +48,12 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
       appBar: AppBar(
         leading: Container(),
         centerTitle: true,
-        title: Text('Cambiar contraseña'),
+        title: const Text('Cambiar contraseña'),
       ),
       body: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) async {
           if (state is TokenExpiradoState) {
-            Future.delayed(Duration(seconds: 4), () {
+            Future.delayed(const Duration(seconds: 4), () {
               Navigator.of(context).pushReplacementNamed('/');
             });
           } else if (state is PasswordChangedState) {
@@ -70,12 +70,12 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
             if (state is TokenValidadoState) {
               return changePasswordWidget(size, context);
             } else if (state is TokenExpiradoState) {
-              return Center(
+              return const Center(
                 child: Text(
                     'El enlace ya expiro. \nLa pagina se redireccionara al login'),
               );
             } else {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             }
@@ -95,14 +95,14 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
         key: _keyForm,
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 15.0,
             ),
             Text(
               'Ingrese los siguientes campos',
               style: Theme.of(context).textTheme.headline6,
             ),
-            SizedBox(
+            const SizedBox(
               height: 15.0,
             ),
             ConstrainedBox(
@@ -112,17 +112,17 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                   ResponsiveGridCol(
                     md: 12,
                     child: Padding(
-                      padding: EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: PasswordWplanner(
                         controller: newPassword,
                         floatingText: 'Nueva contraseña',
                         hintText: 'Nueva contraseña',
-                        inputStyle: TextStyle(color: Colors.black),
-                        hintStyle: TextStyle(color: Colors.grey),
+                        inputStyle: const TextStyle(color: Colors.black),
+                        hintStyle: const TextStyle(color: Colors.grey),
                         autoFocus: false,
                         hasFloatingPlaceholder: true,
-                        prefixIcon: Icon(Icons.password),
-                        suffixIcon: Icon(
+                        prefixIcon: const Icon(Icons.password),
+                        suffixIcon: const Icon(
                           Icons.remove_red_eye,
                           color: Colors.grey,
                         ),
@@ -131,10 +131,10 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                         iconColorSelect: Colors.black,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(color: Colors.black)),
+                            borderSide: const BorderSide(color: Colors.black)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(color: Colors.black)),
+                            borderSide: const BorderSide(color: Colors.black)),
                         validador: (value) {
                           if (!_validaPsw(value)) {
                             return 'Campo requerido con una minuscula, una mayúscula, un número y un minimo de 8 caracteres.';
@@ -146,17 +146,17 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                   ),
                   ResponsiveGridCol(
                     child: Padding(
-                      padding: EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: PasswordWplanner(
                         floatingText: 'Confirmar contraseña',
                         controller: repeatNewPassWord,
                         hintText: 'Confirmar contraseña',
-                        inputStyle: TextStyle(color: Colors.black),
-                        hintStyle: TextStyle(color: Colors.grey),
+                        inputStyle: const TextStyle(color: Colors.black),
+                        hintStyle: const TextStyle(color: Colors.grey),
                         autoFocus: false,
                         hasFloatingPlaceholder: true,
-                        prefixIcon: Icon(Icons.password),
-                        suffixIcon: Icon(
+                        prefixIcon: const Icon(Icons.password),
+                        suffixIcon: const Icon(
                           Icons.remove_red_eye,
                           color: Colors.grey,
                         ),
@@ -165,10 +165,10 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                         iconColorSelect: Colors.black,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(color: Colors.black)),
+                            borderSide: const BorderSide(color: Colors.black)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
-                            borderSide: BorderSide(color: Colors.black)),
+                            borderSide: const BorderSide(color: Colors.black)),
                         validador: (value) {
                           if (value != newPassword.text) {
                             MostrarAlerta(
@@ -187,7 +187,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             ElevatedButton(
@@ -201,7 +201,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                       tipoMensaje: TipoMensaje.advertencia);
                 }
               },
-              child: Text('Guardar'),
+              child: const Text('Guardar'),
             )
           ],
         ),

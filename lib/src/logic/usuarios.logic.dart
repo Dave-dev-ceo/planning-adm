@@ -30,9 +30,9 @@ class MostrarUsuarioException implements Exception {}
 class TokenException implements Exception {}
 
 class FetchListaUsuariosLogic extends UsuariosLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override
@@ -61,9 +61,9 @@ class FetchListaUsuariosLogic extends UsuariosLogic {
 }
 
 class UsuarioCrud extends UsuarioLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
 
   Client client = Client();
   @override

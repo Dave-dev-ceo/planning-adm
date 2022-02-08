@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/models/qr_model/qr_model.dart';
 import 'package:planning/src/logic/qr_logic/qr_logic.dart';
 
@@ -24,7 +25,9 @@ class QrBloc extends Bloc<QrEvent, QrState> {
       } catch (e) {
         emit(QrErrorState());
 
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 

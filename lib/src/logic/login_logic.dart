@@ -18,8 +18,8 @@ abstract class LoginLogic {
 class LoginException implements Exception {}
 
 class BackendLoginLogic implements LoginLogic {
-  ConfigConection confiC = new ConfigConection();
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   Client client = Client();
   @override
   Future<Map<dynamic, dynamic>> login(String correo, String password) async {
@@ -34,8 +34,7 @@ class BackendLoginLogic implements LoginLogic {
         await _sharedPreferences.setLogic(data['usuario']['admin']);
         await _sharedPreferences.setToken(data['token']);
         await _sharedPreferences.setNombre(data['usuario']['nombre_completo']);
-        await _sharedPreferences.setImagen(
-            data['usuario']['imagen'] == null ? '' : data['usuario']['imagen']);
+        await _sharedPreferences.setImagen(data['usuario']['imagen'] ?? '');
         await _sharedPreferences.setClaveRol(data['usuario']['clave_rol']);
 
         await _sharedPreferences.setSesion(true);
@@ -60,11 +59,8 @@ class BackendLoginLogic implements LoginLogic {
             .setIdInvolucrado(data['usuario']['id_involucrado']);
         await _sharedPreferences
             .setEventoNombre(data['usuario']['descripcion']);
-        await _sharedPreferences.setImagen(
-            data['usuario']['imagen'] == null ? '' : data['usuario']['imagen']);
-        await _sharedPreferences.setPortada(data['usuario']['portada'] == null
-            ? ''
-            : data['usuario']['portada']);
+        await _sharedPreferences.setImagen(data['usuario']['imagen'] ?? '');
+        await _sharedPreferences.setPortada(data['usuario']['portada'] ?? '');
         await _sharedPreferences
             .setFechaEvento(data['usuario']['fecha_evento']);
         await _sharedPreferences.setPermisoBoton(true);
@@ -250,8 +246,6 @@ class BackendLoginLogic implements LoginLogic {
       body: json.encode(data),
       headers: headers,
     );
-
-    print(resp);
 
     if (resp.statusCode == 200) {
       return true;

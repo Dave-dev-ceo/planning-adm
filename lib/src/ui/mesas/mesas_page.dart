@@ -23,7 +23,7 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
 import 'package:planning/src/models/mesa/mesas_model.dart';
 import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
-import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
+import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_model.dart';
 import 'package:planning/src/utils/utils.dart';
 
 class MesasPage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _MesasPageState extends State<MesasPage> {
 
   final mesasAsignadasService = MesasAsignadasService();
   final mesasLogic = ServiceMesasLogic();
-  GlobalKey previewContainer = new GlobalKey();
+  GlobalKey previewContainer = GlobalKey();
 
   List<bool> checkedsAsignados = [];
   List<bool> checkedsInvitados = [];
@@ -63,7 +63,7 @@ class _MesasPageState extends State<MesasPage> {
   bool _enable;
   bool _isVisible = false;
   int indexNavBar = 0;
-  int lastNumMesa;
+  int lastNumMesa = 0;
 
   // Variable involucrado
   bool isInvolucrado = false;
@@ -93,12 +93,12 @@ class _MesasPageState extends State<MesasPage> {
       body: BlocBuilder<MesasAsignadasBloc, MesasAsignadasState>(
         builder: (context, state) {
           if (state is LoadingMesasAsignadasState) {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           } else if (state is MostrarMesasAsignadasState) {
             if (state.listaMesasAsignadas != null &&
-                state.listaMesasAsignadas.length > 0) {
+                state.listaMesasAsignadas.isNotEmpty) {
               listaMesasAsignadas = state.listaMesasAsignadas;
             } else {
               listaMesasAsignadas = [];
@@ -145,29 +145,27 @@ class _MesasPageState extends State<MesasPage> {
       activeForegroundColor: Colors.blueGrey,
       icon: Icons.more_vert,
       activeIcon: Icons.close,
-      activeLabel: Text('Cerrar'),
-      animatedIconTheme: IconThemeData(size: 22.0),
+      activeLabel: const Text('Cerrar'),
+      animatedIconTheme: const IconThemeData(size: 22.0),
       curve: Curves.bounceIn,
       animationSpeed: 200,
       tooltip: 'Opciones',
       elevation: 8.0,
-      shape: CircleBorder(),
+      shape: const CircleBorder(),
       children: [
         SpeedDialChild(
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           label: 'Añadir mesa',
           onTap: () {
             Navigator.of(context)
-                .pushNamed('/asignarMesas',
-                    arguments:
-                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+                .pushNamed('/asignarMesas', arguments: lastNumMesa ?? 0)
                 .then((value) => {
-                      lastNumMesa = value,
+                      lastNumMesa = value ?? 0,
                     });
           },
         ),
         SpeedDialChild(
-          child: Icon(Icons.upload),
+          child: const Icon(Icons.upload),
           label: 'Subir archivo',
           onTap: () async {
             const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
@@ -213,29 +211,27 @@ class _MesasPageState extends State<MesasPage> {
       activeForegroundColor: Colors.blueGrey,
       icon: Icons.more_vert,
       activeIcon: Icons.close,
-      activeLabel: Text('Cerrar'),
-      animatedIconTheme: IconThemeData(size: 22.0),
+      activeLabel: const Text('Cerrar'),
+      animatedIconTheme: const IconThemeData(size: 22.0),
       curve: Curves.bounceIn,
       animationSpeed: 200,
       tooltip: 'Opciones',
       elevation: 8.0,
-      shape: CircleBorder(),
+      shape: const CircleBorder(),
       children: [
         SpeedDialChild(
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           label: 'Añadir mesa',
           onTap: () {
             Navigator.of(context)
-                .pushNamed('/asignarMesas',
-                    arguments:
-                        (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+                .pushNamed('/asignarMesas', arguments: lastNumMesa ?? 0)
                 .then((value) => {
-                      lastNumMesa = value,
+                      lastNumMesa = value ?? 0,
                     });
           },
         ),
         SpeedDialChild(
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
           label: 'Descargar PDF',
           onTap: () async {
             if (listaMesaFromDB != null && listaMesaFromDB.isNotEmpty) {
@@ -261,14 +257,12 @@ class _MesasPageState extends State<MesasPage> {
     return FloatingActionButton(
       heroTag: UniqueKey(),
       tooltip: 'Agregar mesa',
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
       onPressed: () {
         Navigator.of(context)
-            .pushNamed('/asignarMesas',
-                arguments:
-                    (lastNumMesa == null) ? lastNumMesa = 0 : lastNumMesa)
+            .pushNamed('/asignarMesas', arguments: lastNumMesa ?? 0)
             .then((value) => {
-                  lastNumMesa = value,
+                  lastNumMesa = value ?? lastNumMesa,
                 });
       },
     );
@@ -277,7 +271,7 @@ class _MesasPageState extends State<MesasPage> {
   BottomNavigationBar _bottomNavigatorBarCustom() {
     return BottomNavigationBar(
       currentIndex: indexNavBar,
-      items: [
+      items: const [
         BottomNavigationBarItem(
             icon: Icon(Icons.post_add_sharp),
             label: 'Asignar',
@@ -305,20 +299,21 @@ class _MesasPageState extends State<MesasPage> {
 
   Widget resumenMesasPage() {
     setState(() {});
-    Widget WidgetBlocMesas = BlocBuilder<MesasBloc, MesasState>(
+    Widget widgetBlocMesas = BlocBuilder<MesasBloc, MesasState>(
       builder: (context, state) {
         if (state is LoadingMesasState) {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         } else if (state is MostrarMesasState) {
           if (state.listaMesas.isNotEmpty && state.listaMesas != null) {
-            lastNumMesa = state.listaMesas.last.numDeMesa;
+            lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
             listaMesaFromDB = state.listaMesas;
             return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: _gridMesasWidget(state.listaMesas));
           } else {
+            lastNumMesa = 0;
             return Align(
               alignment: Alignment.center,
               child: Text(
@@ -328,21 +323,23 @@ class _MesasPageState extends State<MesasPage> {
             );
           }
         } else if (state is ErrorMesasState) {
-          return Container(
-            child: Center(child: Text(state.message)),
-          );
+          lastNumMesa = 0;
+
+          return Center(child: Text(state.message));
         } else {
-          return Center(child: LoadingCustom());
+          lastNumMesa = 0;
+
+          return const Center(child: LoadingCustom());
         }
       },
     );
 
     return Column(
       children: [
-        SizedBox(
+        const SizedBox(
           height: 20.0,
         ),
-        Flexible(child: WidgetBlocMesas)
+        Flexible(child: widgetBlocMesas)
       ],
     );
   }
@@ -351,16 +348,16 @@ class _MesasPageState extends State<MesasPage> {
     return RefreshIndicator(
       color: Colors.blue,
       onRefresh: () async {
-        await BlocProvider.of<MesasAsignadasBloc>(context)
+        BlocProvider.of<MesasAsignadasBloc>(context)
             .add(GetMesasAsignadasEvent());
-        await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
-        await BlocProvider.of<InvitadosMesasBloc>(context)
+        BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+        BlocProvider.of<InvitadosMesasBloc>(context)
             .add(MostrarInvitadosMesasEvent());
       },
       child: GridView.builder(
         key: previewContainer,
         itemCount: listaMesa.length,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 500,
           mainAxisExtent: 300,
           childAspectRatio: 3 / 2,
@@ -375,7 +372,7 @@ class _MesasPageState extends State<MesasPage> {
               elevation: 4,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              margin: EdgeInsets.all(6.0),
+              margin: const EdgeInsets.all(6.0),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -386,7 +383,7 @@ class _MesasPageState extends State<MesasPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             PreferredSize(
-                              preferredSize: Size.fromWidth(15),
+                              preferredSize: const Size.fromWidth(15),
                               child: IconButton(
                                 onPressed: () async {
                                   showDialog(
@@ -396,18 +393,18 @@ class _MesasPageState extends State<MesasPage> {
                                     ),
                                   );
                                 },
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                               ),
                             ),
                             PreferredSize(
-                              preferredSize: Size.fromWidth(12),
+                              preferredSize: const Size.fromWidth(12),
                               child: IconButton(
                                 onPressed: () async {
-                                  await _showAlertDialogDeleteMesa(
+                                  _showAlertDialogDeleteMesa(
                                       listaMesa[index].idMesa, listaAsignados);
                                   setState(() {});
                                 },
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                               ),
                             ),
                           ],
@@ -423,12 +420,12 @@ class _MesasPageState extends State<MesasPage> {
                         //     nameCurrentMesa = value;
                         //   },
                         // ),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
                         subtitle: Text(listaMesa[index].tipoMesa),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     Expanded(
@@ -442,10 +439,11 @@ class _MesasPageState extends State<MesasPage> {
                                 (a) => a.posicion == i + 1,
                                 orElse: () => null,
                               );
-                              if (asigando != null)
+                              if (asigando != null) {
                                 asigando.idAcompanante != 0
                                     ? temp = asigando.acompanante
                                     : temp = asigando.invitado;
+                              }
                             }
                             return ListTile(
                               title: Text('Silla ${i + 1}: $temp'),
@@ -465,25 +463,25 @@ class _MesasPageState extends State<MesasPage> {
     await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('Eliminar mesa'),
-              content: Text('¿Estas seguro de eliminar la mesa?'),
+              title: const Text('Eliminar mesa'),
+              content: const Text('¿Estas seguro de eliminar la mesa?'),
               actions: [
                 TextButton(
                   onPressed: () async {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Cancelar'),
+                  child: const Text('Cancelar'),
                 ),
                 TextButton(
                     onPressed: () async {
                       final data = await mesasLogic.deleteMesa(idMesa);
                       if (data == 'Ok') {
-                        await BlocProvider.of<MesasBloc>(context)
+                        BlocProvider.of<MesasBloc>(context)
                             .add(MostrarMesasEvent());
 
-                        await BlocProvider.of<MesasAsignadasBloc>(context)
+                        BlocProvider.of<MesasAsignadasBloc>(context)
                             .add(GetMesasAsignadasEvent());
-                        await BlocProvider.of<InvitadosMesasBloc>(context)
+                        BlocProvider.of<InvitadosMesasBloc>(context)
                             .add(MostrarInvitadosMesasEvent());
 
                         MostrarAlerta(
@@ -497,7 +495,7 @@ class _MesasPageState extends State<MesasPage> {
                             tipoMensaje: TipoMensaje.error);
                       }
                     },
-                    child: Text('Aceptar'))
+                    child: const Text('Aceptar'))
               ],
             ));
   }
@@ -519,14 +517,14 @@ class _MesasPageState extends State<MesasPage> {
       color: Colors.blue,
       onRefresh: () async {
         await mesasAsignadasService.getMesasAsignadas();
-        await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
-        await BlocProvider.of<InvitadosMesasBloc>(context)
+        BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+        BlocProvider.of<InvitadosMesasBloc>(context)
             .add(MostrarInvitadosMesasEvent());
       },
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 15.0,
             ),
             Padding(
@@ -538,12 +536,12 @@ class _MesasPageState extends State<MesasPage> {
                 child: BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
                   builder: (context, state) {
                     if (state is LoadingInvitadoMesasState) {
-                      return Align(
+                      return const Align(
                         alignment: Alignment.center,
                         child: LoadingCustom(),
                       );
                     } else if (state is MostraListaInvitadosMesaState) {
-                      state.listaInvitadoMesa.length > 0
+                      state.listaInvitadoMesa.isNotEmpty
                           ? _enable = true
                           : _enable = false;
                       if (state.listaInvitadoMesa.isNotEmpty ||
@@ -556,14 +554,14 @@ class _MesasPageState extends State<MesasPage> {
                               state.listaInvitadoMesa),
                         );
                       } else {
-                        return Text('No se encontraron datos');
+                        return const Text('No se encontraron datos');
                       }
                     } else if (state is ErrorInvitadoMesaState) {
                       return Center(
                         child: Text(state.message),
                       );
                     } else {
-                      return Align(
+                      return const Align(
                         alignment: Alignment.center,
                         child: LoadingCustom(),
                       );
@@ -572,39 +570,39 @@ class _MesasPageState extends State<MesasPage> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8.0,
             ),
             Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 10.0,
                 ),
                 ElevatedButton(
                   onPressed: asignarMesas,
-                  child: Icon(Icons.arrow_downward),
+                  child: const Icon(Icons.arrow_downward),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5.0,
                 ),
                 ElevatedButton(
                   onPressed: _deleteAsignadoToMesa,
-                  child: Icon(Icons.arrow_upward),
+                  child: const Icon(Icons.arrow_upward),
                 ),
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     elevation: 5.0,
                   ),
                   onPressed: _asignarAutoMesas,
-                  child: Text('Asignar auto.'),
+                  child: const Text('Asignar auto.'),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10.0,
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 8.0,
             ),
             Padding(
@@ -618,17 +616,19 @@ class _MesasPageState extends State<MesasPage> {
                     BlocBuilder<MesasBloc, MesasState>(
                       builder: (context, state) {
                         if (state is LoadingMesasState) {
-                          return Center(
+                          return const Center(
                             child: LoadingCustom(),
                           );
                         } else if (state is MostrarMesasState) {
                           if (state.listaMesas != null) {
-                            lastNumMesa = state.listaMesas.last.numDeMesa;
+                            lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
+
                             listaMesaFromDB = state.listaMesas;
 
-                            if (state.listaMesas.length > 0) {
+                            if (state.listaMesas.isNotEmpty) {
                               return _buildListaMesas(state.listaMesas);
                             } else {
+                              lastNumMesa = 0;
                               return Align(
                                 alignment: Alignment.center,
                                 child: Text(
@@ -638,6 +638,7 @@ class _MesasPageState extends State<MesasPage> {
                               );
                             }
                           } else {
+                            lastNumMesa = 0;
                             return Align(
                               alignment: Alignment.center,
                               child: Text(
@@ -647,15 +648,17 @@ class _MesasPageState extends State<MesasPage> {
                             );
                           }
                         } else if (state is ErrorMesasState) {
-                          return Container(
-                            child: Center(child: Text(state.message)),
-                          );
+                          lastNumMesa = 0;
+
+                          return Center(child: Text(state.message));
                         } else {
+                          lastNumMesa = 0;
+
                           return Container();
                         }
                       },
                     ),
-                    if (mesaModelData != null) Divider(),
+                    if (mesaModelData != null) const Divider(),
                     if (mesaModelData != null)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 14.0),
@@ -678,7 +681,7 @@ class _MesasPageState extends State<MesasPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           Expanded(
@@ -690,16 +693,17 @@ class _MesasPageState extends State<MesasPage> {
                   BlocBuilder<MesasBloc, MesasState>(
                     builder: (context, state) {
                       if (state is LoadingMesasState) {
-                        return Center(
+                        return const Center(
                           child: LoadingCustom(),
                         );
                       } else if (state is MostrarMesasState) {
                         if (state.listaMesas != null &&
-                            state.listaMesas.length > 0) {
-                          lastNumMesa = state.listaMesas.last.numDeMesa;
+                            state.listaMesas.isNotEmpty) {
+                          lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
+
                           listaMesaFromDB = state.listaMesas;
 
-                          if (state.listaMesas.length > 0) {
+                          if (state.listaMesas.isNotEmpty) {
                             return _buildListaMesas(state.listaMesas);
                           } else {
                             return Align(
@@ -720,17 +724,15 @@ class _MesasPageState extends State<MesasPage> {
                           );
                         }
                       } else if (state is ErrorMesasState) {
-                        return Container(
-                          child: Center(child: Text(state.message)),
-                        );
+                        return Center(child: Text(state.message));
                       } else {
                         return Container();
                       }
                     },
                   ),
-                  if (mesaModelData != null) Divider(),
+                  if (mesaModelData != null) const Divider(),
                   if (mesaModelData != null)
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                   if (mesaModelData != null) Expanded(child: formTableByMesa())
@@ -738,46 +740,46 @@ class _MesasPageState extends State<MesasPage> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 8.0,
           ),
           Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   elevation: 5.0,
-                  minimumSize: Size(10.0, 8.0),
+                  minimumSize: const Size(10.0, 8.0),
                 ),
                 onPressed: asignarMesas,
                 // child: Text('Regresar'),
-                child: Icon(Icons.arrow_back),
+                child: const Icon(Icons.arrow_back),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   elevation: 5.0,
-                  minimumSize: Size(10.0, 8.0),
+                  minimumSize: const Size(10.0, 8.0),
                 ),
                 onPressed: _deleteAsignadoToMesa,
                 // child: Text('Asignar'),
-                child: Icon(Icons.arrow_forward),
+                child: const Icon(Icons.arrow_forward),
               ),
-              Spacer(),
+              const Spacer(),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   elevation: 5.0,
                 ),
                 onPressed: _asignarAutoMesas,
-                child: Text('Asignar auto.'),
+                child: const Text('Asignar auto.'),
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             width: 10.0,
           ),
           Expanded(
@@ -790,12 +792,12 @@ class _MesasPageState extends State<MesasPage> {
                 BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
                   builder: (context, state) {
                     if (state is LoadingInvitadoMesasState) {
-                      return Align(
+                      return const Align(
                         alignment: Alignment.center,
                         child: LoadingCustom(),
                       );
                     } else if (state is MostraListaInvitadosMesaState) {
-                      state.listaInvitadoMesa.length > 0
+                      state.listaInvitadoMesa.isNotEmpty
                           ? _enable = true
                           : _enable = false;
                       if (state.listaInvitadoMesa.isNotEmpty ||
@@ -806,14 +808,14 @@ class _MesasPageState extends State<MesasPage> {
                             child: buildListInvitadosConfirmador(
                                 state.listaInvitadoMesa));
                       } else {
-                        return Text('No se encontraron datos');
+                        return const Text('No se encontraron datos');
                       }
                     } else if (state is ErrorInvitadoMesaState) {
                       return Center(
                         child: Text(state.message),
                       );
                     } else {
-                      return Align(
+                      return const Align(
                         alignment: Alignment.center,
                         child: LoadingCustom(),
                       );
@@ -842,9 +844,9 @@ class _MesasPageState extends State<MesasPage> {
           MostrarAlerta(
               mensaje: 'Se han eliminado correctamente',
               tipoMensaje: TipoMensaje.correcto);
-          await invitadosBloc.add(MostrarInvitadosMesasEvent());
+          invitadosBloc.add(MostrarInvitadosMesasEvent());
 
-          await BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+          BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
           BlocProvider.of<MesasAsignadasBloc>(context)
               .add(GetMesasAsignadasEvent());
 
@@ -885,17 +887,17 @@ class _MesasPageState extends State<MesasPage> {
 
   asignarMesas() async {
     List<int> listTemp = [];
-    if (listaMesasAsignadas.length > 0 && mesaModelData != null) {
+    if (listaMesasAsignadas.isNotEmpty && mesaModelData != null) {
       final datosMesaAsginada = listaMesasAsignadas
           .where((mesaAsignada) => mesaAsignada.idMesa == mesaModelData.idMesa);
-      datosMesaAsginada.forEach((element) {
+      for (var element in datosMesaAsginada) {
         listPosicionDisponible.remove(element.posicion);
-      });
+      }
 
-      if (datosMesaAsginada.length > 0) {
-        datosMesaAsginada.forEach((asignado) {
+      if (datosMesaAsginada.isNotEmpty) {
+        for (var asignado in datosMesaAsginada) {
           listTemp.add(asignado.posicion);
-        });
+        }
       }
     }
 
@@ -915,25 +917,21 @@ class _MesasPageState extends State<MesasPage> {
           listToAsignarForAdd[i].posicion = listPosicionDisponible[i];
         }
 
-        listPosicionDisponible.forEach((element) {});
-
-        listToAsignarForAdd.forEach((asignado) {});
-
         final data = await mesasAsignadasService
             .asignarPersonasMesas(listToAsignarForAdd);
         mesaModelData.dimension;
         if (data == 'Ok') {
-          await invitadosBloc.add(MostrarInvitadosMesasEvent());
+          invitadosBloc.add(MostrarInvitadosMesasEvent());
 
           mesasAsignadasService.getMesasAsignadas().then((value) {
             setState(() {
-              listAsigandosToDelete.forEach((element) {
+              for (var element in listAsigandosToDelete) {
                 listPosicionDisponible.remove(element.posicion);
-              });
+              }
               listToAsignarForAdd.clear();
-              listaMesasAsignadas = value;
               checkedsInvitados = [];
             });
+            listaMesasAsignadas = value;
           });
 
           MostrarAlerta(
@@ -942,8 +940,6 @@ class _MesasPageState extends State<MesasPage> {
           setState(() {
             listToAsignarForAdd.clear();
           });
-          BlocProvider.of<MesasAsignadasBloc>(context)
-              .add(GetMesasAsignadasEvent());
         } else {
           MostrarAlerta(mensaje: data, tipoMensaje: TipoMensaje.error);
         }
@@ -955,13 +951,13 @@ class _MesasPageState extends State<MesasPage> {
     Widget dropMenuSelectMesas = Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: DropdownButtonFormField(
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             overflow: TextOverflow.ellipsis,
           ),
           decoration: InputDecoration(
               labelText: 'Mesas',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               constraints: BoxConstraints(maxWidth: size.width * 0.4)),
           items: listaDeMesas
               .map((mesa) =>
@@ -1058,7 +1054,7 @@ class _MesasPageState extends State<MesasPage> {
           ),
           title: Text(
             listaInvitados[index].nombre,
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
           // children: widgetAcompanantes,
         );
@@ -1137,10 +1133,11 @@ class _MesasPageState extends State<MesasPage> {
         final mesaDisponible = listaMesaFromDB.firstWhere((mesa) {
           final listaAsignado = _listaMesasAsignadas
               .where((asignado) => asignado.idMesa == mesa.idMesa);
-          if (listaAsignado.length < mesa.dimension)
+          if (listaAsignado.length < mesa.dimension) {
             return true;
-          else
+          } else {
             return false;
+          }
         }, orElse: () => null);
         if (mesaDisponible != null) {
           final listaAsignado = _listaMesasAsignadas
@@ -1169,17 +1166,18 @@ class _MesasPageState extends State<MesasPage> {
           break;
         }
       }
-      if (listToAsignarForAdd.isNotEmpty && listToAsignarForAdd.length > 0) {
+      if (listToAsignarForAdd.isNotEmpty && listToAsignarForAdd.isNotEmpty) {
         final data = await mesasAsignadasService
             .asignarPersonasMesas(listToAsignarForAdd);
         if (data == 'Ok') {
-          await invitadosBloc.add(MostrarInvitadosMesasEvent());
+          invitadosBloc.add(MostrarInvitadosMesasEvent());
+          BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
 
           mesasAsignadasService.getMesasAsignadas().then((value) {
             setState(() {
-              listAsigandosToDelete.forEach((element) {
+              for (var element in listAsigandosToDelete) {
                 listPosicionDisponible.remove(element.posicion);
-              });
+              }
               listToAsignarForAdd.clear();
               listaMesasAsignadas = value;
               checkedsInvitados = [];
@@ -1196,6 +1194,9 @@ class _MesasPageState extends State<MesasPage> {
           MostrarAlerta(mensaje: data, tipoMensaje: TipoMensaje.error);
         }
       }
+    } else {
+      MostrarAlerta(
+          mensaje: 'No se encontraron mesas', tipoMensaje: TipoMensaje.error);
     }
   }
 
@@ -1212,7 +1213,7 @@ class _MesasPageState extends State<MesasPage> {
               return _viewFile(snapshot.data);
             } else {
               return Column(
-                children: [
+                children: const [
                   SizedBox(
                     height: 20.0,
                   ),
@@ -1222,7 +1223,7 @@ class _MesasPageState extends State<MesasPage> {
             }
           } else {
             return Column(
-              children: [
+              children: const [
                 SizedBox(
                   height: 20.0,
                 ),
@@ -1239,7 +1240,7 @@ class _MesasPageState extends State<MesasPage> {
     if (layoutMesa.mime == 'pdf') {
       final bytes = base64Decode(layoutMesa.file);
       return Center(
-        child: Container(
+        child: SizedBox(
           width: 500.0,
           height: MediaQuery.of(context).size.height,
           child: SfPdfViewer.memory(
@@ -1254,13 +1255,13 @@ class _MesasPageState extends State<MesasPage> {
       final bytes = base64Decode(layoutMesa.file);
       final image = MemoryImage(bytes);
       return Center(
-        child: Container(
+        child: SizedBox(
           width: 500.0,
           height: MediaQuery.of(context).size.height,
           child: ClipRect(
             child: PhotoView(
               tightMode: true,
-              backgroundDecoration: BoxDecoration(color: Colors.white),
+              backgroundDecoration: const BoxDecoration(color: Colors.white),
               imageProvider: image,
             ),
           ),
@@ -1293,7 +1294,7 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return AlertDialog(
-      title: Text('Editar datos de la mesa'),
+      title: const Text('Editar datos de la mesa'),
       content: BlocListener<MesasBloc, MesasState>(
         listener: (context, state) {
           if (state is MesasEditedState) {
@@ -1317,7 +1318,7 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
                 validator: (value) => (value != null || value != '')
                     ? null
                     : 'El Campo es requerido',
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
                 initialValue: widget.mesaModel.descripcion,
@@ -1325,14 +1326,14 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
                   widget.mesaModel.descripcion = value;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8.0,
               ),
               DropdownButtonFormField(
                 value: widget.mesaModel.idTipoDeMesa,
                 decoration: InputDecoration(
                     constraints: BoxConstraints(maxWidth: size.width * 0.2),
-                    prefixIcon: Icon(Icons.table_chart),
+                    prefixIcon: const Icon(Icons.table_chart),
                     hintText: 'Tipo de mesa'),
                 items: listTipoDeMesa
                     .map((m) => DropdownMenuItem(
@@ -1362,7 +1363,7 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancelar')),
+            child: const Text('Cancelar')),
         TextButton(
             onPressed: () {
               if (_keyForm.currentState.validate()) {
@@ -1374,7 +1375,7 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
                     tipoMensaje: TipoMensaje.advertencia);
               }
             },
-            child: Text('Aceptar'))
+            child: const Text('Aceptar'))
       ],
     );
   }

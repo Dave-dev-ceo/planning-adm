@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/widgets.dart';
 import 'package:planning/src/logic/actividades_timing_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
@@ -68,7 +68,9 @@ class ActividadestimingBloc
 
         yield EditedActividadEvent(resp);
         add(FetchActividadesTimingsPorPlannerEvent(event.idTiming));
-      } catch (e) {}
+      } catch (e) {
+        debugPrint(e);
+      }
     }
   }
 }

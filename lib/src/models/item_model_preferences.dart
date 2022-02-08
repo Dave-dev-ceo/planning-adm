@@ -137,9 +137,7 @@ class SharedPreferencesT {
 
   getSession() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getBool('session') == null
-        ? false
-        : _sharedPreferences.getBool('session');
+    return _sharedPreferences.getBool('session') ?? false;
   }
 
   setLogic(bool logic) async {
@@ -149,9 +147,7 @@ class SharedPreferencesT {
 
   getLogic() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getBool('logic') == null
-        ? false
-        : _sharedPreferences.getBool('logic');
+    return _sharedPreferences.getBool('logic') ?? false;
   }
 
   setJsonData(List<String> json) async {
@@ -173,7 +169,7 @@ class SharedPreferencesT {
   Future<String> getCorreo() async {
     SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
-    return await _sharedPreferences.getString('correo');
+    return _sharedPreferences.getString('correo');
   }
 
   setClaveRol(String claveRol) async {
@@ -185,12 +181,12 @@ class SharedPreferencesT {
   Future<String> getClaveRol() async {
     SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
-    return await _sharedPreferences.getString('claveRol');
+    return _sharedPreferences.getString('claveRol');
   }
 
   clear() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    Set<dynamic> keyPreferens = await _sharedPreferences.getKeys();
+    Set<dynamic> keyPreferens = _sharedPreferences.getKeys();
 
     for (var key in keyPreferens) {
       if (key == 'correo') {

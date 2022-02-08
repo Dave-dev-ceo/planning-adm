@@ -8,7 +8,7 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormPago extends StatefulWidget {
   final String tipoPresupuesto;
-  FormPago({Key key, @required this.tipoPresupuesto}) : super(key: key);
+  const FormPago({Key key, @required this.tipoPresupuesto}) : super(key: key);
 
   @override
   _FormPagoState createState() => _FormPagoState();
@@ -20,7 +20,7 @@ class _FormPagoState extends State<FormPago> {
 
   // variable clases
   bool bandera = true;
-  Map itemPago = Map();
+  Map itemPago = {};
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _FormPagoState extends State<FormPago> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Agregar presupuestos'),
+          title: const Text('Agregar presupuestos'),
         ),
         body: _myBloc(),
       ),
@@ -58,11 +58,11 @@ class _FormPagoState extends State<FormPago> {
       child: BlocBuilder<PagosBloc, PagosState>(
         builder: (context, state) {
           if (state is PagosInitial) {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           } else if (state is PagosLogging) {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           } else if (state is PagosSelectFormState) {
@@ -76,7 +76,7 @@ class _FormPagoState extends State<FormPago> {
             }
             return _formPagos(state.proveedor, state.servicios);
           } else {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           }
@@ -87,66 +87,66 @@ class _FormPagoState extends State<FormPago> {
 
   _formPagos(proveedor, servicios) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       color: Colors.white,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
+          const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
                 'Agregar presupuestos',
                 style: TextStyle(fontSize: 20.0),
               )),
-          SizedBox(
+          const SizedBox(
             height: 64.0,
           ),
           _selectServicios(servicios),
-          SizedBox(
+          const SizedBox(
             height: 32.0,
           ),
           _selectProveedores(proveedor),
-          SizedBox(
+          const SizedBox(
             height: 32.0,
           ),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['cantidad']}'),
-            decoration: InputDecoration(hintText: 'Cantidad:'),
+            decoration: const InputDecoration(hintText: 'Cantidad:'),
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (valor) {
               itemPago['cantidad'] = valor;
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 32.0,
           ),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['concepto']}'),
-            decoration: InputDecoration(hintText: 'Concepto:'),
+            decoration: const InputDecoration(hintText: 'Concepto:'),
             onChanged: (valor) {
               itemPago['concepto'] = valor;
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 32.0,
           ),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['precio']}'),
-            decoration: InputDecoration(hintText: 'Precio unitario:'),
+            decoration: const InputDecoration(hintText: 'Precio unitario:'),
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (valor) {
               itemPago['precio'] = valor;
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 32.0,
           ),
           ElevatedButton(
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
             onPressed: () => _agregarPago(),
           )
         ],
@@ -155,18 +155,18 @@ class _FormPagoState extends State<FormPago> {
   }
 
   _selectServicios(ItemModelPagos servicios) {
-    if (servicios.pagos.length > 0) {
+    if (servicios.pagos.isNotEmpty) {
       List temp = servicios.pagos.map((item) {
         return DropdownMenuItem<String>(
           value: item.idServicio.toString(),
           child: Text(
             item.servicio,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         );
       }).toList();
 
-      temp.add(DropdownMenuItem<String>(
+      temp.add(const DropdownMenuItem<String>(
         value: '0',
         child: Text(
           'Servicios',
@@ -174,7 +174,7 @@ class _FormPagoState extends State<FormPago> {
         ),
       ));
 
-      return Container(
+      return SizedBox(
         width: double.infinity,
         child: DropdownButton<String>(
             value: itemPago['servicios'],
@@ -194,23 +194,23 @@ class _FormPagoState extends State<FormPago> {
             items: temp),
       );
     } else {
-      return SizedBox();
+      return const SizedBox();
     }
   }
 
   _selectProveedores(ItemModelPagos proveedor) {
-    if (proveedor.pagos.length > 0) {
+    if (proveedor.pagos.isNotEmpty) {
       List temp = proveedor.pagos.map((item) {
         return DropdownMenuItem<String>(
           value: item.idProveedor.toString(),
           child: Text(
             item.proveedor,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         );
       }).toList();
 
-      temp.add(DropdownMenuItem<String>(
+      temp.add(const DropdownMenuItem<String>(
         value: '0',
         child: Text(
           'Proveedores',
@@ -218,7 +218,7 @@ class _FormPagoState extends State<FormPago> {
         ),
       ));
 
-      return Container(
+      return SizedBox(
         width: double.infinity,
         child: DropdownButton<String>(
             value: itemPago['proveedores'],
@@ -238,7 +238,7 @@ class _FormPagoState extends State<FormPago> {
             items: temp),
       );
     } else {
-      return SizedBox();
+      return const SizedBox();
     }
   }
 

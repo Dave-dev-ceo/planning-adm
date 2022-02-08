@@ -16,8 +16,8 @@ class CustomPageRouter extends PageRouteBuilder {
     this.direction = AxisDirection.left,
     this.transicionRouter = TypeTransicionRouter.slideRouterTransition,
   }) : super(
-            transitionDuration: Duration(milliseconds: 900),
-            reverseTransitionDuration: Duration(milliseconds: 900),
+            transitionDuration: const Duration(milliseconds: 900),
+            reverseTransitionDuration: const Duration(milliseconds: 900),
             pageBuilder: (context, animation, secondaryAnimation) => child);
 
   @override
@@ -71,16 +71,16 @@ class CustomPageRouter extends PageRouteBuilder {
   Offset getBeginOffset() {
     switch (direction) {
       case AxisDirection.up:
-        return Offset(0, 1);
+        return const Offset(0, 1);
         break;
       case AxisDirection.down:
-        return Offset(0, -1);
+        return const Offset(0, -1);
         break;
       case AxisDirection.right:
-        return Offset(-1, 0);
+        return const Offset(-1, 0);
         break;
       default:
-        return Offset(1, 0);
+        return const Offset(1, 0);
         break;
     }
   }

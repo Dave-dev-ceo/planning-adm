@@ -19,8 +19,8 @@ class TokenException implements Exception {}
 class CreateEstatusException implements Exception {}
 
 class FetchListaEstatusLogic extends ListaEstatusLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override

@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:planning/src/ui/actividades/actividades_timing.dart';
 
@@ -21,15 +23,15 @@ class _FullScreenDialogAddActividadesState
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar actividades'),
-        actions: [],
+        title: const Text('Agregar actividades'),
+        actions: const [],
         automaticallyImplyLeading: true,
       ),
       body: SafeArea(

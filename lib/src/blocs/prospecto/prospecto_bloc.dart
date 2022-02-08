@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/prospecto_logic/prospecto_logic.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 
@@ -15,7 +15,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
 
         emit(MostrarEtapasState(data));
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -25,7 +27,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
 
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -33,7 +37,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
       try {
         await logic.updateEtapaProspecto(event.idEtapa, event.idProspecto);
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -41,7 +47,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
       try {
         await logic.updateEtapa(event.listEtapasUpdate);
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -54,7 +62,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
 
         emit(MostrarEtapasState(etapas));
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -63,7 +73,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.updateNameProspecto(event.editProspecto);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
     on<UpdateTelefonoProspecto>((event, emit) async {
@@ -71,7 +83,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.updatePhoneProspecto(event.editProspecto);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -80,7 +94,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.updateCorreoProspecto(event.editProspecto);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -89,7 +105,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.updateDescripcionProspecto(event.editProspecto);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -98,7 +116,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.insertActividadProspecto(event.newActividad);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -107,7 +127,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.editNameEtapa(event.etapaToEdit);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -116,7 +138,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.deleteEtapa(event.idEtapa);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -125,7 +149,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.deleteActividadProspecto(event.idActividad);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -135,7 +161,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
 
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -145,7 +173,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         emit(AddedEtapaState(data));
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -154,7 +184,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.editInvolucrado(event.prospectoModel);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -163,7 +195,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
         await logic.eventoFromProspecto(event.idProspecto);
         add(MostrarEtapasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
 
@@ -179,7 +213,9 @@ class ProspectoBloc extends Bloc<ProspectoEvent, ProspectoState> {
           add(MostrarEtapasEvent());
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     });
   }

@@ -1,4 +1,5 @@
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/blocs/servicios/bloc/servicios_bloc_dart_bloc.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_proveedor.dart';
 import 'package:planning/src/ui/widgets/editProveedorDialog/edit_proveedor_dialog.dart';
@@ -16,7 +17,7 @@ import 'package:planning/src/ui/proveedores/servicios.dart';
 class Proveedores extends StatefulWidget {
   const Proveedores({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => Proveedores(),
+        builder: (context) => const Proveedores(),
       );
   @override
   _ProveedoresState createState() => _ProveedoresState();
@@ -53,24 +54,16 @@ class _ProveedoresState extends State<Proveedores> {
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await proveedorBloc.add(FechtProveedorEvent());
-          await proveedorBloc.add(FechtSevicioByProveedorEvent());
+          proveedorBloc.add(FechtProveedorEvent());
+          proveedorBloc.add(FechtSevicioByProveedorEvent());
         },
-        child: Container(
-            child: IndexedStack(
+        child: IndexedStack(
           index: _selectedIndex,
-          children: [_listaProveedore(), Servicios()],
-        )),
+          children: [_listaProveedore(), const Servicios()],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: expasionFabButton(),
-      /* FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          Navigator.of(context).pushNamed('/agregarProveedores',
-              arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
-        }, 
-      ),*/
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -91,20 +84,20 @@ class _ProveedoresState extends State<Proveedores> {
   Widget expasionFabButton() {
     return SpeedDial(
       tooltip: 'Opciones',
-      child: Icon(Icons.more_vert),
+      child: const Icon(Icons.more_vert),
       children: [
         SpeedDialChild(
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
           label: 'Descargar PDF',
           onTap: () async {
             final data = await proveedoresLogic.downloadPDFProveedor();
             if (data != null) {
-              await downloadFile(data, 'Proveedores');
+              downloadFile(data, 'Proveedores');
             }
           },
         ),
         SpeedDialChild(
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           label: 'Añadir proveedor',
           onTap: () async {
             Navigator.of(context).pushNamed('/agregarProveedores',
@@ -128,37 +121,37 @@ class _ProveedoresState extends State<Proveedores> {
       controller: ScrollController(),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: BlocBuilder<ProveedorBloc, ProveedorState>(
             builder: (context, state) {
           if (state is MostrarSevicioByProveedorState) {
             _data = _createDataListServ(state.detlistas);
             if (_dataProveedores != null && _data != null) {
-              _dataProveedores.forEach((prov) {
+              for (var prov in _dataProveedores) {
                 List<ServiciosModel> _listaServ = [];
                 List<ItemProveedor> _prove = [];
 
-                _data.forEach((elmProv) {
-                  if (elmProv.id_servicio == prov.id_servicio) {
+                for (var elmProv in _data) {
+                  if (elmProv.idServicio == prov.idServicio) {
                     _listaServ.add(ServiciosModel(
-                      id_servicio: elmProv.id_servicio,
+                      idServicio: elmProv.idServicio,
                       nombre: elmProv.nombre,
                       proveedores: _prove,
                     ));
                   }
                   prov.servicio = _listaServ;
-                });
-              });
+                }
+              }
 
-              _data.forEach((elmProv) {
+              for (var elmProv in _data) {
                 List<ItemProveedor> listaProv = [];
-                _dataProveedores.forEach((prov) {
-                  if (elmProv.id_servicio == prov.id_servicio) {
+                for (var prov in _dataProveedores) {
+                  if (elmProv.idServicio == prov.idServicio) {
                     if ((idPais == null || prov.idPais == idPais) &&
                         (idEstado == null || prov.idEstado == idEstado) &&
-                        (idCiudad == null || prov.idCiudad == idCiudad))
+                        (idCiudad == null || prov.idCiudad == idCiudad)) {
                       listaProv.add(ItemProveedor(
-                        id_proveedor: prov.id_proveedor,
+                        idProveedor: prov.idProveedor,
                         nombre: prov.nombre,
                         descripcion: prov.descripcion,
                         estatus: prov.estatus,
@@ -170,11 +163,12 @@ class _ProveedoresState extends State<Proveedores> {
                         idEstado: prov.idEstado,
                         idPais: prov.idPais,
                       ));
+                    }
                   }
 
                   elmProv.proveedores = listaProv;
-                });
-              });
+                }
+              }
             }
             final size = MediaQuery.of(context).size.width < 520
                 ? MediaQuery.of(context).size.width
@@ -202,7 +196,8 @@ class _ProveedoresState extends State<Proveedores> {
                                 peticionEstados = getEstados(value);
                               }),
                               value: idPais,
-                              decoration: InputDecoration(label: Text('País')),
+                              decoration:
+                                  const InputDecoration(label: Text('País')),
                               items: paises
                                   .map((p) => DropdownMenuItem<int>(
                                         child: Text(p.nombre),
@@ -212,7 +207,7 @@ class _ProveedoresState extends State<Proveedores> {
                             );
                           }
 
-                          return LinearProgressIndicator();
+                          return const LinearProgressIndicator();
                         },
                       ),
                       large: size,
@@ -235,8 +230,8 @@ class _ProveedoresState extends State<Proveedores> {
                                   idEstado = value;
                                   peticionCiudades = getCiudades(value);
                                 }),
-                                decoration:
-                                    InputDecoration(label: Text('Estado')),
+                                decoration: const InputDecoration(
+                                    label: Text('Estado')),
                                 items: estados
                                     .map((e) => DropdownMenuItem(
                                           child: Text(e.nombre),
@@ -245,7 +240,7 @@ class _ProveedoresState extends State<Proveedores> {
                                     .toList(),
                               );
                             }
-                            return LinearProgressIndicator();
+                            return const LinearProgressIndicator();
                           },
                         ),
                         large: size,
@@ -266,8 +261,8 @@ class _ProveedoresState extends State<Proveedores> {
                                 onChanged: (value) => setState(() {
                                   idCiudad = value;
                                 }),
-                                decoration:
-                                    InputDecoration(label: Text('Ciudad')),
+                                decoration: const InputDecoration(
+                                    label: Text('Ciudad')),
                                 items: ciudades
                                     .map((c) => DropdownMenuItem(
                                           child: Text(c.nombre),
@@ -276,7 +271,7 @@ class _ProveedoresState extends State<Proveedores> {
                                     .toList(),
                               );
                             }
-                            return LinearProgressIndicator();
+                            return const LinearProgressIndicator();
                           },
                         ),
                         large: size,
@@ -292,22 +287,22 @@ class _ProveedoresState extends State<Proveedores> {
                             idEstado = null;
                             idCiudad = null;
                           }),
-                          icon: Icon(Icons.clear_all),
+                          icon: const Icon(Icons.clear_all),
                         ),
                       )
                   ],
                 ),
                 _listaBuild(),
-                SizedBox(
+                const SizedBox(
                   height: 50.0,
                 )
               ],
             );
           } else if (state is MostrarProveedorState) {
             _dataProveedores = _createDataListProv(state.detlistas);
-            return Text('');
+            return const Text('');
           } else {
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           }
         }),
       ),
@@ -317,7 +312,7 @@ class _ProveedoresState extends State<Proveedores> {
   Widget _listaBuild() {
     return Flexible(
         child: ListView(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             // animationDuration: Duration(milliseconds: 500),
             children: _data
@@ -332,38 +327,39 @@ class _ProveedoresState extends State<Proveedores> {
               return Card(
                 child: ExpansionTile(
                   title: Text(item.nombre,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                       )),
                   children: _listServicio(
-                      item.proveedores, item.id_proveedor, item.id_servicio),
+                      item.proveedores, item.idProveedor, item.idServicio),
                 ),
               );
             }).toList()));
   }
 
   List<Widget> _listServicio(
-      List<ItemProveedor> itemServicio, int id_proveedor, int idServicio) {
+      List<ItemProveedor> itemServicio, int idProveedor, int idServicio) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
       final tempWidget = ListTile(
         leading: IconButton(
           tooltip: 'Editar',
-          icon: Icon(
+          icon: const Icon(
             Icons.edit,
             size: 14.0,
             color: Colors.black,
           ),
           onPressed: () async {
-            showDialog(
+            await showDialog(
                 context: context,
                 builder: (context) => EditProveedorDialog(
                       proveedor: opt,
-                    ));
+                    )).then((_) => BlocProvider.of<ServiciosBloc>(context)
+                .add(FechtServiciosEvent()));
           },
         ),
         title: Text(opt.nombre,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
             )),
         trailing: Wrap(spacing: 12, children: <Widget>[
@@ -372,7 +368,7 @@ class _ProveedoresState extends State<Proveedores> {
               Navigator.of(context).pushNamed(
                 '/agregarArchivo',
                 arguments: {
-                  'id_proveedor': opt.id_proveedor,
+                  'id_proveedor': opt.idProveedor,
                   'id_servicio': idServicio,
                   'nombre': opt.nombre,
                   'type': 0,
@@ -401,25 +397,25 @@ class _ProveedoresState extends State<Proveedores> {
   _createDataListServ(ItemModelServicioByProv serv) {
     List<ServiciosModel> _listaServ = [];
     List<ItemProveedor> dataProv = [];
-    serv.results.forEach((element) {
+    for (var element in serv.results) {
       _listaServ.add(ServiciosModel(
-        id_servicio: element.id_servicio,
-        id_proveedor: element.id_proveedor,
+        idServicio: element.idServicio,
+        idProveedor: element.idProveedor,
         isExpanded: false,
         nombre: element.nombre,
         proveedores: dataProv,
       ));
-    });
+    }
     return _listaServ;
   }
 
   _createDataListProv(ItemModelProveedores prov) {
     List<ItemProveedor> _dataProv = [];
     List<ServiciosModel> listaServ = [];
-    prov.results.forEach((element) {
+    for (var element in prov.results) {
       _dataProv.add(ItemProveedor(
-        id_proveedor: element.id_proveedor,
-        id_servicio: element.id_servicio,
+        idProveedor: element.idProveedor,
+        idServicio: element.idServicio,
         nombre: element.nombre,
         descripcion: element.descripcion,
         servicio: listaServ,
@@ -432,7 +428,7 @@ class _ProveedoresState extends State<Proveedores> {
         idEstado: element.idEstado,
         idPais: element.idPais,
       ));
-    });
+    }
     return _dataProv;
   }
 
@@ -448,7 +444,7 @@ class _ProveedoresState extends State<Proveedores> {
         TextButton(
           onPressed: () async {
             proveedor.estatus = 'I';
-            await proveedorBloc.add(UpdateProveedor(proveedor));
+            proveedorBloc.add(UpdateProveedor(proveedor));
             Navigator.pop(context, 'Aceptar');
           },
           child: const Text('Aceptar'),

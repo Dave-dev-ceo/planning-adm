@@ -37,15 +37,15 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
     return BlocBuilder<InvolucradosBloc, InvolucradosState>(
       builder: (context, state) {
         if (state is InvolucradosInitial) {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         } else if (state is InvolucradosLogging) {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         } else if (state is InvolucradosSelect) {
-          if (state.autorizacion.contrato.length > 0) {
+          if (state.autorizacion.contrato.isNotEmpty) {
             item = Involucrado(
                 idInvolucrado: state.autorizacion.contrato[0].idInvolucrado,
                 nombre: state.autorizacion.contrato[0].nombreCompleto,
@@ -57,7 +57,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
           }
           return viewForm();
         } else if (state is InvolucradosInsert) {
-          if (state.autorizacion.contrato.length > 0) {
+          if (state.autorizacion.contrato.isNotEmpty) {
             item = Involucrado(
                 idInvolucrado: state.autorizacion.contrato[0].idInvolucrado,
                 nombre: state.autorizacion.contrato[0].nombreCompleto,
@@ -66,7 +66,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
           }
           return viewForm();
         } else {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         }
@@ -83,70 +83,68 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
   }
 
   Widget viewForm() {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          formItemsDesign(
-              Icons.person,
-              TextFormField(
-                controller: TextEditingController(text: item.nombre),
-                decoration: new InputDecoration(
-                  labelText: 'Nombre',
-                ),
-                onChanged: (valor) {
-                  item.nombre = valor;
-                },
+    return Column(
+      children: <Widget>[
+        formItemsDesign(
+            Icons.person,
+            TextFormField(
+              controller: TextEditingController(text: item.nombre),
+              decoration: const InputDecoration(
+                labelText: 'Nombre',
               ),
-              500.0,
-              80.0),
-          formItemsDesign(
-              Icons.phone,
-              TextFormField(
-                controller: TextEditingController(text: item.telefono),
-                decoration: new InputDecoration(
-                  labelText: 'Teléfono',
-                ),
-                onChanged: (valor) {
-                  item.telefono = valor;
-                },
+              onChanged: (valor) {
+                item.nombre = valor;
+              },
+            ),
+            500.0,
+            80.0),
+        formItemsDesign(
+            Icons.phone,
+            TextFormField(
+              controller: TextEditingController(text: item.telefono),
+              decoration: const InputDecoration(
+                labelText: 'Teléfono',
               ),
-              500.0,
-              80.0),
-          formItemsDesign(
-              Icons.email,
-              TextFormField(
-                controller: TextEditingController(text: item.email),
-                decoration: new InputDecoration(
-                  labelText: 'Correo',
-                ),
-                onChanged: (valor) {
-                  item.email = valor;
-                },
+              onChanged: (valor) {
+                item.telefono = valor;
+              },
+            ),
+            500.0,
+            80.0),
+        formItemsDesign(
+            Icons.email,
+            TextFormField(
+              controller: TextEditingController(text: item.email),
+              decoration: const InputDecoration(
+                labelText: 'Correo',
               ),
-              500.0,
-              80.0),
-          SizedBox(
-            height: 30.0,
-          ),
-          !isInvolucrado
-              ? IconButton(
-                  icon: Icon(Icons.save),
-                  color: Colors.black,
-                  onPressed: () => validaTodo(),
-                )
-              : Text(''),
-          SizedBox(
-            height: 30.0,
-          ),
-        ],
-      ),
+              onChanged: (valor) {
+                item.email = valor;
+              },
+            ),
+            500.0,
+            80.0),
+        const SizedBox(
+          height: 30.0,
+        ),
+        !isInvolucrado
+            ? IconButton(
+                icon: const Icon(Icons.save),
+                color: Colors.black,
+                onPressed: () => validaTodo(),
+              )
+            : const Text(''),
+        const SizedBox(
+          height: 30.0,
+        ),
+      ],
     );
   }
 
   formItemsDesign(icon, item, large, ancho) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -160,7 +158,7 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
 
   bool validateNombre(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (value.length < 10) {
       return false;
     } else if (!regExp.hasMatch(value)) {
@@ -170,9 +168,9 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
   }
 
   bool validateCorreo(String value) {
-    RegExp regExp = new RegExp(
+    RegExp regExp = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return false;
     } else if (!regExp.hasMatch(value)) {
       return false;
@@ -182,8 +180,8 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
   }
 
   bool validateTelefono(String value) {
-    RegExp regExp = new RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$');
-    if (value.length == 0) {
+    RegExp regExp = RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$');
+    if (value.isEmpty) {
       return false;
     } else if (!regExp.hasMatch(value)) {
       return false;

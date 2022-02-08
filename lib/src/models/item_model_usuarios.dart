@@ -21,7 +21,7 @@ class ItemModelUsuarios {
       _Result result = _Result.fromModel(_results[i]);
       temp.add(result);
     }
-    return new ItemModelUsuarios(temp);
+    return ItemModelUsuarios(temp);
   }
 
   ItemModelUsuarios copyWith(ItemModelUsuarios obj) {
@@ -48,7 +48,7 @@ class ItemModelUsuario {
   }
 
   ItemModelUsuario copy() {
-    return new ItemModelUsuario(_result);
+    return ItemModelUsuario(_result);
   }
 
   ItemModelUsuario copyWith(ItemModelUsuarios obj) {
@@ -103,27 +103,27 @@ class _Result {
     _nombreRol = dataObj._nombreRol;
   }
 
-  int get id_usuario => this._idUsuario;
+  int get idUsuario => _idUsuario;
 
-  String get correo => this._correo;
+  String get correo => _correo;
 
-  bool get admin => this._admin;
+  bool get admin => _admin;
 
-  String get nombre_completo => this._nombreCompleto;
+  String get nombreCompleto => _nombreCompleto;
 
-  String get telefono => this._telefono;
+  String get telefono => _telefono;
 
-  String get estatus => this._estatus;
+  String get estatus => _estatus;
 
-  String get creado => this._creado;
+  String get creado => _creado;
 
-  String get modificado => this._modificado;
+  String get modificado => _modificado;
 
-  String get creado_por => this._creadoPor;
+  String get creadoPor => _creadoPor;
 
-  String get modificado_por => this._modificadoPor;
+  String get modificadoPor => _modificadoPor;
 
-  int get id_rol => this._idRol;
+  int get idRol => _idRol;
 
-  String get nombre_rol => this._nombreRol;
+  String get nombreRol => _nombreRol;
 }

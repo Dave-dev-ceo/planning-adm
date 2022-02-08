@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -24,21 +25,21 @@ class TokenException implements Exception {}
 class CreateArchivoProveedorException implements Exception {}
 
 class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection configC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection configC = ConfigConection();
   Client client = Client();
 
   @override
   Future<ItemModelArchivoProvServ> fetchArchivosProvServ(
       int prov, int serv) async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
 
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerArchivos/$id_planner/$prov/$serv'),
+              '/wedding/PROVEEDORES/obtenerArchivos/$idPlanner/$prov/$serv'),
           headers: {
             HttpHeaders.authorizationHeader: token,
             'Content-type': 'application/json',
@@ -54,7 +55,9 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
         throw ArchivoProveedoresException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       throw ArchivoProveedoresException();
     }
   }
@@ -92,7 +95,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
 
   @override
   Future<int> deleteArchivo(int idArchivo) async {
-    int id_planner = await _sharedPreferences.getIdPlanner();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(configC.url +
@@ -100,7 +103,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
             '/wedding/PROVEEDORES/deleteArchivos'),
         body: {
           "id_archivo": idArchivo.toString(),
-          'id_planner': id_planner.toString()
+          'id_planner': idPlanner.toString()
         },
         headers: {
           HttpHeaders.authorizationHeader: token
@@ -119,12 +122,12 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
   @override
   Future<ItemModelArchivoProvServ> fetchArchivosById(int idArchivo) async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerArchivosById/$id_planner/$idArchivo'),
+              '/wedding/PROVEEDORES/obtenerArchivosById/$idPlanner/$idArchivo'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -137,20 +140,23 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
         throw ArchivoProveedoresException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       throw ArchivoProveedoresException();
     }
   }
 
+  @override
   Future<ItemModelArchivoEspecial> fetchArchivosProvEvent(
       int prov, int event) async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerArchivosEspeciales/$id_planner/$prov/$event'),
+              '/wedding/PROVEEDORES/obtenerArchivosEspeciales/$idPlanner/$prov/$event'),
           headers: {
             HttpHeaders.authorizationHeader: token,
             'Content-type': 'application/json',
@@ -166,14 +172,16 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
         throw ArchivoProveedoresException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       throw ArchivoProveedoresException();
     }
   }
 
   @override
   Future<int> deleteArchivoEspecial(int idArchivoEspecial) async {
-    int id_planner = await _sharedPreferences.getIdPlanner();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(configC.url +
@@ -181,7 +189,7 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
             '/wedding/PROVEEDORES/deleteArchivosEspecial'),
         body: {
           "id_archivo": idArchivoEspecial.toString(),
-          'id_planner': id_planner.toString()
+          'id_planner': idPlanner.toString()
         },
         headers: {
           HttpHeaders.authorizationHeader: token
@@ -234,12 +242,12 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
   Future<ItemModelArchivoEspecial> fetchArchivosEspecialById(
       int idArchivo) async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerArchivosEspecialById/$id_planner/$idArchivo'),
+              '/wedding/PROVEEDORES/obtenerArchivosEspecialById/$idPlanner/$idArchivo'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -252,7 +260,9 @@ class FetchArchivoProveedoresLogic extends LogicArchivoProveedores {
         throw ArchivoProveedoresException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       throw ArchivoProveedoresException();
     }
   }

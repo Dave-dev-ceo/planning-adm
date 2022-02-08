@@ -21,7 +21,7 @@ class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
       yield LoadingCrearUsuarioState();
       try {
         ItemModelUsuario usuario = await logic.crearUsuario(event.data);
-        yield UsuarioCreadoState(new ItemModelUsuario(usuario.result));
+        yield UsuarioCreadoState(ItemModelUsuario(usuario.result));
       } on CrearUsuarioException {
         yield ErrorCrearUsuarioState("Error al crear Usuario");
       } on TokenException {
@@ -32,9 +32,9 @@ class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
       yield LoadingEditarUsuarioState();
       try {
         ItemModelUsuario usuario = await logic.editarUsuario(event.data);
-        yield UsuarioCreadoState(new ItemModelUsuario(usuario.result));
+        yield UsuarioCreadoState(ItemModelUsuario(usuario.result));
       } on CrearUsuarioException {
-        yield ErrorCrearUsuarioState("Error al crear Usuario");
+        yield ErrorCrearUsuarioState("Error al editar Usuario");
       } on TokenException {
         yield ErrorTokenUsuarioState("Error de validación de token");
       }

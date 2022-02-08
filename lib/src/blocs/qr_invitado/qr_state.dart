@@ -14,11 +14,11 @@ class QrLoading extends QrState {}
 class QrValidState extends QrState {
   final QrInvitadoModel qrData;
 
-  QrValidState(this.qrData);
+  const QrValidState(this.qrData);
 }
 
 class QrValidAnotherState extends QrState {}
 
-class QrInvitadoUpdateState extends QrState{}
+class QrInvitadoUpdateState extends QrState {}
 
 class QrErrorState extends QrState {}

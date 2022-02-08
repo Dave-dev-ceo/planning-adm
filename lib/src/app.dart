@@ -39,7 +39,7 @@ import 'package:planning/src/blocs/machotes/machotes_bloc.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
 import 'package:planning/src/blocs/planes/planes_bloc.dart';
 import 'package:planning/src/blocs/planners/planners_bloc.dart';
-import 'package:planning/src/blocs/roles/formRol/formRol_bloc.dart';
+import 'package:planning/src/blocs/roles/formRol/form_rol_bloc.dart';
 import 'package:planning/src/blocs/roles/rol/rol_bloc.dart';
 import 'package:planning/src/blocs/roles/roles_bloc.dart';
 import 'package:planning/src/blocs/timings/timings_bloc.dart';
@@ -83,8 +83,10 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessegerKey =
     GlobalKey<ScaffoldMessengerState>();
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   MaterialColor createMaterialColor(Color color) {
@@ -95,7 +97,7 @@ class MyApp extends StatelessWidget {
     for (int i = 1; i < 10; i++) {
       strengths.add(0.1 * i);
     }
-    strengths.forEach((strength) {
+    for (var strength in strengths) {
       final double ds = 0.5 - strength;
       swatch[(strength * 1000).round()] = Color.fromRGBO(
         r + ((ds < 0 ? r : (255 - r)) * ds).round(),
@@ -103,7 +105,7 @@ class MyApp extends StatelessWidget {
         b + ((ds < 0 ? b : (255 - b)) * ds).round(),
         1,
       );
-    });
+    }
     return MaterialColor(color.value, swatch);
   }
 
@@ -111,30 +113,29 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       scaffoldMessengerKey: scaffoldMessegerKey,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         SfGlobalLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('es'),
+      supportedLocales: const [
+        Locale('es'),
       ],
       locale: const Locale('es'),
       title: 'Planning',
       theme: ThemeData(
         bottomNavigationBarTheme:
-            BottomNavigationBarThemeData(selectedItemColor: Colors.black),
-        textSelectionTheme: TextSelectionThemeData(
+            const BottomNavigationBarThemeData(selectedItemColor: Colors.black),
+        textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Colors.black,
           selectionColor: Colors.grey,
         ),
-        primarySwatch: createMaterialColor(Color(0xFFfdf4e5)),
+        primarySwatch: createMaterialColor(const Color(0xFFfdf4e5)),
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(primary: Colors.black)),
-        inputDecorationTheme: InputDecorationTheme(
+        inputDecorationTheme: const InputDecorationTheme(
             floatingLabelStyle: TextStyle(color: Colors.black54)),
-        //backgroundColor: createMaterialColor(Color(0xD34444)),
         scaffoldBackgroundColor: hexToColor('#fff9f9'),
         fontFamily: 'Montserrat-Medium',
       ),
@@ -146,6 +147,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AppState extends StatelessWidget {
+  const AppState({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
@@ -245,6 +248,6 @@ class AppState extends StatelessWidget {
         create: (context) => ProspectoBloc(logic: ProspectoLogic()),
       ),
       BlocProvider<QrBloc>(create: (_) => QrBloc())
-    ], child: MyApp());
+    ], child: const MyApp());
   }
 }

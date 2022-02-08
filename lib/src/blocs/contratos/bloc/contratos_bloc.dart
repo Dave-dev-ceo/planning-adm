@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/add_contratos_logic.dart';
 import 'package:planning/src/models/item_model_add_contratos.dart';
 
@@ -33,14 +33,18 @@ class ContratosDosBloc extends Bloc<ContratosEvent, ContratosState> {
         yield UpdateValContratoState(valString);
         add(ContratosSelect());
       } on Exception {
-        print('Error');
+        if (kDebugMode) {
+          print('Error');
+        }
       }
     } else if (event is FectValContratoEvent) {
       try {
         String val = await logic.fetchValContratos(event.machote);
         yield FectValContratoState(val);
       } on Exception {
-        print('Error');
+        if (kDebugMode) {
+          print('Error');
+        }
       }
     }
   }

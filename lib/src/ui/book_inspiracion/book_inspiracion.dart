@@ -45,7 +45,7 @@ class _BookInspiracion extends State<BookInspiracion> {
     return Scaffold(
       appBar: (isInvolucrado)
           ? AppBar(
-              title: Text('Book Inspiration'),
+              title: const Text('Book Inspiration'),
               centerTitle: true,
             )
           : null,
@@ -54,13 +54,13 @@ class _BookInspiracion extends State<BookInspiracion> {
           builder: (BuildContext context,
               AsyncSnapshot<List<LayoutBookModel>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             }
             if (snapshot.hasData) {
               if (snapshot.data != null) {
-                if (snapshot.data.length > 0) {
+                if (snapshot.data.isNotEmpty) {
                   return _viewFile(snapshot.data);
                 } else {
                   return sinDatos();
@@ -77,7 +77,7 @@ class _BookInspiracion extends State<BookInspiracion> {
         tooltip: 'Opciones',
         children: [
           SpeedDialChild(
-              child: Icon(Icons.upload),
+              child: const Icon(Icons.upload),
               label: 'Subir archivo',
               onTap: () async {
                 FilePickerResult pickedFile =
@@ -87,10 +87,8 @@ class _BookInspiracion extends State<BookInspiracion> {
                   allowMultiple: false,
                 );
                 if (pickedFile != null) {
-                  var bytes = await pickedFile.files.first.bytes;
-                  if (bytes == null) {
-                    bytes = File(pickedFile.files.first.path).readAsBytesSync();
-                  }
+                  var bytes = pickedFile.files.first.bytes;
+                  bytes ??= File(pickedFile.files.first.path).readAsBytesSync();
                   String _extension = pickedFile.files.first.extension;
                   String file64 = base64Encode(bytes);
                   bookInspiracionService
@@ -109,7 +107,7 @@ class _BookInspiracion extends State<BookInspiracion> {
                 }
               }),
           SpeedDialChild(
-              child: Icon(Icons.download),
+              child: const Icon(Icons.download),
               label: 'Descargar Archivo',
               onTap: () async {
                 final datosBookIns =
@@ -124,7 +122,7 @@ class _BookInspiracion extends State<BookInspiracion> {
   }
 
   Align sinDatos() {
-    return Align(
+    return const Align(
       alignment: Alignment.center,
       child: Center(
         child: Text('No se encontraron datos'),
@@ -134,9 +132,9 @@ class _BookInspiracion extends State<BookInspiracion> {
 
   Widget _viewFile(List<LayoutBookModel> layoutBookModel) {
     return GridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
         itemCount: layoutBookModel.length,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 500,
           mainAxisExtent: 300,
           childAspectRatio: 3 / 2,
@@ -147,7 +145,7 @@ class _BookInspiracion extends State<BookInspiracion> {
           final bytes = base64Decode(layoutBookModel[index].file);
           return Stack(
             children: [
-              Container(
+              SizedBox(
                 width: double.infinity,
                 height: double.infinity,
                 child: Image.memory(

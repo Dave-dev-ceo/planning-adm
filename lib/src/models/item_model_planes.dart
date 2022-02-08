@@ -10,9 +10,9 @@ class ItemModelPlanes {
     List<_Planes> temp = []; // variable temp para ir agregando
 
     // extrameos los datos - metodo forEach
-    pardedJson.forEach((data) {
+    for (var data in pardedJson) {
       temp.add(_Planes(data));
-    });
+    }
 
     _planes = temp;
   }
@@ -69,40 +69,40 @@ class _Planes {
 
   // creamos getters
   // parte de tares
-  int get idPlan => this._idPlan;
-  String get nombrePlan => this._nombrePlan;
-  DateTime get fechaInicioEvento => this._fechaInicioEvento;
-  DateTime get fechaFinalEvento => this._fechaFinalEvento;
-  int get idOldPlan => this._idOldPlan;
+  int get idPlan => _idPlan;
+  String get nombrePlan => _nombrePlan;
+  DateTime get fechaInicioEvento => _fechaInicioEvento;
+  DateTime get fechaFinalEvento => _fechaFinalEvento;
+  int get idOldPlan => _idOldPlan;
   // parte de actividades
-  int get idActividad => this._idActividad;
-  String get nombreActividad => this._nombreActividad;
-  String get nombreResponsable => this._nombreResponsable;
-  String get descripcionActividad => this._descripcionActividad;
-  bool get visibleInvolucradosActividad => this._visibleInvolucradosActividad;
-  int get duracionActividad => this._duracionActividad;
-  int get predecesorActividad => this._predecesorActividad;
-  bool get statusCalendar => this._statusCalendar;
-  DateTime get fechaInicioActividad => this._fechaInicioActividad;
-  int get idOldActividad => this._idOldActividad;
-  bool get statusProgreso => this._statusProgreso;
+  int get idActividad => _idActividad;
+  String get nombreActividad => _nombreActividad;
+  String get nombreResponsable => _nombreResponsable;
+  String get descripcionActividad => _descripcionActividad;
+  bool get visibleInvolucradosActividad => _visibleInvolucradosActividad;
+  int get duracionActividad => _duracionActividad;
+  int get predecesorActividad => _predecesorActividad;
+  bool get statusCalendar => _statusCalendar;
+  DateTime get fechaInicioActividad => _fechaInicioActividad;
+  int get idOldActividad => _idOldActividad;
+  bool get statusProgreso => _statusProgreso;
 
   // creamos setters
   // parte de tares
-  set idPlan(value) => this._idPlan;
-  set nombrePlan(value) => this._nombrePlan;
-  set fechaInicioEvento(value) => this._fechaInicioEvento;
-  set fechaFinalEvento(value) => this._fechaFinalEvento;
-  set idOldPlan(value) => this._idOldPlan;
+  set idPlan(value) => _idPlan;
+  set nombrePlan(value) => _nombrePlan;
+  set fechaInicioEvento(value) => _fechaInicioEvento;
+  set fechaFinalEvento(value) => _fechaFinalEvento;
+  set idOldPlan(value) => _idOldPlan;
   // parte de actividades
-  set idActividad(value) => this._idActividad;
-  set nombreActividad(value) => this._nombreActividad;
-  set descripcionActividad(value) => this._descripcionActividad;
-  set visibleInvolucradosActividad(value) => this._visibleInvolucradosActividad;
-  set duracionActividad(value) => this._duracionActividad;
-  set predecesorActividad(value) => this._predecesorActividad;
-  set statusCalendar(value) => this._statusCalendar;
-  set fechaInicioActividad(value) => this._fechaInicioActividad;
-  set idOldActividad(value) => this._idOldActividad;
-  set statusProgreso(value) => this._statusProgreso;
+  set idActividad(value) => _idActividad;
+  set nombreActividad(value) => _nombreActividad;
+  set descripcionActividad(value) => _descripcionActividad;
+  set visibleInvolucradosActividad(value) => _visibleInvolucradosActividad;
+  set duracionActividad(value) => _duracionActividad;
+  set predecesorActividad(value) => _predecesorActividad;
+  set statusCalendar(value) => _statusCalendar;
+  set fechaInicioActividad(value) => _fechaInicioActividad;
+  set idOldActividad(value) => _idOldActividad;
+  set statusProgreso(value) => _statusProgreso;
 }

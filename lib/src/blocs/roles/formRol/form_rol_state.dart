@@ -1,4 +1,4 @@
-part of 'formRol_bloc.dart';
+part of 'form_rol_bloc.dart';
 
 @immutable
 abstract class FormRolState {}
@@ -12,7 +12,7 @@ class LoadingMostrarFormRol extends FormRolState {}
 class MostrarFormRol extends FormRolState {
   final ItemModelFormRol form;
   MostrarFormRol(this.form);
-  ItemModelFormRol get data => this.form;
+  ItemModelFormRol get data => form;
 }
 
 class ErrorMostrarFormRol extends FormRolState {

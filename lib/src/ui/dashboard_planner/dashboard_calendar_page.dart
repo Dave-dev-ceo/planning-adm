@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/dashboard/dashboard_bloc.dart';
@@ -9,6 +10,8 @@ import 'package:planning/src/models/eventosModel/eventos_dashboard_model.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class DashboardCalendarPage extends StatefulWidget {
+  const DashboardCalendarPage({Key key}) : super(key: key);
+
   @override
   _DashboardCalendarPageState createState() => _DashboardCalendarPageState();
 }
@@ -25,7 +28,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
   DashboardBloc dashboardBloc;
 
   final ScrollController _controller = ScrollController();
-  List<Meeting> _eventos = [];
+  final List<Meeting> _eventos = [];
   final MeetingDataSource _events = MeetingDataSource();
   List<DashboardEventoModel> eventos = [];
   List<EventoActividadModel> actividades = [];
@@ -64,7 +67,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
                     shrinkWrap: true,
                     controller: _controller,
                     children: <Widget>[
-                      Container(height: 600, child: calendar())
+                      SizedBox(height: 600, child: calendar())
                     ],
                   ))
               : Container(child: calendar()),
@@ -77,7 +80,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
     return Theme(
       data: ThemeData.light(),
       child: SfCalendar(
-        headerStyle: CalendarHeaderStyle(
+        headerStyle: const CalendarHeaderStyle(
           backgroundColor: Color(0xFFFFF0D6),
           textStyle: TextStyle(
             color: Colors.black,
@@ -106,7 +109,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
                       ? 50
                       : double.infinity,
                   alignment: Alignment.center,
-                  child: CircularProgressIndicator(),
+                  child: const CircularProgressIndicator(),
                 );
               });
         },
@@ -159,39 +162,39 @@ class MeetingDataSource extends CalendarDataSource {
   Future<void> handleLoadMore(DateTime startDate, DateTime endDate) async {
     List<Color> _colorCollection = <Color>[];
 
-    _colorCollection.add(Color(0xFF0444BF));
-    _colorCollection.add(Color(0xFFF05837));
-    _colorCollection.add(Color(0xFF0F8644));
-    _colorCollection.add(Color(0xFF888c46));
-    _colorCollection.add(Color(0xFFf4874b));
-    _colorCollection.add(Color(0xFF6465A5));
-    _colorCollection.add(Color(0xFF8B1FA9));
-    _colorCollection.add(Color(0xFFD20100));
-    _colorCollection.add(Color(0xFFdaa2da));
-    _colorCollection.add(Color(0xFFF49F05));
-    _colorCollection.add(Color(0xFF36B37B));
-    _colorCollection.add(Color(0xFF01A1EF));
-    _colorCollection.add(Color(0xFFFC571D));
-    _colorCollection.add(Color(0xFF80add7));
-    _colorCollection.add(Color(0xFFbf9d7a));
-    _colorCollection.add(Color(0xFF3D4FB5));
-    _colorCollection.add(Color(0xFFE47C73));
-    _colorCollection.add(Color(0xFFbed905));
-    _colorCollection.add(Color(0xFF00743f));
-    _colorCollection.add(Color(0xFF636363));
-    _colorCollection.add(Color(0xFF1d65a6));
-    _colorCollection.add(Color(0xFFde8cf0));
-    _colorCollection.add(Color(0xFF0A8043));
-    _colorCollection.add(Color(0xFFff6961));
-    _colorCollection.add(Color(0xFF77dd77));
-    _colorCollection.add(Color(0xFFfdfd96));
-    _colorCollection.add(Color(0xFF84b6f4));
-    _colorCollection.add(Color(0xFFfdcae1));
-    _colorCollection.add(Color(0xFFb2dafa));
-    _colorCollection.add(Color(0xFF0584F2));
-    _colorCollection.add(Color(0xFFfad2b2));
-    _colorCollection.add(Color(0xFFA7414A));
-    _colorCollection.add(Color(0xFFb6fab2));
+    _colorCollection.add(const Color(0xFF0444BF));
+    _colorCollection.add(const Color(0xFFF05837));
+    _colorCollection.add(const Color(0xFF0F8644));
+    _colorCollection.add(const Color(0xFF888c46));
+    _colorCollection.add(const Color(0xFFf4874b));
+    _colorCollection.add(const Color(0xFF6465A5));
+    _colorCollection.add(const Color(0xFF8B1FA9));
+    _colorCollection.add(const Color(0xFFD20100));
+    _colorCollection.add(const Color(0xFFdaa2da));
+    _colorCollection.add(const Color(0xFFF49F05));
+    _colorCollection.add(const Color(0xFF36B37B));
+    _colorCollection.add(const Color(0xFF01A1EF));
+    _colorCollection.add(const Color(0xFFFC571D));
+    _colorCollection.add(const Color(0xFF80add7));
+    _colorCollection.add(const Color(0xFFbf9d7a));
+    _colorCollection.add(const Color(0xFF3D4FB5));
+    _colorCollection.add(const Color(0xFFE47C73));
+    _colorCollection.add(const Color(0xFFbed905));
+    _colorCollection.add(const Color(0xFF00743f));
+    _colorCollection.add(const Color(0xFF636363));
+    _colorCollection.add(const Color(0xFF1d65a6));
+    _colorCollection.add(const Color(0xFFde8cf0));
+    _colorCollection.add(const Color(0xFF0A8043));
+    _colorCollection.add(const Color(0xFFff6961));
+    _colorCollection.add(const Color(0xFF77dd77));
+    _colorCollection.add(const Color(0xFFfdfd96));
+    _colorCollection.add(const Color(0xFF84b6f4));
+    _colorCollection.add(const Color(0xFFfdcae1));
+    _colorCollection.add(const Color(0xFFb2dafa));
+    _colorCollection.add(const Color(0xFF0584F2));
+    _colorCollection.add(const Color(0xFFfad2b2));
+    _colorCollection.add(const Color(0xFFA7414A));
+    _colorCollection.add(const Color(0xFFb6fab2));
 
     List<EventoDetails> eventoColors = [];
 
@@ -225,9 +228,7 @@ class MeetingDataSource extends CalendarDataSource {
           background:
               eventoColors.firstWhere((e) => e.id == actividad.idEvento).color,
           isAllDay: false,
-          organizer: actividad.responsable != null
-              ? actividad.responsable
-              : 'Sin responsable',
+          organizer: actividad.responsable ?? 'Sin responsable',
           idActividad: actividad.idActividad,
         );
         meetings.add(meeting);
@@ -235,7 +236,9 @@ class MeetingDataSource extends CalendarDataSource {
       appointments.addAll(meetings);
       notifyListeners(CalendarDataSourceAction.add, meetings);
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

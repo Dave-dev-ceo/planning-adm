@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_servicios.dart';
@@ -12,7 +13,7 @@ abstract class ServiciosLogic {
   Future<int> createServicio(Map<String, dynamic> data);
   Future<int> editarServicio(Map<String, dynamic> data);
   Future<int> deleteDetallaLista(int idServicio);
-  Future<ItemModuleServicios> fetchServiciosByProoveedor(int id_proveedor);
+  Future<ItemModuleServicios> fetchServiciosByProoveedor(int idProveedor);
 }
 
 class ServiciosException implements Exception {}
@@ -22,19 +23,19 @@ class TokenException implements Exception {}
 class CreateServiciosException implements Exception {}
 
 class FetchServiciosLogic extends ServiciosLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection configC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection configC = ConfigConection();
   Client client = Client();
 
   @override
   Future<ItemModuleServicios> fetchServicios() async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/SERVICIOS/obtenerServicios/$id_planner'),
+              '/wedding/SERVICIOS/obtenerServicios/$idPlanner'),
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -46,7 +47,9 @@ class FetchServiciosLogic extends ServiciosLogic {
         throw ServiciosException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -106,14 +109,14 @@ class FetchServiciosLogic extends ServiciosLogic {
 
   @override
   Future<int> deleteDetallaLista(int idServicio) async {
-    int id_planner = await _sharedPreferences.getIdPlanner();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(
             configC.url + configC.puerto + '/wedding/SERVICIOS/deleteServicio'),
         body: {
           "id_servicio": idServicio.toString(),
-          'id_planner': id_planner.toString()
+          'id_planner': idPlanner.toString()
         },
         headers: {
           HttpHeaders.authorizationHeader: token
@@ -131,14 +134,14 @@ class FetchServiciosLogic extends ServiciosLogic {
 
   @override
   Future<ItemModuleServicios> fetchServiciosByProoveedor(
-      int id_proveedor) async {
+      int idProveedor) async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/SERVICIOS/obtenerServiciosByProveedor/$id_planner/$id_proveedor'),
+              '/wedding/SERVICIOS/obtenerServiciosByProveedor/$idPlanner/$idProveedor'),
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -150,7 +153,9 @@ class FetchServiciosLogic extends ServiciosLogic {
         throw ServiciosException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

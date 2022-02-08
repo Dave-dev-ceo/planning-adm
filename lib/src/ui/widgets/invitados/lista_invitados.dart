@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, no_logic_in_create_state
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -23,7 +25,7 @@ import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/asistencia/asistencia.dart';
-import 'package:planning/src/ui/mesas/mesasPage.dart';
+import 'package:planning/src/ui/mesas/mesas_page.dart';
 import '../../../models/item_model_invitados.dart';
 
 import 'package:planning/src/utils/utils.dart' as utils;
@@ -46,7 +48,7 @@ class ListaInvitados extends StatefulWidget {
     this.permisos,
   }) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => ListaInvitados(),
+        builder: (context) => const ListaInvitados(),
       );
   @override
   _ListaInvitadosState createState() => _ListaInvitadosState(
@@ -55,8 +57,8 @@ class ListaInvitados extends StatefulWidget {
 
 class _ListaInvitadosState extends State<ListaInvitados>
     with TickerProviderStateMixin {
-  ApiProvider api = new ApiProvider();
-  final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
+  ApiProvider api = ApiProvider();
+  final TextStyle estiloTxt = const TextStyle(fontWeight: FontWeight.bold);
   final int idEvento;
 
   int currentIndex = 0;
@@ -106,7 +108,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
   _ListaInvitadosState(this.idEvento, this.WP_EVT_INV_CRT, this.WP_EVT_INV_EDT,
       this.WP_EVT_INV_ENV);
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   void setDialVisible(bool value) {
@@ -119,41 +121,40 @@ class _ListaInvitadosState extends State<ListaInvitados>
     showDialog(
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(
-              title: Text('Importación de excel'),
+              title: const Text('Importación de excel'),
               content: Column(
                 children: [
-                  Text(
+                  const Text(
                       'Procedera a abrir su explorador de archivos para seleccionar un archivo excel,¿Desea continuar?'),
                   TextButton(
                     style: TextButton.styleFrom(
                         primary: Colors.blue,
-                        textStyle: TextStyle(fontSize: 13.0)),
+                        textStyle: const TextStyle(fontSize: 13.0)),
                     onPressed: () async {
                       ByteData bytes =
                           await rootBundle.load("assets/Plantilla.xlsx");
-                      ;
                       String base64 = base64Encode(bytes.buffer.asUint8List(
                           bytes.offsetInBytes, bytes.lengthInBytes));
                       utils.downloadFile(base64, 'Plantilla',
                           extensionFile: 'xlsx');
                     },
-                    child: Text('Descargar plantiila'),
+                    child: const Text('Descargar plantiila'),
                   ),
                 ],
               ),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  child: Text(
+                  child: const Text(
                     'No',
                     style: TextStyle(color: Colors.red),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 CupertinoDialogAction(
-                  child: Text('Sí'),
+                  child: const Text('Sí'),
                   onPressed: () async {
                     await _readExcel();
-                    await Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -172,10 +173,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
     /// file might be picked
     if (pickedFile != null) {
       var bytes = pickedFile.files.single.bytes;
-      if (bytes == null) {
-        bytes = File(pickedFile.files[0].path).readAsBytesSync();
-        print('error');
-      }
+      bytes ??= File(pickedFile.files[0].path).readAsBytesSync();
 
       var excel = Excel.decodeBytes(bytes);
       bool bandera = false;
@@ -211,9 +209,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
             mensaje: 'Error: No se pudo realizar el registro.',
             tipoMensaje: TipoMensaje.advertencia);
       }
-    } else {
-      print('El file is null');
-    }
+    } 
   }
 
   Future<PermissionStatus> _getPermission() async {
@@ -245,11 +241,11 @@ class _ListaInvitadosState extends State<ListaInvitados>
       showDialog(
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
-                title: Text('Permisos denegados'),
-                content: Text('Por favor habilitar el acceso a contactos'),
+                title: const Text('Permisos denegados'),
+                content: const Text('Por favor habilitar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () => Navigator.of(context).pop(),
                   )
                 ],
@@ -270,7 +266,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
     if (WP_EVT_INV_CRT) {
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
-        child: Tooltip(
+        child: const Tooltip(
           child: Icon(Icons.person_add),
           message: "Agregar invitado",
         ),
@@ -291,7 +287,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
-        child: Tooltip(
+        child: const Tooltip(
           child: Icon(Icons.table_chart_outlined),
           message: "Importar excel",
         ),
@@ -302,7 +298,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
       ));
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
-        child: Tooltip(
+        child: const Tooltip(
           child: Icon(Icons.import_contacts_rounded),
           message: "Importar contactos",
         ),
@@ -313,7 +309,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
       ));
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
-        child: Tooltip(
+        child: const Tooltip(
           child: Icon(Icons.download),
           message: "Descargar PDF",
         ),
@@ -326,7 +322,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
     if (WP_EVT_INV_ENV) {
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
-        child: Tooltip(
+        child: const Tooltip(
           child: Icon(Icons.send_and_archive_sharp),
           message: "Enviar QR a invitados",
         ),
@@ -351,11 +347,11 @@ class _ListaInvitadosState extends State<ListaInvitados>
     showDialog(
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(
-              title: Text('Permisos denegados'),
-              content: Text('Por favor habilitar el acceso a contactos'),
+              title: const Text('Permisos denegados'),
+              content: const Text('Por favor habilitar el acceso a contactos'),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  child: Text('OK'),
+                  child: const Text('OK'),
                   onPressed: () => openAppSettings(),
                 )
               ],
@@ -378,7 +374,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         },
       ),
     );
@@ -390,7 +386,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
       if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV'))
         listaInvitados(context),
       if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI'))
-        Asistencia(),
+        const Asistencia(),
       if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE'))
         MesasPage(nameEvento: widget.nameEvento),
     ];
@@ -399,7 +395,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Invitados'),
+        title: const Text('Invitados'),
         bottom: tabs == 1
             ? null
             : TabBar(
@@ -408,19 +404,19 @@ class _ListaInvitadosState extends State<ListaInvitados>
                 tabs: [
                   if (widget.permisos.pantallas
                       .hasAcceso(clavePantalla: 'WP-EVT-INV'))
-                    Tab(
+                    const Tab(
                       icon: Icon(Icons.people),
                       text: 'Lista de Invitados',
                     ),
                   if (widget.permisos.pantallas
                       .hasAcceso(clavePantalla: 'WP-EVT-ASI'))
-                    Tab(
+                    const Tab(
                       icon: Icon(Icons.accessibility),
                       text: 'Asistencia',
                     ),
                   if (widget.permisos.pantallas
                       .hasAcceso(clavePantalla: 'WP-EVT-MDE'))
-                    Tab(
+                    const Tab(
                       icon: Icon(Icons.contact_mail_sharp),
                       text: 'Mesas',
                     ),
@@ -451,7 +447,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
   }
 
   _dialogSpinner(String title) {
-    Widget child = LoadingCustom();
+    Widget child = const LoadingCustom();
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -463,7 +459,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
@@ -478,10 +474,10 @@ class _ListaInvitadosState extends State<ListaInvitados>
       children: [
         Card(
           child: ListTile(
-            leading: new Icon(Icons.search),
-            title: new TextField(
+            leading: const Icon(Icons.search),
+            title: TextField(
               controller: controllerBuscar,
-              decoration: new InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Buscar...', border: InputBorder.none),
               onChanged: (value) async {
                 setState(() {
@@ -497,8 +493,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
                 });
               },
             ),
-            trailing: new IconButton(
-                icon: Icon(Icons.cancel),
+            trailing: IconButton(
+                icon: const Icon(Icons.cancel),
                 onPressed: () {
                   setState(() {
                     controllerBuscar.clear();
@@ -509,7 +505,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           ),
         ),
         PaginatedDataTable(
-          header: Text('Invitados'),
+          header: const Text('Invitados'),
           rowsPerPage: 8,
           showCheckboxColumn: false,
           columns: [
@@ -523,7 +519,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           source: _DataSource(buscador, context, idEvento, WP_EVT_INV_CRT,
               WP_EVT_INV_EDT, WP_EVT_INV_ENV),
         ),
-        SizedBox(
+        const SizedBox(
           height: 35.0,
         ),
       ],
@@ -562,7 +558,7 @@ class _DataSource extends DataTableSource {
   ItemModelEstatusInvitado _estatus;
   String _grupoSelect = "0";
   String _estatusSelect = "0";
-  ApiProvider api = new ApiProvider();
+  ApiProvider api = ApiProvider();
 
   _DataSource(context, BuildContext cont, this.idEvento, this.WP_EVT_INV_CRT,
       this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV) {
@@ -572,8 +568,8 @@ class _DataSource extends DataTableSource {
           context[i].idInvitado,
           context[i].nombre,
           context[i].telefono,
-          context[i].grupo == null ? 'Sin grupo' : context[i].grupo,
-          context[i].asistencia == null ? 'Sin estatus' : context[i].asistencia,
+          context[i].grupo ?? 'Sin grupo',
+          context[i].asistencia ?? 'Sin estatus',
           context[i].telefono));
     }
     _cont = cont;
@@ -585,7 +581,7 @@ class _DataSource extends DataTableSource {
       //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Teléfono', textAlign: TextAlign.center),
+          title: const Text('Teléfono', textAlign: TextAlign.center),
           content: Container(
             margin: const EdgeInsets.all(10.0),
             width: 400.0,
@@ -595,7 +591,7 @@ class _DataSource extends DataTableSource {
                 Card(
                   child: ListTile(
                     title: Text('Se llamara al número $numero'),
-                    trailing: Icon(Icons.phone),
+                    trailing: const Icon(Icons.phone),
                     onTap: () async {
                       launch('tel://$numero');
                       Navigator.of(context).pop();
@@ -604,13 +600,13 @@ class _DataSource extends DataTableSource {
                 ),
                 Card(
                   child: ListTile(
-                      title: Text('Abrir WhatsApp',
+                      title: const Text('Abrir WhatsApp',
                           textAlign: TextAlign.start,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               // fontSize: 20,
                               color: Colors.green)),
-                      trailing: FaIcon(FontAwesomeIcons.whatsapp),
+                      trailing: const FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
                         launch('http://wa.me/521' + numero);
                       }),
@@ -620,7 +616,7 @@ class _DataSource extends DataTableSource {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -646,12 +642,12 @@ class _DataSource extends DataTableSource {
         context: _cont,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Text('Eliminar Invitado'),
+              title: const Text('Eliminar Invitado'),
               content: // RichText(
                   RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   text: '¿Desara eliminar el invitado? ',
-                  children: const <TextSpan>[
+                  children: <TextSpan>[
                     TextSpan(
                         text:
                             '!Se eliminarán los acompañantes relacionados al invitado!',
@@ -662,16 +658,16 @@ class _DataSource extends DataTableSource {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Cancelar'),
+                  child: const Text('Cancelar'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10.0,
                 ),
                 TextButton(
-                  child: Text('Aceptar'),
+                  child: const Text('Aceptar'),
                   onPressed: () async {
                     Map<String, dynamic> json = {'id_invitado': idInvitado};
                     int response = await api.deleteInvitados(json);
@@ -755,8 +751,8 @@ class _DataSource extends DataTableSource {
       //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Seleccionar estatus', textAlign: TextAlign.center),
-          content: Container(
+          title: const Text('Seleccionar estatus', textAlign: TextAlign.center),
+          content: SizedBox(
             height: 120,
             child: //Column(
                 //children: [
@@ -778,14 +774,14 @@ class _DataSource extends DataTableSource {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ),
             TextButton(
-              child: Text('Confirmar'),
+              child: const Text('Confirmar'),
               onPressed: () async {
                 await _updateGrupo(idInvitado);
                 Navigator.of(context).pop();
@@ -821,8 +817,8 @@ class _DataSource extends DataTableSource {
       //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Seleccionar estatus', textAlign: TextAlign.center),
-          content: Container(
+          title: const Text('Seleccionar estatus', textAlign: TextAlign.center),
+          content: SizedBox(
             height: 120,
             child: //Column(
                 //children: [
@@ -839,7 +835,7 @@ class _DataSource extends DataTableSource {
                   if (_estatus.results != null)
                     for (var data in _estatus.results) Text(data.descripcion)
                   else
-                    (Text('Sin datos')),
+                    (const Text('Sin datos')),
                 ]),
             // _listaGrupos(),
             // ],
@@ -847,16 +843,16 @@ class _DataSource extends DataTableSource {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ),
             TextButton(
-              child: Text('Confirmar'),
+              child: const Text('Confirmar'),
               onPressed: () async {
                 await _updateEstatus(idInvitado);
                 BlocProvider.of<InvitadosMesasBloc>(context)
@@ -906,7 +902,7 @@ class _DataSource extends DataTableSource {
           },
         ),
         DataCell(
-          Icon(Icons.delete),
+          const Icon(Icons.delete),
           onTap: () {
             _showMyDialogWhatsApp(row.valueE, row.valueId);
           },

@@ -1,3 +1,6 @@
+// ignore_for_file: no_logic_in_create_state
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:multi_select_item/multi_select_item.dart';
@@ -22,9 +25,9 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
   String _mySelection = "0";
   bool bandera = true;
   Iterable<Contact> _contacts;
-  TextEditingController grupo = new TextEditingController();
-  GlobalKey<FormState> keyForm = new GlobalKey();
-  ApiProvider api = new ApiProvider();
+  TextEditingController grupo = TextEditingController();
+  GlobalKey<FormState> keyForm = GlobalKey();
+  ApiProvider api = ApiProvider();
 
   _FullScreenDialogState(this.id);
   _listaGrupos() {
@@ -39,7 +42,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: LoadingCustom());
+        return const Center(child: LoadingCustom());
       },
     );
   }
@@ -52,7 +55,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       style: const TextStyle(color: Color(0xFF000000)),
       underline: Container(
         height: 2,
-        color: Color(0xFF000000),
+        color: const Color(0xFF000000),
       ),
       onChanged: (newValue) {
         setState(() {
@@ -72,7 +75,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
           value: item.idGrupo.toString(),
           child: Text(
             item.nombreGrupo,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         );
       }).toList(),
@@ -82,15 +85,15 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
   @override
   void initState() {
     //_listaGrupos();
-    controller = new MultiSelectController();
+    controller = MultiSelectController();
     getContacts();
     super.initState();
   }
 
   String validateGrupo(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
-    if (value.length == 0) {
+    RegExp regExp = RegExp(pattern);
+    if (value.isEmpty) {
       return "El grupo es necesario";
     } else if (!regExp.hasMatch(value)) {
       return "El grupo debe de ser a-z y A-Z";
@@ -100,7 +103,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
 
   formItemsDesign(icon, item) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Card(child: ListTile(leading: Icon(icon), title: item)),
     );
   }
@@ -117,7 +120,9 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
             mensaje: 'Grupo agregado.', tipoMensaje: TipoMensaje.correcto);
         _listaGrupos();
       } else {
-        print('error');
+        if (kDebugMode) {
+          print('error');
+        }
       }
     }
   }
@@ -128,7 +133,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Registar nuevo grupo', textAlign: TextAlign.center),
+          title: const Text('Registar nuevo grupo', textAlign: TextAlign.center),
           content: SingleChildScrollView(
             child: Form(
               key: keyForm,
@@ -136,19 +141,19 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
                 children: <Widget>[
                   TextFormField(
                     controller: grupo,
-                    decoration: new InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Grupo',
                     ),
                     validator: validateGrupo,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   GestureDetector(
                     onTap: () {
                       _save(context);
                     },
-                    child: CallToAction('Agregar'),
+                    child: const CallToAction('Agregar'),
                   ),
                 ],
               ),
@@ -156,7 +161,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cerrar'),
+              child: const Text('Cerrar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -185,7 +190,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       );
     } else {
       return CircleAvatar(
-        child: Icon(Icons.person),
+        child: const Icon(Icons.person),
         backgroundColor: Theme.of(context).colorScheme.secondary,
         radius: 25,
       );
@@ -209,7 +214,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
   }
 
   _saveContact() async {
-    if (controller.selectedIndexes.length <= 0) {
+    if (controller.selectedIndexes.isEmpty) {
       MostrarAlerta(
           mensaje: 'Seleccione un contacto.',
           tipoMensaje: TipoMensaje.advertencia);
@@ -261,13 +266,13 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text((controller.selectedIndexes.length > 0
+        title: Text((controller.selectedIndexes.isNotEmpty
             ? 'Seleccionados ${controller.selectedIndexes.length}'
             : 'Seleccionar contactos')),
         actions: (controller.isSelecting)
             ? <Widget>[
                 IconButton(
-                  icon: Icon(Icons.check_box),
+                  icon: const Icon(Icons.check_box),
                   onPressed: selectAll,
                 )
               ]
@@ -275,7 +280,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
       ),
       body: Column(
         children: <Widget>[
-          Container(
+          SizedBox(
             height: 70,
             width: double.infinity,
             child: Center(
@@ -309,16 +314,16 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
                                 children: [
                                   Text(
                                     _nameContact(contact),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Text(
                                     _phoneContact(contact),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -328,13 +333,13 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
                             ],
                           ),
                           decoration: controller.isSelected(index)
-                              ? new BoxDecoration(color: Colors.grey[300])
-                              : new BoxDecoration(),
+                              ? BoxDecoration(color: Colors.grey[300])
+                              : const BoxDecoration(),
                         ),
                       );
                     },
                   )
-                : Center(child: LoadingCustom()),
+                : const Center(child: LoadingCustom()),
           ),
         ],
       ),

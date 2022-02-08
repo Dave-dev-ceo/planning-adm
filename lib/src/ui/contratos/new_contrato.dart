@@ -1,5 +1,5 @@
 // imports flutter/dart
-// ignore_for_file: unused_local_variable
+// ignore_for_file: unused_local_variable, void_checks
 
 import 'dart:convert';
 // import 'package:universal_html/html.dart';
@@ -19,13 +19,13 @@ import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
 
 class NewContrato extends StatefulWidget {
-  NewContrato({Key key}) : super(key: key);
+  const NewContrato({Key key}) : super(key: key);
 
   @override
-  New_ContratoState createState() => New_ContratoState();
+  NewContratoState createState() => NewContratoState();
 }
 
-class New_ContratoState extends State<NewContrato> {
+class NewContratoState extends State<NewContrato> {
   // variables bloc
   ContratosDosBloc contratosBloc;
   VerContratosBloc verContratos;
@@ -71,7 +71,7 @@ class New_ContratoState extends State<NewContrato> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -80,7 +80,7 @@ class New_ContratoState extends State<NewContrato> {
     return Scaffold(
       appBar: (isInvolucrado)
           ? AppBar(
-              title: Text('Documentos'),
+              title: const Text('Documentos'),
               centerTitle: true,
             )
           : null,
@@ -110,10 +110,10 @@ class New_ContratoState extends State<NewContrato> {
             tipoMensaje: TipoMensaje.correcto);
       } else if (state is VerContratosVer) {
         Navigator.pop(context);
-        var tipo_file = state.tipo_mime;
+        var tipoFile = state.tipoMime;
         if (state.archivo != null && state.archivo != '') {
           Navigator.pushNamed(context, '/viewContrato',
-              arguments: {'htmlPdf': state.archivo, 'tipo_mime': tipo_file});
+              arguments: {'htmlPdf': state.archivo, 'tipo_mime': tipoFile});
         } else {
           MostrarAlerta(
               mensaje: 'No se encuentra ningún archivo.',
@@ -128,7 +128,7 @@ class New_ContratoState extends State<NewContrato> {
       } else if (state is DescargarArchivoSubidoState) {
         if (state.subido != null) {
           downloadFile(state.subido, state.nombre,
-              extensionFile: state.tipo_mime);
+              extensionFile: state.tipoMime);
         } else {
           MostrarAlerta(
               mensaje: 'No se encuentra ningún archivo para descargar.',
@@ -139,7 +139,7 @@ class New_ContratoState extends State<NewContrato> {
         if (state.subido != null) {
           Navigator.pushReplacementNamed(context, '/viewContrato', arguments: {
             'htmlPdf': state.subido,
-            'tipo_mime': state.tipo_mime
+            'tipo_mime': state.tipoMime
           });
         } else {
           MostrarAlerta(
@@ -149,7 +149,7 @@ class New_ContratoState extends State<NewContrato> {
       } else if (state is DescargarContratoSubidoState) {
         if (state.subido != null) {
           downloadFile(state.subido, state.nombre,
-              extensionFile: state.tipo_mime);
+              extensionFile: state.tipoMime);
         } else {
           MostrarAlerta(
               mensaje: 'No se encuentra ningún archivo para descargar.',
@@ -160,15 +160,15 @@ class New_ContratoState extends State<NewContrato> {
     }, child: BlocBuilder<ContratosDosBloc, ContratosState>(
             builder: (context, state) {
       if (state is ContratosInitial) {
-        return Center(
+        return const Center(
           child: LoadingCustom(),
         );
       } else if (state is ContratosLogging) {
-        return Center(
+        return const Center(
           child: LoadingCustom(),
         );
       } else if (state is SelectContratoState) {
-        if (itemModel.length == 0) {
+        if (itemModel.isEmpty) {
           itemModel = state.contrato.contrato
               .map((item) => Contratos(
                   idContrato: item.idContrato,
@@ -179,11 +179,11 @@ class New_ContratoState extends State<NewContrato> {
                   clave: item.clavePlantilla,
                   valida: true, // Hay que cambiar el valor.
                   //  valida: item.original != null ? true : false, // Hay que cambiar el valor.
-                  tipo_doc: item.tipo_doc,
-                  tipo_mime: item.tipo_mime,
-                  tipo_mime_original: item.tipo_mime_original))
+                  tipoDoc: item.tipoDoc,
+                  tipoMime: item.tipoMime,
+                  tipoMimeOriginal: item.tipoMimeOriginal))
               .toList();
-        } else if (itemModel.length != state.contrato.contrato) {
+        } else {
           itemModel = state.contrato.contrato
               .map((item) => Contratos(
                   idContrato: item.idContrato,
@@ -194,19 +194,19 @@ class New_ContratoState extends State<NewContrato> {
                   clave: item.clavePlantilla,
                   valida: true, // Hay que cambiar el valor.
                   // valida: item.original != null ? true : false, // Hay que cambiar el valor.
-                  tipo_doc: item.tipo_doc,
-                  tipo_mime: item.tipo_mime,
-                  tipo_mime_original: item.tipo_mime_original))
+                  tipoDoc: item.tipoDoc,
+                  tipoMime: item.tipoMime,
+                  tipoMimeOriginal: item.tipoMimeOriginal))
               .toList();
         }
         return RefreshIndicator(
             color: Colors.blue,
             onRefresh: () async {
-              await contratosBloc.add(ContratosSelect());
+              contratosBloc.add(ContratosSelect());
             },
             child: _showContratos());
       } else {
-        return Center(
+        return const Center(
           child: LoadingCustom(),
         );
       }
@@ -216,7 +216,7 @@ class New_ContratoState extends State<NewContrato> {
   // cointener => columna => listas x tipo
   _showContratos() {
     return Container(
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -227,62 +227,62 @@ class New_ContratoState extends State<NewContrato> {
                 children: [
                   Card(
                     child: ExpansionTile(
-                        title: Text(
+                        title: const Text(
                           'Contratos',
                           style: TextStyle(color: Colors.black),
                         ),
                         children: _contratosItem(),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.gavel,
                           color: Colors.black,
                         )),
                   ),
                   Card(
                     child: ExpansionTile(
-                        title: Text('Recibos',
+                        title: const Text('Recibos',
                             style: TextStyle(color: Colors.black)),
                         children: _recibosItem(),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.receipt,
                           color: Colors.black,
                         )),
                   ),
                   Card(
                     child: ExpansionTile(
-                        title: Text('Pagos',
+                        title: const Text('Pagos',
                             style: TextStyle(color: Colors.black)),
                         children: _pagosItem(),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.request_page,
                           color: Colors.black,
                         )),
                   ),
                   Card(
                     child: ExpansionTile(
-                        title: Text('Minutas',
+                        title: const Text('Minutas',
                             style: TextStyle(color: Colors.black)),
                         children: _minutasItem(),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.receipt,
                           color: Colors.black,
                         )),
                   ),
                   Card(
                     child: ExpansionTile(
-                        title: Text('Orden de Pedido',
+                        title: const Text('Orden de Pedido',
                             style: TextStyle(color: Colors.black)),
                         children: _ordenPagos(),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.list_alt,
                           color: Colors.black,
                         )),
                   ),
                   Card(
                     child: ExpansionTile(
-                        title: Text('Autorizaciones',
+                        title: const Text('Autorizaciones',
                             style: TextStyle(color: Colors.black)),
                         children: _autorizaciones(),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.description_outlined,
                           color: Colors.black,
                         )),
@@ -315,28 +315,28 @@ class New_ContratoState extends State<NewContrato> {
   // ini items
   _contratosItem() {
     List<Widget> item = [];
-    if (itemModel.length != 0) {
-      itemModel.forEach((contrato) {
+    if (itemModel.isNotEmpty) {
+      for (var contrato in itemModel) {
         if (contrato.clave == 'CT' || contrato.clave == 'CT_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
         }
-      });
+      }
     }
     return item;
   }
 
   ListTile buildWeb(Contratos contrato) {
     return ListTile(
-      contentPadding: EdgeInsets.all(20.0),
-      leading: Icon(Icons.gavel),
+      contentPadding: const EdgeInsets.all(20.0),
+      leading: const Icon(Icons.gavel),
       title: Text(contrato.description),
       subtitle: Row(
         children: [
@@ -345,26 +345,26 @@ class New_ContratoState extends State<NewContrato> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextButton.icon(
-                  icon: Icon(Icons.remove_red_eye_rounded),
-                  label: Text('Ver'),
+                  icon: const Icon(Icons.remove_red_eye_rounded),
+                  label: const Text('Ver'),
                   onPressed: () => _verOldFile(
                       contrato.idMachote,
                       contrato.idContrato,
-                      contrato.tipo_mime,
-                      contrato.tipo_doc,
+                      contrato.tipoMime,
+                      contrato.tipoDoc,
                       contrato.description),
                 )
               ],
             ),
           ),
-          !isInvolucrado && contrato.tipo_doc == 'html'
+          !isInvolucrado && contrato.tipoDoc == 'html'
               ? Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextButton.icon(
-                        icon: Icon(Icons.edit),
-                        label: Text('Editar'),
+                        icon: const Icon(Icons.edit),
+                        label: const Text('Editar'),
                         onPressed: () {
                           Navigator.pushNamed(context, '/editarContratos',
                               arguments: {
@@ -380,20 +380,20 @@ class New_ContratoState extends State<NewContrato> {
                     ],
                   ),
                 )
-              : Text(''),
+              : const Text(''),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextButton.icon(
-                  icon: Icon(Icons.cloud_download_outlined),
-                  label: Text('Descargar'),
+                  icon: const Icon(Icons.cloud_download_outlined),
+                  label: const Text('Descargar'),
                   onPressed: () => _crearPDF(
                       contrato.idMachote,
                       contrato.idContrato,
                       contrato.description,
-                      contrato.tipo_doc,
-                      contrato.tipo_mime),
+                      contrato.tipoDoc,
+                      contrato.tipoMime),
                 )
               ],
             ),
@@ -404,58 +404,60 @@ class New_ContratoState extends State<NewContrato> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextButton.icon(
-                        icon: Icon(Icons.cloud_upload_outlined),
-                        label: Text('Subir Firmado'),
+                        icon: const Icon(Icons.cloud_upload_outlined),
+                        label: const Text('Subir Firmado'),
                         onPressed: () => _uploadFile(contrato.idContrato),
                       )
                     ],
                   ),
                 )
-              : Text(''),
+              : const Text(''),
           contrato.valida
               ? Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextButton.icon(
-                        icon: Icon(Icons.remove_red_eye_rounded),
-                        label: Text('Ver Firmado'),
-                        onPressed: () => _verNewFile(contrato.idContrato,
-                            contrato.tipo_mime_original, contrato.tipo_doc),
+                        icon: const Icon(Icons.remove_red_eye_rounded),
+                        label: const Text('Ver Firmado'),
+                        onPressed: () {
+                          _verNewFile(contrato.idContrato,
+                              contrato.tipoMimeOriginal, contrato.tipoDoc);
+                        },
                       )
                     ],
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
           contrato.valida
               ? Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextButton.icon(
-                          icon: Icon(Icons.cloud_download_outlined),
-                          label: Text('Descarga Firmado.'),
+                          icon: const Icon(Icons.cloud_download_outlined),
+                          label: const Text('Descarga Firmado.'),
                           onPressed: () => {
                                 _descargaArchivoSubido(
                                     contrato.idContrato,
-                                    contrato.tipo_mime_original,
+                                    contrato.tipoMimeOriginal,
                                     contrato.description)
                               }),
                     ],
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ],
       ),
       trailing: !isInvolucrado
           ? GestureDetector(
-              child: Icon(
+              child: const Icon(
                 Icons.delete,
                 color: Colors.black,
               ),
               onTap: () => _borrarContratos(contrato.idContrato),
             )
-          : Text(''),
+          : const Text(''),
     );
   }
 
@@ -463,20 +465,20 @@ class New_ContratoState extends State<NewContrato> {
     return ExpansionTile(
       trailing: !isInvolucrado
           ? GestureDetector(
-              child: Icon(
+              child: const Icon(
                 Icons.delete,
                 color: Colors.black,
               ),
               onTap: () => _borrarContratos(contrato.idContrato),
             )
-          : Text(''),
-      leading: Icon(
+          : const Text(''),
+      leading: const Icon(
         Icons.gavel,
         color: Colors.black,
       ),
       title: Text(
         contrato.description,
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
         overflow: TextOverflow.ellipsis,
       ),
       children: [
@@ -488,24 +490,24 @@ class New_ContratoState extends State<NewContrato> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextButton.icon(
-                    icon: Icon(Icons.remove_red_eye_rounded),
-                    label: Text('Ver'),
+                    icon: const Icon(Icons.remove_red_eye_rounded),
+                    label: const Text('Ver'),
                     onPressed: () => _verOldFile(
                         contrato.idMachote,
                         contrato.idContrato,
-                        contrato.tipo_mime,
-                        contrato.tipo_doc,
+                        contrato.tipoMime,
+                        contrato.tipoDoc,
                         contrato.description),
                   )
                 ],
               ),
-              if (!isInvolucrado && contrato.tipo_doc == 'html')
+              if (!isInvolucrado && contrato.tipoDoc == 'html')
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextButton.icon(
-                      icon: Icon(Icons.edit),
-                      label: Text('Editar'),
+                      icon: const Icon(Icons.edit),
+                      label: const Text('Editar'),
                       onPressed: () {
                         Navigator.pushNamed(context, '/editarContratos',
                             arguments: {
@@ -524,14 +526,14 @@ class New_ContratoState extends State<NewContrato> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextButton.icon(
-                    icon: Icon(Icons.cloud_download_outlined),
-                    label: Text('Descargar'),
+                    icon: const Icon(Icons.cloud_download_outlined),
+                    label: const Text('Descargar'),
                     onPressed: () => _crearPDF(
                         contrato.idMachote,
                         contrato.idContrato,
                         contrato.description,
-                        contrato.tipo_doc,
-                        contrato.tipo_mime),
+                        contrato.tipoDoc,
+                        contrato.tipoMime),
                   )
                 ],
               ),
@@ -540,8 +542,8 @@ class New_ContratoState extends State<NewContrato> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextButton.icon(
-                      icon: Icon(Icons.cloud_upload_outlined),
-                      label: Text('Subir firmado'),
+                      icon: const Icon(Icons.cloud_upload_outlined),
+                      label: const Text('Subir firmado'),
                       onPressed: () => _uploadFile(contrato.idContrato),
                     )
                   ],
@@ -551,10 +553,10 @@ class New_ContratoState extends State<NewContrato> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextButton.icon(
-                      icon: Icon(Icons.remove_red_eye_rounded),
-                      label: Text('Ver firmado'),
+                      icon: const Icon(Icons.remove_red_eye_rounded),
+                      label: const Text('Ver firmado'),
                       onPressed: () => _verNewFile(contrato.idContrato,
-                          contrato.tipo_mime_original, contrato.tipo_doc),
+                          contrato.tipoMimeOriginal, contrato.tipoDoc),
                     )
                   ],
                 ),
@@ -563,15 +565,15 @@ class New_ContratoState extends State<NewContrato> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextButton.icon(
-                        icon: Icon(Icons.cloud_download_outlined),
-                        label: Text(
+                        icon: const Icon(Icons.cloud_download_outlined),
+                        label: const Text(
                           'Descargar firmado',
                           overflow: TextOverflow.ellipsis,
                         ),
                         onPressed: () => {
                               _descargaArchivoSubido(
                                   contrato.idContrato,
-                                  contrato.tipo_mime_original,
+                                  contrato.tipoMimeOriginal,
                                   contrato.description)
                             }),
                   ],
@@ -585,138 +587,103 @@ class New_ContratoState extends State<NewContrato> {
 
   _recibosItem() {
     List<Widget> item = [];
-    if (itemModel.length != 0) {
-      itemModel.forEach((contrato) {
+    if (itemModel.isNotEmpty) {
+      for (var contrato in itemModel) {
         if (contrato.clave == 'RC' || contrato.clave == 'RC_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
         }
-      });
+      }
     }
     return item;
   }
 
   _pagosItem() {
     List<Widget> item = [];
-    if (itemModel.length != 0) {
-      itemModel.forEach((contrato) {
+    if (itemModel.isNotEmpty) {
+      for (var contrato in itemModel) {
         if (contrato.clave == 'PG' || contrato.clave == 'PG_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
         }
-      });
+      }
     }
     return item;
   }
 
   _ordenPagos() {
     List<Widget> item = [];
-    if (itemModel.length != 0) {
-      itemModel.forEach((contrato) {
+    if (itemModel.isNotEmpty) {
+      for (var contrato in itemModel) {
         if (contrato.clave == 'OP' || contrato.clave == 'OP_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
         }
-      });
+      }
     }
     return item;
   }
 
   _minutasItem() {
     List<Widget> item = [];
-    if (itemModel.length != 0) {
-      itemModel.forEach((contrato) {
+    if (itemModel.isNotEmpty) {
+      for (var contrato in itemModel) {
         if (contrato.clave == 'MT' || contrato.clave == 'MT_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
         }
-      });
+      }
     }
     return item;
   }
 
   _autorizaciones() {
     List<Widget> item = [];
-    if (itemModel.length != 0) {
-      itemModel.forEach((contrato) {
+    if (itemModel.isNotEmpty) {
+      for (var contrato in itemModel) {
         if (contrato.clave == 'AU' || contrato.clave == 'AU_T') {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: EdgeInsets.all(20),
+            margin: const EdgeInsets.all(20),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
                 : contratosMovil(contrato),
           ));
         }
-      });
+      }
     }
     return item;
   }
-  // fin items
-
-  // _showNavigationBar() {
-  //   return BottomNavigationBar(
-  //     type: BottomNavigationBarType.fixed,
-  //     items: [
-  //       BottomNavigationBarItem(
-  //         icon: Icon(Icons.gavel),
-  //         label: 'Contratos',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: Icon(Icons.receipt),
-  //         label: 'Recibos',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: Icon(Icons.request_page),
-  //         label: 'Pagos',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: Icon(Icons.receipt),
-  //         label: 'Minutas',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: Icon(Icons.list_alt),
-  //         label: 'Orden de pedido',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: Icon(Icons.description_outlined),
-  //         label: 'Autorizaciones',
-  //       ),
-  //     ],
-  //     currentIndex: _selectedIndex,
-  //     onTap: (index) => setState(() => _selectedIndex = index),
-  //   );
-  // }
 
   _showButton() {
     return SpeedDial(
@@ -729,15 +696,15 @@ class New_ContratoState extends State<NewContrato> {
   _childrenButtons() {
     List<SpeedDialChild> temp = [];
     temp.add(SpeedDialChild(
-        child: Tooltip(
+        child: const Tooltip(
           child: Icon(Icons.upload_file),
-          message: 'Subir firmado',
+          message: 'Subir archivo',
         ),
-        label: 'Subir firmado',
+        label: 'Subir archivo',
         onTap: _eventoUploadFile));
     // 1ro
     temp.add(SpeedDialChild(
-        child: Tooltip(
+        child: const Tooltip(
             child: Icon(Icons.send_and_archive_sharp),
             message: 'Crear plantilla'),
         label: 'Crear plantilla',
@@ -747,36 +714,13 @@ class New_ContratoState extends State<NewContrato> {
     return temp;
   }
 
-  //_eventoUpload() {
-  //  switch (_selectedIndex) {
-  //    case 0:
-  //      _createContrato('CT');
-  //      break;
-  //    case 1:
-  //      _createContrato('RC');
-  //      break;
-  //    case 2:
-  //      _createContrato('PG');
-  //      break;
-  //    case 3:
-  //      _createContrato('MT');
-  //      break;
-  //    case 4:
-  //      _createContrato('OP');
-  //      break;
-  //    default:
-  //      _createContrato('AU');
-  //      break;
-  //  }
-  //}
-
   Future<void> _eventoUploadFile() async {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Subir firmado', textAlign: TextAlign.center),
+          title: const Text('Subir firmado', textAlign: TextAlign.center),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Form(
@@ -798,7 +742,7 @@ class New_ContratoState extends State<NewContrato> {
                               leading: Radio(
                                 value: i,
                                 groupValue: _grupoRadio,
-                                activeColor: Color(0xFF6200EE),
+                                activeColor: const Color(0xFF6200EE),
                                 onChanged: (int value) {
                                   setState(() {
                                     _grupoRadio = value;
@@ -820,16 +764,16 @@ class New_ContratoState extends State<NewContrato> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            SizedBox(
+            const SizedBox(
               width: 5.0,
             ),
             TextButton(
-              child: Text('Seleccionar Archivo'),
+              child: const Text('Seleccionar Archivo'),
               onPressed: () async {
                 _createContrato(_clave['clave'], 'file');
               },
@@ -840,13 +784,13 @@ class New_ContratoState extends State<NewContrato> {
     );
   }
 
-  Future<void> _eventoAdd(String tipo_doc) async {
+  Future<void> _eventoAdd(String tipoDoc) async {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Crear plantilla', textAlign: TextAlign.center),
+          title: const Text('Crear plantilla', textAlign: TextAlign.center),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Form(
@@ -868,14 +812,14 @@ class New_ContratoState extends State<NewContrato> {
                               leading: Radio(
                                 value: i,
                                 groupValue: _grupoRadio,
-                                activeColor: Color(0xFF6200EE),
+                                activeColor: const Color(0xFF6200EE),
                                 onChanged: (int value) {
                                   setState(() {
                                     _grupoRadio = value;
                                     _clave = {
                                       'clave': radioB.elementAt(i)['clave'],
                                       'clave_t': radioB.elementAt(i)['clave_t'],
-                                      'tipo_doc': tipo_doc,
+                                      'tipo_doc': tipoDoc,
                                       'tipo_mime': 'pdf'
                                     };
                                   });
@@ -892,16 +836,16 @@ class New_ContratoState extends State<NewContrato> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ),
             TextButton(
-              child: Text('Guardar'),
+              child: const Text('Guardar'),
               onPressed: () async {
                 Navigator.pushReplacementNamed(context, '/addContratos',
                     arguments: _clave);
@@ -910,44 +854,18 @@ class New_ContratoState extends State<NewContrato> {
           ],
         );
       },
-      // switch (_selectedIndex) {
-      //   case 0:
-      //     Navigator.pushNamed(context, '/addContratos',
-      //         arguments: {'clave': 'CT', 'clave_t': 'CT_T'});
-      //     break;
-      //   case 1:
-      //     Navigator.pushNamed(context, '/addContratos',
-      //         arguments: {'clave': 'RC', 'clave_t': 'RC_T'});
-      //     break;
-      //   case 2:
-      //     Navigator.pushNamed(context, '/addContratos',
-      //         arguments: {'clave': 'PG', 'clave_t': 'PG_T'});
-      //     break;
-      //   case 3:
-      //     Navigator.pushNamed(context, '/addContratos',
-      //         arguments: {'clave': 'MT', 'clave_t': 'MT_T'});
-      //     break;
-      //   case 4:
-      //     Navigator.pushNamed(context, '/addContratos',
-      //         arguments: {'clave': 'OP', 'clave_t': 'OP_T'});
-      //     break;
-      //   default:
-      //     Navigator.pushNamed(context, '/addContratos',
-      //         arguments: {'clave': 'AU', 'clave_t': 'AU_T'});
-      //     break;
-      // }
     );
   }
 
   // ini eventos Cards
-  _verOldFile(int idMachote, int idContrato, String tipo_mime, String tipo_doc,
+  _verOldFile(int idMachote, int idContrato, String tipoMime, String tipoDoc,
       String descripcion) {
     // if (idMachote != 0) {
-    if (tipo_doc == 'html') {
-      verContratos.add(VerContrato(idContrato, tipo_mime, tipo_doc));
-    } else if (tipo_doc == 'file') {
+    if (tipoDoc == 'html') {
+      verContratos.add(VerContrato(idContrato, tipoMime, tipoDoc));
+    } else if (tipoDoc == 'file') {
       verContratos
-          .add(VerContratoSubidoEvent(idContrato, tipo_mime, descripcion));
+          .add(VerContratoSubidoEvent(idContrato, tipoMime, descripcion));
     }
   }
 
@@ -967,26 +885,25 @@ class New_ContratoState extends State<NewContrato> {
     }
   }
 
-  _verNewFile(int id_contrato, String tipo_mime, String tipo_doc) {
+  _verNewFile(int idContrato, String tipoMime, String tipoDoc) {
     // Navigator.pushNamed(context, '/viewContrato', arguments: original);
-    verContratos.add(VerContratoSubido(id_contrato, tipo_mime, tipo_doc));
+    verContratos.add(VerContratoSubido(idContrato, tipoMime, tipoDoc));
   }
 
-  _descargaArchivoSubido(int id_contrato, String tipo_mime, String nombre) {
-    verContratos
-        .add(DescargarArchivoSubidoEvent(id_contrato, tipo_mime, nombre));
+  _descargaArchivoSubido(int idContrato, String tipoMime, String nombre) {
+    verContratos.add(DescargarArchivoSubidoEvent(idContrato, tipoMime, nombre));
   }
 
   _borrarContratos(int idContrato) {
     _alertaBorrar(idContrato);
   }
 
-  _crearPDF(int id, int idContrato, String nombreDocumento, String tipo_doc,
+  _crearPDF(int id, int idContrato, String nombreDocumento, String tipoDoc,
       String extencion) {
     if (id != 0) {
       verContratos
           .add(DescargarContrato(nombreDocumento, idContrato, extencion));
-    } else if (tipo_doc == 'file') {
+    } else if (tipoDoc == 'file') {
       //_descargarFile(contrato, nombreDocumento, extencion);
       verContratos.add(
           DescargarContratoSubidoEvent(idContrato, extencion, nombreDocumento));
@@ -998,7 +915,7 @@ class New_ContratoState extends State<NewContrato> {
     downloadFile(contrato, nombreDocumento, extensionFile: extencion);
   }
 
-  _createContrato(String clave, String tipo_doc) async {
+  _createContrato(String clave, String tipoDoc) async {
     const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
     FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
@@ -1014,7 +931,7 @@ class New_ContratoState extends State<NewContrato> {
           (pickedFile.files[0].name).replaceAll(_extension.toString(), ""),
           base64.encode(pickedFile.files[0].bytes),
           clave,
-          tipo_doc,
+          tipoDoc,
           _extension));
       Navigator.of(context).pop();
     }
@@ -1022,7 +939,7 @@ class New_ContratoState extends State<NewContrato> {
   // fin eventos Cards
 
   _dialogMSG(String title) {
-    Widget child = LoadingCustom();
+    Widget child = const LoadingCustom();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1032,7 +949,7 @@ class New_ContratoState extends State<NewContrato> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
@@ -1047,7 +964,7 @@ class New_ContratoState extends State<NewContrato> {
           title: const Text('Estás por borrar un documentos.'),
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
+              children: const <Widget>[
                 // Center(child: Text('La actividad: $Nombre')),
                 // SizedBox(height: 15.0,),
                 Center(child: Text('¿Deseas confirmar?')),
@@ -1086,9 +1003,9 @@ class Contratos {
   // String archivo;
   String clave;
   bool valida;
-  String tipo_doc;
-  String tipo_mime;
-  String tipo_mime_original;
+  String tipoDoc;
+  String tipoMime;
+  String tipoMimeOriginal;
 
   Contratos(
       {this.idContrato,
@@ -1098,7 +1015,7 @@ class Contratos {
       // this.archivo,
       this.clave,
       this.valida,
-      this.tipo_doc,
-      this.tipo_mime,
-      this.tipo_mime_original});
+      this.tipoDoc,
+      this.tipoMime,
+      this.tipoMimeOriginal});
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/pagos_logic.dart';
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
@@ -50,7 +50,9 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
       } on TokenException {
         yield PagosTokenErrorState('Error token');
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is DeletePagosEvent) {
       yield PagosLogging();

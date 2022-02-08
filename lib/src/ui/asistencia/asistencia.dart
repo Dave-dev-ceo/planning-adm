@@ -16,7 +16,7 @@ import 'package:planning/src/blocs/asistencia/asistencia_bloc.dart';
 import 'package:planning/src/models/item_model_asistencia.dart';
 
 class Asistencia extends StatefulWidget {
-  Asistencia({Key key}) : super(key: key);
+  const Asistencia({Key key}) : super(key: key);
 
   @override
   _AsistenciaState createState() => _AsistenciaState();
@@ -32,7 +32,7 @@ class _AsistenciaState extends State<Asistencia> {
   ItemModelAsistencia copyItemFinal;
 
   //stilos
-  final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
+  final TextStyle _boldStyle = const TextStyle(fontWeight: FontWeight.bold);
 
   // Variable involucrado
   bool isInvolucrado = false;
@@ -51,23 +51,21 @@ class _AsistenciaState extends State<Asistencia> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(bottom: 30.0),
-        padding: EdgeInsets.all(30.0),
+        margin: const EdgeInsets.only(bottom: 30.0),
+        padding: const EdgeInsets.all(30.0),
         // BlocBuilder - revisamos el estado
         child: BlocBuilder<AsistenciaBloc, AsistenciaState>(
           builder: (context, state) {
             // state Iniciando
-            if (state is AsistenciaInitialState)
-              return Center(
+            if (state is AsistenciaInitialState) {
+              return const Center(
                 child: LoadingCustom(),
               );
-            // state Loading
-            else if (state is LodingAsistenciaState)
-              return Center(
+            } else if (state is LodingAsistenciaState) {
+              return const Center(
                 child: LoadingCustom(),
               );
-            // state Data
-            else if (state is MostrarAsistenciaState) {
+            } else if (state is MostrarAsistenciaState) {
               // buscador en header
               if (state.asistencia != null) {
                 if (itemModelAsistencia != state.asistencia) {
@@ -78,26 +76,25 @@ class _AsistenciaState extends State<Asistencia> {
                 }
               } else {
                 asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
-                return Center(
+                return const Center(
                   child: LoadingCustom(),
                 );
               }
               if (copyItemFinal != null) {
                 return getAsistencia(copyItemFinal);
               } else {
-                return Center(child: Text('Sin datos'));
+                return const Center(child: Text('Sin datos'));
               }
             }
             // fin buscador
             // state Error
-            else if (state is ErrorMostrarAsistenciaState)
+            else if (state is ErrorMostrarAsistenciaState) {
               return Center(child: Text(state.message));
-            // update
-            else if (state is SavedAsistenciaState)
-              return Center(child: Text('Cambiando asistencia'));
-            // state No Data
-            else
-              return Center(child: Text('no data'));
+            } else if (state is SavedAsistenciaState) {
+              return const Center(child: Text('Cambiando asistencia'));
+            } else {
+              return const Center(child: Text('no data'));
+            }
           },
         ),
       ),
@@ -120,7 +117,7 @@ class _AsistenciaState extends State<Asistencia> {
       child: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
+          asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
         },
         child: ListView(
           children: [
@@ -128,7 +125,7 @@ class _AsistenciaState extends State<Asistencia> {
               header: Container(
                   height: 100.0,
                   color: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 35.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 35.0),
                   alignment: Alignment.centerLeft,
                   child: _crearHeader(asistencia)),
               content: _crearTabla(asistencia),
@@ -140,7 +137,7 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   Widget _crearTabla(asistencia) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: PaginatedDataTable(
         // header: _crearHeader(asistencia),
@@ -163,7 +160,7 @@ class _AsistenciaState extends State<Asistencia> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
+          const Expanded(
               flex: 3,
               child: Text(
                 'Asistencia',
@@ -172,7 +169,7 @@ class _AsistenciaState extends State<Asistencia> {
           Expanded(
               flex: 5,
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     prefixIcon: Icon(
                       Icons.search,
                     ),
@@ -199,8 +196,8 @@ class _AsistenciaState extends State<Asistencia> {
 
   List<List<DataCell>> _crearLista(ItemModelAsistencia itemModel) {
     List<List<DataCell>> invitadosList = [];
-    if (itemModel.asistencias.length > 0) {
-      itemModel.asistencias.forEach((element) {
+    if (itemModel.asistencias.isNotEmpty) {
+      for (var element in itemModel.asistencias) {
         List<DataCell> invitadosListTemp = [
           DataCell(
             !isInvolucrado
@@ -211,7 +208,7 @@ class _AsistenciaState extends State<Asistencia> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '${element.nombre}',
+                          element.nombre,
                           style: _boldStyle,
                         ),
                         Text('Grupo: ${element.grupo}'),
@@ -220,7 +217,7 @@ class _AsistenciaState extends State<Asistencia> {
                     ),
                     value: element.asistencia,
                     onChanged: (value) {
-                      _guardarAsistencia(element.id_invitado, value);
+                      _guardarAsistencia(element.idInvitado, value);
                       setState(() => element.asistencia = value);
                     },
                   )
@@ -230,7 +227,7 @@ class _AsistenciaState extends State<Asistencia> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '${element.nombre}',
+                        element.nombre,
                         style: _boldStyle,
                       ),
                       Text('Grupo: ${element.grupo}'),
@@ -240,10 +237,10 @@ class _AsistenciaState extends State<Asistencia> {
           )
         ];
         invitadosList.add(invitadosListTemp);
-      });
+      }
     } else {
       List<DataCell> invitadosListNoData = [
-        DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
       ];
       invitadosList.add(invitadosListNoData);
     }
@@ -266,10 +263,10 @@ class _AsistenciaState extends State<Asistencia> {
           .toList();
       setState(() {
         copyItemFinal.asistencias.clear();
-        if (buscador.length > 0) {
-          buscador.forEach((element) {
+        if (buscador.isNotEmpty) {
+          for (var element in buscador) {
             copyItemFinal.asistencias.add(element);
-          });
+          }
         } else {}
       });
     } else {
@@ -283,7 +280,7 @@ class _AsistenciaState extends State<Asistencia> {
 
   // colores
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   // boton flotante
@@ -296,10 +293,10 @@ class _AsistenciaState extends State<Asistencia> {
             onTap: () async {
               final result = await Navigator.of(context).pushNamed('/lectorQr');
             },
-            child: Icon(Icons.qr_code_outlined),
+            child: const Icon(Icons.qr_code_outlined),
             label: 'Codigo QR'),
         SpeedDialChild(
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
           onTap: () async {
             final data = await asistenciaLogic.downloadPDFAsistencia();
 
@@ -330,6 +327,7 @@ class DTS extends DataTableSource {
     );
   }
 
+  @override
   bool get isRowCountApproximate => false;
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/item_model_proveedores_evento.dart';
@@ -17,8 +18,8 @@ class ProveedoresException implements Exception {}
 class TokenException implements Exception {}
 
 class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection configC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection configC = ConfigConection();
   Client client = Client();
 
   @override
@@ -27,7 +28,7 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
     try {
       // var checkInvolucrado;
 
-      int id_planner = await _sharedPreferences.getIdPlanner();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       var checkInvolucrado = await _sharedPreferences.getIdInvolucrado();
       if (checkInvolucrado == null) {
@@ -38,7 +39,7 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/PROVEEDORES/obtenerProveedoresEvento/$id_planner/$checkInvolucrado'),
+              '/wedding/PROVEEDORES/obtenerProveedoresEvento/$idPlanner/$checkInvolucrado'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -51,7 +52,9 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
         throw ProveedoresException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

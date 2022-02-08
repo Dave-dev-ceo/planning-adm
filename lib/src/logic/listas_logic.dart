@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:planning/src/models/item_model_listas.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -23,21 +24,21 @@ class CreateListasException implements Exception {}
 class DeleteArticulosRecibirException implements Exception {}
 
 class FetchListaLogic extends ListasLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection configC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection configC = ConfigConection();
   Client client = Client();
 
   @override
   // ignore: missing_return
   Future<ItemModelListas> fetchListas() async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
-      int id_evento = await _sharedPreferences.getIdEvento();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
+      int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/LISTAS/obtenerListaPorPlanner/$id_planner/$id_evento'),
+              '/wedding/LISTAS/obtenerListaPorPlanner/$idPlanner/$idEvento'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -50,7 +51,9 @@ class FetchListaLogic extends ListasLogic {
         throw ListasException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -90,6 +93,7 @@ class FetchListaLogic extends ListasLogic {
     }
   }
 
+  @override
   Future<int> deleteActividadesRecibir(int idActividad) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();

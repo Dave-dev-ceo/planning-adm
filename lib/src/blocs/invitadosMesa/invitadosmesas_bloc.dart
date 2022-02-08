@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:planning/src/logic/invitados_mesas_logic/invitados_mesa_logic.dart';
-import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_Model.dart';
+import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_model.dart';
 
 part 'invitadosmesas_event.dart';
 part 'invitadosmesas_state.dart';

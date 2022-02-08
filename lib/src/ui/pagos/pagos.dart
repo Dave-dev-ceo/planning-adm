@@ -19,7 +19,7 @@ import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
 
 class Pagos extends StatefulWidget {
-  Pagos({Key key}) : super(key: key);
+  const Pagos({Key key}) : super(key: key);
 
   @override
   _PagosState createState() => _PagosState();
@@ -35,12 +35,12 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
   // logic
   ConsultasPagosLogic pagosLogic = ConsultasPagosLogic();
-  NumberFormat f = new NumberFormat("#,##0.00", "en_US");
+  NumberFormat f = NumberFormat("#,##0.00", "en_US");
   TabController _tabController;
 
   // styles
-  final TextStyle _boldStyle = TextStyle(fontWeight: FontWeight.bold);
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final TextStyle _boldStyle = const TextStyle(fontWeight: FontWeight.bold);
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   HistorialPagosLogic logicPagos = HistorialPagosLogic();
@@ -94,7 +94,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     if (isInvolucrado) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Presupuestos'),
+          title: const Text('Presupuestos'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -102,8 +102,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           child: RefreshIndicator(
             color: Colors.blue,
             onRefresh: () async {
-              await pagosBloc.add(SelectPagosEvent());
-              await historialPagosBloc.add(MostrarHistorialPagosEvent());
+              pagosBloc.add(SelectPagosEvent());
+              historialPagosBloc.add(MostrarHistorialPagosEvent());
             },
             child: _bloc('E'),
           ),
@@ -122,9 +122,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 child: RefreshIndicator(
                     color: Colors.blue,
                     onRefresh: () async {
-                      await pagosBloc.add(SelectPagosEvent());
-                      await historialPagosBloc
-                          .add(MostrarHistorialPagosEvent());
+                      pagosBloc.add(SelectPagosEvent());
+                      historialPagosBloc.add(MostrarHistorialPagosEvent());
                     },
                     child: _bloc('I'))),
             SingleChildScrollView(
@@ -132,16 +131,15 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 child: RefreshIndicator(
                     color: Colors.blue,
                     onRefresh: () async {
-                      await pagosBloc.add(SelectPagosEvent());
-                      await historialPagosBloc
-                          .add(MostrarHistorialPagosEvent());
+                      pagosBloc.add(SelectPagosEvent());
+                      historialPagosBloc.add(MostrarHistorialPagosEvent());
                     },
                     child: _bloc('E')))
           ],
         ),
         bottomNavigationBar: TabBar(
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(
               text: 'Interno',
               icon: Tooltip(
@@ -201,7 +199,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 ? _crearListaPagos(pagos)
                 : _crearListaPagosEventos(pagos)),
         onRowsPerPageChanged: null,
-        rowsPerPage: pagos.length == 0 ? 1 : pagos.length + 1,
+        rowsPerPage: pagos.isEmpty ? 1 : pagos.length + 1,
         dataRowHeight: 25.0,
       ),
     );
@@ -210,12 +208,12 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
   List<List<DataCell>> _crearListaPagos(List<HistorialPagosModel> pagos) {
     List<List<DataCell>> pagosEventosList = [];
 
-    if (pagos.length > 0) {
-      pagos.forEach((pago) {
+    if (pagos.isNotEmpty) {
+      for (var pago in pagos) {
         if ('I' == pago.tipoPresupuesto) {
           List<DataCell> pagosListTemp = [
             DataCell(
-                Center(
+                const Center(
                   child: Icon(
                     Icons.delete,
                   ),
@@ -224,7 +222,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 await showDialog(
                   context: _scaffoldKey.currentContext,
                   builder: (context) => AlertDialog(
-                    title: Text('Eliminar pago'),
+                    title: const Text('Eliminar pago'),
                     content: Text(
                         '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
                     actions: [
@@ -232,7 +230,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text('Cancelar'),
+                        child: const Text('Cancelar'),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -250,7 +248,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                                 mensaje: resp, tipoMensaje: TipoMensaje.error);
                           }
                         },
-                        child: Text('Aceptar'),
+                        child: const Text('Aceptar'),
                       ),
                     ],
                   ),
@@ -304,13 +302,13 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           ];
           pagosEventosList.add(pagosListTemp);
         }
-      });
+      }
     } else {
       List<DataCell> pagosListWitoutData = [
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
       ];
       pagosEventosList.add(pagosListWitoutData);
     }
@@ -322,21 +320,21 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
       List<HistorialPagosModel> pagos) {
     List<List<DataCell>> pagosEventosList = [];
 
-    if (pagos.length > 0) {
-      pagos.forEach((pago) {
+    if (pagos.isNotEmpty) {
+      for (var pago in pagos) {
         if ('E' == pago.tipoPresupuesto) {
           List<DataCell> pagosListTemp = [
             DataCell(
-                Center(
+                const Center(
                   child: Icon(
                     Icons.delete,
                   ),
                 ), onTap: () async {
-              if (!isInvolucrado)
+              if (!isInvolucrado) {
                 await showDialog(
                   context: _scaffoldKey.currentContext,
                   builder: (context) => AlertDialog(
-                    title: Text('Eliminar pago'),
+                    title: const Text('Eliminar pago'),
                     content: Text(
                         '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
                     actions: [
@@ -344,7 +342,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text('Cancelar'),
+                        child: const Text('Cancelar'),
                       ),
                       TextButton(
                         onPressed: () async {
@@ -362,7 +360,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                                 mensaje: resp, tipoMensaje: TipoMensaje.error);
                           }
                         },
-                        child: Text('Aceptar'),
+                        child: const Text('Aceptar'),
                       ),
                     ],
                   ),
@@ -375,6 +373,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                           if (value) {pagosBloc.add(SelectPagosEvent())}
                         }
                     });
+              }
             }),
             DataCell(
                 Align(
@@ -409,13 +408,13 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           ];
           pagosEventosList.add(pagosListTemp);
         }
-      });
+      }
     } else {
       List<DataCell> pagosListWitoutData = [
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
       ];
       pagosEventosList.add(pagosListWitoutData);
     }
@@ -428,31 +427,31 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     return BlocBuilder<PagosBloc, PagosState>(
       builder: (context, state) {
         if (state is PagosInitial) {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         } else if (state is PagosLogging) {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         } else if (state is PagosSelect) {
           int totalsaldopresupuesto = 0;
           int totalpagos = 0;
           int totalpresupuestos = 0;
-          if (state.pagos != null && state.pagos.pagos.length > 0 ||
-              state.listaPagos != null && state.listaPagos.length > 0) {
+          if (state.pagos != null && state.pagos.pagos.isNotEmpty ||
+              state.listaPagos != null && state.listaPagos.isNotEmpty) {
             isPressed = true;
-            state.pagos.pagos.forEach((pago) {
+            for (var pago in state.pagos.pagos) {
               if (tipoPage == pago.tipoPresupuesto) {
                 totalpresupuestos += pago.total;
               }
-            });
+            }
 
-            state.listaPagos.forEach((pago) {
+            for (var pago in state.listaPagos) {
               if (tipoPage == pago.tipoPresupuesto) {
                 totalpagos += pago.pago.toInt();
               }
-            });
+            }
 
             totalsaldopresupuesto = totalpresupuestos - totalpagos;
 
@@ -473,17 +472,17 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                     totalpagos,
                     totalpresupuestos,
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 20.0,
                       ),
-                      Text(
+                      const Text(
                         'Pagos',
                         style: TextStyle(fontSize: 20.0),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 100,
                       ),
                       ElevatedButton(
@@ -501,18 +500,18 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                                 }
                               }
                             : null,
-                        child: Text(
+                        child: const Text(
                           'Agregar Pago',
                           style: TextStyle(color: Colors.white),
                         ),
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   buildTablePagos(state.listaPagos, tipoPage),
-                  SizedBox(
+                  const SizedBox(
                     height: 100.0,
                   )
                 ],
@@ -529,9 +528,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                     content: Container(
                         height: 100.0,
                         color: Colors.white,
-                        padding: EdgeInsets.symmetric(horizontal: 35.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 35.0),
                         alignment: Alignment.centerLeft,
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             'No existen presupuestos registrados.',
                             style: TextStyle(fontSize: 15.0),
@@ -543,7 +542,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             );
           }
         } else {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         }
@@ -570,7 +569,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     return Container(
         height: size.width > 500 ? 100.0 : 120.0,
         color: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 35.0),
+        padding: const EdgeInsets.symmetric(horizontal: 35.0),
         alignment: Alignment.centerLeft,
         child:
             _crearHeader(totalsaldopresupuesto, totalpagos, totalpresupuestos));
@@ -588,7 +587,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               flex: 3,
               child: Text(
                 index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
-                style: TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
+                style: const TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
                 maxLines: 2,
               ),
             ),
@@ -598,13 +597,13 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                 AutoSizeText.rich(
                   TextSpan(
                     text: 'Total: ',
-                    style:
-                        TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                    style: const TextStyle(
+                        color: Colors.black, fontFamily: 'Comfortaa'),
                     children: [
                       TextSpan(
                         text:
                             '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontFamily: 'Comfortaa',
@@ -614,22 +613,22 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   ),
                   minFontSize: 5.0,
                   maxLines: 2,
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                   group: myGroup,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8.0,
                 ),
                 AutoSizeText.rich(
                   TextSpan(
                     text: 'Pagos: ',
-                    style:
-                        TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                    style: const TextStyle(
+                        color: Colors.black, fontFamily: 'Comfortaa'),
                     children: [
                       TextSpan(
                         text:
                             '\$${totalpagos > 0 ? f.format(totalpagos) : totalpagos}',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                             fontFamily: 'Comfortaa'),
@@ -638,22 +637,22 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   ),
                   minFontSize: 10.0,
                   maxLines: 2,
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                   group: myGroup,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8.0,
                 ),
                 AutoSizeText.rich(
                   TextSpan(
                     text: 'Saldo: ',
-                    style:
-                        TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                    style: const TextStyle(
+                        color: Colors.black, fontFamily: 'Comfortaa'),
                     children: [
                       TextSpan(
                         text:
                             '\$${totalsaldopresupuesto > 0 ? f.format(totalsaldopresupuesto) : totalsaldopresupuesto}',
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Comfortaa'),
@@ -663,7 +662,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   group: myGroup,
                   minFontSize: 10.0,
                   maxLines: 2,
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                 ),
               ],
             )
@@ -678,21 +677,22 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           children: [
             Text(
               index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
-              style: TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
+              style: const TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
               maxLines: 2,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             AutoSizeText.rich(
               TextSpan(
                 text: 'Total: ',
-                style: TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                style: const TextStyle(
+                    color: Colors.black, fontFamily: 'Comfortaa'),
                 children: [
                   TextSpan(
                     text:
                         '\$${totalpresupuestos > 0 ? f.format(totalpresupuestos) : totalpresupuestos}',
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         fontFamily: 'Comfortaa'),
@@ -701,21 +701,22 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               ),
               minFontSize: 5.0,
               maxLines: 2,
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
               group: myGroup,
             ),
-            SizedBox(
+            const SizedBox(
               height: 8.0,
             ),
             AutoSizeText.rich(
               TextSpan(
                 text: 'Saldo: ',
-                style: TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                style: const TextStyle(
+                    color: Colors.black, fontFamily: 'Comfortaa'),
                 children: [
                   TextSpan(
                     text:
                         '\$${totalsaldopresupuesto > 0 ? f.format(totalsaldopresupuesto) : totalsaldopresupuesto}',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Comfortaa'),
@@ -725,20 +726,21 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               group: myGroup,
               minFontSize: 10.0,
               maxLines: 2,
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8.0,
             ),
             AutoSizeText.rich(
               TextSpan(
                 text: 'Pagos: ',
-                style: TextStyle(color: Colors.black, fontFamily: 'Comfortaa'),
+                style: const TextStyle(
+                    color: Colors.black, fontFamily: 'Comfortaa'),
                 children: [
                   TextSpan(
                     text:
                         '\$${totalpagos > 0 ? f.format(totalpagos) : totalpagos}',
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         fontFamily: 'Comfortaa'),
@@ -747,7 +749,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               ),
               minFontSize: 10.0,
               maxLines: 2,
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
               group: myGroup,
             ),
           ],
@@ -829,11 +831,11 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
   _crearLista(ItemModelPagos itemPago, String tipoPage) {
     List<List<DataCell>> pagosList = [];
-    if (itemPago.pagos.length > 0) {
+    if (itemPago.pagos.isNotEmpty) {
       isPressed = true;
       var total = 0;
       var saldo = 0;
-      itemPago.pagos.forEach((element) {
+      for (var element in itemPago.pagos) {
         total += element.total;
         saldo += element.saldo;
         String precioUnitario = f.format(element.precioUnitario);
@@ -843,7 +845,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
               Center(
                 child: Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Icon(Icons.delete),
                     ),
                     Expanded(
@@ -859,7 +861,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           DataCell(
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('${element.proveedor}')), onTap: () {
+                  child: Text(element.proveedor)), onTap: () {
             if (!isInvolucrado) {
               _editarPago(element.idConcepto);
             }
@@ -867,7 +869,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           DataCell(
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text('${element.descripcion}')), onTap: () {
+                  child: Text(element.descripcion)), onTap: () {
             if (!isInvolucrado) {
               _editarPago(element.idConcepto);
             }
@@ -875,7 +877,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           DataCell(
               Align(
                   alignment: Alignment.centerRight,
-                  child: Text('\$${precioUnitario}')), onTap: () {
+                  child: Text('\$$precioUnitario')), onTap: () {
             if (!isInvolucrado) {
               _editarPago(element.idConcepto);
             }
@@ -894,25 +896,25 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
         if (tipoPage == element.tipoPresupuesto) {
           pagosList.add(pagosListTemp);
         }
-      });
+      }
 
       if (pagosList.isEmpty) {
         List<DataCell> pagosListNoData = [
-          DataCell(Text('Sin datos')),
-          DataCell(Text('Sin datos')),
-          DataCell(Text('Sin datos')),
-          DataCell(Text('Sin datos')),
-          DataCell(Text('Sin datos')),
+          const DataCell(Text('Sin datos')),
+          const DataCell(Text('Sin datos')),
+          const DataCell(Text('Sin datos')),
+          const DataCell(Text('Sin datos')),
+          const DataCell(Text('Sin datos')),
         ];
         pagosList.add(pagosListNoData);
       }
     } else {
       List<DataCell> pagosListNoData = [
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
-        DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
+        const DataCell(Text('Sin datos')),
       ];
 
       // for(int i = 0; i<101; i++ )
@@ -930,13 +932,13 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
         !isInvolucrado
             ? SpeedDialChild(
                 label: 'Agregar presupuesto',
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
                 onTap: () => _agregarPago(),
               )
             : SpeedDialChild(),
         SpeedDialChild(
           label: 'Descargar PDF',
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
           onTap: () async {
             final data = index == 0
                 ? await pagosLogic.downlooadPagosEvento('I')
@@ -973,7 +975,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           title: const Text('Estás por borrar un pago.'),
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
+              children: const <Widget>[
                 // Center(child: Text('La actividad: $Nombre')),
                 // SizedBox(height: 15.0,),
                 Center(child: Text('¿Deseas confirmar?')),

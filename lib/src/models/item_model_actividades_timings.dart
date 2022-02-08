@@ -7,7 +7,7 @@ class ItemModelActividadesTimings {
 
   ItemModelActividadesTimings.fromJson(List<dynamic> parsedJson) {
     List<_Result> temp = [];
-    if (parsedJson.length > 0) {
+    if (parsedJson.isNotEmpty) {
       _Result dat = _Result({
         "id_actividad_timing": 0,
         "nombre_actividad": "Seleccionar predecesor"
@@ -39,7 +39,7 @@ class ItemModelActividadesTimings {
       temp.add(result);
     }
 
-    return new ItemModelActividadesTimings(temp);
+    return ItemModelActividadesTimings(temp);
   }
 
   ItemModelActividadesTimings copyWith(ItemModelActividadesTimings obj) {
@@ -94,17 +94,21 @@ class _Result {
     _nombreEventoActividad = result['nombre'];
     _isCheck = false;
     _isExpanded = false;
-    if (result['fecha_inicio_actividad'] != null)
+    if (result['fecha_inicio_actividad'] != null) {
       _fechaInicioActividad = DateTime.parse(result['fecha_inicio_actividad']);
-    if (result['fecha_inicio_evento'] != null)
+    }
+    if (result['fecha_inicio_evento'] != null) {
       _fechaInicioEvento = DateTime.parse(result['fecha_inicio_evento']);
-    if (result['fecha_final_evento'] != null)
+    }
+    if (result['fecha_final_evento'] != null) {
       _fechaFinalEvento = DateTime.parse(result['fecha_final_evento']);
+    }
     if (result['dias'] != null) {
-      if (result['dias'].runtimeType == String)
+      if (result['dias'].runtimeType == String) {
         _dia = int.parse(result['dias']);
-      else
+      } else {
         _dia = result['dias'];
+      }
     }
   }
 
@@ -130,45 +134,46 @@ class _Result {
     _dia = int.parse(dataObj._dias);
   }
 
-  int get idActividad => this._idActividad;
-  String get nombreActividad => this._nombreActividad;
-  String get descripcion => this._descripcion;
-  bool get visibleInvolucrados => this._visibleInvolucrados;
-  String get dias => this._dias;
-  int get predecesor => this._predecesor;
-  int get idTipoTimig => this._idTipoTimig;
-  bool get addActividad => this._addActividad;
-  DateTime get fechaInicio => this._fechaInicio;
+  int get idActividad => _idActividad;
+  String get nombreActividad => _nombreActividad;
+  String get descripcion => _descripcion;
+  bool get visibleInvolucrados => _visibleInvolucrados;
+  String get dias => _dias;
+  int get predecesor => _predecesor;
+  int get idTipoTimig => _idTipoTimig;
+  // ignore: unnecessary_getters_setters
+  bool get addActividad => _addActividad;
+  DateTime get fechaInicio => _fechaInicio;
   /* nuevas */
-  int get idEventoTiming => this._idEventoTiming;
-  String get nombreEventoTarea => this._nombreEventoTarea;
-  int get idEventoActividad => this._idEventoActividad;
-  String get nombreEventoActividad => this._nombreEventoActividad;
-  bool get isCheck => this._isCheck;
-  bool get isExpanded => this._isExpanded;
-  DateTime get fechaInicioActividad => this._fechaInicioActividad;
-  DateTime get fechaInicioEvento => this._fechaInicioEvento;
-  DateTime get fechaFinalEvento => this._fechaFinalEvento;
-  int get dia => this._dia;
+  int get idEventoTiming => _idEventoTiming;
+  String get nombreEventoTarea => _nombreEventoTarea;
+  int get idEventoActividad => _idEventoActividad;
+  String get nombreEventoActividad => _nombreEventoActividad;
+  bool get isCheck => _isCheck;
+  bool get isExpanded => _isExpanded;
+  DateTime get fechaInicioActividad => _fechaInicioActividad;
+  DateTime get fechaInicioEvento => _fechaInicioEvento;
+  DateTime get fechaFinalEvento => _fechaFinalEvento;
+  int get dia => _dia;
 
-  set addidActividad(int value) => this._idActividad = value;
-  set addnombreActividad(String value) => this._nombreActividad = value;
-  set adddescripcion(String value) => this._descripcion = value;
-  set addvisibleInvolucrados(bool value) => this._visibleInvolucrados = value;
-  set adddias(String value) => this._dias = value;
-  set addpredecesor(int value) => this._predecesor = value;
-  set addidTipoTimig(int value) => this._idTipoTimig = value;
-  set addActividad(bool value) => this._addActividad = value;
-  set fechaInicio(DateTime value) => this._fechaInicio;
+  set addidActividad(int value) => _idActividad = value;
+  set addnombreActividad(String value) => _nombreActividad = value;
+  set adddescripcion(String value) => _descripcion = value;
+  set addvisibleInvolucrados(bool value) => _visibleInvolucrados = value;
+  set adddias(String value) => _dias = value;
+  set addpredecesor(int value) => _predecesor = value;
+  set addidTipoTimig(int value) => _idTipoTimig = value;
+  set addActividad(bool value) => _addActividad = value;
+  set fechaInicio(DateTime value) => _fechaInicio;
   /* nuevas */
-  set idEventoTiming(int value) => this._idEventoTiming;
-  set nombreEventoTarea(String value) => this._nombreEventoTarea;
-  set idEventoActividad(int value) => this._idEventoActividad;
-  set nombreEventoActividad(String value) => this._nombreEventoActividad;
-  set isCheck(bool value) => this._isCheck;
-  set isExpanded(bool value) => this._isExpanded;
-  set fechaInicioActividad(DateTime value) => this._fechaInicioActividad;
-  set fechaInicioEvento(DateTime value) => this._fechaInicioEvento;
-  set fechaFinalEvento(DateTime value) => this._fechaFinalEvento;
-  set dia(int value) => this._dia;
+  set idEventoTiming(int value) => _idEventoTiming;
+  set nombreEventoTarea(String value) => _nombreEventoTarea;
+  set idEventoActividad(int value) => _idEventoActividad;
+  set nombreEventoActividad(String value) => _nombreEventoActividad;
+  set isCheck(bool value) => _isCheck;
+  set isExpanded(bool value) => _isExpanded;
+  set fechaInicioActividad(DateTime value) => _fechaInicioActividad;
+  set fechaInicioEvento(DateTime value) => _fechaInicioEvento;
+  set fechaFinalEvento(DateTime value) => _fechaFinalEvento;
+  set dia(int value) => _dia;
 }

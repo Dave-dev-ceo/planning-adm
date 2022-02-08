@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
@@ -25,7 +27,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   TextEditingController numEditCtrl;
   ActividadestimingBloc actividadestimingBloc;
   ItemModelActividadesTimings itemModelActividadesTimings;
-  GlobalKey<FormState> keyForm = new GlobalKey();
+  GlobalKey<FormState> keyForm = GlobalKey();
   String _mySelectionAT = '0';
   int _itemCount = 0;
   bool _actVisible = false;
@@ -42,7 +44,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   _clearData() {
@@ -55,24 +57,24 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   _initControlersEdit(ItemModelActividadesTimings actividad, int i) {
-    actividadEditCtrl = new TextEditingController(
+    actividadEditCtrl = TextEditingController(
         text: actividad.results.elementAt(i).nombreActividad);
     _itemCountEdit = int.parse(actividad.results.elementAt(i).dias);
-    numEditCtrl = new TextEditingController(text: _itemCountEdit.toString());
+    numEditCtrl = TextEditingController(text: _itemCountEdit.toString());
     _actVisibleEdit = actividad.results.elementAt(i).visibleInvolucrados;
-    descripcionEditCtrl = new TextEditingController(
-        text: actividad.results.elementAt(i).descripcion);
+    descripcionEditCtrl =
+        TextEditingController(text: actividad.results.elementAt(i).descripcion);
     //_mySelectionAT = actividad.results.elementAt(i).idTipoTimig.toString();
   }
 
   _initControlers() {
-    actividadCtrl = new TextEditingController();
-    numCtrl = new TextEditingController(text: 0.toString());
-    descripcionCtrl = new TextEditingController();
+    actividadCtrl = TextEditingController();
+    numCtrl = TextEditingController(text: 0.toString());
+    descripcionCtrl = TextEditingController();
   }
 
   String validateActividad(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "Falta actividad";
     } else {
       return null;
@@ -80,7 +82,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   String validateDescripcion(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "Falta descripcion";
     } else {
       return null;
@@ -88,7 +90,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   String validateActividadEdit(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "Falta actividad";
     } else {
       return null;
@@ -96,7 +98,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   String validateDescripcionEdit(String value) {
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return "Falta descripcion";
     } else {
       return null;
@@ -118,7 +120,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   _formIu(bool et) {
-    return Container(
+    return SizedBox(
       width: 1200,
       //height: 600,
       child: Card(
@@ -135,7 +137,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     icon: Icons.local_activity,
                     item: TextFormField(
                       controller: et ? actividadCtrl : actividadEditCtrl,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Nombre',
                       ),
                       validator: et ? validateActividad : validateActividadEdit,
@@ -146,7 +148,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     icon: Icons.drive_file_rename_outline,
                     item: TextFormField(
                       controller: et ? descripcionCtrl : descripcionEditCtrl,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Descripción',
                       ),
                       validator:
@@ -165,10 +167,10 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                   large: 363.0,
                   item: Row(
                     children: [
-                      Expanded(child: Text("Duración en días:")),
+                      const Expanded(child: Text("Duración en días:")),
                       et
                           ? IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               onPressed: _itemCount == 0
                                   ? null
                                   : () => setState(() {
@@ -177,7 +179,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                       }),
                             )
                           : IconButton(
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               onPressed: _itemCountEdit == 0
                                   ? null
                                   : () => setState(() {
@@ -186,11 +188,11 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                             _itemCountEdit.toString();
                                       }),
                             ),
-                      Container(
+                      SizedBox(
                         width: 45,
                         height: 45,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 3),
+                          padding: const EdgeInsets.symmetric(vertical: 3),
                           child: TextFormField(
                             controller: et ? numCtrl : numEditCtrl,
                             textAlign: TextAlign.center,
@@ -199,13 +201,13 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                       ),
                       et
                           ? IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               onPressed: () => setState(() {
                                     _itemCount++;
                                     numCtrl.text = _itemCount.toString();
                                   }))
                           : IconButton(
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               onPressed: () => setState(() {
                                     _itemCountEdit++;
                                     numEditCtrl.text =
@@ -218,7 +220,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     ? TextFormFields(
                         icon: null,
                         item: CheckboxListTile(
-                          title: Text('Visible para novios'),
+                          title: const Text('Visible para novios'),
                           //secondary: Icon(Icons.be),
                           controlAffinity: ListTileControlAffinity.platform,
                           value: _actVisible,
@@ -236,7 +238,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     : TextFormFields(
                         icon: null,
                         item: CheckboxListTile(
-                          title: Text('Visible para novios'),
+                          title: const Text('Visible para novios'),
                           //secondary: Icon(Icons.be),
                           controlAffinity: ListTileControlAffinity.platform,
                           value: _actVisibleEdit,
@@ -258,18 +260,18 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                   large: 500,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   child: ElevatedButton(
                     onPressed: () {
                       _save();
                     },
-                    child: Text('Guardar',
+                    child: const Text('Guardar',
                         style: TextStyle(fontSize: 18, color: Colors.black)),
                     style: ElevatedButton.styleFrom(
                       primary: hexToColor('#fdf4e5'), // background
                       onPrimary: Colors.white, // foreground
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 68, vertical: 25),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 68, vertical: 25),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
@@ -286,7 +288,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   _dropDownActividades(ItemModelActividadesTimings items) {
-    return items.results.length != 0
+    return items.results.isNotEmpty
         ? DropdownButton(
             isExpanded: true,
             value: _mySelectionAT,
@@ -297,7 +299,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 color: Color(0xFF000000), overflow: TextOverflow.ellipsis),
             underline: Container(
               height: 2,
-              color: Color(0xFF000000),
+              color: const Color(0xFF000000),
             ),
             onChanged: (newValue) {
               setState(() {
@@ -309,23 +311,23 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 value: item.idActividad.toString(),
                 child: Text(
                   item.nombreActividad,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               );
             }).toList(),
           )
-        : Container(child: Center(child: Text('Sin predecesores')));
+        : const Center(child: Text('Sin predecesores'));
   }
 
   _constructorDropDownAT() {
     return BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
       builder: (context, state) {
         if (state is ActividadestimingInitial) {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         } else if (state is LoadingActividadesTimingsState) {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         } else if (state is MostrarActividadesTimingsState) {
@@ -336,7 +338,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
           );
           //_showError(context, state.message);
         } else {
-          return Center(
+          return const Center(
             child: LoadingCustom(),
           );
         }
@@ -345,7 +347,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   _actividadesTiming() {
-    return Container(
+    return SizedBox(
       width: 1200,
       height: 400,
       child: Card(
@@ -356,11 +358,11 @@ class _AgregarActividadesState extends State<AgregarActividades> {
         child: BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
           builder: (context, state) {
             if (state is ActividadestimingInitial) {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             } else if (state is LoadingActividadesTimingsState) {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             } else if (state is MostrarActividadesTimingsState) {
@@ -371,7 +373,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
               );
               //_showError(context, state.message);
             } else {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             }
@@ -382,7 +384,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   _constructorListView(ItemModelActividadesTimings item) {
-    return item.results.length != 0
+    return item.results.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
             itemCount: item.results.length - 1,
@@ -394,7 +396,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 key: Key(row.idActividad.toString()),
                 secondaryBackground: Container(
                   color: Colors.green[400],
-                  child: Icon(
+                  child: const Icon(
                     Icons.edit,
                     color: Colors.white,
                   ),
@@ -422,27 +424,25 @@ class _AgregarActividadesState extends State<AgregarActividades> {
 
                           List<EventoActividadModel> listaActividades = [];
 
-                          item.results.forEach((actividad) => {
-                                if (item.results.elementAt(i).idActividad !=
-                                        actividad.idActividad &&
-                                    actividad.idActividad != 0)
-                                  {
-                                    listaActividades.add(
-                                      (EventoActividadModel(
-                                        idActividad: actividad.idActividad,
-                                        nombreActividad:
-                                            actividad.nombreActividad,
-                                        descripcionActividad:
-                                            actividad.descripcion,
-                                        diasActividad: actividad.dia,
-                                        visibleInvolucrado:
-                                            actividad.visibleInvolucrados,
-                                        predecesorActividad:
-                                            actividad.predecesor,
-                                      )),
-                                    )
-                                  }
-                              });
+                          for (var actividad in item.results) {
+                            {
+                              if (item.results.elementAt(i).idActividad !=
+                                      actividad.idActividad &&
+                                  actividad.idActividad != 0) {
+                                listaActividades.add(
+                                  (EventoActividadModel(
+                                    idActividad: actividad.idActividad,
+                                    nombreActividad: actividad.nombreActividad,
+                                    descripcionActividad: actividad.descripcion,
+                                    diasActividad: actividad.dia,
+                                    visibleInvolucrado:
+                                        actividad.visibleInvolucrados,
+                                    predecesorActividad: actividad.predecesor,
+                                  )),
+                                );
+                              }
+                            }
+                          }
 
                           return EditActividadDialog(
                             actividad: actividadModel,
@@ -454,10 +454,10 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     return await showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return Container(
+                          return SizedBox(
                               width: double.infinity,
                               child: AlertDialog(
-                                title: Text('¿Eliminar actividad?'),
+                                title: const Text('¿Eliminar actividad?'),
                                 actions: [
                                   TextButton(
                                       onPressed: () {
@@ -472,12 +472,12 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                         });
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('Sí')),
+                                      child: const Text('Sí')),
                                   TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('No')),
+                                      child: const Text('No')),
                                 ],
                               ));
                         });
@@ -485,7 +485,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 },
                 background: Container(
                   color: Colors.red[400],
-                  child: Icon(
+                  child: const Icon(
                     Icons.cancel,
                     color: Colors.white,
                   ),
@@ -493,15 +493,11 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 ),
                 child: Container(
                   child: ListTile(
-                    title: Text(
-                        item.results.elementAt(i).nombreActividad != null
-                            ? item.results.elementAt(i).nombreActividad
-                            : ''),
+                    title:
+                        Text(item.results.elementAt(i).nombreActividad ?? ''),
                     subtitle: ListBody(
                       children: [
-                        Text(item.results.elementAt(i).descripcion != null
-                            ? item.results.elementAt(i).descripcion
-                            : ''),
+                        Text(item.results.elementAt(i).descripcion ?? ''),
                         Text(item.results.elementAt(i).visibleInvolucrados
                             ? 'Visible para los novios'
                             : 'No visible para los novios')
@@ -513,9 +509,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 ),
               );
             })
-        : Container(
-            child: Center(child: Text('Sin actividades')),
-          );
+        : const Center(child: Text('Sin actividades'));
   }
 
   @override
@@ -529,19 +523,19 @@ class _AgregarActividadesState extends State<AgregarActividades> {
       child: SingleChildScrollView(
         child: Container(
             width: double.infinity,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(child: Form(key: keyForm, child: _formIu(true))),
-                SizedBox(
+                Form(key: keyForm, child: _formIu(true)),
+                const SizedBox(
                   height: 20,
                 ),
-                Text(
+                const Text(
                   'Actividades',
                   style: TextStyle(fontSize: 24),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 _actividadesTiming(),
@@ -592,10 +586,10 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: AlertDialog(
-          title: Text('Editar actividad'),
+          title: const Text('Editar actividad'),
           content: SingleChildScrollView(
               child:
                   BlocListener<ActividadestimingBloc, ActividadestimingState>(
@@ -611,7 +605,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
             },
             child: ListBody(
               children: [
-                Container(
+                SizedBox(
                   width: 1200,
                   //height: 600,
                   child: Card(
@@ -629,7 +623,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                                 icon: Icons.local_activity,
                                 item: TextFormField(
                                   initialValue: actividad.nombreActividad,
-                                  decoration: new InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Nombre',
                                   ),
                                   onChanged: (value) {
@@ -642,7 +636,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                                 icon: Icons.drive_file_rename_outline,
                                 item: TextFormField(
                                   initialValue: actividad.descripcionActividad,
-                                  decoration: new InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Descripción',
                                   ),
                                   onChanged: (value) {
@@ -671,7 +665,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                             TextFormFields(
                               icon: null,
                               item: CheckboxListTile(
-                                title: Text('Visible para novios'),
+                                title: const Text('Visible para novios'),
                                 //secondary: Icon(Icons.be),
                                 controlAffinity:
                                     ListTileControlAffinity.platform,
@@ -687,17 +681,18 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               ancho: 80,
                               large: 363.0,
                             ),
-                            if (widget.actividades.length > 0)
+                            if (widget.actividades.isNotEmpty)
                               TextFormFields(
                                 icon: Icons.linear_scale_outlined,
                                 item: DropdownButtonFormField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                         constraints: BoxConstraints(
                                       maxWidth: 450,
                                     )),
-                                    hint: Text('Seleccione el predecesor'),
+                                    hint:
+                                        const Text('Seleccione el predecesor'),
                                     menuMaxHeight: 450,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -712,9 +707,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                                     },
                                     iconSize: 10.0,
                                     isExpanded: true,
-                                    value: actividad.predecesorActividad == null
-                                        ? -1
-                                        : actividad.predecesorActividad,
+                                    value: actividad.predecesorActividad ?? -1,
                                     items: predecesores
                                         .map((e) => DropdownMenuItem(
                                               child: Text(
@@ -740,24 +733,24 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('Cancelar')),
+                child: const Text('Cancelar')),
             TextButton(
                 onPressed: () async {
-                  await actividadestimingBloc
+                  actividadestimingBloc
                       .add(UpdateActividadEvent(actividad, idTiming));
                 },
-                child: Text('Aceptar')),
+                child: const Text('Aceptar')),
           ],
         ));
   }
 
   List<Widget> durationDaysChildren(bool isMovil) {
     return [
-      Text("Duración en días:"),
+      const Text("Duración en días:"),
       Row(
         children: [
           IconButton(
-            icon: Icon(Icons.remove),
+            icon: const Icon(Icons.remove),
             onPressed: actividad.diasActividad == 0
                 ? null
                 : () => setState(() {
@@ -765,11 +758,11 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                       diasController.text = actividad.diasActividad.toString();
                     }),
           ),
-          Container(
+          SizedBox(
             width: 45,
             height: 45,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 3),
+              padding: const EdgeInsets.symmetric(vertical: 3),
               child: TextFormField(
                 controller: diasController,
                 textAlign: TextAlign.center,
@@ -777,7 +770,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
             ),
           ),
           IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed: () => setState(() {
                     actividad.diasActividad++;
                     diasController.text = actividad.diasActividad.toString();

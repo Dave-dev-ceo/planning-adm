@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:planning/src/ui/Roles/form_rol.dart';
 
@@ -7,7 +9,7 @@ class FullScreenDialogAddRol extends StatefulWidget {
       : super(key: key);
   @override
   _FullScreenDialogAddRolState createState() =>
-      _FullScreenDialogAddRolState(this.datos);
+      _FullScreenDialogAddRolState(datos);
 }
 
 class _FullScreenDialogAddRolState extends State<FullScreenDialogAddRol> {
@@ -20,7 +22,7 @@ class _FullScreenDialogAddRolState extends State<FullScreenDialogAddRol> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -29,7 +31,7 @@ class _FullScreenDialogAddRolState extends State<FullScreenDialogAddRol> {
       appBar: AppBar(
         title:
             Text(datos['accion'] == 0 ? 'Agregar rol' : 'Editar datos de rol'),
-        actions: [],
+        actions: const [],
         automaticallyImplyLeading: true,
       ),
       body: SafeArea(

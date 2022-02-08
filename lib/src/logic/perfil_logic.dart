@@ -20,8 +20,8 @@ abstract class PerfilLogic {
 // class exiende - van las consultas
 class ConsultasPerfilLogic extends PerfilLogic {
   // variables de configuracion
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override
@@ -49,8 +49,7 @@ class ConsultasPerfilLogic extends PerfilLogic {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      await _sharedPreferences.setImagen(
-          data['data'][0]['imagen'] == null ? '' : data['data'][0]['imagen']);
+      await _sharedPreferences.setImagen(data['data'][0]['imagen'] ?? '');
       return ItemModelPerfil.fromJson(data['data']);
     } else if (response.statusCode == 401) {
       throw TokenException();

@@ -20,8 +20,8 @@ class CreateInventarioAlcoholException implements Exception {}
 class UpdateInventarioAlcoholException implements Exception {}
 
 class FetchListaInventarioAlcoholLogic extends ListaInventarioAlcoholLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override

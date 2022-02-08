@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
 import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 
@@ -20,7 +20,11 @@ class MesasAsignadasBloc
       try {
         final mesasAsignadas = await service.getMesasAsignadas();
         yield MostrarMesasAsignadasState(mesasAsignadas);
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is DeleteAsignadoFromMesaEvent) {
       try {
         final resp =
@@ -30,7 +34,9 @@ class MesasAsignadasBloc
 
         add(GetMesasAsignadasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is AsignarPersonasMesasEvent) {
       try {
@@ -39,7 +45,9 @@ class MesasAsignadasBloc
         yield AddedAsignadoFromMesaState(resp);
         add(GetMesasAsignadasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }

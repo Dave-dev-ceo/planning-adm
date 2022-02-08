@@ -25,8 +25,8 @@ abstract class PagosLogic {
 // consultas
 class ConsultasPagosLogic extends PagosLogic {
   // variables de configuracion
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
 
   @override
   Future<bool> insertPagos(Map pago) async {
@@ -222,7 +222,7 @@ class ConsultasPagosLogic extends PagosLogic {
   }
 
   @override
-  Future<String> downlooadPagosEvento(String tipoPresupueto) async {
+  Future<String> downlooadPagosEvento(String tipoPresupuesto) async {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -238,7 +238,7 @@ class ConsultasPagosLogic extends PagosLogic {
     final data = {
       'idPlanner': idPlanner,
       'idEvento': idEvento,
-      'tipoPresupuesto': tipoPresupueto
+      'tipoPresupuesto': tipoPresupuesto
     };
 
     final resp = await http.post(

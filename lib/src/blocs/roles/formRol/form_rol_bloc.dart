@@ -5,8 +5,8 @@ import 'package:meta/meta.dart';
 import 'package:planning/src/logic/roles_logic.dart';
 import 'package:planning/src/models/model_form.dart';
 
-part 'formRol_event.dart';
-part 'formRol_state.dart';
+part 'form_rol_event.dart';
+part 'form_rol_state.dart';
 
 class FormRolBloc extends Bloc<GetFormRolEvent, FormRolState> {
   final RolFormLogic logic;

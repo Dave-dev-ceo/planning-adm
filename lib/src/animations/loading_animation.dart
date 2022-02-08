@@ -1,8 +1,10 @@
-import 'dart:math' as Math;
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
 class LoadingCustom extends StatefulWidget {
+  const LoadingCustom({Key key}) : super(key: key);
+
   @override
   _LoadingCustomState createState() => _LoadingCustomState();
 }
@@ -20,7 +22,7 @@ class _LoadingCustomState extends State<LoadingCustom>
   void initState() {
     controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     );
     opacidad = Tween<double>(
       begin: 1,
@@ -31,7 +33,7 @@ class _LoadingCustomState extends State<LoadingCustom>
     ));
     rotacion = Tween<double>(
       begin: 0.0,
-      end: 2 * Math.pi,
+      end: 2 * math.pi,
     ).animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
 
     scale = Tween<double>(
@@ -54,7 +56,7 @@ class _LoadingCustomState extends State<LoadingCustom>
     controller.forward();
     return AnimatedBuilder(
       animation: controller,
-      child: Image(
+      child: const Image(
         width: 100,
         image: AssetImage('assets/new_logo.png'),
         color: Colors.black,

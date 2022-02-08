@@ -22,8 +22,8 @@ class CreateMachotesException implements Exception {}
 class UpdateMachotesException implements Exception {}
 
 class FetchListaMachotesLogic extends ListaMachotesLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
 
   @override
   Future<ItemModelMachotes> fetchMachotes() async {
@@ -98,7 +98,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
   Future<bool> updateNameMachote(int idMachote, String newNombre) async {
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/MACHOTES/updateNombreMachote';
+    const endpoint = 'wedding/MACHOTES/updateNombreMachote';
 
     final data = {'idMachote': idMachote, 'nombre': newNombre};
 
@@ -124,7 +124,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
   Future<bool> eliminarMachote(int idMachote) async {
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/MACHOTES/eliminarMachote';
+    const endpoint = 'wedding/MACHOTES/eliminarMachote';
 
     final data = {'idMachote': idMachote};
 

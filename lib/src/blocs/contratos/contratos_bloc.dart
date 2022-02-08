@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/contratos_logic.dart';
 import 'package:planning/src/models/item_model_contratos.dart';
 
@@ -38,7 +38,7 @@ class ContratosBloc extends Bloc<ContratosEvent, ContratosState> {
           'descripcion': dato,
           'contrato': tipo
         };
-        Contratos est = new Contratos(lista);
+        Contratos est = Contratos(lista);
         model.results.add(est);
         //yield CreateContratosState(contratos);
         yield MostrarContratosState(model);
@@ -71,12 +71,16 @@ class ContratosBloc extends Bloc<ContratosEvent, ContratosState> {
     } else if (event is FechtContratosPdfViewEvent) {
       yield LoadingContratosPdfViewState();
       try {
-        String contrato = await logic.fetchContratosPdf(event.data);
+        String contrato = await logic.fetchPlantillaPdf(event.data);
         yield MostrarContratosPdfViewState(contrato);
       } on ListaContratosPdfException {
         yield ErrorListaContratosPdfState("Error contrato");
       } on TokenException {
         yield ErrorTokenContratosState("Sesión caducada");
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is UploadFileEvent) {
       yield LoadingUploadFileState();

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/proveedores_logic.dart';
 import 'package:planning/src/models/item_model_proveedores.dart';
 
@@ -22,7 +22,9 @@ class ProveedorBloc extends Bloc<ProveedorEvent, ProveedorState> {
         ItemModelProveedores proveedor = await logic.fetchProveedor();
         yield MostrarProveedorState(proveedor);
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorCreateProveedorState('No se pudo insertar');
       }
     } else if (event is CreateProveedorEvent) {
@@ -33,7 +35,9 @@ class ProveedorBloc extends Bloc<ProveedorEvent, ProveedorState> {
           add(FechtSevicioByProveedorEvent());
         }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorCreateProveedorState('No se pudo insertar');
       }
     } else if (event is FechtSevicioByProveedorEvent) {
@@ -41,7 +45,9 @@ class ProveedorBloc extends Bloc<ProveedorEvent, ProveedorState> {
         ItemModelServicioByProv servicios = await logic.fetchServicioByProv();
         yield MostrarSevicioByProveedorState(servicios);
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorCreateProveedorState('No se pudo insertar');
       }
     } else if (event is DeleteServicioProvEvent) {
@@ -49,28 +55,45 @@ class ProveedorBloc extends Bloc<ProveedorEvent, ProveedorState> {
         int service =
             await logic.deleteServicioProv(event.idServicio, event.idProveedor);
         if (service == 0) {
-          await add(FechtProveedorEvent());
-          await add(FechtSevicioByProveedorEvent());
+          add(FechtProveedorEvent());
+          add(FechtSevicioByProveedorEvent());
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is UpdateProveedor) {
       try {
         final response = await logic.updateProveedor(event.proveedor);
 
         if (response == 'Ok') {
-          await add(FechtProveedorEvent());
-          await add(FechtSevicioByProveedorEvent());
+          add(FechtProveedorEvent());
+          add(FechtSevicioByProveedorEvent());
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is InsertServicioProvEvent) {
       try {
         int service =
             await logic.insertServicioProv(event.idServicio, event.idProveedor);
         if (service == 0) {
-          await add(FechtProveedorEvent());
-          await add(FechtSevicioByProveedorEvent());
+          add(FechtProveedorEvent());
+          add(FechtSevicioByProveedorEvent());
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
+  }
+
+  @override
+  void onTransition(Transition<ProveedorEvent, ProveedorState> transition) {
+    super.onTransition(transition);
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
@@ -22,7 +24,7 @@ class EditarPlantillas extends StatefulWidget {
       this.idMachote})
       : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => EditarPlantillas(),
+        builder: (context) => const EditarPlantillas(),
       );
 
   @override
@@ -40,7 +42,7 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
   ItemModelEtiquetas itemModelET;
   ItemModelMachotes itemModelMC;
 
-  HtmlEditorController _controller = HtmlEditorController();
+  final HtmlEditorController _controller = HtmlEditorController();
 
   _EditarPlantillasState(this.descripcionPlantilla, this.clavePlantilla,
       this.plantilla, this.idMachote);
@@ -54,15 +56,15 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   _contectCont(String etiqueta) {
-    return Container(
+    return SizedBox(
       height: 20,
       child: GestureDetector(
         child: Card(
-          margin: EdgeInsets.fromLTRB(12, 0, 12, 0),
+          margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
             child: Center(child: Text(etiqueta)),
@@ -90,68 +92,64 @@ class _EditarPlantillasState extends State<EditarPlantillas> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: double.infinity,
-                height: 50,
-                child: Center(
-                  child: Text(
-                    'variables',
-                    style: TextStyle(fontSize: 25),
-                  ),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(
+              height: 20,
+            ),
+            const SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: Center(
+                child: Text(
+                  'variables',
+                  style: TextStyle(fontSize: 25),
                 ),
               ),
-              Container(
-                height: 50,
-                width: double.infinity,
-                child: BlocBuilder<EtiquetasBloc, EtiquetasState>(
-                  builder: (context, state) {
-                    if (state is LoadingEtiquetasState) {
-                      return Center(child: LoadingCustom());
-                    } else if (state is MostrarEtiquetasState) {
-                      itemModelET = state.etiquetas;
-                      return _constructorLista(state.etiquetas);
-                    } else if (state is ErrorListaEtiquetasState) {
-                      return Center(
-                        child: Text(state.message),
-                      );
-                    } else {
-                      return Center(child: LoadingCustom());
-                      // return _constructorLista(itemModelET);
-                    }
-                  },
-                ),
+            ),
+            SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: BlocBuilder<EtiquetasBloc, EtiquetasState>(
+                builder: (context, state) {
+                  if (state is LoadingEtiquetasState) {
+                    return const Center(child: LoadingCustom());
+                  } else if (state is MostrarEtiquetasState) {
+                    itemModelET = state.etiquetas;
+                    return _constructorLista(state.etiquetas);
+                  } else if (state is ErrorListaEtiquetasState) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else {
+                    return const Center(child: LoadingCustom());
+                    // return _constructorLista(itemModelET);
+                  }
+                },
               ),
-              const Divider(
-                height: 20,
-                thickness: 5,
+            ),
+            const Divider(
+              height: 20,
+              thickness: 5,
+            ),
+            HtmlEditor(
+              controller: _controller, //required
+              htmlEditorOptions: HtmlEditorOptions(
+                hint: "Escribe aquí...",
+                initialText: plantilla,
               ),
-              Container(
-                child: HtmlEditor(
-                  controller: _controller, //required
-                  htmlEditorOptions: HtmlEditorOptions(
-                    hint: "Escribe aquí...",
-                    initialText: plantilla,
-                  ),
 
-                  otherOptions: OtherOptions(
-                    height: size.height * 0.8,
-                  ),
-                ),
-              )
-            ],
-          ),
+              otherOptions: OtherOptions(
+                height: size.height * 0.8,
+              ),
+            )
+          ],
         ),
       ),
       floatingActionButton: PointerInterceptor(
         child: FloatingActionButton(
           heroTag: UniqueKey(),
-          child: Icon(Icons.save),
+          child: const Icon(Icons.save),
           onPressed: () async {
             String txt = await _controller.getText();
             machotesBloc.add(UpdateMachotesEvent({

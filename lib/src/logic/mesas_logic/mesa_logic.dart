@@ -22,7 +22,7 @@ class MesasAsignadasException implements Exception {}
 class MesasException implements Exception {}
 
 class ServiceMesasLogic extends MesasLogic {
-  SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
 
   @override
@@ -31,7 +31,7 @@ class ServiceMesasLogic extends MesasLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
-    final endpoint = 'wedding/EVENTOS/getMesasAsignadas';
+    const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
     final response = await http
         .post(Uri.parse(confiC.url + confiC.puerto + '/' + endpoint), body: {
       'idEvento': idEvento.toString(),
@@ -55,15 +55,15 @@ class ServiceMesasLogic extends MesasLogic {
   }
 
   @override
-  Future<String> createMesas(List<MesaModel> listasMesasToAdd) async {
+  Future<String> createMesas(List<MesaModel> listaMesasToAdd) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/MESAS/createMesas';
+    const endpoint = 'wedding/MESAS/createMesas';
 
     final data = {
       'idPlanner': idPlanner,
-      'mesas': listasMesasToAdd.map((e) => e.toJson()).toList(),
+      'mesas': listaMesasToAdd.map((e) => e.toJson()).toList(),
     };
 
     final response = await http.post(
@@ -88,7 +88,7 @@ class ServiceMesasLogic extends MesasLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final endpoint = 'wedding/MESAS/obtenerMesas';
+    const endpoint = 'wedding/MESAS/obtenerMesas';
 
     final data = {
       'idEvento': idEvento,
@@ -117,15 +117,15 @@ class ServiceMesasLogic extends MesasLogic {
   }
 
   @override
-  Future<bool> updateMesa(MesaModel mesaToEdit) async {
+  Future<bool> updateMesa(MesaModel editToMesa) async {
     String token = await SharedPreferencesT().getToken();
 
-    final endpoint = 'wedding/MESAS/updateMesa';
+    const endpoint = 'wedding/MESAS/updateMesa';
 
     final data = {
-      'descripcion': mesaToEdit.descripcion,
-      'idMesa': mesaToEdit.idMesa,
-      'idTipoMesa': mesaToEdit.idTipoDeMesa,
+      'descripcion': editToMesa.descripcion,
+      'idMesa': editToMesa.idMesa,
+      'idTipoMesa': editToMesa.idTipoDeMesa,
     };
 
     final headers = {
@@ -157,7 +157,7 @@ class ServiceMesasLogic extends MesasLogic {
       'mime': extension,
     };
 
-    final endpoint = 'wedding/MESAS/uploadLayout';
+    const endpoint = 'wedding/MESAS/uploadLayout';
 
     final headers = {
       HttpHeaders.authorizationHeader: token,
@@ -188,7 +188,7 @@ class ServiceMesasLogic extends MesasLogic {
       'idMesa': idMesa,
     };
 
-    final endpoint = 'wedding/MESAS/deleteMesa';
+    const endpoint = 'wedding/MESAS/deleteMesa';
 
     final headers = {
       HttpHeaders.authorizationHeader: token,

@@ -11,7 +11,7 @@ import 'package:planning/src/utils/utils.dart';
 class ProveedorEvento extends StatefulWidget {
   const ProveedorEvento({Key key}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => ProveedorEvento(),
+        builder: (context) => const ProveedorEvento(),
       );
   @override
   _ProveedorEventoState createState() => _ProveedorEventoState();
@@ -23,20 +23,20 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   List<ItemProveedorEvento> _dataPrvEv = [];
 
   ItemModelProveedoresEvent provEvet;
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  var checkInvolucrado;
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  int checkInvolucrado;
   Size size;
   // plan a
   List<Servicios> servicio = [];
   // plan b
-  Map servicios = Map();
+  Map servicios = {};
 
   // logic
   FetchProveedoresEventoLogic proveedoresEventoLogic =
       FetchProveedoresEventoLogic();
 
   void getValues() async {
-    final idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+    final int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
     setState(() {
       checkInvolucrado = idInvolucrado;
     });
@@ -58,31 +58,30 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
         body: RefreshIndicator(
           color: Colors.blue,
           onRefresh: () async {
-            await proveedoreventosBloc.add(FechtProveedorEventosEvent());
+            proveedoreventosBloc.add(FechtProveedorEventosEvent());
           },
           child: SingleChildScrollView(
             controller: ScrollController(),
             physics: const AlwaysScrollableScrollPhysics(),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
                   builder: (context, state) {
                 if (state is MostrarProveedorEventoState) {
-                  if (state.detlistas != null && _dataPrvEv.length == 0) {
-                    state.detlistas.results.forEach((element) {});
+                  if (state.detlistas != null && _dataPrvEv.isEmpty) {
                     _dataPrvEv = _createDataListProvEvt(state.detlistas);
                   }
                   return Column(
                     children: [
                       _listaBuild(),
-                      SizedBox(
+                      const SizedBox(
                         height: 50.0,
                       )
                     ],
                   );
                 } else {
-                  return Center(child: LoadingCustom());
+                  return const Center(child: LoadingCustom());
                 }
               }),
             ),
@@ -90,7 +89,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: UniqueKey(),
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
           onPressed: () async {
             final data =
                 await proveedoresEventoLogic.downloadPDFProveedoresEvento();
@@ -104,37 +103,36 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Proveedores'),
+          title: const Text('Proveedores'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
                 builder: (context, state) {
               if (state is MostrarProveedorEventoState) {
-                if (state.detlistas != null && _dataPrvEv.length == 0) {
-                  state.detlistas.results.forEach((element) {});
+                if (state.detlistas != null && _dataPrvEv.isEmpty) {
                   _dataPrvEv = _createDataListProvEvt(state.detlistas);
                 }
                 return Column(
                   children: [
                     _listaInvolucrado(),
-                    SizedBox(
+                    const SizedBox(
                       height: 50.0,
                     )
                   ],
                 );
               } else {
-                return Center(child: LoadingCustom());
+                return const Center(child: LoadingCustom());
               }
             }),
           ),
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: UniqueKey(),
-          child: Icon(Icons.download),
+          child: const Icon(Icons.download),
           onPressed: () async {
             final data =
                 await proveedoresEventoLogic.downloadPDFProveedoresEvento();
@@ -149,9 +147,8 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   }
 
   Widget _listaBuild() {
-    return Container(
-        child: ExpansionPanelList(
-      animationDuration: Duration(milliseconds: 500),
+    return ExpansionPanelList(
+      animationDuration: const Duration(milliseconds: 500),
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
           _dataPrvEv[index].isExpanded = !isExpanded;
@@ -162,27 +159,27 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(
               title: Text(item.nombre),
-              trailing: Wrap(spacing: 12, children: <Widget>[]),
+              trailing: Wrap(spacing: 12, children: const <Widget>[]),
             );
           },
-          body: Column(children: _listServicio(item.prov, item.id_servicio)),
+          body: Column(children: _listServicio(item.prov, item.idServicio)),
           isExpanded: item.isExpanded,
         );
       }).toList(),
-    ));
+    );
   }
 
   _createDataListProvEvt(ItemModelProveedoresEvento prov) {
     List<ItemProveedorEvento> _dataProv = [];
-    prov.results.forEach((element) {
+    for (var element in prov.results) {
       List<ItemProveedor> _provTemp = [];
 
       servicios[element.idServicio] = 0;
 
-      if (element.prov.length > 0) {
-        element.prov.forEach((element2) {
+      if (element.prov.isNotEmpty) {
+        for (var element2 in element.prov) {
           _provTemp.add(ItemProveedor(
-              id_proveedor: element2['id_proveedor'],
+              idProveedor: element2['id_proveedor'],
               nombre: element2['nombre'],
               descripcion: element2['descripcion'],
               isExpanded: element2['check'],
@@ -192,18 +189,18 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           if (element2['seleccionado']) {
             servicios[element.idServicio] = element2['id_proveedor'];
           }
-        });
+        }
       }
 
       _dataProv.add(ItemProveedorEvento(
-          id_servicio: element.idServicio,
-          id_planner: element.idPlanner,
+          idServicio: element.idServicio,
+          idPlanner: element.idPlanner,
           nombre: element.nombre,
           prov: _provTemp,
           isExpanded: false,
           seleccion: element.seleccion,
           observacion: element.observacion));
-    });
+    }
     return _dataProv;
   }
 
@@ -220,11 +217,11 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
               child: ExpansionTile(
                 title: Text(
                   opt.nombre,
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                 ),
                 subtitle: Text(
                   opt.descripcion,
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                 ),
                 children: [
                   itemsProveedorWidgets(opt, idServi),
@@ -240,11 +237,11 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
     return Wrap(
       spacing: 12,
       children: <Widget>[
-        SizedBox(),
+        const SizedBox(),
         IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed('/agregarArchivo', arguments: {
-                'id_proveedor': opt.id_proveedor,
+                'id_proveedor': opt.idProveedor,
                 'id_servicio': idServi,
                 'nombre': opt.nombre,
                 'type': 0,
@@ -252,10 +249,10 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                 'isEvento': true,
               });
             },
-            icon: Icon(Icons.file_present)),
+            icon: const Icon(Icons.file_present)),
         if (opt.seleccion)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: Text('Seleccionado'),
           ),
         if (opt.seleccion)
@@ -275,7 +272,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                   });
                   Map<String, dynamic> json = {
                     'id_servicio': idServi,
-                    'id_proveedor': opt.id_proveedor
+                    'id_proveedor': opt.idProveedor
                   };
                   if (opt.isExpanded) {
                     proveedoreventosBloc.add(CreateProveedorEventosEvent(json));
@@ -291,15 +288,14 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
 
   insert(opt) {
     proveedoreventosBloc.add(CreateProveedorEventosEvent(
-        {'id_servicio': opt.id_servicio, 'id_proveedor': opt.id_proveedor}));
+        {'id_servicio': opt.idServicio, 'id_proveedor': opt.idProveedor}));
   }
 
   // involucrados
 
   Widget _listaInvolucrado() {
-    return Container(
-        child: ExpansionPanelList(
-      animationDuration: Duration(milliseconds: 500),
+    return ExpansionPanelList(
+      animationDuration: const Duration(milliseconds: 500),
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
           _dataPrvEv[index].isExpanded = !isExpanded;
@@ -310,17 +306,17 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(
               title: Text(item.nombre),
-              trailing: Wrap(spacing: 12, children: <Widget>[]),
+              trailing: Wrap(spacing: 12, children: const <Widget>[]),
             );
           },
           body: Column(
-            children: _listServicioInvolucrado(
-                item.prov, item.id_servicio, servicios),
+            children:
+                _listServicioInvolucrado(item.prov, item.idServicio, servicios),
           ),
           isExpanded: item.isExpanded,
         );
       }).toList(),
-    ));
+    );
   }
 
   List<Widget> _listServicioInvolucrado(
@@ -329,7 +325,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
     for (var opt in itemServicio) {
       if (opt.isExpanded) {
         TextEditingController textEditController = opt.observacion != null
-            ? TextEditingController(text: '${opt.observacion}')
+            ? TextEditingController(text: opt.observacion)
             : TextEditingController();
         final tempWidget = ListTile(
             title: Row(
@@ -340,7 +336,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                       onPressed: () {
                         Navigator.of(context)
                             .pushNamed('/agregarArchivo', arguments: {
-                          'id_proveedor': opt.id_proveedor,
+                          'id_proveedor': opt.idProveedor,
                           'id_servicio': idServi,
                           'nombre': opt.nombre,
                           'type': 1,
@@ -356,32 +352,32 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             trailing: Wrap(
               spacing: 12,
               children: <Widget>[
-                servicios[idServi] == opt.id_proveedor
-                    ? Container(
+                servicios[idServi] == opt.idProveedor
+                    ? SizedBox(
                         width: 250.0,
                         child: TextFormField(
                           controller: textEditController,
-                          decoration:
-                              InputDecoration(hintText: 'Observaciones: '),
+                          decoration: const InputDecoration(
+                              hintText: 'Observaciones: '),
                           onChanged: (value) async {
                             opt.observacion = value;
                             Map data = {
-                              'id_proveedor': opt.id_proveedor.toString(),
+                              'id_proveedor': opt.idProveedor.toString(),
                               'id_servicio': idServi.toString(),
                               'observacion': opt.observacion
                             };
-                            await proveedoreventosBloc
+                            proveedoreventosBloc
                                 .add(UpdateProveedorEventosEvent(data));
                           },
                         ),
                       )
-                    : SizedBox(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                    : const SizedBox(),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text('Seleccionar: '),
                 ),
                 Radio(
-                  value: opt.id_proveedor,
+                  value: opt.idProveedor,
                   groupValue: servicios[idServi],
                   onChanged: (value) async {
                     setState(() {
@@ -389,11 +385,10 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                       servicios[idServi] = value;
                     });
                     Map data = {
-                      'id_proveedor': opt.id_proveedor.toString(),
+                      'id_proveedor': opt.idProveedor.toString(),
                       'id_servicio': idServi.toString()
                     };
-                    await proveedoreventosBloc
-                        .add(UpdateProveedorEventosEvent(data));
+                    proveedoreventosBloc.add(UpdateProveedorEventosEvent(data));
                   },
                 ),
               ],
@@ -402,14 +397,14 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
       }
     }
     if (lista.isEmpty) {
-      lista.add(Center(
+      lista.add(const Center(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(10.0),
           child: Text('Sin datos.'),
         ),
       ));
     }
-    lista.add(SizedBox(
+    lista.add(const SizedBox(
       height: 20.0,
     ));
     return lista;

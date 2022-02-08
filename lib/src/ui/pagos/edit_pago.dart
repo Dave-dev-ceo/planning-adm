@@ -8,7 +8,7 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormEditPago extends StatefulWidget {
   final int id;
-  FormEditPago({Key key, @required this.id}) : super(key: key);
+  const FormEditPago({Key key, @required this.id}) : super(key: key);
 
   @override
   _FormEditPagoState createState() => _FormEditPagoState();
@@ -21,7 +21,7 @@ class _FormEditPagoState extends State<FormEditPago> {
   // variable model
 
   // variable class
-  Map itemPago = Map();
+  Map itemPago = {};
   bool bandera = true;
 
   @override
@@ -40,7 +40,7 @@ class _FormEditPagoState extends State<FormEditPago> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Editar presupuesto'),
+          title: const Text('Editar presupuesto'),
         ),
         body: _myBloc(),
       ),
@@ -64,11 +64,11 @@ class _FormEditPagoState extends State<FormEditPago> {
       child: BlocBuilder<PagosBloc, PagosState>(
         builder: (context, state) {
           if (state is PagosInitial) {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           } else if (state is PagosLogging) {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           } else if (state is PagosSelectId) {
@@ -89,7 +89,7 @@ class _FormEditPagoState extends State<FormEditPago> {
             }
             return _formEditPagos(state.proveedor, state.servicio);
           } else {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           }
@@ -100,7 +100,7 @@ class _FormEditPagoState extends State<FormEditPago> {
 
   _formEditPagos(proveedor, servicios) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       color: Colors.white,
       child: ListView(
         children: [
@@ -109,65 +109,65 @@ class _FormEditPagoState extends State<FormEditPago> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     'Editar presupuesto',
                     style: TextStyle(fontSize: 20.0),
                   )),
-              SizedBox(
+              const SizedBox(
                 height: 64.0,
               ),
               _selectServicios(servicios),
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
               _selectProveedores(proveedor),
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
-              Text('Cantidad:'),
+              const Text('Cantidad:'),
               TextFormField(
                 controller:
                     TextEditingController(text: '${itemPago['cantidad']}'),
-                decoration: InputDecoration(hintText: 'Cantidad:'),
+                decoration: const InputDecoration(hintText: 'Cantidad:'),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 onChanged: (valor) {
                   itemPago['cantidad'] = valor;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
-              Text('Concepto:'),
+              const Text('Concepto:'),
               TextFormField(
                 controller:
                     TextEditingController(text: '${itemPago['descripcion']}'),
-                decoration: InputDecoration(hintText: 'Concepto:'),
+                decoration: const InputDecoration(hintText: 'Concepto:'),
                 onChanged: (valor) {
                   itemPago['descripcion'] = valor;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
-              Text('Precio Unitario:'),
+              const Text('Precio Unitario:'),
               TextFormField(
                 controller:
                     TextEditingController(text: '${itemPago['precio']}'),
-                decoration: InputDecoration(hintText: 'Precio Unitario:'),
+                decoration: const InputDecoration(hintText: 'Precio Unitario:'),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 onChanged: (valor) {
                   itemPago['precio'] = valor;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
               ElevatedButton(
-                child: Icon(Icons.edit),
+                child: const Icon(Icons.edit),
                 onPressed: () => _editPago(),
               ),
               // SizedBox(height: 32.0,),
@@ -183,8 +183,8 @@ class _FormEditPagoState extends State<FormEditPago> {
   }
 
   _selectServicios(ItemModelPagos servicios) {
-    if (servicios.pagos.length > 0) {
-      return Container(
+    if (servicios.pagos.isNotEmpty) {
+      return SizedBox(
         width: double.infinity,
         child: DropdownButton<String>(
             value: itemPago['servicios'],
@@ -206,19 +206,19 @@ class _FormEditPagoState extends State<FormEditPago> {
                 value: item.idServicio.toString(),
                 child: Text(
                   item.servicio,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               );
             }).toList()),
       );
     } else {
-      return SizedBox();
+      return const SizedBox();
     }
   }
 
   _selectProveedores(ItemModelPagos proveedor) {
-    if (proveedor.pagos.length > 0) {
-      return Container(
+    if (proveedor.pagos.isNotEmpty) {
+      return SizedBox(
         width: double.infinity,
         child: DropdownButton<String>(
             value: itemPago['proveedores'],
@@ -240,13 +240,13 @@ class _FormEditPagoState extends State<FormEditPago> {
                 value: item.idProveedor.toString(),
                 child: Text(
                   item.proveedor,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               );
             }).toList()),
       );
     } else {
-      return SizedBox();
+      return const SizedBox();
     }
   }
 

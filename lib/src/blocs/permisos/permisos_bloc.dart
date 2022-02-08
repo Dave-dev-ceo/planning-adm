@@ -16,7 +16,7 @@ class PermisosBloc extends Bloc<PermisosEvent, PermisosState> {
   Stream<PermisosState> mapEventToState(
     PermisosEvent event,
   ) async* {
-    if (event is obtenerPermisosEvent) {
+    if (event is ObtenerPermisosEvent) {
       yield LoadingPermisos();
 
       try {

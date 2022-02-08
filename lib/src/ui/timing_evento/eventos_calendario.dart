@@ -18,7 +18,7 @@ class _EventoCalendarioState extends State<EventoCalendario> {
   Widget _crearVista() {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calendario del evento'),
+        title: const Text('Calendario del evento'),
       ),
       body: ListView(
         children: [_addCalendary()],
@@ -33,7 +33,7 @@ class _EventoCalendarioState extends State<EventoCalendario> {
         lastDay: DateTime.utc(2030, 3, 14),
         focusedDay: DateTime.now(),
         headerStyle:
-            HeaderStyle(formatButtonVisible: false, titleCentered: true),
+            const HeaderStyle(formatButtonVisible: false, titleCentered: true),
         onDaySelected: (selectedDay, focusedDay) {});
   }
 }

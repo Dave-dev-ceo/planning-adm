@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:planning/src/logic/listas_logic.dart';
 import 'package:planning/src/models/item_model_detalle_listas.dart';
@@ -24,21 +25,20 @@ class TokenException implements Exception {}
 class CreateDetalleListasException implements Exception {}
 
 class FetchDetalleListaLogic extends DetallesListasLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection configC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection configC = ConfigConection();
   Client client = Client();
 
   @override
   // ignore: missing_return
   Future<ItemModelDetalleListas> fetchDetalleListas(int idLista) async {
     try {
-      int id_planner = await _sharedPreferences.getIdPlanner();
-      int id_lista = await idLista;
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(configC.url +
               configC.puerto +
-              '/wedding/LISTAS/obtenerDetallesListaPorPlanner/$id_planner/$id_lista'),
+              '/wedding/LISTAS/obtenerDetallesListaPorPlanner/$idPlanner/$idLista'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -51,7 +51,9 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
         throw DetalleListasException();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -92,7 +94,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
 
   @override
   Future<int> deleteDetallaLista(int idDetalleLista) async {
-    int id_planner = await _sharedPreferences.getIdPlanner();
+    int idplanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(configC.url +
@@ -100,7 +102,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
             '/wedding/LISTAS/deleteDetalleLista'),
         body: {
           "id_detalle_lista": idDetalleLista.toString(),
-          'id_planner': id_planner.toString()
+          'id_planner': idplanner.toString()
         },
         headers: {
           HttpHeaders.authorizationHeader: token

@@ -31,9 +31,11 @@ class PasswordWplanner extends StatefulWidget {
       this.prefixIcon,
       this.suffixIcon,
       this.pattern,
-      this.suffixIconEnabled = true})
+      this.suffixIconEnabled = true,
+      Key key})
       : assert((backgroundColor == null && backgroundBorderRadius == null) ||
-            (backgroundColor != null && backgroundBorderRadius != null));
+            (backgroundColor != null && backgroundBorderRadius != null)),
+        super(key: key);
   // assert((hasFloatingPlaceholder == true && hintText == null) ||
   //     (hasFloatingPlaceholder == false && hintText != null));
 
@@ -67,19 +69,19 @@ class PasswordWplanner extends StatefulWidget {
   /// A controller for an editable PasswordWplanner.
   final TextEditingController controller;
 
-  /**
-   * RegEx pattern for the input password
-   *
-   *     r'[a-zA-Z]'      // 'heLLo' allows Alphabets with upper and lower case
-   *     r'[a-zA-Z]{8}'   // 'helloYou' allows Alphabetic password strict to 8 chars
-   *     r'[0-9a-zA-Z]';  // 'Hello123' allows alphanumeric password
-   *     r'[0-9]{6}'      //  '123456' allows numeric password strict to 6 characters
-   *
-   * Dart regular expressions have the same syntax and semantics 
-   * as JavaScript regular expressions. 
-   * See:[ecma-international.org/ecma-262/9.0/#sec-regexp-regular-expression-objects](ecma-international.org/ecma-262/9.0/#sec-regexp-regular-expression-objects)
-   * for the specification of JavaScript regular expressions.
-   */
+  ///
+  ///  RegEx pattern for the input password
+  ///
+  ///     r'[a-zA-Z]'      // 'heLLo' allows Alphabets with upper and lower case
+  ///     r'[a-zA-Z]{8}'   // 'helloYou' allows Alphabetic password strict to 8 chars
+  ///     r'[0-9a-zA-Z]';  // 'Hello123' allows alphanumeric password
+  ///     r'[0-9]{6}'      //  '123456' allows numeric password strict to 6 characters
+  ///
+  /// Dart regular expressions have the same syntax and semantics
+  /// as JavaScript regular expressions.
+  /// See:[ecma-international.org/ecma-262/9.0/#sec-regexp-regular-expression-objects](ecma-international.org/ecma-262/9.0/#sec-regexp-regular-expression-objects)
+  /// for the specification of JavaScript regular expressions.
+  ///
   final String pattern;
 
   /// whether the placeholder can float to left top on focus
@@ -168,7 +170,7 @@ class PasswordWplannerState extends State<PasswordWplanner> {
   }
 
   PasswordBloc bloc = PasswordBloc();
-  Widget PasswordWplannerWidget() {
+  Widget passwordWplannerWidget() {
     return StreamBuilder<String>(
       stream: bloc.password,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -214,16 +216,17 @@ class PasswordWplannerState extends State<PasswordWplanner> {
                         onTap: () {
                           setState(() {
                             obscureText = !obscureText;
-                            if (obscureText)
+                            if (obscureText) {
                               iconBoton = Icon(
                                 Icons.remove_red_eye,
                                 color: widget.iconColor,
                               );
-                            else
+                            } else {
                               iconBoton = Icon(
                                 Icons.remove_red_eye_outlined,
                                 color: widget.iconColorSelect,
                               );
+                            }
                           });
                         },
                         child: iconBoton,
@@ -243,6 +246,6 @@ class PasswordWplannerState extends State<PasswordWplanner> {
 
   @override
   Widget build(BuildContext context) {
-    return PasswordWplannerWidget();
+    return passwordWplannerWidget();
   }
 }

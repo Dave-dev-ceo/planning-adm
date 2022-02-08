@@ -30,6 +30,7 @@ class DashboardInvolucradoPage extends StatefulWidget {
 
   @override
   _DashboardInvolucradoPageState createState() =>
+      // ignore: no_logic_in_create_state
       _DashboardInvolucradoPageState(detalleEvento);
 }
 
@@ -38,21 +39,22 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
 
   PermisosBloc permisosBloc;
   bool isInvolucrado = false;
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   BuildContext _dialogContext;
 
   _DashboardInvolucradoPageState(this.detalleEvento);
 
+  @override
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
-    permisosBloc.add(obtenerPermisosEvent());
+    permisosBloc.add(ObtenerPermisosEvent());
 
     getIdInvolucrado();
     super.initState();
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   getIdInvolucrado() async {
@@ -65,7 +67,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
@@ -74,7 +76,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: LoadingCustom()),
+              body: const Center(child: LoadingCustom()),
             );
           } else if (state is ErrorTokenPermisos) {
             return _showDialogMsg(context);
@@ -83,7 +85,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               appBar: AppBar(
                 automaticallyImplyLeading: false,
               ),
-              body: Center(child: LoadingCustom()),
+              body: const Center(child: LoadingCustom()),
             );
           } else if (state is PermisosOk) {
             return Scaffold(
@@ -95,7 +97,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               child: Text(state.message),
             );
           } else {
-            return Center(child: Text('Sin permisos'));
+            return const Center(child: Text('Sin permisos'));
           }
         },
       ),
@@ -121,7 +123,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               WP_EVT_RES_EDT:
                   pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
             ),
-            FaIcon(FontAwesomeIcons.clipboardList)),
+            const FaIcon(FontAwesomeIcons.clipboardList)),
       );
       // temp.add(ResumenEvento(
       //   detalleEvento: detalleEvento,
@@ -130,16 +132,16 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
       gridCard.add(
-        _builCard('Actividades', PlanesPage(),
-            FaIcon(FontAwesomeIcons.solidCalendarCheck)),
+        _builCard('Actividades', const PlanesPage(),
+            const FaIcon(FontAwesomeIcons.solidCalendarCheck)),
       );
       // temp.add(PlanesPage());
     }
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
       gridCard.add(_builCard(
         'Documentos',
-        NewContrato(),
-        FaIcon(FontAwesomeIcons.book),
+        const NewContrato(),
+        const FaIcon(FontAwesomeIcons.book),
       ));
 
       // temp.add(NewContrato());
@@ -147,8 +149,8 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
       gridCard.add(_builCard(
         'Presupuestos',
-        Pagos(),
-        FaIcon(FontAwesomeIcons.moneyBillWave),
+        const Pagos(),
+        const FaIcon(FontAwesomeIcons.moneyBillWave),
       ));
 
       // temp.add(Pagos());
@@ -156,8 +158,8 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
       gridCard.add(_builCard(
         'Proveedores',
-        ProveedorEvento(),
-        FaIcon(FontAwesomeIcons.peopleCarry),
+        const ProveedorEvento(),
+        const FaIcon(FontAwesomeIcons.peopleCarry),
         isProveedor: true,
       ));
     }
@@ -173,22 +175,22 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           nameEvento: detalleEvento.descripcion,
           permisos: permisos,
         ),
-        FaIcon(FontAwesomeIcons.users),
+        const FaIcon(FontAwesomeIcons.users),
       ));
     }
 
     if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
       gridCard.add(_builCard(
         'Listas',
-        Listas(),
-        FaIcon(FontAwesomeIcons.thList),
+        const Listas(),
+        const FaIcon(FontAwesomeIcons.thList),
       ));
 
       if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
         gridCard.add(_builCard(
           'Book Inspiration',
-          BookInspiracion(),
-          FaIcon(FontAwesomeIcons.bookOpen),
+          const BookInspiracion(),
+          const FaIcon(FontAwesomeIcons.bookOpen),
         ));
       }
 
@@ -201,7 +203,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
       ),
       child: GridView.builder(
         itemCount: gridCard.length,
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 350,
           mainAxisExtent: 200,
           childAspectRatio: 3 / 2,
@@ -229,7 +231,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
         child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 stops: [
                   0.10,
                   0.52,
@@ -255,7 +257,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   titulo,
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
             ],
@@ -280,10 +282,10 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   Widget appBarCustom() {
     final IconThemeData iconTheme = IconTheme.of(context);
     return PreferredSize(
-      preferredSize: Size.fromHeight(200.0),
+      preferredSize: const Size.fromHeight(200.0),
       child: AppBar(
         elevation: 5,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20))),
@@ -291,13 +293,13 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           alignment: Alignment.topRight,
           child: PopupMenuButton(
             itemBuilder: (context) => [
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 1,
                 child: Text("Perfil"),
               ),
               if (!isInvolucrado)
-                PopupMenuItem(value: 2, child: Text("Planner")),
-              PopupMenuItem(
+                const PopupMenuItem(value: 2, child: Text("Planner")),
+              const PopupMenuItem(
                 value: 3,
                 child: Text("Cerrar sesión"),
               )
@@ -330,7 +332,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                     // ),
                     Text(
                       detalleEvento.descripcion,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Oleo',
@@ -348,64 +350,62 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           ),
         ),
         automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: (detalleEvento.portada == null ||
-                              detalleEvento.portada == '')
-                          ? AssetImage(
-                              'portada.jpg',
-                            )
-                          : MemoryImage(
-                              base64Decode(detalleEvento.portada),
-                            ),
-                    )),
-                width: double.infinity,
-                height: double.infinity,
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
-                    child: Container(
-                      width: double.infinity,
-                      height: 200,
-                      decoration:
-                          BoxDecoration(color: Colors.black.withOpacity(0.2)),
-                    ),
+        flexibleSpace: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: (detalleEvento.portada == null ||
+                            detalleEvento.portada == '')
+                        ? const AssetImage(
+                            'portada.jpg',
+                          )
+                        : MemoryImage(
+                            base64Decode(detalleEvento.portada),
+                          ),
+                  )),
+              width: double.infinity,
+              height: double.infinity,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration:
+                        BoxDecoration(color: Colors.black.withOpacity(0.2)),
                   ),
                 ),
               ),
-              Positioned(
-                top: 20.0,
-                left: 8.0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      width: 60,
-                      height: 80,
-                      child: Image.asset(
-                        'assets/new_logo.png',
-                        fit: BoxFit.contain,
-                        color: Color(0xFFfdf4e5),
-                      )),
-                ),
+            ),
+            Positioned(
+              top: 20.0,
+              left: 8.0,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                    width: 60,
+                    height: 80,
+                    child: Image.asset(
+                      'assets/new_logo.png',
+                      fit: BoxFit.contain,
+                      color: const Color(0xFFfdf4e5),
+                    )),
               ),
-              Positioned(
-                bottom: 10,
-                right: 10,
-                child: ContadorEventoPage(
-                  fechaEvento: detalleEvento.fechaEvento,
-                ),
+            ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: ContadorEventoPage(
+                fechaEvento: detalleEvento.fechaEvento,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -414,17 +414,17 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   _showDialogMsg(BuildContext contextT) {
     _dialogContext = contextT;
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Sesión",
         textAlign: TextAlign.center,
       ),
-      content: Text(
+      content: const Text(
           'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[
         TextButton(
-          child: Text('Cerrar'),
+          child: const Text('Cerrar'),
           onPressed: () async {
             await _sharedPreferences.clear();
             Navigator.of(contextT)
@@ -444,6 +444,7 @@ class ContadorEventoPage extends StatefulWidget {
 
   @override
   _ContadorEventoPageState createState() =>
+      // ignore: no_logic_in_create_state
       _ContadorEventoPageState(fechaEvento);
 }
 
@@ -472,7 +473,7 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
   }
 
   initTimer() async {
-    timer = Timer.periodic(Duration(seconds: 30), (timer) async {
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) async {
       setState(() {
         fechaEventoTime = DateTime.parse(widget.fechaEvento.toString())
             .difference(DateTime.now());
@@ -492,29 +493,27 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          if (isActive)
-            Text(
-              'Tiempo restante:',
-              style: TextStyle(color: Colors.white),
-            ),
-          if (!isActive)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'El evento ya finalizó',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Column(
+      children: [
+        if (isActive)
+          const Text(
+            'Tiempo restante:',
+            style: TextStyle(color: Colors.white),
+          ),
+        if (!isActive)
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'El evento ya finalizó',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-            )
-          else
-            timerEvento()
-        ],
-      ),
+            ),
+          )
+        else
+          timerEvento()
+      ],
     );
   }
 
@@ -536,7 +535,7 @@ class _ContadorEventoPageState extends State<ContadorEventoPage> {
           children: [
             Text(
               time,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(tipoTime)
           ],

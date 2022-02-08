@@ -12,7 +12,7 @@ class LoadingCrearRolState extends RolState {}
 class RolCreadoState extends RolState {
   final ItemModelRol rol;
   RolCreadoState(this.rol);
-  ItemModelRol get data => this.rol;
+  ItemModelRol get data => rol;
 }
 
 class ErrorCrearRolState extends RolState {
@@ -29,7 +29,7 @@ class LoadingEditarRolState extends RolState {}
 class RolEditadoState extends RolState {
   final ItemModelRol rol;
   RolEditadoState(this.rol);
-  ItemModelRol get data => this.rol;
+  ItemModelRol get data => rol;
 }
 
 class ErrorEditarRolState extends RolState {

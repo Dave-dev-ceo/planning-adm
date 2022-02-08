@@ -17,7 +17,7 @@ class _Estatus {
   String _cantidad;
 
   _Estatus(datos) {
-    _estatus = datos['estatus'] == null ? 'Sin estatus' : datos['estatus'];
+    _estatus = datos['estatus'] ?? 'Sin estatus';
     _cantidad = datos['cantidad'];
   }
 

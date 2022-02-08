@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
@@ -14,7 +16,7 @@ class FullScreenDialogReporte extends StatefulWidget {
 }
 
 class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
-  ApiProvider api = new ApiProvider();
+  ApiProvider api = ApiProvider();
   final String reporte;
   ItemModelEstatusInvitado modelEstatus;
   ItemModelGrupos _grupos;
@@ -31,7 +33,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   Future<String> _tiposReporte() async {
@@ -65,9 +67,9 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
               length: lenghtTab,
               child: Scaffold(
                 appBar: AppBar(
-                  title: Text('Reporte de evento'),
+                  title: const Text('Reporte de evento'),
                   backgroundColor: hexToColor('#fdf4e5'),
-                  actions: [],
+                  actions: const [],
                   automaticallyImplyLeading: true,
                   bottom: TabBar(
                     indicatorColor: Colors.black,
@@ -87,7 +89,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                                 : reporte == "relacion"
                                     ? _grupos.results.elementAt(i).nombreGrupo
                                     : "data",
-                            style: TextStyle(fontSize: 17),
+                            style: const TextStyle(fontSize: 17),
                           ),
                         ),
                     ],
@@ -113,8 +115,8 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
               length: lenghtTab,
               child: Scaffold(
                 appBar: AppBar(
-                  title: Text('Reporte de evento'),
-                  actions: [],
+                  title: const Text('Reporte de evento'),
+                  actions: const [],
                   automaticallyImplyLeading: true,
                   bottom: TabBar(
                     onTap: (int index) {
@@ -144,7 +146,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                                 : reporte == "relacion"
                                     ? _grupos.results.elementAt(i).nombreGrupo
                                     : "data",
-                            style: TextStyle(fontSize: 17),
+                            style: const TextStyle(fontSize: 17),
                           ),
                         ),
                     ],
@@ -155,7 +157,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
                     index: _pageIndex,
                     children: <Widget>[
                       for (int j = 0; j < lenghtTab; j++)
-                        ReporteEvento(
+                        const ReporteEvento(
                           dataView: "relacion",
                         ),
                     ],
@@ -167,41 +169,35 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
             dataJson["reporte"] = "sin datos";
             return Scaffold(
               appBar: AppBar(
-                title: Text('Reporte de evento'),
-                actions: [],
+                title: const Text('Reporte de evento'),
+                actions: const [],
                 automaticallyImplyLeading: true,
               ),
-              body: Container(
-                child: Center(
-                  child: Text('Sin reportes'),
-                ),
+              body: const Center(
+                child: Text('Sin reportes'),
               ),
             );
           }
         } else if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Reporte de evento'),
-              actions: [],
+              title: const Text('Reporte de evento'),
+              actions: const [],
               automaticallyImplyLeading: true,
             ),
-            body: Container(
-              child: Center(
-                child: Text('El sistema esta en acualización'),
-              ),
+            body: const Center(
+              child: Text('El sistema esta en acualización'),
             ),
           );
         } else {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Reporte de evento'),
-              actions: [],
+              title: const Text('Reporte de evento'),
+              actions: const [],
               automaticallyImplyLeading: true,
             ),
-            body: Container(
-              child: Center(
-                child: Text('El sistema tiene un error'),
-              ),
+            body: const Center(
+              child: Text('El sistema tiene un error'),
             ),
           );
         }

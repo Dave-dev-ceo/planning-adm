@@ -11,12 +11,11 @@ class CreateArchivoProvServEvent extends ArchivoProveedorEvent {
 }
 
 class FechtArchivoProvServEvent extends ArchivoProveedorEvent {
-  final int id_proveedor;
-  final int id_servicio;
+  final int idProveedor;
+  final int idServicio;
   final bool isServicio;
-  FechtArchivoProvServEvent(
-      this.id_proveedor, this.id_servicio, this.isServicio);
-  List<Object> get props => [id_proveedor, id_servicio];
+  FechtArchivoProvServEvent(this.idProveedor, this.idServicio, this.isServicio);
+  List<Object> get props => [idProveedor, idServicio];
 }
 
 class DeleteArchivoEvent extends ArchivoProveedorEvent {
@@ -30,8 +29,8 @@ class DeleteArchivoEvent extends ArchivoProveedorEvent {
 }
 
 class FechtArchivoProvEvent extends ArchivoProveedorEvent {
-  final int id_proveedor;
-  final int id_evento;
-  FechtArchivoProvEvent(this.id_proveedor, this.id_evento);
-  List<Object> get props => [id_proveedor, id_evento];
+  final int idProveedor;
+  final int idEvento;
+  FechtArchivoProvEvent(this.idProveedor, this.idEvento);
+  List<Object> get props => [idProveedor, idEvento];
 }

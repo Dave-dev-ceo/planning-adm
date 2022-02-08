@@ -21,8 +21,8 @@ class RolesPlannerException implements Exception {}
 class TokenRolesException implements Exception {}
 
 class RolesPlannerLogic implements RolesLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   RolesPlannerLogic();
@@ -43,7 +43,7 @@ class RolesPlannerLogic implements RolesLogic {
       // If the call to the server was successful, parse the JSON
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      return new ItemModelRoles.fromJson(data['roles']);
+      return ItemModelRoles.fromJson(data['roles']);
     } else if (response.statusCode == 401) {
       throw TokenRolesException();
     } else {
@@ -66,7 +66,7 @@ class RolesPlannerLogic implements RolesLogic {
       // If the call to the server was successful, parse the JSON
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      return new ItemModelRoles.fromJson(data['roles']);
+      return ItemModelRoles.fromJson(data['roles']);
     } else if (response.statusCode == 401) {
       throw TokenRolesException();
     } else {
@@ -94,9 +94,9 @@ abstract class RolLogic {
 }
 
 class RolCrud extends RolLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
 
   Client client = Client();
   @override
@@ -190,8 +190,8 @@ abstract class RolFormLogic {
 }
 
 class FormRolLogic implements RolFormLogic {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
-  ConfigConection confiC = new ConfigConection();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   FormRolLogic();
@@ -210,7 +210,7 @@ class FormRolLogic implements RolFormLogic {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
       await _sharedPreferences.setToken(data['token']);
-      return new ItemModelFormRol.fromJson(data['result']);
+      return ItemModelFormRol.fromJson(data['result']);
     } else if (response.statusCode == 401) {
       throw TokenFormRolException();
     } else {

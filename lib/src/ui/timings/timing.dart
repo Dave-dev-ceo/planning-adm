@@ -20,10 +20,10 @@ class Timing extends StatefulWidget {
 }
 
 class _TimingState extends State<Timing> {
-  final TextStyle estiloTxt = TextStyle(fontWeight: FontWeight.bold);
+  final TextStyle estiloTxt = const TextStyle(fontWeight: FontWeight.bold);
 
   final formState = GlobalKey<FormState>();
-  TextEditingController timingCtrl = new TextEditingController();
+  TextEditingController timingCtrl = TextEditingController();
   TimingsBloc timingBloc;
   ItemModelTimings itemModelTimings;
   ItemModelTimings filterTimings;
@@ -61,11 +61,11 @@ class _TimingState extends State<Timing> {
           child: BlocBuilder<TimingsBloc, TimingsState>(
             builder: (context, state) {
               if (state is TimingsInitial) {
-                return Center(
+                return const Center(
                   child: LoadingCustom(),
                 );
               } else if (state is LoadingTimingsState) {
-                return Center(
+                return const Center(
                   child: LoadingCustom(),
                 );
               } else if (state is MostrarTimingsState) {
@@ -89,12 +89,12 @@ class _TimingState extends State<Timing> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         tooltip: 'Descargar PDF',
-        child: Icon(Icons.file_download_sharp),
+        child: const Icon(Icons.file_download_sharp),
         onPressed: () async {
           final data = await timingsLogic.downloadPDFTiming();
 
           if (data != null) {
-            await downloadFile(data, 'Cronogramas');
+            downloadFile(data, 'Cronogramas');
           }
         },
       ),
@@ -102,19 +102,19 @@ class _TimingState extends State<Timing> {
   }
 
   Future<void> _refresTiming() async {
-    Future.delayed(Duration(seconds: 200), () {
+    Future.delayed(const Duration(seconds: 200), () {
       setState(() {});
     });
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   formItemsDesign(icon, item, large, ancho) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 3),
-      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -127,16 +127,16 @@ class _TimingState extends State<Timing> {
   }
 
   _constructorTable(ItemModelTimings model) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 50.0,
           ),
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.all(15),
+            margin: const EdgeInsets.all(15),
             child: formItemsDesign(
                 null,
                 Row(
@@ -148,7 +148,7 @@ class _TimingState extends State<Timing> {
                           padding: const EdgeInsets.symmetric(vertical: 7.5),
                           child: TextFormField(
                             controller: timingCtrl,
-                            decoration: new InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Cronograma',
                             ),
                             validator: (value) {
@@ -168,7 +168,7 @@ class _TimingState extends State<Timing> {
                           margin: const EdgeInsets.all(15),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 12),
-                          child: FittedBox(
+                          child: const FittedBox(
                             child: Text(
                               "Agregar",
                               style: TextStyle(
@@ -202,8 +202,8 @@ class _TimingState extends State<Timing> {
                 80.0),
           ),
           Center(
-            child: Container(
-                height: 400.0, width: 600.0, child: buildList2(model)),
+            child:
+                SizedBox(height: 400.0, width: 600.0, child: buildList2(model)),
           ),
         ],
       ),
@@ -213,11 +213,11 @@ class _TimingState extends State<Timing> {
   Widget buildList2(ItemModelTimings listItemModelTimings) {
     return SingleChildScrollView(
       child: Card(
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('Cronograma'),
             ),
             Padding(
@@ -237,10 +237,9 @@ class _TimingState extends State<Timing> {
                     setState(() {
                       dropdownValue = newValue;
                     });
-                    await timingBloc
-                        .add(FetchTimingsPorPlannerEvent(dropdownValue));
+                    timingBloc.add(FetchTimingsPorPlannerEvent(dropdownValue));
                   },
-                  items: [
+                  items: const [
                     DropdownMenuItem(
                       child: Text("Activo", style: TextStyle(fontSize: 16)),
                       value: 'A',
@@ -254,7 +253,7 @@ class _TimingState extends State<Timing> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     prefixIcon: Icon(
                       Icons.search,
                     ),
@@ -262,13 +261,13 @@ class _TimingState extends State<Timing> {
                 onChanged: (String value) async {
                   if (value.length > 2) {
                     List<dynamic> usrs = itemModelTimings.results
-                        .where((imu) => imu.nombre_timing
+                        .where((imu) => imu.nombreTiming
                             .toLowerCase()
                             .contains(value.toLowerCase()))
                         .toList();
                     setState(() {
                       filterTimings.results.clear();
-                      if (usrs.length > 0) {
+                      if (usrs.isNotEmpty) {
                         for (var usr in usrs) {
                           filterTimings.results.add(usr);
                         }
@@ -300,9 +299,9 @@ class _TimingState extends State<Timing> {
                               context: context,
                               builder: (context) => EditTimingDialog(
                                 name: listItemModelTimings
-                                    .results[index].nombre_timing,
+                                    .results[index].nombreTiming,
                                 idCronograma: listItemModelTimings
-                                    .results[index].id_timing,
+                                    .results[index].idTiming,
                                 estatus:
                                     listItemModelTimings.results[index].estatus,
                               ),
@@ -311,19 +310,19 @@ class _TimingState extends State<Timing> {
                                     {
                                       if (value)
                                         {
-                                          await timingBloc.add(
+                                          timingBloc.add(
                                               FetchTimingsPorPlannerEvent('A')),
                                           setState(() {})
                                         }
                                     }
                                 });
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.edit,
                             size: 14.0,
                           ),
                         ),
-                        SizedBox(width: 3.0),
+                        const SizedBox(width: 3.0),
                         IconButton(
                           onPressed: () async {
                             showDialog(
@@ -349,7 +348,7 @@ class _TimingState extends State<Timing> {
                                       },
                                       child: CupertinoAlertDialog(
                                         content: RichText(
-                                          text: TextSpan(
+                                          text: const TextSpan(
                                             text:
                                                 '¿Esta seguro de eliminar el cronograma?\n',
                                             style: TextStyle(
@@ -374,33 +373,33 @@ class _TimingState extends State<Timing> {
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('Cancelar'),
+                                            child: const Text('Cancelar'),
                                           ),
                                           CupertinoDialogAction(
-                                            child: Text('Aceptar'),
+                                            child: const Text('Aceptar'),
                                             onPressed: () async {
-                                              await timingBloc.add(
+                                              timingBloc.add(
                                                   DeleteTimingPlannerEvent(
                                                       listItemModelTimings
                                                           .results[index]
-                                                          .id_timing));
+                                                          .idTiming));
                                             },
                                           ),
                                         ],
                                       ),
                                     ));
                           },
-                          icon: Icon(Icons.delete_forever),
+                          icon: const Icon(Icons.delete_forever),
                         )
                       ],
                     ),
                     onTap: () {
                       Navigator.of(context).pushNamed('/addActividadesTiming',
                           arguments:
-                              listItemModelTimings.results[index].id_timing);
+                              listItemModelTimings.results[index].idTiming);
                     },
                     title:
-                        Text(listItemModelTimings.results[index].nombre_timing),
+                        Text(listItemModelTimings.results[index].nombreTiming),
                   );
                 })
           ],
@@ -421,11 +420,11 @@ class _TimingState extends State<Timing> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(height: 30, child: Text('Cronogramas')),
-              Container(
+              const SizedBox(height: 30, child: Text('Cronogramas')),
+              SizedBox(
                 height: 30,
                 child: TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       prefixIcon: Icon(
                         Icons.search,
                       ),
@@ -433,13 +432,13 @@ class _TimingState extends State<Timing> {
                   onChanged: (String value) async {
                     if (value.length > 2) {
                       List<dynamic> usrs = itemModelTimings.results
-                          .where((imu) => imu.nombre_timing
+                          .where((imu) => imu.nombreTiming
                               .toLowerCase()
                               .contains(value.toLowerCase()))
                           .toList();
                       setState(() {
                         filterTimings.results.clear();
-                        if (usrs.length > 0) {
+                        if (usrs.isNotEmpty) {
                           for (var usr in usrs) {
                             filterTimings.results.add(usr);
                           }
@@ -457,16 +456,16 @@ class _TimingState extends State<Timing> {
           ),
           rowsPerPage: snapshot.results.length > 8
               ? 8
-              : snapshot.results.length < 1
+              : snapshot.results.isEmpty
                   ? 1
                   : snapshot.results.length,
           showCheckboxColumn: bandera,
           columns: [
             DataColumn(
-                label: Text('Cronograma'),
+                label: const Text('Cronograma'),
                 onSort: (columnIndex, ascending) {
                   setState(() {
-                    snapshot.results.length > 0
+                    snapshot.results.isNotEmpty
                         ? itemModelTimings = onSortColum(
                             columnIndex, ascending, itemModelTimings)
                         : null;
@@ -486,9 +485,9 @@ class _TimingState extends State<Timing> {
       case 0:
         sort[columnIndex]
             ? sortData.results
-                .sort((a, b) => a.nombre_timing.compareTo((b.nombre_timing)))
+                .sort((a, b) => a.nombreTiming.compareTo((b.nombreTiming)))
             : sortData.results
-                .sort((a, b) => b.nombre_timing.compareTo(a.nombre_timing));
+                .sort((a, b) => b.nombreTiming.compareTo(a.nombreTiming));
         break;
     }
     _sortColumnIndex = columnIndex;
@@ -515,7 +514,7 @@ class _DataSource extends DataTableSource {
     _rows = <_Row>[];
     if (context.length > 0) {
       for (int i = 0; i < context.length; i++) {
-        _rows.add(_Row(context[i].id_timing, context[i].nombre_timing));
+        _rows.add(_Row(context[i].idTiming, context[i].nombreTiming));
       }
     } else {
       _rows.add(_Row(null, 'Sin datos'));
@@ -566,7 +565,7 @@ class EditTimingDialog extends StatefulWidget {
   final String name;
   final int idCronograma;
   final String estatus;
-  EditTimingDialog({Key key, this.name, this.idCronograma, this.estatus})
+  const EditTimingDialog({Key key, this.name, this.idCronograma, this.estatus})
       : super(key: key);
 
   @override
@@ -598,7 +597,7 @@ class _EditTimingDialogState extends State<EditTimingDialog> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return AlertDialog(
-      title: Center(child: Text('Editar cronograma')),
+      title: const Center(child: Text('Editar cronograma')),
       content: ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: size.height * 0.6,
@@ -618,7 +617,7 @@ class _EditTimingDialogState extends State<EditTimingDialog> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         initialValue: name,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Nombre del cronograma',
                         ),
@@ -662,22 +661,23 @@ class _EditTimingDialogState extends State<EditTimingDialog> {
           onPressed: () {
             Navigator.of(context).pop(false);
           },
-          child: Text('Cancelar'),
+          child: const Text('Cancelar'),
         ),
         TextButton(
           onPressed: () async {
             if (keyFormCrono.currentState.validate()) {
-              await timingsBloc
-                  .add(UpdateTimingEvent(idCronograma, name, estatus));
+              timingsBloc.add(UpdateTimingEvent(idCronograma, name, estatus));
 
-              await timingsBloc.add(FetchTimingsPorPlannerEvent('A'));
+              timingsBloc.add(FetchTimingsPorPlannerEvent('A'));
 
               Navigator.of(context).pop(true);
             } else {
-              print('Incorrecto');
+              MostrarAlerta(
+                  mensaje: 'Los campos son necesarios',
+                  tipoMensaje: TipoMensaje.error);
             }
           },
-          child: Text('Aceptar'),
+          child: const Text('Aceptar'),
         )
       ],
     );

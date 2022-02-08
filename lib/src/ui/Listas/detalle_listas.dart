@@ -1,6 +1,7 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, no_logic_in_create_state
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/lista/detalle_lista/detalle_listas_bloc.dart';
@@ -22,40 +23,40 @@ class DetalleListas extends StatefulWidget {
 
 class _DetalleListasState extends State<DetalleListas> {
   Map<String, dynamic> listas;
-  GlobalKey<FormState> keyForm = new GlobalKey();
+  GlobalKey<FormState> keyForm = GlobalKey();
   ItemModelDetalleListas itemModeDetallaLista;
   ItemModelListas itemModelLista;
   // Text para forms lista.
-  TextEditingController nombreCtrl = new TextEditingController();
-  TextEditingController descripcionCtrl = new TextEditingController();
+  TextEditingController nombreCtrl = TextEditingController();
+  TextEditingController descripcionCtrl = TextEditingController();
   // Text para forms detalla de listas.
-  TextEditingController cantidadDescCtrl = new TextEditingController();
-  TextEditingController nombreDescCtrl = new TextEditingController();
-  TextEditingController descripcionDescCtrl = new TextEditingController();
+  TextEditingController cantidadDescCtrl = TextEditingController();
+  TextEditingController nombreDescCtrl = TextEditingController();
+  TextEditingController descripcionDescCtrl = TextEditingController();
   // Text para forms detalla de listas (Editar).
-  TextEditingController cantidadEditarDescCtrl = new TextEditingController();
-  TextEditingController nombreEditarDescCtrl = new TextEditingController();
-  TextEditingController descripcionEditarDescCtrl = new TextEditingController();
+  TextEditingController cantidadEditarDescCtrl = TextEditingController();
+  TextEditingController nombreEditarDescCtrl = TextEditingController();
+  TextEditingController descripcionEditarDescCtrl = TextEditingController();
 
   DetalleListasBloc detalleListasBloc;
-  _DetalleListasState(this.listas) {}
+  _DetalleListasState(this.listas);
 
   bool btnAddEditList = false;
 
   // Declaración variables globales.
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
 
   final listaLogic = FetchDetalleListaLogic();
 
   @override
   void initState() {
     detalleListasBloc = BlocProvider.of<DetalleListasBloc>(context);
-    if (this.listas['id_lista'] == null) {
+    if (listas['id_lista'] == null) {
       detalleListasBloc.add(FechtDetalleListaEvent(0));
-    } else if (this.listas['id_lista'] != null) {
-      nombreCtrl.text = this.listas['nombre'];
-      descripcionCtrl.text = this.listas['descripcion'];
-      detalleListasBloc.add(FechtDetalleListaEvent(this.listas['id_lista']));
+    } else if (listas['id_lista'] != null) {
+      nombreCtrl.text = listas['nombre'];
+      descripcionCtrl.text = listas['descripcion'];
+      detalleListasBloc.add(FechtDetalleListaEvent(listas['id_lista']));
     }
     super.initState();
   }
@@ -64,8 +65,8 @@ class _DetalleListasState extends State<DetalleListas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detallado de lista'),
-        actions: [],
+        title: const Text('Detallado de lista'),
+        actions: const [],
         automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
@@ -74,21 +75,21 @@ class _DetalleListasState extends State<DetalleListas> {
           if (state is MostrarDetalleListasState) {
             return _buildList(state.detlistas);
           } else if (state is CreateListasState) {
-            this.listas['id_lista'] = state.id_lista.toString();
-            detalleListasBloc.add(FechtDetalleListaEvent(state.id_lista));
-            return Text('');
-          } else if (this.listas['id_lista'] != null) {
-            return Center(
+            listas['id_lista'] = state.idLista.toString();
+            detalleListasBloc.add(FechtDetalleListaEvent(state.idLista));
+            return const Text('');
+          } else if (listas['id_lista'] != null) {
+            return const Center(
               child: LoadingCustom(),
             );
           } else {
-            return Text('');
+            return const Text('');
           }
         }),
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: UniqueKey(),
-        child: Icon(Icons.download),
+        child: const Icon(Icons.download),
         onPressed: () async {
           final data = await listaLogic
               .downloadPDFDetalleLista(widget.lista['id_lista']);
@@ -109,7 +110,7 @@ class _DetalleListasState extends State<DetalleListas> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: <Widget>[
-          Text('Lista',
+          const Text('Lista',
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 24)),
@@ -120,7 +121,7 @@ class _DetalleListasState extends State<DetalleListas> {
                 icon: Icons.local_activity,
                 item: TextFormField(
                   controller: nombreCtrl,
-                  decoration: new InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Nombre',
                   ),
                   onChanged: (text) {
@@ -136,7 +137,7 @@ class _DetalleListasState extends State<DetalleListas> {
                 icon: Icons.drive_file_rename_outline,
                 item: TextFormField(
                     controller: descripcionCtrl,
-                    decoration: new InputDecoration(labelText: 'Descripción'),
+                    decoration: const InputDecoration(labelText: 'Descripción'),
                     onChanged: (text) {
                       setState(() {
                         btnAddEditList = true;
@@ -147,7 +148,7 @@ class _DetalleListasState extends State<DetalleListas> {
               ),
               btnAddEditList
                   ? Ink(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       width: 100.0,
                       // height: 100.0,
                       decoration: const ShapeDecoration(
@@ -158,7 +159,7 @@ class _DetalleListasState extends State<DetalleListas> {
                         icon: const Icon(Icons.save),
                         color: Colors.white,
                         onPressed: () async {
-                          if (this.listas['id_lista'] == null) {
+                          if (listas['id_lista'] == null) {
                             Map<String, dynamic> json =
                                 await _jsonAgregarLista(context);
                             detalleListasBloc.add(
@@ -167,7 +168,7 @@ class _DetalleListasState extends State<DetalleListas> {
                                 mensaje:
                                     'El elemento se actualizó correctamente.',
                                 tipoMensaje: TipoMensaje.correcto);
-                          } else if (this.listas['id_lista'] != null) {
+                          } else if (listas['id_lista'] != null) {
                             Map<String, dynamic> json =
                                 await _jsonUpdateLista(context);
                             detalleListasBloc.add(
@@ -179,7 +180,7 @@ class _DetalleListasState extends State<DetalleListas> {
                         },
                       ),
                     )
-                  : Text('')
+                  : const Text('')
             ],
           )
         ],
@@ -201,8 +202,9 @@ class _DetalleListasState extends State<DetalleListas> {
               TextFormFields(
                 icon: Icons.tag,
                 item: TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   controller: cantidadDescCtrl,
-                  decoration: new InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Cantidad',
                   ),
                 ),
@@ -213,7 +215,7 @@ class _DetalleListasState extends State<DetalleListas> {
                 icon: Icons.local_activity,
                 item: TextFormField(
                   controller: nombreDescCtrl,
-                  decoration: new InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Nombre',
                   ),
                 ),
@@ -224,7 +226,7 @@ class _DetalleListasState extends State<DetalleListas> {
                 icon: Icons.drive_file_rename_outline,
                 item: TextFormField(
                   controller: descripcionDescCtrl,
-                  decoration: new InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Descripción',
                   ),
                 ),
@@ -232,7 +234,7 @@ class _DetalleListasState extends State<DetalleListas> {
                 ancho: 80.0,
               ),
               Ink(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 width: 100.0,
                 // height: 100.0,
                 decoration: const ShapeDecoration(
@@ -247,7 +249,7 @@ class _DetalleListasState extends State<DetalleListas> {
                         await _jsonDetalleLista(context);
                     detalleListasBloc.add(
                         CreateDetalleListasEvent(json, itemModeDetallaLista));
-                    await _limpiarForm();
+                    _limpiarForm();
                   },
                 ),
               )
@@ -262,13 +264,13 @@ class _DetalleListasState extends State<DetalleListas> {
     return SingleChildScrollView(
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _formLista(),
-            if (this.listas['id_lista'] != null) _formDetalleList(),
-            if (this.listas['id_lista'] != null) _listaDetalle(snapshot)
+            if (listas['id_lista'] != null) _formDetalleList(),
+            if (listas['id_lista'] != null) _listaDetalle(snapshot)
             // Container(
             //     height: 400.0, width: 650.0, child: _listaDetalle(snapshot)),
           ],
@@ -290,12 +292,12 @@ class _DetalleListasState extends State<DetalleListas> {
     // Creación de lista de Widget.
     List<Widget> lista = [];
     // Se agrega el titulo del card
-    final titulo = Text('Detalles de lista',
+    const titulo = Text('Detalles de lista',
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 24));
     // final campos =
-    final size = SizedBox(height: 20);
+    const size = SizedBox(height: 20);
     lista.add(titulo);
     // lista.add(campos);
     lista.add(size);
@@ -307,8 +309,8 @@ class _DetalleListasState extends State<DetalleListas> {
           IconButton(
               onPressed: () => showDialog<void>(
                   context: context,
-                  builder: (BuildContext context) => _eliminarDetalleLista(
-                      opt.id_detalle_lista, opt.id_lista)),
+                  builder: (BuildContext context) =>
+                      _eliminarDetalleLista(opt.idDetalleLista, opt.idLista)),
               icon: const Icon(Icons.delete)),
           IconButton(
               onPressed: () => showDialog<void>(
@@ -332,7 +334,7 @@ class _DetalleListasState extends State<DetalleListas> {
       'cantidad': cantidadDescCtrl.text,
       'nombre': nombreDescCtrl.text,
       'descripcion': descripcionDescCtrl.text,
-      'id_lista': this.listas['id_lista']
+      'id_lista': listas['id_lista']
     };
     return json;
   }
@@ -343,7 +345,7 @@ class _DetalleListasState extends State<DetalleListas> {
     descripcionDescCtrl.text = '';
   }
 
-  _eliminarDetalleLista(int id_detalle_lista, int id_lista) {
+  _eliminarDetalleLista(int idDetalleLista, int idLista) {
     return AlertDialog(
       title: const Text('Eliminar'),
       content: const Text('¿Desea eliminar el elemento?'),
@@ -356,7 +358,7 @@ class _DetalleListasState extends State<DetalleListas> {
           onPressed: () => {
             Navigator.pop(context, 'Aceptar'),
             detalleListasBloc
-                .add(DeleteDetalleListaEvent(id_detalle_lista, id_lista))
+                .add(DeleteDetalleListaEvent(idDetalleLista, idLista))
           },
           child: const Text('Aceptar'),
         ),
@@ -370,30 +372,33 @@ class _DetalleListasState extends State<DetalleListas> {
     descripcionEditarDescCtrl.text = item.descripcion;
     return AlertDialog(
       title: const Text('Editar'),
-      content: Container(
+      content: SizedBox(
         width: 400.0,
         height: 150.0,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: cantidadEditarDescCtrl,
-              decoration: new InputDecoration(
-                labelText: 'Cantidad',
+        child: SingleChildScrollView(
+          controller: ScrollController(),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: cantidadEditarDescCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Cantidad',
+                ),
               ),
-            ),
-            TextFormField(
-              controller: nombreEditarDescCtrl,
-              decoration: new InputDecoration(
-                labelText: 'Nombre',
+              TextFormField(
+                controller: nombreEditarDescCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre',
+                ),
               ),
-            ),
-            TextFormField(
-              controller: descripcionEditarDescCtrl,
-              decoration: new InputDecoration(
-                labelText: 'Descripción',
-              ),
-            )
-          ],
+              TextFormField(
+                controller: descripcionEditarDescCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Descripción',
+                ),
+              )
+            ],
+          ),
         ),
       ),
       actions: <Widget>[
@@ -422,8 +427,8 @@ class _DetalleListasState extends State<DetalleListas> {
       'cantidad': cantidadEditarDescCtrl.text,
       'nombre': nombreEditarDescCtrl.text,
       'descripcion': descripcionEditarDescCtrl.text,
-      'id_detalle_lista': item.id_detalle_lista,
-      'id_lista': item.id_lista
+      'id_detalle_lista': item.idDetalleLista,
+      'id_lista': item.idLista
     };
     return json;
   }
@@ -441,7 +446,7 @@ class _DetalleListasState extends State<DetalleListas> {
     Map<String, dynamic> json = {
       'nombre': nombreCtrl.text,
       'descripcion': descripcionCtrl.text,
-      'id_lista': this.listas['id_lista']
+      'id_lista': listas['id_lista']
     };
     return json;
   }

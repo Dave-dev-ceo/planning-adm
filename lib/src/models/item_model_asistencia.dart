@@ -21,7 +21,7 @@ class ItemModelAsistencia {
       _Result result = _Result.fromModel(_results[i]);
       temp.add(result);
     }
-    return new ItemModelAsistencia(temp);
+    return ItemModelAsistencia(temp);
   }
 
   ItemModelAsistencia copyWith(ItemModelAsistencia obj) {
@@ -59,23 +59,23 @@ class _Result {
     _asistencia = dataObj._asistencia;
   }
 
-  int get id_invitado => this._idInvitado;
+  int get idInvitado => _idInvitado;
 
-  set id_invitado(value) => this._idInvitado = value;
+  set idInvitado(value) => _idInvitado = value;
 
-  String get nombre => this._nombreCompleto;
+  String get nombre => _nombreCompleto;
 
-  set nombre(value) => this._nombreCompleto = value;
+  set nombre(value) => _nombreCompleto = value;
 
-  String get mesa => this._mesa;
+  String get mesa => _mesa;
 
-  set mesa(value) => this._mesa = value;
+  set mesa(value) => _mesa = value;
 
-  String get grupo => this._grupo;
+  String get grupo => _grupo;
 
-  set grupo(value) => this._grupo = value;
+  set grupo(value) => _grupo = value;
 
-  bool get asistencia => this._asistencia;
+  bool get asistencia => _asistencia;
 
-  set asistencia(value) => this._asistencia = value;
+  set asistencia(value) => _asistencia = value;
 }

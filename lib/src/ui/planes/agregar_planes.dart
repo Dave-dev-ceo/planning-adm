@@ -16,7 +16,7 @@ import 'package:planning/src/models/item_model_planes.dart';
 
 class AgregarPlanes extends StatefulWidget {
   final List<TimingModel> lista;
-  AgregarPlanes({Key key, @required this.lista}) : super(key: key);
+  const AgregarPlanes({Key key, @required this.lista}) : super(key: key);
 
   @override
   _AgregarPlanesState createState() => _AgregarPlanesState();
@@ -31,7 +31,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
 
   // variables class
   List<TareaPlanner> _listTare;
-  String _condicionQuery = 'AND ea.estatus_calendar = true';
+  final String _condicionQuery = 'AND ea.estatus_calendar = true';
 
   @override
   void initState() {
@@ -48,14 +48,14 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
 
   // creo el scaffold muestra la vista - v1
   Widget _crearScaffold() {
-    return new WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
         _planesBloc.add(GetTimingsAndActivitiesEvent());
         return true;
       },
-      child: new Scaffold(
-        appBar: new AppBar(
-          title: Text('Lista de planes'),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Lista de planes'),
         ),
         body: _buildBloc(),
       ),
@@ -66,32 +66,31 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
   Widget _buildBloc() {
     return BlocBuilder<PlanesBloc, PlanesState>(builder: (context, state) {
       // state ini
-      if (state is InitiaPlaneslState)
-        return Center(child: LoadingCustom());
-      // state log
-      else if (state is LodingPlanesState)
-        return Center(child: LoadingCustom());
-      // state select
-      else if (state is SelectPlanesState) {
+      if (state is InitiaPlaneslState) {
+        return const Center(child: LoadingCustom());
+      } else if (state is LodingPlanesState) {
+        return const Center(child: LoadingCustom());
+      } else if (state is SelectPlanesState) {
         // evita que se reescriba la lista
         if (state.planes != null) {
           if (_itemModel != state.planes) {
             _itemModel = state.planes;
             if (_itemModel != null) {
-              if (widget.lista.length > 0)
+              if (widget.lista.isNotEmpty) {
                 _listTare = _crearListaEditableConDatos(_itemModel);
-              else
+              } else {
                 _listTare = _crearListaEditableSinDatos(_itemModel);
+              }
             }
           }
         } else {
           _planesBloc.add(SelectPlanesEvent());
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         }
         if (_itemModel != null) {
           return _crearStickyHeader(_itemModel);
         } else {
-          return Center(child: Text('Sin datos'));
+          return const Center(child: Text('Sin datos'));
         }
       }
       // state create
@@ -101,7 +100,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       }
       // no state
       else {
-        return Center(child: LoadingCustom());
+        return const Center(child: LoadingCustom());
       }
     });
   }
@@ -109,7 +108,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
   // creo el StickyHeader
   Widget _crearStickyHeader(ItemModelPlanes model) {
     return Container(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Card(
           child: ListView(
             children: [
@@ -125,10 +124,10 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
   // header
   Container _header() {
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       width: double.infinity,
       color: Colors.white,
-      child: Text(
+      child: const Text(
         'Selecciona los planes para tu evento',
         style: TextStyle(fontSize: 20.0),
       ),
@@ -138,20 +137,20 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
   // contetnt
   Container _content(ItemModelPlanes model) {
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _crearViewExpanded(model),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           ElevatedButton(
-            child: Text('Agregar'),
+            child: const Text('Agregar'),
             onPressed:
-                widget.lista.length > 0 ? _eventoAgregarData : _eventoAgregar,
+                widget.lista.isNotEmpty ? _eventoAgregarData : _eventoAgregar,
           ),
         ],
       ),
@@ -185,7 +184,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       }
 
       // juntando las tareas con sus actividades
-      if (i == 0)
+      if (i == 0) {
         tempTarea.add(TareaPlanner(
             idTareaPlanner: model.planes[i].idPlan,
             nombreTareaPlanner: model.planes[i].nombrePlan,
@@ -193,8 +192,8 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
             checkTarePlanner: false,
             expandedTarePlanner: false,
             actividadTareaPlanner: tempActividad));
-      else {
-        if (model.planes[i].idPlan != model.planes[(i - 1)].idPlan)
+      } else {
+        if (model.planes[i].idPlan != model.planes[(i - 1)].idPlan) {
           tempTarea.add(TareaPlanner(
               idTareaPlanner: model.planes[i].idPlan,
               nombreTareaPlanner: model.planes[i].nombrePlan,
@@ -202,6 +201,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
               checkTarePlanner: false,
               expandedTarePlanner: false,
               actividadTareaPlanner: tempActividad));
+        }
       }
     }
 
@@ -235,7 +235,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       }
 
       // juntando las tareas con sus actividades
-      if (i == 0)
+      if (i == 0) {
         tempTarea.add(TareaPlanner(
             idTareaPlanner: model.planes[i].idPlan,
             nombreTareaPlanner: model.planes[i].nombrePlan,
@@ -243,8 +243,8 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
             expandedTarePlanner: false,
             isEvento: false,
             actividadTareaPlanner: tempActividad));
-      else {
-        if (model.planes[i].idPlan != model.planes[(i - 1)].idPlan)
+      } else {
+        if (model.planes[i].idPlan != model.planes[(i - 1)].idPlan) {
           tempTarea.add(TareaPlanner(
               idTareaPlanner: model.planes[i].idPlan,
               nombreTareaPlanner: model.planes[i].nombrePlan,
@@ -252,18 +252,19 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
               expandedTarePlanner: false,
               isEvento: false,
               actividadTareaPlanner: tempActividad));
+        }
       }
     }
 
-    tempTarea.forEach((tareaHere) {
-      widget.lista.forEach((tareaThere) {
+    for (var tareaHere in tempTarea) {
+      for (var tareaThere in widget.lista) {
         if (tareaThere.idPlanerOld == tareaHere.idTareaPlanner) {
           tareaHere.idTareaPlanner = tareaThere.idPlanner;
           tareaHere.checkTarePlanner = true;
           tareaHere.isEvento = true;
 
-          tareaHere.actividadTareaPlanner.forEach((actividadHere) {
-            tareaThere.actividades.forEach((actividadThere) {
+          for (var actividadHere in tareaHere.actividadTareaPlanner) {
+            for (var actividadThere in tareaThere.actividades) {
               if (actividadHere.idActividadPlanner ==
                   actividadThere.idActividadOld) {
                 actividadHere.idActividadPlanner =
@@ -271,21 +272,22 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
                 actividadHere.checkActividadPlanner = true;
                 actividadHere.isEvento = true;
               }
-            });
-          });
+            }
+          }
         }
-      });
-    });
+      }
+    }
 
     return tempTarea; // enviamos la lista
   }
 
   // creamos una promesa de una lista
   Future<List<TareaPlanner>> _promiseList(ItemModelPlanes model) async {
-    if (widget.lista.length > 0)
+    if (widget.lista.isNotEmpty) {
       return _crearListaEditableSinDatos(model);
-    else
+    } else {
       return _crearListaEditableConDatos(model);
+    }
   }
 
   // creamos los expandeds
@@ -327,9 +329,9 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
                     _listTare[i].checkTarePlanner = valor;
 
                     // forEach para seleccionar a todas las actividades de la tarea
-                    _listTare[i].actividadTareaPlanner.forEach((actividad) {
+                    for (var actividad in _listTare[i].actividadTareaPlanner) {
                       actividad.checkActividadPlanner = valor;
-                    });
+                    }
                   });
                 },
               ),
@@ -345,7 +347,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
           },
           isExpanded: _listTare[i].expandedTarePlanner ?? false,
           body: Container(
-            padding: EdgeInsets.only(left: 20.0),
+            padding: const EdgeInsets.only(left: 20.0),
             child: Column(
               children: listWidget,
             ),
@@ -359,14 +361,14 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
 
   // creamos la vista de expanded
   Widget _crearViewExpanded(ItemModelPlanes model) {
-    if (model.planes.length > 0) {
+    if (model.planes.isNotEmpty) {
       return FutureBuilder<List<TareaPlanner>>(
           future: _promiseList(model),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SingleChildScrollView(
                 child: ExpansionPanelList(
-                  animationDuration: Duration(milliseconds: 500),
+                  animationDuration: const Duration(milliseconds: 500),
                   expansionCallback: (int index, bool isExpanded) {
                     setState(() {
                       _listTare[index].expandedTarePlanner = !isExpanded;
@@ -375,15 +377,17 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
                   children: _buildListExpanded(snapshot.data),
                 ),
               );
-            } else
-              return Center(
+            } else {
+              return const Center(
                 child: LoadingCustom(),
               );
+            }
           });
-    } else
-      return Center(
+    } else {
+      return const Center(
         child: Text('Sin datos'),
       );
+    }
   }
 
   /* seccion de evento */
@@ -393,12 +397,12 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
     List<TareaPlanner> tareaPlaner = []; // lista ciclo 1
 
     // ciclo 1 manejar tareas
-    _listTare.forEach((tarea) {
+    for (var tarea in _listTare) {
       List<ActividadPlanner> actividadPlaner = []; // lista ciclo 2
       bool bandera = false; // bandera para agregar lo que esta marcado
 
       // ciclo 2 manejar actividades
-      tarea.actividadTareaPlanner.forEach((actividad) {
+      for (var actividad in tarea.actividadTareaPlanner) {
         // agregar actividades marcadas
         if (actividad.checkActividadPlanner) {
           actividadPlaner.add(ActividadPlanner(
@@ -413,29 +417,31 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
               isEvento: false));
           bandera = true;
         }
-      });
+      }
 
       // agregar tareas & actividades
-      if (bandera)
+      if (bandera) {
         tareaPlaner.add(TareaPlanner(
             idTareaPlanner: tarea.idTareaPlanner,
             nombreTareaPlanner: tarea.nombreTareaPlanner,
             actividadTareaPlanner: actividadPlaner,
             isEvento: false));
-    });
+      }
+    }
 
     // enviamos al evento
-    if (tareaPlaner.length > 0) {
+    if (tareaPlaner.isNotEmpty) {
       // regresamos
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
       _planesBloc.add(GetTimingsAndActivitiesEvent());
       Navigator.pop(context);
       MostrarAlerta(
           mensaje: 'Planes agregados.', tipoMensaje: TipoMensaje.correcto);
-    } else
+    } else {
       MostrarAlerta(
           mensaje: 'Agrege un plan por favor...',
           tipoMensaje: TipoMensaje.advertencia);
+    }
   }
 
   //  creamos lista con las tareas & actividades que van al evento sin repetir || revisar en el metodo anterior se puede hacer esto
@@ -443,12 +449,12 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
     List<TareaPlanner> tareaPlaner = []; // lista ciclo 1
 
     // ciclo 1 manejar tareas
-    _listTare.forEach((tarea) {
+    for (var tarea in _listTare) {
       List<ActividadPlanner> actividadPlaner = []; // lista ciclo 2
       bool bandera = false; // bandera para agregar lo que esta marcado
 
       // ciclo 2 manejar actividades
-      tarea.actividadTareaPlanner.forEach((actividad) {
+      for (var actividad in tarea.actividadTareaPlanner) {
         // agregar actividades marcadas
         if (actividad.checkActividadPlanner) {
           actividadPlaner.add(ActividadPlanner(
@@ -463,29 +469,31 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
               isEvento: actividad.isEvento));
           bandera = true;
         }
-      });
+      }
 
       // agregar tareas & actividades
-      if (bandera)
+      if (bandera) {
         tareaPlaner.add(TareaPlanner(
             idTareaPlanner: tarea.idTareaPlanner,
             nombreTareaPlanner: tarea.nombreTareaPlanner,
             actividadTareaPlanner: actividadPlaner,
             isEvento: tarea.isEvento));
-    });
+      }
+    }
 
     // enviamos al evento
-    if (tareaPlaner.length > 0) {
+    if (tareaPlaner.isNotEmpty) {
       // regresamos
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
       _planesBloc.add(GetTimingsAndActivitiesEvent());
       Navigator.pop(context);
       MostrarAlerta(
           mensaje: 'Planes agregados.', tipoMensaje: TipoMensaje.correcto);
-    } else
+    } else {
       MostrarAlerta(
           mensaje: 'Agrege un plan por favor...',
           tipoMensaje: TipoMensaje.advertencia);
+    }
   }
 }
 

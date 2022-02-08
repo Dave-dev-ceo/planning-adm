@@ -9,9 +9,9 @@ class ItemModelAutorizacion {
     List<_Autorizacion> temp = []; // lista temporal
 
     // extramos los datos | llenamos lista - metodo forEach
-    pardedJson.forEach((data) {
+    for (var data in pardedJson) {
       temp.add(_Autorizacion(data));
-    });
+    }
 
     _autorizacion = temp; // guardamos en la lista
   }
@@ -40,20 +40,20 @@ class _Autorizacion {
   }
 
   // ini getters
-  int get idAutorizacion => this._idAutorizacion;
-  String get descripcionAutorizacion => this._descripcionAutorizacion;
-  String get nombre => this._nombre;
-  int get idEvidencia => this._idEvidencia;
-  String get archivo => this._archivo;
-  String get comentario => this._comentario;
+  int get idAutorizacion => _idAutorizacion;
+  String get descripcionAutorizacion => _descripcionAutorizacion;
+  String get nombre => _nombre;
+  int get idEvidencia => _idEvidencia;
+  String get archivo => _archivo;
+  String get comentario => _comentario;
   // fin getters
 
   // ini setters
-  set idAutorizacion(value) => this._idAutorizacion;
-  set descripcionAutorizacion(value) => this._descripcionAutorizacion;
-  set nombre(value) => this._nombre;
-  set idEvidencia(value) => this._idEvidencia;
-  set archivo(value) => this._archivo;
-  set comentario(value) => this._comentario;
+  set idAutorizacion(value) => _idAutorizacion;
+  set descripcionAutorizacion(value) => _descripcionAutorizacion;
+  set nombre(value) => _nombre;
+  set idEvidencia(value) => _idEvidencia;
+  set archivo(value) => _archivo;
+  set comentario(value) => _comentario;
   // fin setters
 }

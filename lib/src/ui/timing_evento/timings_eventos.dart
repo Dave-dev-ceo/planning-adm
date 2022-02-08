@@ -52,9 +52,9 @@ class _TimingsEventosState extends State<TimingsEventos> {
     return BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
       builder: (context, state) {
         if (state is ActividadestimingInitial) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is LoadingActividadesTimingsState) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is MostrarActividadesTimingsEventosState) {
           // buscador en header
           if (state.actividadesTimings != null) {
@@ -67,31 +67,32 @@ class _TimingsEventosState extends State<TimingsEventos> {
             }
           } else {
             eventoTimingBloc.add(FetchActividadesTimingsPorIdPlannerEvent());
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           }
           if (copyItemModel != null) {
             return _crearVista(copyItemModel);
           } else {
-            return Center(child: Text('Sin datos'));
+            return const Center(child: Text('Sin datos'));
           }
         } else if (state is AddActividadesState) {
           // eventoTimingBloc.add(FetchActividadesTimingsPorIdPlannerEvent());
           // return Center(child: LoadingCustom());
-          _listFull.forEach((tarea) {
-            tarea.actividad.forEach((actividad) {
-              if (tarea.id_tarea == state.idTarea &&
-                  actividad.id_actividad == 0 &&
-                  tarea.nueva_actividad == true)
-                actividad.id_actividad = state.idActividad;
-            });
-          });
+          for (var tarea in _listFull) {
+            for (var actividad in tarea.actividad) {
+              if (tarea.idTarea == state.idTarea &&
+                  actividad.idActividad == 0 &&
+                  tarea.nuevaActividad == true) {
+                actividad.idActividad = state.idActividad;
+              }
+            }
+          }
           return _crearVista(copyItemModel);
         } else if (state is ErrorMostrarActividadesTimingsState) {
           return Center(
             child: Text(state.message),
           );
         } else {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         }
       },
     );
@@ -106,7 +107,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
             header: _agregarHeader(),
             content: _agregarActividades(copyItemModel),
           ),
-          SizedBox(
+          const SizedBox(
             height: 60.0,
           )
         ],
@@ -119,14 +120,14 @@ class _TimingsEventosState extends State<TimingsEventos> {
   // creamos header
   Widget _agregarHeader() {
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       child: Card(child: _crearHeader()),
     );
   }
 
   Widget _crearHeader() {
     return Container(
-      padding: EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +136,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
           _tituloHeader(),
           // SizedBox(height: 10.0,),
           // _buscadorHeader(),
-          SizedBox(
+          const SizedBox(
             height: 15.0,
           ),
           _checkActividadesHeader(),
@@ -145,7 +146,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
   }
 
   Widget _tituloHeader() {
-    return Text(
+    return const Text(
       'Actividades',
       style: TextStyle(fontSize: 20.0),
     );
@@ -153,7 +154,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
 
   Widget _buscadorHeader() {
     return TextField(
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           prefixIcon: Icon(
             Icons.search,
           ),
@@ -172,24 +173,24 @@ class _TimingsEventosState extends State<TimingsEventos> {
           onChanged: (valor) {
             setState(() {
               _allCheck = !_allCheck;
-              _listFull.forEach((tarea) {
-                tarea.check_tarea = _allCheck;
-                tarea.expanded_tarea = _allCheck;
-                tarea.actividad.forEach((actividad) {
-                  actividad.agregar_actividad = _allCheck;
-                });
-              });
+              for (var tarea in _listFull) {
+                tarea.checkTarea = _allCheck;
+                tarea.expandedTarea = _allCheck;
+                for (var actividad in tarea.actividad) {
+                  actividad.agregarActividad = _allCheck;
+                }
+              }
             });
           },
         ),
-        Text('Seleccionar todo.'),
+        const Text('Seleccionar todo.'),
       ],
     );
   }
 
   Widget _agregarActividades(copyItemModel) {
     return Container(
-        padding: EdgeInsets.all(20.0), child: listaToda(copyItemModel));
+        padding: const EdgeInsets.all(20.0), child: listaToda(copyItemModel));
   }
 
   // Cargar las actividades - eventos/todo
@@ -199,30 +200,31 @@ class _TimingsEventosState extends State<TimingsEventos> {
   }
 
   Widget listaToda(ItemModelActividadesTimings itemModel) {
-    if (itemModel.results.length > 0) {
+    if (itemModel.results.isNotEmpty) {
       return FutureBuilder<List<Tarea>>(
           future: loadData(itemModel),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return SingleChildScrollView(
                 child: ExpansionPanelList(
-                    animationDuration: Duration(milliseconds: 500),
+                    animationDuration: const Duration(milliseconds: 500),
                     expansionCallback: (int index, bool isExpanded) {
                       setState(() {
-                        if (_listFull[index].check_tarea == true)
-                          _listFull[index].expanded_tarea = !isExpanded;
+                        if (_listFull[index].checkTarea == true) {
+                          _listFull[index].expandedTarea = !isExpanded;
+                        }
                       });
                     },
                     children: buildPanelList(snapshot.data)),
               );
             } else {
-              return Center(
+              return const Center(
                 child: LoadingCustom(),
               );
             }
           });
     } else {
-      return Center(child: Text('Sin datos'));
+      return const Center(child: Text('Sin datos'));
     }
   }
 
@@ -231,24 +233,24 @@ class _TimingsEventosState extends State<TimingsEventos> {
     for (int i = 0; i < data.length; i++) {
       List<Widget> listTiles = [];
       for (int j = 0; j < _listFull[i].actividad.length; j++) {
-        if (_listFull[i].actividad[j].id_actividad != 0) {
+        if (_listFull[i].actividad[j].idActividad != 0) {
           listTiles.add(ListTile(
             leading: Checkbox(
-              value: _listFull[i].actividad[j].agregar_actividad,
+              value: _listFull[i].actividad[j].agregarActividad,
               onChanged: (valor) {
                 setState(() {
-                  _listFull[i].actividad[j].agregar_actividad = valor;
+                  _listFull[i].actividad[j].agregarActividad = valor;
                 });
               },
             ),
-            title: Text('${_listFull[i].actividad[j].nombre_actividad}'),
-            subtitle: Text('${_listFull[i].actividad[j].describe_actividad}'),
-            trailing: _listFull[i].actividad[j].agregar_actividad == true
+            title: Text(_listFull[i].actividad[j].nombreActividad),
+            subtitle: Text(_listFull[i].actividad[j].describeActividad),
+            trailing: _listFull[i].actividad[j].agregarActividad == true
                 ? _calendaryIcon(
-                    _listFull[i].actividad[j].fecha_inicio_actividad,
-                    _listFull[i].actividad[j].id_actividad,
-                    _listFull[i].actividad[j].fecha_inicio_evento,
-                    _listFull[i].actividad[j].fecha_final_evento,
+                    _listFull[i].actividad[j].fechaInicioActividad,
+                    _listFull[i].actividad[j].idActividad,
+                    _listFull[i].actividad[j].fechaInicioEvento,
+                    _listFull[i].actividad[j].fechaFinalEvento,
                     _listFull[i].actividad[j].dias)
                 : null,
             // onTap: _listFull[i].actividad[j].agregar_actividad == true ? (){} : null,
@@ -264,7 +266,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               Wrap(
@@ -276,14 +278,13 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     ancho: 80.0,
                     item: TextFormField(
                       controller: TextEditingController(
-                          text:
-                              '${_listFull[i].actividad[j].nombre_actividad}'),
-                      decoration: new InputDecoration(
+                          text: _listFull[i].actividad[j].nombreActividad),
+                      decoration: InputDecoration(
                           labelText: 'Nombre:',
                           errorText:
                               nombreValidador ? 'Campo obligatorio.' : null),
                       onChanged: (valor) {
-                        _listFull[i].actividad[j].nombre_actividad = valor;
+                        _listFull[i].actividad[j].nombreActividad = valor;
                       },
                     ),
                   ),
@@ -293,21 +294,20 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     ancho: 80.0,
                     item: TextFormField(
                       controller: TextEditingController(
-                          text:
-                              '${_listFull[i].actividad[j].describe_actividad}'),
-                      decoration: new InputDecoration(
+                          text: _listFull[i].actividad[j].describeActividad),
+                      decoration: InputDecoration(
                           labelText: 'Descripción:',
                           errorText: descripcionValidador
                               ? 'Campo obligatorio.'
                               : null),
                       onChanged: (valor) {
-                        _listFull[i].actividad[j].describe_actividad = valor;
+                        _listFull[i].actividad[j].describeActividad = valor;
                       },
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               Wrap(
@@ -319,9 +319,9 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     ancho: 80.0,
                     item: Row(
                       children: [
-                        Expanded(child: Text("Duración en días:")),
+                        const Expanded(child: Text("Duración en días:")),
                         IconButton(
-                          icon: Icon(Icons.remove),
+                          icon: const Icon(Icons.remove),
                           onPressed: _listFull[i].actividad[j].dias > 0
                               ? () {
                                   setState(
@@ -329,11 +329,11 @@ class _TimingsEventosState extends State<TimingsEventos> {
                                 }
                               : null,
                         ),
-                        Container(
+                        SizedBox(
                           width: 45,
                           height: 45,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 3),
+                            padding: const EdgeInsets.symmetric(vertical: 3),
                             child: TextFormField(
                               controller: TextEditingController(
                                   text: '${_listFull[i].actividad[j].dias}'),
@@ -348,7 +348,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                           ),
                         ),
                         IconButton(
-                            icon: Icon(Icons.add),
+                            icon: const Icon(Icons.add),
                             onPressed: () {
                               setState(() => _listFull[i].actividad[j].dias++);
                             })
@@ -360,19 +360,18 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     large: 500.0,
                     ancho: 80,
                     item: CheckboxListTile(
-                      title: Text('Visible para novios:'),
+                      title: const Text('Visible para novios:'),
                       controlAffinity: ListTileControlAffinity.platform,
-                      value: _listFull[i].actividad[j].visible_actividad,
+                      value: _listFull[i].actividad[j].visibleActividad,
                       onChanged: (valor) {
-                        setState(() => _listFull[i]
-                            .actividad[j]
-                            .visible_actividad = valor);
+                        setState(() =>
+                            _listFull[i].actividad[j].visibleActividad = valor);
                       },
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               Wrap(
@@ -385,47 +384,47 @@ class _TimingsEventosState extends State<TimingsEventos> {
                       // item: _crearSelect(listActividad, idTarea, idActividad),
                       item: DropdownButton(
                         isExpanded: true,
-                        value: _listFull[i].actividad[j].predecesor_actividad,
+                        value: _listFull[i].actividad[j].predecesorActividad,
                         icon: const Icon(Icons.arrow_drop_down_outlined),
                         iconSize: 24,
                         elevation: 16,
                         style: const TextStyle(color: Color(0xFF000000)),
                         underline: Container(
                           height: 2,
-                          color: Color(0xFF000000),
+                          color: const Color(0xFF000000),
                         ),
                         onChanged: (valor) {
                           setState(() {
-                            _listFull[i].actividad[j].predecesor_actividad =
+                            _listFull[i].actividad[j].predecesorActividad =
                                 valor;
                           });
                         },
                         items: _listFull[i].actividad.map((item) {
                           return DropdownMenuItem(
-                            value: item.id_actividad,
+                            value: item.idActividad,
                             child: Text(
-                              item.id_actividad != 0
-                                  ? item.nombre_actividad
+                              item.idActividad != 0
+                                  ? item.nombreActividad
                                   : 'Selecciona un predecesor',
-                              style: TextStyle(fontSize: 18),
+                              style: const TextStyle(fontSize: 18),
                             ),
                           );
                         }).toList(),
                       )),
                   Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: ElevatedButton(
-                      child: Tooltip(
+                      child: const Tooltip(
                         child: Icon(Icons.save_sharp),
                         message: "Agregar actividad.",
                       ),
                       onPressed: () {
                         // validamos data
-                        if (_listFull[i].actividad[j].nombre_actividad == '') {
+                        if (_listFull[i].actividad[j].nombreActividad == '') {
                           setState(() => nombreValidador = true);
                         } else if (_listFull[i]
                                 .actividad[j]
-                                .describe_actividad ==
+                                .describeActividad ==
                             '') {
                           setState(() => descripcionValidador = true);
                         } else if (_listFull[i].actividad[j].dias <= 0) {
@@ -439,42 +438,41 @@ class _TimingsEventosState extends State<TimingsEventos> {
                           Map<String, dynamic> actividadTemporal = {
                             'id_actividad': _listFull[i]
                                 .actividad[j]
-                                .id_actividad
+                                .idActividad
                                 .toString(),
                             'nombre_actividad': _listFull[i]
                                 .actividad[j]
-                                .nombre_actividad
+                                .nombreActividad
                                 .toString(),
                             'describe_actividad': _listFull[i]
                                 .actividad[j]
-                                .describe_actividad
+                                .describeActividad
                                 .toString(),
                             'dias': _listFull[i].actividad[j].dias.toString(),
                             'fecha_inicio_actividad': DateTime.now().toString(),
                             'agregar_actividad': false.toString(),
                             'visible_actividad': _listFull[i]
                                 .actividad[j]
-                                .visible_actividad
+                                .visibleActividad
                                 .toString(),
-                            'predecesor_actividad': _listFull[i]
+                            'predecesor_actividad':
+                                _listFull[i].actividad[j].predecesorActividad ==
+                                        0
+                                    ? '0'
+                                    : _listFull[i]
                                         .actividad[j]
-                                        .predecesor_actividad ==
-                                    0
-                                ? '0'
-                                : _listFull[i]
-                                    .actividad[j]
-                                    .predecesor_actividad
-                                    .toString(),
+                                        .predecesorActividad
+                                        .toString(),
                           };
                           _addActividad(
-                              _listFull[i].id_tarea, actividadTemporal);
+                              _listFull[i].idTarea, actividadTemporal);
                         }
                       },
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
             ],
@@ -484,35 +482,35 @@ class _TimingsEventosState extends State<TimingsEventos> {
 
       // add new activities
       listTiles.add(Container(
-          padding: EdgeInsets.only(right: 15.0, bottom: 15.0),
+          padding: const EdgeInsets.only(right: 15.0, bottom: 15.0),
           child: Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton(
               child: Tooltip(
-                child: _listFull[i].nueva_actividad == true
-                    ? Icon(Icons.add)
-                    : Icon(Icons.remove),
+                child: _listFull[i].nuevaActividad == true
+                    ? const Icon(Icons.add)
+                    : const Icon(Icons.remove),
                 message: "Agregar actividades.",
               ),
               onPressed: () {
                 setState(() {
-                  if (_listFull[i].nueva_actividad == true) {
+                  if (_listFull[i].nuevaActividad == true) {
                     _listFull[i].actividad.add(Actividad(
-                          id_actividad: 0,
-                          nombre_actividad: '',
-                          describe_actividad: '',
+                          idActividad: 0,
+                          nombreActividad: '',
+                          describeActividad: '',
                           dias: 1,
-                          fecha_inicio_actividad: DateTime.now(),
-                          agregar_actividad: false,
-                          visible_actividad: false,
-                          predecesor_actividad: 0,
-                          fecha_inicio_evento: _listFull[i].fecha_inicio_evento,
-                          fecha_final_evento: _listFull[i].fecha_final_evento,
+                          fechaInicioActividad: DateTime.now(),
+                          agregarActividad: false,
+                          visibleActividad: false,
+                          predecesorActividad: 0,
+                          fechaInicioEvento: _listFull[i].fechaInicioEvento,
+                          fechaFinalEvento: _listFull[i].fechaFinalEvento,
                         ));
-                    _listFull[i].nueva_actividad = false;
+                    _listFull[i].nuevaActividad = false;
                   } else {
-                    _listFull[i].actividad..removeLast();
-                    _listFull[i].nueva_actividad = true;
+                    _listFull[i].actividad.removeLast();
+                    _listFull[i].nuevaActividad = true;
                   }
                 });
               },
@@ -524,18 +522,19 @@ class _TimingsEventosState extends State<TimingsEventos> {
         headerBuilder: (context, isExpanded) {
           return ListTile(
             leading: Checkbox(
-              value: _listFull[i].check_tarea ?? false,
+              value: _listFull[i].checkTarea ?? false,
               onChanged: (valor) {
                 setState(() {
-                  if (_listFull[i].expanded_tarea == false)
-                    _listFull[i].check_tarea = valor;
+                  if (_listFull[i].expandedTarea == false) {
+                    _listFull[i].checkTarea = valor;
+                  }
                 });
               },
             ),
-            title: Text("${data[i].nombre_tarea}"),
+            title: Text(data[i].nombreTarea),
           );
         },
-        isExpanded: _listFull[i].expanded_tarea ?? false,
+        isExpanded: _listFull[i].expandedTarea ?? false,
         body: Column(
           children: listTiles,
         ),
@@ -558,45 +557,45 @@ class _TimingsEventosState extends State<TimingsEventos> {
         if (itemInMethod.results[i].idEventoTiming ==
             itemInMethod.results[j].idEventoTiming) {
           tempActividad.add(Actividad(
-            id_actividad: itemInMethod.results[j].idEventoActividad,
-            nombre_actividad: itemInMethod.results[j].nombreEventoActividad,
-            describe_actividad: itemInMethod.results[j].descripcion,
+            idActividad: itemInMethod.results[j].idEventoActividad,
+            nombreActividad: itemInMethod.results[j].nombreEventoActividad,
+            describeActividad: itemInMethod.results[j].descripcion,
             dias: itemInMethod.results[j].dia,
-            fecha_inicio_actividad:
-                itemInMethod.results[j].fechaInicioActividad,
-            fecha_inicio_evento: itemInMethod.results[j].fechaInicioEvento,
-            fecha_final_evento: itemInMethod.results[j].fechaFinalEvento,
-            agregar_actividad: itemInMethod.results[j].addActividad,
+            fechaInicioActividad: itemInMethod.results[j].fechaInicioActividad,
+            fechaInicioEvento: itemInMethod.results[j].fechaInicioEvento,
+            fechaFinalEvento: itemInMethod.results[j].fechaFinalEvento,
+            agregarActividad: itemInMethod.results[j].addActividad,
           ));
 
           if (itemInMethod.results[j].addActividad == true) isOpen = true;
         }
       }
       //
-      if (i == 0)
+      if (i == 0) {
         tempTarea.add(Tarea(
-          id_tarea: itemInMethod.results[i].idEventoTiming,
-          nombre_tarea: itemInMethod.results[i].nombreEventoTarea,
-          check_tarea: isOpen,
-          expanded_tarea: isOpen,
-          nueva_actividad: true,
-          fecha_inicio_evento: itemInMethod.results[i].fechaInicioEvento,
-          fecha_final_evento: itemInMethod.results[i].fechaFinalEvento,
+          idTarea: itemInMethod.results[i].idEventoTiming,
+          nombreTarea: itemInMethod.results[i].nombreEventoTarea,
+          checkTarea: isOpen,
+          expandedTarea: isOpen,
+          nuevaActividad: true,
+          fechaInicioEvento: itemInMethod.results[i].fechaInicioEvento,
+          fechaFinalEvento: itemInMethod.results[i].fechaFinalEvento,
           actividad: tempActividad,
         ));
-      else {
+      } else {
         if (itemInMethod.results[(i - 1)].idEventoTiming !=
-            itemInMethod.results[i].idEventoTiming)
+            itemInMethod.results[i].idEventoTiming) {
           tempTarea.add(Tarea(
-            id_tarea: itemInMethod.results[i].idEventoTiming,
-            nombre_tarea: itemInMethod.results[i].nombreEventoTarea,
-            check_tarea: isOpen,
-            expanded_tarea: isOpen,
-            nueva_actividad: true,
-            fecha_inicio_evento: itemInMethod.results[i].fechaInicioEvento,
-            fecha_final_evento: itemInMethod.results[i].fechaFinalEvento,
+            idTarea: itemInMethod.results[i].idEventoTiming,
+            nombreTarea: itemInMethod.results[i].nombreEventoTarea,
+            checkTarea: isOpen,
+            expandedTarea: isOpen,
+            nuevaActividad: true,
+            fechaInicioEvento: itemInMethod.results[i].fechaInicioEvento,
+            fechaFinalEvento: itemInMethod.results[i].fechaFinalEvento,
             actividad: tempActividad,
           ));
+        }
       }
     }
 
@@ -612,15 +611,15 @@ class _TimingsEventosState extends State<TimingsEventos> {
           .toList();
       setState(() {
         copyItemModel.results.clear();
-        if (buscador.length > 0) {
-          buscador.forEach((element) {
+        if (buscador.isNotEmpty) {
+          for (var element in buscador) {
             copyItemModel.results.add(element);
             // rescribir cheks
             // copyItemModel.results.forEach((element) {
             //   if(_keepStatus[element.idActividad] != null)
             //     element.addActividad = _keepStatus[element.idActividad].isCheck;
             // });
-          });
+          }
         } else {}
       });
     } else {
@@ -640,7 +639,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
 
   // colores
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   FloatingActionButton _agregarActividadCalendario() {
@@ -648,12 +647,12 @@ class _TimingsEventosState extends State<TimingsEventos> {
       heroTag: UniqueKey(),
       backgroundColor: hexToColor('#fdf4e5'),
       foregroundColor: Colors.white,
-      child: Tooltip(
+      child: const Tooltip(
         child: Icon(Icons.calendar_today_outlined),
         message: "Agregar a calendario.",
       ),
       onPressed: () async {
-        await _saveActividades();
+        _saveActividades();
       },
     );
   }
@@ -661,13 +660,13 @@ class _TimingsEventosState extends State<TimingsEventos> {
   void _saveActividades() {
     List<Actividad> send = [];
 
-    _listFull.forEach((full) {
-      full.actividad.forEach((actividad) {
-        if (actividad.agregar_actividad == true) send.add(actividad);
-        eventoTimingBloc.add(ActulizarTimingsEvent(actividad.id_actividad,
-            actividad.agregar_actividad, actividad.fecha_inicio_actividad));
-      });
-    });
+    for (var full in _listFull) {
+      for (var actividad in full.actividad) {
+        if (actividad.agregarActividad == true) send.add(actividad);
+        eventoTimingBloc.add(ActulizarTimingsEvent(actividad.idActividad,
+            actividad.agregarActividad, actividad.fechaInicioActividad));
+      }
+    }
 
     // agregamos a la base de datos
     Navigator.of(context).pushNamed('/eventoCalendario', arguments: send);
@@ -677,12 +676,12 @@ class _TimingsEventosState extends State<TimingsEventos> {
   Widget _calendaryIcon(DateTime fechaInicio, int idActividad,
       DateTime fechaInicioEvento, DateTime fechaFinalEvento, int dias) {
     return GestureDetector(
-      child: Icon(
+      child: const Icon(
         Icons.calendar_today,
         color: Colors.black,
       ),
       onTap: () async {
-        FocusScope.of(context).requestFocus(new FocusNode());
+        FocusScope.of(context).requestFocus(FocusNode());
 
         fechaInicio = await showDatePicker(
           context: context,
@@ -696,25 +695,26 @@ class _TimingsEventosState extends State<TimingsEventos> {
         );
 
         // // agregamos la nueva fecha
-        _listFull.forEach((tareas) {
-          tareas.actividad.forEach((actividades) {
-            if (actividades.id_actividad == idActividad) {
+        for (var tareas in _listFull) {
+          for (var actividades in tareas.actividad) {
+            if (actividades.idActividad == idActividad) {
               if (fechaInicio != null) {
                 if (fechaInicio
                     .add(Duration(days: actividades.dias))
-                    .isAfter(actividades.fecha_final_evento))
+                    .isAfter(actividades.fechaFinalEvento)) {
                   _alertaFechas(
-                      actividades.nombre_actividad,
-                      actividades.fecha_inicio_evento,
+                      actividades.nombreActividad,
+                      actividades.fechaInicioEvento,
                       fechaInicio,
-                      actividades.fecha_final_evento,
+                      actividades.fechaFinalEvento,
                       actividades.dias);
-                else
-                  actividades.fecha_inicio_actividad = fechaInicio;
+                } else {
+                  actividades.fechaInicioActividad = fechaInicio;
+                }
               } else {}
             }
-          });
-        });
+          }
+        }
       },
     );
   }
@@ -724,10 +724,11 @@ class _TimingsEventosState extends State<TimingsEventos> {
       DateTime fechaActividad, DateTime fechaFinalEvento, int duracion) {
     String txtDuracion;
 
-    if (duracion > 1)
+    if (duracion > 1) {
       txtDuracion = 'tiene la duración de $duracion dias';
-    else
+    } else {
       txtDuracion = 'tiene la duración de $duracion dia';
+    }
 
     return showDialog<void>(
       context: context,
@@ -739,12 +740,12 @@ class _TimingsEventosState extends State<TimingsEventos> {
             child: ListBody(
               children: <Widget>[
                 Text('La actividad: $actividad'),
-                Text('$txtDuracion'),
-                SizedBox(
+                Text(txtDuracion),
+                const SizedBox(
                   height: 15.0,
                 ),
-                Text('No puedes exceder el día final del evento,'),
-                SizedBox(
+                const Text('No puedes exceder el día final del evento,'),
+                const SizedBox(
                   height: 15.0,
                 ),
                 Text(
@@ -766,11 +767,11 @@ class _TimingsEventosState extends State<TimingsEventos> {
   }
 
   // fin calendary put
-  void _addActividad(int id_tarea, Map<String, dynamic> actividad) {
-    _listFull.forEach((tarea) {
-      if (tarea.id_tarea == id_tarea) tarea.nueva_actividad = true;
-    });
-    eventoTimingBloc.add(AddActividadesEvent(actividad, id_tarea));
+  void _addActividad(int idTarea, Map<String, dynamic> actividad) {
+    for (var tarea in _listFull) {
+      if (tarea.idTarea == idTarea) tarea.nuevaActividad = true;
+    }
+    eventoTimingBloc.add(AddActividadesEvent(actividad, idTarea));
   }
 
   // tiene un bug
@@ -778,14 +779,14 @@ class _TimingsEventosState extends State<TimingsEventos> {
       int idTarea, int idActividad, List<Actividad> listActividad) {
     Column temp;
 
-    _listFull.forEach((tarea) {
-      tarea.actividad.forEach((actividad) {
-        if (actividad.id_actividad == idActividad) {
+    for (var tarea in _listFull) {
+      for (var actividad in tarea.actividad) {
+        if (actividad.idActividad == idActividad) {
           temp = Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               Wrap(
@@ -797,7 +798,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     ancho: 80.0,
                     item: TextFormField(
                       controller: null,
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Nombre:',
                       ),
                     ),
@@ -807,14 +808,14 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     large: 500.0,
                     ancho: 80.0,
                     item: TextFormField(
-                      decoration: new InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Descripción:',
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               Wrap(
@@ -826,23 +827,24 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     ancho: 80.0,
                     item: Row(
                       children: [
-                        Expanded(child: Text("Duración en días:")),
+                        const Expanded(child: Text("Duración en días:")),
                         IconButton(
-                          icon: Icon(Icons.remove),
+                          icon: const Icon(Icons.remove),
                           onPressed: () {},
                         ),
-                        Container(
+                        SizedBox(
                           width: 45,
                           height: 45,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 3),
+                            padding: const EdgeInsets.symmetric(vertical: 3),
                             child: TextFormField(
                               // controller: et ? numCtrl : numEditCtrl,
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                        IconButton(icon: Icon(Icons.add), onPressed: () {})
+                        IconButton(
+                            icon: const Icon(Icons.add), onPressed: () {})
                       ],
                     ),
                   ),
@@ -851,7 +853,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     large: 500.0,
                     ancho: 80,
                     item: CheckboxListTile(
-                      title: Text('Visible para novios:'),
+                      title: const Text('Visible para novios:'),
                       controlAffinity: ListTileControlAffinity.platform,
                       value: false,
                       onChanged: (valor) {},
@@ -861,7 +863,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15.0,
               ),
               Wrap(
@@ -874,9 +876,9 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     item: _crearSelect(listActividad, idTarea, idActividad),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: ElevatedButton(
-                      child: Tooltip(
+                      child: const Tooltip(
                         child: Icon(Icons.save_sharp),
                         message: "Agregar actividad.",
                       ),
@@ -885,14 +887,14 @@ class _TimingsEventosState extends State<TimingsEventos> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
             ],
           );
         }
-      });
-    });
+      }
+    }
 
     return temp;
   }
@@ -902,94 +904,94 @@ class _TimingsEventosState extends State<TimingsEventos> {
       List<Actividad> listActividades, int idTarea, int idActividad) {
     Widget temp;
 
-    _listFull.forEach((tareas) {
-      tareas.actividad.forEach((actividades) {
-        if (actividades.id_actividad == idActividad) {
+    for (var tareas in _listFull) {
+      for (var actividades in tareas.actividad) {
+        if (actividades.idActividad == idActividad) {
           temp = DropdownButton(
             isExpanded: true,
-            value: actividades.predecesor_actividad,
+            value: actividades.predecesorActividad,
             icon: const Icon(Icons.arrow_drop_down_outlined),
             iconSize: 24,
             elevation: 16,
             style: const TextStyle(color: Color(0xFF000000)),
             underline: Container(
               height: 2,
-              color: Color(0xFF000000),
+              color: const Color(0xFF000000),
             ),
             onChanged: (valor) {
               setState(() {
-                actividades.predecesor_actividad = valor;
+                actividades.predecesorActividad = valor;
               });
             },
             items: tareas.actividad.map((item) {
               return DropdownMenuItem(
-                value: item.id_actividad,
+                value: item.idActividad,
                 child: Text(
-                  item.id_actividad != 0
-                      ? item.nombre_actividad
+                  item.idActividad != 0
+                      ? item.nombreActividad
                       : 'Selecciona un predecesor',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               );
             }).toList(),
           );
         }
-      });
-    });
+      }
+    }
 
     return listActividades.length > 1
         ? temp
-        : Container(child: Center(child: Text('Sin predecesores')));
+        : const Center(child: Text('Sin predecesores'));
   }
 }
 
 // clases para manejar el modelo
 // tarea
 class Tarea {
-  int id_tarea;
-  String nombre_tarea;
-  bool check_tarea;
-  bool expanded_tarea;
-  bool nueva_actividad;
-  DateTime fecha_inicio_evento;
-  DateTime fecha_final_evento;
+  int idTarea;
+  String nombreTarea;
+  bool checkTarea;
+  bool expandedTarea;
+  bool nuevaActividad;
+  DateTime fechaInicioEvento;
+  DateTime fechaFinalEvento;
   List<Actividad> actividad;
 
   Tarea({
-    this.id_tarea,
-    this.nombre_tarea,
-    this.check_tarea,
-    this.expanded_tarea,
-    this.nueva_actividad,
-    this.fecha_inicio_evento,
-    this.fecha_final_evento,
+    this.idTarea,
+    this.nombreTarea,
+    this.checkTarea,
+    this.expandedTarea,
+    this.nuevaActividad,
+    this.fechaInicioEvento,
+    this.fechaFinalEvento,
     this.actividad,
   });
 }
 
 // actividad
 class Actividad {
-  int id_actividad;
-  String nombre_actividad;
-  String describe_actividad;
+  int idActividad;
+  String nombreActividad;
+  String describeActividad;
   int dias;
-  DateTime fecha_inicio_actividad;
-  DateTime fecha_inicio_evento;
-  DateTime fecha_final_evento;
-  bool agregar_actividad;
-  bool visible_actividad;
-  int predecesor_actividad;
+  DateTime fechaInicioActividad;
+  DateTime fechaInicioEvento;
+  DateTime fechaFinalEvento;
+  bool agregarActividad;
+  bool visibleActividad;
+  int predecesorActividad;
 
   Actividad({
-    this.id_actividad,
-    this.nombre_actividad,
-    this.describe_actividad,
+    this.idActividad,
+    this.nombreActividad,
+    this.describeActividad,
     this.dias,
-    this.fecha_inicio_actividad,
-    this.fecha_inicio_evento,
-    this.fecha_final_evento,
-    this.agregar_actividad,
-    this.visible_actividad,
-    this.predecesor_actividad,
+    this.fechaInicioActividad,
+    this.fechaInicioEvento,
+    this.fechaFinalEvento,
+    this.agregarActividad,
+    this.visibleActividad,
+    this.predecesorActividad,
   });
 }

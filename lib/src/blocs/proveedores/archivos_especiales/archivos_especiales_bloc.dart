@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/archivos_proveedores_logic.dart';
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
 
@@ -19,7 +19,7 @@ class ArchivosEspecialesBloc
       yield LoadingArchivoEspecialState();
       try {
         ItemModelArchivoEspecial proveedor = await logic.fetchArchivosProvEvent(
-            event.id_proveedor, event.id_evento);
+            event.idProveedor, event.idEvento);
         yield MostrarArchivoProvEventState(proveedor);
       } catch (e) {
         yield ErrorMostrarArchivEspecialState('No se pudo insertar');
@@ -29,7 +29,9 @@ class ArchivosEspecialesBloc
         await logic.deleteArchivoEspecial(event.idArchivo);
         add(FechtArchivoEspecialEvent(event.idProveedor, event.idEvento));
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is CreateArchivoEspecialEvent) {
       try {
@@ -46,7 +48,9 @@ class ArchivosEspecialesBloc
           ),
         );
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }

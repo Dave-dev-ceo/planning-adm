@@ -1,3 +1,5 @@
+// ignore_for_file: no_logic_in_create_state, unnecessary_const
+
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -13,7 +15,7 @@ class ViewPdfContrato extends StatefulWidget {
 }
 
 class _ViewPdfContratoState extends State<ViewPdfContrato> {
-  static final int _initialPage = 0;
+  static const int _initialPage = 0;
   final Map<String, dynamic> data;
   int _actualPageNumber = _initialPage, _allPagesCount = 0;
   bool isSampleDoc = true;
@@ -22,10 +24,10 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
   _ViewPdfContratoState(this.data);
   @override
   void initState() {
-    if (this.data['tipo_mime'] == 'pdf' ||
-        this.data['tipo_mime'] == null ||
-        this.data['tipo_mime'] == '') {
-      Uint8List _bytesData = Base64Decoder().convert(this.data['htmlPdf']);
+    if (data['tipo_mime'] == 'pdf' ||
+        data['tipo_mime'] == null ||
+        data['tipo_mime'] == '') {
+      Uint8List _bytesData = const Base64Decoder().convert(data['htmlPdf']);
       _pdfController = PdfController(
         //document: PdfDocument.openAsset('assets/businesscard.pdf'),
         document: PdfDocument.openData(_bytesData),
@@ -45,17 +47,17 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contrato'),
-        actions: this.data['tipo_mime'] == 'pdf' ||
-                this.data['tipo_mime'] == null ||
-                this.data['tipo_mime'] == ''
+        title: const Text('Documento'),
+        actions: data['tipo_mime'] == 'pdf' ||
+                data['tipo_mime'] == null ||
+                data['tipo_mime'] == ''
             ? <Widget>[
                 IconButton(
-                  icon: Icon(Icons.navigate_before),
+                  icon: const Icon(Icons.navigate_before),
                   onPressed: () {
                     _pdfController.previousPage(
                       curve: Curves.ease,
-                      duration: Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 100),
                     );
                   },
                 ),
@@ -63,27 +65,27 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
                   alignment: Alignment.center,
                   child: Text(
                     '$_actualPageNumber/$_allPagesCount',
-                    style: TextStyle(fontSize: 22),
+                    style: const TextStyle(fontSize: 22),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.navigate_next),
+                  icon: const Icon(Icons.navigate_next),
                   onPressed: () {
                     _pdfController.nextPage(
                       curve: Curves.ease,
-                      duration: Duration(milliseconds: 100),
+                      duration: const Duration(milliseconds: 100),
                     );
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.refresh),
+                  icon: const Icon(Icons.refresh),
                   onPressed: () {
                     if (isSampleDoc) {
                       _pdfController.loadDocument(PdfDocument.openData(
-                          Base64Decoder().convert(this.data['htmlPdf'])));
+                          const Base64Decoder().convert(data['htmlPdf'])));
                     } else {
                       _pdfController.loadDocument(PdfDocument.openData(
-                          Base64Decoder().convert(this.data['htmlPdf'])));
+                          const Base64Decoder().convert(data['htmlPdf'])));
                     }
                     isSampleDoc = !isSampleDoc;
                   },
@@ -91,12 +93,12 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
               ]
             : [],
       ),
-      body: this.data['tipo_mime'] == 'pdf' ||
-              this.data['tipo_mime'] == null ||
-              this.data['tipo_mime'] == ''
+      body: data['tipo_mime'] == 'pdf' ||
+              data['tipo_mime'] == null ||
+              data['tipo_mime'] == ''
           ? PdfView(
-              documentLoader: Center(child: LoadingCustom()),
-              pageLoader: Center(child: LoadingCustom()),
+              documentLoader: const Center(child: LoadingCustom()),
+              pageLoader: const Center(child: const LoadingCustom()),
               controller: _pdfController,
               onDocumentLoaded: (document) {
                 setState(() {
@@ -114,16 +116,16 @@ class _ViewPdfContratoState extends State<ViewPdfContrato> {
   }
 
   Widget _buildImg() {
-    final bytes = base64Decode(this.data['htmlPdf']);
+    final bytes = base64Decode(data['htmlPdf']);
     final image = MemoryImage(bytes);
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 500.0,
         height: MediaQuery.of(context).size.height,
         child: ClipRect(
           child: PhotoView(
             tightMode: true,
-            backgroundDecoration: BoxDecoration(color: Colors.white),
+            backgroundDecoration: const BoxDecoration(color: Colors.white),
             imageProvider: image,
           ),
         ),

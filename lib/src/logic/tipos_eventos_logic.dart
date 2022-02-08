@@ -11,7 +11,7 @@ abstract class ListaTiposEventosLogic {
 class ListaTiposEventosException implements Exception {}
 
 class FetchListaTiposEventosLogic extends ListaTiposEventosLogic {
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override

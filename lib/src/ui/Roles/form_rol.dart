@@ -1,10 +1,11 @@
-// ignore_for_file: unused_field, unused_local_variable
+// ignore_for_file: unused_field, unused_local_variable, unnecessary_this, no_logic_in_create_state
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
-import 'package:planning/src/blocs/roles/formRol/formRol_bloc.dart';
+import 'package:planning/src/blocs/roles/formRol/form_rol_bloc.dart';
 import 'package:planning/src/blocs/roles/rol/rol_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_form.dart';
@@ -15,29 +16,29 @@ class FormRol extends StatefulWidget {
   final Map<String, dynamic> datos;
   const FormRol({Key key, this.datos}) : super(key: key);
   static Route<dynamic> route() => MaterialPageRoute(
-        builder: (context) => FormRol(),
+        builder: (context) => const FormRol(),
       );
   @override
   _FormRolState createState() => _FormRolState(this.datos);
 }
 
 class _FormRolState extends State<FormRol> {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   final Map<String, dynamic> datos;
 
-  GlobalKey<FormState> formKey = new GlobalKey();
+  GlobalKey<FormState> formKey = GlobalKey();
 
   BuildContext _dialogContext;
 
   TextEditingController claveCtrl;
   TextEditingController nombreCtrl;
 
-  Map<int, Widget> _estatus = {
-    0: Text(
+  final Map<int, Widget> _estatus = {
+    0: const Text(
       'Activo',
       style: TextStyle(fontSize: 12),
     ),
-    1: Text(
+    1: const Text(
       'Inactivo',
       style: TextStyle(fontSize: 12),
     ),
@@ -66,7 +67,7 @@ class _FormRolState extends State<FormRol> {
       rolFormBloc.add(GetFormRolEvent());
     } else if (datos['accion'] == 1) {
       ItemModelRol rol = datos['data'];
-      rolFormBloc.add(GetFormRolEvent(idRol0: rol.result.id_rol));
+      rolFormBloc.add(GetFormRolEvent(idRol0: rol.result.idRol));
     }
     _setInitialController();
     _data = [];
@@ -78,6 +79,7 @@ class _FormRolState extends State<FormRol> {
     return Scaffold(
       body: SingleChildScrollView(
         child: BlocListener<RolBloc, RolState>(
+          // ignore: void_checks
           listener: (context, state) {
             // Alta de usuario
             if (state is LoadingCrearRolState) {
@@ -110,16 +112,16 @@ class _FormRolState extends State<FormRol> {
             else if (state is ErrorTokenRolState) {
               Navigator.pop(_dialogContext);
               return _showDialogMsg(context);
-            }
+            } else {}
           },
           child: Container(
             width: double.infinity,
             alignment: Alignment.center,
             //child: Expanded(
-            child: new Container(
+            child: Container(
               width: 800,
-              margin: new EdgeInsets.all(10.0),
-              child: new Form(
+              margin: const EdgeInsets.all(10.0),
+              child: Form(
                 key: formKey,
                 child: formUI(context),
               ),
@@ -131,10 +133,10 @@ class _FormRolState extends State<FormRol> {
   }
 
   _setInitialController() {
-    claveCtrl = new TextEditingController(
-        text: datos['accion'] == 1 ? datos['data'].result.clave_rol : '');
-    nombreCtrl = new TextEditingController(
-        text: datos['accion'] == 1 ? datos['data'].result.nombre_rol : '');
+    claveCtrl = TextEditingController(
+        text: datos['accion'] == 1 ? datos['data'].result.claveRol : '');
+    nombreCtrl = TextEditingController(
+        text: datos['accion'] == 1 ? datos['data'].result.nombreRol : '');
 
     _estatusSeleccionado = datos['accion'] == 1
         ? datos['data'].result.estatus == 'A'
@@ -151,15 +153,15 @@ class _FormRolState extends State<FormRol> {
       Function validator,
       List<TextInputFormatter> inputF,
       bool isEnabled,
-      {bool obscureT: false,
-      int maxL: 0}) {
+      {bool obscureT = false,
+      int maxL = 0}) {
     return formItemsDesign(
         icono,
         TextFormField(
           enabled: isEnabled,
           keyboardType: inputType,
           controller: controller,
-          decoration: new InputDecoration(
+          decoration: InputDecoration(
             labelText: titulo,
           ),
           validator: validator,
@@ -179,7 +181,7 @@ class _FormRolState extends State<FormRol> {
             'Nombre de rol', validateNombre, null, true,
             maxL: 75),
         _formPermisos(),
-        SizedBox(
+        const SizedBox(
           height: 20.0,
         ),
         ElevatedButton(
@@ -187,11 +189,11 @@ class _FormRolState extends State<FormRol> {
             _save(contextForm);
           },
           child: Text((datos['accion'] == 0 ? 'Crear' : 'Editar') + ' rol',
-              style: TextStyle(fontSize: 18, color: Colors.black)),
+              style: const TextStyle(fontSize: 18, color: Colors.black)),
           style: ElevatedButton.styleFrom(
             primary: hexToColor('#fdf4e5'), // background
             onPrimary: Colors.white, // foreground
-            padding: EdgeInsets.symmetric(horizontal: 68, vertical: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 25),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
@@ -204,7 +206,7 @@ class _FormRolState extends State<FormRol> {
 
   formItemsDesign(icon, item) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Card(child: ListTile(leading: Icon(icon), title: item)),
     );
   }
@@ -212,28 +214,28 @@ class _FormRolState extends State<FormRol> {
   _save(BuildContext contextSB) {
     try {
       List<SeccionRol> _dataTemp = [];
-      _data.forEach((element) {
+      for (var element in _data) {
         List _pantallasSeccion = [];
-        if (element.pantallas.length > 0) {
-          element.pantallas.forEach((elementPantallas) {
+        if (element.pantallas.isNotEmpty) {
+          for (var elementPantallas in element.pantallas) {
             _pantallasSeccion.add({
-              'id_pantalla': elementPantallas.id_pantalla,
-              'clave_pantalla': elementPantallas.clave_pantalla,
-              'nombre_pantalla': elementPantallas.nombre_pantalla,
+              'id_pantalla': elementPantallas.idPantalla,
+              'clave_pantalla': elementPantallas.clavePantalla,
+              'nombre_pantalla': elementPantallas.nombrePantalla,
               'selected': elementPantallas.seleccion
             });
-          });
+          }
         }
         Map<String, dynamic> jsonRol = {
-          'id_seccion': element.id_seccion,
-          'clave_seccion': element.clave_seccion,
-          'nombre_seccion': element.nombre_seccion,
+          'id_seccion': element.idSeccion,
+          'clave_seccion': element.claveSeccion,
+          'nombre_seccion': element.nombreSeccion,
           'selected': element.selected,
           'pantallas': _pantallasSeccion
         };
         _dataTemp.add(SeccionRol(jsonRol));
-      });
-      ItemModelFormRol _formRolesTemp = new ItemModelFormRol(_dataTemp);
+      }
+      ItemModelFormRol _formRolesTemp = ItemModelFormRol(_dataTemp);
       if (formKey.currentState.validate()) {
         if (datos['accion'] == 0) {
           Map<String, dynamic> jsonRol = {
@@ -244,7 +246,7 @@ class _FormRolState extends State<FormRol> {
           rolBloc.add(CrearRolEvent(jsonRol));
         } else {
           Map<String, dynamic> jsonRol = {
-            '"id_rol"': datos['data'].result.id_rol,
+            '"id_rol"': datos['data'].result.idRol,
             '"clave_rol"': '"${claveCtrl.text}"',
             '"nombre_rol"': '"${claveCtrl.text}"',
             '"permisos"': _formRolesTemp.toJsonStr()
@@ -258,7 +260,9 @@ class _FormRolState extends State<FormRol> {
             tipoMensaje: TipoMensaje.advertencia);
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -267,7 +271,7 @@ class _FormRolState extends State<FormRol> {
     if (type == "msg") {
       child = Text(msg);
     } else if (type == "loading") {
-      child = Center(child: LoadingCustom());
+      child = const Center(child: LoadingCustom());
     }
     showDialog(
         context: context,
@@ -279,12 +283,12 @@ class _FormRolState extends State<FormRol> {
                 textAlign: TextAlign.center,
               ),
               content: child,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(32.0))),
               actions: type != "log"
                   ? <Widget>[
                       TextButton(
-                        child: Text('Cerrar'),
+                        child: const Text('Cerrar'),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -295,7 +299,7 @@ class _FormRolState extends State<FormRol> {
   }
 
   _dialogSpinner(String title) {
-    Widget child = LoadingCustom();
+    Widget child = const LoadingCustom();
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -307,7 +311,7 @@ class _FormRolState extends State<FormRol> {
               textAlign: TextAlign.center,
             ),
             content: child,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
           );
         });
@@ -315,7 +319,7 @@ class _FormRolState extends State<FormRol> {
 
   String validateNombre(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (value == null || value == '') {
       return "El campo es requerido";
     }
@@ -324,7 +328,7 @@ class _FormRolState extends State<FormRol> {
 
   String validateClave(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (value == null || value == '') {
       return "El campo es requerido";
     }
@@ -332,20 +336,20 @@ class _FormRolState extends State<FormRol> {
   }
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   _formPermisos() {
-    List<Widget> dataForm = <Widget>[Text('Permisos del rol:')];
+    List<Widget> dataForm = <Widget>[const Text('Permisos del rol:')];
     return BlocBuilder<FormRolBloc, FormRolState>(
       builder: (context, state) {
         if (state is FormRolInitial) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is ErrorTokenFormRolState) {
           return _showDialogMsg(context);
         } else if (state is LoadingMostrarFormRol) {
           _formRoles = null;
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is MostrarFormRol) {
           if (_formRoles == null && contador <= 1) {
             _formRoles = state.form;
@@ -353,10 +357,10 @@ class _FormRolState extends State<FormRol> {
             contador++;
           }
 
-          if (_data.length > 0) {
+          if (_data.isNotEmpty) {
             return _listaBuild();
           } else {
-            return Center(
+            return const Center(
               child: Text('No hay datos.'),
             );
           }
@@ -365,7 +369,7 @@ class _FormRolState extends State<FormRol> {
             child: Text(state.message),
           );
         } else {
-          return Center(child: Text('Sin permisos'));
+          return const Center(child: Text('Sin permisos'));
         }
       },
     );
@@ -373,9 +377,8 @@ class _FormRolState extends State<FormRol> {
 
   Widget _listaBuild() {
     int position = 0;
-    return Container(
-        child: ExpansionPanelList(
-      animationDuration: Duration(milliseconds: 500),
+    return ExpansionPanelList(
+      animationDuration: const Duration(milliseconds: 500),
       expansionCallback: (int index, bool isExpanded) {
         setState(() {
           _data[index].isExpanded = !isExpanded;
@@ -386,8 +389,8 @@ class _FormRolState extends State<FormRol> {
         return ExpansionPanel(
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(
-              leading: Icon(Icons.view_module),
-              title: Text(item.nombre_seccion),
+              leading: const Icon(Icons.view_module),
+              title: Text(item.nombreSeccion),
               trailing: Wrap(spacing: 12, children: <Widget>[
                 Checkbox(
                     value: item.selected,
@@ -395,13 +398,13 @@ class _FormRolState extends State<FormRol> {
                       setState(() {
                         item.selected = value;
                         if (item.selected) {
-                          item.pantallas.forEach((element) {
+                          for (var element in item.pantallas) {
                             element.seleccion = true;
-                          });
+                          }
                         } else {
-                          item.pantallas.forEach((element) {
+                          for (var element in item.pantallas) {
                             element.seleccion = false;
-                          });
+                          }
                         }
                       });
                     })
@@ -412,7 +415,7 @@ class _FormRolState extends State<FormRol> {
           isExpanded: item.isExpanded,
         );
       }).toList(),
-    ));
+    );
   }
 
   List<Widget> _listPantallas(
@@ -426,9 +429,9 @@ class _FormRolState extends State<FormRol> {
               itemCount: itemPantalla.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  leading: Icon(Icons.preview),
+                  leading: const Icon(Icons.preview),
                   trailing: Padding(
-                    padding: EdgeInsets.only(left: 15),
+                    padding: const EdgeInsets.only(left: 15),
                     child: Checkbox(
                         value: itemPantalla[index].seleccion,
                         onChanged: (value) {
@@ -438,17 +441,17 @@ class _FormRolState extends State<FormRol> {
                               _data[positionHeader].selected = true;
                             } else if (!itemPantalla[index].seleccion) {
                               var boolPosition = false;
-                              itemPantalla.forEach((element) {
+                              for (var element in itemPantalla) {
                                 if (element.seleccion) {
                                   boolPosition = true;
                                 }
-                              });
+                              }
                               _data[positionHeader].selected = boolPosition;
                             }
                           });
                         }),
                   ),
-                  title: Text(itemPantalla[index].nombre_pantalla),
+                  title: Text(itemPantalla[index].nombrePantalla),
                 );
               }),
         ),
@@ -460,17 +463,17 @@ class _FormRolState extends State<FormRol> {
   _showDialogMsg(BuildContext contextT) {
     _dialogContext = contextT;
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Sesión",
         textAlign: TextAlign.center,
       ),
-      content:
-          Text('Lo sentimos; la sesión a caducado. Inicie sesión de nuevo.'),
-      shape: RoundedRectangleBorder(
+      content: const Text(
+          'Lo sentimos; la sesión a caducado. Inicie sesión de nuevo.'),
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[
         TextButton(
-          child: Text('Cerrar'),
+          child: const Text('Cerrar'),
           onPressed: () async {
             await _sharedPreferences.clear();
             Navigator.of(contextT)
@@ -484,28 +487,28 @@ class _FormRolState extends State<FormRol> {
   _generateItems(ItemModelFormRol data) {
     List<Itemr> _dataTemp = [];
     int posicionTemp = 0;
-    data.form.forEach((element) {
+    for (var element in data.form) {
       List<ItemPantalla> _pantallaTemp = [];
       if (element.pantallas != null) {
-        element.pantallas.forEach((elementPant) {
+        for (var elementPant in element.pantallas) {
           _pantallaTemp.add(ItemPantalla(
-            clave_pantalla: elementPant.clave_pantalla,
-            id_pantalla: elementPant.id_pantalla,
-            nombre_pantalla: elementPant.nombre_pantalla,
+            clavePantalla: elementPant.clavePantalla,
+            idPantalla: elementPant.idPantalla,
+            nombrePantalla: elementPant.nombrePantalla,
             seleccion: elementPant.selected,
           ));
-        });
+        }
       }
       _dataTemp.add(Itemr(
-          clave_seccion: element.clave_seccion,
-          id_seccion: element.id_seccion.toString(),
-          nombre_seccion: element.nombre_seccion,
+          claveSeccion: element.claveSeccion,
+          idSeccion: element.idSeccion.toString(),
+          nombreSeccion: element.nombreSeccion,
           selected: element.selected,
           isExpanded: true,
           pantallas: _pantallaTemp,
           posicion: posicionTemp));
       posicionTemp++;
-    });
+    }
     return _dataTemp;
   }
 }

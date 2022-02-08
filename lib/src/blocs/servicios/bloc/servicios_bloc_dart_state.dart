@@ -20,7 +20,8 @@ class MostrarServiciosState extends ServiciosState {
 }
 
 class MostrarServiciosByProveedorState extends ServiciosState {
-  final ItemModuleServicios listServicios;
-  MostrarServiciosByProveedorState(this.listServicios);
-  ItemModuleServicios get props => listServicios;
+  final ItemModuleServicios servicios;
+  final ItemModuleServicios listServiciosEvent;
+  MostrarServiciosByProveedorState(this.listServiciosEvent, this.servicios);
+  ItemModuleServicios get props => listServiciosEvent;
 }

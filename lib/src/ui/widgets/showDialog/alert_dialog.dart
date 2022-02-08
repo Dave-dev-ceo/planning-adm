@@ -1,4 +1,4 @@
-// ignore_for_file: missing_return
+// ignore_for_file: missing_return, no_logic_in_create_state
 
 import 'package:flutter/material.dart';
 
@@ -58,7 +58,7 @@ class _DialogAlertState extends State<DialogAlert> {
               eventoDescripcion = invitado.evento;
               return AlertDialog(
                 scrollable: false,
-                title: Center(child: Text('Datos de invitado')),
+                title: const Center(child: Text('Datos de invitado')),
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: [
@@ -68,8 +68,8 @@ class _DialogAlertState extends State<DialogAlert> {
                       texto('Mesa: ', invitado.mesa, 'Sin mesa'),
                       texto('Correo: ', invitado.correo, 'Sin correo'),
                       texto('Teléfono: ', invitado.telefono, 'Sin teléfono'),
-                      if (invitado.acompanantes.length > 0)
-                        Padding(
+                      if (invitado.acompanantes.isNotEmpty)
+                        const Padding(
                           padding: EdgeInsets.all(10),
                           child: Text('Acompañantes:'),
                         ),
@@ -89,7 +89,7 @@ class _DialogAlertState extends State<DialogAlert> {
                           flex: 5,
                           child: TextButton(
                               onPressed: () => Navigator.pop(context, false),
-                              child: Text('Cancelar'))),
+                              child: const Text('Cancelar'))),
                       Expanded(
                           flex: 5,
                           child: TextButton(
@@ -97,34 +97,34 @@ class _DialogAlertState extends State<DialogAlert> {
                                     _guardarAsistencia(invitado.idInvitado,
                                         invitado.nombre, true, invitado.evento),
                                   },
-                              child: Text('Aceptar'))),
+                              child: const Text('Aceptar'))),
                     ],
                   )
                 ],
               );
             } else if (state is QrInvitadoUpdateState) {
               return AlertDialog(
-                title: Text('¡Bienvenido!'),
+                title: const Text('¡Bienvenido!'),
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                         '$nombreInvitado estás en el evento $eventoDescripcion'),
-                    Text('Gracias por asistir.'),
+                    const Text('Gracias por asistir.'),
                   ],
                 ),
                 actions: [
                   TextButton(
                       onPressed: () => Navigator.pop(context, true),
-                      child: Text('Ok')),
+                      child: const Text('Ok')),
                 ],
               );
             } else {
               return AlertDialog(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: const [
                     Center(
                       child: LoadingCustom(),
                     ),
@@ -143,10 +143,10 @@ class _DialogAlertState extends State<DialogAlert> {
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
-          label + (valor != null ? valor : sinDatos),
+          label + (valor ?? sinDatos),
         ),
       ),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
     );
   }
 
@@ -155,7 +155,7 @@ class _DialogAlertState extends State<DialogAlert> {
     // BlocProvider - cargamos el evento
     AsistenciaBloc asistenciaBloc;
     asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
-    await asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
+    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
     qrBloc.add(QrInvitadoUpdateEvent());
   }
 }

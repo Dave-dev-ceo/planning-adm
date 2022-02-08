@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class CallToAction extends StatelessWidget {
   final String title;
-  CallToAction(this.title);
+  const CallToAction(this.title, {Key key}) : super(key: key);
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -14,7 +14,7 @@ class CallToAction extends StatelessWidget {
       child: FittedBox(
         child: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w100,
             color: Colors.black,

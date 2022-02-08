@@ -61,7 +61,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calendario de actividades'),
+        title: const Text('Calendario de actividades'),
       ),
       body: _mostrarActividades(widget.actividadesLista),
     );
@@ -73,9 +73,9 @@ class _TableEventsExampleState extends State<TableEventsExample> {
       return BlocBuilder<ComentariosactividadesBloc,
           ComentariosactividadesState>(builder: (context, state) {
         if (state is ComentarioInitialState) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is LodingComentarioState) {
-          return Center(child: LoadingCustom());
+          return const Center(child: LoadingCustom());
         } else if (state is SelectComentarioState) {
           // buscador en header
           if (state.comentario != null) {
@@ -88,12 +88,12 @@ class _TableEventsExampleState extends State<TableEventsExample> {
             }
           } else {
             eventoComentario.add(SelectComentarioPorIdEvent());
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           }
           if (copyItemModel != null) {
             return _consulta(copyItemModel, actividades);
           } else {
-            return Center(child: Text('Sin datos'));
+            return const Center(child: Text('Sin datos'));
           }
         } else if (state is CreateComentariosState) {
           _idComentario = state.idComentario;
@@ -101,13 +101,13 @@ class _TableEventsExampleState extends State<TableEventsExample> {
         } else if (state is UpdateComentariosState) {
           return _consulta(copyItemModel, actividades);
         } else {
-          return Center(
+          return const Center(
             child: Text('Error En Data'),
           );
         }
       });
     } else {
-      return Center(
+      return const Center(
         child: Text('Sin actividades'),
       );
     }
@@ -116,25 +116,25 @@ class _TableEventsExampleState extends State<TableEventsExample> {
   // v2
   Widget _consulta(comentario, actividades) {
     return Container(
-      padding: EdgeInsets.all(30.0),
+      padding: const EdgeInsets.all(30.0),
       child: Card(
         color: Colors.white,
         child: Column(
           children: [
             TableCalendar<Event>(
               locale: 'es_ES',
-              headerStyle: HeaderStyle(
+              headerStyle: const HeaderStyle(
                 formatButtonVisible: false,
                 titleCentered: true,
               ),
               firstDay: DateTime.utc(
-                  actividades[0].fecha_inicio_evento.year,
-                  actividades[0].fecha_inicio_evento.month,
-                  actividades[0].fecha_inicio_evento.day),
+                  actividades[0].fechaInicioEvento.year,
+                  actividades[0].fechaInicioEvento.month,
+                  actividades[0].fechaInicioEvento.day),
               lastDay: DateTime.utc(
-                  actividades[0].fecha_final_evento.year,
-                  actividades[0].fecha_final_evento.month,
-                  actividades[0].fecha_final_evento.day),
+                  actividades[0].fechaFinalEvento.year,
+                  actividades[0].fechaFinalEvento.month,
+                  actividades[0].fechaFinalEvento.day),
               focusedDay: _focusedDay,
               selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
               rangeStartDay: _rangeStart,
@@ -143,7 +143,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
               rangeSelectionMode: _rangeSelectionMode,
               eventLoader: _getEventsForDay,
               startingDayOfWeek: StartingDayOfWeek.monday,
-              calendarStyle: CalendarStyle(
+              calendarStyle: const CalendarStyle(
                 // Use `CalendarStyle` to customize the UI
                 outsideDaysVisible: false,
               ),
@@ -177,9 +177,9 @@ class _TableEventsExampleState extends State<TableEventsExample> {
           itemCount: value.length,
           itemBuilder: (context, index) {
             return Container(
-              padding: EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15.0),
               child: ExpansionPanelList(
-                animationDuration: Duration(milliseconds: 500),
+                animationDuration: const Duration(milliseconds: 500),
                 expansionCallback: (int i, bool isExpanded) {
                   setState(() {
                     value[index].actividad.isExpanded = !isExpanded;
@@ -204,8 +204,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
                             });
                           },
                         ),
-                        title:
-                            Text("${value[index].actividad.nombreActividad}"),
+                        title: Text(value[index].actividad.nombreActividad),
                         subtitle: Text(
                             "${value[index].actividad.descripcionActividad} \n La actividad finaliza el: ${DateFormat('yyyy-MM-dd').format(value[index].actividad.fechaActividad.add(Duration(days: value[index].actividad.duracion)))}"),
                       );
@@ -215,21 +214,23 @@ class _TableEventsExampleState extends State<TableEventsExample> {
                       children: [
                         ListTile(
                           title: TextField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Agrega un comentario',
                             ),
                             maxLines: 6,
                             controller: TextEditingController(
-                                text:
-                                    '${value[index].actividad.comentario.comentarioTxt}'),
+                                text: value[index]
+                                    .actividad
+                                    .comentario
+                                    .comentarioTxt),
                             onChanged: (valor) {
                               value[index].actividad.comentario.comentarioTxt =
                                   valor;
                             },
                           ),
                           trailing: GestureDetector(
-                            child: Icon(
+                            child: const Icon(
                               Icons.save_sharp,
                               color: Colors.black,
                             ),
@@ -241,7 +242,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
                             },
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15.0,
                         )
                       ],
@@ -264,17 +265,18 @@ class _TableEventsExampleState extends State<TableEventsExample> {
     // crea
     final _kEventSourceModel = Map<DateTime, List<Event>>.fromIterable(
         itemRecived,
-        key: (item) => DateTime.utc(item.fecha_inicio_actividad.year,
-            item.fecha_inicio_actividad.month, item.fecha_inicio_actividad.day),
+        key: (item) => DateTime.utc(item.fechaInicioActividad.year,
+            item.fechaInicioActividad.month, item.fechaInicioActividad.day),
         value: ((item) {
           List<Event> temp = [];
 
           // hay un bug no muestra 1 actividad agregada pasa solo si es agregada en las primeras 2 fechas
           // si es la primera o la 3 no pasa nada es una actividad con el nombre igual a otra
-          _listFull.forEach((actividad) {
-            if (actividad.fechaActividad == item.fecha_inicio_actividad)
-              temp.add(Event(('${actividad.nombreActividad}'), actividad));
-          });
+          for (var actividad in _listFull) {
+            if (actividad.fechaActividad == item.fechaInicioActividad) {
+              temp.add(Event((actividad.nombreActividad), actividad));
+            }
+          }
 
           return temp;
         }));
@@ -341,29 +343,27 @@ class _TableEventsExampleState extends State<TableEventsExample> {
     actividades.forEach((actividad) {
       Comentario tempComentario;
 
-      modelo.comentarios.forEach((comentarios) {
-        if (actividad.id_actividad == comentarios.idEventoActividad) {
+      for (var comentarios in modelo.comentarios) {
+        if (actividad.idActividad == comentarios.idEventoActividad) {
           tempComentario = Comentario(
             idComentario: comentarios.idComentario,
             comentarioTxt: comentarios.comentarioActividad,
             estadoComentario: comentarios.estadoComentario,
           );
         }
-      });
-
-      if (tempComentario == null) {
-        tempComentario = Comentario(
-          idComentario: 0,
-          comentarioTxt: '',
-          estadoComentario: false,
-        );
       }
 
+      tempComentario ??= Comentario(
+        idComentario: 0,
+        comentarioTxt: '',
+        estadoComentario: false,
+      );
+
       tempActividad.add(Actividad(
-        idActividad: actividad.id_actividad,
-        nombreActividad: actividad.nombre_actividad,
-        descripcionActividad: actividad.describe_actividad,
-        fechaActividad: actividad.fecha_inicio_actividad,
+        idActividad: actividad.idActividad,
+        nombreActividad: actividad.nombreActividad,
+        descripcionActividad: actividad.describeActividad,
+        fechaActividad: actividad.fechaInicioActividad,
         duracion: actividad.dias,
         isExpanded: false,
         comentario: tempComentario,
@@ -382,10 +382,11 @@ class _TableEventsExampleState extends State<TableEventsExample> {
 
   // crear&actualizar
   _caomentariosEvents(actividad) async {
-    if (actividad.comentario.idComentario == null)
-      actividad.comentario.idComentario = await _idComentario;
-    else
+    if (actividad.comentario.idComentario == null) {
+      actividad.comentario.idComentario = _idComentario;
+    } else {
       _idComentario = null;
+    }
     // guardamos en BD cambios
     if (actividad.comentario.idComentario == 0) {
       eventoComentario.add(CreateComentarioEvent(
@@ -395,8 +396,9 @@ class _TableEventsExampleState extends State<TableEventsExample> {
 
       actividad.comentario.idComentario = null;
 
-      if (_idComentario != null)
-        actividad.comentario.idComentario = await _idComentario;
+      if (_idComentario != null) {
+        actividad.comentario.idComentario = _idComentario;
+      }
     } else {
       // update
       eventoComentario.add(UpdateComentarioEvent(

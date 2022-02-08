@@ -21,7 +21,7 @@ import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 class Perfil extends StatefulWidget {
-  Perfil({Key key}) : super(key: key);
+  const Perfil({Key key}) : super(key: key);
 
   @override
   _PerfilState createState() => _PerfilState();
@@ -33,7 +33,7 @@ class _PerfilState extends State<Perfil> {
   ItemModelPerfil item;
 
   // variables de la classe
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   String portada = '';
   String claveRol = '';
   final _formKey = GlobalKey<FormState>();
@@ -77,16 +77,16 @@ class _PerfilState extends State<Perfil> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Perfil del usuario'),
+            title: const Text('Perfil del usuario'),
           ),
           body: BlocBuilder<PerfilBloc, PerfilState>(
             builder: (context, state) {
               if (state is PerfilInitial) {
-                return Center(
+                return const Center(
                   child: LoadingCustom(),
                 );
               } else if (state is PerfilLogging) {
-                return Center(
+                return const Center(
                   child: LoadingCustom(),
                 );
               } else if (state is PerfilSelect) {
@@ -106,12 +106,12 @@ class _PerfilState extends State<Perfil> {
                   }
                 } else {
                   perfilBloc.add(SelectPerfilEvent());
-                  return Center(child: LoadingCustom());
+                  return const Center(child: LoadingCustom());
                 }
                 if (perfil != null) {
                   return _showPerfil();
                 } else {
-                  return Center(child: Text('Sin datos'));
+                  return const Center(child: Text('Sin datos'));
                 }
               } else if (state is PerfilUpdate) {
                 if (state.perfil.perfil != null) {
@@ -126,7 +126,7 @@ class _PerfilState extends State<Perfil> {
                 }
                 return _showPerfil();
               } else {
-                return Center(
+                return const Center(
                   child: LoadingCustom(),
                 );
               }
@@ -138,7 +138,6 @@ class _PerfilState extends State<Perfil> {
   }
 
   _showPerfil() {
-    print(perfil.image);
     return Form(
       key: _formKey,
       child: Container(
@@ -148,16 +147,16 @@ class _PerfilState extends State<Perfil> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    controller: TextEditingController(text: '${perfil.names}'),
+                    controller: TextEditingController(text: perfil.names),
                     maxLength: 50,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person),
+                      prefixIcon: const Icon(Icons.person),
                       hintText: 'Nombre completo:',
                       labelText: 'Nombre',
                       enabledBorder: OutlineInputBorder(
@@ -180,10 +179,10 @@ class _PerfilState extends State<Perfil> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     readOnly: true,
-                    controller: TextEditingController(text: '${perfil.email}'),
+                    controller: TextEditingController(text: perfil.email),
                     maxLength: 250,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
+                      prefixIcon: const Icon(Icons.email),
                       hintText: 'Correo electrónico:',
                       labelText: 'Correo electrónico',
                       enabledBorder: OutlineInputBorder(
@@ -205,10 +204,11 @@ class _PerfilState extends State<Perfil> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    // ignore: unnecessary_string_interpolations
                     controller: TextEditingController(text: '${perfil.phone}'),
                     maxLength: 10,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.phone),
+                      prefixIcon: const Icon(Icons.phone),
                       hintText: 'Teléfono:',
                       labelText: 'Teléfono',
                       enabledBorder: OutlineInputBorder(
@@ -230,22 +230,20 @@ class _PerfilState extends State<Perfil> {
                 if (claveRol != 'INVO')
                   Center(
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Flexible(
-                              child: Container(
+                              child: SizedBox(
                             height: 100.0,
                             width: 100.0,
                             child: perfil.image == null
-                                ? FittedBox(
+                                ? const FittedBox(
                                     fit: BoxFit.cover,
-                                    child: Container(
-                                        child: ClipRect(
-                                            child:
-                                                FaIcon(FontAwesomeIcons.user))))
+                                    child: ClipRect(
+                                        child: FaIcon(FontAwesomeIcons.user)))
                                 : Container(
                                     decoration: BoxDecoration(
                                         color: Colors.transparent,
@@ -257,9 +255,9 @@ class _PerfilState extends State<Perfil> {
                                   ),
                           )),
                           Padding(
-                            padding: EdgeInsets.all(20.0),
+                            padding: const EdgeInsets.all(20.0),
                             child: ElevatedButton(
-                              child: Text('Agregar imagen'),
+                              child: const Text('Agregar imagen'),
                               onPressed: () => _addImage(),
                             ),
                           ),
@@ -274,9 +272,10 @@ class _PerfilState extends State<Perfil> {
                         onPressed: () async {
                           showDialog(
                               context: context,
-                              builder: (context) => CambiarContrasenaDialog());
+                              builder: (context) =>
+                                  const CambiarContrasenaDialog());
                         },
-                        child: Text('Cambiar contraseña')),
+                        child: const Text('Cambiar contraseña')),
                   ),
                 ),
                 Center(
@@ -285,7 +284,7 @@ class _PerfilState extends State<Perfil> {
                     children: [
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: new ElevatedButton(
+                          child: ElevatedButton(
                             child: const Text('Guardar'),
                             onPressed: () {
                               // It returns true if the form is valid, otherwise returns false
@@ -301,7 +300,7 @@ class _PerfilState extends State<Perfil> {
                     ],
                   ),
                 ),
-                if (_isInvolucrado) Divider(),
+                if (_isInvolucrado) const Divider(),
                 if (_isInvolucrado)
                   Center(
                     child: Text(
@@ -325,7 +324,7 @@ class _PerfilState extends State<Perfil> {
                                       base64Decode(portada),
                                       fit: BoxFit.cover,
                                     )
-                                  : Image(
+                                  : const Image(
                                       image: AssetImage(
                                         'portada.jpg',
                                       ),
@@ -354,8 +353,9 @@ class _PerfilState extends State<Perfil> {
       allowMultiple: false,
     );
 
-    pickedFile.files.forEach((archivo) =>
-        setState(() => perfil.image = base64.encode(archivo.bytes)));
+    for (var archivo in pickedFile.files) {
+      setState(() => perfil.image = base64.encode(archivo.bytes));
+    }
   }
 
   changePortadaImage() async {
@@ -419,8 +419,9 @@ class _PerfilState extends State<Perfil> {
     if (validaNumeros.hasMatch(txt)) numeros = true;
     if (validaSimbolos.hasMatch(txt)) simbolos = true;
 
-    if (txt.length > 7 && mayusculas && minusculas && numeros && simbolos)
+    if (txt.length > 7 && mayusculas && minusculas && numeros && simbolos) {
       temp = true;
+    }
 
     return temp;
   }
@@ -480,7 +481,7 @@ class _PerfilState extends State<Perfil> {
               nombreCompleto: perfil.names,
               boton: false,
               img: image,
-              portada: portada != null ? portada : null,
+              portada: portada,
               fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
             ));
       }
@@ -510,7 +511,7 @@ class _Perfil {
 }
 
 class CambiarContrasenaDialog extends StatefulWidget {
-  CambiarContrasenaDialog({Key key}) : super(key: key);
+  const CambiarContrasenaDialog({Key key}) : super(key: key);
 
   @override
   _CambiarContrasenaDialogState createState() =>
@@ -548,7 +549,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cambiar Contraseña'),
+        title: const Text('Cambiar Contraseña'),
       ),
       body: Center(
         child: Container(
@@ -559,7 +560,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
             key: _keyForm,
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 15.0,
                 ),
                 ConstrainedBox(
@@ -575,12 +576,12 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                             floatingText: 'Contraseña actual',
                             hintText: 'Contraseña actual',
                             controller: passwordUser,
-                            inputStyle: TextStyle(color: Colors.black),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            inputStyle: const TextStyle(color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.grey),
                             autoFocus: false,
                             hasFloatingPlaceholder: true,
-                            prefixIcon: Icon(Icons.password),
-                            suffixIcon: Icon(
+                            prefixIcon: const Icon(Icons.password),
+                            suffixIcon: const Icon(
                               Icons.remove_red_eye,
                               color: Colors.grey,
                             ),
@@ -589,27 +590,29 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                             iconColorSelect: Colors.black,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
-                                borderSide: BorderSide(color: Colors.black)),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
-                                borderSide: BorderSide(color: Colors.black)),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
                           ),
                         ),
                       ),
                       ResponsiveGridCol(
                         md: 12,
                         child: Padding(
-                          padding: EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(20.0),
                           child: PasswordWplanner(
                             controller: newPassword,
                             floatingText: 'Nueva contraseña',
                             hintText: 'Nueva contraseña',
-                            inputStyle: TextStyle(color: Colors.black),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            inputStyle: const TextStyle(color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.grey),
                             autoFocus: false,
                             hasFloatingPlaceholder: true,
-                            prefixIcon: Icon(Icons.password),
-                            suffixIcon: Icon(
+                            prefixIcon: const Icon(Icons.password),
+                            suffixIcon: const Icon(
                               Icons.remove_red_eye,
                               color: Colors.grey,
                             ),
@@ -618,10 +621,12 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                             iconColorSelect: Colors.black,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
-                                borderSide: BorderSide(color: Colors.black)),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
-                                borderSide: BorderSide(color: Colors.black)),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
                             validador: (value) {
                               if (!_validaPsw(value)) {
                                 return 'Campo requerido con una minuscula, una mayúscula, un número y un minimo de 8 caracteres.';
@@ -633,17 +638,17 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                       ),
                       ResponsiveGridCol(
                         child: Padding(
-                          padding: EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(20.0),
                           child: PasswordWplanner(
                             floatingText: 'Confirmar contraseña',
                             controller: repeatNewPassWord,
                             hintText: 'Confirmar contraseña',
-                            inputStyle: TextStyle(color: Colors.black),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            inputStyle: const TextStyle(color: Colors.black),
+                            hintStyle: const TextStyle(color: Colors.grey),
                             autoFocus: false,
                             hasFloatingPlaceholder: true,
-                            prefixIcon: Icon(Icons.password),
-                            suffixIcon: Icon(
+                            prefixIcon: const Icon(Icons.password),
+                            suffixIcon: const Icon(
                               Icons.remove_red_eye,
                               color: Colors.grey,
                             ),
@@ -652,10 +657,12 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                             iconColorSelect: Colors.black,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
-                                borderSide: BorderSide(color: Colors.black)),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25.0),
-                                borderSide: BorderSide(color: Colors.black)),
+                                borderSide:
+                                    const BorderSide(color: Colors.black)),
                             validador: (value) {
                               if (value != newPassword.text) {
                                 MostrarAlerta(
@@ -673,7 +680,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 ElevatedButton(
@@ -681,7 +688,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                     if (passwordValid == passwordUser.text) {
                       if (_keyForm.currentState.validate()) {
                         // Falta se para cambio de contraseñas invo / planner
-                        var data;
+                        String data;
                         if (_isInvolucrado) {
                           data = await loginLogic
                               .changePasswordInvolucrado(newPassword.text);
@@ -710,7 +717,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                           tipoMensaje: TipoMensaje.error);
                     }
                   },
-                  child: Text('Guardar'),
+                  child: const Text('Guardar'),
                 )
               ],
             ),

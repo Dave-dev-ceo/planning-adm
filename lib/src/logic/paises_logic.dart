@@ -11,7 +11,7 @@ abstract class ListaPaisesLogic {
 class ListaPaisesException implements Exception {}
 
 class FetchListaPaisesLogic extends ListaPaisesLogic {
-  ConfigConection confiC = new ConfigConection();
+  ConfigConection confiC = ConfigConection();
   Client client = Client();
 
   @override

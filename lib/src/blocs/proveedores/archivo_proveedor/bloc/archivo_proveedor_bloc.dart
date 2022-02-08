@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/archivos_proveedores_logic.dart';
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';
 part 'archivo_proveedor_event.dart';
@@ -11,6 +11,7 @@ class ArchivoProveedorBloc
   final LogicArchivoProveedores logic;
   ArchivoProveedorBloc({@required this.logic})
       : super(ArchivoProveedorInitial());
+
   @override
   Stream<ArchivoProveedorState> mapEventToState(
     ArchivoProveedorEvent event,
@@ -19,10 +20,12 @@ class ArchivoProveedorBloc
       yield LoadingArchivoProveedorState();
       try {
         ItemModelArchivoProvServ proveedor = await logic.fetchArchivosProvServ(
-            event.id_proveedor, event.id_servicio);
+            event.idProveedor, event.idServicio);
         yield MostrarArchivoProvServState(proveedor);
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorMostrarArchivoProvServState('No se pudo insertar');
       }
     } else if (event is CreateArchivoProvServEvent) {
@@ -40,7 +43,9 @@ class ArchivoProveedorBloc
                     : int.parse(event.data['id_proveedor']),
             false));
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorCreateArchivoProvServState('No se pudo insertar');
       }
     } else if (event is DeleteArchivoEvent) {
@@ -50,7 +55,11 @@ class ArchivoProveedorBloc
           add(FechtArchivoProvServEvent(
               event.idProveedor, event.idServicio, false));
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     }
   }
 }

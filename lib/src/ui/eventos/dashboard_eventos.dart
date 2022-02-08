@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, unnecessary_this, no_logic_in_create_state
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -29,7 +31,7 @@ class DashboardEventos extends StatefulWidget {
 }
 
 class _DashboardEventosState extends State<DashboardEventos> {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   EventosBloc eventosBloc;
   ItemModelEventos eventos;
   PerfiladoLogic perfilado;
@@ -39,7 +41,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
   _DashboardEventosState(this.WP_EVT_CRT);
 
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -77,14 +79,14 @@ class _DashboardEventosState extends State<DashboardEventos> {
     return GestureDetector(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         elevation: 10,
         child: Container(
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 Color(0xFFFFF0D6),
                 Color(0xFFF3D8A9),
@@ -98,7 +100,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
             child: Column(
               children: <Widget>[
                 ListTile(
-                  contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+                  contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
                   title: Text(titulo),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,8 +113,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
                             ? Text(involucrados[i].tipoInvolucrado +
                                 ' : ' +
                                 involucrados[i].nombre)
-                            : Text('Sin involucrados'),
-                      Align(
+                            : const Text('Sin involucrados'),
+                      const Align(
                         alignment: Alignment.centerRight,
                         child: FaIcon(
                           FontAwesomeIcons.glassCheers,
@@ -126,7 +128,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
                   //   size: 18.0,
                   // ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8.0,
                 )
               ],
@@ -155,17 +157,17 @@ class _DashboardEventosState extends State<DashboardEventos> {
         builder: (BuildContext context) {
           //_ingresando = context;
           return AlertDialog(
-            title: Text(
+            title: const Text(
               "Sesión",
               textAlign: TextAlign.center,
             ),
-            content: Text(
+            content: const Text(
                 'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
             actions: <Widget>[
               TextButton(
-                child: Text('Cerrar'),
+                child: const Text('Cerrar'),
                 onPressed: () {
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil('/', (route) => false);
@@ -184,9 +186,10 @@ class _DashboardEventosState extends State<DashboardEventos> {
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await eventosBloc.add(FechtEventosEvent(valEstatus));
+          eventosBloc.add(FechtEventosEvent(valEstatus));
         },
         child: BlocListener<EventosBloc, EventosState>(
+          // ignore: void_checks
           listener: (context, state) {
             if (state is ErrorTokenEventosState) {
               return _showDialogMsg(context);
@@ -195,37 +198,31 @@ class _DashboardEventosState extends State<DashboardEventos> {
           child: BlocBuilder<EventosBloc, EventosState>(
             builder: (context, state) {
               if (state is EventosInitial) {
-                return Center(child: LoadingCustom());
+                return const Center(child: LoadingCustom());
               }
               if (state is LoadingEventosState) {
-                return Center(child: LoadingCustom());
+                return const Center(child: LoadingCustom());
               } else if (state is MostrarEventosState) {
                 eventos = state.eventos;
-                return Container(
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: SwitchListTile(
-                                title: const Text('Ver todos los eventos.'),
-                                value: _lights,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    _lights = value;
-                                    eventosBloc
-                                        .add(FechtEventosEvent(valEstatus));
-                                  });
-                                })),
-                        Expanded(
-                            child: Row(
-                          children: [Expanded(child: buildList(eventos))],
-                        ))
-                      ],
-                    ),
-                  ),
-                  // child: buildList(eventos),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: SwitchListTile(
+                            title: const Text('Ver todos los eventos.'),
+                            value: _lights,
+                            onChanged: (bool value) {
+                              setState(() {
+                                _lights = value;
+                                eventosBloc.add(FechtEventosEvent(valEstatus));
+                              });
+                            })),
+                    Expanded(
+                        child: Row(
+                      children: [Expanded(child: buildList(eventos))],
+                    ))
+                  ],
                 );
               } else if (state is ErrorListaEventosState) {
                 return Center(
@@ -237,14 +234,15 @@ class _DashboardEventosState extends State<DashboardEventos> {
                     child: buildList(eventos),
                   );
                 } else {
-                  return Center(child: LoadingCustom());
+                  return const Center(child: LoadingCustom());
                 }
               }
             },
           ),
         ),
       ),
-      floatingActionButton: WP_EVT_CRT ? expadibleFab() : SizedBox.shrink(),
+      floatingActionButton:
+          WP_EVT_CRT ? expadibleFab() : const SizedBox.shrink(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
@@ -252,17 +250,17 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget expadibleFab() {
     return SpeedDial(
       tooltip: 'Opciones',
-      child: Icon(Icons.more_vert),
+      child: const Icon(Icons.more_vert),
       children: [
         SpeedDialChild(
-            child: Icon(Icons.event_available),
+            child: const Icon(Icons.event_available),
             onTap: () {
               Navigator.of(context).pushNamed('/addEvento');
             }),
         SpeedDialChild(
-            child: Icon(Icons.download),
+            child: const Icon(Icons.download),
             onTap: () async {
-              await _buildEventosPDF();
+              _buildEventosPDF();
             })
       ],
     );
@@ -286,7 +284,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       'eventos': eventos.results.map((e) => e.toJson()).toList(),
     };
     Client client = Client();
-    ConfigConection confiC = new ConfigConection();
+    ConfigConection confiC = ConfigConection();
     final resp = await client.post(
       Uri.parse(confiC.url + confiC.puerto + endpoint),
       body: json.encode(data),
@@ -297,7 +295,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
       final pdf = json.decode(resp.body)['pdf'];
       String titulotemp = 'Eventos';
       final titulo = titulotemp.replaceAll(" ", "_");
-      utils.downloadFile(pdf, '$titulo');
+      utils.downloadFile(pdf, titulo);
     }
   }
 }

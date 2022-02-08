@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/perfil_logic.dart';
 import 'package:planning/src/models/item_model_perfil.dart';
 import 'package:planning/src/models/perfil/perfil_planner_model.dart';
@@ -47,7 +47,9 @@ class PerfilBloc extends Bloc<PerfilEvent, PerfilState> {
         final data = await logic.getPerfilPlanner();
         yield PerfilPlannerState(data);
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else if (event is EditPerfilPlannerEvent) {
       yield PerfilLogging();
@@ -57,7 +59,9 @@ class PerfilBloc extends Bloc<PerfilEvent, PerfilState> {
         yield PerfilPlannerEditadoState(data);
         add(PerfilPlannerEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }

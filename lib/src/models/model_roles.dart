@@ -21,7 +21,7 @@ class ItemModelRoles {
       _Rol result = _Rol.fromModel(_results[i]);
       temp.add(result);
     }
-    return new ItemModelRoles(temp);
+    return ItemModelRoles(temp);
   }
 
   ItemModelRoles copyWith(ItemModelRoles obj) {
@@ -48,7 +48,7 @@ class ItemModelRol {
   }
 
   ItemModelRol copy() {
-    return new ItemModelRol(_result);
+    return ItemModelRol(_result);
   }
 
   ItemModelRol copyWith(ItemModelRol obj) {
@@ -105,44 +105,44 @@ class _Rol {
     _editable = dataObj._editable;
   }
 
-  int get id_rol => this._idRol;
+  int get idRol => _idRol;
 
-  String get clave_rol => this._claveRol;
+  String get claveRol => _claveRol;
 
-  String get nombre_rol => this._nombreRol;
+  String get nombreRol => _nombreRol;
 
-  int get id_planner => this._idPlanner;
+  int get idPlanner => _idPlanner;
 
-  String get estatus => this._estatus;
+  String get estatus => _estatus;
 
-  String get creado => this._creado;
+  String get creado => _creado;
 
-  String get modificado => this._modificado;
+  String get modificado => _modificado;
 
-  int get creado_por => this._creadoPor;
+  int get creadoPor => _creadoPor;
 
-  int get modificado_por => this._modificadoPor;
+  int get modificadoPor => _modificadoPor;
 
-  String get agregado_por => this._agregadoPor;
+  String get agregadoPor => _agregadoPor;
 
-  String get editado_por => this._editadoPor;
+  String get editadoPor => _editadoPor;
 
-  bool get editable => this._editable;
+  bool get editable => _editable;
 }
 
 class Itemr {
   Itemr(
-      {this.clave_seccion,
-      this.id_seccion,
-      this.nombre_seccion,
+      {this.claveSeccion,
+      this.idSeccion,
+      this.nombreSeccion,
       this.selected,
       this.pantallas,
       this.isExpanded = true,
       this.posicion});
 
-  String clave_seccion;
-  String id_seccion;
-  String nombre_seccion;
+  String claveSeccion;
+  String idSeccion;
+  String nombreSeccion;
   bool selected;
   List<ItemPantalla> pantallas;
   bool isExpanded;
@@ -151,12 +151,12 @@ class Itemr {
 
 class ItemPantalla {
   ItemPantalla(
-      {this.clave_pantalla,
-      this.id_pantalla,
-      this.nombre_pantalla,
+      {this.clavePantalla,
+      this.idPantalla,
+      this.nombrePantalla,
       this.seleccion});
-  String clave_pantalla;
-  int id_pantalla;
-  String nombre_pantalla;
+  String clavePantalla;
+  int idPantalla;
+  String nombrePantalla;
   bool seleccion;
 }

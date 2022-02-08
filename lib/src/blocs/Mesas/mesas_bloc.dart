@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/estatus_logic.dart';
 import 'package:planning/src/logic/mesas_logic/mesa_logic.dart';
 import 'package:planning/src/models/mesa/mesas_model.dart';
@@ -43,7 +43,9 @@ class MesasBloc extends Bloc<MesasEvent, MesasState> {
         yield MesasEditedState(data);
         add(MostrarMesasEvent());
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }

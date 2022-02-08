@@ -20,20 +20,20 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  int _index = 0;
+  final int _index = 0;
   LoginBloc loginBloc;
-  TextEditingController emailCtrl = new TextEditingController(text: '');
-  TextEditingController passwordCtrl = new TextEditingController(text: '');
-  TextEditingController emailRCtrl = new TextEditingController();
-  TextEditingController passwordRCtrl = new TextEditingController();
-  TextEditingController passwordConfirRCtrl = new TextEditingController();
-  TextEditingController nombreRCtrl = new TextEditingController();
-  TextEditingController telefonoRCtrl = new TextEditingController();
-  TextEditingController correoRecuperacionCtrl = new TextEditingController();
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  TextEditingController emailCtrl = TextEditingController(text: '');
+  TextEditingController passwordCtrl = TextEditingController(text: '');
+  TextEditingController emailRCtrl = TextEditingController();
+  TextEditingController passwordRCtrl = TextEditingController();
+  TextEditingController passwordConfirRCtrl = TextEditingController();
+  TextEditingController nombreRCtrl = TextEditingController();
+  TextEditingController telefonoRCtrl = TextEditingController();
+  TextEditingController correoRecuperacionCtrl = TextEditingController();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   BuildContext _ingresando;
-  bool _visible = true;
-  ApiProvider api = new ApiProvider();
+  final bool _visible = true;
+  ApiProvider api = ApiProvider();
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
               descripcion: titulo,
               nombreCompleto: nombreUser,
               boton: false,
-              portada: portada != null ? portada : null,
+              portada: portada,
               img: image,
               fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
             ));
@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
       child = Text(msg);
     } else if (type == "log") {
       child = AnimatedOpacity(
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           opacity: _visible ? 1.0 : 0.0,
           child: Image.asset(
             'assets/new_logo.png',
@@ -116,12 +116,12 @@ class _LoginState extends State<Login> {
                 textAlign: TextAlign.center,
               ),
               content: child,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(32.0))),
               actions: type != "log"
                   ? <Widget>[
                       TextButton(
-                        child: Text('Cerrar'),
+                        child: const Text('Cerrar'),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -141,7 +141,7 @@ class _LoginState extends State<Login> {
       fillColor: Colors.black,
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(25.0),
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           color: Colors.black,
         ),
       ),
@@ -197,7 +197,7 @@ class _LoginState extends State<Login> {
       },
       child: Column(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 10.0,
           ),
           Image.asset(
@@ -205,7 +205,7 @@ class _LoginState extends State<Login> {
             height: 180.0,
             width: 450,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10.0,
           ),
           Padding(
@@ -213,7 +213,7 @@ class _LoginState extends State<Login> {
             child: TextFormField(
               controller: emailCtrl,
               keyboardType: TextInputType.emailAddress,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
               decoration: _decorationText("Correo"),
               cursorColor: Colors.purple[100],
             ),
@@ -232,7 +232,7 @@ class _LoginState extends State<Login> {
                 color: Colors.purple[100],
                 iconColor: Colors.purple[100],
                 iconColorSelect: Colors.black,
-                inputStyle: TextStyle(color: Colors.black),
+                inputStyle: const TextStyle(color: Colors.black),
                 hintStyle: TextStyle(color: Colors.purple[100]),
                 autoFocus: false,
                 hasFloatingPlaceholder: true,
@@ -243,7 +243,7 @@ class _LoginState extends State<Login> {
                         BorderSide(width: 2.0, color: Colors.purple[100])),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Colors.black)),
+                    borderSide: const BorderSide(color: Colors.black)),
                 onSubmit: (_) {
                   if ((emailCtrl.text.trim() == '') ||
                       (passwordCtrl.text.trim() == '')) {
@@ -266,11 +266,13 @@ class _LoginState extends State<Login> {
                       MaterialStateProperty.all<Color>(Colors.black),
                   overlayColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.hovered))
+                      if (states.contains(MaterialState.hovered)) {
                         return Colors.purple.withOpacity(0.04);
+                      }
                       if (states.contains(MaterialState.focused) ||
-                          states.contains(MaterialState.pressed))
+                          states.contains(MaterialState.pressed)) {
                         return Colors.purple.withOpacity(0.12);
+                      }
                       return null; // Defer to the widget's default.
                     },
                   ),
@@ -285,13 +287,13 @@ class _LoginState extends State<Login> {
                         emailCtrl.text.trim(), passwordCtrl.text.trim()));
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Iniciar Sesión',
                   style: TextStyle(fontSize: 17),
                 )),
           ),
           recoverPasswordButton(context),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
         ],
@@ -301,15 +303,15 @@ class _LoginState extends State<Login> {
 
   Padding recoverPasswordButton(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: TextButton(
         onPressed: () {
           showDialog(
               barrierColor: Colors.transparent,
               context: context,
-              builder: (context) => RecoverPasswordDialog());
+              builder: (context) => const RecoverPasswordDialog());
         },
-        child: Text(
+        child: const Text(
           'Olvidé mi contraseña',
           style: TextStyle(fontSize: 12.0),
         ),
@@ -334,13 +336,13 @@ class _LoginState extends State<Login> {
             child: Center(
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 100.0,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15.0,
                   ),
-                  Container(
+                  SizedBox(
                     width: 370,
                     height: 760,
                     child: Center(
@@ -352,7 +354,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 130.0,
                   )
                 ],
@@ -375,6 +377,8 @@ class _LoginState extends State<Login> {
 }
 
 class RecoverPasswordDialog extends StatefulWidget {
+  const RecoverPasswordDialog({Key key}) : super(key: key);
+
   @override
   State<RecoverPasswordDialog> createState() => _RecoverPasswordDialogState();
 }
@@ -382,7 +386,7 @@ class RecoverPasswordDialog extends StatefulWidget {
 class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
   LoginBloc loginBloc;
 
-  TextEditingController correoRecuperacionCtrl = new TextEditingController();
+  TextEditingController correoRecuperacionCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -419,10 +423,10 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'Ingrese su correo electronico de recuperación',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               Padding(
@@ -431,7 +435,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
                   onFieldSubmitted: (_) {
                     _submit();
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Correo electrónico',
                     labelText: 'Correo electrónico',
@@ -451,7 +455,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
                 elevation: 3.0,
               ),
               onPressed: _submit,
-              child: Text('Enviar'),
+              child: const Text('Enviar'),
             ),
           )
         ],
@@ -464,7 +468,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
         r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
 
     if (regExpEmail.hasMatch(correoRecuperacionCtrl.text)) {
-      await loginBloc.add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
+      loginBloc.add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
     } else {
       MostrarAlerta(
           mensaje: 'Ingrese un correo valido', tipoMensaje: TipoMensaje.error);

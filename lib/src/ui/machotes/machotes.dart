@@ -35,8 +35,8 @@ class _MachotesState extends State<Machotes> {
   void initState() {
     machotesBloc = BlocProvider.of<MachotesBloc>(context);
     machotesBloc.add(FechtMachotesEvent());
-    keyForm = new GlobalKey();
-    descripcionMachote = new TextEditingController();
+    keyForm = GlobalKey();
+    descripcionMachote = TextEditingController();
     super.initState();
   }
 
@@ -62,14 +62,14 @@ class _MachotesState extends State<Machotes> {
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: EdgeInsets.all(12),
+        margin: const EdgeInsets.all(12),
         elevation: 10,
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: <Widget>[
               ListTile(
-                contentPadding: EdgeInsets.fromLTRB(15, 10, 25, 0),
+                contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
                 title: Container(
                   alignment: Alignment.topLeft,
                   height: 25,
@@ -77,12 +77,12 @@ class _MachotesState extends State<Machotes> {
                   child: FittedBox(
                     child: Text(
                       itemMC.results.elementAt(element).descripcion,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                       textAlign: TextAlign.left,
                     ),
                   ),
                 ),
-                leading: Icon(Icons.event),
+                leading: const Icon(Icons.event),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -93,14 +93,14 @@ class _MachotesState extends State<Machotes> {
                           context: context,
                           builder: (context) => AlertDialog(
                             buttonPadding: EdgeInsets.zero,
-                            title: Center(
+                            title: const Center(
                               child: Text('Editar nombre de la plantilla'),
                             ),
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 TextFormField(
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Nombre de la plantilla'),
                                   initialValue: temp,
@@ -115,57 +115,57 @@ class _MachotesState extends State<Machotes> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('Cancelar'),
+                                child: const Text('Cancelar'),
                               ),
                               TextButton(
                                 onPressed: () async {
                                   if (temp != '') {
-                                    await machotesBloc.add(
-                                        UpdateNombreMachoteEvent(
-                                            itemMC.results
-                                                .elementAt(element)
-                                                .idMachote,
-                                            temp));
+                                    machotesBloc.add(UpdateNombreMachoteEvent(
+                                        itemMC.results
+                                            .elementAt(element)
+                                            .idMachote,
+                                        temp));
                                     Navigator.of(context).pop();
                                   }
                                 },
-                                child: Text('Aceptar'),
+                                child: const Text('Aceptar'),
                               )
                             ],
                           ),
                         );
                       },
-                      icon: Icon(Icons.edit),
+                      icon: const Icon(Icons.edit),
                     ),
                     IconButton(
                       onPressed: () async {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text('Eliminar plantilla'),
-                            content: Text('¿Desea eliminar la plantilla?'),
+                            title: const Text('Eliminar plantilla'),
+                            content:
+                                const Text('¿Desea eliminar la plantilla?'),
                             actions: [
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('Cancelar'),
+                                child: const Text('Cancelar'),
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  await machotesBloc.add(EliminarMachoteEvent(
-                                      itemMC.results
-                                          .elementAt(element)
-                                          .idMachote));
+                                  machotesBloc.add(EliminarMachoteEvent(itemMC
+                                      .results
+                                      .elementAt(element)
+                                      .idMachote));
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('Aceptar'),
+                                child: const Text('Aceptar'),
                               )
                             ],
                           ),
                         );
                       },
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                     )
                   ],
                 ),
@@ -180,7 +180,7 @@ class _MachotesState extends State<Machotes> {
   _constructorLista(ItemModelMachotes modelMC) {
     return IndexedStack(index: _selectedIndex, children: [
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -192,7 +192,7 @@ class _MachotesState extends State<Machotes> {
         ),
       ),
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -204,7 +204,7 @@ class _MachotesState extends State<Machotes> {
         ),
       ),
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -216,7 +216,7 @@ class _MachotesState extends State<Machotes> {
         ),
       ),
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -228,7 +228,7 @@ class _MachotesState extends State<Machotes> {
         ),
       ),
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -240,7 +240,7 @@ class _MachotesState extends State<Machotes> {
         ),
       ),
       Container(
-        margin: EdgeInsets.fromLTRB(10, 20, 10, 20),
+        margin: const EdgeInsets.fromLTRB(10, 20, 10, 20),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
@@ -256,8 +256,8 @@ class _MachotesState extends State<Machotes> {
 
   String validateDescripcion(String value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
-    RegExp regExp = new RegExp(pattern);
-    if (value.length == 0) {
+    RegExp regExp = RegExp(pattern);
+    if (value.isEmpty) {
       return "La descripción es necesaria";
     } else if (!regExp.hasMatch(value)) {
       return "La descripción debe de ser a-z y A-Z";
@@ -271,7 +271,7 @@ class _MachotesState extends State<Machotes> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Crear plantilla', textAlign: TextAlign.center),
+          title: const Text('Crear plantilla', textAlign: TextAlign.center),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Form(
@@ -293,7 +293,7 @@ class _MachotesState extends State<Machotes> {
                               leading: Radio(
                                 value: i,
                                 groupValue: _grupoRadio,
-                                activeColor: Color(0xFF6200EE),
+                                activeColor: const Color(0xFF6200EE),
                                 onChanged: (int value) {
                                   setState(() {
                                     _grupoRadio = value;
@@ -306,7 +306,7 @@ class _MachotesState extends State<Machotes> {
                       ),
                       TextFormField(
                         controller: descripcionMachote,
-                        decoration: new InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'Descripción',
                         ),
                         validator: validateDescripcion,
@@ -319,16 +319,16 @@ class _MachotesState extends State<Machotes> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            SizedBox(
+            const SizedBox(
               width: 10.0,
             ),
             TextButton(
-              child: Text('Guardar'),
+              child: const Text('Guardar'),
               onPressed: () async {
                 await _goEdit(context);
                 //_save();
@@ -346,40 +346,38 @@ class _MachotesState extends State<Machotes> {
       body: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await machotesBloc.add(FechtMachotesEvent());
+          machotesBloc.add(FechtMachotesEvent());
         },
-        child: Container(
-          child: BlocBuilder<MachotesBloc, MachotesState>(
-            builder: (context, state) {
-              if (state is LoadingMachotesState) {
-                return Center(child: LoadingCustom());
-              } else if (state is MostrarMachotesState) {
-                itemModelMC = state.machotes;
-                editsContratos = [];
-                return _constructorLista(state.machotes);
-              } else if (state is ErrorListaMachotesState) {
-                return Center(
-                  child: Text(state.message),
-                );
-              } else {
-                return Center(child: LoadingCustom());
-                //return _constructorLista(itemModelET);
-              }
-            },
-          ),
+        child: BlocBuilder<MachotesBloc, MachotesState>(
+          builder: (context, state) {
+            if (state is LoadingMachotesState) {
+              return const Center(child: LoadingCustom());
+            } else if (state is MostrarMachotesState) {
+              itemModelMC = state.machotes;
+              editsContratos = [];
+              return _constructorLista(state.machotes);
+            } else if (state is ErrorListaMachotesState) {
+              return Center(
+                child: Text(state.message),
+              );
+            } else {
+              return const Center(child: LoadingCustom());
+              //return _constructorLista(itemModelET);
+            }
+          },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         heroTag: UniqueKey(),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () async {
           await _showMyDialogGuardar();
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.gavel),
             label: 'Contratos',

@@ -29,7 +29,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  SharedPreferencesT _sharedPreferences = new SharedPreferencesT();
+  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   int _pageIndex = 0;
   int _pages = 0;
   PermisosBloc permisosBloc;
@@ -38,9 +38,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   ItemModelPerfil permisos;
 
+  @override
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
-    permisosBloc.add(obtenerPermisosEvent());
+    permisosBloc.add(ObtenerPermisosEvent());
     getClaveRol();
     super.initState();
   }
@@ -51,7 +52,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   //_HomeState(this.idPlanner);
   Color hexToColor(String code) {
-    return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override
@@ -62,13 +63,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       child: BlocBuilder<PermisosBloc, PermisosState>(
         builder: (context, state) {
           if (state is PermisosInitial) {
-            return Center(
+            return const Center(
               child: LoadingCustom(),
             );
           } else if (state is ErrorTokenPermisos) {
             return _showDialogMsg(context);
           } else if (state is LoadingPermisos) {
-            return Center(child: LoadingCustom());
+            return const Center(child: LoadingCustom());
           } else if (state is PermisosOk) {
             permisos = state.permisos;
             List<TabItem> tabs = obtenerTabs(state.permisos
@@ -82,7 +83,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               child: Text(state.message),
             );
           } else {
-            return Center(child: Text('Sin permisos'));
+            return const Center(child: Text('Sin permisos'));
           }
         },
       ),
@@ -108,22 +109,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   width: 250.0,
                 )),
               ),
-              leading: Container(
-                  child: Center(
+              leading: const Center(
                 child: Text('PLANNER',
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-              )),
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
               leadingWidth: 100.0,
               actions: <Widget>[
                 Container(
-                  padding: EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: Center(
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       child: PopupMenuButton(
                         child: widget.data['imag'] == null ||
                                 widget.data['imag'] == ''
-                            ? FaIcon(
+                            ? const FaIcon(
                                 FontAwesomeIcons.user,
                                 color: Colors.black,
                               )
@@ -133,13 +133,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 ),
                               ),
                         itemBuilder: (context) => [
-                          PopupMenuItem(
+                          const PopupMenuItem(
                             value: 1,
                             child: Text("Perfil"),
                           ),
                           if (claveRol == 'SU')
-                            PopupMenuItem(value: 2, child: Text("Planner")),
-                          PopupMenuItem(
+                            const PopupMenuItem(
+                                value: 2, child: Text("Planner")),
+                          const PopupMenuItem(
                             value: 3,
                             child: Text("Cerrar sesión"),
                           )
@@ -187,17 +188,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
     if (secciones != null) {
       if (secciones.hasAcceso(claveSeccion: 'WP-CEV')) {
-        tabs.add(TabItem(titulo: 'Dashboard', icono: Icons.dashboard));
+        tabs.add(const TabItem(titulo: 'Dashboard', icono: Icons.dashboard));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRE')) {
         tabs.add(
-            TabItem(titulo: 'Prospectos', icono: Icons.folder_shared_sharp));
+            const TabItem(titulo: 'Prospectos', icono: Icons.folder_shared_sharp));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
         tabs.add(
-            TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
+            const TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
         temp += 1;
       }
       // if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
@@ -207,43 +208,43 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       //   temp += 1;
       // }
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
-        tabs.add(TabItem(
+        tabs.add(const TabItem(
             titulo: 'Cronogramas', icono: Icons.hourglass_bottom_rounded));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
-        tabs.add(TabItem(titulo: 'Plantillas', icono: Icons.copy));
+        tabs.add(const TabItem(titulo: 'Plantillas', icono: Icons.copy));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-TEV')) {
-        tabs.add(TabItem(
+        tabs.add(const TabItem(
             titulo: 'Tipos de eventos', icono: Icons.event_note_outlined));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
-        tabs.add(TabItem(
+        tabs.add(const TabItem(
             titulo: 'Proveedores', icono: Icons.support_agent_outlined));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-IVT')) {
-        tabs.add(TabItem(
+        tabs.add(const TabItem(
             titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRS')) {
         tabs.add(
-            TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
+            const TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
 
       if (secciones.hasAcceso(claveSeccion: 'WP-USR')) {
-        tabs.add(TabItem(titulo: 'Usuarios', icono: Icons.people));
+        tabs.add(const TabItem(titulo: 'Usuarios', icono: Icons.people));
         temp += 1;
       }
       _pages = temp;
       return tabs;
     } else {
-      return [TabItem(titulo: 'Sin permisos', icono: Icons.block)];
+      return [const TabItem(titulo: 'Sin permisos', icono: Icons.block)];
     }
   }
 
@@ -251,10 +252,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     List<Widget> pan = [];
     if (secciones != null) {
       if (secciones.hasAcceso(claveSeccion: 'WP-CEV')) {
-        pan.add(DashboardCalendarPage());
+        pan.add(const DashboardCalendarPage());
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRE')) {
-        pan.add(ProspectosPage());
+        pan.add(const ProspectosPage());
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
         pan.add(DashboardEventos(
@@ -264,23 +265,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       }
 
       if (secciones.hasAcceso(claveSeccion: 'WP-TIM')) {
-        pan.add(Timing());
+        pan.add(const Timing());
       }
 
       if (secciones.hasAcceso(claveSeccion: 'WP-PLN')) {
-        pan.add(Machotes());
+        pan.add(const Machotes());
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRV')) {
-        pan.add(Proveedores());
+        pan.add(const Proveedores());
       }
 
       if (secciones.hasAcceso(claveSeccion: 'WP-USR')) {
-        pan.add(Usuarios());
+        pan.add(const Usuarios());
       }
       return pan;
     } else {
       return [
-        Center(
+        const Center(
           child: Text('Sin permisos.'),
         )
       ];
@@ -290,17 +291,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   _showDialogMsg(BuildContext contextT) {
     _dialogContext = contextT;
     return AlertDialog(
-      title: Text(
+      title: const Text(
         "Sesión",
         textAlign: TextAlign.center,
       ),
-      content: Text(
+      content: const Text(
           'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[
         TextButton(
-          child: Text('Cerrar'),
+          child: const Text('Cerrar'),
           onPressed: () async {
             await _sharedPreferences.clear();
             Navigator.of(contextT)

@@ -4,13 +4,13 @@ part of 'view_archivos_bloc.dart';
 abstract class ViewArchivosEvent {}
 
 class FechtArchivoByIdEvent extends ViewArchivosEvent {
-  final int id_archivo;
-  FechtArchivoByIdEvent(this.id_archivo);
-  List<Object> get props => [id_archivo];
+  final int idArchivo;
+  FechtArchivoByIdEvent(this.idArchivo);
+  List<Object> get props => [idArchivo];
 }
 
 class FechtArchivoEspecialByIdEvent extends ViewArchivosEvent {
-  final int id_archivo;
-  FechtArchivoEspecialByIdEvent(this.id_archivo);
-  List<Object> get props => [id_archivo];
+  final int idArchivo;
+  FechtArchivoEspecialByIdEvent(this.idArchivo);
+  List<Object> get props => [idArchivo];
 }

@@ -4,10 +4,10 @@ part of 'archivos_especiales_bloc.dart';
 abstract class ArchivosEspecialesEvent {}
 
 class FechtArchivoEspecialEvent extends ArchivosEspecialesEvent {
-  final int id_proveedor;
-  final int id_evento;
-  FechtArchivoEspecialEvent(this.id_proveedor, this.id_evento);
-  List<Object> get props => [id_proveedor, id_evento];
+  final int idProveedor;
+  final int idEvento;
+  FechtArchivoEspecialEvent(this.idProveedor, this.idEvento);
+  List<Object> get props => [idProveedor, idEvento];
 }
 
 class DeleteArchivoEspecialEvent extends ArchivosEspecialesEvent {

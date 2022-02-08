@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/timings_logic.dart';
 import 'package:planning/src/models/item_model_timings.dart';
 
@@ -48,7 +48,11 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
         if (resp == 'Ok') {
           add(FetchTimingsPorPlannerEvent('A'));
         }
-      } catch (e) {}
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
     } else if (event is DeleteTimingPlannerEvent) {
       try {
         final data = await logic.deleteTimingPlanner(event.idTipoTiming);
@@ -56,7 +60,9 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
         yield TimingDeletedState(data);
         add(FetchTimingsPorPlannerEvent('A'));
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }
