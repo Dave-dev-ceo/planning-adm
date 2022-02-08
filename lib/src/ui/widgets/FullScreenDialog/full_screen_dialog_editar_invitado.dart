@@ -68,6 +68,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   String _mySelectionG = "1";
   String _mySelectionM = "0";
   final bool _lights = false;
+  String seleccionEstatus;
+  bool isEdtiingEstatus = false;
 
   String _base64qr;
   // Acompañante
@@ -517,15 +519,15 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     }
   }
 
-  _listaEstatus(String value) {
+  _listaEstatus() {
     ///bloc.dispose();
     blocEstatus.fetchAllEstatus(context);
     return StreamBuilder(
       stream: blocEstatus.allEstatus,
       builder: (context, AsyncSnapshot<ItemModelEstatusInvitado> snapshot) {
         if (snapshot.hasData) {
-          _mySelection = ((snapshot.data.results.length - 1).toString());
-          return _dropDownEstatusInvitado(snapshot.data, value);
+          // _mySelection = ((snapshot.data.results.length - 1).toString());
+          return _dropDownEstatusInvitado(snapshot.data);
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -534,10 +536,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     );
   }
 
-  _dropDownEstatusInvitado(ItemModelEstatusInvitado estatus, String value) {
+  _dropDownEstatusInvitado(ItemModelEstatusInvitado estatus) {
     return DropdownButton(
-      hint: const Text('Seleccionar estatus'),
-      value: value == 'null' ? null : value,
+      // hint: const Text('Seleccionar estatus'),
+      value: seleccionEstatus,
       icon: const Icon(Icons.arrow_drop_down_outlined),
       iconSize: 24,
       elevation: 16,
@@ -546,9 +548,11 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         height: 2,
         color: const Color(0xFF000000),
       ),
+      isDense: true,
       onChanged: (newValue) {
         setState(() {
-          _mySelection = newValue;
+          isEdtiingEstatus = true;
+          seleccionEstatus = newValue;
         });
       },
       items: estatus.results.map((item) {
@@ -581,6 +585,12 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     if (invitado.numbAcomp != null) {
       _numAcomp = invitado.numbAcomp;
     }
+    if (!isEdtiingEstatus) {
+      seleccionEstatus = invitado.asistencia.toString() == 'null'
+          ? null
+          : invitado.asistencia.toString();
+    }
+
     _base64qr = invitado.codigoQr;
     if (contActualiza <= 0) {
       if (invitado.asistencia != null) {
@@ -690,8 +700,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                             const SizedBox(
                               width: 15,
                             ),
-
-                            _listaEstatus(invitado.asistencia.toString()),
+                            _listaEstatus(),
                             //_dropDownEstatusInvitado(),
                           ],
                         ),
