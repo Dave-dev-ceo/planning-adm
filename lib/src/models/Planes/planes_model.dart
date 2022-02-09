@@ -111,8 +111,6 @@ class EventoActividadModel {
   String nombreActividad;
   String descripcionActividad;
   bool visibleInvolucrado = false;
-  int diasActividad;
-  int predecesorActividad;
   int idEvento;
   bool estadoCalendarioActividad;
   DateTime fechaInicioActividad;
@@ -131,8 +129,6 @@ class EventoActividadModel {
     this.nombreActividad,
     this.descripcionActividad,
     this.visibleInvolucrado,
-    this.diasActividad = 0,
-    this.predecesorActividad,
     this.estadoCalendarioActividad,
     this.fechaInicioActividad,
     this.idActividadOld,
@@ -153,8 +149,6 @@ class EventoActividadModel {
         nombreActividad: json['nombre_actividad'],
         descripcionActividad: json['descripcion_actividad'],
         visibleInvolucrado: json['visible_involucrados_actividad'],
-        diasActividad: json['dias_actividad'],
-        predecesorActividad: json['predecesor_actividad'],
         estadoCalendarioActividad: json['estado_calendario_actividad'],
         fechaInicioActividad:
             DateTime.tryParse(json['fecha_inicio_actividad']).toLocal(),
@@ -180,8 +174,6 @@ class EventoActividadModel {
         'nombre_actividad': nombreActividad,
         'descripcion_actividad': descripcionActividad,
         'visible_involucrados_actividad': visibleInvolucrado,
-        'dias_actividad': diasActividad,
-        'predecesor_actividad': predecesorActividad,
         'estado_calendario_actividad': estadoCalendarioActividad,
         'fecha_inicio_actividad': fechaInicioActividad.toString(),
         'fecha_fin_actividad': fechaFinActividad.toString(),

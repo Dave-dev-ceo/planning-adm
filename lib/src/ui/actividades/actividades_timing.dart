@@ -31,7 +31,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   String _mySelectionAT = '0';
   int _itemCount = 0;
   bool _actVisible = false;
-  int _itemCountEdit = 0;
   bool _actVisibleEdit = false;
 
   _AgregarActividadesState(this.idTiming);
@@ -59,8 +58,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   _initControlersEdit(ItemModelActividadesTimings actividad, int i) {
     actividadEditCtrl = TextEditingController(
         text: actividad.results.elementAt(i).nombreActividad);
-    _itemCountEdit = int.parse(actividad.results.elementAt(i).dias);
-    numEditCtrl = TextEditingController(text: _itemCountEdit.toString());
     _actVisibleEdit = actividad.results.elementAt(i).visibleInvolucrados;
     descripcionEditCtrl =
         TextEditingController(text: actividad.results.elementAt(i).descripcion);
@@ -111,8 +108,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
         "nombre_actividad": actividadCtrl.text,
         "descripcion": descripcionCtrl.text,
         "visible_involucrados": _actVisible.toString(),
-        "dias": numCtrl.text,
-        "predecesor": _mySelectionAT,
       };
       actividadestimingBloc
           .add(CreateActividadesTimingsEvent(jsonActividad, idTiming));
@@ -161,61 +156,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
             Wrap(
               alignment: WrapAlignment.center,
               children: <Widget>[
-                TextFormFields(
-                  icon: Icons.date_range_outlined,
-                  ancho: 80.0,
-                  large: 363.0,
-                  item: Row(
-                    children: [
-                      const Expanded(child: Text("Duración en días:")),
-                      et
-                          ? IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: _itemCount == 0
-                                  ? null
-                                  : () => setState(() {
-                                        _itemCount--;
-                                        numCtrl.text = _itemCount.toString();
-                                      }),
-                            )
-                          : IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: _itemCountEdit == 0
-                                  ? null
-                                  : () => setState(() {
-                                        _itemCountEdit--;
-                                        numEditCtrl.text =
-                                            _itemCountEdit.toString();
-                                      }),
-                            ),
-                      SizedBox(
-                        width: 45,
-                        height: 45,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 3),
-                          child: TextFormField(
-                            controller: et ? numCtrl : numEditCtrl,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      et
-                          ? IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () => setState(() {
-                                    _itemCount++;
-                                    numCtrl.text = _itemCount.toString();
-                                  }))
-                          : IconButton(
-                              icon: const Icon(Icons.add),
-                              onPressed: () => setState(() {
-                                    _itemCountEdit++;
-                                    numEditCtrl.text =
-                                        _itemCountEdit.toString();
-                                  })),
-                    ],
-                  ),
-                ),
                 et
                     ? TextFormFields(
                         icon: null,
@@ -253,12 +193,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                         ancho: 80,
                         large: 363.0,
                       ),
-                TextFormFields(
-                  icon: Icons.linear_scale_outlined,
-                  item: _constructorDropDownAT(),
-                  ancho: 80,
-                  large: 500,
-                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   child: ElevatedButton(
@@ -415,11 +349,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                 item.results.elementAt(i).nombreActividad,
                             descripcionActividad:
                                 item.results.elementAt(i).descripcion,
-                            diasActividad: item.results.elementAt(i).dia,
                             visibleInvolucrado:
                                 item.results.elementAt(i).visibleInvolucrados,
-                            predecesorActividad:
-                                item.results.elementAt(i).predecesor,
                           );
 
                           List<EventoActividadModel> listaActividades = [];
@@ -434,10 +365,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                     idActividad: actividad.idActividad,
                                     nombreActividad: actividad.nombreActividad,
                                     descripcionActividad: actividad.descripcion,
-                                    diasActividad: actividad.dia,
                                     visibleInvolucrado:
                                         actividad.visibleInvolucrados,
-                                    predecesorActividad: actividad.predecesor,
                                   )),
                                 );
                               }
@@ -569,23 +498,16 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
   _EditActividadDialogState(this.actividad, this.idTiming);
 
   ActividadestimingBloc actividadestimingBloc;
-  TextEditingController diasController;
-  List<EventoActividadModel> predecesores = [];
 
   @override
   void initState() {
     actividadestimingBloc = BlocProvider.of<ActividadestimingBloc>(context);
-    EventoActividadModel primeraOpcion = EventoActividadModel(
-        nombreActividad: 'Seleccione un predecesor', idActividad: -1);
-    predecesores = [primeraOpcion, ...widget.actividades];
 
-    diasController = TextEditingController(text: '${actividad.diasActividad}');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return SizedBox(
         width: double.infinity,
         child: AlertDialog(
@@ -616,110 +538,49 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                         borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       children: <Widget>[
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          children: <Widget>[
-                            TextFormFields(
-                                icon: Icons.local_activity,
-                                item: TextFormField(
-                                  initialValue: actividad.nombreActividad,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Nombre',
-                                  ),
-                                  onChanged: (value) {
-                                    actividad.nombreActividad = value;
-                                  },
-                                ),
-                                large: 500.0,
-                                ancho: 80.0),
-                            TextFormFields(
-                                icon: Icons.drive_file_rename_outline,
-                                item: TextFormField(
-                                  initialValue: actividad.descripcionActividad,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Descripción',
-                                  ),
-                                  onChanged: (value) {
-                                    actividad.descripcionActividad = value;
-                                  },
-                                ),
-                                large: 500.0,
-                                ancho: 80.0),
-                          ],
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          children: <Widget>[
-                            TextFormFields(
-                              icon: Icons.date_range_outlined,
-                              ancho: 80.0,
-                              large: 363.0,
-                              item: (size.width > 400)
-                                  ? Row(
-                                      children: durationDaysChildren(false),
-                                    )
-                                  : Column(
-                                      children: durationDaysChildren(true),
-                                    ),
-                            ),
-                            TextFormFields(
-                              icon: null,
-                              item: CheckboxListTile(
-                                title: const Text('Visible para involucrados'),
-                                //secondary: Icon(Icons.be),
-                                controlAffinity:
-                                    ListTileControlAffinity.platform,
-                                value: actividad.visibleInvolucrado,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    actividad.visibleInvolucrado = value;
-                                  });
-                                },
-                                activeColor: Colors.green,
-                                checkColor: Colors.black,
+                        TextFormFields(
+                            icon: Icons.local_activity,
+                            item: TextFormField(
+                              initialValue: actividad.nombreActividad,
+                              decoration: const InputDecoration(
+                                labelText: 'Nombre',
                               ),
-                              ancho: 80,
-                              large: 363.0,
+                              onChanged: (value) {
+                                actividad.nombreActividad = value;
+                              },
                             ),
-                            if (widget.actividades.isNotEmpty)
-                              TextFormFields(
-                                icon: Icons.linear_scale_outlined,
-                                item: DropdownButtonFormField(
-                                    decoration: const InputDecoration(
-                                        constraints: BoxConstraints(
-                                      maxWidth: 450,
-                                    )),
-                                    hint:
-                                        const Text('Seleccione el predecesor'),
-                                    menuMaxHeight: 450,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    onChanged: (valor) {
-                                      setState(() {
-                                        if (valor != -1) {
-                                          actividad.predecesorActividad = valor;
-                                        } else {
-                                          actividad.predecesorActividad = null;
-                                        }
-                                      });
-                                    },
-                                    iconSize: 10.0,
-                                    isExpanded: true,
-                                    value: actividad.predecesorActividad ?? -1,
-                                    items: predecesores
-                                        .map((e) => DropdownMenuItem(
-                                              child: Text(
-                                                e.nombreActividad,
-                                              ),
-                                              value: e.idActividad,
-                                            ))
-                                        .toList()),
-                                ancho: 80,
-                                large: 500,
+                            large: 500.0,
+                            ancho: 80.0),
+                        TextFormFields(
+                            icon: Icons.drive_file_rename_outline,
+                            item: TextFormField(
+                              initialValue: actividad.descripcionActividad,
+                              decoration: const InputDecoration(
+                                labelText: 'Descripción',
                               ),
-                          ],
+                              onChanged: (value) {
+                                actividad.descripcionActividad = value;
+                              },
+                            ),
+                            large: 500.0,
+                            ancho: 80.0),
+                        TextFormFields(
+                          icon: null,
+                          item: CheckboxListTile(
+                            title: const Text('Visible para involucrados'),
+                            //secondary: Icon(Icons.be),
+                            controlAffinity: ListTileControlAffinity.platform,
+                            value: actividad.visibleInvolucrado,
+                            onChanged: (bool value) {
+                              setState(() {
+                                actividad.visibleInvolucrado = value;
+                              });
+                            },
+                            activeColor: Colors.green,
+                            checkColor: Colors.black,
+                          ),
+                          ancho: 80,
+                          large: 363.0,
                         )
                       ],
                     ),
@@ -742,41 +603,5 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                 child: const Text('Aceptar')),
           ],
         ));
-  }
-
-  List<Widget> durationDaysChildren(bool isMovil) {
-    return [
-      const Text("Duración en días:"),
-      Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.remove),
-            onPressed: actividad.diasActividad == 0
-                ? null
-                : () => setState(() {
-                      actividad.diasActividad--;
-                      diasController.text = actividad.diasActividad.toString();
-                    }),
-          ),
-          SizedBox(
-            width: 45,
-            height: 45,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              child: TextFormField(
-                controller: diasController,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () => setState(() {
-                    actividad.diasActividad++;
-                    diasController.text = actividad.diasActividad.toString();
-                  })),
-        ],
-      )
-    ];
   }
 }

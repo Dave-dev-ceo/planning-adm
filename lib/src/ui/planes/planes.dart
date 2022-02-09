@@ -692,7 +692,6 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   actividad.fechaInicioActividad,
                   actividad.fechaInicioEvento,
                   actividad.fechaFinEvento,
-                  actividad.diasActividad,
                   actividad.idActividad,
                 );
 
@@ -741,7 +740,6 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   actividad.fechaInicioActividad,
                   actividad.fechaInicioEvento,
                   actividad.fechaFinEvento,
-                  actividad.diasActividad,
                   actividad.idActividad,
                 );
 
@@ -791,6 +789,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                         showDialog(
                             context: context,
                             builder: (context) => DialogArchivoActividad(
+                                  nombreActividad: actividad.nombreActividad,
                                   idActividad: actividad.idActividad,
                                 ));
                       },
@@ -1187,7 +1186,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
   // }
 
   Future<DateTime> _giveFecha(DateTime fechaActividad, DateTime fechaInicio,
-      DateTime fechaFinal, int dias, int id) async {
+      DateTime fechaFinal, int id) async {
     fechaActividad = await showDatePicker(
       context: context,
       initialDate: fechaActividad,
@@ -1303,8 +1302,6 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             nombreResponsable: actividad.responsable,
             descripcionActividadPlanner: actividad.descripcionActividad,
             visibleInvolucradosActividadPlanner: actividad.visibleInvolucrado,
-            diasActividadPlanner: actividad.diasActividad,
-            predecesorActividadPlanner: actividad.predecesorActividad,
             fechaInicioEvento: actividad.fechaInicioEvento,
             fechaFinalEvento: actividad.fechaFinEvento,
             idOldActividad: actividad.idActividadOld,
@@ -1393,7 +1390,6 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
           .format(widget.actividadModel.fechaFinActividad);
     } else {
       actividad = EventoActividadModel(
-        diasActividad: 1,
         visibleInvolucrado: false,
         estadoCalendarioActividad: false,
       );

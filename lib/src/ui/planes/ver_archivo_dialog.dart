@@ -8,7 +8,9 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class DialogArchivoActividad extends StatefulWidget {
   final int idActividad;
-  const DialogArchivoActividad({Key key, @required this.idActividad})
+  final String nombreActividad;
+  const DialogArchivoActividad(
+      {Key key, @required this.idActividad, this.nombreActividad})
       : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class _DialogArchivoActividadState extends State<DialogArchivoActividad> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('ver Archivo Actividad'),
+        title: Text('Archivo: ${widget.nombreActividad}'),
       ),
       body: FutureBuilder(
         future: logic.obtenerArchivoActividad(widget.idActividad),
