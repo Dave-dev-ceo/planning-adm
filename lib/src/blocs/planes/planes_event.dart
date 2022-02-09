@@ -81,16 +81,25 @@ class UpdateActividadesEventoEvent extends PlanesEvent {
 
 class AddNewActividadEvent extends PlanesEvent {
   final EventoActividadModel actividad;
-  final int idEventoTiming;
+  final int idTiming;
+  final String archivo;
+  final String tipoMime;
 
-  AddNewActividadEvent(this.actividad, this.idEventoTiming);
+  AddNewActividadEvent(
+      this.actividad, this.idTiming, this.archivo, this.tipoMime);
 
-  List<Object> get props => [actividad, idEventoTiming];
+  List<Object> get props => [actividad, idTiming, archivo, tipoMime];
 }
 
 class EditActividadEvent extends PlanesEvent {
+  final String archivo;
+  final String tipoMime;
   final EventoActividadModel actividad;
 
-  EditActividadEvent(this.actividad);
-  List<Object> get props => [actividad];
+  EditActividadEvent(this.actividad, this.archivo, this.tipoMime);
+  List<Object> get props => [
+        actividad,
+        archivo,
+        tipoMime,
+      ];
 }

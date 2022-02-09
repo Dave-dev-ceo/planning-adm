@@ -29,8 +29,13 @@ abstract class PlanesLogic {
   Future<List<TimingModel>> getTimingsAndActivities();
   Future<bool> updateEventoActividades(List<EventoActividadModel> actividades);
   Future<bool> addNewActividadEvento(
-      EventoActividadModel actividadModel, int idEventoTiming);
-  Future<bool> editActtividad(EventoActividadModel actividadModel);
+    EventoActividadModel actividadModel,
+    int idTiming,
+    String archivo,
+    String tipoMime,
+  );
+  Future<bool> editActtividad(
+      EventoActividadModel actividadModel, String archivo, String tipoMime);
 }
 
 class ConsultasPlanesLogic extends PlanesLogic {
@@ -451,7 +456,11 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
   @override
   Future<bool> addNewActividadEvento(
-      EventoActividadModel actividadModel, int idEventoTiming) async {
+    EventoActividadModel actividadModel,
+    int idTiming,
+    String archivo,
+    String tipoMime,
+  ) async {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -469,7 +478,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
       'idPlanner': idPlanner,
       'idUsuario': idUsuario,
       'idEvento': idEvento,
-      'idEventoTiming': idEventoTiming,
+      'idTiming': idTiming,
       'nombreActiviad': actividadModel.nombreActividad,
       'descripcion': actividadModel.descripcionActividad,
       'fecha': actividadModel.fechaInicioActividad.toString(),
@@ -478,7 +487,9 @@ class ConsultasPlanesLogic extends PlanesLogic {
       'dias': actividadModel.diasActividad,
       'idActividadTiming': actividadModel.idActividadOld,
       'responsable': actividadModel.responsable,
-      'fechafin': actividadModel.fechaFinActividad.toString()
+      'fechafin': actividadModel.fechaFinActividad.toString(),
+      'archivo': archivo,
+      'tipoMime': tipoMime,
     };
 
     final resp = await client.post(
@@ -495,7 +506,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
   }
 
   @override
-  Future<bool> editActtividad(EventoActividadModel actividadModel) async {
+  Future<bool> editActtividad(EventoActividadModel actividadModel,
+      String archivo, String tipoMime) async {
     String token = await _sharedPreferences.getToken();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
@@ -520,7 +532,9 @@ class ConsultasPlanesLogic extends PlanesLogic {
       'visibleInvolucrado': actividadModel.visibleInvolucrado,
       'predecesor': actividadModel.predecesorActividad,
       'responsable': actividadModel.responsable,
-      'fechafin': actividadModel.fechaFinActividad.toString()
+      'fechafin': actividadModel.fechaFinActividad.toString(),
+      'archivo': archivo,
+      'tipoMime': tipoMime,
     };
 
     final resp = await client.post(

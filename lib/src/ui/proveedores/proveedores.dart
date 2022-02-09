@@ -210,8 +210,8 @@ class _ProveedoresState extends State<Proveedores> {
                           return const LinearProgressIndicator();
                         },
                       ),
-                      large: size,
-                      ancho: 80.0,
+                      large: size.toDouble(),
+                      ancho: 80.0.toDouble(),
                     ),
                     if (idPais != null)
                       TextFormFields(
@@ -243,8 +243,8 @@ class _ProveedoresState extends State<Proveedores> {
                             return const LinearProgressIndicator();
                           },
                         ),
-                        large: size,
-                        ancho: 80.0,
+                        large: size.toDouble(),
+                        ancho: 80.0.toDouble(),
                       ),
                     if (idEstado != null)
                       TextFormFields(
@@ -274,8 +274,8 @@ class _ProveedoresState extends State<Proveedores> {
                             return const LinearProgressIndicator();
                           },
                         ),
-                        large: size,
-                        ancho: 80.0,
+                        large: size.toDouble(),
+                        ancho: 80.0.toDouble(),
                       ),
                     if (idPais != null)
                       Padding(

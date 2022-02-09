@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -134,7 +135,7 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
     } else if (event is AddNewActividadEvent) {
       try {
         final data = await logic.addNewActividadEvento(
-            event.actividad, event.idEventoTiming);
+            event.actividad, event.idTiming, event.archivo, event.tipoMime);
         yield AddedActividadState(data);
         add(GetTimingsAndActivitiesEvent());
       } catch (e) {
@@ -144,7 +145,8 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       }
     } else if (event is EditActividadEvent) {
       try {
-        final data = await logic.editActtividad(event.actividad);
+        final data = await logic.editActtividad(
+            event.actividad, event.archivo, event.tipoMime);
         yield AddedActividadState(data);
         add(GetTimingsAndActivitiesEvent());
       } catch (e) {
