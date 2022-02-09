@@ -33,6 +33,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   evt_bloc.EventosBloc eventosBloc;
   FetchListaEventosLogic eventoLogic = FetchListaEventosLogic();
   final ActividadesEvento _planesLogic = ActividadesEvento();
+
   bool isInvolucrado = false;
 
   @override
@@ -112,7 +113,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
               contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
               title: const Text(
                 'Asistencia',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 15),
               ),
               subtitle: SizedBox(
                 height: 70,
@@ -189,7 +190,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                       const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
                   title: const Text(
                     'Detalles del evento',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 15),
                   ),
                   subtitle: Wrap(
                     spacing: 5,
@@ -245,58 +246,252 @@ class _ResumenEventoState extends State<ResumenEvento> {
     }
   }
 
+  Widget contadorActividadesWidget(Size size) {
+    _planesLogic.getContadorValues(isInvolucrado);
+
+    return Card(
+      color: const Color(0xFFfdf4e5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      margin: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
+      elevation: 10.0,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: StreamBuilder(
+          stream: _planesLogic.contadorActividadStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data.total > 0) {
+                return Column(
+                  children: [
+                    const Center(
+                        child: Text(
+                      'Actividades',
+                      style: TextStyle(fontSize: 15.0),
+                    )),
+                    if (size.width > 400)
+                      Row(
+                        children: [
+                          const Spacer(),
+                          Theme(
+                            data: ThemeData(disabledColor: Colors.green),
+                            child: const Checkbox(
+                              value: true,
+                              onChanged: null,
+                              hoverColor: Colors.transparent,
+                            ),
+                          ),
+                          Text(
+                              '${snapshot.data.completadas.toString()} Completadas'),
+                          const Spacer(),
+                          Theme(
+                            data: ThemeData(disabledColor: Colors.yellow[800]),
+                            child: const Checkbox(
+                              value: false,
+                              onChanged: null,
+                            ),
+                          ),
+                          Text(
+                              '${snapshot.data.pendientes.toString()} En Curso'),
+                          const Spacer(),
+                          Theme(
+                            data: ThemeData(disabledColor: Colors.red),
+                            child: const Checkbox(
+                              value: false,
+                              onChanged: null,
+                            ),
+                          ),
+                          Text(
+                              '${snapshot.data.atrasadas.toString()} Atrasadas'),
+                          const Spacer(),
+                        ],
+                      )
+                    else
+                      Column(children: [
+                        Theme(
+                          data: ThemeData(disabledColor: Colors.green),
+                          child: const Checkbox(
+                            value: true,
+                            onChanged: null,
+                            hoverColor: Colors.transparent,
+                          ),
+                        ),
+                        Text(
+                            '${snapshot.data.completadas.toString()} Completadas'),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Theme(
+                          data: ThemeData(disabledColor: Colors.yellow[800]),
+                          child: const Checkbox(
+                            value: false,
+                            onChanged: null,
+                          ),
+                        ),
+                        Text('${snapshot.data.pendientes.toString()} En Curso'),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Theme(
+                          data: ThemeData(disabledColor: Colors.red),
+                          child: const Checkbox(
+                            value: false,
+                            onChanged: null,
+                          ),
+                        ),
+                        Text('${snapshot.data.atrasadas.toString()} Atrasadas'),
+                      ]),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                        'Progreso ${((snapshot.data.completadas / snapshot.data.total) * 100).toStringAsFixed(0)}%'),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Theme(
+                      data: ThemeData(),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: size.width > 400 ? 400 : 200,
+                        ),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          child: LinearProgressIndicator(
+                            minHeight: 5.0,
+                            value:
+                                snapshot.data.completadas / snapshot.data.total,
+                            semanticsLabel: 'Linear progress indicator',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Text('Total: ${snapshot.data.total}')
+                  ],
+                );
+              }
+            }
+            if (size.width > 400) {
+              return Row(
+                children: [
+                  const Spacer(),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.green),
+                    child: const Checkbox(
+                      value: true,
+                      onChanged: null,
+                      hoverColor: Colors.transparent,
+                    ),
+                  ),
+                  const Text('Completadas'),
+                  const Spacer(),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.yellow[800]),
+                    child: const Checkbox(
+                      value: false,
+                      onChanged: null,
+                    ),
+                  ),
+                  const Text('En Curso'),
+                  const Spacer(),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.red),
+                    child: const Checkbox(
+                      value: false,
+                      onChanged: null,
+                    ),
+                  ),
+                  const Text('Atrasadas'),
+                  const Spacer(),
+                ],
+              );
+            } else {
+              return Column(
+                children: [
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.green),
+                    child: const Checkbox(
+                      value: true,
+                      onChanged: null,
+                      hoverColor: Colors.transparent,
+                    ),
+                  ),
+                  const Text('Completadas'),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.yellow[800]),
+                    child: const Checkbox(
+                      value: false,
+                      onChanged: null,
+                    ),
+                  ),
+                  const Text('En Curso'),
+                  Theme(
+                    data: ThemeData(disabledColor: Colors.red),
+                    child: const Checkbox(
+                      value: false,
+                      onChanged: null,
+                    ),
+                  ),
+                  const Text('Atrasadas'),
+                ],
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
   Widget futureToPlannes() {
     _planesLogic.getAllPlannes();
 
-    return StreamBuilder(
-      stream: _planesLogic.actividadesStream,
-      builder:
-          (BuildContext context, AsyncSnapshot<List<PlannesModel>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFFfdf4e5),
-            ),
-            width: 500,
-            height: 300,
-            child: Card(
-              color: const Color(0xFFfdf4e5),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              margin: const EdgeInsets.all(20.0),
-              elevation: 10.0,
-              child: const Align(
-                alignment: Alignment.center,
-                child: LoadingCustom(),
-              ),
-            ),
-          );
-        } else {
-          if (snapshot.hasData) {
-            return miCardActividades(snapshot.data);
-          } else {
+    return Card(
+      child: StreamBuilder(
+        stream: _planesLogic.actividadesStream,
+        builder:
+            (BuildContext context, AsyncSnapshot<List<PlannesModel>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               decoration: const BoxDecoration(
                 color: Color(0xFFfdf4e5),
               ),
               width: 500,
               height: 300,
-              child: Card(
-                color: const Color(0xFFfdf4e5),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                margin: const EdgeInsets.all(20.0),
-                elevation: 10.0,
-                child: const SingleChildScrollView(
-                    child: Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Center(
-                            child: Text('No se encontraron actividades')))),
+              child: const Align(
+                alignment: Alignment.center,
+                child: LoadingCustom(),
               ),
             );
+          } else {
+            if (snapshot.hasData) {
+              return miCardActividades(snapshot.data);
+            } else {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFFfdf4e5),
+                ),
+                width: 500,
+                height: 300,
+                child: Card(
+                  color: const Color(0xFFfdf4e5),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  margin: const EdgeInsets.all(20.0),
+                  elevation: 10.0,
+                  child: const SingleChildScrollView(
+                      child: Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Center(
+                              child: Text('No se encontraron actividades')))),
+                ),
+              );
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -373,11 +568,14 @@ class _ResumenEventoState extends State<ResumenEvento> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: (isInvolucrado)
           ? AppBar(
               centerTitle: true,
-              title: const Text('Resumen del evento'),
+              title: const Text(
+                'Resumen del evento',
+              ),
             )
           : null,
       body: RefreshIndicator(
@@ -401,7 +599,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                     //child:
                     reporteEvento(),
                     reporteInvitados(),
-                    futureToPlannes(),
+                    contadorActividadesWidget(size),
                     //),
                   ],
                 ),
