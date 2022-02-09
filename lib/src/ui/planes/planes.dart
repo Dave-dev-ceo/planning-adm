@@ -483,76 +483,28 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
               ),
               flex: 1,
             ),
-            if (claveRol != 'INVO')
-              const Expanded(
-                child: Text('Acción'),
-                flex: 1,
-              )
+            const Expanded(
+              child: Text('Acción'),
+              flex: 1,
+            )
           ],
         ),
       );
-      listActividadesWidget.add(header);
+      if (size.width > 720) {
+        listActividadesWidget.add(header);
+      }
 
       for (EventoActividadModel actividad in actividades) {
         if (claveRol == 'INVO') {
           if (actividad.visibleInvolucrado) {
-            Widget actividadWidget = ListTile(
-              leading: Theme(
-                data: ThemeData(
-                    primarySwatch: Colors.green,
-                    unselectedWidgetColor: actividad.estatus == 'Pendiente'
-                        ? Colors.yellow[800]
-                        : Colors.red),
-                child: Checkbox(
-                  value: actividad.estatusProgreso,
-                  onChanged: (_) => {},
-                  hoverColor: Colors.transparent,
-                ),
-              ),
-              title: Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: AutoSizeText(
-                      actividad.nombreActividad,
-                      maxLines: 2,
-                    ),
-                  ),
-                  Expanded(
-                      flex: 2,
-                      child: Text(
-                        actividad.responsable ?? 'Sin responsable',
-                      )),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: AutoSizeText(
-                        '${actividad.fechaInicioActividad.day}/${actividad.fechaInicioActividad.month}/${actividad.fechaInicioActividad.year}',
-                        maxLines: 1,
-                        wrapWords: false,
-                      ),
-                    ),
-                    flex: 1,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: AutoSizeText(
-                        '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
-                        maxLines: 1,
-                        wrapWords: false,
-                      ),
-                    ),
-                    flex: 1,
-                  )
-                ],
-              ),
-              subtitle: Text(actividad.descripcionActividad),
-            );
-            listActividadesWidget.add(actividadWidget);
+            listActividadesWidget.add(size.width > 720
+                ? listileActividad(actividad)
+                : buildActividaWidgetdMovil(actividad));
           }
         } else {
-          listActividadesWidget.add(listileActividad(actividad));
+          listActividadesWidget.add(size.width > 720
+              ? listileActividad(actividad)
+              : buildActividaWidgetdMovil(actividad));
         }
       }
 
@@ -568,32 +520,33 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
               const SizedBox(
                 height: 10.0,
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AddNuevaActividad(
-                          idTiming: idTiming,
-                          fechaFinEvento: fechaFin,
-                          fechaInicioEvento: fechaInicio,
-                          actividadModel: EventoActividadModel(),
-                        ),
-                      ).then((_) async {
-                        await _planesLogic.getAllPlannes();
-                        await _planesLogic
-                            .getContadorValues(claveRol == 'INVO');
-                        setState(() {});
-                      });
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Agregar actividad'),
+              if (claveRol != 'INVO')
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AddNuevaActividad(
+                            idTiming: idTiming,
+                            fechaFinEvento: fechaFin,
+                            fechaInicioEvento: fechaInicio,
+                            actividadModel: EventoActividadModel(),
+                          ),
+                        ).then((_) async {
+                          await _planesLogic.getAllPlannes();
+                          await _planesLogic
+                              .getContadorValues(claveRol == 'INVO');
+                          setState(() {});
+                        });
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Agregar actividad'),
+                    ),
                   ),
                 ),
-              ),
               const SizedBox(
                 height: 10.0,
               ),
@@ -616,6 +569,254 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     }
   }
 
+  Widget buildActividaWidgetdMovil(EventoActividadModel actividad) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      elevation: 10,
+      child: ExpansionTile(
+        textColor: Colors.black,
+        leading: Theme(
+          data: claveRol == 'INVO'
+              ? ThemeData(
+                  disabledColor: actividad.estatus == 'En Curso'
+                      ? Colors.yellow[800]
+                      : actividad.estatus == 'Completada'
+                          ? Colors.green
+                          : Colors.red)
+              : ThemeData(
+                  primarySwatch: Colors.green,
+                  unselectedWidgetColor: actividad.estatus == 'En Curso'
+                      ? Colors.yellow[800]
+                      : Colors.red),
+          child: Checkbox(
+            value: actividad.estatusProgreso,
+            onChanged: claveRol == 'INVO'
+                ? null
+                : (value) {
+                    setState(
+                      () {
+                        isEnableButton = true;
+                        actividad.estatusProgreso = value;
+                        if (actividad.estatusProgreso) {
+                          actividad.estatus = 'Completada';
+                        }
+                      },
+                    );
+                  },
+          ),
+        ),
+        subtitle: Text(actividad.descripcionActividad),
+        title: GestureDetector(
+          onTap: claveRol == 'INVO'
+              ? null
+              : () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AddNuevaActividad(
+                      fechaFinEvento: actividad.fechaFinEvento,
+                      fechaInicioEvento: actividad.fechaInicioEvento,
+                      actividadModel: actividad,
+                    ),
+                  ).then((_) async {
+                    await _planesLogic.getAllPlannes();
+                    await _planesLogic.getContadorValues(claveRol == 'INVO');
+                    setState(() {});
+                  });
+                },
+          child: AutoSizeText(
+            actividad.nombreActividad,
+            maxLines: 2,
+          ),
+        ),
+        children: [
+          if (claveRol != 'INVO')
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Text('Visible:'),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  FaIcon(
+                    actividad.visibleInvolucrado
+                        ? FontAwesomeIcons.eye
+                        : FontAwesomeIcons.eyeSlash,
+                    size: 15.0,
+                  ),
+                ],
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Text('Responsable: ' +
+                    (actividad.responsable ?? 'Sin responsable')),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const Text('Inicio:'),
+                GestureDetector(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: AutoSizeText(
+                      '${actividad.fechaInicioActividad.day}/${actividad.fechaInicioActividad.month}/${actividad.fechaInicioActividad.year}',
+                      maxLines: 1,
+                      wrapWords: false,
+                    ),
+                  ),
+                  onTap: claveRol != 'INVO'
+                      ? () async {
+                          final data = await _giveFecha(
+                            actividad.fechaInicioActividad,
+                            actividad.fechaInicioEvento,
+                            actividad.fechaFinEvento,
+                            actividad.idActividad,
+                          );
+
+                          setState(() {
+                            if (data != null) {
+                              isEnableButton = true;
+                              DateTime fecha = DateTime(
+                                data.year,
+                                data.month,
+                                data.day,
+                                DateTime.now().toLocal().hour,
+                                DateTime.now().toLocal().minute,
+                              );
+
+                              if (fecha.isAfter(DateTime.now()) ||
+                                  fecha.isAtSameMomentAs(DateTime.now())) {
+                                actividad.estatus = 'En Curso';
+                              } else if (fecha.isBefore(DateTime.now())) {
+                                actividad.estatus = 'Atrasada';
+                              } else {
+                                actividad.estatus = 'En Curso';
+                              }
+                              if (fecha.isAfter(actividad.fechaFinActividad)) {
+                                actividad.fechaFinActividad =
+                                    fecha.add(const Duration(hours: 1));
+                              }
+                              actividad.fechaInicioActividad = fecha;
+                              actividad.estadoCalendarioActividad = true;
+                            }
+                          });
+                        }
+                      : null,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const Text('Fin:'),
+                GestureDetector(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: AutoSizeText(
+                      '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
+                      maxLines: 1,
+                      wrapWords: false,
+                    ),
+                  ),
+                  onTap: claveRol != 'INVO'
+                      ? () async {
+                          final data = await _giveFecha(
+                            actividad.fechaInicioActividad,
+                            actividad.fechaInicioEvento,
+                            actividad.fechaFinEvento,
+                            actividad.idActividad,
+                          );
+
+                          setState(() {
+                            if (data != null) {
+                              isEnableButton = true;
+
+                              DateTime fecha = DateTime(
+                                data.year,
+                                data.month,
+                                data.day,
+                                DateTime.now().toLocal().hour,
+                                DateTime.now().toLocal().minute,
+                              );
+                              if (fecha.isAfter(DateTime.now())) {
+                                actividad.estatus = 'En Curso';
+                              } else if (fecha.isBefore(DateTime.now())) {
+                                actividad.estatus = 'Atrasada';
+                              } else {
+                                actividad.estatus = 'En Curso';
+                              }
+                              if (fecha
+                                  .isBefore(actividad.fechaInicioActividad)) {
+                                actividad.fechaInicioActividad =
+                                    fecha.subtract(const Duration(hours: 1));
+                              }
+                              actividad.fechaFinActividad = fecha;
+                              actividad.estadoCalendarioActividad = true;
+                            }
+                          });
+                        }
+                      : null,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Row(
+              children: [
+                const Text('Acción:'),
+                if (actividad.archivo)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      child: const Tooltip(
+                        message: 'Ver archivo',
+                        child: Icon(Icons.file_present_rounded),
+                      ),
+                      onTap: () async {
+                        showDialog(
+                            context: context,
+                            builder: (context) => DialogArchivoActividad(
+                                  nombreActividad: actividad.nombreActividad,
+                                  idActividad: actividad.idActividad,
+                                ));
+                      },
+                    ),
+                  ),
+                if (claveRol != 'INVO')
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      child: const Tooltip(
+                        message: 'Eliminar Actividad',
+                        child: Icon(Icons.delete),
+                      ),
+                      onTap: () async {
+                        await _alertaBorrar(
+                            actividad.idActividad, actividad.nombreActividad);
+                        _planesLogic.getAllPlannes();
+                        _planesLogic.getContadorValues(claveRol == 'INVO');
+                        setState(() {});
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   ListTile listileActividad(EventoActividadModel actividad) {
     return ListTile(
       leading: Theme(
@@ -624,19 +825,35 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             unselectedWidgetColor: actividad.estatus == 'En Curso'
                 ? Colors.yellow[800]
                 : Colors.red),
-        child: Checkbox(
-          value: actividad.estatusProgreso,
-          onChanged: (value) {
-            setState(
-              () {
-                isEnableButton = true;
-                actividad.estatusProgreso = value;
-                if (actividad.estatusProgreso) {
-                  actividad.estatus = 'Completada';
-                }
-              },
-            );
-          },
+        child: Theme(
+          data: claveRol == 'INVO'
+              ? ThemeData(
+                  disabledColor: actividad.estatus == 'En Curso'
+                      ? Colors.yellow[800]
+                      : actividad.estatus == 'Completada'
+                          ? Colors.green
+                          : Colors.red)
+              : ThemeData(
+                  primarySwatch: Colors.green,
+                  unselectedWidgetColor: actividad.estatus == 'En Curso'
+                      ? Colors.yellow[800]
+                      : Colors.red),
+          child: Checkbox(
+            value: actividad.estatusProgreso,
+            onChanged: claveRol == 'INVO'
+                ? null
+                : (value) {
+                    setState(
+                      () {
+                        isEnableButton = true;
+                        actividad.estatusProgreso = value;
+                        if (actividad.estatusProgreso) {
+                          actividad.estatus = 'Completada';
+                        }
+                      },
+                    );
+                  },
+          ),
         ),
       ),
       title: Row(
@@ -644,35 +861,39 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           Expanded(
             flex: 4,
             child: GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AddNuevaActividad(
-                    fechaFinEvento: actividad.fechaFinEvento,
-                    fechaInicioEvento: actividad.fechaInicioEvento,
-                    actividadModel: actividad,
-                  ),
-                ).then((_) async {
-                  await _planesLogic.getAllPlannes();
-                  await _planesLogic.getContadorValues(claveRol == 'INVO');
-                  setState(() {});
-                });
-              },
+              onTap: claveRol == 'INVO'
+                  ? null
+                  : () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AddNuevaActividad(
+                          fechaFinEvento: actividad.fechaFinEvento,
+                          fechaInicioEvento: actividad.fechaInicioEvento,
+                          actividadModel: actividad,
+                        ),
+                      ).then((_) async {
+                        await _planesLogic.getAllPlannes();
+                        await _planesLogic
+                            .getContadorValues(claveRol == 'INVO');
+                        setState(() {});
+                      });
+                    },
               child: AutoSizeText(
                 actividad.nombreActividad,
                 maxLines: 2,
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: FaIcon(
-              actividad.visibleInvolucrado
-                  ? FontAwesomeIcons.eye
-                  : FontAwesomeIcons.eyeSlash,
-              size: 15.0,
+          if (claveRol != 'INVO')
+            Expanded(
+              flex: 1,
+              child: FaIcon(
+                actividad.visibleInvolucrado
+                    ? FontAwesomeIcons.eye
+                    : FontAwesomeIcons.eyeSlash,
+                size: 15.0,
+              ),
             ),
-          ),
           Expanded(
             flex: 2,
             child: Text(actividad.responsable ?? 'Sin responsable'),
@@ -687,41 +908,43 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   wrapWords: false,
                 ),
               ),
-              onTap: () async {
-                final data = await _giveFecha(
-                  actividad.fechaInicioActividad,
-                  actividad.fechaInicioEvento,
-                  actividad.fechaFinEvento,
-                  actividad.idActividad,
-                );
+              onTap: claveRol != 'INVO'
+                  ? () async {
+                      final data = await _giveFecha(
+                        actividad.fechaInicioActividad,
+                        actividad.fechaInicioEvento,
+                        actividad.fechaFinEvento,
+                        actividad.idActividad,
+                      );
 
-                setState(() {
-                  if (data != null) {
-                    isEnableButton = true;
-                    DateTime fecha = DateTime(
-                      data.year,
-                      data.month,
-                      data.day,
-                      DateTime.now().toLocal().hour,
-                      DateTime.now().toLocal().minute,
-                    );
+                      setState(() {
+                        if (data != null) {
+                          isEnableButton = true;
+                          DateTime fecha = DateTime(
+                            data.year,
+                            data.month,
+                            data.day,
+                            DateTime.now().toLocal().hour,
+                            DateTime.now().toLocal().minute,
+                          );
 
-                    if (fecha.isAfter(DateTime.now())) {
-                      actividad.estatus = 'En Curso';
-                    } else if (fecha.isBefore(DateTime.now())) {
-                      actividad.estatus = 'Atrasada';
-                    } else {
-                      actividad.estatus = 'En Curs';
+                          if (fecha.isAfter(DateTime.now())) {
+                            actividad.estatus = 'En Curso';
+                          } else if (fecha.isBefore(DateTime.now())) {
+                            actividad.estatus = 'Atrasada';
+                          } else {
+                            actividad.estatus = 'En Curs';
+                          }
+                          if (fecha.isAfter(actividad.fechaFinActividad)) {
+                            actividad.fechaFinActividad =
+                                fecha.add(const Duration(hours: 1));
+                          }
+                          actividad.fechaInicioActividad = fecha;
+                          actividad.estadoCalendarioActividad = true;
+                        }
+                      });
                     }
-                    if (fecha.isAfter(actividad.fechaFinActividad)) {
-                      actividad.fechaFinActividad =
-                          fecha.add(const Duration(hours: 1));
-                    }
-                    actividad.fechaInicioActividad = fecha;
-                    actividad.estadoCalendarioActividad = true;
-                  }
-                });
-              },
+                  : null,
             ),
             flex: 1,
           ),
@@ -735,65 +958,69 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   wrapWords: false,
                 ),
               ),
-              onTap: () async {
-                final data = await _giveFecha(
-                  actividad.fechaInicioActividad,
-                  actividad.fechaInicioEvento,
-                  actividad.fechaFinEvento,
-                  actividad.idActividad,
-                );
+              onTap: claveRol != 'INVO'
+                  ? () async {
+                      final data = await _giveFecha(
+                        actividad.fechaInicioActividad,
+                        actividad.fechaInicioEvento,
+                        actividad.fechaFinEvento,
+                        actividad.idActividad,
+                      );
 
-                setState(() {
-                  if (data != null) {
-                    isEnableButton = true;
+                      setState(() {
+                        if (data != null) {
+                          isEnableButton = true;
 
-                    DateTime fecha = DateTime(
-                      data.year,
-                      data.month,
-                      data.day,
-                      DateTime.now().toLocal().hour,
-                      DateTime.now().toLocal().minute,
-                    );
-                    if (fecha.isAfter(DateTime.now())) {
-                      actividad.estatus = 'En Curso';
-                    } else if (fecha.isBefore(DateTime.now())) {
-                      actividad.estatus = 'Atrasada';
-                    } else {
-                      actividad.estatus = 'En Curso';
+                          DateTime fecha = DateTime(
+                            data.year,
+                            data.month,
+                            data.day,
+                            DateTime.now().toLocal().hour,
+                            DateTime.now().toLocal().minute,
+                          );
+                          if (fecha.isAfter(DateTime.now())) {
+                            actividad.estatus = 'En Curso';
+                          } else if (fecha.isBefore(DateTime.now())) {
+                            actividad.estatus = 'Atrasada';
+                          } else {
+                            actividad.estatus = 'En Curso';
+                          }
+                          if (fecha.isBefore(actividad.fechaInicioActividad)) {
+                            actividad.fechaInicioActividad =
+                                fecha.subtract(const Duration(hours: 1));
+                          }
+                          actividad.fechaFinActividad = fecha;
+                          actividad.estadoCalendarioActividad = true;
+                        }
+                      });
                     }
-                    if (fecha.isBefore(actividad.fechaInicioActividad)) {
-                      actividad.fechaInicioActividad =
-                          fecha.subtract(const Duration(hours: 1));
-                    }
-                    actividad.fechaFinActividad = fecha;
-                    actividad.estadoCalendarioActividad = true;
-                  }
-                });
-              },
+                  : null,
             ),
             flex: 1,
           ),
-          if (claveRol != 'INVO')
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (actividad.archivo)
-                    GestureDetector(
-                      child: const Tooltip(
-                        message: 'Ver archivo',
-                        child: Icon(Icons.file_present_rounded),
-                      ),
-                      onTap: () async {
-                        showDialog(
-                            context: context,
-                            builder: (context) => DialogArchivoActividad(
-                                  nombreActividad: actividad.nombreActividad,
-                                  idActividad: actividad.idActividad,
-                                ));
-                      },
+          Expanded(
+            child: Row(
+              mainAxisAlignment: claveRol == 'INVO'
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (actividad.archivo)
+                  GestureDetector(
+                    child: const Tooltip(
+                      message: 'Ver archivo',
+                      child: Icon(Icons.file_present_rounded),
                     ),
+                    onTap: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) => DialogArchivoActividad(
+                                nombreActividad: actividad.nombreActividad,
+                                idActividad: actividad.idActividad,
+                              ));
+                    },
+                  ),
+                if (claveRol != 'INVO')
                   GestureDetector(
                     child: const Tooltip(
                       message: 'Eliminar Actividad',
@@ -807,383 +1034,18 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       setState(() {});
                     },
                   ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                ],
-              ),
-              flex: 1,
-            )
+                const SizedBox(
+                  width: 8.0,
+                ),
+              ],
+            ),
+            flex: 1,
+          )
         ],
       ),
       subtitle: Text(actividad.descripcionActividad),
     );
   }
-
-  // Widget buildActividadesEvento() {
-  //   List<Widget> listPlanesWidget = [];
-  //   // List<FocusNode> focusNode = [];
-  //   index = 0;
-
-  //   if (listaTimings.isEmpty) {
-  //     return const Padding(
-  //       padding: EdgeInsets.all(15.0),
-  //       child: Center(
-  //         child: Text('No se encontraron planes'),
-  //       ),
-  //     );
-  //   } else {
-  //     for (var timing in listaTimings) {
-  //       List<Widget> tempActividadesTiming = [];
-
-  //       for (var actividad in timing.actividades) {
-  //         // FocusNode tempFocus = FocusNode();
-  //         // focusNode.add(tempFocus);
-
-  //         actividad.fechaFinActividad ??=
-  //             actividad.fechaInicioActividad.add(const Duration(days: 1));
-  //         if (claveRol != 'INVO') {
-  //           Widget actividadWidget = ListTile(
-  //             leading: Theme(
-  //               data: ThemeData(
-  //                   primarySwatch: Colors.green,
-  //                   unselectedWidgetColor: actividad.estatus == 'Pendiente'
-  //                       ? Colors.yellow[800]
-  //                       : Colors.red),
-  //               child: Checkbox(
-  //                 value: actividad.estatusProgreso,
-  //                 onChanged: (value) {
-  //                   setState(
-  //                     () {
-  //                       isEnableButton = true;
-  //                       actividad.estatusProgreso = value;
-  //                       if (actividad.estatusProgreso) {
-  //                         actividad.estatus = 'Completada';
-  //                       }
-  //                     },
-  //                   );
-  //                 },
-  //               ),
-  //             ),
-  //             title: Row(
-  //               children: [
-  //                 Expanded(
-  //                   flex: 4,
-  //                   child: GestureDetector(
-  //                     onTap: () {
-  //                       showDialog(
-  //                         context: context,
-  //                         builder: (context) => AddNuevaActividad(
-  //                           actividadModel: actividad,
-  //                         ),
-  //                       ).then((_) async {
-  //                         await _planesLogic.getAllPlannes();
-  //                         await _planesLogic
-  //                             .getContadorValues(claveRol == 'INVO');
-  //                         setState(() {});
-  //                       });
-  //                     },
-  //                     child: AutoSizeText(
-  //                       actividad.nombreActividad,
-  //                       maxLines: 2,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 Expanded(
-  //                   flex: 1,
-  //                   child: FaIcon(
-  //                     actividad.visibleInvolucrado
-  //                         ? FontAwesomeIcons.eye
-  //                         : FontAwesomeIcons.eyeSlash,
-  //                     size: 15.0,
-  //                   ),
-  //                 ),
-  //                 Expanded(
-  //                   flex: 2,
-  //                   child: Tooltip(
-  //                     showDuration: const Duration(
-  //                       milliseconds: 3,
-  //                     ),
-  //                     message: 'Click para editar',
-  //                     child: TextFormField(
-  //                       onTap: () => setState(() {
-  //                         actividad.enable = true;
-  //                         isEnableButton = true;
-  //                       }),
-  //                       // focusNode: focusNode[index],
-  //                       readOnly: !actividad.enable,
-  //                       decoration: InputDecoration(
-  //                         hintText: 'Responsable',
-  //                         constraints: BoxConstraints(
-  //                           maxWidth: size.width * 0.06,
-  //                         ),
-  //                       ),
-  //                       initialValue: actividad.responsable,
-  //                       onChanged: (value) {
-  //                         actividad.responsable = value;
-  //                       },
-  //                       onFieldSubmitted: (_) {},
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 Expanded(
-  //                   child: GestureDetector(
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.only(left: 8.0),
-  //                       child: AutoSizeText(
-  //                         '${actividad.fechaInicioActividad.day}/${actividad.fechaInicioActividad.month}/${actividad.fechaInicioActividad.year}',
-  //                         maxLines: 1,
-  //                         wrapWords: false,
-  //                       ),
-  //                     ),
-  //                     onTap: () async {
-  //                       final data = await _giveFecha(
-  //                         actividad.fechaInicioActividad,
-  //                         actividad.fechaInicioEvento,
-  //                         actividad.fechaFinEvento,
-  //                         actividad.diasActividad,
-  //                         actividad.idActividad,
-  //                       );
-
-  //                       setState(() {
-  //                         if (data != null) {
-  //                           isEnableButton = true;
-  //                           DateTime fecha = DateTime(
-  //                             data.year,
-  //                             data.month,
-  //                             data.day,
-  //                             DateTime.now().toLocal().hour,
-  //                             DateTime.now().toLocal().minute,
-  //                           );
-
-  //                           if (fecha.isAfter(DateTime.now())) {
-  //                             actividad.estatus = 'Pendiente';
-  //                           } else if (fecha.isBefore(DateTime.now())) {
-  //                             actividad.estatus = 'Atrasada';
-  //                           } else {
-  //                             actividad.estatus = 'Pendiente';
-  //                           }
-  //                           if (fecha.isAfter(actividad.fechaFinActividad)) {
-  //                             actividad.fechaFinActividad =
-  //                                 fecha.add(const Duration(hours: 1));
-  //                           }
-  //                           actividad.fechaInicioActividad = fecha;
-  //                           actividad.estadoCalendarioActividad = true;
-  //                         }
-  //                       });
-  //                     },
-  //                   ),
-  //                   flex: 1,
-  //                 ),
-  //                 Expanded(
-  //                   child: GestureDetector(
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.only(left: 8.0),
-  //                       child: AutoSizeText(
-  //                         '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
-  //                         maxLines: 1,
-  //                         wrapWords: false,
-  //                       ),
-  //                     ),
-  //                     onTap: () async {
-  //                       final data = await _giveFecha(
-  //                         actividad.fechaInicioActividad,
-  //                         actividad.fechaInicioEvento,
-  //                         actividad.fechaFinEvento,
-  //                         actividad.diasActividad,
-  //                         actividad.idActividad,
-  //                       );
-
-  //                       setState(() {
-  //                         if (data != null) {
-  //                           isEnableButton = true;
-
-  //                           DateTime fecha = DateTime(
-  //                             data.year,
-  //                             data.month,
-  //                             data.day,
-  //                             DateTime.now().toLocal().hour,
-  //                             DateTime.now().toLocal().minute,
-  //                           );
-  //                           if (fecha.isAfter(DateTime.now())) {
-  //                             actividad.estatus = 'Pendiente';
-  //                           } else if (fecha.isBefore(DateTime.now())) {
-  //                             actividad.estatus = 'Atrasada';
-  //                           } else {
-  //                             actividad.estatus = 'Pendiente';
-  //                           }
-  //                           if (fecha
-  //                               .isBefore(actividad.fechaInicioActividad)) {
-  //                             actividad.fechaInicioActividad =
-  //                                 fecha.subtract(const Duration(hours: 1));
-  //                           }
-  //                           actividad.fechaFinActividad = fecha;
-  //                           actividad.estadoCalendarioActividad = true;
-  //                         }
-  //                       });
-  //                     },
-  //                   ),
-  //                   flex: 1,
-  //                 ),
-  //                 Expanded(
-  //                   child: (claveRol != ' INVO')
-  //                       ? GestureDetector(
-  //                           child: const Tooltip(
-  //                             message: 'Eliminar Actividad',
-  //                             child: Icon(Icons.delete),
-  //                           ),
-  //                           onTap: () async {
-  //                             await _alertaBorrar(actividad.idActividad,
-  //                                 actividad.nombreActividad);
-  //                             _planesLogic.getAllPlannes();
-  //                             _planesLogic
-  //                                 .getContadorValues(claveRol == ' INVO');
-  //                             setState(() {});
-  //                           },
-  //                         )
-  //                       : Container(),
-  //                   flex: 1,
-  //                 )
-  //               ],
-  //             ),
-  //             subtitle: Text(actividad.descripcionActividad),
-  //           );
-  //           tempActividadesTiming.add(actividadWidget);
-  //           index++;
-  //         } else {
-  //           if (actividad.visibleInvolucrado) {
-  //             Widget actividadWidget = ListTile(
-  //               leading: Theme(
-  //                 data: ThemeData(
-  //                     primarySwatch: Colors.green,
-  //                     unselectedWidgetColor: actividad.estatus == 'Pendiente'
-  //                         ? Colors.yellow[800]
-  //                         : Colors.red),
-  //                 child: Checkbox(
-  //                   value: actividad.estatusProgreso,
-  //                   onChanged: (_) => {},
-  //                   hoverColor: Colors.transparent,
-  //                 ),
-  //               ),
-  //               title: Row(
-  //                 children: [
-  //                   Expanded(
-  //                     flex: 4,
-  //                     child: AutoSizeText(
-  //                       actividad.nombreActividad,
-  //                       maxLines: 2,
-  //                     ),
-  //                   ),
-  //                   Expanded(
-  //                       flex: 2,
-  //                       child: Text(
-  //                         actividad.responsable ?? 'Sin responsable',
-  //                       )),
-  //                   Expanded(
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.only(left: 8.0),
-  //                       child: AutoSizeText(
-  //                         '${actividad.fechaInicioActividad.day}/${actividad.fechaInicioActividad.month}/${actividad.fechaInicioActividad.year}',
-  //                         maxLines: 1,
-  //                         wrapWords: false,
-  //                       ),
-  //                     ),
-  //                     flex: 1,
-  //                   ),
-  //                   Expanded(
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.only(left: 8.0),
-  //                       child: AutoSizeText(
-  //                         '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
-  //                         maxLines: 1,
-  //                         wrapWords: false,
-  //                       ),
-  //                     ),
-  //                     flex: 1,
-  //                   )
-  //                 ],
-  //               ),
-  //               subtitle: Text(actividad.descripcionActividad),
-  //             );
-  //             tempActividadesTiming.add(actividadWidget);
-  //             index++;
-  //           }
-  //         }
-  //       }
-
-  //       if (claveRol != 'INVO') {
-  //         if (listaTimings.first.actividades.first.fechaFinEvento
-  //             .isAfter(DateTime.now())) {
-  //           tempActividadesTiming.add(
-  //             Padding(
-  //               padding: const EdgeInsets.all(15.0),
-  //               child: ElevatedButton.icon(
-  //                 onPressed: () {
-  //                   showDialog(
-  //                     context: context,
-  //                     builder: (context) => AddNuevaActividad(
-  //                       actividadModel: EventoActividadModel(),
-  //                     ),
-  //                   ).then((_) async {
-  //                     await _planesLogic.getAllPlannes();
-  //                     await _planesLogic.getContadorValues(claveRol == 'INVO');
-  //                     setState(() {});
-  //                   });
-  //                 },
-  //                 icon: const Icon(Icons.add),
-  //                 label: const Text('Agregar actividad'),
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       }
-
-  //       if (tempActividadesTiming.isNotEmpty) {
-  //         Widget timingWidget = ExpansionTile(
-  //           iconColor: Colors.black,
-  //           title: Text(
-  //             timing.nombrePlaner,
-  //             style: const TextStyle(
-  //               color: Colors.black,
-  //             ),
-  //           ),
-  //           children: tempActividadesTiming,
-  //         );
-
-  //         listPlanesWidget.add(timingWidget);
-  //       }
-  //     }
-  //     if (listPlanesWidget.isNotEmpty) {
-  //       return Card(
-  //         shape:
-  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-  //         margin: const EdgeInsets.all(20.0),
-  //         elevation: 10.0,
-  //         child: Padding(
-  //           padding: const EdgeInsets.all(4.0),
-  //           child: Column(
-  //             children: [
-  //               const SizedBox(
-  //                 height: 10.0,
-  //               ),
-  //               ListView(
-  //                 shrinkWrap: true,
-  //                 children: listPlanesWidget,
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     } else {
-  //       return const Center(
-  //         child: Padding(
-  //           padding: EdgeInsets.all(20.0),
-  //           child: Text('No se encontraron actividades'),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
 
   Future<DateTime> _giveFecha(DateTime fechaActividad, DateTime fechaInicio,
       DateTime fechaFinal, int id) async {
