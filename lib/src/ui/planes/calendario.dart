@@ -244,7 +244,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
                         // ),
                         title: Text(value[index].actividad.nombreActividad),
                         subtitle: Text(
-                            "${value[index].actividad.descripcionActividad} \n La actividad finaliza el: ${DateFormat('yyyy-MM-dd').format(value[index].actividad.fechaActividad.add(Duration(days: value[index].actividad.duracion)))}"),
+                            "${value[index].actividad.descripcionActividad} \n La actividad finaliza el: ${DateFormat('yyyy-MM-dd').format(value[index].actividad.fechaActividad)}"),
                       );
                     },
                     isExpanded: value[index].actividad.isExpanded,
