@@ -180,32 +180,32 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 const SizedBox(
                   height: 10.0,
                 ),
-                if (claveRol != 'INVO')
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: isEnableButton
-                            ? () async {
-                                _updateYselect();
-                              }
-                            : null,
-                        icon: const Icon(Icons.save),
-                        label: const Text('Guardar'),
-                      ),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: isEnableButton
+                          ? () async {
+                              _updateYselect();
+                            }
+                          : null,
+                      icon: const Icon(Icons.save),
+                      label: const Text('Guardar'),
+                    ),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    if (claveRol != 'INVO')
                       ElevatedButton.icon(
                         onPressed: _goAddingPlanes,
                         icon: const Icon(Icons.add),
                         label: const Text('Añadir'),
                       ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                    ],
-                  ),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 10.0,
                 ),
@@ -576,33 +576,24 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
       child: ExpansionTile(
         textColor: Colors.black,
         leading: Theme(
-          data: claveRol == 'INVO'
-              ? ThemeData(
-                  disabledColor: actividad.estatus == 'En Curso'
-                      ? Colors.yellow[800]
-                      : actividad.estatus == 'Completada'
-                          ? Colors.green
-                          : Colors.red)
-              : ThemeData(
-                  primarySwatch: Colors.green,
-                  unselectedWidgetColor: actividad.estatus == 'En Curso'
-                      ? Colors.yellow[800]
-                      : Colors.red),
+          data: ThemeData(
+              primarySwatch: Colors.green,
+              unselectedWidgetColor: actividad.estatus == 'En Curso'
+                  ? Colors.yellow[800]
+                  : Colors.red),
           child: Checkbox(
             value: actividad.estatusProgreso,
-            onChanged: claveRol == 'INVO'
-                ? null
-                : (value) {
-                    setState(
-                      () {
-                        isEnableButton = true;
-                        actividad.estatusProgreso = value;
-                        if (actividad.estatusProgreso) {
-                          actividad.estatus = 'Completada';
-                        }
-                      },
-                    );
-                  },
+            onChanged: (value) {
+              setState(
+                () {
+                  isEnableButton = true;
+                  actividad.estatusProgreso = value;
+                  if (actividad.estatusProgreso) {
+                    actividad.estatus = 'Completada';
+                  }
+                },
+              );
+            },
           ),
         ),
         subtitle: Text(actividad.descripcionActividad),
@@ -824,35 +815,19 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             unselectedWidgetColor: actividad.estatus == 'En Curso'
                 ? Colors.yellow[800]
                 : Colors.red),
-        child: Theme(
-          data: claveRol == 'INVO'
-              ? ThemeData(
-                  disabledColor: actividad.estatus == 'En Curso'
-                      ? Colors.yellow[800]
-                      : actividad.estatus == 'Completada'
-                          ? Colors.green
-                          : Colors.red)
-              : ThemeData(
-                  primarySwatch: Colors.green,
-                  unselectedWidgetColor: actividad.estatus == 'En Curso'
-                      ? Colors.yellow[800]
-                      : Colors.red),
-          child: Checkbox(
-            value: actividad.estatusProgreso,
-            onChanged: claveRol == 'INVO'
-                ? null
-                : (value) {
-                    setState(
-                      () {
-                        isEnableButton = true;
-                        actividad.estatusProgreso = value;
-                        if (actividad.estatusProgreso) {
-                          actividad.estatus = 'Completada';
-                        }
-                      },
-                    );
-                  },
-          ),
+        child: Checkbox(
+          value: actividad.estatusProgreso,
+          onChanged: (value) {
+            setState(
+              () {
+                isEnableButton = true;
+                actividad.estatusProgreso = value;
+                if (actividad.estatusProgreso) {
+                  actividad.estatus = 'Completada';
+                }
+              },
+            );
+          },
         ),
       ),
       title: Row(
