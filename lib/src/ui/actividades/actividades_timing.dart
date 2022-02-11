@@ -28,7 +28,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   ActividadestimingBloc actividadestimingBloc;
   ItemModelActividadesTimings itemModelActividadesTimings;
   GlobalKey<FormState> keyForm = GlobalKey();
-  String _mySelectionAT = '0';
   int _itemCount = 0;
   bool _actVisible = false;
   bool _actVisibleEdit = false;
@@ -47,7 +46,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   }
 
   _clearData() {
-    _mySelectionAT = '0';
     _itemCount = 0;
     numCtrl.text = _itemCount.toString();
     _actVisible = false;
@@ -218,65 +216,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
           ],
         ),
       ),
-    );
-  }
-
-  _dropDownActividades(ItemModelActividadesTimings items) {
-    return items.results.isNotEmpty
-        ? DropdownButton(
-            isExpanded: true,
-            value: _mySelectionAT,
-            icon: const Icon(Icons.arrow_drop_down_outlined),
-            iconSize: 24,
-            elevation: 16,
-            style: const TextStyle(
-                color: Color(0xFF000000), overflow: TextOverflow.ellipsis),
-            underline: Container(
-              height: 2,
-              color: const Color(0xFF000000),
-            ),
-            onChanged: (newValue) {
-              setState(() {
-                _mySelectionAT = newValue;
-              });
-            },
-            items: items.results.map((item) {
-              return DropdownMenuItem(
-                value: item.idActividad.toString(),
-                child: Text(
-                  item.nombreActividad,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              );
-            }).toList(),
-          )
-        : const Center(child: Text('Sin predecesores'));
-  }
-
-  _constructorDropDownAT() {
-    return BlocBuilder<ActividadestimingBloc, ActividadestimingState>(
-      builder: (context, state) {
-        if (state is ActividadestimingInitial) {
-          return const Center(
-            child: LoadingCustom(),
-          );
-        } else if (state is LoadingActividadesTimingsState) {
-          return const Center(
-            child: LoadingCustom(),
-          );
-        } else if (state is MostrarActividadesTimingsState) {
-          return _dropDownActividades(state.actividadesTimings);
-        } else if (state is ErrorMostrarActividadesTimingsState) {
-          return Center(
-            child: Text(state.message),
-          );
-          //_showError(context, state.message);
-        } else {
-          return const Center(
-            child: LoadingCustom(),
-          );
-        }
-      },
     );
   }
 

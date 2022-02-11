@@ -421,10 +421,6 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
   Widget buildListActividades() {
     List<Widget> listActividadesWidget = [];
 
-    DateTime fechaInicio =
-        listaTimings.first.actividades.first.fechaInicioEvento;
-    DateTime fechaFin = listaTimings.first.actividades.first.fechaFinEvento;
-
     Widget card;
     List<EventoActividadModel> actividades = [];
 
@@ -436,6 +432,9 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
         ),
       );
     } else {
+      DateTime fechaInicio =
+          listaTimings.first.actividades.first.fechaInicioEvento;
+      DateTime fechaFin = listaTimings.first.actividades.first.fechaFinEvento;
       int idTiming = listaTimings.last.idPlanner;
 
       for (TimingModel timing in listaTimings) {

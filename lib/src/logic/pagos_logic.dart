@@ -20,6 +20,7 @@ abstract class PagosLogic {
   Future<ItemModelPagos> selectServicios();
   Future<ItemModelPagos> selectPagosId(int id);
   Future<String> downlooadPagosEvento(String tipoPresupuesto);
+  Future<Map<String, dynamic>> obtenerResumenPagos();
 }
 
 // consultas
@@ -249,6 +250,36 @@ class ConsultasPagosLogic extends PagosLogic {
 
     if (resp.statusCode == 200) {
       return json.decode(resp.body)['pdf'];
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> obtenerResumenPagos() async {
+    String token = await _sharedPreferences.getToken();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    const endpoint = '/wedding/PAGOS/obtenerResumenPagosPorEvento';
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final data = {
+      'idEvento': idEvento,
+    };
+
+    final resp = await http.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (resp.statusCode == 200) {
+      return jsonDecode(resp.body);
     } else {
       return null;
     }

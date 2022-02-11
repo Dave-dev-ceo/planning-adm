@@ -213,7 +213,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
           MostrarAlerta(
               mensaje: 'Se ha agregado el pago correctamente',
               tipoMensaje: TipoMensaje.correcto);
-          Navigator.of(context).pop(true);
+          Navigator.of(context, rootNavigator: true).pop(true);
         } else {
           MostrarAlerta(mensaje: resp, tipoMensaje: TipoMensaje.error);
         }
@@ -226,7 +226,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
           MostrarAlerta(
               mensaje: 'Se ha editado el pago correctamente',
               tipoMensaje: TipoMensaje.correcto);
-          Navigator.of(context).pop(true);
+          Navigator.of(context, rootNavigator: true).pop(true);
         } else {
           MostrarAlerta(mensaje: resp, tipoMensaje: TipoMensaje.error);
         }

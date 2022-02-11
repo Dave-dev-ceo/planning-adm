@@ -24,9 +24,12 @@ abstract class AddContratosLogic {
   Future<String> fetchValContratos(String _machote);
   Future<String> obtenerContratoById(Map<String, dynamic> data);
   Future<String> obtenerContratoSubidoById(Map<String, dynamic> data);
+  Future<String> actualizarDescripcionDocumento(
+      int idDocumento, String descripcion);
+  Future<Map<String, dynamic>> obtenerUltimoDocumento();
 }
 
-class ConsultasAddContratosLogic extends AddContratosLogic {
+class ConsultasAddContratosLogic implements AddContratosLogic {
   // variables configuracion
   final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
@@ -349,6 +352,66 @@ class ConsultasAddContratosLogic extends AddContratosLogic {
       throw TokenException();
     } else {
       throw Exception();
+    }
+  }
+
+  @override
+  Future<String> actualizarDescripcionDocumento(
+      int idDocumento, String descripcion) async {
+    String token = await _sharedPreferences.getToken();
+
+    const endpoint = '/wedding/ADDCONTRATOS/actualizarDescripcionDocumento';
+
+    final data = {
+      'idDocumento': idDocumento,
+      'descripcion': descripcion,
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final response = await http.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return 'Ok';
+    } else {
+      return response.body;
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> obtenerUltimoDocumento() async {
+    String token = await _sharedPreferences.getToken();
+    int idEvento = await _sharedPreferences.getIdEvento();
+    const endpoint = '/wedding/ADDCONTRATOS/obtenerUltimoDocumento';
+
+    final data = {
+      'idEvento': idEvento,
+    };
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final response = await http.post(
+      Uri.parse(confiC.url + confiC.puerto + endpoint),
+      body: json.encode(data),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
     }
   }
 }

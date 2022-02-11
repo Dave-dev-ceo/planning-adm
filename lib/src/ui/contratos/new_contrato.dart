@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // imports
 import 'package:file_picker/file_picker.dart';
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/logic/add_contratos_logic.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart';
@@ -50,6 +51,8 @@ class NewContratoState extends State<NewContrato> {
   int _grupoRadio = 0;
   Map _clave = {'clave': 'CT', 'clave_t': 'CT_T'};
   Size size;
+
+  ConsultasAddContratosLogic logicDocumento = ConsultasAddContratosLogic();
 
   @override
   void initState() {
@@ -103,13 +106,14 @@ class NewContratoState extends State<NewContrato> {
         Navigator.pop(context);
         contratosBloc.add(ContratosSelect());
       } else if (state is VerContratosSubir) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
         contratosBloc.add(ContratosSelect());
         MostrarAlerta(
             mensaje: 'Se ha subido el documento.',
             tipoMensaje: TipoMensaje.correcto);
       } else if (state is VerContratosVer) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
+
         var tipoFile = state.tipoMime;
         if (state.archivo != null && state.archivo != '') {
           Navigator.pushNamed(context, '/viewContrato',
@@ -120,7 +124,8 @@ class NewContratoState extends State<NewContrato> {
               tipoMensaje: TipoMensaje.advertencia);
         }
       } else if (state is DescargarContratoState) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
+
         _descargarFile(state.archivo, state.nombre, state.extencion);
       } else if (state is CrearContratoState) {
         Navigator.pop(context);
@@ -134,7 +139,7 @@ class NewContratoState extends State<NewContrato> {
               mensaje: 'No se encuentra ningún archivo para descargar.',
               tipoMensaje: TipoMensaje.advertencia);
         }
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
       } else if (state is VerContratoSubidoState) {
         if (state.subido != null) {
           Navigator.pushReplacementNamed(context, '/viewContrato', arguments: {
@@ -155,7 +160,7 @@ class NewContratoState extends State<NewContrato> {
               mensaje: 'No se encuentra ningún archivo para descargar.',
               tipoMensaje: TipoMensaje.advertencia);
         }
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
       }
     }, child: BlocBuilder<ContratosDosBloc, ContratosState>(
             builder: (context, state) {
@@ -321,7 +326,7 @@ class NewContratoState extends State<NewContrato> {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(20),
+            margin: EdgeInsets.all(size.width > 650 ? 20 : 8),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
@@ -336,7 +341,13 @@ class NewContratoState extends State<NewContrato> {
   ListTile buildWeb(Contratos contrato) {
     return ListTile(
       contentPadding: const EdgeInsets.all(20.0),
-      leading: const Icon(Icons.gavel),
+      leading: !isInvolucrado
+          ? GestureDetector(
+              onTap: () {
+                _shodDialogEdit(contrato.idContrato, contrato.description);
+              },
+              child: const Icon(Icons.edit))
+          : null,
       title: Text(contrato.description),
       subtitle: Row(
         children: [
@@ -457,7 +468,7 @@ class NewContratoState extends State<NewContrato> {
               ),
               onTap: () => _borrarContratos(contrato.idContrato),
             )
-          : const Text(''),
+          : null,
     );
   }
 
@@ -471,11 +482,14 @@ class NewContratoState extends State<NewContrato> {
               ),
               onTap: () => _borrarContratos(contrato.idContrato),
             )
-          : const Text(''),
-      leading: const Icon(
-        Icons.gavel,
-        color: Colors.black,
-      ),
+          : null,
+      leading: !isInvolucrado
+          ? GestureDetector(
+              onTap: () {
+                _shodDialogEdit(contrato.idContrato, contrato.description);
+              },
+              child: const Icon(Icons.edit))
+          : null,
       title: Text(
         contrato.description,
         style: const TextStyle(color: Colors.black),
@@ -585,6 +599,71 @@ class NewContratoState extends State<NewContrato> {
     );
   }
 
+  void _shodDialogEdit(int idDocumento, String descripcion) {
+    final formkeyEditDocumento = GlobalKey<FormState>();
+    String descripcionTemp = descripcion;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Editar Documento'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Form(
+              key: formkeyEditDocumento,
+              child: TextFormField(
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Descripción',
+                    labelText: 'Descripción'),
+                onChanged: (String value) {
+                  descripcionTemp = value;
+                },
+                initialValue: descripcionTemp,
+                validator: (String value) {
+                  if (value != '') {
+                    return null;
+                  }
+                  return 'El campo esta vacío';
+                },
+              ),
+            )
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (formkeyEditDocumento.currentState.validate()) {
+                final data =
+                    await logicDocumento.actualizarDescripcionDocumento(
+                        idDocumento, descripcionTemp);
+
+                if (data == 'Ok') {
+                  Navigator.of(context, rootNavigator: true).pop();
+
+                  MostrarAlerta(
+                      mensaje: 'Se actulizo el nombre correctamente',
+                      tipoMensaje: TipoMensaje.correcto);
+                  contratosBloc.add(ContratosSelect());
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  MostrarAlerta(mensaje: data, tipoMensaje: TipoMensaje.error);
+                }
+              }
+            },
+            child: const Text('Aceptar'),
+          )
+        ],
+      ),
+    );
+  }
+
   _recibosItem() {
     List<Widget> item = [];
     if (itemModel.isNotEmpty) {
@@ -593,7 +672,7 @@ class NewContratoState extends State<NewContrato> {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(20),
+            margin: EdgeInsets.all(size.width > 650 ? 20 : 8),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
@@ -613,7 +692,7 @@ class NewContratoState extends State<NewContrato> {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(20),
+            margin: EdgeInsets.all(size.width > 650 ? 20 : 8),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
@@ -633,7 +712,7 @@ class NewContratoState extends State<NewContrato> {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(20),
+            margin: EdgeInsets.all(size.width > 650 ? 20 : 8),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
@@ -653,7 +732,7 @@ class NewContratoState extends State<NewContrato> {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(20),
+            margin: EdgeInsets.all(size.width > 650 ? 20 : 8),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
@@ -673,7 +752,7 @@ class NewContratoState extends State<NewContrato> {
           item.add(Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(20),
+            margin: EdgeInsets.all(size.width > 650 ? 20 : 8),
             elevation: 10,
             child: (size.width > 650)
                 ? buildWeb(contrato)
@@ -766,7 +845,7 @@ class NewContratoState extends State<NewContrato> {
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context, rootNavigator: true).pop();
               },
             ),
             const SizedBox(
@@ -981,7 +1060,7 @@ class NewContratoState extends State<NewContrato> {
             TextButton(
               child: const Text('Confirmar'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context, rootNavigator: true).pop();
                 verContratos.add(BorrarContrato(idContrato));
                 MostrarAlerta(
                     mensaje: 'Contrato Borrado.',
