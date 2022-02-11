@@ -9,9 +9,16 @@ class ArchivoActividadLogic {
   final SharedPreferencesT _preferencesT = SharedPreferencesT();
   final ConfigConection _configConection = ConfigConection();
 
-  Future<Map<String, dynamic>> obtenerArchivoActividad(int idActividad) async {
+  Future<Map<String, dynamic>> obtenerArchivoActividad(
+      int idActividad, bool isPlanner) async {
     String token = await _preferencesT.getToken();
-    const endpoint = '/wedding/PLANES/obtenerArchivoActividad';
+    String endpoint;
+
+    endpoint = '/wedding/PLANES/obtenerArchivoActividad';
+
+    if (isPlanner) {
+      endpoint = '/wedding/ACTIVIDADESTIMINGS/obtenerArchivActividadPlaner';
+    }
 
     final data = {'idActividad': idActividad};
 

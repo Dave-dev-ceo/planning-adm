@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:planning/src/app.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,31 +41,37 @@ void MostrarAlerta(
 
       break;
   }
-  scaffoldMessegerKey.currentState.hideCurrentSnackBar();
+  try {
+    scaffoldMessegerKey.currentState.clearSnackBars();
 
-  scaffoldMessegerKey.currentState.showSnackBar(SnackBar(
-    content: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        icon,
-        const SizedBox(
-          width: 8.0,
-        ),
-        Expanded(
-          child: Text(
-            mensaje,
-            style: style,
+    scaffoldMessegerKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          icon,
+          const SizedBox(
+            width: 8.0,
           ),
-        ),
-      ],
-    ),
-    backgroundColor: color,
-    elevation: 3.0,
-    duration: const Duration(milliseconds: 2000),
-    behavior: SnackBarBehavior.floating,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(4.0),
-    ),
-    onVisible: onVisible,
-  ));
+          Expanded(
+            child: Text(
+              mensaje,
+              style: style,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: color,
+      elevation: 3.0,
+      duration: const Duration(milliseconds: 2000),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      onVisible: onVisible,
+    ));
+  } catch (e) {
+    if (kDebugMode) {
+      print(e);
+    }
+  }
 }

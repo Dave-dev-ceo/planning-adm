@@ -59,6 +59,7 @@ class _Result {
   String _nombreActividad;
   String _descripcion;
   bool _visibleInvolucrados;
+  bool _haveFile;
   String _dias;
   int _predecesor;
   int _idTipoTimig;
@@ -87,6 +88,8 @@ class _Result {
     _idTipoTimig = result['id_tipo_timing'];
     _addActividad = result['estatus_calendar'];
     _fechaInicio = DateTime.now();
+    _haveFile = result['hasfile'];
+
     /* nuevas */
     _idEventoTiming = result['id_evento_timing'];
     _nombreEventoTarea = result['nombre_timing'];
@@ -155,6 +158,7 @@ class _Result {
   DateTime get fechaInicioEvento => _fechaInicioEvento;
   DateTime get fechaFinalEvento => _fechaFinalEvento;
   int get dia => _dia;
+  bool get haveFile => _haveFile;
 
   set addidActividad(int value) => _idActividad = value;
   set addnombreActividad(String value) => _nombreActividad = value;
@@ -176,4 +180,5 @@ class _Result {
   set fechaInicioEvento(DateTime value) => _fechaInicioEvento;
   set fechaFinalEvento(DateTime value) => _fechaFinalEvento;
   set dia(int value) => _dia;
+  set haveFile(bool value) => _haveFile = value;
 }

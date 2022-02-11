@@ -476,6 +476,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
       'nombre': actividadModel.nombreActividad,
       'descripcion': actividadModel.descripcionActividad,
       'visibleInvolucrado': actividadModel.visibleInvolucrado,
+      'archivo': actividadModel.archivo,
+      'tipoMime': actividadModel.tipoMime,
+      'haveArchivo': actividadModel.haveArchivo,
     };
     final headers = {
       'Content-type': 'application/json',

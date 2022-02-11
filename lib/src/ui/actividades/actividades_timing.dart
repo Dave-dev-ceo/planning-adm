@@ -1,11 +1,16 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'dart:convert';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/actividadesTiming/actividadestiming_bloc.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_actividades_timings.dart';
+import 'package:planning/src/ui/planes/ver_archivo_dialog.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
@@ -19,6 +24,8 @@ class AgregarActividades extends StatefulWidget {
 
 class _AgregarActividadesState extends State<AgregarActividades> {
   final int idTiming;
+  _AgregarActividadesState(this.idTiming);
+
   TextEditingController actividadCtrl;
   TextEditingController actividadEditCtrl;
   TextEditingController descripcionCtrl;
@@ -32,7 +39,11 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   bool _actVisible = false;
   bool _actVisibleEdit = false;
 
-  _AgregarActividadesState(this.idTiming);
+  TextEditingController nombreArchivoCtrl = TextEditingController();
+
+  String archivo;
+  PlatformFile file;
+
   @override
   void initState() {
     actividadestimingBloc = BlocProvider.of<ActividadestimingBloc>(context);
@@ -51,6 +62,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     _actVisible = false;
     actividadCtrl.clear();
     descripcionCtrl.clear();
+    file = null;
+    nombreArchivoCtrl.clear();
   }
 
   _initControlersEdit(ItemModelActividadesTimings actividad, int i) {
@@ -107,6 +120,16 @@ class _AgregarActividadesState extends State<AgregarActividades> {
         "descripcion": descripcionCtrl.text,
         "visible_involucrados": _actVisible.toString(),
       };
+
+      if (file != null) {
+        final tipoMime = file.extension;
+
+        jsonActividad['archivo'] = base64Encode(file.bytes);
+        jsonActividad['descripcionFile'] = file.name;
+
+        jsonActividad['tipoMime'] = tipoMime;
+      }
+
       actividadestimingBloc
           .add(CreateActividadesTimingsEvent(jsonActividad, idTiming));
     }
@@ -188,31 +211,71 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                           activeColor: Colors.green,
                           checkColor: Colors.black,
                         ),
-                        ancho: 80,
-                        large: 363.0,
+                        ancho: 80.toDouble(),
+                        large: 363.0.toDouble(),
                       ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.all(20),
                   child: ElevatedButton(
-                    onPressed: () {
-                      _save();
+                    onPressed: () async {
+                      const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
+                      FilePickerResult pickedFile =
+                          await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        withData: true,
+                        allowedExtensions: extensiones,
+                        allowMultiple: false,
+                      );
+
+                      if (pickedFile != null) {
+                        file = pickedFile.files.single;
+                        nombreArchivoCtrl.text = file.name;
+                        setState(() {});
+                      }
                     },
-                    child: const Text('Guardar',
-                        style: TextStyle(fontSize: 18, color: Colors.black)),
-                    style: ElevatedButton.styleFrom(
-                      primary: hexToColor('#fdf4e5'), // background
-                      onPrimary: Colors.white, // foreground
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 68, vertical: 25),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      elevation: 8.0,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: FaIcon(FontAwesomeIcons.fileUpload),
                     ),
                   ),
                 ),
               ],
-            )
+            ),
+            if (file != null)
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextFormFields(
+                    icon: FontAwesomeIcons.fileArchive,
+                    item: TextFormField(
+                      controller: nombreArchivoCtrl,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                          hintText: 'Nombre del archivo',
+                          labelText: 'Nombre del archivo'),
+                    ),
+                    large: 500.toDouble(),
+                    ancho: 80.toDouble()),
+              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: ElevatedButton(
+                onPressed: () {
+                  _save();
+                },
+                child: const Text('Guardar',
+                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                style: ElevatedButton.styleFrom(
+                  primary: hexToColor('#fdf4e5'), // background
+                  onPrimary: Colors.white, // foreground
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 68, vertical: 25),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  elevation: 8.0,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -290,6 +353,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                 item.results.elementAt(i).descripcion,
                             visibleInvolucrado:
                                 item.results.elementAt(i).visibleInvolucrados,
+                            haveArchivo: item.results.elementAt(i).haveFile,
                           );
 
                           List<EventoActividadModel> listaActividades = [];
@@ -306,6 +370,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                     descripcionActividad: actividad.descripcion,
                                     visibleInvolucrado:
                                         actividad.visibleInvolucrados,
+                                    haveArchivo:
+                                        item.results.elementAt(i).haveFile,
                                   )),
                                 );
                               }
@@ -338,7 +404,9 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                                       .idActividad));
                                           item.results.removeAt(i);
                                         });
-                                        Navigator.of(context).pop();
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
                                       },
                                       child: const Text('Sí')),
                                   TextButton(
@@ -361,6 +429,24 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 ),
                 child: Container(
                   child: ListTile(
+                    trailing: item.results.elementAt(i).haveFile
+                        ? GestureDetector(
+                            child: const FaIcon(FontAwesomeIcons.paperclip),
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => DialogArchivoActividad(
+                                        nombreActividad: item.results
+                                            .elementAt(i)
+                                            .nombreActividad,
+                                        idActividad: item.results
+                                            .elementAt(i)
+                                            .idActividad,
+                                        isPlanner: true,
+                                      ));
+                            },
+                          )
+                        : null,
                     title:
                         Text(item.results.elementAt(i).nombreActividad ?? ''),
                     subtitle: ListBody(
@@ -386,6 +472,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
       listener: (context, state) {
         if (state is CreateActividadesTimingsOkState) {
           _clearData();
+          setState(() {});
         }
       },
       child: SingleChildScrollView(
@@ -437,6 +524,10 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
   _EditActividadDialogState(this.actividad, this.idTiming);
 
   ActividadestimingBloc actividadestimingBloc;
+  TextEditingController nombreArchivoCtrl = TextEditingController();
+
+  String archivo;
+  PlatformFile file;
 
   @override
   void initState() {
@@ -457,10 +548,10 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
             listener: (context, state) {
               if (state is EditedActividadEvent) {
                 if (state.isOk) {
+                  Navigator.of(context, rootNavigator: true).pop();
                   MostrarAlerta(
                       mensaje: 'Se ha editado correctamente la actividad',
                       tipoMensaje: TipoMensaje.correcto);
-                  Navigator.of(context).pop();
                 }
               }
             },
@@ -520,7 +611,47 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                           ),
                           ancho: 80,
                           large: 363.0,
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
+                              FilePickerResult pickedFile =
+                                  await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                withData: true,
+                                allowedExtensions: extensiones,
+                                allowMultiple: false,
+                              );
+
+                              if (pickedFile != null) {
+                                file = pickedFile.files.single;
+                                nombreArchivoCtrl.text = file.name;
+                                setState(() {});
+                              }
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: FaIcon(FontAwesomeIcons.fileUpload),
+                            ),
+                          ),
+                        ),
+                        if (file != null)
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: TextFormFields(
+                                icon: FontAwesomeIcons.fileArchive,
+                                item: TextFormField(
+                                  controller: nombreArchivoCtrl,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                      hintText: 'Nombre del archivo',
+                                      labelText: 'Nombre del archivo'),
+                                ),
+                                large: 500.toDouble(),
+                                ancho: 80.toDouble()),
+                          ),
                       ],
                     ),
                   ),
@@ -536,6 +667,12 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                 child: const Text('Cancelar')),
             TextButton(
                 onPressed: () async {
+                  if (file != null) {
+                    actividad.archivo = base64Encode(file.bytes);
+                    actividad.tipoMime = file.extension;
+                    actividad.haveArchivo = false;
+                  }
+
                   actividadestimingBloc
                       .add(UpdateActividadEvent(actividad, idTiming));
                 },

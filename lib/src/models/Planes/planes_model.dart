@@ -122,7 +122,9 @@ class EventoActividadModel {
   DateTime fechaInicioEvento;
   DateTime fechaFinEvento;
   bool enable;
-  bool archivo;
+  bool haveArchivo;
+  String archivo;
+  String tipoMime;
 
   EventoActividadModel({
     this.idActividad,
@@ -140,7 +142,9 @@ class EventoActividadModel {
     this.enable = false,
     this.fechaFinActividad,
     this.idEvento,
+    this.haveArchivo,
     this.archivo,
+    this.tipoMime,
   });
 
   factory EventoActividadModel.fromJson(Map<String, dynamic> json) =>
@@ -166,7 +170,7 @@ class EventoActividadModel {
             ? DateTime.tryParse(json['fecha_inicio_evento']).toLocal()
             : null,
         idEvento: json['id_evento'],
-        archivo: json['archivo'],
+        haveArchivo: json['archivo'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -184,6 +188,6 @@ class EventoActividadModel {
         'fecha_final_evento': fechaFinEvento.toString(),
         'fecha_inicio_evento': fechaInicioEvento.toString(),
         'id_evento': idEvento,
-        'archivo': archivo,
+        'archivo': haveArchivo,
       };
 }

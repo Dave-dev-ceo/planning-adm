@@ -8,9 +8,13 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class DialogArchivoActividad extends StatefulWidget {
   final int idActividad;
+  final bool isPlanner;
   final String nombreActividad;
   const DialogArchivoActividad(
-      {Key key, @required this.idActividad, this.nombreActividad})
+      {Key key,
+      @required this.idActividad,
+      this.nombreActividad,
+      this.isPlanner = false})
       : super(key: key);
 
   @override
@@ -30,7 +34,8 @@ class _DialogArchivoActividadState extends State<DialogArchivoActividad> {
         title: Text('Archivo: ${widget.nombreActividad}'),
       ),
       body: FutureBuilder(
-        future: logic.obtenerArchivoActividad(widget.idActividad),
+        future:
+            logic.obtenerArchivoActividad(widget.idActividad, widget.isPlanner),
         builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.hasData) {
             final bytes = base64Decode(snapshot.data['archivo']);

@@ -764,7 +764,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             child: Row(
               children: [
                 const Text('Acción:'),
-                if (actividad.archivo)
+                if (actividad.haveArchivo)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
@@ -979,7 +979,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   : MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (actividad.archivo)
+                if (actividad.haveArchivo)
                   GestureDetector(
                     child: const Tooltip(
                       message: 'Ver archivo',
@@ -1094,14 +1094,14 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
             TextButton(
               child: const Text('Confirmar'),
               onPressed: () async {
+                MostrarAlerta(
+                    mensaje: 'Actividad borrada',
+                    tipoMensaje: TipoMensaje.correcto);
                 Navigator.of(context, rootNavigator: true).pop();
                 _planesBloc.add(BorrarActividadPlanEvent(idActividad));
                 await _planesLogic.getAllPlannes();
                 await _planesLogic.getContadorValues(claveRol == 'INVO');
                 setState(() {});
-                MostrarAlerta(
-                    mensaje: 'Actividad borrada',
-                    tipoMensaje: TipoMensaje.correcto);
               },
             ),
             TextButton(
@@ -1213,7 +1213,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
   @override
   void initState() {
     if (widget.actividadModel.idActividad != null) {
-      if (widget.actividadModel.archivo) {
+      if (widget.actividadModel.haveArchivo) {
         getArchivo();
       }
 
@@ -1239,7 +1239,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
 
   void getArchivo() async {
     archivoLogic
-        .obtenerArchivoActividad(widget.actividadModel.idActividad)
+        .obtenerArchivoActividad(widget.actividadModel.idActividad, false)
         .then((value) {
       if (value != null) {
         archivo = value['archivo'];
@@ -1722,9 +1722,11 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       archivo = base64Encode(pickedFile.files.single.bytes);
                       tipoMime = pickedFile.files.single.extension;
 
-                      // MostrarAlerta(
-                      //     mensaje: 'El archivo se subio correctament',
-                      //     tipoMensaje: TipoMensaje.correcto);
+                      MostrarAlerta(
+                        mensaje:
+                            'Archivo seleccionado: ${pickedFile.files.single.name}',
+                        tipoMensaje: TipoMensaje.correcto,
+                      );
                     }
                   },
                   child: const Text('Subir archivo'),
