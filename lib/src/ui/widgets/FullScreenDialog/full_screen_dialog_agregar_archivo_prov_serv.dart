@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 // import 'package:planning/src/blocs/archivosEspeciales/archivosespeciales_bloc.dart';
 import 'package:planning/src/blocs/proveedores/archivo_proveedor/bloc/archivo_proveedor_bloc.dart';
@@ -687,7 +688,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                         alignment: WrapAlignment.center,
                                         children: <Widget>[
                                           TextFormFields(
-                                            icon: Icons.add_link_outlined,
+                                            icon: FontAwesomeIcons.featherAlt,
                                             item: TextFormField(
                                               controller: _textcontrollerDes,
                                               onChanged: (value) {
