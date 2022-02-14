@@ -44,31 +44,33 @@ void MostrarAlerta(
   try {
     scaffoldMessegerKey.currentState.clearSnackBars();
 
-    scaffoldMessegerKey.currentState.showSnackBar(SnackBar(
-      content: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          icon,
-          const SizedBox(
-            width: 8.0,
-          ),
-          Expanded(
-            child: Text(
-              mensaje,
-              style: style,
+    scaffoldMessegerKey.currentState.showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            icon,
+            const SizedBox(
+              width: 8.0,
             ),
-          ),
-        ],
+            Expanded(
+              child: Text(
+                mensaje,
+                style: style,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: color,
+        elevation: 3.0,
+        duration: const Duration(milliseconds: 2000),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        onVisible: onVisible,
       ),
-      backgroundColor: color,
-      elevation: 3.0,
-      duration: const Duration(milliseconds: 2000),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-      onVisible: onVisible,
-    ));
+    );
   } catch (e) {
     if (kDebugMode) {
       print(e);

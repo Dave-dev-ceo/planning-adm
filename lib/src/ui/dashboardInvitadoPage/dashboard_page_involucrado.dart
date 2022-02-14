@@ -38,7 +38,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   final EventoResumenModel detalleEvento;
 
   PermisosBloc permisosBloc;
-  bool isInvolucrado = false;
+  String claveRol;
   final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   BuildContext _dialogContext;
 
@@ -58,11 +58,10 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
   }
 
   getIdInvolucrado() async {
-    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
-
-    if (idInvolucrado != null) {
-      isInvolucrado = true;
-    }
+    final clave = await SharedPreferencesT().getClaveRol();
+    setState(() {
+      claveRol = clave;
+    });
   }
 
   @override
@@ -266,13 +265,10 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
       ),
       onTap: () {
         showDialog(context: context, builder: (context) => page).then((_) => {
-              if (isInvolucrado != null)
+              if (claveRol == 'INVO')
                 {
-                  if (isInvolucrado)
-                    {
-                      BlocProvider.of<ProveedoreventosBloc>(context)
-                          .add(FechtProveedorEventosEvent())
-                    }
+                  BlocProvider.of<ProveedoreventosBloc>(context)
+                      .add(FechtProveedorEventosEvent())
                 }
             });
       },
@@ -297,7 +293,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                 value: 1,
                 child: Text("Perfil"),
               ),
-              if (!isInvolucrado)
+              if (claveRol != 'INVO')
                 const PopupMenuItem(value: 2, child: Text("Planner")),
               const PopupMenuItem(
                 value: 3,

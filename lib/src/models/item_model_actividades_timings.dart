@@ -1,4 +1,4 @@
-// ignore_for_file: missing_return
+// ignore_for_file: missing_return, unnecessary_getters_setters, duplicate_ignore
 
 class ItemModelActividadesTimings {
   List<_Result> _results = [];

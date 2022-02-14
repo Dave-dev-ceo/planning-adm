@@ -24,36 +24,44 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
 
   ItemModelProveedoresEvent provEvet;
   final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
-  int checkInvolucrado;
   Size size;
   // plan a
   List<Servicios> servicio = [];
   // plan b
   Map servicios = {};
 
+  String claveRol;
+
+  bool isInit = true;
+
   // logic
   FetchProveedoresEventoLogic proveedoresEventoLogic =
       FetchProveedoresEventoLogic();
 
   void getValues() async {
-    final int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
-    setState(() {
-      checkInvolucrado = idInvolucrado;
-    });
+    claveRol = await _sharedPreferences.getClaveRol();
+    setState(() {});
   }
 
   @override
   void initState() {
+    getValues();
     proveedoreventosBloc = BlocProvider.of<ProveedoreventosBloc>(context);
     proveedoreventosBloc.add(FechtProveedorEventosEvent());
+
     super.initState();
-    getValues();
+  }
+
+  @override
+  void dispose() {
+    proveedoreventosBloc.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    if (checkInvolucrado == null) {
+    if (claveRol != 'INVO') {
       return Scaffold(
         body: RefreshIndicator(
           color: Colors.blue,
@@ -323,6 +331,9 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
       List<ItemProveedor> itemServicio, int idServi, Map servicios) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
+      // print(opt.idProveedor);
+      // print(opt.nombre);
+      // print(opt.idServicio);
       if (opt.isExpanded) {
         TextEditingController textEditController = opt.observacion != null
             ? TextEditingController(text: opt.observacion)
