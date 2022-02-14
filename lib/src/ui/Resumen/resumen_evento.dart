@@ -514,73 +514,17 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 );
               }
             }
-            if (size.width > 400) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Spacer(),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.green),
-                    child: const Checkbox(
-                      value: true,
-                      onChanged: null,
-                      hoverColor: Colors.transparent,
-                    ),
-                  ),
-                  const Text('Completadas'),
-                  const Spacer(),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.yellow[800]),
-                    child: const Checkbox(
-                      value: false,
-                      onChanged: null,
-                    ),
-                  ),
-                  const Text('En Curso'),
-                  const Spacer(),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.red),
-                    child: const Checkbox(
-                      value: false,
-                      onChanged: null,
-                    ),
-                  ),
-                  const Text('Atrasadas'),
-                  const Spacer(),
-                ],
-              );
-            } else {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.green),
-                    child: const Checkbox(
-                      value: true,
-                      onChanged: null,
-                      hoverColor: Colors.transparent,
-                    ),
-                  ),
-                  const Text('Completadas'),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.yellow[800]),
-                    child: const Checkbox(
-                      value: false,
-                      onChanged: null,
-                    ),
-                  ),
-                  const Text('En Curso'),
-                  Theme(
-                    data: ThemeData(disabledColor: Colors.red),
-                    child: const Checkbox(
-                      value: false,
-                      onChanged: null,
-                    ),
-                  ),
-                  const Text('Atrasadas'),
-                ],
-              );
-            }
+
+            return const SizedBox(
+              width: 310,
+              height: 115,
+              child: ListTile(
+                title: Text('Sin actividades'),
+                trailing: FaIcon(
+                  FontAwesomeIcons.calendarMinus,
+                ),
+              ),
+            );
           },
         ),
       ),
