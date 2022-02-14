@@ -323,7 +323,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
               if (fechaTemp.isBefore(fechaInicio)) {
                 MostrarAlerta(
                     mensaje:
-                        'La actividad no puede ser antes de la fecha de inicio del evento',
+                        'La actividad no puede ser antes de la fecha de planeación del evento',
                     tipoMensaje: TipoMensaje.advertencia);
               } else {
                 actividad.fechaInicio = fechaTemp;
@@ -360,7 +360,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
                       if (fechaTemp.isBefore(fechaInicio)) {
                         MostrarAlerta(
                             mensaje:
-                                'La actividad no puede ser antes de la fecha de inicio del evento',
+                                'La actividad no puede ser antes de la fecha de planeación del evento',
                             tipoMensaje: TipoMensaje.advertencia);
                       } else {
                         actividad.fechaInicio = fechaTemp;

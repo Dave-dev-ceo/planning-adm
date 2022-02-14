@@ -255,7 +255,10 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     value: _seleccion,
                     hint: const Text(
                         'Seleccione a cuanto tiempo antes del evento'),
-                    style: const TextStyle(overflow: TextOverflow.ellipsis),
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.black,
+                    ),
                   ),
                   ancho: 85.toDouble(),
                   large: 400.0.toDouble(),
@@ -717,7 +720,9 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               hint: const Text(
                                   'Seleccione a cuanto tiempo antes del evento'),
                               style: const TextStyle(
-                                  overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis,
+                                color: Colors.black,
+                              ),
                             ),
                             ancho: 85.toDouble(),
                             large: 500.0.toDouble(),
