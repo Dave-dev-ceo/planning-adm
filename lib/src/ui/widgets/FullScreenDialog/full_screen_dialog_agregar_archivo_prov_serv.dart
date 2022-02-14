@@ -188,12 +188,12 @@ class _FullScreenDialogAgregarArchivoProvServEvent
     );
   }
 
-  _insertLink() async {
+  _insertLink(int idServicio) async {
     Map<String, dynamic> jsonLink = {};
     if (_keyFormLink.currentState.validate()) {
       jsonLink = {
         'id_proveedor': provsrv['id_proveedor'],
-        'id_servicio': provsrv['id_servicio'],
+        'id_servicio': idServicio,
         'tipo_mime': 'url',
         'archivo': urlValue,
         'nombre': descripcionLink,
@@ -432,7 +432,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
             : IconButton(
                 tooltip: 'Agregar archivo del proveedor',
                 onPressed: () {
-                  _dialogoAgregarArchivo();
+                  _dialogoAgregarArchivo(null);
                 },
                 icon: const Icon(Icons.upload),
               ),
@@ -759,7 +759,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                                 Icons.add_circle_outline),
                                             color: Colors.white,
                                             onPressed: () {
-                                              _insertLink();
+                                              _insertLink(idServicio);
                                             },
                                           ),
                                         ),
