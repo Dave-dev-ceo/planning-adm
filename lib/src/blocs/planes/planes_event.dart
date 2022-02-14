@@ -10,7 +10,7 @@ class SelectPlanesEvent extends PlanesEvent {
 
 // evento - crear de planner::evento
 class CreatePlanesEvent extends PlanesEvent {
-  final List<dynamic> planesPlanner;
+  final List<TareaPlanner> planesPlanner;
 
   CreatePlanesEvent(this.planesPlanner);
 

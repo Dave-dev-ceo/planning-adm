@@ -5,7 +5,13 @@ class TextFormFields extends StatelessWidget {
   final Widget item;
   final double large;
   final double ancho;
-  const TextFormFields({ Key key,@required this.icon,@required this.item,@required this.large,@required this.ancho }) : super(key: key);
+  const TextFormFields(
+      {Key key,
+      @required this.icon,
+      @required this.item,
+      @required this.large,
+      @required this.ancho})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

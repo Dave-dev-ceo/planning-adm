@@ -28,6 +28,8 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
 
   // variable model
   ItemModelPlanes _itemModel;
+  DateTime fechaEvento;
+  DateTime fechaInicio;
 
   // variables class
   List<TareaPlanner> _listTare;
@@ -76,6 +78,8 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
           if (_itemModel != state.planes) {
             _itemModel = state.planes;
             if (_itemModel != null) {
+              fechaEvento = state.fechaEvento;
+              fechaInicio = state.fechaInicio;
               if (widget.lista.isNotEmpty) {
                 _listTare = _crearListaEditableConDatos(_itemModel);
               } else {
@@ -179,6 +183,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
             predecesorActividadPlanner: model.planes[j].predecesorActividad,
             isEvento: false,
             checkActividadPlanner: false,
+            tiempoAntes: model.planes[j].tiempoAntes,
           ));
         }
       }
@@ -226,10 +231,10 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
             descripcionActividadPlanner: model.planes[j].descripcionActividad,
             visibleInvolucradosActividadPlanner:
                 model.planes[j].visibleInvolucradosActividad,
-            diasActividadPlanner: model.planes[j].duracionActividad,
             predecesorActividadPlanner: model.planes[j].predecesorActividad,
             isEvento: false,
             checkActividadPlanner: false,
+            tiempoAntes: model.planes[j].tiempoAntes,
           ));
         }
       }
@@ -237,21 +242,23 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       // juntando las tareas con sus actividades
       if (i == 0) {
         tempTarea.add(TareaPlanner(
+          idTareaPlanner: model.planes[i].idPlan,
+          nombreTareaPlanner: model.planes[i].nombrePlan,
+          checkTarePlanner: false,
+          expandedTarePlanner: false,
+          isEvento: false,
+          actividadTareaPlanner: tempActividad,
+        ));
+      } else {
+        if (model.planes[i].idPlan != model.planes[(i - 1)].idPlan) {
+          tempTarea.add(TareaPlanner(
             idTareaPlanner: model.planes[i].idPlan,
             nombreTareaPlanner: model.planes[i].nombrePlan,
             checkTarePlanner: false,
             expandedTarePlanner: false,
             isEvento: false,
-            actividadTareaPlanner: tempActividad));
-      } else {
-        if (model.planes[i].idPlan != model.planes[(i - 1)].idPlan) {
-          tempTarea.add(TareaPlanner(
-              idTareaPlanner: model.planes[i].idPlan,
-              nombreTareaPlanner: model.planes[i].nombrePlan,
-              checkTarePlanner: false,
-              expandedTarePlanner: false,
-              isEvento: false,
-              actividadTareaPlanner: tempActividad));
+            actividadTareaPlanner: tempActividad,
+          ));
         }
       }
     }
@@ -271,6 +278,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
                     actividadThere.idActividadOld;
                 actividadHere.checkActividadPlanner = true;
                 actividadHere.isEvento = true;
+                actividadHere.tiempoAntes = actividadThere.tiempoAntes;
               }
             }
           }
@@ -295,25 +303,37 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
     List<ExpansionPanel> listExpanded = []; // variable con la lista de expanded
 
     // ciclo para generar mis widgets padres
-    for (int i = 0; i < list.length; i++) {
+    for (TareaPlanner tarea in _listTare) {
       List<Widget> listWidget = []; // variable con los hijos del expanded
 
       // ciclo para generar los hijos
-      for (int j = 0; j < list[i].actividadTareaPlanner.length; j++) {
+      for (ActividadPlanner actividad in tarea.actividadTareaPlanner) {
         // agregamos items a la lista widget
         listWidget.add(ListTile(
           leading: Checkbox(
-            value: _listTare[i].actividadTareaPlanner[j].checkActividadPlanner,
+            value: actividad.checkActividadPlanner,
             onChanged: (valor) {
-              setState(() {
-                _listTare[i].actividadTareaPlanner[j].checkActividadPlanner =
-                    valor;
-              });
+              DateTime fechaTemp = DateTime(
+                fechaEvento.year,
+                fechaEvento.month - actividad.tiempoAntes,
+                fechaEvento.day,
+                10,
+              );
+
+              if (fechaTemp.isBefore(fechaInicio)) {
+                MostrarAlerta(
+                    mensaje:
+                        'La actividad no puede ser antes de la fecha de inicio del evento',
+                    tipoMensaje: TipoMensaje.advertencia);
+              } else {
+                actividad.fechaInicio = fechaTemp;
+                actividad.checkActividadPlanner = valor;
+                setState(() {});
+              }
             },
           ),
-          title: Text(list[i].actividadTareaPlanner[j].nombreActividadPlanner),
-          subtitle: Text(
-              list[i].actividadTareaPlanner[j].descripcionActividadPlanner),
+          title: Text(actividad.nombreActividadPlanner),
+          subtitle: Text(actividad.descripcionActividadPlanner),
         ));
       }
 
@@ -323,29 +343,45 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
           headerBuilder: (context, isExpanded) {
             return ListTile(
               leading: Checkbox(
-                value: _listTare[i].checkTarePlanner ?? false,
+                value: tarea.checkTarePlanner ?? false,
                 onChanged: (valor) {
                   setState(() {
-                    _listTare[i].checkTarePlanner = valor;
+                    tarea.checkTarePlanner = valor;
 
                     // forEach para seleccionar a todas las actividades de la tarea
-                    for (var actividad in _listTare[i].actividadTareaPlanner) {
-                      actividad.checkActividadPlanner = valor;
+                    for (var actividad in tarea.actividadTareaPlanner) {
+                      DateTime fechaTemp = DateTime(
+                        fechaEvento.year,
+                        fechaEvento.month - actividad.tiempoAntes,
+                        fechaEvento.day,
+                        10,
+                      );
+
+                      if (fechaTemp.isBefore(fechaInicio)) {
+                        MostrarAlerta(
+                            mensaje:
+                                'La actividad no puede ser antes de la fecha de inicio del evento',
+                            tipoMensaje: TipoMensaje.advertencia);
+                      } else {
+                        actividad.fechaInicio = fechaTemp;
+                        setState(() {
+                          actividad.checkActividadPlanner = valor;
+                        });
+                      }
                     }
                   });
                 },
               ),
-              title: Text(list[i].nombreTareaPlanner),
+              title: Text(tarea.nombreTareaPlanner),
               onTap: () {
                 // evento clic en el cuerpo de la listTile cabre el expanded
                 setState(() {
-                  _listTare[i].expandedTarePlanner =
-                      !_listTare[i].expandedTarePlanner;
+                  tarea.expandedTarePlanner = !tarea.expandedTarePlanner;
                 });
               },
             );
           },
-          isExpanded: _listTare[i].expandedTarePlanner ?? false,
+          isExpanded: tarea.expandedTarePlanner ?? false,
           body: Container(
             padding: const EdgeInsets.only(left: 20.0),
             child: Column(
@@ -406,15 +442,17 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
         // agregar actividades marcadas
         if (actividad.checkActividadPlanner) {
           actividadPlaner.add(ActividadPlanner(
-              idActividadPlanner: actividad.idActividadPlanner,
-              nombreActividadPlanner: actividad.nombreActividadPlanner,
-              descripcionActividadPlanner:
-                  actividad.descripcionActividadPlanner,
-              visibleInvolucradosActividadPlanner:
-                  actividad.visibleInvolucradosActividadPlanner,
-              diasActividadPlanner: actividad.diasActividadPlanner,
-              predecesorActividadPlanner: actividad.predecesorActividadPlanner,
-              isEvento: false));
+            idActividadPlanner: actividad.idActividadPlanner,
+            nombreActividadPlanner: actividad.nombreActividadPlanner,
+            descripcionActividadPlanner: actividad.descripcionActividadPlanner,
+            visibleInvolucradosActividadPlanner:
+                actividad.visibleInvolucradosActividadPlanner,
+            diasActividadPlanner: actividad.diasActividadPlanner,
+            predecesorActividadPlanner: actividad.predecesorActividadPlanner,
+            isEvento: false,
+            tiempoAntes: actividad.tiempoAntes,
+            fechaInicio: actividad.fechaInicio,
+          ));
           bandera = true;
         }
       }
@@ -432,6 +470,7 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
     // enviamos al evento
     if (tareaPlaner.isNotEmpty) {
       // regresamos
+
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
       _planesBloc.add(GetTimingsAndActivitiesEvent());
       Navigator.pop(context);
@@ -458,15 +497,17 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
         // agregar actividades marcadas
         if (actividad.checkActividadPlanner) {
           actividadPlaner.add(ActividadPlanner(
-              idActividadPlanner: actividad.idActividadPlanner,
-              nombreActividadPlanner: actividad.nombreActividadPlanner,
-              descripcionActividadPlanner:
-                  actividad.descripcionActividadPlanner,
-              visibleInvolucradosActividadPlanner:
-                  actividad.visibleInvolucradosActividadPlanner,
-              diasActividadPlanner: actividad.diasActividadPlanner,
-              predecesorActividadPlanner: actividad.predecesorActividadPlanner,
-              isEvento: actividad.isEvento));
+            idActividadPlanner: actividad.idActividadPlanner,
+            nombreActividadPlanner: actividad.nombreActividadPlanner,
+            descripcionActividadPlanner: actividad.descripcionActividadPlanner,
+            visibleInvolucradosActividadPlanner:
+                actividad.visibleInvolucradosActividadPlanner,
+            diasActividadPlanner: actividad.diasActividadPlanner,
+            predecesorActividadPlanner: actividad.predecesorActividadPlanner,
+            isEvento: actividad.isEvento,
+            tiempoAntes: actividad.tiempoAntes,
+            fechaInicio: actividad.fechaInicio,
+          ));
           bandera = true;
         }
       }
@@ -474,10 +515,11 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       // agregar tareas & actividades
       if (bandera) {
         tareaPlaner.add(TareaPlanner(
-            idTareaPlanner: tarea.idTareaPlanner,
-            nombreTareaPlanner: tarea.nombreTareaPlanner,
-            actividadTareaPlanner: actividadPlaner,
-            isEvento: tarea.isEvento));
+          idTareaPlanner: tarea.idTareaPlanner,
+          nombreTareaPlanner: tarea.nombreTareaPlanner,
+          actividadTareaPlanner: actividadPlaner,
+          isEvento: tarea.isEvento,
+        ));
       }
     }
 
@@ -486,9 +528,9 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
       // regresamos
       _planesBloc.add(CreatePlanesEvent(tareaPlaner));
       _planesBloc.add(GetTimingsAndActivitiesEvent());
-      Navigator.pop(context);
       MostrarAlerta(
           mensaje: 'Planes agregados.', tipoMensaje: TipoMensaje.correcto);
+      Navigator.of(context, rootNavigator: true).pop();
     } else {
       MostrarAlerta(
           mensaje: 'Agrege un plan por favor...',
@@ -524,7 +566,9 @@ class ActividadPlanner {
   int diasActividadPlanner;
   int predecesorActividadPlanner;
   bool isEvento;
+  DateTime fechaInicio;
   bool checkActividadPlanner;
+  int tiempoAntes;
 
   ActividadPlanner({
     this.idActividadPlanner,
@@ -535,5 +579,7 @@ class ActividadPlanner {
     this.predecesorActividadPlanner,
     this.isEvento,
     this.checkActividadPlanner,
+    this.tiempoAntes,
+    this.fechaInicio,
   });
 }

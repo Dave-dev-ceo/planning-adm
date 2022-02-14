@@ -162,11 +162,11 @@ class MeetingDataSource extends CalendarDataSource {
   Future<void> handleLoadMore(DateTime startDate, DateTime endDate) async {
     List<Color> _colorCollection = <Color>[];
 
-    _colorCollection.add(const Color(0xFF0444BF));
     _colorCollection.add(const Color(0xFFF05837));
     _colorCollection.add(const Color(0xFF0F8644));
     _colorCollection.add(const Color(0xFF888c46));
     _colorCollection.add(const Color(0xFFf4874b));
+    _colorCollection.add(const Color(0xFF0444BF));
     _colorCollection.add(const Color(0xFF6465A5));
     _colorCollection.add(const Color(0xFF8B1FA9));
     _colorCollection.add(const Color(0xFFD20100));
@@ -221,8 +221,7 @@ class MeetingDataSource extends CalendarDataSource {
           eventName: actividad.nombreActividad,
           description: actividad.descripcionActividad,
           from: actividad.fechaInicioActividad,
-          to: actividad.fechaFinActividad ??
-              actividad.fechaInicioActividad.add(const Duration(hours: 1)),
+          to: actividad.fechaInicioActividad.add(const Duration(hours: 1)),
           background:
               eventoColors.firstWhere((e) => e.id == actividad.idEvento).color,
           isAllDay: false,

@@ -44,6 +44,7 @@ class _Planes {
   DateTime _fechaInicioActividad;
   int _idOldActividad;
   bool _statusProgreso;
+  int _tiempoAntes;
 
   // constructor
   _Planes(result) {
@@ -65,6 +66,7 @@ class _Planes {
     _fechaInicioActividad = DateTime.parse(result['fecha_inicio_actividad']);
     _idOldActividad = result['id_actividad_old'];
     _statusProgreso = result['estatus_progreso'];
+    _tiempoAntes = result['tiempo_antes'];
   }
 
   // creamos getters
@@ -86,6 +88,7 @@ class _Planes {
   DateTime get fechaInicioActividad => _fechaInicioActividad;
   int get idOldActividad => _idOldActividad;
   bool get statusProgreso => _statusProgreso;
+  int get tiempoAntes => _tiempoAntes;
 
   // creamos setters
   // parte de tares
@@ -105,4 +108,5 @@ class _Planes {
   set fechaInicioActividad(value) => _fechaInicioActividad;
   set idOldActividad(value) => _idOldActividad;
   set statusProgreso(value) => _statusProgreso;
+  set tiempoAntes(int value) => _tiempoAntes;
 }

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/planes_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_planes.dart';
+import 'package:planning/src/ui/planes/agregar_planes.dart';
 
 part 'planes_event.dart';
 part 'planes_state.dart';
@@ -21,8 +22,10 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
     if (event is SelectPlanesEvent) {
       yield LodingPlanesState();
       try {
-        ItemModelPlanes planes = await logic.selectPlanesPlanner();
-        yield SelectPlanesState(planes);
+        final planes = await logic.selectPlanesPlanner();
+
+        yield SelectPlanesState(
+            planes['modelo'], planes['fechaEvento'], planes['fechaInicio']);
       } on ListaPlanesException {
         yield ErrorMostrarPlanesState('Sin Planes');
       } on TokenException {

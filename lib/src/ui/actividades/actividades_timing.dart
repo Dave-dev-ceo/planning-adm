@@ -44,6 +44,23 @@ class _AgregarActividadesState extends State<AgregarActividades> {
   String archivo;
   PlatformFile file;
 
+  int _seleccion;
+
+  List<Map<String, dynamic>> opcionesMeses = [
+    {'descripcion': 'A un mes', 'value': 1},
+    {'descripcion': 'A dos meses', 'value': 2},
+    {'descripcion': 'A tres meses', 'value': 3},
+    {'descripcion': 'A cuatro meses', 'value': 4},
+    {'descripcion': 'A cinco meses', 'value': 5},
+    {'descripcion': 'A seis meses', 'value': 6},
+    {'descripcion': 'A siete meses', 'value': 7},
+    {'descripcion': 'A ocho meses', 'value': 8},
+    {'descripcion': 'A nueve meses', 'value': 9},
+    {'descripcion': 'A diez meses', 'value': 10},
+    {'descripcion': 'A once meses', 'value': 11},
+    {'descripcion': 'A doce meses', 'value': 12},
+  ];
+
   @override
   void initState() {
     actividadestimingBloc = BlocProvider.of<ActividadestimingBloc>(context);
@@ -64,6 +81,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     descripcionCtrl.clear();
     file = null;
     nombreArchivoCtrl.clear();
+    _seleccion = null;
   }
 
   _initControlersEdit(ItemModelActividadesTimings actividad, int i) {
@@ -119,6 +137,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
         "nombre_actividad": actividadCtrl.text,
         "descripcion": descripcionCtrl.text,
         "visible_involucrados": _actVisible.toString(),
+        'tiempoAntes': _seleccion.toString(),
       };
 
       if (file != null) {
@@ -159,7 +178,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                       validator: et ? validateActividad : validateActividadEdit,
                     ),
                     large: 500.0,
-                    ancho: 80.0),
+                    ancho: 85.0),
                 TextFormFields(
                     icon: Icons.drive_file_rename_outline,
                     item: TextFormField(
@@ -171,7 +190,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                           et ? validateDescripcion : validateActividadEdit,
                     ),
                     large: 500.0,
-                    ancho: 80.0),
+                    ancho: 85.0),
               ],
             ),
             Wrap(
@@ -179,7 +198,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
               children: <Widget>[
                 et
                     ? TextFormFields(
-                        icon: null,
+                        icon: FontAwesomeIcons.checkCircle,
                         item: CheckboxListTile(
                           title: const Text('Visible para involucrados'),
                           //secondary: Icon(Icons.be),
@@ -193,11 +212,11 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                           activeColor: Colors.green,
                           checkColor: Colors.black,
                         ),
-                        ancho: 80,
-                        large: 363.0,
+                        ancho: 85,
+                        large: 400.0,
                       )
                     : TextFormFields(
-                        icon: null,
+                        icon: FontAwesomeIcons.checkCircle,
                         item: CheckboxListTile(
                           title: const Text('Visible para involucrados'),
                           //secondary: Icon(Icons.be),
@@ -211,51 +230,86 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                           activeColor: Colors.green,
                           checkColor: Colors.black,
                         ),
-                        ancho: 80.toDouble(),
-                        large: 363.0.toDouble(),
+                        ancho: 85.toDouble(),
+                        large: 400.0.toDouble(),
                       ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
-                      FilePickerResult pickedFile =
-                          await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        withData: true,
-                        allowedExtensions: extensiones,
-                        allowMultiple: false,
-                      );
-
-                      if (pickedFile != null) {
-                        file = pickedFile.files.single;
-                        nombreArchivoCtrl.text = file.name;
-                        setState(() {});
+                TextFormFields(
+                  icon: FontAwesomeIcons.calendarDay,
+                  item: DropdownButtonFormField(
+                    validator: (value) {
+                      if (value != null) {
+                        return null;
                       }
+                      return 'El campo es requerido';
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: FaIcon(FontAwesomeIcons.fileUpload),
-                    ),
+                    isExpanded: true,
+                    onChanged: (value) => setState(() {
+                      _seleccion = value;
+                    }),
+                    items: opcionesMeses.map((e) {
+                      return DropdownMenuItem(
+                        child: Text(e['descripcion']),
+                        value: e['value'],
+                      );
+                    }).toList(),
+                    value: _seleccion,
+                    hint: const Text(
+                        'Seleccione a cuanto tiempo antes del evento'),
+                    style: const TextStyle(overflow: TextOverflow.ellipsis),
                   ),
+                  ancho: 85.toDouble(),
+                  large: 400.0.toDouble(),
                 ),
               ],
             ),
-            if (file != null)
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextFormFields(
-                    icon: FontAwesomeIcons.fileArchive,
-                    item: TextFormField(
-                      controller: nombreArchivoCtrl,
-                      readOnly: true,
-                      decoration: const InputDecoration(
-                          hintText: 'Nombre del archivo',
-                          labelText: 'Nombre del archivo'),
+            Wrap(
+              alignment: WrapAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Tooltip(
+                    message: 'Subir archivo',
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
+                        FilePickerResult pickedFile =
+                            await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          withData: true,
+                          allowedExtensions: extensiones,
+                          allowMultiple: false,
+                        );
+
+                        if (pickedFile != null) {
+                          file = pickedFile.files.single;
+                          nombreArchivoCtrl.text = file.name;
+                          setState(() {});
+                        }
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: FaIcon(FontAwesomeIcons.fileUpload),
+                      ),
                     ),
-                    large: 500.toDouble(),
-                    ancho: 80.toDouble()),
-              ),
+                  ),
+                ),
+                if (file != null)
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: TextFormFields(
+                        icon: FontAwesomeIcons.fileArchive,
+                        item: TextFormField(
+                          controller: nombreArchivoCtrl,
+                          readOnly: true,
+                          decoration: const InputDecoration(
+                              hintText: 'Nombre del archivo',
+                              labelText: 'Nombre del archivo'),
+                        ),
+                        large: 500.toDouble(),
+                        ancho: 85.toDouble()),
+                  ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: ElevatedButton(
@@ -354,6 +408,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                             visibleInvolucrado:
                                 item.results.elementAt(i).visibleInvolucrados,
                             haveArchivo: item.results.elementAt(i).haveFile,
+                            tiempoAntes: item.results.elementAt(i).tiempoAntes,
                           );
 
                           List<EventoActividadModel> listaActividades = [];
@@ -372,6 +427,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                         actividad.visibleInvolucrados,
                                     haveArchivo:
                                         item.results.elementAt(i).haveFile,
+                                    tiempoAntes:
+                                        item.results.elementAt(i).tiempoAntes,
                                   )),
                                 );
                               }
@@ -529,6 +586,23 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
   String archivo;
   PlatformFile file;
 
+  final _keyForm = GlobalKey<FormState>();
+
+  List<Map<String, dynamic>> opcionesMeses = [
+    {'descripcion': 'A un mes', 'value': 1},
+    {'descripcion': 'A dos meses', 'value': 2},
+    {'descripcion': 'A tres meses', 'value': 3},
+    {'descripcion': 'A cuatro meses', 'value': 4},
+    {'descripcion': 'A cinco meses', 'value': 5},
+    {'descripcion': 'A seis meses', 'value': 6},
+    {'descripcion': 'A siete meses', 'value': 7},
+    {'descripcion': 'A ocho meses', 'value': 8},
+    {'descripcion': 'A nueve meses', 'value': 9},
+    {'descripcion': 'A diez meses', 'value': 10},
+    {'descripcion': 'A once meses', 'value': 11},
+    {'descripcion': 'A doce meses', 'value': 12},
+  ];
+
   @override
   void initState() {
     actividadestimingBloc = BlocProvider.of<ActividadestimingBloc>(context);
@@ -555,108 +629,150 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                 }
               }
             },
-            child: ListBody(
-              children: [
-                SizedBox(
-                  width: 1200,
-                  //height: 600,
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 12,
-                    shadowColor: Colors.black12,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: <Widget>[
-                        TextFormFields(
-                            icon: Icons.local_activity,
-                            item: TextFormField(
-                              initialValue: actividad.nombreActividad,
-                              decoration: const InputDecoration(
-                                labelText: 'Nombre',
-                              ),
-                              onChanged: (value) {
-                                actividad.nombreActividad = value;
-                              },
-                            ),
-                            large: 500.0,
-                            ancho: 80.0),
-                        TextFormFields(
-                            icon: Icons.drive_file_rename_outline,
-                            item: TextFormField(
-                              initialValue: actividad.descripcionActividad,
-                              decoration: const InputDecoration(
-                                labelText: 'Descripción',
-                              ),
-                              onChanged: (value) {
-                                actividad.descripcionActividad = value;
-                              },
-                            ),
-                            large: 500.0,
-                            ancho: 80.0),
-                        TextFormFields(
-                          icon: null,
-                          item: CheckboxListTile(
-                            title: const Text('Visible para involucrados'),
-                            //secondary: Icon(Icons.be),
-                            controlAffinity: ListTileControlAffinity.platform,
-                            value: actividad.visibleInvolucrado,
-                            onChanged: (bool value) {
-                              setState(() {
-                                actividad.visibleInvolucrado = value;
-                              });
-                            },
-                            activeColor: Colors.green,
-                            checkColor: Colors.black,
-                          ),
-                          ancho: 80,
-                          large: 363.0,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
-                              FilePickerResult pickedFile =
-                                  await FilePicker.platform.pickFiles(
-                                type: FileType.custom,
-                                withData: true,
-                                allowedExtensions: extensiones,
-                                allowMultiple: false,
-                              );
-
-                              if (pickedFile != null) {
-                                file = pickedFile.files.single;
-                                nombreArchivoCtrl.text = file.name;
-                                setState(() {});
-                              }
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: FaIcon(FontAwesomeIcons.fileUpload),
-                            ),
-                          ),
-                        ),
-                        if (file != null)
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: TextFormFields(
-                                icon: FontAwesomeIcons.fileArchive,
-                                item: TextFormField(
-                                  controller: nombreArchivoCtrl,
-                                  readOnly: true,
-                                  decoration: const InputDecoration(
-                                      hintText: 'Nombre del archivo',
-                                      labelText: 'Nombre del archivo'),
+            child: Form(
+              key: _keyForm,
+              child: ListBody(
+                children: [
+                  SizedBox(
+                    width: 1200,
+                    //height: 600,
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 12,
+                      shadowColor: Colors.black12,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        children: <Widget>[
+                          TextFormFields(
+                              icon: Icons.local_activity,
+                              item: TextFormField(
+                                initialValue: actividad.nombreActividad,
+                                decoration: const InputDecoration(
+                                  labelText: 'Nombre',
                                 ),
-                                large: 500.toDouble(),
-                                ancho: 80.toDouble()),
+                                onChanged: (value) {
+                                  actividad.nombreActividad = value;
+                                },
+                                validator: (value) {
+                                  if (value != '' && value != null) {
+                                    return null;
+                                  }
+                                  return 'El nombre es requerido';
+                                },
+                              ),
+                              large: 500.0,
+                              ancho: 85.0),
+                          TextFormFields(
+                              icon: Icons.drive_file_rename_outline,
+                              item: TextFormField(
+                                initialValue: actividad.descripcionActividad,
+                                decoration: const InputDecoration(
+                                  labelText: 'Descripción',
+                                ),
+                                onChanged: (value) {
+                                  actividad.descripcionActividad = value;
+                                },
+                              ),
+                              large: 500.0,
+                              ancho: 85.0),
+                          TextFormFields(
+                            icon: FontAwesomeIcons.checkCircle,
+                            item: CheckboxListTile(
+                              title: const Text('Visible para involucrados'),
+                              //secondary: Icon(Icons.be),
+                              controlAffinity: ListTileControlAffinity.platform,
+                              value: actividad.visibleInvolucrado,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  actividad.visibleInvolucrado = value;
+                                });
+                              },
+                              activeColor: Colors.green,
+                              checkColor: Colors.black,
+                            ),
+                            ancho: 85,
+                            large: 500.0,
                           ),
-                      ],
+                          TextFormFields(
+                            icon: FontAwesomeIcons.calendarDay,
+                            item: DropdownButtonFormField(
+                              validator: (value) {
+                                if (value != null) {
+                                  return null;
+                                }
+                                return 'El tiempo es requerido';
+                              },
+                              isExpanded: true,
+                              onChanged: (value) => setState(() {
+                                actividad.tiempoAntes = value;
+                              }),
+                              items: opcionesMeses.map((e) {
+                                return DropdownMenuItem(
+                                  child: Text(e['descripcion']),
+                                  value: e['value'],
+                                );
+                              }).toList(),
+                              value: actividad.tiempoAntes,
+                              hint: const Text(
+                                  'Seleccione a cuanto tiempo antes del evento'),
+                              style: const TextStyle(
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                            ancho: 85.toDouble(),
+                            large: 500.0.toDouble(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                const extensiones = [
+                                  'jpg',
+                                  'png',
+                                  'jpeg',
+                                  'pdf'
+                                ];
+                                FilePickerResult pickedFile =
+                                    await FilePicker.platform.pickFiles(
+                                  type: FileType.custom,
+                                  withData: true,
+                                  allowedExtensions: extensiones,
+                                  allowMultiple: false,
+                                );
+
+                                if (pickedFile != null) {
+                                  file = pickedFile.files.single;
+                                  nombreArchivoCtrl.text = file.name;
+                                  setState(() {});
+                                }
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: FaIcon(FontAwesomeIcons.fileUpload),
+                              ),
+                            ),
+                          ),
+                          if (file != null)
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: TextFormFields(
+                                  icon: FontAwesomeIcons.fileArchive,
+                                  item: TextFormField(
+                                    controller: nombreArchivoCtrl,
+                                    readOnly: true,
+                                    decoration: const InputDecoration(
+                                        hintText: 'Nombre del archivo',
+                                        labelText: 'Nombre del archivo'),
+                                  ),
+                                  large: 500.toDouble(),
+                                  ancho: 85.toDouble()),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           )),
           actions: [
@@ -673,8 +789,10 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                     actividad.haveArchivo = false;
                   }
 
-                  actividadestimingBloc
-                      .add(UpdateActividadEvent(actividad, idTiming));
+                  if (_keyForm.currentState.validate()) {
+                    actividadestimingBloc
+                        .add(UpdateActividadEvent(actividad, idTiming));
+                  }
                 },
                 child: const Text('Aceptar')),
           ],

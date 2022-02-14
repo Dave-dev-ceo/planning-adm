@@ -12,8 +12,10 @@ class LodingPlanesState extends PlanesState {}
 // estado - select
 class SelectPlanesState extends PlanesState {
   final ItemModelPlanes planes;
+  final DateTime fechaEvento;
+  final DateTime fechaInicio;
 
-  SelectPlanesState(this.planes);
+  SelectPlanesState(this.planes, this.fechaEvento, this.fechaInicio);
 
   ItemModelPlanes get props => planes;
 }

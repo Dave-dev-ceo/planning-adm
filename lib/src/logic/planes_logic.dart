@@ -12,12 +12,13 @@ import 'package:planning/src/resources/config_conection.dart';
 
 // import model
 import 'package:planning/src/models/item_model_planes.dart';
+import 'package:planning/src/ui/planes/agregar_planes.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class PlanesLogic {
-  Future<ItemModelPlanes> selectPlanesPlanner();
+  Future<Map<String, dynamic>> selectPlanesPlanner();
   Future<ItemModelPlanes> selectPlanesEvento(String myQuery);
-  Future<bool> crearTareasEventoLista(List<dynamic> listaPlanner);
+  Future<bool> crearTareasEventoLista(List<TareaPlanner> listaPlanner);
   Future<int> createTareaEvento(Map<String, dynamic> tareaEvento);
   Future<int> createActividadEvento(
       Map<String, dynamic> actividadEvento, int idTarea);
@@ -45,7 +46,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
   Client client = Client();
 
   @override
-  Future<ItemModelPlanes> selectPlanesPlanner() async {
+  Future<Map<String, dynamic>> selectPlanesPlanner() async {
     // variables
     int idEvento = await _sharedPreferences.getIdEvento();
     int idPlanner = await _sharedPreferences.getIdPlanner();
@@ -70,7 +71,13 @@ class ConsultasPlanesLogic extends PlanesLogic {
       // actualizamos shared
       await _sharedPreferences.setToken(data['token']);
       // enviamos data
-      return ItemModelPlanes.fromJson(data['data']);
+
+      ItemModelPlanes itemModel = ItemModelPlanes.fromJson(data['data']);
+      return {
+        'modelo': itemModel,
+        'fechaEvento': DateTime.parse(data['fecha_evento']).toLocal(),
+        'fechaInicio': DateTime.parse(data['fecha_inicio']).toLocal(),
+      };
     } else if (response.statusCode == 401) {
       // enviamos un null
       return null;
@@ -81,7 +88,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
   }
 
   @override
-  Future<bool> crearTareasEventoLista(List<dynamic> listaPlanner) async {
+  Future<bool> crearTareasEventoLista(List<TareaPlanner> listaPlanner) async {
     // variables
     int idEvento = await _sharedPreferences.getIdEvento();
     int idPlanner = await _sharedPreferences.getIdPlanner();
@@ -89,7 +96,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
     bool done;
 
     // creamos tareas
-    Future.forEach(listaPlanner, (tarea) async {
+    Future.forEach(listaPlanner, (TareaPlanner tarea) async {
       // validamos que no se repita
       if (!tarea.isEvento) {
         final response = await client.post(
@@ -108,7 +115,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
         Map<String, dynamic> data = json.decode(response.body);
 
-        tarea.actividadTareaPlanner.forEach((actividad) async {
+        Future.forEach(tarea.actividadTareaPlanner,
+            (ActividadPlanner actividad) async {
           await client.post(
               Uri.parse(confiC.url +
                   confiC.puerto +
@@ -125,13 +133,15 @@ class ConsultasPlanesLogic extends PlanesLogic {
                 'dias': actividad.diasActividadPlanner.toString(),
                 'predecesor': actividad.predecesorActividadPlanner.toString(),
                 'id_actividad_timing': actividad.idActividadPlanner.toString(),
+                'fechaInicio': actividad.fechaInicio.toString(),
               },
               headers: {
                 HttpHeaders.authorizationHeader: token
               });
         });
       } else {
-        tarea.actividadTareaPlanner.forEach((actividad) async {
+        Future.forEach(tarea.actividadTareaPlanner,
+            (ActividadPlanner actividad) async {
           if (!actividad.isEvento) {
             await client.post(
                 Uri.parse(confiC.url +
@@ -150,6 +160,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
                   'predecesor': actividad.predecesorActividadPlanner.toString(),
                   'id_actividad_timing':
                       actividad.idActividadPlanner.toString(),
+                  'fechaInicio': actividad.fechaInicio.toString(),
                 },
                 headers: {
                   HttpHeaders.authorizationHeader: token
@@ -485,7 +496,6 @@ class ConsultasPlanesLogic extends PlanesLogic {
       'visibleInvolucrado': actividadModel.visibleInvolucrado,
       'idActividadTiming': actividadModel.idActividadOld,
       'responsable': actividadModel.responsable,
-      'fechafin': actividadModel.fechaFinActividad.toString(),
       'archivo': archivo,
       'tipoMime': tipoMime,
     };
@@ -529,7 +539,6 @@ class ConsultasPlanesLogic extends PlanesLogic {
       'fecha': actividadModel.fechaInicioActividad.toString(),
       'visibleInvolucrado': actividadModel.visibleInvolucrado,
       'responsable': actividadModel.responsable,
-      'fechafin': actividadModel.fechaFinActividad.toString(),
       'archivo': archivo,
       'tipoMime': tipoMime,
     };

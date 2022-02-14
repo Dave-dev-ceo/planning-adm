@@ -441,8 +441,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
         actividades += [...timing.actividades];
       }
 
-      actividades.sort(
-          (a, b) => b.fechaInicioActividad.compareTo(a.fechaFinActividad));
+      actividades.sort((a, b) => b.fechaInicioActividad
+          .compareTo(a.fechaInicioActividad.add(const Duration(hours: 1))));
 
       Widget header = ListTile(
         leading: const Text('Estatus'),
@@ -469,15 +469,6 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 padding: EdgeInsets.only(left: 8.0),
                 child: Text(
                   'Inicio',
-                ),
-              ),
-              flex: 1,
-            ),
-            const Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'Fin',
                 ),
               ),
               flex: 1,
@@ -689,67 +680,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                               } else {
                                 actividad.estatus = 'En Curso';
                               }
-                              if (fecha.isAfter(actividad.fechaFinActividad)) {
-                                actividad.fechaFinActividad =
-                                    fecha.add(const Duration(hours: 1));
-                              }
+
                               actividad.fechaInicioActividad = fecha;
-                              actividad.estadoCalendarioActividad = true;
-                            }
-                          });
-                        }
-                      : null,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                const Text('Fin:'),
-                GestureDetector(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: AutoSizeText(
-                      '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
-                      maxLines: 1,
-                      wrapWords: false,
-                    ),
-                  ),
-                  onTap: claveRol != 'INVO'
-                      ? () async {
-                          final data = await _giveFecha(
-                            actividad.fechaInicioActividad,
-                            actividad.fechaInicioEvento,
-                            actividad.fechaFinEvento,
-                            actividad.idActividad,
-                          );
-
-                          setState(() {
-                            if (data != null) {
-                              isEnableButton = true;
-
-                              DateTime fecha = DateTime(
-                                data.year,
-                                data.month,
-                                data.day,
-                                DateTime.now().toLocal().hour,
-                                DateTime.now().toLocal().minute,
-                              );
-                              if (fecha.isAfter(DateTime.now())) {
-                                actividad.estatus = 'En Curso';
-                              } else if (fecha.isBefore(DateTime.now())) {
-                                actividad.estatus = 'Atrasada';
-                              } else {
-                                actividad.estatus = 'En Curso';
-                              }
-                              if (fecha
-                                  .isBefore(actividad.fechaInicioActividad)) {
-                                actividad.fechaInicioActividad =
-                                    fecha.subtract(const Duration(hours: 1));
-                              }
-                              actividad.fechaFinActividad = fecha;
                               actividad.estadoCalendarioActividad = true;
                             }
                           });
@@ -909,61 +841,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                           } else {
                             actividad.estatus = 'En Curs';
                           }
-                          if (fecha.isAfter(actividad.fechaFinActividad)) {
-                            actividad.fechaFinActividad =
-                                fecha.add(const Duration(hours: 1));
-                          }
+
                           actividad.fechaInicioActividad = fecha;
-                          actividad.estadoCalendarioActividad = true;
-                        }
-                      });
-                    }
-                  : null,
-            ),
-            flex: 1,
-          ),
-          Expanded(
-            child: GestureDetector(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: AutoSizeText(
-                  '${actividad.fechaFinActividad.day}/${actividad.fechaFinActividad.month}/${actividad.fechaFinActividad.year}',
-                  maxLines: 1,
-                  wrapWords: false,
-                ),
-              ),
-              onTap: claveRol != 'INVO'
-                  ? () async {
-                      final data = await _giveFecha(
-                        actividad.fechaInicioActividad,
-                        actividad.fechaInicioEvento,
-                        actividad.fechaFinEvento,
-                        actividad.idActividad,
-                      );
-
-                      setState(() {
-                        if (data != null) {
-                          isEnableButton = true;
-
-                          DateTime fecha = DateTime(
-                            data.year,
-                            data.month,
-                            data.day,
-                            DateTime.now().toLocal().hour,
-                            DateTime.now().toLocal().minute,
-                          );
-                          if (fecha.isAfter(DateTime.now())) {
-                            actividad.estatus = 'En Curso';
-                          } else if (fecha.isBefore(DateTime.now())) {
-                            actividad.estatus = 'Atrasada';
-                          } else {
-                            actividad.estatus = 'En Curso';
-                          }
-                          if (fecha.isBefore(actividad.fechaInicioActividad)) {
-                            actividad.fechaInicioActividad =
-                                fecha.subtract(const Duration(hours: 1));
-                          }
-                          actividad.fechaFinActividad = fecha;
                           actividad.estadoCalendarioActividad = true;
                         }
                       });
@@ -1205,7 +1084,6 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
   final ArchivoActividadLogic archivoLogic = ArchivoActividadLogic();
 
   TextEditingController fechaInicioController = TextEditingController();
-  TextEditingController fechaFinController = TextEditingController();
   List<EventoActividadModel> predecesores = [];
   String archivo;
   String tipoMime;
@@ -1221,18 +1099,13 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
       fechaInicioController.text = DateFormat.yMd()
           .add_jm()
           .format(widget.actividadModel.fechaInicioActividad);
-      fechaFinController.text = DateFormat.yMd()
-          .add_jm()
-          .format(widget.actividadModel.fechaFinActividad);
     } else {
       actividad = EventoActividadModel(
         visibleInvolucrado: false,
         estadoCalendarioActividad: false,
       );
       actividad.fechaInicioActividad = widget.fechaInicioEvento;
-      actividad.fechaFinActividad = widget.fechaFinEvento;
       fechaInicioController.text = '';
-      fechaFinController.text = '';
     }
     super.initState();
   }
@@ -1268,7 +1141,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
               } else {
                 MostrarAlerta(
                     mensaje: 'Ocurrio un error',
-                    tipoMensaje: TipoMensaje.correcto);
+                    tipoMensaje: TipoMensaje.error);
               }
             }
           },
@@ -1382,52 +1255,6 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                         fechaInicioController.text =
                                             DateFormat.yMd().add_jm().format(
                                                 actividad.fechaInicioActividad);
-                                        if (fechaFinController.text == '') {
-                                          actividad.fechaFinActividad =
-                                              DateTime(
-                                                  actividad.fechaInicioActividad
-                                                      .year,
-                                                  actividad.fechaInicioActividad
-                                                      .month,
-                                                  actividad
-                                                      .fechaInicioActividad.day,
-                                                  actividad.fechaInicioActividad
-                                                          .hour +
-                                                      1,
-                                                  actividad.fechaInicioActividad
-                                                      .minute);
-                                          fechaFinController.text =
-                                              DateFormat.yMd().add_jm().format(
-                                                  actividad.fechaFinActividad);
-                                        } else {
-                                          if (actividad.fechaInicioActividad
-                                              .isAfter(actividad
-                                                  .fechaFinActividad)) {
-                                            actividad.fechaFinActividad =
-                                                DateTime(
-                                                    actividad
-                                                        .fechaInicioActividad
-                                                        .year,
-                                                    actividad
-                                                        .fechaInicioActividad
-                                                        .month,
-                                                    actividad
-                                                        .fechaInicioActividad
-                                                        .day,
-                                                    actividad
-                                                            .fechaInicioActividad
-                                                            .hour +
-                                                        1,
-                                                    actividad
-                                                        .fechaInicioActividad
-                                                        .minute);
-                                            fechaFinController.text =
-                                                DateFormat.yMd()
-                                                    .add_jm()
-                                                    .format(actividad
-                                                        .fechaFinActividad);
-                                          }
-                                        }
                                       }
                                     },
                                     icon: const Icon(
@@ -1458,199 +1285,9 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                                 time.hour,
                                                 time.minute);
 
-                                        if (actividad.fechaInicioActividad
-                                            .isAfter(
-                                                actividad.fechaFinActividad)) {
-                                          actividad.fechaFinActividad =
-                                              actividad
-                                                  .fechaInicioActividad
-                                                  .add(
-                                                      const Duration(hours: 1));
-                                          fechaFinController.text =
-                                              DateFormat.yMd().add_jm().format(
-                                                  actividad.fechaFinActividad);
-                                        }
-
                                         fechaInicioController.text =
                                             DateFormat.yMd().add_jm().format(
                                                 actividad.fechaInicioActividad);
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.more_time,
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                ],
-                              )),
-                        ),
-                      ),
-                    ),
-                    TextFormFields(
-                      icon: Icons.drive_file_rename_outline,
-                      large: 500.0,
-                      ancho: 80.0,
-                      item: Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: TextFormField(
-                          validator: (value) {
-                            if (value != null && value != '') {
-                              return null;
-                            } else {
-                              return 'El campo es requerido';
-                            }
-                          },
-                          readOnly: true,
-                          controller: fechaFinController,
-                          decoration: InputDecoration(
-                              focusColor: Colors.black,
-                              labelText: 'Fecha final',
-                              suffixIcon: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    onPressed: () async {
-                                      final fecha = await showDatePicker(
-                                        initialDate:
-                                            (actividad.fechaInicioActividad !=
-                                                    null)
-                                                ? actividad.fechaInicioActividad
-                                                : widget.fechaInicioEvento,
-                                        context: context,
-                                        firstDate: widget.fechaInicioEvento,
-                                        lastDate: widget.fechaFinEvento,
-                                        errorFormatText: 'Error en el formato',
-                                        errorInvalidText: 'Error en la fecha',
-                                        fieldHintText: 'día/mes/año',
-                                        fieldLabelText:
-                                            'Fecha fin de actividad',
-                                      );
-                                      if (fecha != null) {
-                                        actividad.fechaFinActividad = DateTime(
-                                            fecha.year,
-                                            fecha.month,
-                                            fecha.day,
-                                            fecha.hour,
-                                            fecha.minute);
-                                        if (fechaFinController.text == '') {
-                                          actividad.fechaInicioActividad =
-                                              DateTime(
-                                                  actividad
-                                                      .fechaFinActividad.year,
-                                                  actividad
-                                                      .fechaFinActividad.month,
-                                                  actividad
-                                                      .fechaFinActividad.day,
-                                                  actividad.fechaFinActividad
-                                                          .hour -
-                                                      1,
-                                                  actividad.fechaFinActividad
-                                                      .minute);
-
-                                          fechaInicioController.text =
-                                              DateFormat.yMd().add_jm().format(
-                                                  actividad
-                                                      .fechaInicioActividad);
-                                        } else {
-                                          if (actividad.fechaFinActividad
-                                              .isBefore(actividad
-                                                  .fechaInicioActividad)) {
-                                            actividad.fechaInicioActividad =
-                                                DateTime(
-                                                    actividad
-                                                        .fechaFinActividad.year,
-                                                    actividad.fechaFinActividad
-                                                        .month,
-                                                    actividad
-                                                        .fechaFinActividad.day,
-                                                    actividad.fechaFinActividad
-                                                            .hour -
-                                                        1,
-                                                    actividad.fechaFinActividad
-                                                        .minute);
-                                            fechaInicioController.text =
-                                                DateFormat.yMd()
-                                                    .add_jm()
-                                                    .format(actividad
-                                                        .fechaInicioActividad);
-                                          }
-                                        }
-                                        fechaFinController.text =
-                                            DateFormat.yMd().add_jm().format(
-                                                actividad.fechaFinActividad);
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.date_range,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () async {
-                                      final time = await showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay(
-                                              hour: actividad
-                                                  .fechaFinActividad.hour,
-                                              minute: actividad
-                                                  .fechaFinActividad.minute));
-
-                                      if (time != null) {
-                                        actividad.fechaFinActividad = DateTime(
-                                            actividad.fechaFinActividad.year,
-                                            actividad.fechaFinActividad.month,
-                                            actividad.fechaFinActividad.day,
-                                            time.hour,
-                                            time.minute);
-
-                                        if (fechaInicioController.text == '') {
-                                          actividad.fechaInicioActividad =
-                                              DateTime(
-                                                  actividad
-                                                      .fechaFinActividad.year,
-                                                  actividad
-                                                      .fechaFinActividad.month,
-                                                  actividad
-                                                      .fechaFinActividad.day,
-                                                  actividad.fechaFinActividad
-                                                          .hour -
-                                                      1,
-                                                  actividad.fechaFinActividad
-                                                      .minute);
-
-                                          fechaInicioController.text =
-                                              DateFormat.yMd().add_jm().format(
-                                                  actividad
-                                                      .fechaInicioActividad);
-                                        } else {
-                                          if (actividad.fechaFinActividad
-                                              .isBefore(actividad
-                                                  .fechaInicioActividad)) {
-                                            actividad.fechaInicioActividad =
-                                                DateTime(
-                                                    actividad
-                                                        .fechaFinActividad.year,
-                                                    actividad.fechaFinActividad
-                                                        .month,
-                                                    actividad
-                                                        .fechaFinActividad.day,
-                                                    actividad.fechaFinActividad
-                                                            .hour -
-                                                        1,
-                                                    actividad.fechaFinActividad
-                                                        .minute);
-
-                                            fechaInicioController.text =
-                                                DateFormat.yMd()
-                                                    .add_jm()
-                                                    .format(actividad
-                                                        .fechaInicioActividad);
-                                          }
-                                        }
-
-                                        fechaFinController.text =
-                                            DateFormat.yMd().add_jm().format(
-                                                actividad.fechaFinActividad);
                                       }
                                     },
                                     icon: const Icon(
@@ -1695,7 +1332,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                       item: TextFormField(
                         initialValue: actividad.descripcionActividad,
                         decoration: const InputDecoration(
-                          labelText: 'Descripción:',
+                          labelText: 'Comentarios:',
                         ),
                         onChanged: (valor) {
                           actividad.descripcionActividad = valor;

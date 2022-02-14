@@ -65,6 +65,7 @@ class _Result {
   int _idTipoTimig;
   bool _addActividad;
   DateTime _fechaInicio;
+  int _tiempoAntes;
 
   /* nuevas */
   int _idEventoTiming;
@@ -89,6 +90,7 @@ class _Result {
     _addActividad = result['estatus_calendar'];
     _fechaInicio = DateTime.now();
     _haveFile = result['hasfile'];
+    _tiempoAntes = result['tiempo_antes'];
 
     /* nuevas */
     _idEventoTiming = result['id_evento_timing'];
@@ -135,6 +137,7 @@ class _Result {
     _fechaInicioEvento = dataObj._fechaInicioEvento;
     _fechaFinalEvento = dataObj._fechaFinalEvento;
     _dia = int.parse(dataObj._dias);
+    _tiempoAntes = dataObj._tiempoAntes;
   }
 
   int get idActividad => _idActividad;
@@ -159,6 +162,7 @@ class _Result {
   DateTime get fechaFinalEvento => _fechaFinalEvento;
   int get dia => _dia;
   bool get haveFile => _haveFile;
+  int get tiempoAntes => _tiempoAntes;
 
   set addidActividad(int value) => _idActividad = value;
   set addnombreActividad(String value) => _nombreActividad = value;
@@ -181,4 +185,5 @@ class _Result {
   set fechaFinalEvento(DateTime value) => _fechaFinalEvento;
   set dia(int value) => _dia;
   set haveFile(bool value) => _haveFile = value;
+  set tiempoAntes(int value) => _tiempoAntes = value;
 }

@@ -107,44 +107,44 @@ class TimingModel {
 }
 
 class EventoActividadModel {
-  int idActividad;
-  String nombreActividad;
-  String descripcionActividad;
-  bool visibleInvolucrado = false;
-  int idEvento;
-  bool estadoCalendarioActividad;
-  DateTime fechaInicioActividad;
-  DateTime fechaFinActividad;
-  int idActividadOld;
-  bool estatusProgreso;
-  String responsable;
-  String estatus;
-  DateTime fechaInicioEvento;
-  DateTime fechaFinEvento;
   bool enable;
+  bool estadoCalendarioActividad;
+  bool estatusProgreso;
   bool haveArchivo;
+  bool visibleInvolucrado = false;
+  DateTime fechaFinEvento;
+  DateTime fechaInicioActividad;
+  DateTime fechaInicioEvento;
+  int idActividad;
+  int idActividadOld;
+  int idEvento;
+  int tiempoAntes;
   String archivo;
+  String descripcionActividad;
+  String estatus;
+  String nombreActividad;
+  String responsable;
   String tipoMime;
 
   EventoActividadModel({
-    this.idActividad,
-    this.nombreActividad,
-    this.descripcionActividad,
-    this.visibleInvolucrado,
-    this.estadoCalendarioActividad,
-    this.fechaInicioActividad,
-    this.idActividadOld,
-    this.estatusProgreso,
-    this.responsable,
-    this.estatus,
-    this.fechaFinEvento,
-    this.fechaInicioEvento,
-    this.enable = false,
-    this.fechaFinActividad,
-    this.idEvento,
-    this.haveArchivo,
     this.archivo,
+    this.descripcionActividad,
+    this.enable = false,
+    this.estadoCalendarioActividad,
+    this.estatus,
+    this.estatusProgreso,
+    this.fechaFinEvento,
+    this.fechaInicioActividad,
+    this.fechaInicioEvento,
+    this.haveArchivo,
+    this.idActividad,
+    this.idActividadOld,
+    this.idEvento,
+    this.nombreActividad,
+    this.responsable,
+    this.tiempoAntes,
     this.tipoMime,
+    this.visibleInvolucrado,
   });
 
   factory EventoActividadModel.fromJson(Map<String, dynamic> json) =>
@@ -156,9 +156,6 @@ class EventoActividadModel {
         estadoCalendarioActividad: json['estado_calendario_actividad'],
         fechaInicioActividad:
             DateTime.tryParse(json['fecha_inicio_actividad']).toLocal(),
-        fechaFinActividad: json['fecha_fin_actividad'] != null
-            ? DateTime.tryParse(json['fecha_fin_actividad']).toLocal()
-            : null,
         idActividadOld: json['id_actividad_old'],
         estatusProgreso: json['estatus_progreso'],
         responsable: json['responsable'],
@@ -171,6 +168,7 @@ class EventoActividadModel {
             : null,
         idEvento: json['id_evento'],
         haveArchivo: json['archivo'],
+        tiempoAntes: json['tiempo_antes'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -180,7 +178,6 @@ class EventoActividadModel {
         'visible_involucrados_actividad': visibleInvolucrado,
         'estado_calendario_actividad': estadoCalendarioActividad,
         'fecha_inicio_actividad': fechaInicioActividad.toString(),
-        'fecha_fin_actividad': fechaFinActividad.toString(),
         'id_actividad_old': idActividadOld,
         'estatus_progreso': estatusProgreso,
         'responsable': responsable,
@@ -189,5 +186,6 @@ class EventoActividadModel {
         'fecha_inicio_evento': fechaInicioEvento.toString(),
         'id_evento': idEvento,
         'archivo': haveArchivo,
+        'tiempo_antes': tiempoAntes,
       };
 }
