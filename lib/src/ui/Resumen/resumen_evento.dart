@@ -208,18 +208,18 @@ class _ResumenEventoState extends State<ResumenEvento> {
                       ),
                     );
                   } else {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('Sin documentos'),
+                    return const ListTile(
+                      title: Text('Sin actividades'),
+                      trailing: FaIcon(
+                        FontAwesomeIcons.book,
                       ),
                     );
                   }
                 }
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Sin documentos'),
+                return const ListTile(
+                  title: Text('Sin documentos'),
+                  trailing: FaIcon(
+                    FontAwesomeIcons.book,
                   ),
                 );
               },

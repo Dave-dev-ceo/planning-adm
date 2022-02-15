@@ -358,10 +358,12 @@ class _AgregarPlanesState extends State<AgregarPlanes> {
                       );
 
                       if (fechaTemp.isBefore(fechaInicio)) {
-                        MostrarAlerta(
-                            mensaje:
-                                'La actividad no puede ser antes de la fecha de planeación del evento',
-                            tipoMensaje: TipoMensaje.advertencia);
+                        if (tarea.checkTarePlanner ?? false) {
+                          MostrarAlerta(
+                              mensaje:
+                                  'La actividad no puede ser antes de la fecha de planeación del evento',
+                              tipoMensaje: TipoMensaje.advertencia);
+                        }
                       } else {
                         actividad.fechaInicio = fechaTemp;
                         setState(() {
