@@ -135,21 +135,23 @@ class _FullScreenDialogAgregarProveedorEvent
                           large: 520.0,
                           ancho: 90.0,
                         ),
-                        TextFormFields(
-                          icon: Icons.select_all,
-                          item: MultiSelectDialogField(
-                            buttonText: const Text('Servicios'),
-                            title: const Text('Servicios'),
-                            confirmText: const Text('Aceptar'),
-                            cancelText: const Text('Cancelar'),
-                            items: _items,
-                            initialValue: _selectedServicios,
-                            onConfirm: (values) {
-                              _selectedServicios = values;
-                            },
+                        Expanded(
+                          child: TextFormFields(
+                            icon: Icons.select_all,
+                            item: MultiSelectDialogField<ServiciosModel>(
+                              chipDisplay: MultiSelectChipDisplay(),
+                              buttonText: const Text('Servicios'),
+                              title: const Text('Servicios'),
+                              confirmText: const Text('Aceptar'),
+                              cancelText: const Text('Cancelar'),
+                              items: _items,
+                              initialValue: _selectedServicios,
+                              onConfirm: (values) {
+                                _selectedServicios = values;
+                              },
+                            ),
+                            large: 520.0,
                           ),
-                          large: 520.0,
-                          ancho: 90.0,
                         ),
                         TextFormFields(
                           icon: Icons.flag,

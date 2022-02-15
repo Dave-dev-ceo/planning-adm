@@ -1094,29 +1094,26 @@ class _MesasPageState extends State<MesasPage> {
           checkedsAsignados.add(checked);
 
           return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                leading: temp == ''
-                    ? null
-                    : Checkbox(
-                        value: checkedsAsignados[i],
-                        onChanged: (value) {
-                          setState(() {
-                            checkedsAsignados[i] = value;
-                          });
+            child: ListTile(
+              leading: temp == ''
+                  ? null
+                  : Checkbox(
+                      value: checkedsAsignados[i],
+                      onChanged: (value) {
+                        setState(() {
+                          checkedsAsignados[i] = value;
+                        });
 
-                          if (checkedsAsignados[i] && mesaModelData != null) {
-                            listAsigandosToDelete.add(asignadotemp);
-                          } else if (!checkedsAsignados[i]) {
-                            listAsigandosToDelete.remove(asignadotemp);
-                          }
-                        },
-                      ),
-                title: Padding(
-                  padding: EdgeInsets.only(left: temp == '' ? 14 : 0),
-                  child: Text('Silla ${i + 1}: ' + temp),
-                ),
+                        if (checkedsAsignados[i] && mesaModelData != null) {
+                          listAsigandosToDelete.add(asignadotemp);
+                        } else if (!checkedsAsignados[i]) {
+                          listAsigandosToDelete.remove(asignadotemp);
+                        }
+                      },
+                    ),
+              title: Padding(
+                padding: EdgeInsets.only(left: temp == '' ? 14 : 0),
+                child: Text('Silla ${i + 1}: ' + temp),
               ),
             ),
           );
