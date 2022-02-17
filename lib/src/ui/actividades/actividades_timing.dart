@@ -428,10 +428,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                                     descripcionActividad: actividad.descripcion,
                                     visibleInvolucrado:
                                         actividad.visibleInvolucrados,
-                                    haveArchivo:
-                                        item.results.elementAt(i).haveFile,
-                                    tiempoAntes:
-                                        item.results.elementAt(i).tiempoAntes,
+                                    haveArchivo: actividad.haveFile,
+                                    tiempoAntes: actividad.tiempoAntes,
                                   )),
                                 );
                               }
@@ -575,13 +573,12 @@ class EditActividadDialog extends StatefulWidget {
 
   @override
   _EditActividadDialogState createState() =>
-      _EditActividadDialogState(actividad, idTiming);
+      _EditActividadDialogState(idTiming);
 }
 
 class _EditActividadDialogState extends State<EditActividadDialog> {
-  EventoActividadModel actividad;
   int idTiming;
-  _EditActividadDialogState(this.actividad, this.idTiming);
+  _EditActividadDialogState(this.idTiming);
 
   ActividadestimingBloc actividadestimingBloc;
   TextEditingController nombreArchivoCtrl = TextEditingController();
@@ -650,12 +647,12 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                           TextFormFields(
                               icon: Icons.local_activity,
                               item: TextFormField(
-                                initialValue: actividad.nombreActividad,
+                                initialValue: widget.actividad.nombreActividad,
                                 decoration: const InputDecoration(
                                   labelText: 'Nombre',
                                 ),
                                 onChanged: (value) {
-                                  actividad.nombreActividad = value;
+                                  widget.actividad.nombreActividad = value;
                                 },
                                 validator: (value) {
                                   if (value != '' && value != null) {
@@ -669,12 +666,13 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                           TextFormFields(
                               icon: Icons.drive_file_rename_outline,
                               item: TextFormField(
-                                initialValue: actividad.descripcionActividad,
+                                initialValue:
+                                    widget.actividad.descripcionActividad,
                                 decoration: const InputDecoration(
                                   labelText: 'Descripción',
                                 ),
                                 onChanged: (value) {
-                                  actividad.descripcionActividad = value;
+                                  widget.actividad.descripcionActividad = value;
                                 },
                               ),
                               large: 500.0,
@@ -685,10 +683,10 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               title: const Text('Visible para involucrados'),
                               //secondary: Icon(Icons.be),
                               controlAffinity: ListTileControlAffinity.platform,
-                              value: actividad.visibleInvolucrado,
+                              value: widget.actividad.visibleInvolucrado,
                               onChanged: (bool value) {
                                 setState(() {
-                                  actividad.visibleInvolucrado = value;
+                                  widget.actividad.visibleInvolucrado = value;
                                 });
                               },
                               activeColor: Colors.green,
@@ -708,7 +706,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               },
                               isExpanded: true,
                               onChanged: (value) => setState(() {
-                                actividad.tiempoAntes = value;
+                                widget.actividad.tiempoAntes = value;
                               }),
                               items: opcionesMeses.map((e) {
                                 return DropdownMenuItem(
@@ -716,9 +714,10 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                                   value: e['value'],
                                 );
                               }).toList(),
-                              value: actividad.tiempoAntes,
-                              hint: const Text(
-                                  'Seleccione a cuanto tiempo antes del evento'),
+                              value: widget.actividad.tiempoAntes,
+                              hint: Text(widget.actividad.tiempoAntes != null
+                                  ? widget.actividad.tiempoAntes.toString()
+                                  : 'Seleccione a cuanto tiempo antes del evento'),
                               style: const TextStyle(
                                 overflow: TextOverflow.ellipsis,
                                 color: Colors.black,
@@ -789,14 +788,14 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
             TextButton(
                 onPressed: () async {
                   if (file != null) {
-                    actividad.archivo = base64Encode(file.bytes);
-                    actividad.tipoMime = file.extension;
-                    actividad.haveArchivo = false;
+                    widget.actividad.archivo = base64Encode(file.bytes);
+                    widget.actividad.tipoMime = file.extension;
+                    widget.actividad.haveArchivo = false;
                   }
 
                   if (_keyForm.currentState.validate()) {
                     actividadestimingBloc
-                        .add(UpdateActividadEvent(actividad, idTiming));
+                        .add(UpdateActividadEvent(widget.actividad, idTiming));
                   }
                 },
                 child: const Text('Aceptar')),

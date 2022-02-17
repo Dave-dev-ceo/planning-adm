@@ -116,10 +116,6 @@ flutter:
     - family: MyFlutterApp
       fonts:
         - asset: fonts/MyFlutterApp.ttf
-
-    - family: Quaylike
-      fonts:
-        - asset: fonts/Quaylike.ttf
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
