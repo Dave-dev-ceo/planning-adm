@@ -11,6 +11,7 @@ import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
 import 'package:planning/src/blocs/involucrados/involucrados_bloc.dart';
 import 'package:planning/src/blocs/mesasAsignadas/mesasasignadas_bloc.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
+import 'package:planning/src/blocs/plantillasSistema/plantiilas_sistema_bloc.dart';
 import 'package:planning/src/blocs/proveedorEvento/proveedoreventos_bloc.dart';
 import 'package:planning/src/blocs/proveedores/archivos_especiales/archivos_especiales_bloc.dart';
 import 'package:planning/src/blocs/proveedores/view_archivos/view_archivos_bloc.dart';
@@ -245,7 +246,9 @@ class AppState extends StatelessWidget {
       BlocProvider<ProspectoBloc>(
         create: (context) => ProspectoBloc(logic: ProspectoLogic()),
       ),
-      BlocProvider<QrBloc>(create: (_) => QrBloc())
+      BlocProvider<QrBloc>(create: (_) => QrBloc()),
+      BlocProvider<PlantillasSistemaBloc>(
+          create: (_) => PlantillasSistemaBloc()),
     ], child: const MyApp());
   }
 }

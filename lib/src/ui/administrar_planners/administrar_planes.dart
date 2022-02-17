@@ -28,6 +28,8 @@ class _AdminPlannerPageState extends State<AdminPlannerPage>
   List<PlannerModel> plannersFiltradosGlobal = [];
   TabController _tabController;
 
+  int currentIndex = 0;
+
   @override
   void initState() {
     plannersBloc = BlocProvider.of<PlannersBloc>(context);
@@ -43,6 +45,11 @@ class _AdminPlannerPageState extends State<AdminPlannerPage>
         centerTitle: true,
         title: const Text('Administrar'),
         bottom: TabBar(
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
           indicatorColor: Colors.black,
           controller: _tabController,
           indicatorSize: TabBarIndicatorSize.label,
@@ -66,22 +73,26 @@ class _AdminPlannerPageState extends State<AdminPlannerPage>
           const PlantillasSistemaPage(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .pushNamed(
-                '/detallesPlanner',
-                arguments: 0,
-              )
-              .then(
-                (_) => {
-                  BlocProvider.of<PlannersBloc>(context)
-                      .add(ObtenerPlannersEvent())
-                },
-              );
-        },
-        child: const FaIcon(FontAwesomeIcons.userPlus),
-      ),
+      floatingActionButton: currentIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                if (_tabController.index == 0) {
+                  Navigator.of(context)
+                      .pushNamed(
+                        '/detallesPlanner',
+                        arguments: 0,
+                      )
+                      .then(
+                        (_) => {
+                          BlocProvider.of<PlannersBloc>(context)
+                              .add(ObtenerPlannersEvent())
+                        },
+                      );
+                } else {}
+              },
+              child: const FaIcon(FontAwesomeIcons.userPlus),
+            )
+          : null,
     );
   }
 
