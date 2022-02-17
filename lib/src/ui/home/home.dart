@@ -35,6 +35,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   PermisosBloc permisosBloc;
   BuildContext _dialogContext;
   String claveRol;
+  int idUsuario;
+  int idPlanner;
 
   ItemModelPerfil permisos;
 
@@ -48,6 +50,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   getClaveRol() async {
     claveRol = await _sharedPreferences.getClaveRol();
+    idUsuario = await _sharedPreferences.getIdUsuario();
+    idPlanner = await _sharedPreferences.getIdPlanner();
   }
 
   //_HomeState(this.idPlanner);
@@ -140,6 +144,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           if (claveRol == 'SU')
                             const PopupMenuItem(
                                 value: 2, child: Text("Planner")),
+                          if (idPlanner == 0 && idUsuario == 0)
+                            const PopupMenuItem(
+                              child: Text('Administar'),
+                              value: 4,
+                            ),
                           const PopupMenuItem(
                             value: 3,
                             child: Text("Cerrar sesión"),
@@ -153,6 +162,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           } else if (valor == 3) {
                             await _sharedPreferences.clear();
                             Navigator.pushReplacementNamed(context, '/');
+                          } else if (valor == 4) {
+                            Navigator.of(context)
+                                .pushNamed('/administrarPlanners');
                           }
                         },
                       ),
@@ -192,13 +204,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRE')) {
-        tabs.add(
-            const TabItem(titulo: 'Prospectos', icono: Icons.folder_shared_sharp));
+        tabs.add(const TabItem(
+            titulo: 'Prospectos', icono: Icons.folder_shared_sharp));
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-EVT')) {
-        tabs.add(
-            const TabItem(titulo: 'Eventos', icono: Icons.calendar_today_outlined));
+        tabs.add(const TabItem(
+            titulo: 'Eventos', icono: Icons.calendar_today_outlined));
         temp += 1;
       }
       // if (secciones.hasAcceso(claveSeccion: 'WP-EIN')) {
@@ -232,8 +244,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         temp += 1;
       }
       if (secciones.hasAcceso(claveSeccion: 'WP-PRS')) {
-        tabs.add(
-            const TabItem(titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
+        tabs.add(const TabItem(
+            titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
 

@@ -3,6 +3,8 @@ import 'package:planning/src/animations/custom_page_router.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
+import 'package:planning/src/ui/administrar_planners/administrar_planes.dart';
+import 'package:planning/src/ui/administrar_planners/detalles_planner.dart';
 import 'package:planning/src/ui/contratos/add_contrato.dart';
 import 'package:planning/src/ui/contratos/view_contrato_pdf.dart';
 import 'package:planning/src/ui/dashboardInvitadoPage/dashboard_page_involucrado.dart';
@@ -186,6 +188,13 @@ class RouteGenerator {
         return CustomPageRouter(
             child: DashboardInvolucradoPage(
           detalleEvento: args,
+        ));
+      case '/administrarPlanners':
+        return CustomPageRouter(child: const AdminPlannerPage());
+      case '/detallesPlanner':
+        return CustomPageRouter(
+            child: DetallesPlanner(
+          idPlanner: args,
         ));
       default:
         return CustomPageRouter(

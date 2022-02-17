@@ -1,50 +1,78 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-import 'package:planning/src/logic/planners_logic.dart';
-import 'package:planning/src/models/item_model_planners.dart';
+import 'package:flutter/foundation.dart';
+import 'package:planning/src/logic/planners_logic/planners_logic.dart';
+import 'package:planning/src/models/plannerModel/planner_model.dart';
 
 part 'planners_event.dart';
 part 'planners_state.dart';
 
 class PlannersBloc extends Bloc<PlannersEvent, PlannersState> {
-  final ListaPlannersLogic logic;
-  PlannersBloc({@required this.logic}) : super(PlannersInitialState());
-
-  @override
-  Stream<PlannersState> mapEventToState(
-    PlannersEvent event,
-  ) async* {
-    if (event is FechtPlannersEvent) {
-      yield LoadingPlannersState();
-
+  PlannersBloc() : super(PlannersInitialState()) {
+    final logic = PlannersLogic();
+    on<ObtenerPlannersEvent>((event, emit) async {
       try {
-        ItemModelPlanners planners = await logic.fetchPrueba();
-        yield MostrarPlannersState(planners);
-      } on ListaPlannersException {
-        yield ErrorListaPlannersState("Sin planners");
+        emit(LoadingPlannersState());
+        final data = await logic.obtenerPlanners();
+
+        emit(MostrarPlannersState(data, [...data]));
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+        emit(ErrorListaPlannersState('Ocurrio un error'));
       }
-    } else if (event is CreatePlannersEvent) {
+    });
+
+    on<ObtenerDetallePlannerEvent>(((event, emit) async {
       try {
-        int idPlanner = await logic.createPlanners(event.data);
-        ItemModelPlanners model = event.planners;
-        //String dato = event.data['descripcion'];
-        Map<String, dynamic> lista = {
-          'id_planner': idPlanner,
-          'empresa': event.data['empresa'],
-          'correo': event.data['correo'],
-          'telefono': event.data['telefono'],
-          'pais': event.data['pais']
-        };
-        ResultsPlanners res = ResultsPlanners(lista);
-        /*Estatus est = new Estatus(lista);*/
-        model.results.add(res);
-        //yield CreateEstatusState(estatus);
-        yield MostrarPlannersState(model);
-      } on CreatePlannersException {
-        yield ErrorCreatePlannersState("No se pudo insertar");
+        emit(LoadingPlannersState());
+
+        final data = await logic.obtenerPlannerbyID(event.idPlanner);
+
+        if (data != null) {
+          emit(DetallesPlannerState(data));
+        } else {
+          emit(ErrorListaPlannersState('Ocurrio un error'));
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+        emit(ErrorListaPlannersState('Ocurrio un error'));
       }
-    }
+    }));
+
+    on<EditPlannerEvent>(((event, emit) async {
+      try {
+        final data = await logic.editarPlanner(event.plannerEdit);
+        if (data) {
+          emit(PlannerEditSuccessState());
+        } else {
+          emit(PlannerEditErrorState());
+          add(ObtenerDetallePlannerEvent(event.plannerEdit.idPlanner));
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+        emit(ErrorListaPlannersState('Ocurrio un error'));
+      }
+    }));
+
+    on<AddPlannerEvent>(((event, emit) async {
+      try {
+        final data = await logic.agregarPlanner(event.plannerEdit);
+        if (data) {
+          emit(PlannerCreatedSuccessState());
+        } else {
+          emit(PlannerCreatedErrorState());
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+        emit(PlannerCreatedErrorState());
+      }
+    }));
   }
 }

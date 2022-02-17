@@ -349,8 +349,6 @@ class _DataSource extends DataTableSource {
             context[i].correo,
             context[i].estatus == 'A' ? 'Activo' : 'Inactivo'));
       }
-    } else {
-      _rows.add(_Row(null, 'Sin datos', '', '', ''));
     }
   }
 

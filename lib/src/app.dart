@@ -55,7 +55,6 @@ import 'package:planning/src/logic/login_logic.dart';
 import 'package:planning/src/logic/machotes_logic.dart';
 import 'package:planning/src/logic/permisos_logic.dart';
 import 'package:planning/src/logic/planes_logic.dart';
-import 'package:planning/src/logic/planners_logic.dart';
 import 'package:planning/src/logic/roles_logic.dart';
 import 'package:planning/src/logic/timings_logic.dart';
 import 'package:planning/src/logic/tipos_eventos_logic.dart';
@@ -164,8 +163,7 @@ class AppState extends StatelessWidget {
       BlocProvider<EstatusBloc>(
         create: (_) => EstatusBloc(logic: FetchListaEstatusLogic()),
       ),
-      BlocProvider<PlannersBloc>(
-          create: (_) => PlannersBloc(logic: FetchListaPlannersLogic())),
+      BlocProvider<PlannersBloc>(create: (_) => PlannersBloc()),
       BlocProvider<PaisesBloc>(
           create: (_) => PaisesBloc(logic: FetchListaPaisesLogic())),
       BlocProvider<EtiquetasBloc>(

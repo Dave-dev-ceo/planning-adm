@@ -53,7 +53,11 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
 
   Widget buildPerfilPlanner(PerfilPlannerModel data) {
     PerfilPlannerModel perfil = data;
-    Uint8List image = base64Decode(perfil.logo);
+
+    Uint8List image;
+    if (perfil.logo != "" && perfil.logo != null) {
+      image = base64Decode(perfil.logo);
+    }
     return Form(
       key: _formPlannerKey,
       child: Container(
@@ -199,7 +203,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                         height: 100.0,
                         width: 100.0,
                         color: Colors.black,
-                        child: perfil.logo == null
+                        child: (perfil.logo == "" || perfil.logo == null)
                             ? Image.asset('assets/user.png')
                             : Container(
                                 width: 1100,

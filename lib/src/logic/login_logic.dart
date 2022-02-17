@@ -133,17 +133,12 @@ class BackendLoginLogic implements LoginLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
 
     Map<String, dynamic> data;
-    if (idPlanner != null) {
-      data = {
-        'idInvolucrado': idPlanner,
-        'contrasena': newPassword,
-      };
-    } else {
-      data = {
-        'idUsuario': idUsuario,
-        'contrasena': newPassword,
-      };
-    }
+
+    data = {
+      'idPlanner': idPlanner,
+      'contrasena': newPassword,
+      'idUsuario': idUsuario,
+    };
 
     const endpoint = '/wedding/ACCESO/changePassword';
 

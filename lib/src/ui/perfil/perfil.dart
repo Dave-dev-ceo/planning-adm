@@ -353,8 +353,10 @@ class _PerfilState extends State<Perfil> {
       allowMultiple: false,
     );
 
-    for (var archivo in pickedFile.files) {
-      setState(() => perfil.image = base64.encode(archivo.bytes));
+    if (pickedFile != null) {
+      for (var archivo in pickedFile.files) {
+        setState(() => perfil.image = base64.encode(archivo.bytes));
+      }
     }
   }
 
