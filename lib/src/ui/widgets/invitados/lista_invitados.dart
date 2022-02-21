@@ -209,7 +209,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
             mensaje: 'Error: No se pudo realizar el registro.',
             tipoMensaje: TipoMensaje.advertencia);
       }
-    } 
+    }
   }
 
   Future<PermissionStatus> _getPermission() async {
@@ -242,7 +242,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
                 title: const Text('Permisos denegados'),
-                content: const Text('Por favor habilitar el acceso a contactos'),
+                content:
+                    const Text('Por favor habilitar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: const Text('OK'),
@@ -647,11 +648,13 @@ class _DataSource extends DataTableSource {
                   RichText(
                 text: const TextSpan(
                   text: '¿Desara eliminar el invitado? ',
+                  style: TextStyle(color: Colors.black),
                   children: <TextSpan>[
                     TextSpan(
                         text:
                             '!Se eliminarán los acompañantes relacionados al invitado!',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black)),
                     // TextSpan(text: ' world!'),
                   ],
                 ),
