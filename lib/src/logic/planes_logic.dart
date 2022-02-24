@@ -93,6 +93,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
     bool done;
 
     // creamos tareas
@@ -106,6 +108,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
             body: {
               'id_evento': idEvento.toString(),
               'id_planner': idPlanner.toString(),
+              'id_usuario': idUsuario.toString(),
               'id_timing': tarea.idTareaPlanner.toString(),
               'nombre': tarea.nombreTareaPlanner.toString(),
             },
@@ -124,6 +127,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
               body: {
                 'id_evento': idEvento.toString(),
                 'id_planner': idPlanner.toString(),
+                'id_usuario': idUsuario.toString(),
                 'id_evento_timing':
                     data['data'][0]['id_evento_timing'].toString(),
                 'nombre': actividad.nombreActividadPlanner.toString(),
@@ -150,6 +154,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
                 body: {
                   'id_evento': idEvento.toString(),
                   'id_planner': idPlanner.toString(),
+                  'id_usuario': idUsuario.toString(),
                   'id_evento_timing': tarea.idTareaPlanner.toString(),
                   'nombre': actividad.nombreActividadPlanner.toString(),
                   'descripcion':
@@ -225,7 +230,10 @@ class ConsultasPlanesLogic extends PlanesLogic {
     int idEvento = await _sharedPreferences.getIdEvento();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
+
     actividadEvento['id_planner'] = idPlanner.toString();
+    actividadEvento['id_usuario'] = idUsuario.toString();
     actividadEvento['id_evento'] = idEvento.toString();
     actividadEvento['id_evento_timing'] = idTarea.toString();
 

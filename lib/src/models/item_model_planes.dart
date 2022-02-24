@@ -51,8 +51,6 @@ class _Planes {
     // parte de tares
     _idPlan = result['id_planer'];
     _nombrePlan = result['nombre_planer'];
-    _fechaInicioEvento = DateTime.parse(result['fecha_inicio_evento']);
-    _fechaFinalEvento = DateTime.parse(result['fecha_final_evento']);
     _idOldPlan = result['id_planer_old'];
     // parte de actividades
     _idActividad = result['id_actividad'];
@@ -63,7 +61,6 @@ class _Planes {
     _duracionActividad = result['dias_actividad'];
     _predecesorActividad = result['predecesor_actividad'];
     _statusCalendar = result['estado_calendario_actividad'];
-    _fechaInicioActividad = DateTime.parse(result['fecha_inicio_actividad']);
     _idOldActividad = result['id_actividad_old'];
     _statusProgreso = result['estatus_progreso'];
     _tiempoAntes = result['tiempo_antes'];

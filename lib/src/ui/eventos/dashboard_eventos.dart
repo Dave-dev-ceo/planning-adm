@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:http/http.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/resources/config_conection.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -86,15 +85,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
           height: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            gradient: const LinearGradient(
-              colors: [
-                Color(0xFFFFF0D6),
-                Color(0xFFF3D8A9),
-              ],
-              stops: [0.85, 0.85],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: const Color(0xFFfdf4e5),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -116,10 +107,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
                             : const Text('Sin involucrados'),
                       const Align(
                         alignment: Alignment.centerRight,
-                        child: FaIcon(
-                          FontAwesomeIcons.glassCheers,
-                          size: 18.0,
-                        ),
                       )
                     ],
                   ),
