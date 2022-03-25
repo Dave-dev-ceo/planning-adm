@@ -214,7 +214,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
   Future<PermissionStatus> _getPermission() async {
     PermissionStatus permission = await Permission.contacts.status;
-    if (permission != PermissionStatus.granted &&
+    if (permission != PermissionStatus.granted ||
         permission != PermissionStatus.permanentlyDenied) {
       PermissionStatus permissionStatus = await Permission.contacts.request();
       return permissionStatus;
@@ -242,8 +242,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
                 title: const Text('Permisos denegados'),
-                content:
-                    const Text('Por favor habilitar el acceso a contactos'),
+                content: const Text('Por favor otorgar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: const Text('OK'),
