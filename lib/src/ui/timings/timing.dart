@@ -34,13 +34,9 @@ class _TimingState extends State<Timing> {
   bool sortArrow = false;
   String dropdownValue = 'A';
   bool crt = true;
+  bool switchValue = false;
 
   _TimingState();
-
-  List<dynamic> listaEstatus = [
-    {'descripcion': 'Activo', 'value': 'A'},
-    {'descripcion': 'Inactivo', 'value': 'I'}
-  ];
 
   @override
   void initState() {
@@ -131,9 +127,6 @@ class _TimingState extends State<Timing> {
       width: double.infinity,
       child: Column(
         children: [
-          const SizedBox(
-            height: 50.0,
-          ),
           Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.all(15),
@@ -202,8 +195,7 @@ class _TimingState extends State<Timing> {
                 80.0),
           ),
           Center(
-            child:
-                SizedBox(height: 400.0, width: 600.0, child: buildList2(model)),
+            child: SizedBox(width: 600.0, child: buildList2(model)),
           ),
         ],
       ),
@@ -211,199 +203,210 @@ class _TimingState extends State<Timing> {
   }
 
   Widget buildList2(ItemModelTimings listItemModelTimings) {
-    return SingleChildScrollView(
-      child: Card(
-        margin: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('Cronograma'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: dropdownValue,
-                  icon: const Icon(Icons.arrow_downward),
-                  elevation: 16,
-                  iconSize: 24,
-                  style: const TextStyle(color: Colors.black54),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.black,
-                  ),
-                  onChanged: (newValue) async {
-                    setState(() {
-                      dropdownValue = newValue;
-                    });
-                    timingBloc.add(FetchTimingsPorPlannerEvent(dropdownValue));
-                  },
-                  items: const [
-                    DropdownMenuItem(
-                      child: Text("Activo", style: TextStyle(fontSize: 16)),
-                      value: 'A',
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Inactivo", style: TextStyle(fontSize: 16)),
-                      value: 'I',
-                    )
-                  ]),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextField(
-                decoration: const InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                    ),
-                    hintText: 'Buscar...'),
-                onChanged: (String value) async {
-                  if (value.length > 2) {
-                    List<dynamic> usrs = itemModelTimings.results
-                        .where((imu) => imu.nombreTiming
-                            .toLowerCase()
-                            .contains(value.toLowerCase()))
-                        .toList();
-                    setState(() {
-                      filterTimings.results.clear();
-                      if (usrs.isNotEmpty) {
-                        for (var usr in usrs) {
-                          filterTimings.results.add(usr);
-                        }
-                      } else {}
-                    });
-                  } else {
-                    setState(
-                      () {
-                        filterTimings = itemModelTimings.copy();
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: listItemModelTimings.results.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          enableFeedback: true,
-                          hoverColor: Colors.white,
-                          onPressed: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => EditTimingDialog(
-                                name: listItemModelTimings
-                                    .results[index].nombreTiming,
-                                idCronograma: listItemModelTimings
-                                    .results[index].idTiming,
-                                estatus:
-                                    listItemModelTimings.results[index].estatus,
-                              ),
-                            ).then((value) async => {
-                                  if (value != null)
-                                    {
-                                      if (value)
-                                        {
-                                          timingBloc.add(
-                                              FetchTimingsPorPlannerEvent('A')),
-                                          setState(() {})
-                                        }
-                                    }
-                                });
-                          },
-                          icon: const Icon(
-                            Icons.edit,
-                            size: 14.0,
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('Cronograma'),
+          ),
+          SwitchListTile(
+            value: switchValue,
+            title: Text(switchValue ? 'Todos' : 'Activos'),
+            onChanged: (valor) {
+              setState(() {
+                switchValue = valor;
+                dropdownValue = switchValue ? 'I' : 'A';
+                timingBloc.add(FetchTimingsPorPlannerEvent(dropdownValue));
+              });
+            },
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(20.0),
+          //   child: DropdownButton<String>(
+          //       isExpanded: true,
+          //       value: dropdownValue,
+          //       icon: const Icon(Icons.arrow_downward),
+          //       elevation: 16,
+          //       iconSize: 24,
+          //       style: const TextStyle(color: Colors.black54),
+          //       underline: Container(
+          //         height: 2,
+          //         color: Colors.black,
+          //       ),
+          //       onChanged: (newValue) async {
+          //         setState(() {
+          //           dropdownValue = newValue;
+          //         });
+          //         timingBloc.add(FetchTimingsPorPlannerEvent(dropdownValue));
+          //       },
+          //       items: const [
+          //         DropdownMenuItem(
+          //           child: Text("Activo", style: TextStyle(fontSize: 16)),
+          //           value: 'A',
+          //         ),
+          //         DropdownMenuItem(
+          //           child: Text("Inactivo", style: TextStyle(fontSize: 16)),
+          //           value: 'I',
+          //         )
+          //       ]),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.all(20.0),
+          //   child: TextField(
+          //     decoration: const InputDecoration(
+          //         prefixIcon: Icon(
+          //           Icons.search,
+          //         ),
+          //         hintText: 'Buscar...'),
+          //     onChanged: (String value) async {
+          //       if (value.length > 2) {
+          //         List<dynamic> usrs = itemModelTimings.results
+          //             .where((imu) => imu.nombreTiming
+          //                 .toLowerCase()
+          //                 .contains(value.toLowerCase()))
+          //             .toList();
+          //         setState(() {
+          //           filterTimings.results.clear();
+          //           if (usrs.isNotEmpty) {
+          //             for (var usr in usrs) {
+          //               filterTimings.results.add(usr);
+          //             }
+          //           } else {}
+          //         });
+          //       } else {
+          //         setState(
+          //           () {
+          //             filterTimings = itemModelTimings.copy();
+          //           },
+          //         );
+          //       }
+          //     },
+          //   ),
+          // ),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: listItemModelTimings.results.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      enableFeedback: true,
+                      hoverColor: Colors.white,
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => EditTimingDialog(
+                            name: listItemModelTimings
+                                .results[index].nombreTiming,
+                            idCronograma:
+                                listItemModelTimings.results[index].idTiming,
+                            estatus:
+                                listItemModelTimings.results[index].estatus,
                           ),
-                        ),
-                        const SizedBox(width: 3.0),
-                        IconButton(
-                          onPressed: () async {
-                            showDialog(
-                                context: context,
-                                builder: (context) =>
-                                    BlocListener<TimingsBloc, TimingsState>(
-                                      listener: (context, state) {
-                                        if (state is TimingDeletedState) {
-                                          if (state.wasDeletedTiming) {
-                                            Navigator.of(context).pop();
-                                            MostrarAlerta(
-                                                mensaje:
-                                                    'El cronograma se elimino correctamente',
-                                                tipoMensaje:
-                                                    TipoMensaje.correcto);
-                                          } else {
-                                            Navigator.of(context).pop();
-                                            MostrarAlerta(
-                                                mensaje: 'Ocurrio un error',
-                                                tipoMensaje: TipoMensaje.error);
-                                          }
-                                        }
-                                      },
-                                      child: CupertinoAlertDialog(
-                                        content: RichText(
-                                          text: const TextSpan(
+                        ).then((value) async => {
+                              if (value != null)
+                                {
+                                  if (value)
+                                    {
+                                      timingBloc.add(
+                                          FetchTimingsPorPlannerEvent('A')),
+                                      setState(() {})
+                                    }
+                                }
+                            });
+                      },
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 14.0,
+                      ),
+                    ),
+                    const SizedBox(width: 3.0),
+                    IconButton(
+                      onPressed: () async {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                BlocListener<TimingsBloc, TimingsState>(
+                                  listener: (context, state) {
+                                    if (state is TimingDeletedState) {
+                                      if (state.wasDeletedTiming) {
+                                        Navigator.of(context).pop();
+                                        MostrarAlerta(
+                                            mensaje:
+                                                'El cronograma se elimino correctamente',
+                                            tipoMensaje: TipoMensaje.correcto);
+                                      } else {
+                                        Navigator.of(context).pop();
+                                        MostrarAlerta(
+                                            mensaje: 'Ocurrio un error',
+                                            tipoMensaje: TipoMensaje.error);
+                                      }
+                                    }
+                                  },
+                                  child: CupertinoAlertDialog(
+                                    content: RichText(
+                                      text: const TextSpan(
+                                        text:
+                                            '¿Esta seguro de eliminar el cronograma?\n',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          decorationStyle:
+                                              TextDecorationStyle.dotted,
+                                        ),
+                                        children: [
+                                          TextSpan(
                                             text:
-                                                '¿Esta seguro de eliminar el cronograma?\n',
+                                                '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
                                             style: TextStyle(
                                               color: Colors.black,
-                                              decorationStyle:
-                                                  TextDecorationStyle.dotted,
+                                              fontStyle: FontStyle.italic,
                                             ),
-                                            children: [
-                                              TextSpan(
-                                                text:
-                                                    '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontStyle: FontStyle.italic,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Cancelar'),
-                                          ),
-                                          CupertinoDialogAction(
-                                            child: const Text('Aceptar'),
-                                            onPressed: () async {
-                                              timingBloc.add(
-                                                  DeleteTimingPlannerEvent(
-                                                      listItemModelTimings
-                                                          .results[index]
-                                                          .idTiming));
-                                            },
-                                          ),
+                                          )
                                         ],
                                       ),
-                                    ));
-                          },
-                          icon: const Icon(Icons.delete_forever),
-                        )
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/addActividadesTiming',
-                          arguments:
-                              listItemModelTimings.results[index].idTiming);
-                    },
-                    title:
-                        Text(listItemModelTimings.results[index].nombreTiming),
-                  );
-                })
-          ],
-        ),
+                                    ),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      CupertinoDialogAction(
+                                        child: const Text('Aceptar'),
+                                        onPressed: () async {
+                                          timingBloc.add(
+                                              DeleteTimingPlannerEvent(
+                                                  listItemModelTimings
+                                                      .results[index]
+                                                      .idTiming));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                      },
+                      icon: const Icon(Icons.delete_forever),
+                    )
+                  ],
+                ),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/addActividadesTiming',
+                      arguments: listItemModelTimings.results[index].idTiming);
+                },
+                title: Text(listItemModelTimings.results[index].nombreTiming),
+              );
+            },
+          ),
+          const SizedBox(
+            height: 65.0,
+          )
+        ],
       ),
     );
   }

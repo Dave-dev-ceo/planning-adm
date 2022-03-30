@@ -37,6 +37,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
   final bool WP_EVT_CRT;
   Size size;
   bool _lights = false;
+  String valEstatus;
   _DashboardEventosState(this.WP_EVT_CRT);
 
   Color hexToColor(String code) {
@@ -45,7 +46,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
 
   @override
   void initState() {
-    var valEstatus = _lights ? 'I' : 'A';
+    valEstatus = _lights ? 'I' : 'A';
     eventosBloc = BlocProvider.of<EventosBloc>(context);
     eventosBloc.add(FechtEventosEvent(valEstatus));
     super.initState();
@@ -168,7 +169,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    var valEstatus = _lights ? 'I' : 'A';
     return Scaffold(
       body: RefreshIndicator(
         color: Colors.blue,
@@ -197,11 +197,20 @@ class _DashboardEventosState extends State<DashboardEventos> {
                     Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: SwitchListTile(
-                            title: const Text('Ver todos los eventos.'),
+                            title: Text(
+                              _lights
+                                  ? 'Todos los eventos.'
+                                  : 'Eventos Activos',
+                            ),
                             value: _lights,
                             onChanged: (bool value) {
                               setState(() {
                                 _lights = value;
+                                if (_lights) {
+                                  valEstatus = 'I';
+                                } else {
+                                  valEstatus = 'A';
+                                }
                                 eventosBloc.add(FechtEventosEvent(valEstatus));
                               });
                             })),
