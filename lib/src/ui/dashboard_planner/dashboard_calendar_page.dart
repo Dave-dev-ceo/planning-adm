@@ -34,6 +34,10 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
   List<EventoActividadModel> actividades = [];
   final CalendarController _calendarController = CalendarController();
 
+  final textStyleCustom = TextStyle(
+    fontFamily: 'Montserrat-Medium',
+    color: Colors.black,
+  );
   @override
   void initState() {
     dashboardBloc = BlocProvider.of<DashboardBloc>(context);
@@ -80,11 +84,26 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
     return Theme(
       data: ThemeData.light(),
       child: SfCalendar(
-        headerStyle: const CalendarHeaderStyle(
-          backgroundColor: Color(0xFFFFF0D6),
-          textStyle: TextStyle(
-            color: Colors.black,
-          ),
+        appointmentTextStyle: textStyleCustom,
+        scheduleViewSettings: ScheduleViewSettings(
+            appointmentTextStyle: textStyleCustom,
+            dayHeaderSettings: DayHeaderSettings(
+              dateTextStyle: textStyleCustom,
+              dayTextStyle: textStyleCustom,
+            ),
+            monthHeaderSettings: MonthHeaderSettings(
+              monthTextStyle: textStyleCustom,
+            ),
+            weekHeaderSettings: WeekHeaderSettings(
+              weekTextStyle: textStyleCustom,
+            )),
+        headerStyle: CalendarHeaderStyle(
+          backgroundColor: const Color(0xFFFFF0D6),
+          textStyle: textStyleCustom,
+        ),
+        viewHeaderStyle: ViewHeaderStyle(
+          dateTextStyle: textStyleCustom,
+          dayTextStyle: textStyleCustom.copyWith(fontFamily: 'Montserrat'),
         ),
         initialDisplayDate: DateTime.now(),
         controller: _calendarController,
@@ -95,9 +114,23 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
         selectionDecoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(color: Colors.green, width: 2)),
-        monthViewSettings: const MonthViewSettings(
+        monthViewSettings: MonthViewSettings(
+          monthCellStyle: MonthCellStyle(
+            textStyle: textStyleCustom,
+            leadingDatesTextStyle: textStyleCustom.copyWith(color: Colors.grey),
+            trailingDatesTextStyle:
+                textStyleCustom.copyWith(color: Colors.grey),
+          ),
+          agendaStyle: AgendaStyle(
+            dayTextStyle: textStyleCustom,
+            dateTextStyle: textStyleCustom,
+            appointmentTextStyle: textStyleCustom,
+          ),
           showAgenda: true,
           appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+        ),
+        timeSlotViewSettings: TimeSlotViewSettings(
+          timeTextStyle: textStyleCustom,
         ),
         loadMoreWidgetBuilder:
             (BuildContext context, LoadMoreCallback loadMoreAppointments) {
