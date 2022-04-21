@@ -78,7 +78,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   int _mySelectionAGenero = 0;
   int _mySelectionAEdad2 = 0;
   int _mySelectionAGenero2 = 0;
-  int numbAcomFromDB;
 
   _FullScreenDialogEditState(this.idInvitado);
   final Map<int, Widget> _children = {
@@ -125,7 +124,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       stream: blocInvitado.allAcompanante,
       builder: (context, AsyncSnapshot<ItemModelAcompanante> snapshot) {
         if (snapshot.hasData) {
-          numbAcomFromDB = snapshot.data.results.length;
           return SizedBox(
             width: 1000,
             child: Column(
@@ -763,77 +761,35 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                   Wrap(
                     children: <Widget>[
                       formItemsDesign(
-                          Icons.email,
-                          TextFormField(
-                            controller: emailCtrl,
-                            //initialValue: invitado.email,
-                            decoration: const InputDecoration(
-                              labelText: 'Correo',
-                            ),
-                            validator: validateEmail,
+                        Icons.email,
+                        TextFormField(
+                          controller: emailCtrl,
+                          //initialValue: invitado.email,
+                          decoration: const InputDecoration(
+                            labelText: 'Correo',
                           ),
-                          500.0,
-                          80.0),
+                          validator: validateEmail,
+                        ),
+                        500.0,
+                        80.0,
+                      ),
                       formItemsDesign(
-                          Icons.people,
-                          MergeSemantics(
-                            child: ListTile(
-                              title: TextFormField(
-                                enabled: false,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
-                                // controller: _textController,
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    labelText: 'Número de invitados'),
-                                controller: _numberGuestsController,
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        if (_numAcomp > 0 ||
-                                            _numAcomp >= numbAcomFromDB) {
-                                          _numAcomp -= 1;
-
-                                          _numberGuestsController.text =
-                                              _numAcomp.toString();
-                                        }
-                                      },
-                                      icon: const Icon(
-                                          Icons.keyboard_arrow_down)),
-                                  IconButton(
-                                      onPressed: () {
-                                        _numAcomp += 1;
-                                        _numberGuestsController.text =
-                                            _numAcomp.toString();
-                                      },
-                                      icon: const Icon(Icons.keyboard_arrow_up))
-                                ],
-                              ),
-                            ),
+                        Icons.phone,
+                        TextFormField(
+                          controller: telefonoCtrl,
+                          //initialValue: invitado.telefono,
+                          decoration: const InputDecoration(
+                            labelText: 'Número de teléfono',
                           ),
-                          500.0,
-                          80.0)
+                          validator: validateTelefono,
+                        ),
+                        500.0,
+                        80.0,
+                      ),
                     ],
                   ),
                   Wrap(
                     children: <Widget>[
-                      formItemsDesign(
-                          Icons.phone,
-                          TextFormField(
-                            controller: telefonoCtrl,
-                            //initialValue: invitado.telefono,
-                            decoration: const InputDecoration(
-                              labelText: 'Número de teléfono',
-                            ),
-                            validator: validateTelefono,
-                          ),
-                          500.0,
-                          80.0),
                       formItemsDesign(
                           Icons.group,
                           Row(

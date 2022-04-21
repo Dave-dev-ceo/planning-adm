@@ -64,12 +64,14 @@ class _MesasPageState extends State<MesasPage> {
   bool _isVisible = false;
   int indexNavBar = 0;
   int lastNumMesa = 0;
+  Future<LayoutMesaModel> layoutMesaFuture;
 
   // Variable involucrado
   bool isInvolucrado = false;
 
   @override
   void initState() {
+    layoutMesaFuture = mesasAsignadasService.getLayoutMesa();
     getIdInvolucrado();
     invitadosBloc = BlocProvider.of<InvitadosMesasBloc>(context);
     BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
@@ -513,15 +515,15 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget buildAsignarMesaMovil() {
-    return RefreshIndicator(
-      color: Colors.blue,
-      onRefresh: () async {
-        await mesasAsignadasService.getMesasAsignadas();
-        BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
-        BlocProvider.of<InvitadosMesasBloc>(context)
-            .add(MostrarInvitadosMesasEvent());
-      },
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: RefreshIndicator(
+        color: Colors.blue,
+        onRefresh: () async {
+          await mesasAsignadasService.getMesasAsignadas();
+          BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+          BlocProvider.of<InvitadosMesasBloc>(context)
+              .add(MostrarInvitadosMesasEvent());
+        },
         child: Column(
           children: [
             const SizedBox(
@@ -830,7 +832,7 @@ class _MesasPageState extends State<MesasPage> {
     );
   }
 
-  _deleteAsignadoToMesa() async {
+  Future<void> _deleteAsignadoToMesa() async {
     if (mesaModelData != null) {
       if (listAsigandosToDelete.isEmpty) {
         MostrarAlerta(
@@ -885,7 +887,7 @@ class _MesasPageState extends State<MesasPage> {
     }
   }
 
-  asignarMesas() async {
+  Future<void> asignarMesas() async {
     List<int> listTemp = [];
     if (listaMesasAsignadas.isNotEmpty && mesaModelData != null) {
       final datosMesaAsginada = listaMesasAsignadas
@@ -923,6 +925,9 @@ class _MesasPageState extends State<MesasPage> {
         if (data == 'Ok') {
           invitadosBloc.add(MostrarInvitadosMesasEvent());
 
+          BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+          BlocProvider.of<MesasAsignadasBloc>(context)
+              .add(GetMesasAsignadasEvent());
           mesasAsignadasService.getMesasAsignadas().then((value) {
             setState(() {
               for (var element in listAsigandosToDelete) {
@@ -931,8 +936,11 @@ class _MesasPageState extends State<MesasPage> {
               listToAsignarForAdd.clear();
               checkedsInvitados = [];
             });
-            listaMesasAsignadas = value;
+            setState(() {
+              listaMesasAsignadas = value;
+            });
           });
+          invitadosBloc.add(MostrarInvitadosMesasEvent());
 
           MostrarAlerta(
               mensaje: 'Se han asignado correctamente',
@@ -1202,7 +1210,7 @@ class _MesasPageState extends State<MesasPage> {
   Widget layoutMesa() {
     return SingleChildScrollView(
       child: FutureBuilder(
-        future: mesasAsignadasService.getLayoutMesa(),
+        future: layoutMesaFuture,
         builder:
             (BuildContext context, AsyncSnapshot<LayoutMesaModel> snapshot) {
           if (snapshot.hasData) {
