@@ -532,45 +532,7 @@ class _MesasPageState extends State<MesasPage> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                child: BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
-                  builder: (context, state) {
-                    if (state is LoadingInvitadoMesasState) {
-                      return const Align(
-                        alignment: Alignment.center,
-                        child: LoadingCustom(),
-                      );
-                    } else if (state is MostraListaInvitadosMesaState) {
-                      state.listaInvitadoMesa.isNotEmpty
-                          ? _enable = true
-                          : _enable = false;
-                      if (state.listaInvitadoMesa.isNotEmpty ||
-                          state.listaInvitadoMesa != null) {
-                        _listaInvitadoDisponibles = state.listaInvitadoMesa;
-                        //
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: buildListInvitadosConfirmador(
-                              state.listaInvitadoMesa),
-                        );
-                      } else {
-                        return const Text('No se encontraron datos');
-                      }
-                    } else if (state is ErrorInvitadoMesaState) {
-                      return Center(
-                        child: Text(state.message),
-                      );
-                    } else {
-                      return const Align(
-                        alignment: Alignment.center,
-                        child: LoadingCustom(),
-                      );
-                    }
-                  },
-                ),
-              ),
+              child: _buildInvitados(),
             ),
             const SizedBox(
               height: 8.0,
@@ -610,68 +572,121 @@ class _MesasPageState extends State<MesasPage> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                child: Column(
-                  children: [
-                    BlocBuilder<MesasBloc, MesasState>(
-                      builder: (context, state) {
-                        if (state is LoadingMesasState) {
-                          return const Center(
-                            child: LoadingCustom(),
-                          );
-                        } else if (state is MostrarMesasState) {
-                          if (state.listaMesas != null) {
-                            lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
-
-                            listaMesaFromDB = state.listaMesas;
-
-                            if (state.listaMesas.isNotEmpty) {
-                              return _buildListaMesas(state.listaMesas);
-                            } else {
-                              lastNumMesa = 0;
-                              return Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'No se encontraron datos',
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              );
-                            }
-                          } else {
-                            lastNumMesa = 0;
-                            return Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'No se encontraron datos',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                            );
-                          }
-                        } else if (state is ErrorMesasState) {
-                          lastNumMesa = 0;
-
-                          return Center(child: Text(state.message));
-                        } else {
-                          lastNumMesa = 0;
-
-                          return Container();
-                        }
-                      },
-                    ),
-                    if (mesaModelData != null) const Divider(),
-                    if (mesaModelData != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 14.0),
-                        child: formTableByMesa(),
-                      )
-                  ],
-                ),
-              ),
+              child: _mesasBuild(),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Card _buildInvitados([bool esDesktop = false]) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: Column(
+        children: [
+          BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
+            builder: (context, state) {
+              if (state is LoadingInvitadoMesasState) {
+                return const Align(
+                  alignment: Alignment.center,
+                  child: LoadingCustom(),
+                );
+              } else if (state is MostraListaInvitadosMesaState) {
+                state.listaInvitadoMesa.isNotEmpty
+                    ? _enable = true
+                    : _enable = false;
+                if (state.listaInvitadoMesa.isNotEmpty ||
+                    state.listaInvitadoMesa != null) {
+                  _listaInvitadoDisponibles = state.listaInvitadoMesa;
+                  //
+                  return esDesktop
+                      ? Expanded(
+                          child: buildListInvitadosConfirmador(
+                              state.listaInvitadoMesa),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: buildListInvitadosConfirmador(
+                              state.listaInvitadoMesa),
+                        );
+                } else {
+                  return const Text('No se encontraron datos');
+                }
+              } else if (state is ErrorInvitadoMesaState) {
+                return Center(
+                  child: Text(state.message),
+                );
+              } else {
+                return const Align(
+                  alignment: Alignment.center,
+                  child: LoadingCustom(),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Card _mesasBuild() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      child: Column(
+        children: [
+          BlocBuilder<MesasBloc, MesasState>(
+            builder: (context, state) {
+              if (state is LoadingMesasState) {
+                return const Center(
+                  child: LoadingCustom(),
+                );
+              } else if (state is MostrarMesasState) {
+                if (state.listaMesas != null) {
+                  lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
+
+                  listaMesaFromDB = state.listaMesas;
+
+                  if (state.listaMesas.isNotEmpty) {
+                    return _buildListaMesas(state.listaMesas);
+                  } else {
+                    lastNumMesa = 0;
+                    return Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'No se encontraron datos',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    );
+                  }
+                } else {
+                  lastNumMesa = 0;
+                  return Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'No se encontraron datos',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                  );
+                }
+              } else if (state is ErrorMesasState) {
+                lastNumMesa = 0;
+
+                return Center(child: Text(state.message));
+              } else {
+                lastNumMesa = 0;
+
+                return Container();
+              }
+            },
+          ),
+          if (mesaModelData != null) const Divider(),
+          if (mesaModelData != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 14.0),
+              child: formTableByMesa(),
+            )
+        ],
       ),
     );
   }
@@ -687,60 +702,7 @@ class _MesasPageState extends State<MesasPage> {
             height: 20.0,
           ),
           Expanded(
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              child: Column(
-                children: [
-                  BlocBuilder<MesasBloc, MesasState>(
-                    builder: (context, state) {
-                      if (state is LoadingMesasState) {
-                        return const Center(
-                          child: LoadingCustom(),
-                        );
-                      } else if (state is MostrarMesasState) {
-                        if (state.listaMesas != null &&
-                            state.listaMesas.isNotEmpty) {
-                          lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
-
-                          listaMesaFromDB = state.listaMesas;
-
-                          if (state.listaMesas.isNotEmpty) {
-                            return _buildListaMesas(state.listaMesas);
-                          } else {
-                            return Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'No se encontraron datos',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                            );
-                          }
-                        } else {
-                          return Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              'No se encontraron datos',
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                          );
-                        }
-                      } else if (state is ErrorMesasState) {
-                        return Center(child: Text(state.message));
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                  if (mesaModelData != null) const Divider(),
-                  if (mesaModelData != null)
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                  if (mesaModelData != null) Expanded(child: formTableByMesa())
-                ],
-              ),
-            ),
+            child: _mesasBuild(),
           ),
           const SizedBox(
             width: 8.0,
@@ -785,48 +747,8 @@ class _MesasPageState extends State<MesasPage> {
             width: 10.0,
           ),
           Expanded(
-              child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                BlocBuilder<InvitadosMesasBloc, InvitadosMesasState>(
-                  builder: (context, state) {
-                    if (state is LoadingInvitadoMesasState) {
-                      return const Align(
-                        alignment: Alignment.center,
-                        child: LoadingCustom(),
-                      );
-                    } else if (state is MostraListaInvitadosMesaState) {
-                      state.listaInvitadoMesa.isNotEmpty
-                          ? _enable = true
-                          : _enable = false;
-                      if (state.listaInvitadoMesa.isNotEmpty ||
-                          state.listaInvitadoMesa != null) {
-                        _listaInvitadoDisponibles = state.listaInvitadoMesa;
-
-                        return Expanded(
-                            child: buildListInvitadosConfirmador(
-                                state.listaInvitadoMesa));
-                      } else {
-                        return const Text('No se encontraron datos');
-                      }
-                    } else if (state is ErrorInvitadoMesaState) {
-                      return Center(
-                        child: Text(state.message),
-                      );
-                    } else {
-                      return const Align(
-                        alignment: Alignment.center,
-                        child: LoadingCustom(),
-                      );
-                    }
-                  },
-                )
-              ],
-            ),
-          )),
+            child: _buildInvitados(true),
+          ),
         ],
       ),
     );
