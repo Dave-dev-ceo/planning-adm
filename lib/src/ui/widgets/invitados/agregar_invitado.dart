@@ -1,6 +1,7 @@
 // ignore_for_file: no_logic_in_create_state
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
@@ -151,6 +152,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             Icons.phone,
             TextFormField(
               controller: telefonoCtrl,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: const InputDecoration(
                 labelText: 'Teléfono',
               ),
@@ -276,7 +278,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
         nombreCtrl.clear();
         telefonoCtrl.clear();
         emailCtrl.clear();
-        numeroAcomp.clear();
+        numeroAcomp.text = '0';
         dropdownValue = "Hombre";
         MostrarAlerta(
             mensaje: 'Invitado registrado.', tipoMensaje: TipoMensaje.correcto);
