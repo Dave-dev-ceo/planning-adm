@@ -188,9 +188,6 @@ class _MesasPageState extends State<MesasPage> {
               mesasLogic.createLayout(file64, _extension).then((value) => {
                     if (value == 'Ok')
                       {
-                        setState(() {
-                          mesasAsignadasService.getLayoutMesa();
-                        }),
                         MostrarAlerta(
                             mensaje: 'Se subio correctamente el layout',
                             tipoMensaje: TipoMensaje.correcto)
@@ -199,7 +196,10 @@ class _MesasPageState extends State<MesasPage> {
                       {
                         MostrarAlerta(
                             mensaje: value, tipoMensaje: TipoMensaje.error)
-                      }
+                      },
+                    setState(() {
+                      layoutMesaFuture = mesasAsignadasService.getLayoutMesa();
+                    }),
                   });
             } else {}
           },
@@ -1137,7 +1137,64 @@ class _MesasPageState extends State<MesasPage> {
             (BuildContext context, AsyncSnapshot<LayoutMesaModel> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.file != null) {
-              return _viewFile(snapshot.data);
+              return Stack(
+                children: [
+                  _viewFile(snapshot.data),
+                  Positioned(
+                    top: 20.0,
+                    right: 10.0,
+                    child: Tooltip(
+                      message: 'Eliminar',
+                      child: IconButton(
+                        onPressed: () async {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: const Text('Eliminar layout'),
+                                    content: const Text(
+                                        '¿Desea eliminar el layout?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final resp =
+                                              await mesasAsignadasService
+                                                  .eliminarLayoutMesa();
+
+                                          if (resp) {
+                                            MostrarAlerta(
+                                              mensaje: 'Layout eliminado',
+                                              tipoMensaje: TipoMensaje.correcto,
+                                            );
+
+                                            setState(() {
+                                              layoutMesaFuture =
+                                                  mesasAsignadasService
+                                                      .getLayoutMesa();
+                                            });
+                                          } else {
+                                            MostrarAlerta(
+                                                mensaje: 'Ocurrio un error',
+                                                tipoMensaje: TipoMensaje.error);
+                                          }
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Aceptar'),
+                                      ),
+                                    ],
+                                  ));
+                        },
+                        icon: const Icon(Icons.delete),
+                      ),
+                    ),
+                  ),
+                ],
+              );
             } else {
               return Column(
                 children: const [

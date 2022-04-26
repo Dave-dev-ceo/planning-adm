@@ -412,7 +412,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
                       .hasAcceso(clavePantalla: 'WP-EVT-ASI'))
                     const Tab(
                       icon: Icon(Icons.accessibility),
-                      text: 'Asistencia',
+                      text: 'Asistió al evento',
                     ),
                   if (widget.permisos.pantallas
                       .hasAcceso(clavePantalla: 'WP-EVT-MDE'))

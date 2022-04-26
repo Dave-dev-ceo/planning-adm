@@ -70,6 +70,33 @@ class MesasAsignadasService {
     }
   }
 
+  Future<bool> eliminarLayoutMesa() async {
+    String token = await _sharedPreferencesT.getToken();
+    int idEvento = await _sharedPreferencesT.getIdEvento();
+
+    final data = {
+      'idEvento': idEvento,
+    };
+
+    const endpoint = 'wedding/MESAS/eliminarLayoutMesa';
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
+
+    final response = await http.post(
+        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        body: json.encode(data),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
   Future<List<MesasAsignadasModel>> getMesasAsignadas() async {
     int idEvento = await _sharedPreferencesT.getIdEvento();
     String token = await _sharedPreferencesT.getToken();
