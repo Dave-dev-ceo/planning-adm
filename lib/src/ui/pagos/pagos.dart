@@ -63,7 +63,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      index = _tabController.index;
+      setState(() {
+        index = _tabController.index;
+      });
     });
     isInvolucradoFunction();
   }
@@ -931,7 +933,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
       children: [
         !isInvolucrado
             ? SpeedDialChild(
-                label: 'Agregar presupuesto',
+                label: index == 0 ? 'Pago a proveedor' : 'Recibido a cliente',
                 child: const Icon(Icons.add),
                 onTap: () => _agregarPago(),
               )
