@@ -34,7 +34,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
   List<EventoActividadModel> actividades = [];
   final CalendarController _calendarController = CalendarController();
 
-  final textStyleCustom = TextStyle(
+  final textStyleCustom = const TextStyle(
     fontFamily: 'Montserrat-Medium',
     color: Colors.black,
   );

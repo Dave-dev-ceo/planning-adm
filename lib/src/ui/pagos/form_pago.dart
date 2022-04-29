@@ -107,7 +107,10 @@ class _FormPagoState extends State<FormPago> {
           const SizedBox(
             height: 32.0,
           ),
-          _selectProveedores(proveedor),
+          AbsorbPointer(
+            absorbing: (itemPago['servicios'] == '0'),
+            child: _selectProveedores(proveedor),
+          ),
           const SizedBox(
             height: 32.0,
           ),
@@ -189,6 +192,8 @@ class _FormPagoState extends State<FormPago> {
             onChanged: (String newValue) {
               setState(() {
                 itemPago['servicios'] = newValue;
+
+                itemPago['proveedores'] = '0';
               });
             },
             items: temp),
@@ -200,15 +205,29 @@ class _FormPagoState extends State<FormPago> {
 
   _selectProveedores(ItemModelPagos proveedor) {
     if (proveedor.pagos.isNotEmpty) {
-      List temp = proveedor.pagos.map((item) {
-        return DropdownMenuItem<String>(
-          value: item.idProveedor.toString(),
-          child: Text(
-            item.proveedor,
-            style: const TextStyle(fontSize: 18),
-          ),
-        );
-      }).toList();
+      List<DropdownMenuItem<String>> temp = [];
+
+      for (var item in proveedor.pagos) {
+        if (itemPago['servicios'] == item.idServicio.toString()) {
+          temp.add(DropdownMenuItem<String>(
+            value: item.idProveedor.toString(),
+            child: Text(
+              item.servicio,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ));
+        }
+      }
+
+      // List temp = proveedor.pagos.map((item) {
+      //   return DropdownMenuItem<String>(
+      //     value: item.idProveedor.toString(),
+      //     child: Text(
+      //       item.proveedor,
+      //       style: const TextStyle(fontSize: 18),
+      //     ),
+      //   );
+      // }).toList();
 
       temp.add(const DropdownMenuItem<String>(
         value: '0',

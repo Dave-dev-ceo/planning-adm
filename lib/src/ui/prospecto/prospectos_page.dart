@@ -10,7 +10,6 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
-import 'package:planning/src/logic/actividades_logic/archivo_actividad_logic.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
@@ -526,8 +525,6 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
 
   Future<List<ArchivoProspecto>> futureArchivos;
   final _archivosProspectoLogic = ArchivosProspectosLogic();
-
-  final _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   bool isFocusDescripcion = false;
   bool isEditDescripcion = false;
