@@ -7,10 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum TipoMensaje { correcto, error, advertencia }
 
-void MostrarAlerta(
-    {@required String mensaje,
-    @required TipoMensaje tipoMensaje,
-    Function() onVisible}) {
+void MostrarAlerta({
+  @required String mensaje,
+  @required TipoMensaje tipoMensaje,
+  Function() onVisible,
+}) {
   Color color;
   Widget icon;
   TextStyle style = const TextStyle(

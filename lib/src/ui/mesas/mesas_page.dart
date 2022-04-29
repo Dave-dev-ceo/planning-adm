@@ -519,7 +519,8 @@ class _MesasPageState extends State<MesasPage> {
       child: RefreshIndicator(
         color: Colors.blue,
         onRefresh: () async {
-          await mesasAsignadasService.getMesasAsignadas();
+          BlocProvider.of<MesasAsignadasBloc>(context)
+              .add(GetMesasAsignadasEvent());
           BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
           BlocProvider.of<InvitadosMesasBloc>(context)
               .add(MostrarInvitadosMesasEvent());
@@ -643,11 +644,9 @@ class _MesasPageState extends State<MesasPage> {
                 );
               } else if (state is MostrarMesasState) {
                 if (state.listaMesas != null) {
-                  lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
-
-                  listaMesaFromDB = state.listaMesas;
-
                   if (state.listaMesas.isNotEmpty) {
+                    lastNumMesa = state.listaMesas.last.numDeMesa ?? 0;
+                    listaMesaFromDB = state.listaMesas;
                     return _buildListaMesas(state.listaMesas);
                   } else {
                     lastNumMesa = 0;
@@ -676,7 +675,13 @@ class _MesasPageState extends State<MesasPage> {
               } else {
                 lastNumMesa = 0;
 
-                return Container();
+                return Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'No se encontraron datos',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                );
               }
             },
           ),
@@ -794,9 +799,6 @@ class _MesasPageState extends State<MesasPage> {
 
                     listAsigandosToDelete.clear();
                   }));
-
-          BlocProvider.of<MesasAsignadasBloc>(context)
-              .add(GetMesasAsignadasEvent());
         } else {
           MostrarAlerta(
               mensaje: 'Ocurrio un error al intentar eliminar al invitado',
@@ -1093,12 +1095,14 @@ class _MesasPageState extends State<MesasPage> {
           break;
         }
       }
-      if (listToAsignarForAdd.isNotEmpty && listToAsignarForAdd.isNotEmpty) {
+      if (listToAsignarForAdd.isNotEmpty) {
         final data = await mesasAsignadasService
             .asignarPersonasMesas(listToAsignarForAdd);
         if (data == 'Ok') {
           invitadosBloc.add(MostrarInvitadosMesasEvent());
           BlocProvider.of<MesasBloc>(context).add(MostrarMesasEvent());
+          BlocProvider.of<MesasAsignadasBloc>(context)
+              .add(GetMesasAsignadasEvent());
 
           mesasAsignadasService.getMesasAsignadas().then((value) {
             setState(() {
@@ -1123,7 +1127,8 @@ class _MesasPageState extends State<MesasPage> {
       }
     } else {
       MostrarAlerta(
-          mensaje: 'No se encontraron mesas', tipoMensaje: TipoMensaje.error);
+          mensaje: 'No se encontraron mesas o invitados',
+          tipoMensaje: TipoMensaje.error);
     }
   }
 

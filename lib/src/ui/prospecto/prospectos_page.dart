@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
+import 'package:planning/src/logic/actividades_logic/archivo_actividad_logic.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+
+import '../../logic/archivos_prospectos_logic/archivo_prospecto_dialog.dart';
+import '../../logic/archivos_prospectos_logic/archivos_prospectos_logic.dart';
 
 class ProspectosPage extends StatefulWidget {
   const ProspectosPage({Key key}) : super(key: key);
@@ -189,10 +197,10 @@ class _ProspectosPageState extends State<ProspectosPage> {
                             hintText: 'Nombre del prospecto',
                             labelText: 'Nombrel del prospecto'),
                         validator: (value) {
-                          if (value != null || value != '') {
+                          if (value != null && value != '') {
                             return null;
                           } else {
-                            return 'El nombre del predecesor es requerido';
+                            return 'Campo requerido';
                           }
                         },
                         onChanged: (value) {
@@ -516,12 +524,19 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   bool canEditEmail = false;
   bool canEditInvolucrado = false;
 
+  Future<List<ArchivoProspecto>> futureArchivos;
+  final _archivosProspectoLogic = ArchivosProspectosLogic();
+
+  final _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
   bool isFocusDescripcion = false;
   bool isEditDescripcion = false;
   TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
+    futureArchivos = _archivosProspectoLogic
+        .obtenerArchivosProspectos(widget.prospecto.idProspecto);
     _prospectoBloc = BlocProvider.of<ProspectoBloc>(context);
     super.initState();
   }
@@ -529,27 +544,30 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: BlocListener<ProspectoBloc, ProspectoState>(
-        listener: (context, state) {
-          if (state is DeleteProspectoSuccessState) {
-            Navigator.of(context).pop();
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: [
-              tituloWidget(context),
-              namePredecesorWidget(),
-              involucradoWidget(),
-              phonePredecesorWidget(),
-              emailPredecesorWidget(),
-              descripcionPredecesorWidget(),
-              actividadesWidget(),
-              if (widget.claveEtapa == 'ACP') addEventoButton(context),
-              spacerSizedBoxWidget(),
-              deleteProspectoButton(),
-            ],
+      child: Scaffold(
+        body: BlocListener<ProspectoBloc, ProspectoState>(
+          listener: (context, state) {
+            if (state is DeleteProspectoSuccessState) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: [
+                tituloWidget(context),
+                namePredecesorWidget(),
+                involucradoWidget(),
+                phonePredecesorWidget(),
+                emailPredecesorWidget(),
+                descripcionPredecesorWidget(),
+                _seccionArchivos(),
+                actividadesWidget(),
+                if (widget.claveEtapa == 'ACP') addEventoButton(context),
+                spacerSizedBoxWidget(),
+                deleteProspectoButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -560,6 +578,255 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
     return const SizedBox(
       height: 10.0,
     );
+  }
+
+  Widget _seccionArchivos() {
+    Widget child = Container(
+      margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+      ),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Row(
+              children: const [
+                Expanded(child: Divider()),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Archivos:'),
+                ),
+                Expanded(child: Divider()),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              child: const Text('Agregar'),
+              onPressed: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  withData: true,
+                  allowMultiple: false,
+                  type: FileType.custom,
+                  allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+                );
+
+                if (result != null) {
+                  final file = result.files.single;
+
+                  final nombre =
+                      file.name.replaceFirst('.${file.extension}', '');
+
+                  final temp = ArchivoProspecto(
+                    archivo: base64Encode(file.bytes),
+                    idPropescto: widget.prospecto.idProspecto,
+                    nombreArchivo: nombre,
+                    tipoMime: file.extension,
+                  );
+
+                  final resp =
+                      await _archivosProspectoLogic.crearArchivoProspecto(temp);
+                  if (resp) {
+                    setState(() {
+                      futureArchivos =
+                          _archivosProspectoLogic.obtenerArchivosProspectos(
+                              widget.prospecto.idProspecto);
+                    });
+                    MostrarAlerta(
+                        mensaje: 'Archivo subido',
+                        tipoMensaje: TipoMensaje.correcto);
+                  } else {
+                    MostrarAlerta(
+                      mensaje: 'Ocurrio un error al intentar subir el archivo',
+                      tipoMensaje: TipoMensaje.correcto,
+                    );
+                  }
+                }
+              },
+            ),
+          ),
+          FutureBuilder(
+            future: futureArchivos,
+            builder: (context, AsyncSnapshot<List<ArchivoProspecto>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const LoadingCustom();
+              }
+
+              if (snapshot.hasData) {
+                final archivos = snapshot.data;
+
+                if (archivos.isNotEmpty) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: archivos.length,
+                    itemBuilder: (context, index) {
+                      final archivo = archivos[index];
+                      return ListTile(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => DialogVerArchivoProspecto(
+                                    archivo: archivo.archivo,
+                                    mime: archivo.tipoMime,
+                                    nombreArchivo: archivo.nombreArchivo,
+                                  ));
+                        },
+                        leading: IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  final _formNombreArchivo =
+                                      GlobalKey<FormState>();
+
+                                  String nombreArchivo = archivo.nombreArchivo;
+                                  return AlertDialog(
+                                    title:
+                                        const Text('Editar nombre del archivo'),
+                                    content: Form(
+                                      key: _formNombreArchivo,
+                                      child: TextFormField(
+                                        decoration: const InputDecoration(
+                                            hintText: 'Nombre',
+                                            labelText: 'Nombre del archivo',
+                                            border: OutlineInputBorder()),
+                                        initialValue: nombreArchivo,
+                                        onChanged: (value) {
+                                          nombreArchivo = value;
+                                        },
+                                        validator: (valor) {
+                                          if (valor != null && valor != '') {
+                                            return null;
+                                          }
+                                          return 'El campo no debe estar vacio';
+                                        },
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final resp =
+                                              await _archivosProspectoLogic
+                                                  .editarNombredelArchivo(
+                                                      archivo.idArchivo,
+                                                      nombreArchivo);
+
+                                          if (resp) {
+                                            setState(() {
+                                              futureArchivos =
+                                                  _archivosProspectoLogic
+                                                      .obtenerArchivosProspectos(
+                                                          widget.prospecto
+                                                              .idProspecto);
+                                            });
+                                            MostrarAlerta(
+                                                mensaje: 'Nombre editado',
+                                                tipoMensaje:
+                                                    TipoMensaje.correcto);
+                                          } else {
+                                            MostrarAlerta(
+                                                mensaje:
+                                                    'Ocurrio un error al intentar editar el archivo',
+                                                tipoMensaje:
+                                                    TipoMensaje.correcto);
+                                          }
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Guardar'),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          icon: const Icon(Icons.edit),
+                        ),
+                        title: Row(
+                          children: [
+                            Icon(
+                              archivo.tipoMime == 'pdf'
+                                  ? FontAwesomeIcons.filePdf
+                                  : FontAwesomeIcons.fileImage,
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Text(archivo.nombreArchivo),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          onPressed: () async {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      content: const Text(
+                                          '¿Desea eliminar el archivo?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Cancelar'),
+                                        ),
+                                        TextButton(
+                                            onPressed: () async {
+                                              final resp =
+                                                  await _archivosProspectoLogic
+                                                      .eliminarArchivoProespecto(
+                                                          archivo.idArchivo);
+
+                                              if (resp) {
+                                                setState(() {
+                                                  futureArchivos =
+                                                      _archivosProspectoLogic
+                                                          .obtenerArchivosProspectos(
+                                                              widget.prospecto
+                                                                  .idProspecto);
+                                                });
+                                                MostrarAlerta(
+                                                    mensaje:
+                                                        'Archivo eliminado',
+                                                    tipoMensaje:
+                                                        TipoMensaje.correcto);
+                                              } else {
+                                                MostrarAlerta(
+                                                    mensaje:
+                                                        'Ocurrio un error al intentar eliminar el archivo',
+                                                    tipoMensaje:
+                                                        TipoMensaje.correcto);
+                                              }
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Aceptar'))
+                                      ],
+                                    ));
+                          },
+                          icon: const Icon(Icons.delete),
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+
+              return const Center(
+                child: Text('Sin archivos'),
+              );
+            },
+          )
+        ],
+      ),
+    );
+
+    return child;
   }
 
   Align deleteProspectoButton() {

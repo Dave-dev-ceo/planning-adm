@@ -49,7 +49,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   @override
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
-    permisosBloc.add(ObtenerPermisosEvent());
+    // permisosBloc.add(ObtenerPermisosEvent());
     getClaveRol();
 
     getIdInvolucrado();
