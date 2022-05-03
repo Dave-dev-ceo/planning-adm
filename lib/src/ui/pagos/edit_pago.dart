@@ -167,7 +167,16 @@ class _FormEditPagoState extends State<FormEditPago> {
                 height: 32.0,
               ),
               ElevatedButton(
-                child: const Icon(Icons.edit),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text('Editar'),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Icon(Icons.edit),
+                  ],
+                ),
                 onPressed: () => _editPago(),
               ),
               // SizedBox(height: 32.0,),
@@ -199,6 +208,8 @@ class _FormEditPagoState extends State<FormEditPago> {
             onChanged: (String newValue) {
               setState(() {
                 itemPago['servicios'] = newValue;
+
+                itemPago['proveedores'] = null;
               });
             },
             items: servicios.pagos.map((item) {
@@ -218,10 +229,25 @@ class _FormEditPagoState extends State<FormEditPago> {
 
   _selectProveedores(ItemModelPagos proveedor) {
     if (proveedor.pagos.isNotEmpty) {
+      List<DropdownMenuItem<String>> items = [];
+
+      for (var prov in proveedor.pagos) {
+        if (itemPago['servicios'] == prov.idServicio.toString()) {
+          items.add(DropdownMenuItem<String>(
+            value: prov.idProveedor.toString(),
+            child: Text(
+              prov.servicio,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ));
+        }
+      }
+
       return SizedBox(
         width: double.infinity,
         child: DropdownButton<String>(
             value: itemPago['proveedores'],
+            hint: const Text('Proveedores'),
             icon: const Icon(Icons.arrow_downward),
             iconSize: 24,
             elevation: 16,
@@ -235,15 +261,17 @@ class _FormEditPagoState extends State<FormEditPago> {
                 itemPago['proveedores'] = newValue;
               });
             },
-            items: proveedor.pagos.map((item) {
-              return DropdownMenuItem(
-                value: item.idProveedor.toString(),
-                child: Text(
-                  item.proveedor,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              );
-            }).toList()),
+            items: items
+            // proveedor.pagos.map((item) {
+            // return DropdownMenuItem(
+            // value: item.idProveedor.toString(),
+            // child: Text(
+            // item.proveedor,
+            // style: const TextStyle(fontSize: 18),
+            // ),
+            // );
+            // }).toList(),
+            ),
       );
     } else {
       return const SizedBox();

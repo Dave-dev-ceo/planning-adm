@@ -6,6 +6,8 @@ import 'package:planning/src/logic/pagos_logic.dart';
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
 
+import '../../models/pago/pago_model.dart';
+
 part 'pagos_event.dart';
 part 'pagos_state.dart';
 
@@ -32,7 +34,7 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
       yield PagosLogging();
 
       try {
-        await logic.insertPagos(event.data);
+        await logic.insertPagos(event.data.toJson());
         yield PagosCreateState();
       } on AutorizacionException {
         yield PagosErrorState('Error en insert');

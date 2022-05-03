@@ -466,6 +466,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
   }
 
   Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
+    final datos = snapshot.data;
+
     if (_searchResult == '') {
       buscador = snapshot.data.results;
     }
@@ -505,7 +507,15 @@ class _ListaInvitadosState extends State<ListaInvitados>
           ),
         ),
         PaginatedDataTable(
-          header: const Text('Invitados'),
+          header: Row(
+            children: [
+              Text('Invitados: ${datos.invitados}'),
+              const Spacer(),
+              Text('Acompañantes: ${datos.acompanantes}'),
+              const Spacer(),
+              Text('Total: ${datos.invitados + datos.acompanantes}')
+            ],
+          ),
           rowsPerPage: 8,
           showCheckboxColumn: false,
           columns: [

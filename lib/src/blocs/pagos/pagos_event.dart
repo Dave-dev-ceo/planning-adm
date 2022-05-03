@@ -10,7 +10,7 @@ class SelectPagosEvent extends PagosEvent {
 
 class SelectIdEvent extends PagosEvent {
   final int id;
-  
+
   SelectIdEvent(this.id);
 
   int get prop => id;
@@ -18,10 +18,10 @@ class SelectIdEvent extends PagosEvent {
 
 // evento - crear
 class CrearPagosEvent extends PagosEvent {
-  final Map data;
+  final PagoPresupuesto data;
   CrearPagosEvent(this.data);
 
-  Map get props => data;
+  PagoPresupuesto get props => data;
 }
 
 // evento - update

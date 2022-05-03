@@ -4,6 +4,7 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/pagos/pagos_bloc.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
 import 'package:flutter/services.dart';
+import 'package:planning/src/models/pago/pago_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 class FormPago extends StatefulWidget {
@@ -15,6 +16,9 @@ class FormPago extends StatefulWidget {
 }
 
 class _FormPagoState extends State<FormPago> {
+  final _formKeyPago = GlobalKey<FormState>();
+  PagoPresupuesto pagoPresupuesto = PagoPresupuesto();
+
   // variabls bloc
   PagosBloc pagosBloc;
 
@@ -40,7 +44,9 @@ class _FormPagoState extends State<FormPago> {
         appBar: AppBar(
           title: const Text('Agregar presupuestos'),
         ),
-        body: _myBloc(),
+        body: SingleChildScrollView(
+          child: _myBloc(),
+        ),
       ),
     );
   }
@@ -52,6 +58,7 @@ class _FormPagoState extends State<FormPago> {
           itemPago['cantidad'] = '';
           itemPago['concepto'] = '';
           itemPago['precio'] = '';
+          pagoPresupuesto = PagoPresupuesto();
           pagosBloc.add(SelectFormPagosEvent());
         }
       },
@@ -86,73 +93,162 @@ class _FormPagoState extends State<FormPago> {
   }
 
   _formPagos(proveedor, servicios) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      color: Colors.white,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Agregar presupuestos',
-                style: TextStyle(fontSize: 20.0),
-              )),
-          const SizedBox(
-            height: 64.0,
-          ),
-          _selectServicios(servicios),
-          const SizedBox(
-            height: 32.0,
-          ),
-          AbsorbPointer(
-            absorbing: (itemPago['servicios'] == '0'),
-            child: _selectProveedores(proveedor),
-          ),
-          const SizedBox(
-            height: 32.0,
-          ),
-          TextFormField(
-            controller: TextEditingController(text: '${itemPago['cantidad']}'),
-            decoration: const InputDecoration(hintText: 'Cantidad:'),
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (valor) {
-              itemPago['cantidad'] = valor;
-            },
-          ),
-          const SizedBox(
-            height: 32.0,
-          ),
-          TextFormField(
-            controller: TextEditingController(text: '${itemPago['concepto']}'),
-            decoration: const InputDecoration(hintText: 'Concepto:'),
-            onChanged: (valor) {
-              itemPago['concepto'] = valor;
-            },
-          ),
-          const SizedBox(
-            height: 32.0,
-          ),
-          TextFormField(
-            controller: TextEditingController(text: '${itemPago['precio']}'),
-            decoration: const InputDecoration(hintText: 'Precio unitario:'),
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (valor) {
-              itemPago['precio'] = valor;
-            },
-          ),
-          const SizedBox(
-            height: 32.0,
-          ),
-          ElevatedButton(
-            child: const Icon(Icons.add),
-            onPressed: () => _agregarPago(),
-          )
-        ],
+    return Form(
+      key: _formKeyPago,
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Datos del presupuesto',
+                  style: TextStyle(fontSize: 20.0),
+                )),
+            const SizedBox(
+              height: 40.0,
+            ),
+            _selectServicios(servicios),
+            const SizedBox(
+              height: 32.0,
+            ),
+            AbsorbPointer(
+              absorbing: (pagoPresupuesto.servicioId == '0'),
+              child: _selectProveedores(proveedor),
+            ),
+            const SizedBox(
+              height: 32.0,
+            ),
+            const Text('Cantidad:'),
+            TextFormField(
+              initialValue: pagoPresupuesto.cantidad?.toString(),
+              decoration: const InputDecoration(hintText: 'Cantidad:'),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              onChanged: (valor) {
+                pagoPresupuesto.cantidad = int.parse(valor);
+              },
+            ),
+            const SizedBox(
+              height: 32.0,
+            ),
+            const Text('Concepto:'),
+            TextFormField(
+              validator: (valor) {
+                if (valor != null && valor != '') {
+                  return null;
+                }
+                return 'El campo es requerido';
+              },
+              initialValue: pagoPresupuesto.concepto,
+              decoration: const InputDecoration(hintText: 'Concepto:'),
+              onChanged: (valor) {
+                pagoPresupuesto.concepto = valor;
+              },
+            ),
+            const SizedBox(
+              height: 32.0,
+            ),
+            const Text('Precio Unitario:'),
+            TextFormField(
+              initialValue: pagoPresupuesto.precioUnitario?.toString(),
+              decoration: const InputDecoration(hintText: 'Precio unitario:'),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
+              ],
+              validator: (valor) {
+                final temp = double.parse(valor);
+
+                if (temp >= 0) {
+                  return null;
+                }
+                return 'El campo es requerido';
+              },
+              onChanged: (valor) {
+                pagoPresupuesto.precioUnitario = double.parse(valor);
+              },
+            ),
+            const SizedBox(
+              height: 32.0,
+            ),
+            if (widget.tipoPresupuesto != 'E')
+              Container(
+                margin: const EdgeInsets.all(8.0),
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.grey)),
+                child: SizedBox(
+                  width: 300,
+                  child: CheckboxListTile(
+                    value: pagoPresupuesto.precioAdicional,
+                    onChanged: (valor) {
+                      setState(() {
+                        pagoPresupuesto.precioAdicional = valor;
+                      });
+                      if (!valor) {
+                        pagoPresupuesto.precioUnitarioAdicional = null;
+                      }
+                    },
+                    title: const Text('Agregar al evento'),
+                  ),
+                ),
+              ),
+            if (widget.tipoPresupuesto != 'E')
+              const SizedBox(
+                height: 32.0,
+              ),
+            if (pagoPresupuesto.precioAdicional &&
+                widget.tipoPresupuesto != 'E')
+              const Text('Precio Unitario al evento:'),
+            if (pagoPresupuesto.precioAdicional &&
+                widget.tipoPresupuesto != 'E')
+              TextFormField(
+                initialValue:
+                    pagoPresupuesto.precioUnitarioAdicional?.toString(),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
+                ],
+                decoration: const InputDecoration(hintText: 'Monto'),
+                onChanged: (valor) {
+                  pagoPresupuesto.precioUnitarioAdicional =
+                      double.tryParse(valor);
+                },
+                validator: (valor) {
+                  final temp = double.parse(valor);
+
+                  if (pagoPresupuesto.precioUnitario != null) {
+                    if (temp < pagoPresupuesto.precioUnitario) {
+                      return 'El precio unitario adicional no puede ser menor al precio unitario';
+                    }
+                  }
+
+                  if (temp > 0) {
+                    return null;
+                  }
+                  return 'El campo es requerido';
+                },
+              ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            ElevatedButton(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text('Agregar'),
+                  SizedBox(width: 10.0),
+                  Icon(Icons.add),
+                ],
+              ),
+              onPressed: () => _agregarPago(),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -179,24 +275,37 @@ class _FormPagoState extends State<FormPago> {
 
       return SizedBox(
         width: double.infinity,
-        child: DropdownButton<String>(
-            value: itemPago['servicios'],
-            icon: const Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            style: const TextStyle(color: Colors.black),
-            underline: Container(
-              height: 2,
-              color: Colors.black,
-            ),
-            onChanged: (String newValue) {
-              setState(() {
-                itemPago['servicios'] = newValue;
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Servicio:'),
+            DropdownButtonFormField<String>(
+                validator: (valor) {
+                  if (valor != null && valor != '0') {
+                    return null;
+                  } else {
+                    return 'Este campo es requerido.';
+                  }
+                },
+                value: pagoPresupuesto.servicioId,
+                icon: const Icon(Icons.arrow_downward),
+                iconSize: 24,
+                elevation: 16,
+                style: const TextStyle(color: Colors.black),
+                // underline: Container(
+                //   height: 2,
+                //   color: Colors.black,
+                // ),
+                onChanged: (String newValue) {
+                  setState(() {
+                    pagoPresupuesto.servicioId = newValue;
 
-                itemPago['proveedores'] = '0';
-              });
-            },
-            items: temp),
+                    pagoPresupuesto.proveedoresId = '0';
+                  });
+                },
+                items: temp),
+          ],
+        ),
       );
     } else {
       return const SizedBox();
@@ -208,7 +317,7 @@ class _FormPagoState extends State<FormPago> {
       List<DropdownMenuItem<String>> temp = [];
 
       for (var item in proveedor.pagos) {
-        if (itemPago['servicios'] == item.idServicio.toString()) {
+        if (pagoPresupuesto.servicioId == item.idServicio.toString()) {
           temp.add(DropdownMenuItem<String>(
             value: item.idProveedor.toString(),
             child: Text(
@@ -218,16 +327,6 @@ class _FormPagoState extends State<FormPago> {
           ));
         }
       }
-
-      // List temp = proveedor.pagos.map((item) {
-      //   return DropdownMenuItem<String>(
-      //     value: item.idProveedor.toString(),
-      //     child: Text(
-      //       item.proveedor,
-      //       style: const TextStyle(fontSize: 18),
-      //     ),
-      //   );
-      // }).toList();
 
       temp.add(const DropdownMenuItem<String>(
         value: '0',
@@ -239,22 +338,31 @@ class _FormPagoState extends State<FormPago> {
 
       return SizedBox(
         width: double.infinity,
-        child: DropdownButton<String>(
-            value: itemPago['proveedores'],
-            icon: const Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            style: const TextStyle(color: Colors.black),
-            underline: Container(
-              height: 2,
-              color: Colors.black,
-            ),
-            onChanged: (String newValue) {
-              setState(() {
-                itemPago['proveedores'] = newValue;
-              });
-            },
-            items: temp),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Proveedor:'),
+            DropdownButtonFormField<String>(
+                value: pagoPresupuesto.proveedoresId,
+                icon: const Icon(Icons.arrow_downward),
+                iconSize: 24,
+                elevation: 16,
+                style: const TextStyle(color: Colors.black),
+                validator: (valor) {
+                  if (valor != null && valor != '0') {
+                    return null;
+                  } else {
+                    return 'Este campo es requerido.';
+                  }
+                },
+                onChanged: (String newValue) {
+                  setState(() {
+                    pagoPresupuesto.proveedoresId = newValue;
+                  });
+                },
+                items: temp),
+          ],
+        ),
       );
     } else {
       return const SizedBox();
@@ -262,17 +370,10 @@ class _FormPagoState extends State<FormPago> {
   }
 
   _agregarPago() {
-    if (itemPago['servicios'] == '0' ||
-        itemPago['proveedores'] == '0' ||
-        itemPago['cantidad'] == '' ||
-        itemPago['concepto'] == '' ||
-        itemPago['precio'] == '') {
-      MostrarAlerta(
-          mensaje: 'Todos los campos son obligatorios.',
-          tipoMensaje: TipoMensaje.error);
-    } else {
+    if (_formKeyPago.currentState.validate()) {
       itemPago['tipoPresupuesto'] = widget.tipoPresupuesto;
-      pagosBloc.add(CrearPagosEvent(itemPago));
+      pagoPresupuesto.tipoPresupuesto = widget.tipoPresupuesto;
+      pagosBloc.add(CrearPagosEvent(pagoPresupuesto));
       MostrarAlerta(
           mensaje: 'Pago agregado', tipoMensaje: TipoMensaje.correcto);
     }

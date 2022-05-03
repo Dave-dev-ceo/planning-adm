@@ -203,11 +203,19 @@ class ApiProvider {
     if (res == 0) {
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
-      final response = await http.get(
+
+      final data = {'idEvento': idEvento};
+
+      final response = await http.post(
           Uri.parse(confiC.url +
               confiC.puerto +
-              '/wedding/INVITADOS/obtenerInvitados/$idEvento'),
-          headers: {HttpHeaders.authorizationHeader: token});
+              '/wedding/INVITADOS/obtenterDatosInvitados'),
+          body: json.encode(data),
+          headers: {
+            HttpHeaders.authorizationHeader: token,
+            'Content-type': 'application/json',
+            'Accept': 'application/json',
+          });
 
       if (response.statusCode == 200) {
         // If the call to the server was successful, parse the JSON

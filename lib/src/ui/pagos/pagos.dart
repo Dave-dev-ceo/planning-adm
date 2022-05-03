@@ -502,9 +502,11 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                                 }
                               }
                             : null,
-                        child: const Text(
-                          'Agregar Pago',
-                          style: TextStyle(color: Colors.white),
+                        child: Text(
+                          index == 0
+                              ? 'Pago a proveedor'
+                              : 'Recibido a cliente',
+                          style: const TextStyle(color: Colors.white),
                         ),
                       )
                     ],
@@ -933,7 +935,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
       children: [
         !isInvolucrado
             ? SpeedDialChild(
-                label: index == 0 ? 'Pago a proveedor' : 'Recibido a cliente',
+                label: 'Agregar presupuesto',
                 child: const Icon(Icons.add),
                 onTap: () => _agregarPago(),
               )

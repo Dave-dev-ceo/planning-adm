@@ -12,7 +12,7 @@ import 'package:planning/src/resources/config_conection.dart';
 import 'package:planning/src/models/item_model_pagos.dart';
 
 abstract class PagosLogic {
-  Future<bool> insertPagos(Map pago);
+  Future<bool> insertPagos(Map<String, dynamic> pago);
   Future<Map<String, dynamic>> selectPagos();
   Future<bool> updatePagos(Map pago);
   Future<bool> deletePagos(int id);
@@ -30,19 +30,28 @@ class ConsultasPagosLogic extends PagosLogic {
   ConfigConection confiC = ConfigConection();
 
   @override
-  Future<bool> insertPagos(Map pago) async {
+  Future<bool> insertPagos(Map<String, dynamic> pago) async {
     // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
+    int idUsuario = await _sharedPreferences.getIdUsuario();
     String token = await _sharedPreferences.getToken();
 
-    pago['id_planner'] = idPlanner.toString();
-    pago['id_evento'] = idEvento.toString();
+    pago['id_planner'] = idPlanner;
+    pago['id_evento'] = idEvento;
+    pago['idUsuario'] = idUsuario;
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader: token
+    };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/insertPagos'),
-        body: pago,
-        headers: {HttpHeaders.authorizationHeader: token});
+      Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/insertPagos'),
+      body: json.encode(pago),
+      headers: headers,
+    );
 
     // filtro
     if (response.statusCode == 200) {
