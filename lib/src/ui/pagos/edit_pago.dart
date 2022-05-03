@@ -42,7 +42,9 @@ class _FormEditPagoState extends State<FormEditPago> {
         appBar: AppBar(
           title: const Text('Editar presupuesto'),
         ),
-        body: _myBloc(),
+        body: SingleChildScrollView(
+          child: _myBloc(),
+        ),
       ),
     );
   }
@@ -100,92 +102,87 @@ class _FormEditPagoState extends State<FormEditPago> {
 
   _formEditPagos(proveedor, servicios) {
     return Container(
+      margin: const EdgeInsets.all(20.0),
       padding: const EdgeInsets.all(16.0),
       color: Colors.white,
-      child: ListView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    'Editar presupuesto',
-                    style: TextStyle(fontSize: 20.0),
-                  )),
-              const SizedBox(
-                height: 64.0,
-              ),
-              _selectServicios(servicios),
-              const SizedBox(
-                height: 32.0,
-              ),
-              _selectProveedores(proveedor),
-              const SizedBox(
-                height: 32.0,
-              ),
-              const Text('Cantidad:'),
-              TextFormField(
-                controller:
-                    TextEditingController(text: '${itemPago['cantidad']}'),
-                decoration: const InputDecoration(hintText: 'Cantidad:'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                onChanged: (valor) {
-                  itemPago['cantidad'] = valor;
-                },
-              ),
-              const SizedBox(
-                height: 32.0,
-              ),
-              const Text('Concepto:'),
-              TextFormField(
-                controller:
-                    TextEditingController(text: '${itemPago['descripcion']}'),
-                decoration: const InputDecoration(hintText: 'Concepto:'),
-                onChanged: (valor) {
-                  itemPago['descripcion'] = valor;
-                },
-              ),
-              const SizedBox(
-                height: 32.0,
-              ),
-              const Text('Precio Unitario:'),
-              TextFormField(
-                controller:
-                    TextEditingController(text: '${itemPago['precio']}'),
-                decoration: const InputDecoration(hintText: 'Precio Unitario:'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                onChanged: (valor) {
-                  itemPago['precio'] = valor;
-                },
-              ),
-              const SizedBox(
-                height: 32.0,
-              ),
-              ElevatedButton(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Text('Editar'),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Icon(Icons.edit),
-                  ],
-                ),
-                onPressed: () => _editPago(),
-              ),
-              // SizedBox(height: 32.0,),
-              // ElevatedButton(
-              //   child: Icon(Icons.delete),
-              //   onPressed: () => _deletePago(),
-              // )
-            ],
+          const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Editar presupuesto',
+                style: TextStyle(fontSize: 20.0),
+              )),
+          const SizedBox(
+            height: 64.0,
           ),
+          _selectServicios(servicios),
+          const SizedBox(
+            height: 32.0,
+          ),
+          _selectProveedores(proveedor),
+          const SizedBox(
+            height: 32.0,
+          ),
+          const Text('Cantidad:'),
+          TextFormField(
+            controller: TextEditingController(text: '${itemPago['cantidad']}'),
+            decoration: const InputDecoration(hintText: 'Cantidad:'),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            onChanged: (valor) {
+              itemPago['cantidad'] = valor;
+            },
+          ),
+          const SizedBox(
+            height: 32.0,
+          ),
+          const Text('Concepto:'),
+          TextFormField(
+            controller:
+                TextEditingController(text: '${itemPago['descripcion']}'),
+            decoration: const InputDecoration(hintText: 'Concepto:'),
+            onChanged: (valor) {
+              itemPago['descripcion'] = valor;
+            },
+          ),
+          const SizedBox(
+            height: 32.0,
+          ),
+          const Text('Precio Unitario:'),
+          TextFormField(
+            controller: TextEditingController(text: '${itemPago['precio']}'),
+            decoration: const InputDecoration(hintText: 'Precio Unitario:'),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            onChanged: (valor) {
+              itemPago['precio'] = valor;
+            },
+          ),
+          const SizedBox(
+            height: 32.0,
+          ),
+          ElevatedButton(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text('Editar'),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Icon(Icons.edit),
+              ],
+            ),
+            onPressed: () => _editPago(),
+          ),
+          // SizedBox(height: 32.0,),
+          // ElevatedButton(
+          //   child: Icon(Icons.delete),
+          //   onPressed: () => _deletePago(),
+          // )
         ],
       ),
     );

@@ -97,6 +97,7 @@ class _FormPagoState extends State<FormPago> {
       key: _formKeyPago,
       child: Container(
         padding: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.all(20.0),
         color: Colors.white,
         child: Column(
           mainAxisSize: MainAxisSize.max,
