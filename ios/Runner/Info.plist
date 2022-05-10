@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -26,8 +26,15 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Media Library</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Uso de bluetooth</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Uso de periféricos bluetoooth</string>
 	<key>NSBonjourServices</key>
 	<array>
+		<string></string>
 		<string>_dartobservatory._tcp</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
@@ -38,6 +45,8 @@
 	<string>Parapropositos de debug y hot  reload</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>La aplicación accesa a a librería de fotos para subir evidenias de los acuerdos de los eventos</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Reconocimiento de Voz</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -63,5 +72,7 @@
 	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>priva</key>
+	<string></string>
 </dict>
 </plist>
