@@ -18,7 +18,7 @@ class ConfigConection {
       addUrl = "http://localhost:";
     } else {
       addPuerto = "9000";
-      addUrl = "https://plannig.com.mx:";
+      addUrl = "https://planning.com.mx:";
     }
   }
 }
