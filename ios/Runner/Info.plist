@@ -26,10 +26,16 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dartobservatory._tcp</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>Se utiliza la cámara para leer un còdigo QR generado para la llegada de los invitados al evento</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Se utiliza el acceso a contactos para importarlos a la lista de invitados</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Parapropositos de debug y hot  reload</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>La aplicación accesa a a librería de fotos para subir evidenias de los acuerdos de los eventos</string>
 	<key>UIFileSharingEnabled</key>
@@ -57,11 +63,5 @@
 	<true/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Parapropositos de debug y hot  reload</string>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_dartobservatory._tcp</string>
-	</array>
 </dict>
 </plist>

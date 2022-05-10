@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.grupotum.planning"
+        applicationId "com.grupotum.wplanner"
         minSdkVersion 20
         targetSdkVersion 28
         multiDexEnabled true

@@ -17,8 +17,8 @@ class ConfigConection {
       addPuerto = "3005";
       addUrl = "http://localhost:";
     } else {
-      addPuerto = "9005";
-      addUrl = "https://pruebas.grupotum.com:";
+      addPuerto = "9000";
+      addUrl = "https://plannig.conm.mx:";
     }
   }
 }
