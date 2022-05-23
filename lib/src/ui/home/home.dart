@@ -109,8 +109,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 child: FittedBox(
                     child: Image.asset(
                   'assets/new_logo.png',
-                  height: 100.0,
-                  width: 250.0,
+                  height: 65.0,
+                  width: 200.0,
                 )),
               ),
               leading: const Center(
@@ -144,7 +144,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           if (claveRol == 'SU')
                             const PopupMenuItem(
                                 value: 2, child: Text("Planner")),
-                          if (idPlanner == 0 && idUsuario == 0)
+                          if (idPlanner == 0)
                             const PopupMenuItem(
                               child: Text('Administar'),
                               value: 4,
@@ -172,7 +172,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   ),
                 )
               ],
-              toolbarHeight: 150.0,
+              toolbarHeight: 100.0,
               backgroundColor: hexToColor('#fdf4e5'),
               bottom: TabBar(
                 onTap: (int index) {
