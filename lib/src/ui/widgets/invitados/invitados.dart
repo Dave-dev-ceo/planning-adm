@@ -254,7 +254,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                   ],
                 ),
         ),
-        toolbarHeight: (size.width > 500) ? 100.0 : 80,
+        toolbarHeight: (size.width > 500) ? 150.0 : 80,
         backgroundColor: hexToColor('#fdf4e5'),
         actions: <Widget>[
           Container(

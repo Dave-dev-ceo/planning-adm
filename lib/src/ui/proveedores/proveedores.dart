@@ -20,7 +20,7 @@ class Proveedores extends StatefulWidget {
         builder: (context) => const Proveedores(),
       );
   @override
-  _ProveedoresState createState() => _ProveedoresState();
+  State<Proveedores> createState() => _ProveedoresState();
 }
 
 class _ProveedoresState extends State<Proveedores> {

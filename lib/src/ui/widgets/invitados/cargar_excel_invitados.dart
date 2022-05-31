@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:excel/excel.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:io';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 
@@ -73,7 +72,7 @@ class _CargarExcelState extends State<CargarExcel> {
     if (pickedFile != null) {
       var bytes = pickedFile.files.single.bytes;
 
-      bytes ??= File(pickedFile.files[0].path).readAsBytesSync();
+      // bytes ??= File(pickedFile.files[0].path).readAsBytesSync();
 
       var excel = Excel.decodeBytes(bytes);
       bool bandera = true;
@@ -140,7 +139,8 @@ class _CargarExcelState extends State<CargarExcel> {
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
                 title: const Text('Permisos denegados'),
-                content: const Text('Por favor habilitar el acceso a contactos'),
+                content:
+                    const Text('Por favor habilitar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: const Text('OK'),

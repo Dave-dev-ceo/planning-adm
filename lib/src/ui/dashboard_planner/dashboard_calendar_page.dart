@@ -65,7 +65,7 @@ class _DashboardCalendarPageState extends State<DashboardCalendarPage> {
           child: _calendarController.view == CalendarView.month &&
                   screenHeight < 800
               ? Scrollbar(
-                  isAlwaysShown: true,
+                  thumbVisibility: true,
                   controller: _controller,
                   child: ListView(
                     shrinkWrap: true,

@@ -370,7 +370,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
         stream: blocInvitados.allInvitados,
         builder: (context, AsyncSnapshot<ItemModelInvitados> snapshot) {
           if (snapshot.hasData) {
-            return buildList(snapshot);
+            return buildList(snapshot, context);
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
@@ -465,7 +465,9 @@ class _ListaInvitadosState extends State<ListaInvitados>
         });
   }
 
-  Widget buildList(AsyncSnapshot<ItemModelInvitados> snapshot) {
+  Widget buildList(
+      AsyncSnapshot<ItemModelInvitados> snapshot, BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final datos = snapshot.data;
 
     if (_searchResult == '') {
@@ -507,15 +509,33 @@ class _ListaInvitadosState extends State<ListaInvitados>
           ),
         ),
         PaginatedDataTable(
-          header: Row(
-            children: [
-              Text('Invitados: ${datos.invitados}'),
-              const Spacer(),
-              Text('Acompañantes: ${datos.acompanantes}'),
-              const Spacer(),
-              Text('Total: ${datos.invitados + datos.acompanantes}')
-            ],
-          ),
+          header: size.width >= 560
+              ? Row(
+                  children: [
+                    Text('Invitados: ${datos.invitados}'),
+                    const Spacer(),
+                    Text('Acompañantes: ${datos.acompanantes}'),
+                    const Spacer(),
+                    Text('Total: ${datos.invitados + datos.acompanantes}')
+                  ],
+                )
+              : SizedBox(
+                  height: 150.0,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                          child: Text(
+                        'Invitados: ${datos.invitados}',
+                      )),
+                      Expanded(
+                          child: Text('Acompañantes: ${datos.acompanantes}')),
+                      Expanded(
+                          child: Text(
+                              'Total: ${datos.invitados + datos.acompanantes}'))
+                    ],
+                  ),
+                ),
           rowsPerPage: 8,
           showCheckboxColumn: false,
           columns: [
@@ -603,7 +623,7 @@ class _DataSource extends DataTableSource {
                     title: Text('Se llamara al número $numero'),
                     trailing: const Icon(Icons.phone),
                     onTap: () async {
-                      launch('tel://$numero');
+                      launchUrl(Uri.parse('tel://$numero'));
                       Navigator.of(context).pop();
                     },
                   ),
@@ -618,7 +638,7 @@ class _DataSource extends DataTableSource {
                               color: Colors.green)),
                       trailing: const FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
-                        launch('http://wa.me/521' + numero);
+                        launchUrl(Uri.parse('http://wa.me/521' + numero));
                       }),
                 )
               ],

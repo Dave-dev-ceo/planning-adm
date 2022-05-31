@@ -529,7 +529,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
+    if (await canLaunchUrl(Uri.parse(url))) {
       await launch(
         url,
         forceSafariVC: false,

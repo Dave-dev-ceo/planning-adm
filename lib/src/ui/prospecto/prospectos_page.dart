@@ -87,7 +87,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
   Widget buildEtapas() {
     return Scrollbar(
       controller: _scrollController,
-      isAlwaysShown: true,
+      thumbVisibility: true,
       child: DragAndDropLists(
         contentsWhenEmpty: const Text('Sin datos'),
         scrollController: _scrollController,

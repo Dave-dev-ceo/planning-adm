@@ -84,36 +84,6 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
     );
   }
 
-  _dropDown2() {
-    return DropdownButton(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_drop_down_outlined),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Color(0xFF000000)),
-      underline: Container(
-        height: 2,
-        color: const Color(0xFF000000),
-      ),
-      onChanged: (newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
-      },
-      items: <String>['Hombre', 'Mujer'].map((item) {
-        return DropdownMenuItem(
-          value: item,
-          child: Text(
-            item,
-            style: const TextStyle(fontSize: 18),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  String gender = 'H';
-
   Widget formUI() {
     return Column(
       children: <Widget>[
@@ -125,17 +95,6 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
                 labelText: 'Nombre completo',
               ),
               validator: validateNombre,
-            )),
-        formItemsDesign(
-            MyFlutterApp.transgender,
-            Row(
-              children: <Widget>[
-                const Text('Género'),
-                const SizedBox(
-                  width: 50,
-                ),
-                _dropDown2(),
-              ],
             )),
         formItemsDesign(
             Icons.email,
@@ -256,16 +215,10 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
 
   save() async {
     if (keyForm.currentState.validate()) {
-      if (dropdownValue == "Hombre") {
-        gender = "H";
-      } else if (dropdownValue == "Mujer") {
-        gender = "M";
-      }
       Map<String, String> json = {
         "nombre": nombreCtrl.text,
         "telefono": telefonoCtrl.text,
         "email": emailCtrl.text,
-        "genero": gender,
         "numeroAcomp": numeroAcomp.text,
         "id_evento": id.toString()
       };

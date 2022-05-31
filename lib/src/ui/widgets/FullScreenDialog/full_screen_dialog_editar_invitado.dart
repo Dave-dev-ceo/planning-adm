@@ -14,7 +14,6 @@ import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/models/item_model_invitado.dart';
 import 'package:planning/src/resources/api_provider.dart';
-import 'package:planning/src/resources/my_flutter_app_icons.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
@@ -36,7 +35,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   int _numAcomp = 0;
   int contActualiza = 0;
   int contActualizaEdad = 0;
-  int contActualizaGenero = 0;
   int contActualizaGrupo = 0;
   int contActualizaData = 0;
   int contActualizaMesa = 0;
@@ -63,7 +61,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   String dropdownValue = 'Hombre';
   int _currentSelection;
-  int _currentSelectionGenero;
   String _mySelection = '';
   String _mySelectionG = "1";
   String _mySelectionM = "0";
@@ -75,9 +72,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   // Acompañante
   TextEditingController nombreAcompananteCtrl = TextEditingController();
   int _mySelectionAEdad = 0;
-  int _mySelectionAGenero = 0;
   int _mySelectionAEdad2 = 0;
-  int _mySelectionAGenero2 = 0;
 
   _FullScreenDialogEditState(this.idInvitado);
   final Map<int, Widget> _children = {
@@ -87,16 +82,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     ),
     1: const Text(
       'Niño',
-      style: TextStyle(fontSize: 12),
-    ),
-  };
-  final Map<int, Widget> _childrenGenero = {
-    0: const Text(
-      'Hombre',
-      style: TextStyle(fontSize: 12),
-    ),
-    1: const Text(
-      'Mujer',
       style: TextStyle(fontSize: 12),
     ),
   };
@@ -182,7 +167,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   }
 
   Widget dialogEditAcomp(int idAcompanante, ItemModelAcompanante data) {
-    String genero;
     final acompanante = data.results
         .firstWhere((element) => element.idAcompanne == idAcompanante);
     return AlertDialog(
@@ -204,17 +188,11 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
               acompanante.edad = 'N';
             }
 
-            if (_mySelectionAGenero2 == 0) {
-              genero = 'H';
-            } else {
-              genero = 'M';
-            }
             if (_keyFormEditAcomp.currentState.validate()) {
               Map<String, String> editAcompanante = {
                 'idAcompanante': acompanante.idAcompanne.toString(),
                 'nombre': acompanante.nombre,
                 'edad': acompanante.edad,
-                'genero': genero,
                 'alimentacion': acompanante.alimentacion,
                 'alergias': acompanante.alergias,
                 'asistenciaEspecial': acompanante.asistenciaEspecial
@@ -297,31 +275,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           onSegmentChosen: (index) {
                             setState(() {
                               _mySelectionAEdad2 = index;
-                            });
-                          },
-                        ),
-                      ),
-                    ]),
-                    400.0,
-                    70.0),
-                formItemsDesign(
-                    MyFlutterApp.transgender,
-                    Row(children: <Widget>[
-                      const Text('Género'),
-                      //SizedBox(width: 15,),
-                      Expanded(
-                        child: MaterialSegmentedControl(
-                          children: _childrenGenero,
-                          selectionIndex: _mySelectionAGenero2,
-                          borderColor: const Color(0xFF000000),
-                          selectedColor: const Color(0xFF000000),
-                          unselectedColor: Colors.white,
-                          borderRadius: 32.0,
-                          horizontalPadding:
-                              const EdgeInsets.symmetric(horizontal: 5.0),
-                          onSegmentChosen: (index) {
-                            setState(() {
-                              _mySelectionAGenero2 = index;
                             });
                           },
                         ),
@@ -565,7 +518,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     );
   }
 
-  String gender;
   String edad;
   formItemsDesign(icon, item, double large, double ancho) {
     return SizedBox(
@@ -609,15 +561,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       }
     }
 
-    if (contActualizaGenero <= 0) {
-      if (invitado.genero == "H") {
-        _currentSelectionGenero = 0;
-        contActualizaGenero++;
-      } else if (invitado.genero == "M") {
-        _currentSelectionGenero = 1;
-        contActualizaGenero++;
-      }
-    }
     if (contActualizaGrupo <= 0) {
       if (invitado.grupo == null) {
         _mySelectionG = "0";
@@ -733,34 +676,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           500.0,
                           80.0),
                       formItemsDesign(
-                          MyFlutterApp.transgender,
-                          Row(children: <Widget>[
-                            const Text('Género'),
-                            //SizedBox(width: 15,),
-                            Expanded(
-                              child: MaterialSegmentedControl(
-                                children: _childrenGenero,
-                                selectionIndex: _currentSelectionGenero,
-                                borderColor: const Color(0xFF000000),
-                                selectedColor: const Color(0xFF000000),
-                                unselectedColor: Colors.white,
-                                borderRadius: 32.0,
-                                horizontalPadding: const EdgeInsets.all(8),
-                                onSegmentChosen: (index) {
-                                  setState(() {
-                                    _currentSelectionGenero = index;
-                                  });
-                                },
-                              ),
-                            ),
-                          ]),
-                          500.0,
-                          80.0),
-                    ],
-                  ),
-                  Wrap(
-                    children: <Widget>[
-                      formItemsDesign(
                         Icons.email,
                         TextFormField(
                           controller: emailCtrl,
@@ -773,6 +688,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         500.0,
                         80.0,
                       ),
+                    ],
+                  ),
+                  Wrap(
+                    children: <Widget>[
                       formItemsDesign(
                         Icons.phone,
                         TextFormField(
@@ -786,10 +705,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         500.0,
                         80.0,
                       ),
-                    ],
-                  ),
-                  Wrap(
-                    children: <Widget>[
                       formItemsDesign(
                           Icons.group,
                           Row(
@@ -949,30 +864,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                             500.0,
                             100.0),
                         formItemsDesign(
-                            MyFlutterApp.transgender,
-                            Row(children: <Widget>[
-                              const Text('Género'),
-                              //SizedBox(width: 15,),
-                              Expanded(
-                                child: MaterialSegmentedControl(
-                                  children: _childrenGenero,
-                                  selectionIndex: _mySelectionAGenero,
-                                  borderColor: const Color(0xFF000000),
-                                  selectedColor: const Color(0xFF000000),
-                                  unselectedColor: Colors.white,
-                                  borderRadius: 32.0,
-                                  horizontalPadding: const EdgeInsets.all(8),
-                                  onSegmentChosen: (index) {
-                                    setState(() {
-                                      _mySelectionAGenero = index;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ]),
-                            500.0,
-                            100.0),
-                        formItemsDesign(
                             Icons.restaurant_menu_sharp,
                             Padding(
                               padding: const EdgeInsets.all(6.0),
@@ -1030,23 +921,17 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 //
 //                                  if(_numAcomp > 0 && _numAcomp ){
                             String edad = '';
-                            String genero = '';
                             if (_mySelectionAEdad == 0) {
                               edad = 'A';
                             } else {
                               edad = 'N';
                             }
-                            if (_mySelectionAGenero == 0) {
-                              genero = 'H';
-                            } else {
-                              genero = 'M';
-                            }
+
 //
                             Map<String, String> json = {
                               "id_invitado": idInvitado.toString(),
                               "nombre": nombreAcompananteCtrl.text,
                               "edad": edad,
-                              "genero": genero,
                               "alimentacion": alimentAcompContrl.text,
                               "alergias": alerAcompContrl.text,
                               "asistenciaEspecial": asisEspAcompContrl.text
@@ -1138,13 +1023,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   save() async {
     //if (keyForm.currentState.validate()) {
-    if (_currentSelectionGenero == 0) {
-      gender = "H";
-    } else if (_currentSelectionGenero == 1) {
-      gender = "M";
-    } else {
-      gender = "";
-    }
+
     if (_currentSelection == 0) {
       edad = "A";
     } else if (_currentSelection == 1) {
@@ -1160,7 +1039,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       "edad": edad,
       "telefono": telefonoCtrl.text,
       "email": emailCtrl.text,
-      "genero": gender,
       "id_grupo": _mySelectionG,
       "id_mesa": _mySelectionM,
       "alimentacion": tipoAlimentacionCtrl.text,
