@@ -28,7 +28,7 @@ class FullScreenDialogAgregarProveedorEvent extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FullScreenDialogAgregarProveedorEvent createState() =>
+  State<FullScreenDialogAgregarProveedorEvent> createState() =>
       _FullScreenDialogAgregarProveedorEvent(proveedor);
 }
 
@@ -64,33 +64,38 @@ class _FullScreenDialogAgregarProveedorEvent
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Agregar proveedor'),
-        actions: const [],
-        automaticallyImplyLeading: true,
-      ),
-      body: SingleChildScrollView(child:
-          BlocBuilder<ServiciosBloc, ServiciosState>(builder: (context, state) {
-        if (state is LoadingServiciosState) {
-          return const Center(child: LoadingCustom());
-        } else if (state is MostrarServiciosState) {
-          _items = [];
-          _optItem = [];
-          for (var opt in state.listServicios.results) {
-            _optItem.add(
-                ServiciosModel(idServicio: opt.idServicio, nombre: opt.nombre));
+    try {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Agregar proveedor'),
+          actions: const [],
+          automaticallyImplyLeading: true,
+        ),
+        body: SingleChildScrollView(child:
+            BlocBuilder<ServiciosBloc, ServiciosState>(
+                builder: (context, state) {
+          if (state is LoadingServiciosState) {
+            return const Center(child: LoadingCustom());
+          } else if (state is MostrarServiciosState) {
+            _items = [];
+            _optItem = [];
+            for (var opt in state.listServicios.results) {
+              _optItem.add(ServiciosModel(
+                  idServicio: opt.idServicio, nombre: opt.nombre));
+            }
+            _items = _optItem
+                .map((servicio) =>
+                    MultiSelectItem<ServiciosModel>(servicio, servicio.nombre))
+                .toList();
+            return _formInit();
+          } else {
+            return const Center(child: LoadingCustom());
           }
-          _items = _optItem
-              .map((servicio) =>
-                  MultiSelectItem<ServiciosModel>(servicio, servicio.nombre))
-              .toList();
-          return _formInit();
-        } else {
-          return const Center(child: LoadingCustom());
-        }
-      })),
-    );
+        })),
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Widget _formInit() {
@@ -135,23 +140,21 @@ class _FullScreenDialogAgregarProveedorEvent
                           large: 520.0,
                           ancho: 90.0,
                         ),
-                        Expanded(
-                          child: TextFormFields(
-                            icon: Icons.select_all,
-                            item: MultiSelectDialogField<ServiciosModel>(
-                              chipDisplay: MultiSelectChipDisplay(),
-                              buttonText: const Text('Servicios'),
-                              title: const Text('Servicios'),
-                              confirmText: const Text('Aceptar'),
-                              cancelText: const Text('Cancelar'),
-                              items: _items,
-                              initialValue: _selectedServicios,
-                              onConfirm: (values) {
-                                _selectedServicios = values;
-                              },
-                            ),
-                            large: 520.0,
+                        TextFormFields(
+                          icon: Icons.select_all,
+                          item: MultiSelectDialogField<ServiciosModel>(
+                            chipDisplay: MultiSelectChipDisplay(),
+                            buttonText: const Text('Servicios'),
+                            title: const Text('Servicios'),
+                            confirmText: const Text('Aceptar'),
+                            cancelText: const Text('Cancelar'),
+                            items: _items,
+                            initialValue: _selectedServicios,
+                            onConfirm: (values) {
+                              _selectedServicios = values;
+                            },
                           ),
+                          large: 520.0,
                         ),
                         TextFormFields(
                           icon: Icons.flag,
