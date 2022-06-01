@@ -37,6 +37,7 @@ void downloadFile(String data, String tituloTemp,
     html.Url.revokeObjectUrl(url);
   } else {
     PermissionStatus status = await Permission.storage.request();
+    PermissionStatus status2 = await Permission.manageExternalStorage.request();
     if (status.isGranted) {
       String path;
       if (Platform.isAndroid) {
@@ -55,13 +56,12 @@ void downloadFile(String data, String tituloTemp,
       try {
         f.writeAsBytesSync(bytes);
         result['filePath'] = f.path;
+        NoticationsService()
+            .showNotification(1, 'Se descargó el archivo', result, 2);
       } catch (e) {
         if (kDebugMode) {
           print(e);
         }
-      } finally {
-        NoticationsService()
-            .showNotification(1, 'Se descargó el archivo', result, 2);
       }
     } else {
       if (kDebugMode) {

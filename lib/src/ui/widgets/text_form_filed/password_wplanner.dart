@@ -1,7 +1,7 @@
 library passwordfield;
 
 import 'package:flutter/material.dart';
-import 'package:passwordfield/password_bloc.dart';
+import 'package:passwordfield/src/password_bloc.dart';
 
 class PasswordWplanner extends StatefulWidget {
   const PasswordWplanner(
