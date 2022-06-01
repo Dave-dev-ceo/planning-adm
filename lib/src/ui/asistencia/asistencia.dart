@@ -49,6 +49,7 @@ class _AsistenciaState extends State<Asistencia> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.only(bottom: 30.0),
@@ -81,7 +82,7 @@ class _AsistenciaState extends State<Asistencia> {
                 );
               }
               if (copyItemFinal != null) {
-                return getAsistencia(copyItemFinal);
+                return getAsistencia(copyItemFinal, size);
               } else {
                 return const Center(child: Text('Sin datos'));
               }
@@ -112,7 +113,7 @@ class _AsistenciaState extends State<Asistencia> {
     }
   }
 
-  Widget getAsistencia(asistencia) {
+  Widget getAsistencia(asistencia, Size size) {
     return Center(
       child: RefreshIndicator(
         color: Colors.blue,
@@ -128,7 +129,7 @@ class _AsistenciaState extends State<Asistencia> {
                   padding: const EdgeInsets.symmetric(horizontal: 35.0),
                   alignment: Alignment.centerLeft,
                   child: _crearHeader(asistencia)),
-              content: _crearTabla(asistencia),
+              content: _crearTabla(asistencia, size),
             ),
           ],
         ),
@@ -136,7 +137,7 @@ class _AsistenciaState extends State<Asistencia> {
     );
   }
 
-  Widget _crearTabla(asistencia) {
+  Widget _crearTabla(asistencia, Size size) {
     return SizedBox(
       width: double.infinity,
       child: PaginatedDataTable(
@@ -147,7 +148,7 @@ class _AsistenciaState extends State<Asistencia> {
         rowsPerPage: asistencia.asistencias.length == 0
             ? 1
             : asistencia.asistencias.length,
-        dataRowHeight: 90.0,
+        dataRowHeight: size.width < 560 ? 130.0 : 100,
       ),
     );
   }
@@ -156,7 +157,7 @@ class _AsistenciaState extends State<Asistencia> {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -205,14 +206,22 @@ class _AsistenciaState extends State<Asistencia> {
                     title: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(
                           element.nombre,
                           style: _boldStyle,
                         ),
-                        Text('Grupo: ${element.grupo}'),
-                        Text('Mesa: ${element.mesa}'),
+                        Text(
+                          'Grupo: ${element.grupo}',
+                          style:
+                              const TextStyle(overflow: TextOverflow.ellipsis),
+                        ),
+                        Text(
+                          'Mesa: ${element.mesa}',
+                          style:
+                              const TextStyle(overflow: TextOverflow.ellipsis),
+                        ),
                       ],
                     ),
                     value: element.asistencia,
@@ -226,12 +235,14 @@ class _AsistenciaState extends State<Asistencia> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        element.nombre,
-                        style: _boldStyle,
+                      Expanded(
+                        child: Text(
+                          element.nombre,
+                          style: _boldStyle,
+                        ),
                       ),
-                      Text('Grupo: ${element.grupo}'),
-                      Text('Mesa: ${element.mesa}'),
+                      Expanded(child: Text('Grupo: ${element.grupo}')),
+                      Expanded(child: Text('Mesa: ${element.mesa}')),
                     ],
                   ),
           )
