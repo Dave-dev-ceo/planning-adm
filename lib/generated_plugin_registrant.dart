@@ -6,22 +6,26 @@
 // ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:device_info_plus_web/device_info_plus_web.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:flutter_keyboard_visibility_web/flutter_keyboard_visibility_web.dart';
+import 'package:flutter_native_splash/flutter_native_splash_web.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone_web.dart';
-import 'package:native_pdf_renderer/src/web/native_pdf_renderer_plugin.dart';
+import 'package:pdfx/src/renderer/web/pdfx_plugin.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
-import 'package:syncfusion_flutter_pdfviewer_web/pdfviewer_web.dart';
+import 'package:syncfusion_pdfviewer_web/pdfviewer_web.dart';
 import 'package:url_launcher_web/url_launcher_web.dart';
 
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 // ignore: public_member_api_docs
 void registerPlugins(Registrar registrar) {
+  DeviceInfoPlusPlugin.registerWith(registrar);
   FilePickerWeb.registerWith(registrar);
   FlutterKeyboardVisibilityPlugin.registerWith(registrar);
+  FlutterNativeSplashWeb.registerWith(registrar);
   FlutterNativeTimezonePlugin.registerWith(registrar);
-  NativePdfRendererPlugin.registerWith(registrar);
+  PdfxPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   SyncfusionFlutterPdfViewerPlugin.registerWith(registrar);
   UrlLauncherPlugin.registerWith(registrar);
