@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
 set(BINARY_NAME "Planning")
-set(APPLICATION_ID "mx.com.planning.wplanner")
+set(APPLICATION_ID "mx.com.planning.planner")
 
 cmake_policy(SET CMP0063 NEW)
 

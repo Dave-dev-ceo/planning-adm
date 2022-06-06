@@ -1,4 +1,4 @@
-package mx.com.planning.wplanneradm
+package mx.com.planning.planneradm
 
 import io.flutter.embedding.android.FlutterActivity
 

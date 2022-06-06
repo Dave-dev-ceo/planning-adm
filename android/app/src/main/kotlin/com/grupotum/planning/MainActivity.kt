@@ -1,4 +1,4 @@
-package mx.com.planning.wplanner
+package mx.com.planning.planner
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -623,7 +623,7 @@ class _DataSource extends DataTableSource {
                     title: Text('Se llamara al número $numero'),
                     trailing: const Icon(Icons.phone),
                     onTap: () async {
-                      launchUrl(Uri.parse('tel://$numero'));
+                      launch('tel://$numero');
                       Navigator.of(context).pop();
                     },
                   ),
@@ -638,7 +638,7 @@ class _DataSource extends DataTableSource {
                               color: Colors.green)),
                       trailing: const FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
-                        launchUrl(Uri.parse('http://wa.me/521' + numero));
+                        launch('http://wa.me/521');
                       }),
                 )
               ],
