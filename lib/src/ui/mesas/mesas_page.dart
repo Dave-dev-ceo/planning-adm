@@ -143,68 +143,96 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget _buttonUpdateLayout() {
-    return SpeedDial(
-      activeForegroundColor: Colors.blueGrey,
-      icon: Icons.more_vert,
-      activeIcon: Icons.close,
-      activeLabel: const Text('Cerrar'),
-      animatedIconTheme: const IconThemeData(size: 22.0),
-      curve: Curves.bounceIn,
-      tooltip: 'Opciones',
-      elevation: 8.0,
-      shape: const CircleBorder(),
-      children: [
-        SpeedDialChild(
-          child: const Icon(Icons.add),
-          label: 'Añadir mesa',
-          onTap: () {
-            Navigator.of(context)
-                .pushNamed('/asignarMesas', arguments: lastNumMesa ?? 0)
-                .then((value) => {
-                      lastNumMesa = value ?? 0,
-                    });
-          },
-        ),
-        SpeedDialChild(
-          child: const Icon(Icons.upload),
-          label: 'Subir archivo',
-          onTap: () async {
-            const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
+    return FloatingActionButton(
+      onPressed: () async {
+        const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
-            FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
-              type: FileType.custom,
-              withData: true,
-              allowedExtensions: extensiones,
-              allowMultiple: false,
-            );
+        FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          withData: true,
+          allowedExtensions: extensiones,
+          allowMultiple: false,
+        );
 
-            if (pickedFile != null) {
-              final bytes = pickedFile.files.first.bytes;
-              String _extension = pickedFile.files.first.extension;
+        if (pickedFile != null) {
+          final bytes = pickedFile.files.first.bytes;
+          String _extension = pickedFile.files.first.extension;
 
-              String file64 = base64Encode(bytes);
+          String file64 = base64Encode(bytes);
 
-              mesasLogic.createLayout(file64, _extension).then((value) => {
-                    if (value == 'Ok')
-                      {
-                        MostrarAlerta(
-                            mensaje: 'Se subio correctamente el layout',
-                            tipoMensaje: TipoMensaje.correcto)
-                      }
-                    else
-                      {
-                        MostrarAlerta(
-                            mensaje: value, tipoMensaje: TipoMensaje.error)
-                      },
-                    setState(() {
-                      layoutMesaFuture = mesasAsignadasService.getLayoutMesa();
-                    }),
-                  });
-            } else {}
-          },
-        ),
-      ],
+          mesasLogic.createLayout(file64, _extension).then((value) => {
+                if (value == 'Ok')
+                  {
+                    MostrarAlerta(
+                        mensaje: 'Se subio correctamente el layout',
+                        tipoMensaje: TipoMensaje.correcto)
+                  }
+                else
+                  {
+                    MostrarAlerta(
+                        mensaje: value, tipoMensaje: TipoMensaje.error)
+                  },
+                setState(() {
+                  layoutMesaFuture = mesasAsignadasService.getLayoutMesa();
+                }),
+              });
+        } else {}
+      },
+      child: const Icon(Icons.upload),
+      tooltip: 'Subir archivo',
     );
+
+    // return SpeedDial(
+    //   activeForegroundColor: Colors.blueGrey,
+    //   icon: Icons.more_vert,
+    //   activeIcon: Icons.close,
+    //   activeLabel: const Text('Cerrar'),
+    //   animatedIconTheme: const IconThemeData(size: 22.0),
+    //   curve: Curves.bounceIn,
+    //   tooltip: 'Opciones',
+    //   elevation: 8.0,
+    //   shape: const CircleBorder(),
+    //   children: [
+    //     SpeedDialChild(
+    //       child: const Icon(Icons.upload),
+    //       label: 'Subir archivo',
+    //       onTap: () async {
+    //         const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
+
+    //         FilePickerResult pickedFile = await FilePicker.platform.pickFiles(
+    //           type: FileType.custom,
+    //           withData: true,
+    //           allowedExtensions: extensiones,
+    //           allowMultiple: false,
+    //         );
+
+    //         if (pickedFile != null) {
+    //           final bytes = pickedFile.files.first.bytes;
+    //           String _extension = pickedFile.files.first.extension;
+
+    //           String file64 = base64Encode(bytes);
+
+    //           mesasLogic.createLayout(file64, _extension).then((value) => {
+    //                 if (value == 'Ok')
+    //                   {
+    //                     MostrarAlerta(
+    //                         mensaje: 'Se subio correctamente el layout',
+    //                         tipoMensaje: TipoMensaje.correcto)
+    //                   }
+    //                 else
+    //                   {
+    //                     MostrarAlerta(
+    //                         mensaje: value, tipoMensaje: TipoMensaje.error)
+    //                   },
+    //                 setState(() {
+    //                   layoutMesaFuture = mesasAsignadasService.getLayoutMesa();
+    //                 }),
+    //               });
+    //         } else {}
+    //       },
+    //     ),
+    //   ],
+    // );
   }
 
   Widget _expandableButtonOptions() {

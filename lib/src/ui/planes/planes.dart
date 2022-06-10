@@ -896,7 +896,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
           )
         ],
       ),
-      subtitle: Text(actividad.descripcionActividad),
+      subtitle: Text(actividad.descripcionActividad ?? ''),
     );
   }
 

@@ -211,17 +211,17 @@ class _TimingState extends State<Timing> {
             padding: EdgeInsets.all(8.0),
             child: Text('Cronograma'),
           ),
-          SwitchListTile(
-            value: switchValue,
-            title: Text(switchValue ? 'Todos' : 'Activos'),
-            onChanged: (valor) {
-              setState(() {
-                switchValue = valor;
-                dropdownValue = switchValue ? 'I' : 'A';
-                timingBloc.add(FetchTimingsPorPlannerEvent(dropdownValue));
-              });
-            },
-          ),
+          // SwitchListTile(
+          //   value: switchValue,
+          //   title: Text(switchValue ? 'Todos' : 'Activos'),
+          //   onChanged: (valor) {
+          //     setState(() {
+          //       switchValue = valor;
+          //       dropdownValue = switchValue ? 'I' : 'A';
+          //       timingBloc.add(FetchTimingsPorPlannerEvent(dropdownValue));
+          //     });
+          //   },
+          // ),
           // Padding(
           //   padding: const EdgeInsets.all(20.0),
           //   child: DropdownButton<String>(
