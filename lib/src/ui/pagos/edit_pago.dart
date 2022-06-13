@@ -157,7 +157,9 @@ class _FormEditPagoState extends State<FormEditPago> {
             controller: TextEditingController(text: '${itemPago['precio']}'),
             decoration: const InputDecoration(hintText: 'Precio Unitario:'),
             keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+            ],
             onChanged: (valor) {
               itemPago['precio'] = valor;
             },

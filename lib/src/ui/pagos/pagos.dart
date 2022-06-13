@@ -437,9 +437,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             child: LoadingCustom(),
           );
         } else if (state is PagosSelect) {
-          int totalsaldopresupuesto = 0;
-          int totalpagos = 0;
-          int totalpresupuestos = 0;
+          double totalsaldopresupuesto = 0;
+          double totalpagos = 0;
+          double totalpresupuestos = 0;
           if (state.pagos != null && state.pagos.pagos.isNotEmpty ||
               state.listaPagos != null && state.listaPagos.isNotEmpty) {
             isPressed = true;
@@ -451,7 +451,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
 
             for (var pago in state.listaPagos) {
               if (tipoPage == pago.tipoPresupuesto) {
-                totalpagos += pago.pago.toInt();
+                totalpagos += pago.pago;
               }
             }
 
@@ -552,8 +552,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     );
   }
 
-  _stickyHeader(itemPago, String tipoPage, int totalsaldopresupuesto,
-      int totalpagos, int totalpresupuestos) {
+  _stickyHeader(itemPago, String tipoPage, double totalsaldopresupuesto,
+      double totalpagos, double totalpresupuestos) {
     return Center(
       child: ListView(
         shrinkWrap: true,
@@ -567,7 +567,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     );
   }
 
-  _getHeader(int totalsaldopresupuesto, int totalpagos, int totalpresupuestos) {
+  _getHeader(double totalsaldopresupuesto, double totalpagos,
+      double totalpresupuestos) {
     return Container(
         height: size.width > 500 ? 100.0 : 120.0,
         color: Colors.white,
@@ -577,8 +578,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
             _crearHeader(totalsaldopresupuesto, totalpagos, totalpresupuestos));
   }
 
-  _crearHeader(
-      int totalsaldopresupuesto, int totalpagos, int totalpresupuestos) {
+  _crearHeader(double totalsaldopresupuesto, double totalpagos,
+      double totalpresupuestos) {
     if (size.width > 500) {
       return Padding(
         padding: const EdgeInsets.all(16.0),

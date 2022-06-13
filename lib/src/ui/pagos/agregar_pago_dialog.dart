@@ -21,7 +21,7 @@ class AgregarPagoDialog extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AgregarPagoDialogState createState() => _AgregarPagoDialogState();
+  State<AgregarPagoDialog> createState() => _AgregarPagoDialogState();
 }
 
 class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
@@ -154,7 +154,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
                                 : '',
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  RegExp('[0-9.]'))
+                                  RegExp(r'^(\d+)?\.?\d{0,2}'))
                             ],
                             autofocus: true,
                             focusNode: _conceptoNode,
