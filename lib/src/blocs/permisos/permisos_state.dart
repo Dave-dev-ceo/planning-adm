@@ -27,3 +27,12 @@ class ErrorTokenPermisos extends PermisosState {
 
   List<Object> get props => [message];
 }
+
+//Suscripción en Paypal cancelada
+class ErrorSuscripcionPaypal extends PermisosState {
+  final String message;
+
+  ErrorSuscripcionPaypal(this.message);
+
+  get props => message;
+}

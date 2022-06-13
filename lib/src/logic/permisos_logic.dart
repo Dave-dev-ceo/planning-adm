@@ -14,6 +14,8 @@ class PermisosException implements Exception {}
 
 class TokenPermisosException implements Exception {}
 
+class PaypalSubscriptionException implements Exception {}
+
 class PerfiladoLogic implements PermisosLogic {
   final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
@@ -41,6 +43,8 @@ class PerfiladoLogic implements PermisosLogic {
       ItemModelPantallas pantallas =
           ItemModelPantallas.fromJson(data['pantallas']);
       return ItemModelPerfil(secciones, pantallas);
+    } else if (response.statusCode == 400) {
+      throw PaypalSubscriptionException();
     } else if (response.statusCode == 401) {
       throw TokenPermisosException();
     } else {

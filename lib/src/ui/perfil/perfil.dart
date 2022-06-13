@@ -70,71 +70,65 @@ class _PerfilState extends State<Perfil> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        _checkSession();
-        return true;
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Perfil del usuario'),
-          ),
-          body: BlocBuilder<PerfilBloc, PerfilState>(
-            builder: (context, state) {
-              if (state is PerfilInitial) {
-                return const Center(
-                  child: LoadingCustom(),
-                );
-              } else if (state is PerfilLogging) {
-                return const Center(
-                  child: LoadingCustom(),
-                );
-              } else if (state is PerfilSelect) {
-                if (state.perfil != null) {
-                  if (item != state.perfil) {
-                    item = state.perfil;
-                    if (item != null) {
-                      perfil = _Perfil(
-                        names: state.perfil.perfil[0].nombreCompleto,
-                        phone: state.perfil.perfil[0].telefono,
-                        email: state.perfil.perfil[0].correo,
-                        clave: '',
-                        repit: '',
-                        image: state.perfil.perfil[0].imagen,
-                      );
-                    }
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Perfil del usuario'),
+        ),
+        body: BlocBuilder<PerfilBloc, PerfilState>(
+          builder: (context, state) {
+            if (state is PerfilInitial) {
+              return const Center(
+                child: LoadingCustom(),
+              );
+            } else if (state is PerfilLogging) {
+              return const Center(
+                child: LoadingCustom(),
+              );
+            } else if (state is PerfilSelect) {
+              if (state.perfil != null) {
+                if (item != state.perfil) {
+                  item = state.perfil;
+                  if (item != null) {
+                    perfil = _Perfil(
+                      names: state.perfil.perfil[0].nombreCompleto,
+                      phone: state.perfil.perfil[0].telefono,
+                      email: state.perfil.perfil[0].correo,
+                      clave: '',
+                      repit: '',
+                      image: state.perfil.perfil[0].imagen,
+                    );
                   }
-                } else {
-                  perfilBloc.add(SelectPerfilEvent());
-                  return const Center(child: LoadingCustom());
                 }
-                if (perfil != null) {
-                  return _showPerfil();
-                } else {
-                  return const Center(child: Text('Sin datos'));
-                }
-              } else if (state is PerfilUpdate) {
-                if (state.perfil.perfil != null) {
-                  perfil = _Perfil(
-                    names: state.perfil.perfil[0].nombreCompleto,
-                    phone: state.perfil.perfil[0].telefono,
-                    email: state.perfil.perfil[0].correo,
-                    clave: '',
-                    repit: '',
-                    image: state.perfil.perfil[0].imagen,
-                  );
-                }
+              } else {
+                perfilBloc.add(SelectPerfilEvent());
+                return const Center(child: LoadingCustom());
+              }
+              if (perfil != null) {
                 return _showPerfil();
               } else {
-                return const Center(
-                  child: LoadingCustom(),
+                return const Center(child: Text('Sin datos'));
+              }
+            } else if (state is PerfilUpdate) {
+              if (state.perfil.perfil != null) {
+                perfil = _Perfil(
+                  names: state.perfil.perfil[0].nombreCompleto,
+                  phone: state.perfil.perfil[0].telefono,
+                  email: state.perfil.perfil[0].correo,
+                  clave: '',
+                  repit: '',
+                  image: state.perfil.perfil[0].imagen,
                 );
               }
-            },
-          )
-          //_showPerfil(),
-          ),
-    );
+              return _showPerfil();
+            } else {
+              return const Center(
+                child: LoadingCustom(),
+              );
+            }
+          },
+        )
+        //_showPerfil(),
+        );
   }
 
   _showPerfil() {
