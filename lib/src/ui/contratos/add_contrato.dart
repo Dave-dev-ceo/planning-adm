@@ -12,7 +12,7 @@ class AddMachote extends StatefulWidget {
   const AddMachote({Key key, @required this.map}) : super(key: key);
 
   @override
-  _AddMachoteState createState() => _AddMachoteState();
+  State<AddMachote> createState() => _AddMachoteState();
 }
 
 class _AddMachoteState extends State<AddMachote> {

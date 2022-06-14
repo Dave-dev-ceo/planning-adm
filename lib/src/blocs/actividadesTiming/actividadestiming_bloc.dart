@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:planning/src/logic/actividades_timing_logic.dart';
 import 'package:planning/src/models/Planes/planes_model.dart';

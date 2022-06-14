@@ -24,7 +24,7 @@ class BackendLoginLogic implements LoginLogic {
   @override
   Future<Map<dynamic, dynamic>> login(String correo, String password) async {
     final response = await client.post(
-        Uri.parse(confiC.url + confiC.puerto + "/wedding/ACCESO/loginPlanner"),
+        Uri.parse("${confiC.url}${confiC.puerto}/wedding/ACCESO/loginPlanner"),
         body: {"correo": correo, "contrasena": password});
     if (response.statusCode == 200) {
       Map<dynamic, dynamic> data = json.decode(response.body);

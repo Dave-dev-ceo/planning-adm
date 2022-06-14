@@ -30,9 +30,8 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await http.get(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/MACHOTES/obtenerMachotes/$idPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/MACHOTES/obtenerMachotes/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
@@ -55,7 +54,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
     data['id_usuario'] = idUsuario.toString();
     final response = await http.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/MACHOTES/updateMachotes'),
+            '${confiC.url}${confiC.puerto}/wedding/MACHOTES/updateMachotes'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -79,7 +78,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
     data['id_usuario'] = idUsuario.toString();
     final response = await http.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/MACHOTES/createMachotes'),
+            '${confiC.url}${confiC.puerto}/wedding/MACHOTES/createMachotes'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -109,7 +108,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
     };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: json.encode(data),
         headers: headers);
 
@@ -135,7 +134,7 @@ class FetchListaMachotesLogic extends ListaMachotesLogic {
     };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: json.encode(data),
         headers: headers);
 

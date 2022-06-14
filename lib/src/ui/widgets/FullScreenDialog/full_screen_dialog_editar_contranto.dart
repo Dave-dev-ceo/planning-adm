@@ -38,8 +38,7 @@ class _FullScreenDialogEditContratoState
     etiquetasBloc = BlocProvider.of<EtiquetasBloc>(context);
     etiquetasBloc.add(FechtEtiquetasEvent());
     contratosBlocDos = BlocProvider.of<ContratosDosBloc>(context);
-    contratosBlocDos
-        .add(FectValContratoEvent(data['id_contrato'].toString()));
+    contratosBlocDos.add(FectValContratoEvent(data['id_contrato'].toString()));
 
     super.initState();
   }
@@ -135,7 +134,9 @@ class _FullScreenDialogEditContratoState
                 'archivo': editArchivo
               };
               contratosBlocDos.add(UpdateValContratoEvent(dataJson));
-              Navigator.of(context).pop();
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
               MostrarAlerta(
                   mensaje: 'El contrato se actualizó correctamente.',
                   tipoMensaje: TipoMensaje.correcto);

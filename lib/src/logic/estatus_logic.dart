@@ -28,9 +28,8 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ESTATUS/obtenerEstatus/$idPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ESTATUS/obtenerEstatus/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
@@ -58,7 +57,7 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(
-              confiC.url + confiC.puerto + '/wedding/ESTATUS/updateEstatus'),
+              '${confiC.url}${confiC.puerto}/wedding/ESTATUS/updateEstatus'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
 
@@ -86,7 +85,7 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(
-              confiC.url + confiC.puerto + '/wedding/ESTATUS/createEstatus'),
+              '${confiC.url}${confiC.puerto}/wedding/ESTATUS/createEstatus'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
 
@@ -115,7 +114,7 @@ class FetchListaEstatusLogic extends ListaEstatusLogic {
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(
-              confiC.url + confiC.puerto + '/wedding/ESTATUS/deleteEstatus'),
+              '${confiC.url}${confiC.puerto}/wedding/ESTATUS/deleteEstatus'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
 

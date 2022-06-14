@@ -27,9 +27,8 @@ class FetchListaEtiquetasLogic extends ListaEtiquetasLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ETIQUETAS/obtenerEtiquetas/$idPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ETIQUETAS/obtenerEtiquetas/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {

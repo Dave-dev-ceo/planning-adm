@@ -37,7 +37,7 @@ class FetchProveedoresLogic extends LogicProveedores {
       int idUsuario = await _sharedPreferences.getIdUsuario();
       String token = await _sharedPreferences.getToken();
       List listaTest = data['servicios'];
-      final _data = {
+      final data2 = {
         'nombre': data['nombre'],
         'descripcion': data['descripcion'],
         'idCiudad': data['idCiudad'],
@@ -47,10 +47,9 @@ class FetchProveedoresLogic extends LogicProveedores {
         'servicios': listaTest,
       };
       final response = await client.post(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/PROVEEDORES/insertProveedores'),
-          body: jsonEncode(_data),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/PROVEEDORES/insertProveedores'),
+          body: jsonEncode(data2),
           headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json',
@@ -74,9 +73,8 @@ class FetchProveedoresLogic extends LogicProveedores {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/PROVEEDORES/obtenerProveedores/$idPlanner'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/PROVEEDORES/obtenerProveedores/$idPlanner'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -101,9 +99,8 @@ class FetchProveedoresLogic extends LogicProveedores {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/PROVEEDORES/obtenerServicioByProv/$idPlanner'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/PROVEEDORES/obtenerServicioByProv/$idPlanner'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -127,9 +124,8 @@ class FetchProveedoresLogic extends LogicProveedores {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
-        Uri.parse(configC.url +
-            configC.puerto +
-            '/wedding/PROVEEDORES/deleteServicioProv'),
+        Uri.parse(
+            '${configC.url}${configC.puerto}/wedding/PROVEEDORES/deleteServicioProv'),
         body: {
           "id_servicio": idServcio.toString(),
           'id_planner': idPlanner.toString(),
@@ -259,9 +255,8 @@ class FetchProveedoresLogic extends LogicProveedores {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
-        Uri.parse(configC.url +
-            configC.puerto +
-            '/wedding/PROVEEDORES/insertServicioProv'),
+        Uri.parse(
+            '${configC.url}${configC.puerto}/wedding/PROVEEDORES/insertServicioProv'),
         body: {
           "id_servicio": idServcio.toString(),
           'id_planner': idPlanner.toString(),

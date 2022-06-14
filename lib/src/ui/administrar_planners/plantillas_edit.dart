@@ -70,7 +70,9 @@ class _PlantillaEditPageState extends State<PlantillaEditPage> {
                   mensaje: 'Se ha editado correctamente la plantilla',
                   tipoMensaje: TipoMensaje.correcto);
 
-              Navigator.of(context, rootNavigator: true).pop();
+              if (mounted) {
+                Navigator.of(context, rootNavigator: true).pop();
+              }
             } else {
               MostrarAlerta(
                   mensaje:

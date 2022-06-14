@@ -37,9 +37,8 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
         checkInvolucrado = '0';
       }
       final response = await client.get(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/PROVEEDORES/obtenerProveedoresEvento/$idPlanner/$checkInvolucrado'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/PROVEEDORES/obtenerProveedoresEvento/$idPlanner/$checkInvolucrado'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -74,9 +73,8 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
       data['modificado_por'] = idUsuario.toString();
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/PROVEEDORES/insertProveedoresEvento'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/PROVEEDORES/insertProveedoresEvento'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
@@ -103,9 +101,8 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
 
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/PROVEEDORES/deleteProveedoresEvento'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/PROVEEDORES/deleteProveedoresEvento'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
@@ -131,9 +128,8 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
     data['id_evento'] = idEvento.toString();
 
     final response = await client.post(
-        Uri.parse(configC.url +
-            configC.puerto +
-            '/wedding/PROVEEDORES/updateProveedorEvento'),
+        Uri.parse(
+            '${configC.url}${configC.puerto}/wedding/PROVEEDORES/updateProveedorEvento'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 

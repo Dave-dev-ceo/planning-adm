@@ -23,7 +23,7 @@ class AgregarContratoMobile extends StatefulWidget {
       );
 
   @override
-  _AgregarContratoMobileState createState() => _AgregarContratoMobileState();
+  State<AgregarContratoMobile> createState() => _AgregarContratoMobileState();
 }
 
 class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
@@ -61,8 +61,7 @@ class _AgregarContratoMobileState extends State<AgregarContratoMobile> {
     //Download the output file
     Uint8List bytes = base64.decode(contrato);
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File(
-        "$dir/" + DateTime.now().millisecondsSinceEpoch.toString() + ".pdf");
+    File file = File("$dir/${DateTime.now().millisecondsSinceEpoch}.pdf");
     await file.writeAsBytes(bytes);
     final message = await OpenFile.open(file.path);
   }

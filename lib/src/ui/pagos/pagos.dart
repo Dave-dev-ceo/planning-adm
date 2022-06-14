@@ -836,11 +836,12 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
     List<List<DataCell>> pagosList = [];
     if (itemPago.pagos.isNotEmpty) {
       isPressed = true;
-      var total = 0;
-      var saldo = 0;
+      double total = 0.0;
+      double saldo = 0.0;
       for (var element in itemPago.pagos) {
         total += element.total;
         saldo += element.saldo;
+
         String precioUnitario = f.format(element.precioUnitario);
 
         List<DataCell> pagosListTemp = [

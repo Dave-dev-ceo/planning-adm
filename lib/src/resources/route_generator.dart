@@ -220,18 +220,18 @@ class RouteGenerator {
 }
 
 Future<Widget> checkSession() async {
-  final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+  final SharedPreferencesT sharedPreferences = SharedPreferencesT();
 
-  bool sesion = await _sharedPreferences.getSession();
-  int involucrado = await _sharedPreferences.getIdInvolucrado();
-  int idEvento = await _sharedPreferences.getIdEvento();
-  String titulo = await _sharedPreferences.getEventoNombre();
-  String nombreUser = await _sharedPreferences.getNombre();
-  String image = await _sharedPreferences.getImagen();
-  String portada = await _sharedPreferences.getPortada();
-  String fechaEvento = await _sharedPreferences.getFechaEvento();
+  bool sesion = await sharedPreferences.getSession();
+  int involucrado = await sharedPreferences.getIdInvolucrado();
+  int idEvento = await sharedPreferences.getIdEvento();
+  String titulo = await sharedPreferences.getEventoNombre();
+  String nombreUser = await sharedPreferences.getNombre();
+  String image = await sharedPreferences.getImagen();
+  String portada = await sharedPreferences.getPortada();
+  String fechaEvento = await sharedPreferences.getFechaEvento();
 
-  Map data = {'name': await _sharedPreferences.getNombre(), 'imag': image};
+  Map data = {'name': await sharedPreferences.getNombre(), 'imag': image};
 
   if (sesion) {
     if (involucrado == null) {

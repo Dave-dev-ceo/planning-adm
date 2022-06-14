@@ -36,9 +36,8 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/LISTAS/obtenerDetallesListaPorPlanner/$idPlanner/$idLista'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/LISTAS/obtenerDetallesListaPorPlanner/$idPlanner/$idLista'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -75,9 +74,8 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
       data['modificado_por'] = idUsuario.toString();
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/LISTAS/insertDetalleLista'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/LISTAS/insertDetalleLista'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
@@ -97,9 +95,8 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
     int idplanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
-        Uri.parse(configC.url +
-            configC.puerto +
-            '/wedding/LISTAS/deleteDetalleLista'),
+        Uri.parse(
+            '${configC.url}${configC.puerto}/wedding/LISTAS/deleteDetalleLista'),
         body: {
           "id_detalle_lista": idDetalleLista.toString(),
           'id_planner': idplanner.toString()
@@ -134,9 +131,8 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
       data['modificado_por'] = idUsuario.toString();
       String token = await _sharedPreferences.getToken();
       final response = await client.put(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/LISTAS/editarDetalleLista'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/LISTAS/editarDetalleLista'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
@@ -165,7 +161,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(
-              configC.url + configC.puerto + '/wedding/LISTAS/insertLista'),
+              '${configC.url}${configC.puerto}/wedding/LISTAS/insertLista'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
@@ -194,7 +190,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
       String token = await _sharedPreferences.getToken();
       final response = await client.put(
           Uri.parse(
-              configC.url + configC.puerto + '/wedding/LISTAS/updateLista'),
+              '${configC.url}${configC.puerto}/wedding/LISTAS/updateLista'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {

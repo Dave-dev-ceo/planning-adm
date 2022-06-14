@@ -10,7 +10,7 @@ class Contratos extends StatefulWidget {
   const Contratos({Key key}) : super(key: key);
 
   @override
-  _ContratosState createState() => _ContratosState();
+  State<Contratos> createState() => _ContratosState();
 }
 
 class _ContratosState extends State<Contratos> {

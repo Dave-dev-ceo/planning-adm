@@ -18,13 +18,13 @@ class TextFormFields extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: SizedBox(
+        width: large,
+        height: ancho,
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 10,
             child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
       ),
     );
   }

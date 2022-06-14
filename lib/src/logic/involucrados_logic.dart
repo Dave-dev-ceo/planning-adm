@@ -27,9 +27,8 @@ class ConsultasInvolucradosLogic extends Involucrados {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/INVOLUCRADOS/obtenerInvolucrados'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/INVOLUCRADOS/obtenerInvolucrados'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -59,9 +58,8 @@ class ConsultasInvolucradosLogic extends Involucrados {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/INVOLUCRADOS/insertInvolucrados'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/INVOLUCRADOS/insertInvolucrados'),
         body: {
           'id_evento': idEvento.toString(),
           'id_planner': idPlanner.toString(),

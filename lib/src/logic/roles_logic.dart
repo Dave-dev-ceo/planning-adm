@@ -33,9 +33,8 @@ class RolesPlannerLogic implements RolesLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ROLES/obtenerRolesPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ROLES/obtenerRolesPorPlanner'),
         body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -58,7 +57,7 @@ class RolesPlannerLogic implements RolesLogic {
 
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ROLES/obtenerRolesSelect'),
+            '${confiC.url}${confiC.puerto}/wedding/ROLES/obtenerRolesSelect'),
         body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -107,7 +106,7 @@ class RolCrud extends RolLogic {
 
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ROLES/crearRolPlanner'),
+            '${confiC.url}${confiC.puerto}/wedding/ROLES/crearRolPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_usuario': idUsuario.toString(),
@@ -137,7 +136,7 @@ class RolCrud extends RolLogic {
 
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ROLES/editarRolPlanner'),
+            '${confiC.url}${confiC.puerto}/wedding/ROLES/editarRolPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_usuario': idUsuario.toString(),
@@ -164,7 +163,7 @@ class RolCrud extends RolLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/ROLES/eliminarRol'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/ROLES/eliminarRol'),
         body: {'id_rol': idRol.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -203,7 +202,7 @@ class FormRolLogic implements RolFormLogic {
 
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ROLES/obtenerRolesForm'),
+            '${confiC.url}${confiC.puerto}/wedding/ROLES/obtenerRolesForm'),
         body: {'id_planner': idPlanner.toString(), 'id_rol': idRol.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 

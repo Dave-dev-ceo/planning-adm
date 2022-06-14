@@ -20,7 +20,7 @@ class AgregarEvento extends StatefulWidget {
       );
 
   @override
-  _AgregarEventoState createState() => _AgregarEventoState();
+  State<AgregarEvento> createState() => _AgregarEventoState();
 }
 
 class _AgregarEventoState extends State<AgregarEvento> {
@@ -174,13 +174,13 @@ class _AgregarEventoState extends State<AgregarEvento> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: SizedBox(
+        width: large,
+        height: ancho,
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 10,
             child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
       ),
     );
   }

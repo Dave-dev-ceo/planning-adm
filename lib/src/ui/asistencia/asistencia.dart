@@ -19,7 +19,7 @@ class Asistencia extends StatefulWidget {
   const Asistencia({Key key}) : super(key: key);
 
   @override
-  _AsistenciaState createState() => _AsistenciaState();
+  State<Asistencia> createState() => _AsistenciaState();
 }
 
 class _AsistenciaState extends State<Asistencia> {
@@ -106,9 +106,9 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   void getIdInvolucrado() async {
-    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
-    if (_idInvolucrado != null) {
+    if (idInvolucrado != null) {
       isInvolucrado = true;
     }
   }

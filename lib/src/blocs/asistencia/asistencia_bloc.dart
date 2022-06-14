@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:planning/src/logic/asistencia_logic.dart';
 import 'package:planning/src/models/item_model_asistencia.dart';
@@ -30,8 +30,7 @@ class AsistenciaBloc extends Bloc<AsistenciaEvent, AsistenciaState> {
     }
     // mejorar
     else if (event is SaveAsistenciaEvent) {
-      
-          await logic.saveAsistencia(event.idInvitado, event.asistencia);
+      await logic.saveAsistencia(event.idInvitado, event.asistencia);
       // yield SavedAsistenciaState(response);
       ItemModelAsistencia usuarios = await logic.fetchAsistenciaPorPlanner();
       yield MostrarAsistenciaState(usuarios);

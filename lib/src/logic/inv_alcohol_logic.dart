@@ -29,9 +29,8 @@ class FetchListaInventarioAlcoholLogic extends ListaInventarioAlcoholLogic {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     final response = await client.get(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/InventarioAlcohol/obtenerInventarioAlcohol/$idPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/InventarioAlcohol/obtenerInventarioAlcohol/$idPlanner'),
         headers: {HttpHeaders.authorizationHeader: token});
 
     if (response.statusCode == 200) {
@@ -53,9 +52,8 @@ class FetchListaInventarioAlcoholLogic extends ListaInventarioAlcoholLogic {
     data['id_planner'] = idPlanner.toString();
     data['id_usuario'] = idUsuario.toString();
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/InventarioAlcohol/updateInventarioAlcohol'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/InventarioAlcohol/updateInventarioAlcohol'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -78,9 +76,8 @@ class FetchListaInventarioAlcoholLogic extends ListaInventarioAlcoholLogic {
     data['id_planner'] = idPlanner.toString();
     String token = await _sharedPreferences.getToken();
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/InventarioAlcohol/createInventarioAlcohol'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/InventarioAlcohol/createInventarioAlcohol'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 

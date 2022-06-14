@@ -16,9 +16,8 @@ class FetchListaTiposEventosLogic extends ListaTiposEventosLogic {
 
   @override
   Future<ItemModelTipoEvento> fetchTiposEventos() async {
-    final response = await client.get(Uri.parse(confiC.url +
-        confiC.puerto +
-        '/wedding/TIPOSEVENTOS/obtenerTiposEventos'));
+    final response = await client.get(Uri.parse(
+        '${confiC.url}${confiC.puerto}/wedding/TIPOSEVENTOS/obtenerTiposEventos'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);

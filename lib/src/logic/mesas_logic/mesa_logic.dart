@@ -33,7 +33,7 @@ class ServiceMesasLogic extends MesasLogic {
     String token = await _sharedPreferences.getToken();
     const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
     final response = await http
-        .post(Uri.parse(confiC.url + confiC.puerto + '/' + endpoint), body: {
+        .post(Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'), body: {
       'idEvento': idEvento.toString(),
       'idPlanner': idPlanner.toString(),
       'idUsuario': idUsuario.toString()
@@ -67,7 +67,7 @@ class ServiceMesasLogic extends MesasLogic {
     };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: jsonEncode(data),
         headers: {
           'Content-type': 'application/json',
@@ -101,7 +101,7 @@ class ServiceMesasLogic extends MesasLogic {
     };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: json.encode(data),
         headers: headers);
 
@@ -135,7 +135,7 @@ class ServiceMesasLogic extends MesasLogic {
     };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: json.encode(data),
         headers: headers);
 
@@ -166,7 +166,7 @@ class ServiceMesasLogic extends MesasLogic {
     };
 
     final response = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );
@@ -197,7 +197,7 @@ class ServiceMesasLogic extends MesasLogic {
     };
 
     final response = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );

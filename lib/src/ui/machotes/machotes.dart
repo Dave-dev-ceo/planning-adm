@@ -387,7 +387,7 @@ class _MachotesState extends State<Machotes> {
             label: 'Recibos',
           ),
           BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.moneyCheckAlt),
+            icon: FaIcon(FontAwesomeIcons.moneyCheckDollar),
             label: 'Pagos',
           ),
           BottomNavigationBarItem(

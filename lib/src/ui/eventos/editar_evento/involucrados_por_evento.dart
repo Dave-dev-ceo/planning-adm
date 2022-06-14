@@ -9,7 +9,7 @@ class InvolucradosPorEvento extends StatefulWidget {
   const InvolucradosPorEvento({Key key}) : super(key: key);
 
   @override
-  _InvolucradosPorEventoState createState() => _InvolucradosPorEventoState();
+  State<InvolucradosPorEvento> createState() => _InvolucradosPorEventoState();
 }
 
 class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
@@ -75,9 +75,9 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
   }
 
   void getIdInvolucrado() async {
-    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
-    if (_idInvolucrado != null) {
+    if (idInvolucrado != null) {
       isInvolucrado = true;
     }
   }
@@ -145,13 +145,13 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: SizedBox(
+        width: large,
+        height: ancho,
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 10,
             child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
       ),
     );
   }

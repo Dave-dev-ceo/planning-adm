@@ -55,7 +55,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
     // pedido al servidor
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/PLANES/selectPlanesPlanner'),
+            '${confiC.url}${confiC.puerto}/wedding/PLANES/selectPlanesPlanner'),
         body: {
           'id_evento': idEvento.toString(),
           'id_planner': idPlanner.toString()
@@ -102,9 +102,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
       // validamos que no se repita
       if (!tarea.isEvento) {
         final response = await client.post(
-            Uri.parse(confiC.url +
-                confiC.puerto +
-                '/wedding/PLANES/crearTareasEventoLista'),
+            Uri.parse(
+                '${confiC.url}${confiC.puerto}/wedding/PLANES/crearTareasEventoLista'),
             body: {
               'id_evento': idEvento.toString(),
               'id_planner': idPlanner.toString(),
@@ -121,9 +120,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
         Future.forEach(tarea.actividadTareaPlanner,
             (ActividadPlanner actividad) async {
           await client.post(
-              Uri.parse(confiC.url +
-                  confiC.puerto +
-                  '/wedding/PLANES/crearActividadesEventoLista'),
+              Uri.parse(
+                  '${confiC.url}${confiC.puerto}/wedding/PLANES/crearActividadesEventoLista'),
               body: {
                 'id_evento': idEvento.toString(),
                 'id_planner': idPlanner.toString(),
@@ -148,9 +146,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
             (ActividadPlanner actividad) async {
           if (!actividad.isEvento) {
             await client.post(
-                Uri.parse(confiC.url +
-                    confiC.puerto +
-                    '/wedding/PLANES/crearActividadesEventoLista'),
+                Uri.parse(
+                    '${confiC.url}${confiC.puerto}/wedding/PLANES/crearActividadesEventoLista'),
                 body: {
                   'id_evento': idEvento.toString(),
                   'id_planner': idPlanner.toString(),
@@ -191,7 +188,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
     // pedido al servidor
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/PLANES/selectPlanesEvento'),
+            '${confiC.url}${confiC.puerto}/wedding/PLANES/selectPlanesEvento'),
         body: {
           'condicion': myQuery,
           'id_evento': idEvento.toString(),
@@ -239,9 +236,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
     // enviamos
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/PLANES/crearActividadesEventoLista'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/PLANES/crearActividadesEventoLista'),
         body: actividadEvento,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -280,9 +276,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
           listaPlanner,
           (actividad) async => {
                 await client.post(
-                    Uri.parse(confiC.url +
-                        confiC.puerto +
-                        '/wedding/PLANES/updateActividadEvento'),
+                    Uri.parse(
+                        '${confiC.url}${confiC.puerto}/wedding/PLANES/updateActividadEvento'),
                     body: {
                       'id_planner': idPlanner.toString(),
                       'id_usuario': idUsuario.toString(),
@@ -314,9 +309,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
     String token = await _sharedPreferences.getToken();
     // enviamos
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/PLANES/deleteActividadEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/PLANES/deleteActividadEvento'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_actividad': idActividad.toString()
@@ -587,13 +581,13 @@ class ActividadesEvento {
   }
 
   Future<List<PlannesModel>> getAllPlannes() async {
-    final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+    final SharedPreferencesT sharedPreferences = SharedPreferencesT();
     ConfigConection confiC = ConfigConection();
     Client client = Client();
 
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String token = await sharedPreferences.getToken();
+    int idPlanner = await sharedPreferences.getIdPlanner();
+    int idEvento = await sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/PLANES/getAllPlanes';
 
@@ -626,13 +620,13 @@ class ActividadesEvento {
   }
 
   Future<ContadorActividadesModel> getContadorValues(bool isInvolucrado) async {
-    SharedPreferencesT _sharedPreferences = SharedPreferencesT();
+    SharedPreferencesT sharedPreferences = SharedPreferencesT();
     ConfigConection confiC = ConfigConection();
     Client client = Client();
 
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String token = await sharedPreferences.getToken();
+    int idPlanner = await sharedPreferences.getIdPlanner();
+    int idEvento = await sharedPreferences.getIdEvento();
 
     String endpoint;
 

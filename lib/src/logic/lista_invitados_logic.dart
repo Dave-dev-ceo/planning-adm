@@ -17,7 +17,7 @@ class FetchListaInvitadosLogic extends ListaInvitadosLogic {
   @override
   Future<ItemModelPrueba> fetchPrueba() async {
     final response = await client.get(Uri.parse(
-        confiC.url + confiC.puerto + '/wedding/PRUEBA/obtenerDatos/'));
+        '${confiC.url}${confiC.puerto}/wedding/PRUEBA/obtenerDatos/'));
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

@@ -55,7 +55,7 @@ class MesasAsignadasService {
     };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: json.encode(data),
         headers: headers);
 
@@ -87,7 +87,7 @@ class MesasAsignadasService {
     };
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: json.encode(data),
         headers: headers);
 
@@ -112,7 +112,7 @@ class MesasAsignadasService {
 
     const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
 
-    final response = await http.post(Uri.parse(url + '/' + endpoint),
+    final response = await http.post(Uri.parse('$url/$endpoint'),
         body: jsonEncode(data), headers: headers);
 
     if (json.decode(response.body) == null) return [];
@@ -146,7 +146,7 @@ class MesasAsignadasService {
 
     const endpoint = 'wedding/EVENTOS/deleteAsignadosOnMesas';
 
-    final response = await http.post(Uri.parse(url + '/' + endpoint),
+    final response = await http.post(Uri.parse('$url/$endpoint'),
         body: json.encode(data), headers: headers);
 
     if (response.statusCode == 200) {
@@ -175,7 +175,7 @@ class MesasAsignadasService {
 
     const endpoint = 'wedding/EVENTOS/createMesasAsignadas';
 
-    final response = await http.post(Uri.parse(url + '/' + endpoint),
+    final response = await http.post(Uri.parse('$url/$endpoint'),
         body: json.encode(data), headers: headers);
 
     if (response.statusCode == 200) {
@@ -205,7 +205,7 @@ class MesasAsignadasService {
 
     const endpoint = 'wedding/PLANNER/getLogoPlanner';
 
-    final response = await http.post(Uri.parse(url + '/' + endpoint),
+    final response = await http.post(Uri.parse('$url/$endpoint'),
         body: json.encode(data), headers: headers);
 
     if (response.statusCode == 200) {
@@ -231,7 +231,7 @@ class MesasAsignadasService {
 
     const endpoint = 'wedding/INVITADOS/getPDFMesasAsiganadas';
 
-    final response = await http.post(Uri.parse(url + '/' + endpoint),
+    final response = await http.post(Uri.parse('$url/$endpoint'),
         body: json.encode(data), headers: headers);
 
     if (response.statusCode == 200) {

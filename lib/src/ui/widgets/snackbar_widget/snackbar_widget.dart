@@ -21,14 +21,14 @@ void MostrarAlerta({
     case TipoMensaje.correcto:
       color = Colors.green;
       icon = const FaIcon(
-        FontAwesomeIcons.checkCircle,
+        FontAwesomeIcons.circleCheck,
         color: Colors.white,
       );
       break;
     case TipoMensaje.advertencia:
       color = Colors.amber[900];
       icon = const FaIcon(
-        FontAwesomeIcons.exclamationTriangle,
+        FontAwesomeIcons.triangleExclamation,
         color: Colors.white,
       );
 

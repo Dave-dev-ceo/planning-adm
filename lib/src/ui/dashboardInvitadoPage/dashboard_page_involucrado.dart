@@ -29,7 +29,7 @@ class DashboardInvolucradoPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DashboardInvolucradoPageState createState() =>
+  State<DashboardInvolucradoPage> createState() =>
       // ignore: no_logic_in_create_state
       _DashboardInvolucradoPageState(detalleEvento);
 }
@@ -158,7 +158,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
       gridCard.add(_builCard(
         'Proveedores',
         const ProveedorEvento(),
-        const FaIcon(FontAwesomeIcons.peopleCarry),
+        const FaIcon(FontAwesomeIcons.peopleCarryBox),
         isProveedor: true,
       ));
     }
@@ -182,7 +182,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
       gridCard.add(_builCard(
         'Listas',
         const Listas(),
-        const FaIcon(FontAwesomeIcons.thList),
+        const FaIcon(FontAwesomeIcons.tableList),
       ));
 
       if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
@@ -307,7 +307,9 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
                 Navigator.of(context).pushNamed('/perfilPlanner');
               } else if (valor == 3) {
                 await SharedPreferencesT().clear();
-                Navigator.pushReplacementNamed(context, '/');
+                if (mounted) {
+                  Navigator.pushReplacementNamed(context, '/');
+                }
               }
             },
             child: Row(
@@ -423,8 +425,10 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
           child: const Text('Cerrar'),
           onPressed: () async {
             await _sharedPreferences.clear();
-            Navigator.of(contextT)
-                .pushNamedAndRemoveUntil('/', (route) => false);
+            if (mounted) {
+              Navigator.of(contextT)
+                  .pushNamedAndRemoveUntil('/', (route) => false);
+            }
           },
         ),
       ],
@@ -439,7 +443,7 @@ class ContadorEventoPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ContadorEventoPageState createState() =>
+  State<ContadorEventoPage> createState() =>
       // ignore: no_logic_in_create_state
       _ContadorEventoPageState(fechaEvento);
 }

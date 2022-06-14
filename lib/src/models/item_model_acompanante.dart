@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_getters_setters
+// ignore_for_file: unnecessary_getters_setters, library_private_types_in_public_api
 
 class ItemModelAcompanante {
   List<_ItemModelAcompanante> _results = [];

@@ -40,7 +40,7 @@ class ConsultasPerfilLogic extends PerfilLogic {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PERFIL/selectPerfil'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PERFIL/selectPerfil'),
         body: {'id_planner': idPlanner.toString(), 'perfil': jsonEncode(data)},
         // body: data,
         headers: {HttpHeaders.authorizationHeader: token});
@@ -75,7 +75,7 @@ class ConsultasPerfilLogic extends PerfilLogic {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PERFIL/insertPerfil'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PERFIL/insertPerfil'),
         body: {'id_planner': idPlanner.toString(), 'perfil': jsonEncode(data)},
         // body: data,
         headers: {HttpHeaders.authorizationHeader: token});

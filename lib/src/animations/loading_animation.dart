@@ -6,7 +6,7 @@ class LoadingCustom extends StatefulWidget {
   const LoadingCustom({Key key}) : super(key: key);
 
   @override
-  _LoadingCustomState createState() => _LoadingCustomState();
+  State<LoadingCustom> createState() => _LoadingCustomState();
 }
 
 class _LoadingCustomState extends State<LoadingCustom>

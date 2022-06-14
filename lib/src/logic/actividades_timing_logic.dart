@@ -53,9 +53,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsPorPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_tipo_timing': idTiming.toString()
@@ -86,9 +85,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/createActividadesTimings'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createActividadesTimings'),
         body: dataTiming,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -111,9 +109,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/deleteActividadesTimings'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/deleteActividadesTimings'),
         body: {
           "id_planner": idPlanner.toString(),
           "id_usuario": idUsuario.toString(),
@@ -143,9 +140,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsIdPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimingsIdPorPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -172,9 +168,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/TIMINGS/obtenerTimingsPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/TIMINGS/obtenerTimingsPorPlanner'),
         body: {'id_planner': idPlanner.toString(), 'estatus': 'A'},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -200,9 +195,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/createTimings'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createTimings'),
         body: dataTiming,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -224,9 +218,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/TIMINGS/obtenerTimingsEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/TIMINGS/obtenerTimingsEvento'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -253,9 +246,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimings'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimings'),
         body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -281,9 +273,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/createActividadesEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createActividadesEvento'),
         body: dataTiming,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -305,9 +296,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/obtenerActividadesEventoPorEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/obtenerActividadesEventoPorEvento'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -335,9 +325,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/obtenerNoInEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/obtenerNoInEvento'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -365,9 +354,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/obtenerNoInEventoActividades'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/obtenerNoInEventoActividades'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -396,9 +384,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/actulizarTimingsEvent'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/actulizarTimingsEvent'),
         body: {
           "id_planner": idPlanner.toString(),
           "id_actividad": idActividad.toString(),
@@ -439,9 +426,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
     // send data
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ACTIVIDADESTIMINGS/createActividadesEnEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createActividadesEnEvento'),
         body: dataActividad,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -488,7 +474,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     };
 
     final response = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );

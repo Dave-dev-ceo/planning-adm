@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/mesas_asignadas_logic/mesas_asignadas_services.dart';
 import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';

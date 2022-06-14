@@ -27,7 +27,7 @@ class ArchivosProspectosLogic {
     };
 
     final resp = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );
@@ -53,7 +53,7 @@ class ArchivosProspectosLogic {
     };
 
     final resp = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );
@@ -75,7 +75,7 @@ class ArchivosProspectosLogic {
     };
 
     final resp = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );
@@ -100,7 +100,7 @@ class ArchivosProspectosLogic {
     };
 
     final resp = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );

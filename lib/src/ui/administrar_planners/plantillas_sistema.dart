@@ -10,7 +10,7 @@ class PlantillasSistemaPage extends StatefulWidget {
   const PlantillasSistemaPage({Key key}) : super(key: key);
 
   @override
-  _PlantillasSistemaPageState createState() => _PlantillasSistemaPageState();
+  State<PlantillasSistemaPage> createState() => _PlantillasSistemaPageState();
 }
 
 class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
@@ -238,7 +238,7 @@ class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
               textColor: Colors.black,
               title: const Text('Pagos'),
               trailing: const FaIcon(
-                FontAwesomeIcons.moneyBillWaveAlt,
+                FontAwesomeIcons.moneyBill1Wave,
                 color: Colors.black,
               ),
               children: childrenOfPlantillas(plantillas, 'PG_T'),
@@ -320,12 +320,11 @@ class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
                         showDialog(
                             context: context,
                             builder: (contex) {
-                              final _keyFormDescripcion =
-                                  GlobalKey<FormState>();
+                              final keyFormDescripcion = GlobalKey<FormState>();
                               return AlertDialog(
                                 title: const Text('Editar descripción'),
                                 content: Form(
-                                  key: _keyFormDescripcion,
+                                  key: keyFormDescripcion,
                                   child: TextFormField(
                                     initialValue: plantilla.descripcion,
                                     decoration: const InputDecoration(

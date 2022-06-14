@@ -147,7 +147,7 @@ class _DetallesPlannerState extends State<DetallesPlanner> {
                           prefixIcon: Padding(
                             padding: EdgeInsets.all(8.0),
                             child: FaIcon(
-                              FontAwesomeIcons.phoneAlt,
+                              FontAwesomeIcons.phoneFlip,
                               color: Colors.grey,
                             ),
                           )),
@@ -291,7 +291,7 @@ class _DetallesPlannerState extends State<DetallesPlanner> {
                           title: Text(
                               'Estatus: ${planner.estatus == "A" ? "Activo" : "Inactivo"}'),
                           secondary: FaIcon(planner.estatus == 'A'
-                              ? FontAwesomeIcons.checkCircle
+                              ? FontAwesomeIcons.circleCheck
                               : FontAwesomeIcons.userSlash),
                         ),
                       ),

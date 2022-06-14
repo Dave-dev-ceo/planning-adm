@@ -264,7 +264,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                           reporte.results.elementAt(index).cantidad.toString());
                     }),
               ),
-              trailing: const FaIcon(FontAwesomeIcons.tasks),
+              trailing: const FaIcon(FontAwesomeIcons.listCheck),
             ),
           ],
         ),

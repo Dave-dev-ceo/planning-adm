@@ -17,7 +17,7 @@ class FetchListaPaisesLogic extends ListaPaisesLogic {
   @override
   Future<ItemModelPaises> fetchPaises() async {
     final response = await client.get(Uri.parse(
-        confiC.url + confiC.puerto + '/wedding/PAISES/obtenerPaises/'));
+        '${confiC.url}${confiC.puerto}/wedding/PAISES/obtenerPaises/'));
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

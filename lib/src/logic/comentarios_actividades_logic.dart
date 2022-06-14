@@ -36,9 +36,8 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/COMENTARIOSACTIVIDADES/crearComentarios'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/COMENTARIOSACTIVIDADES/crearComentarios'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString(),
@@ -75,9 +74,8 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/COMENTARIOSACTIVIDADES/obtenerComentariosPorActividades'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/COMENTARIOSACTIVIDADES/obtenerComentariosPorActividades'),
         body: {
           'id_evento': idEvento.toString(),
           'id_planner': idPlanner.toString()
@@ -114,9 +112,8 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
 
     // pedido al servidor
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/COMENTARIOSACTIVIDADES/actualizarComentarios'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/COMENTARIOSACTIVIDADES/actualizarComentarios'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString(),

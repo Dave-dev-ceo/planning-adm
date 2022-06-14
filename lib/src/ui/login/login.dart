@@ -16,7 +16,7 @@ import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
   @override
-  _LoginState createState() => _LoginState();
+  State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
@@ -67,18 +67,22 @@ class _LoginState extends State<Login> {
 
     if (sesion) {
       if (involucrado == null) {
-        Navigator.pushReplacementNamed(context, '/home', arguments: data);
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/home', arguments: data);
+        }
       } else {
-        Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
-            arguments: EventoResumenModel(
-              idEvento: idEvento,
-              descripcion: titulo,
-              nombreCompleto: nombreUser,
-              boton: false,
-              portada: portada,
-              img: image,
-              fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
-            ));
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
+              arguments: EventoResumenModel(
+                idEvento: idEvento,
+                descripcion: titulo,
+                nombreCompleto: nombreUser,
+                boton: false,
+                portada: portada,
+                img: image,
+                fechaEvento: DateTime.tryParse(fechaEvento).toLocal(),
+              ));
+        }
         // Navigator.pushNamed(context, '/eventos', arguments: {
         //   'idEvento': idEvento,
         //   'nEvento': titulo,

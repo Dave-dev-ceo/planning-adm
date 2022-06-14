@@ -41,9 +41,8 @@ class FetchListaUsuariosLogic extends UsuariosLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/USUARIOS/obtenerUsuariosPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/USUARIOS/obtenerUsuariosPorPlanner'),
         body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -74,9 +73,8 @@ class UsuarioCrud extends UsuarioLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/USUARIOS/crearUsuarioParaPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/USUARIOS/crearUsuarioParaPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_usuario': idUsuario.toString(),
@@ -106,9 +104,8 @@ class UsuarioCrud extends UsuarioLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/USUARIOS/editarUsuarioParaPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/USUARIOS/editarUsuarioParaPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_usuario': idUsuario.toString(),
@@ -136,7 +133,7 @@ class UsuarioCrud extends UsuarioLogic {
 
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/USUARIOS/eliminarUsuario'),
+            '${confiC.url}${confiC.puerto}/wedding/USUARIOS/eliminarUsuario'),
         body: {'id_usuario': idUsuario.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 

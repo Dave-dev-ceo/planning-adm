@@ -13,7 +13,7 @@ class ReporteEvento extends StatefulWidget {
         builder: (context) => const ReporteEvento(),
       );
   @override
-  _ReporteEventoState createState() => _ReporteEventoState(dataView, dataId);
+  State<ReporteEvento> createState() => _ReporteEventoState(dataView, dataId);
 }
 
 class _ReporteEventoState extends State<ReporteEvento> {

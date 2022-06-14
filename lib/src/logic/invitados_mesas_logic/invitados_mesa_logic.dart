@@ -33,7 +33,7 @@ class ServiceInvitadosMesasLogic extends InvitadosConfirmadosLogic {
     const endpoint = 'wedding/INVITADOS/obtenerInvitadosConfirmados';
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
         body: json.encode(data),
         headers: headers);
 

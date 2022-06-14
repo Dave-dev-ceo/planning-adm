@@ -32,9 +32,8 @@ class FetchListaTimingsLogic extends TimingsLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/TIMINGS/obtenerTimingsPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/TIMINGS/obtenerTimingsPorPlanner'),
         body: {'id_planner': idPlanner.toString(), 'estatus': estatus},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -59,7 +58,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
     dataTiming['id_usuario'] = idUsuario.toString();
     final response = await client.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/TIMINGS/createTimings'),
+            '${confiC.url}${confiC.puerto}/wedding/TIMINGS/createTimings'),
         body: dataTiming,
         headers: {HttpHeaders.authorizationHeader: token});
 

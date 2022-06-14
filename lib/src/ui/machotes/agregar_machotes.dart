@@ -20,7 +20,7 @@ class AgregarMachote extends StatefulWidget {
       );
 
   @override
-  _AgregarMachoteState createState() =>
+  State<AgregarMachote> createState() =>
       _AgregarMachoteState(descripcionMachote, claveMachote);
 }
 
@@ -154,7 +154,9 @@ class _AgregarMachoteState extends State<AgregarMachote> {
               "machote": txt,
               "clave": claveMachote
             }, itemModelMC));
-            Navigator.of(context).pop();
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
           },
         ),
       ),

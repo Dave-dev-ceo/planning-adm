@@ -18,7 +18,7 @@ class DetalleListas extends StatefulWidget {
   const DetalleListas({Key key, this.lista}) : super(key: key);
 
   @override
-  _DetalleListasState createState() => _DetalleListasState(lista);
+  State<DetalleListas> createState() => _DetalleListasState(lista);
 }
 
 class _DetalleListasState extends State<DetalleListas> {
@@ -303,7 +303,7 @@ class _DetalleListasState extends State<DetalleListas> {
     lista.add(size);
     for (var opt in item.results) {
       final tempWidget = ListTile(
-        title: Text(opt.cantidad.toString() + ' - ' + opt.nombre),
+        title: Text('${opt.cantidad} - ${opt.nombre}'),
         subtitle: Text(opt.descripcion),
         trailing: Wrap(spacing: 12, children: <Widget>[
           IconButton(
@@ -412,7 +412,9 @@ class _DetalleListasState extends State<DetalleListas> {
                 await _jsonEditarDetalleLista(context, item);
             detalleListasBloc
                 .add(UpdateDetalleListasEvent(json, itemModeDetallaLista));
-            Navigator.pop(context, 'Aceptar');
+            if (mounted) {
+              Navigator.pop(context, 'Aceptar');
+            }
           },
           child: const Text('Aceptar'),
         ),

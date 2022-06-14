@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/logic/add_contratos_logic.dart';
 
 part 'ver_contratos_event.dart';
@@ -50,6 +50,8 @@ class VerContratosBloc extends Bloc<VerContratosEvent, VerContratosState> {
         yield AutorizacionErrorState('Error en consulta');
       } on TokenException {
         yield AutorizacionTokenErrorState('Error token');
+      } catch (e) {
+        yield AutorizacionErrorState('Error en consulta');
       }
     } else if (event is VerContratoSubido) {
       yield VerContratosLoggin();

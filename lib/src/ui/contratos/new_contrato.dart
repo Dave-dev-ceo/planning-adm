@@ -64,9 +64,9 @@ class NewContratoState extends State<NewContrato> {
   }
 
   void getIdInvolucrado() async {
-    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
-    if (_idInvolucrado != null) {
+    if (idInvolucrado != null) {
       setState(() {
         isInvolucrado = true;
       });
@@ -645,14 +645,18 @@ class NewContratoState extends State<NewContrato> {
                         idDocumento, descripcionTemp);
 
                 if (data == 'Ok') {
-                  Navigator.of(context, rootNavigator: true).pop();
+                  if (mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  }
 
                   MostrarAlerta(
                       mensaje: 'Se actulizo el nombre correctamente',
                       tipoMensaje: TipoMensaje.correcto);
                   contratosBloc.add(ContratosSelect());
                 } else {
-                  Navigator.of(context, rootNavigator: true).pop();
+                  if (mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  }
                   MostrarAlerta(mensaje: data, tipoMensaje: TipoMensaje.error);
                 }
               }
@@ -776,16 +780,16 @@ class NewContratoState extends State<NewContrato> {
     List<SpeedDialChild> temp = [];
     temp.add(SpeedDialChild(
         child: const Tooltip(
-          child: Icon(Icons.upload_file),
           message: 'Subir archivo',
+          child: Icon(Icons.upload_file),
         ),
         label: 'Subir archivo',
         onTap: _eventoUploadFile));
     // 1ro
     temp.add(SpeedDialChild(
         child: const Tooltip(
-            child: Icon(Icons.send_and_archive_sharp),
-            message: 'Crear plantilla'),
+            message: 'Crear plantilla',
+            child: Icon(Icons.send_and_archive_sharp)),
         label: 'Crear plantilla',
         onTap: () {
           _eventoAdd('html');
@@ -958,9 +962,9 @@ class NewContratoState extends State<NewContrato> {
     );
 
     if (pickedFile != null) {
-      String _extension = pickedFile.files.first.extension;
+      String extension = pickedFile.files.first.extension;
       verContratos.add(SubirContrato(idContrato,
-          base64.encode(pickedFile.files[0].bytes), 'html', _extension));
+          base64.encode(pickedFile.files[0].bytes), 'html', extension));
     }
   }
 
@@ -1005,14 +1009,16 @@ class NewContratoState extends State<NewContrato> {
     );
 
     if (pickedFile != null) {
-      String _extension = pickedFile.files.first.extension;
+      String extension = pickedFile.files.first.extension;
       verContratos.add(CrearContrato(
-          (pickedFile.files[0].name).replaceAll(_extension.toString(), ""),
+          (pickedFile.files[0].name).replaceAll(extension.toString(), ""),
           base64.encode(pickedFile.files[0].bytes),
           clave,
           tipoDoc,
-          _extension));
-      Navigator.of(context).pop();
+          extension));
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
   // fin eventos Cards
@@ -1021,6 +1027,7 @@ class NewContratoState extends State<NewContrato> {
     Widget child = const LoadingCustom();
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(

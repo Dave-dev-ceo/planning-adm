@@ -10,7 +10,7 @@ class AdminPlannerPage extends StatefulWidget {
   const AdminPlannerPage({Key key}) : super(key: key);
 
   @override
-  _AdminPlannerPageState createState() => _AdminPlannerPageState();
+  State<AdminPlannerPage> createState() => _AdminPlannerPageState();
 }
 
 class _AdminPlannerPageState extends State<AdminPlannerPage>
@@ -57,7 +57,7 @@ class _AdminPlannerPageState extends State<AdminPlannerPage>
           tabs: const [
             Tab(
               text: 'Planners',
-              icon: FaIcon(FontAwesomeIcons.usersCog),
+              icon: FaIcon(FontAwesomeIcons.userGear),
             ),
             Tab(
               text: 'Plantillas',
@@ -176,7 +176,7 @@ class _AdminPlannerPageState extends State<AdminPlannerPage>
                     decoration: const InputDecoration(
                         alignLabelWithHint: true,
                         prefixIcon: FaIcon(
-                          FontAwesomeIcons.search,
+                          FontAwesomeIcons.magnifyingGlass,
                           color: Colors.black,
                         ),
                         hintText: 'Buscar...'),

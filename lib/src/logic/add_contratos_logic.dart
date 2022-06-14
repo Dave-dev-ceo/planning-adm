@@ -21,7 +21,7 @@ abstract class AddContratosLogic {
   Future<bool> updateContratoEvento(
       int id, String archivo, String tipoDoc, String tipoMime);
   Future<String> updateValContratos(Map<String, dynamic> data);
-  Future<String> fetchValContratos(String _machote);
+  Future<String> fetchValContratos(String machote);
   Future<String> obtenerContratoById(Map<String, dynamic> data);
   Future<String> obtenerContratoSubidoById(Map<String, dynamic> data);
   Future<String> actualizarDescripcionDocumento(
@@ -43,9 +43,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
     // pedido al servidor
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ADDCONTRATOS/selectContratosPlaner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/selectContratosPlaner'),
         body: {
           'id_planner': idPlanner.toString(),
           "id_evento": idEvento.toString()
@@ -75,9 +74,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
     // pedido al servidor
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ADDCONTRATOS/selectContratosArchivoPlaner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/selectContratosArchivoPlaner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_machote': idMachote.toString()
@@ -111,7 +109,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
     // pedido al servidor
     final response = await http.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/ADDCONTRATOS/inserContrato'),
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/inserContrato'),
         body: contrato,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -136,9 +134,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
     // pedido al servidor
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ADDCONTRATOS/selectContratosEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/selectContratosEvento'),
         body: {
           'id_planner': idPlanner.toString(),
           "id_evento": idEvento.toString()
@@ -167,9 +164,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
     // pedido al servidor
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ADDCONTRATOS/borrarContratoEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/borrarContratoEvento'),
         body: {
           'id_planner': idPlanner.toString(),
           "id_contrato": id.toString()
@@ -198,7 +194,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PDF/createPDF'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PDF/createPDF'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -222,9 +218,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
     // pedido al servidor
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ADDCONTRATOS/updateContratoEvento'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/updateContratoEvento'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_contrato': id.toString(),
@@ -257,7 +252,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
     data['id_contrato'] = data['id_contrato'].toString();
     final response = await http.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/PDF/updateValContratos'),
+            '${confiC.url}${confiC.puerto}/wedding/PDF/updateValContratos'),
         body: data,
         headers: {HttpHeaders.authorizationHeader: token});
     if (response.statusCode == 200) {
@@ -270,7 +265,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
   @override
   // ignore: missing_return
-  Future<String> fetchValContratos(String _machote) async {
+  Future<String> fetchValContratos(String machote) async {
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
@@ -278,12 +273,11 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
     Map<String, dynamic> json = {
       'id_planner': idPlanner.toString(),
       'id_evento': idEvento.toString(),
-      'machote': _machote
+      'machote': machote
     };
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/PDF/generarValorEtiquetasContrato'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/PDF/generarValorEtiquetasContrato'),
         body: json,
         headers: {HttpHeaders.authorizationHeader: token});
     if (response.statusCode == 200) {
@@ -303,9 +297,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ADDCONTRATOS/obtenerContratoById'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/obtenerContratoById'),
         body: {
           'id_contrato': data['id_contrato'].toString(),
           'id_planner': data['id_planner'].toString(),
@@ -333,9 +326,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
     data['id_evento'] = idEvento.toString();
     String token = await _sharedPreferences.getToken();
     final response = await http.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ADDCONTRATOS/obtenerContratoById'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/obtenerContratoById'),
         body: {
           'id_contrato': data['id_contrato'].toString(),
           'id_planner': data['id_planner'].toString(),

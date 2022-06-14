@@ -37,7 +37,7 @@ void downloadFile(String data, String tituloTemp,
     html.Url.revokeObjectUrl(url);
   } else {
     PermissionStatus status = await Permission.storage.request();
-    PermissionStatus status2 = await Permission.manageExternalStorage.request();
+    await Permission.manageExternalStorage.request();
     if (status.isGranted) {
       String path;
       if (Platform.isAndroid) {

@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/archivos_proveedores_logic.dart';
 import 'package:planning/src/models/item_model_archivo_serv_prod.dart';

@@ -21,7 +21,7 @@ class EditarEvento extends StatefulWidget {
       );
 
   @override
-  _EditarEventoState createState() => _EditarEventoState(evento);
+  State<EditarEvento> createState() => _EditarEventoState(evento);
 }
 
 class _EditarEventoState extends State<EditarEvento> {
@@ -89,9 +89,9 @@ class _EditarEventoState extends State<EditarEvento> {
   }
 
   void getIdInvolucrado() async {
-    final _idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    final idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
-    if (_idInvolucrado != null) {
+    if (idInvolucrado != null) {
       isInvolucrado = true;
     }
   }
@@ -208,13 +208,13 @@ class _EditarEventoState extends State<EditarEvento> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: SizedBox(
+        width: large,
+        height: ancho,
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 10,
             child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
       ),
     );
   }
@@ -343,25 +343,10 @@ class _EditarEventoState extends State<EditarEvento> {
   _save() {
     if (keyForm.currentState.validate()) {
       Map<String, dynamic> jsonEvento = {
-        'evtdata': '[{'
-                '"id_evento": ${evento.results.elementAt(0).idEvento.toString()},'
-                '"descripcion_evento": "${descripcionCtrl.text}",' +
-            '"fecha_inicio": "${fechaInicioCtrl.text}",' +
-            '"fecha_fin": "${fechaFinCtrl.text}",' +
-            '"fecha_evento": "${fechaEventoCtrl.text}",' +
-            '"id_tipo_evento": "$_mySelectionTE" ,' +
-            '"numero_invitados": "${numbInvitadosCtrl.text}", ' +
-            '"estatus": "$dropdownValue"'
-                '}]',
-        'ctdata': '[{'
-                '"id_contratante": ${evento.results.elementAt(0).idContratante.toString()},'
-                '"nombre": "${nombreCtrl.text}",' +
-            '"apellidos": "${apellidoCtrl.text}",' +
-            '"telefono": "${telefonoCtrl.text}",' +
-            '"correo": "${emailCtrl.text}",' +
-            '"direccion": "${direccionCtrl.text}",' +
-            '"estado": "${estadoCtrl.text}"' +
-            '}]',
+        'evtdata':
+            '[{"id_evento": ${evento.results.elementAt(0).idEvento.toString()},"descripcion_evento": "${descripcionCtrl.text}","fecha_inicio": "${fechaInicioCtrl.text}","fecha_fin": "${fechaFinCtrl.text}","fecha_evento": "${fechaEventoCtrl.text}","id_tipo_evento": "$_mySelectionTE" ,"numero_invitados": "${numbInvitadosCtrl.text}", "estatus": "$dropdownValue"}]',
+        'ctdata':
+            '[{"id_contratante": ${evento.results.elementAt(0).idContratante.toString()},"nombre": "${nombreCtrl.text}","apellidos": "${apellidoCtrl.text}","telefono": "${telefonoCtrl.text}","correo": "${emailCtrl.text}","direccion": "${direccionCtrl.text}","estado": "${estadoCtrl.text}"}]',
         'id_planner': '',
         'id_usuario': ''
       };
@@ -491,14 +476,14 @@ class _EditarEventoState extends State<EditarEvento> {
                                 },
                                 items: const [
                                   DropdownMenuItem(
+                                    value: 'A',
                                     child: Text("Activo",
                                         style: TextStyle(fontSize: 16)),
-                                    value: 'A',
                                   ),
                                   DropdownMenuItem(
+                                    value: 'I',
                                     child: Text("Inactivo",
                                         style: TextStyle(fontSize: 16)),
-                                    value: 'I',
                                   )
                                 ]),
                             500.0,

@@ -160,7 +160,7 @@ class _FormPagoState extends State<FormPago> {
               decoration: const InputDecoration(hintText: 'Precio unitario:'),
               keyboardType: TextInputType.number,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
+                FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
               ],
               validator: (valor) {
                 final temp = double.parse(valor);

@@ -30,9 +30,8 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ASISTENCIA/obtenerAsistenciasPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ASISTENCIA/obtenerAsistenciasPorPlanner'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -59,9 +58,8 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
     String token = await _sharedPreferences.getToken();
 
     await client.post(
-        Uri.parse(confiC.url +
-            confiC.puerto +
-            '/wedding/ASISTENCIA/saveAsistenciasPorPlanner'),
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/ASISTENCIA/saveAsistenciasPorPlanner'),
         body: {
           'id_invitado': idInvitado.toString(),
           'asistencia': asistencia.toString(),

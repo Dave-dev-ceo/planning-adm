@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/prospecto_logic/prospecto_logic.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';

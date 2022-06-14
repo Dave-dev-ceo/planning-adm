@@ -24,10 +24,10 @@ class _Pagos {
   int _idProveedor;
   String _proveedor;
   String _descripcion;
-  int _precioUnitario;
-  int _total;
-  int _anticipo;
-  int _saldo;
+  double _precioUnitario;
+  double _total;
+  double _anticipo;
+  double _saldo;
   String _tipoPresupuesto;
 
   _Pagos(data) {
@@ -38,10 +38,10 @@ class _Pagos {
     _idProveedor = data['id_proveedor'];
     _proveedor = data['nombre'];
     _descripcion = data['descripcion'];
-    _precioUnitario = data['precio_unitario'];
-    _total = data['total'];
-    _anticipo = data['anticipo'];
-    _saldo = data['saldo'];
+    _precioUnitario = double.tryParse(data['precio_unitario'] ?? '0');
+    _total = double.tryParse(data['total'] ?? '0');
+    _anticipo = double.tryParse(data['anticipo'] ?? '0');
+    _saldo = double.tryParse(data['saldo'] ?? '0');
     _tipoPresupuesto = data['tipo_presupuesto'];
   }
 
@@ -52,10 +52,10 @@ class _Pagos {
   int get idProveedor => _idProveedor;
   String get proveedor => _proveedor;
   String get descripcion => _descripcion;
-  int get precioUnitario => _precioUnitario;
-  int get total => _total;
-  int get anticipo => _anticipo;
-  int get saldo => _saldo;
+  double get precioUnitario => _precioUnitario;
+  double get total => _total;
+  double get anticipo => _anticipo;
+  double get saldo => _saldo;
   String get tipoPresupuesto => _tipoPresupuesto;
 
   set idConcepto(value) => _idConcepto;

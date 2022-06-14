@@ -19,7 +19,7 @@ class AgregarActividades extends StatefulWidget {
   const AgregarActividades({Key key, this.idTiming}) : super(key: key);
 
   @override
-  _AgregarActividadesState createState() => _AgregarActividadesState(idTiming);
+  State<AgregarActividades> createState() => _AgregarActividadesState(idTiming);
 }
 
 class _AgregarActividadesState extends State<AgregarActividades> {
@@ -198,7 +198,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
               children: <Widget>[
                 et
                     ? TextFormFields(
-                        icon: FontAwesomeIcons.checkCircle,
+                        icon: FontAwesomeIcons.circleCheck,
                         item: CheckboxListTile(
                           title: const Text('Visible para involucrados'),
                           //secondary: Icon(Icons.be),
@@ -216,7 +216,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                         large: 400.0,
                       )
                     : TextFormFields(
-                        icon: FontAwesomeIcons.checkCircle,
+                        icon: FontAwesomeIcons.circleCheck,
                         item: CheckboxListTile(
                           title: const Text('Visible para involucrados'),
                           //secondary: Icon(Icons.be),
@@ -248,8 +248,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     }),
                     items: opcionesMeses.map((e) {
                       return DropdownMenuItem(
-                        child: Text(e['descripcion']),
                         value: e['value'],
+                        child: Text(e['descripcion']),
                       );
                     }).toList(),
                     value: _seleccion,
@@ -291,7 +291,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: FaIcon(FontAwesomeIcons.fileUpload),
+                        child: FaIcon(FontAwesomeIcons.fileArrowUp),
                       ),
                     ),
                   ),
@@ -300,7 +300,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: TextFormFields(
-                        icon: FontAwesomeIcons.fileArchive,
+                        icon: FontAwesomeIcons.fileZipper,
                         item: TextFormField(
                           controller: nombreArchivoCtrl,
                           readOnly: true,
@@ -319,8 +319,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 onPressed: () {
                   _save();
                 },
-                child: const Text('Guardar',
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
                 style: ElevatedButton.styleFrom(
                   primary: hexToColor('#fdf4e5'), // background
                   onPrimary: Colors.white, // foreground
@@ -331,6 +329,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                   ),
                   elevation: 8.0,
                 ),
+                child: const Text('Guardar',
+                    style: TextStyle(fontSize: 18, color: Colors.black)),
               ),
             ),
           ],
@@ -389,11 +389,11 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 key: Key(row.idActividad.toString()),
                 secondaryBackground: Container(
                   color: Colors.green[400],
+                  alignment: Alignment.topRight,
                   child: const Icon(
                     Icons.edit,
                     color: Colors.white,
                   ),
-                  alignment: Alignment.topRight,
                 ),
                 confirmDismiss: (DismissDirection direccion) async {
                   if (direccion == DismissDirection.endToStart) {
@@ -479,13 +479,15 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                 },
                 background: Container(
                   color: Colors.red[400],
+                  alignment: Alignment.topLeft,
                   child: const Icon(
                     Icons.cancel,
                     color: Colors.white,
                   ),
-                  alignment: Alignment.topLeft,
                 ),
                 child: Container(
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.black12)),
                   child: ListTile(
                     trailing: item.results.elementAt(i).haveFile
                         ? GestureDetector(
@@ -516,8 +518,6 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                       ],
                     ),
                   ),
-                  decoration:
-                      BoxDecoration(border: Border.all(color: Colors.black12)),
                 ),
               );
             })
@@ -572,7 +572,7 @@ class EditActividadDialog extends StatefulWidget {
       : super(key: key);
 
   @override
-  _EditActividadDialogState createState() =>
+  State<EditActividadDialog> createState() =>
       _EditActividadDialogState(idTiming);
 }
 
@@ -678,7 +678,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               large: 500.0,
                               ancho: 85.0),
                           TextFormFields(
-                            icon: FontAwesomeIcons.checkCircle,
+                            icon: FontAwesomeIcons.circleCheck,
                             item: CheckboxListTile(
                               title: const Text('Visible para involucrados'),
                               //secondary: Icon(Icons.be),
@@ -710,8 +710,8 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               }),
                               items: opcionesMeses.map((e) {
                                 return DropdownMenuItem(
-                                  child: Text(e['descripcion']),
                                   value: e['value'],
+                                  child: Text(e['descripcion']),
                                 );
                               }).toList(),
                               value: widget.actividad.tiempoAntes,
@@ -752,7 +752,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               },
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: FaIcon(FontAwesomeIcons.fileUpload),
+                                child: FaIcon(FontAwesomeIcons.fileArrowUp),
                               ),
                             ),
                           ),
@@ -760,7 +760,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                             Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: TextFormFields(
-                                  icon: FontAwesomeIcons.fileArchive,
+                                  icon: FontAwesomeIcons.fileZipper,
                                   item: TextFormField(
                                     controller: nombreArchivoCtrl,
                                     readOnly: true,

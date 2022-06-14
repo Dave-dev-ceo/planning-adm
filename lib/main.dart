@@ -13,9 +13,9 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
-  NoticationsService().initNotication();
+  await NoticationsService().initNotication();
   runApp(const AppState());
 }

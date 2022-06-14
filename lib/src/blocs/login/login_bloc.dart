@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:planning/src/logic/login_logic.dart';
 
@@ -24,6 +24,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoggedState(response);
       } on LoginException {
         yield ErrorLogginState("Correo o contraseña incorrectos.");
+      } catch (e) {
+        yield ErrorLogginState('No se pudo iniciar sesión, intente mas tarde');
       }
     } else if (event is RecoverPasswordEvent) {
       try {

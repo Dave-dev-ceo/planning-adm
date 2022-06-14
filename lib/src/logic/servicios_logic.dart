@@ -33,9 +33,8 @@ class FetchServiciosLogic extends ServiciosLogic {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/SERVICIOS/obtenerServicios/$idPlanner'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/SERVICIOS/obtenerServicios/$idPlanner'),
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -63,9 +62,8 @@ class FetchServiciosLogic extends ServiciosLogic {
       data['modificado_por'] = idUsuario.toString();
       String token = await _sharedPreferences.getToken();
       final response = await client.post(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/SERVICIOS/insertServicios'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/SERVICIOS/insertServicios'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
@@ -90,9 +88,8 @@ class FetchServiciosLogic extends ServiciosLogic {
       data['modificado_por'] = idUsuario.toString();
       String token = await _sharedPreferences.getToken();
       final response = await client.put(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/SERVICIOS/editarServicio'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/SERVICIOS/editarServicio'),
           body: data,
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
@@ -113,7 +110,7 @@ class FetchServiciosLogic extends ServiciosLogic {
     String token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(
-            configC.url + configC.puerto + '/wedding/SERVICIOS/deleteServicio'),
+            '${configC.url}${configC.puerto}/wedding/SERVICIOS/deleteServicio'),
         body: {
           "id_servicio": idServicio.toString(),
           'id_planner': idPlanner.toString()
@@ -139,9 +136,8 @@ class FetchServiciosLogic extends ServiciosLogic {
       int idPlanner = await _sharedPreferences.getIdPlanner();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/SERVICIOS/obtenerServiciosByProveedor/$idPlanner/$idProveedor'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/SERVICIOS/obtenerServiciosByProveedor/$idPlanner/$idProveedor'),
           headers: {HttpHeaders.authorizationHeader: token});
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);

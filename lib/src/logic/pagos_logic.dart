@@ -48,7 +48,7 @@ class ConsultasPagosLogic extends PagosLogic {
     };
 
     final response = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/insertPagos'),
+      Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/insertPagos'),
       body: json.encode(pago),
       headers: headers,
     );
@@ -73,7 +73,7 @@ class ConsultasPagosLogic extends PagosLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/selectPagos'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/selectPagos'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_evento': idEvento.toString()
@@ -111,7 +111,7 @@ class ConsultasPagosLogic extends PagosLogic {
     pago['id_planner'] = idPlanner.toString();
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/updatePagos'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/updatePagos'),
         body: pago,
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -134,7 +134,7 @@ class ConsultasPagosLogic extends PagosLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/deletePagos'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/deletePagos'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_concepto': id.toString()
@@ -163,7 +163,7 @@ class ConsultasPagosLogic extends PagosLogic {
 
     final response = await http.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/PAGOS/selectProveedor'),
+            '${confiC.url}${confiC.puerto}/wedding/PAGOS/selectProveedor'),
         body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -187,7 +187,7 @@ class ConsultasPagosLogic extends PagosLogic {
 
     final response = await http.post(
         Uri.parse(
-            confiC.url + confiC.puerto + '/wedding/PAGOS/selectServicios'),
+            '${confiC.url}${confiC.puerto}/wedding/PAGOS/selectServicios'),
         body: {'id_planner': idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 
@@ -210,7 +210,7 @@ class ConsultasPagosLogic extends PagosLogic {
     String token = await _sharedPreferences.getToken();
 
     final response = await http.post(
-        Uri.parse(confiC.url + confiC.puerto + '/wedding/PAGOS/selectPagosId'),
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/selectPagosId'),
         body: {
           'id_planner': idPlanner.toString(),
           'id_concepto': id.toString()

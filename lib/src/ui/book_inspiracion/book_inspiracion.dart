@@ -15,7 +15,7 @@ class BookInspiracion extends StatefulWidget {
   const BookInspiracion({Key key}) : super(key: key);
 
   @override
-  _BookInspiracion createState() => _BookInspiracion();
+  State<BookInspiracion> createState() => _BookInspiracion();
 }
 
 class _BookInspiracion extends State<BookInspiracion> {
@@ -89,10 +89,10 @@ class _BookInspiracion extends State<BookInspiracion> {
                 if (pickedFile != null) {
                   var bytes = pickedFile.files.first.bytes;
                   bytes ??= File(pickedFile.files.first.path).readAsBytesSync();
-                  String _extension = pickedFile.files.first.extension;
+                  String extension = pickedFile.files.first.extension;
                   String file64 = base64Encode(bytes);
                   bookInspiracionService
-                      .createBookInspiracion(file64, _extension)
+                      .createBookInspiracion(file64, extension)
                       .then((value) async => {
                             if (value == 'Ok')
                               {

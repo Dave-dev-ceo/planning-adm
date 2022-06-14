@@ -36,9 +36,8 @@ class FetchListaLogic extends ListasLogic {
       int idEvento = await _sharedPreferences.getIdEvento();
       String token = await _sharedPreferences.getToken();
       final response = await client.get(
-          Uri.parse(configC.url +
-              configC.puerto +
-              '/wedding/LISTAS/obtenerListaPorPlanner/$idPlanner/$idEvento'),
+          Uri.parse(
+              '${configC.url}${configC.puerto}/wedding/LISTAS/obtenerListaPorPlanner/$idPlanner/$idEvento'),
           headers: {HttpHeaders.authorizationHeader: token});
 
       if (response.statusCode == 200) {
@@ -65,7 +64,7 @@ class FetchListaLogic extends ListasLogic {
     data['id_evento'] = idEvento.toString();
     String token = await _sharedPreferences.getToken();
     final response = await client.post(
-        Uri.parse(configC.url + configC.puerto + '/wedding/LISTAS/deleteLista'),
+        Uri.parse('${configC.url}${configC.puerto}/wedding/LISTAS/deleteLista'),
         body: {
           'id_lista': data['id_lista'].toString(),
           'id_planner': data['id_planner'].toString(),
@@ -101,7 +100,7 @@ class FetchListaLogic extends ListasLogic {
     int idUsuario = await _sharedPreferences.getIdUsuario();
 
     final response = await client.post(
-        Uri.parse(configC.url + configC.puerto + ''),
+        Uri.parse('${configC.url}${configC.puerto}'),
         body: {"id": idPlanner.toString()},
         headers: {HttpHeaders.authorizationHeader: token});
 

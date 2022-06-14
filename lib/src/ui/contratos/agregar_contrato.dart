@@ -25,7 +25,7 @@ class AgregarContrato extends StatefulWidget {
       );
 
   @override
-  _AgregarContratoState createState() => _AgregarContratoState();
+  State<AgregarContrato> createState() => _AgregarContratoState();
 }
 
 class _AgregarContratoState extends State<AgregarContrato> {

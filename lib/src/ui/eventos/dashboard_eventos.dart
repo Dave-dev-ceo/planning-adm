@@ -25,7 +25,7 @@ class DashboardEventos extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DashboardEventosState createState() =>
+  State<DashboardEventos> createState() =>
       _DashboardEventosState(this.WP_EVT_CRT);
 }
 
@@ -97,9 +97,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Fecha evento: ' + fevento),
-                      Text(
-                          'Planeación de evento del: ' + inicio + ' al ' + fin),
+                      Text('Fecha evento: $fevento'),
+                      Text('Planeación de evento del: $inicio al $fin'),
                       for (var i = 0; i < involucrados.length; i++)
                         involucrados[0].tipoInvolucrado != 'Sin involucrado'
                             ? Text(involucrados[i].tipoInvolucrado +
@@ -126,13 +125,15 @@ class _DashboardEventosState extends State<DashboardEventos> {
       ),
       onTap: () async {
         await _sharedPreferences.setIdEvento(idEvento);
-        Navigator.pushNamed(context, '/eventos', arguments: {
-          'idEvento': idEvento,
-          'nEvento': titulo,
-          'nombre': widget.data['name'],
-          'boton': true,
-          'imag': widget.data['imag']
-        });
+        if (mounted) {
+          Navigator.pushNamed(context, '/eventos', arguments: {
+            'idEvento': idEvento,
+            'nEvento': titulo,
+            'nombre': widget.data['name'],
+            'boton': true,
+            'imag': widget.data['imag']
+          });
+        }
       },
     );
   }
@@ -246,7 +247,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Widget expadibleFab() {
     return SpeedDial(
       tooltip: 'Opciones',
-      child: const Icon(Icons.more_vert),
       children: [
         SpeedDialChild(
             child: const Icon(Icons.event_available),
@@ -259,6 +259,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
               _buildEventosPDF();
             })
       ],
+      child: const Icon(Icons.more_vert),
     );
   }
 

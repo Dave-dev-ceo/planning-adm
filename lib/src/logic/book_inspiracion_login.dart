@@ -43,7 +43,7 @@ class ServiceBookInspiracionLogic {
 
     final response = await http.post(
       Uri.parse(
-          confiC.url + confiC.puerto + endpoint + 'BOOK/getBookInspiracion'),
+          '${confiC.url}${confiC.puerto}${endpoint}BOOK/getBookInspiracion'),
       body: json.encode(data),
       headers: headers,
     );
@@ -80,7 +80,7 @@ class ServiceBookInspiracionLogic {
     };
 
     final response = await client.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );
@@ -111,7 +111,7 @@ class ServiceBookInspiracionLogic {
     };
 
     final response = await client.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );
@@ -139,7 +139,7 @@ class ServiceBookInspiracionLogic {
     };
 
     final response = await client.post(
-      Uri.parse(confiC.url + confiC.puerto + '/' + endpoint),
+      Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
       body: json.encode(data),
       headers: headers,
     );

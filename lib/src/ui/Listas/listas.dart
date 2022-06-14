@@ -16,7 +16,7 @@ class Listas extends StatefulWidget {
         builder: (context) => const Listas(),
       );
   @override
-  _ListaState createState() => _ListaState();
+  State<Listas> createState() => _ListaState();
 }
 
 class _ListaState extends State<Listas> {
@@ -288,13 +288,13 @@ class _ListaState extends State<Listas> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: SizedBox(
+        width: large,
+        height: ancho,
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 10,
             child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
       ),
     );
   }
