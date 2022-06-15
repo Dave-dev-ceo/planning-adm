@@ -118,46 +118,46 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
               maxLength: 10,
               validator: validateTelefono,
             )),
-        formItemsDesign(
-            Icons.people,
-            ListTile(
-              title: TextFormField(
-                controller: numeroAcomp,
-                enabled: false,
-                decoration: const InputDecoration(
-                  labelText: 'Número de acompañantes',
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 2.0,
-                  ),
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 3,
-                validator: validarNumAcomp,
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          if (acompanantes > 0) {
-                            acompanantes--;
-                            numeroAcomp.text = acompanantes.toString();
-                          }
-                        });
-                      },
-                      icon: const Icon(Icons.keyboard_arrow_down)),
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          acompanantes++;
-                          numeroAcomp.text = acompanantes.toString();
-                        });
-                      },
-                      icon: const Icon(Icons.keyboard_arrow_up))
-                ],
-              ),
-            )),
+        //formItemsDesign(
+        //    Icons.people,
+        //    ListTile(
+        //      title: TextFormField(
+        //        controller: numeroAcomp,
+        //        enabled: false,
+        //        decoration: const InputDecoration(
+        //          labelText: 'Número de acompañantes',
+        //          contentPadding: EdgeInsets.symmetric(
+        //            vertical: 2.0,
+        //          ),
+        //        ),
+        //        keyboardType: TextInputType.number,
+        //        maxLength: 3,
+        //        validator: validarNumAcomp,
+        //      ),
+        //      trailing: Row(
+        //        mainAxisSize: MainAxisSize.min,
+        //        children: [
+        //          IconButton(
+        //              onPressed: () {
+        //                setState(() {
+        //                  if (acompanantes > 0) {
+        //                    acompanantes--;
+        //                    numeroAcomp.text = acompanantes.toString();
+        //                  }
+        //                });
+        //              },
+        //              icon: const Icon(Icons.keyboard_arrow_down)),
+        //          IconButton(
+        //              onPressed: () {
+        //                setState(() {
+        //                  acompanantes++;
+        //                  numeroAcomp.text = acompanantes.toString();
+        //                });
+        //              },
+        //              icon: const Icon(Icons.keyboard_arrow_up))
+        //        ],
+        //      ),
+        //    )),
         GestureDetector(
             onTap: () {
               save();
