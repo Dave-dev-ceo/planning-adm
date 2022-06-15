@@ -98,13 +98,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(state.message),
-                    const Text('Renueva tu suscripción en el siguiente enlace. Utiliza el mismo correo del planner.'),
+                    const Text(
+                        'Renueva tu suscripción en el siguiente enlace. Utiliza el mismo correo del planner.'),
                     InkWell(
                       child: const Text(
                         'Haz clic aquí',
                         style: TextStyle(color: Colors.blue),
                       ),
-                      onTap: () => launch('https://www.planning.com.mx/index.html'),
+                      onTap: () =>
+                          launch('https://www.planning.com.mx/index.html'),
                     ),
                   ],
                 ),
@@ -135,79 +137,76 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         ));
   }
 
-  AppBar appBar(BuildContext context, [List<Widget> tabs])  {
+  AppBar appBar(BuildContext context, [List<Widget> tabs]) {
     return AppBar(
-            automaticallyImplyLeading: false,
-            title: Center(
-              child: FittedBox(
-                  child: Image.asset(
-                'assets/new_logo.png',
-                height: 65.0,
-                width: 200.0,
-              )),
-            ),
-            leading: const Center(
-              child: Text('PLANNER',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            leadingWidth: 100.0,
-            actions: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(15.0),
-                child: Center(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: PopupMenuButton(
-                      child: widget.data['imag'] == null ||
-                              widget.data['imag'] == ''
-                          ? const FaIcon(
-                              FontAwesomeIcons.user,
-                              color: Colors.black,
-                            )
-                          : CircleAvatar(
-                              backgroundImage: MemoryImage(
-                                base64Decode(widget.data['imag']),
-                              ),
-                            ),
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                          value: 1,
-                          child: Text("Perfil"),
+      automaticallyImplyLeading: false,
+      title: Center(
+        child: FittedBox(
+            child: Image.asset(
+          'assets/new_logo.png',
+          height: 65.0,
+          width: 200.0,
+        )),
+      ),
+      leading: const Center(
+        child: Text('PLANNER', style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
+      leadingWidth: 100.0,
+      actions: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(15.0),
+          child: Center(
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: PopupMenuButton(
+                child: widget.data['imag'] == null || widget.data['imag'] == ''
+                    ? const FaIcon(
+                        FontAwesomeIcons.user,
+                        color: Colors.black,
+                      )
+                    : CircleAvatar(
+                        backgroundImage: MemoryImage(
+                          base64Decode(widget.data['imag']),
                         ),
-                        if (claveRol == 'SU')
-                          const PopupMenuItem(
-                              value: 2, child: Text("Planner")),
-                        if (idPlanner == 0)
-                          const PopupMenuItem(
-                            child: Text('Administar'),
-                            value: 4,
-                          ),
-                        const PopupMenuItem(
-                          value: 3,
-                          child: Text("Cerrar sesión"),
-                        )
-                      ],
-                      onSelected: (valor) async {
-                        if (valor == 1) {
-                          Navigator.pushNamed(context, '/perfil');
-                        } else if (valor == 2) {
-                          Navigator.of(context).pushNamed('/perfilPlanner');
-                        } else if (valor == 3) {
-                          await _sharedPreferences.clear();
-                          Navigator.pushReplacementNamed(context, '/');
-                        } else if (valor == 4) {
-                          Navigator.of(context)
-                              .pushNamed('/administrarPlanners');
-                        }
-                      },
-                    ),
+                      ),
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 1,
+                    child: Text("Perfil"),
                   ),
-                ),
-              )
-            ],
-            toolbarHeight: 100.0,
-            backgroundColor: hexToColor('#fdf4e5'),
-            bottom: tabs != null? TabBar(
+                  if (claveRol == 'SU' || claveRol == 'PL')
+                    const PopupMenuItem(value: 2, child: Text("Planner")),
+                  if (claveRol == 'SU')
+                    const PopupMenuItem(
+                      child: Text('Administar'),
+                      value: 4,
+                    ),
+                  const PopupMenuItem(
+                    value: 3,
+                    child: Text("Cerrar sesión"),
+                  )
+                ],
+                onSelected: (valor) async {
+                  if (valor == 1) {
+                    Navigator.pushNamed(context, '/perfil');
+                  } else if (valor == 2) {
+                    Navigator.of(context).pushNamed('/perfilPlanner');
+                  } else if (valor == 3) {
+                    await _sharedPreferences.clear();
+                    Navigator.pushReplacementNamed(context, '/');
+                  } else if (valor == 4) {
+                    Navigator.of(context).pushNamed('/administrarPlanners');
+                  }
+                },
+              ),
+            ),
+          ),
+        )
+      ],
+      toolbarHeight: 100.0,
+      backgroundColor: hexToColor('#fdf4e5'),
+      bottom: tabs != null
+          ? TabBar(
               onTap: (int index) {
                 setState(
                   () {
@@ -218,8 +217,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               indicatorColor: Colors.black,
               isScrollable: true,
               tabs: tabs,
-            ) : null,
-          );
+            )
+          : null,
+    );
   }
 
   List<TabItem> obtenerTabs(ItemModelSecciones secciones) {

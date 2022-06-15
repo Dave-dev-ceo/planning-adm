@@ -754,7 +754,7 @@ class ApiProvider {
 
     if (res == 0) {
       String token = await _sharedPreferences.getToken();
-      int idPlanner = await _sharedPreferences.getIdUsuario();
+      int idPlanner = await _sharedPreferences.getIdPlanner();
       int idEvento = await _sharedPreferences.getIdEvento();
       int creadoPor = await _sharedPreferences.getIdUsuario();
       int modificadoPor = await _sharedPreferences.getIdUsuario();

@@ -27,13 +27,15 @@ class PermisosBloc extends Bloc<PermisosEvent, PermisosState> {
       } on TokenPermisosException {
         yield ErrorTokenPermisos("Sesión caducada");
       } on PaypalSubscriptionException {
-        yield ErrorSuscripcionPaypal("No cuentas con una suscripción activa en Paypal.");
+        yield ErrorSuscripcionPaypal(
+            "No cuentas con una suscripción activa en Paypal.");
       }
     }
   }
 
   @override
   void onTransition(Transition<PermisosEvent, PermisosState> transition) {
+    print(transition);
     super.onTransition(transition);
   }
 }

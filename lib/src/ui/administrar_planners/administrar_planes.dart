@@ -73,26 +73,26 @@ class _AdminPlannerPageState extends State<AdminPlannerPage>
           const PlantillasSistemaPage(),
         ],
       ),
-      floatingActionButton: currentIndex == 0
-          ? FloatingActionButton(
-              onPressed: () {
-                if (_tabController.index == 0) {
-                  Navigator.of(context)
-                      .pushNamed(
-                        '/detallesPlanner',
-                        arguments: 0,
-                      )
-                      .then(
-                        (_) => {
-                          BlocProvider.of<PlannersBloc>(context)
-                              .add(ObtenerPlannersEvent())
-                        },
-                      );
-                } else {}
-              },
-              child: const FaIcon(FontAwesomeIcons.userPlus),
-            )
-          : null,
+      //floatingActionButton: currentIndex == 0
+      //    ? FloatingActionButton(
+      //        onPressed: () {
+      //          if (_tabController.index == 0) {
+      //            Navigator.of(context)
+      //                .pushNamed(
+      //                  '/detallesPlanner',
+      //                  arguments: 0,
+      //                )
+      //                .then(
+      //                  (_) => {
+      //                    BlocProvider.of<PlannersBloc>(context)
+      //                        .add(ObtenerPlannersEvent())
+      //                  },
+      //                );
+      //          } else {}
+      //        },
+      //        child: const FaIcon(FontAwesomeIcons.userPlus),
+      //      )
+      //    : null,
     );
   }
 

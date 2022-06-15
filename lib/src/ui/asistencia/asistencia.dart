@@ -209,7 +209,7 @@ class _AsistenciaState extends State<Asistencia> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(
-                          element.nombre,
+                          '${element.nombre}${element.acompanante != null ? " - " + element.acompanante : ""}',
                           style: _boldStyle,
                         ),
                         Text(

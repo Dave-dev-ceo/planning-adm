@@ -96,14 +96,19 @@ class _ProveedoresState extends State<Proveedores> {
             }
           },
         ),
-        SpeedDialChild(
-          child: const Icon(Icons.add),
-          label: 'Añadir proveedor',
-          onTap: () async {
-            Navigator.of(context).pushNamed('/agregarProveedores',
-                arguments: {'id_lista': null, 'nombre': '', 'descripcion': ''});
-          },
-        ),
+        if (_selectedIndex == 0)
+          SpeedDialChild(
+            child: const Icon(Icons.add),
+            label: 'Añadir proveedor',
+            onTap: () async {
+              Navigator.of(context).pushNamed('/agregarProveedores',
+                  arguments: {
+                    'id_lista': null,
+                    'nombre': '',
+                    'descripcion': ''
+                  });
+            },
+          ),
       ],
     );
   }
