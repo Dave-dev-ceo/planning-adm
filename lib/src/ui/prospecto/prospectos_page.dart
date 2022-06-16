@@ -43,11 +43,11 @@ class _ProspectosPageState extends State<ProspectosPage> {
           if (state is AddedEtapaState) {
             if (state.wasAdded) {
               MostrarAlerta(
-                  mensaje: 'Se añadio correctamente un nueva etapa',
+                  mensaje: 'Se añadió correctamente un nueva etapa',
                   tipoMensaje: TipoMensaje.correcto);
             } else {
               MostrarAlerta(
-                  mensaje: 'Ocurrio un error al intentar crear una etapa',
+                  mensaje: 'Ocurrió un error al intentar crear una etapa',
                   tipoMensaje: TipoMensaje.error);
             }
           }
@@ -70,7 +70,7 @@ class _ProspectosPageState extends State<ProspectosPage> {
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: UniqueKey(),
-        tooltip: 'Añadir Etapa',
+        tooltip: 'Añadir etapa',
         child: const Icon(Icons.add),
         onPressed: () {
           _addEtapaSubmit(
@@ -325,12 +325,12 @@ class _ProspectosPageState extends State<ProspectosPage> {
               if (state is AddedEtapaState) {
                 if (state.wasAdded) {
                   MostrarAlerta(
-                      mensaje: 'Se añadio correctamente la etapa',
+                      mensaje: 'Se añadió correctamente la etapa',
                       tipoMensaje: TipoMensaje.correcto);
                   Navigator.of(context).pop();
                 } else {
                   MostrarAlerta(
-                      mensaje: 'Ocurrio un error',
+                      mensaje: 'Ocurrió un error',
                       tipoMensaje: TipoMensaje.error);
                 }
               }
@@ -637,7 +637,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                         tipoMensaje: TipoMensaje.correcto);
                   } else {
                     MostrarAlerta(
-                      mensaje: 'Ocurrio un error al intentar subir el archivo',
+                      mensaje: 'Ocurrió un error al intentar subir el archivo',
                       tipoMensaje: TipoMensaje.correcto,
                     );
                   }
@@ -698,7 +698,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                                           if (valor != null && valor != '') {
                                             return null;
                                           }
-                                          return 'El campo no debe estar vacio';
+                                          return 'El campo no debe estar vacío';
                                         },
                                       ),
                                     ),
@@ -732,7 +732,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                                           } else {
                                             MostrarAlerta(
                                                 mensaje:
-                                                    'Ocurrio un error al intentar editar el archivo',
+                                                    'Ocurrió un error al intentar editar el archivo',
                                                 tipoMensaje:
                                                     TipoMensaje.correcto);
                                           }
@@ -796,7 +796,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
                                               } else {
                                                 MostrarAlerta(
                                                     mensaje:
-                                                        'Ocurrio un error al intentar eliminar el archivo',
+                                                        'Ocurrió un error al intentar eliminar el archivo',
                                                     tipoMensaje:
                                                         TipoMensaje.correcto);
                                               }
@@ -835,7 +835,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
-              content: const Text('¿Esta seguro de eliminar el prospecto?'),
+              content: const Text('¿Está seguro de eliminar el prospecto?'),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -990,7 +990,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
               if (regExpEmail.hasMatch(value)) {
                 return null;
               } else {
-                return 'Ingrese un correo eléctronico valido';
+                return 'Ingrese un correo electrónico válido';
               }
             }
           },
@@ -1096,7 +1096,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             if (value.length < 11 && value.isNotEmpty) {
               return null;
             }
-            return 'El numero debe tener 10 digitos';
+            return 'El número debe tener 10 dígitos';
           },
           enabled: canEditPhone,
           initialValue: (widget.prospecto.telefono != null)

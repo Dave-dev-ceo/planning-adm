@@ -222,7 +222,7 @@ class BackendLoginLogic implements LoginLogic {
     } else if (resp.statusCode == 203) {
       return 'NotFound';
     } else {
-      return 'Ocurrio un error';
+      return 'Ocurrió un error';
     }
   }
 

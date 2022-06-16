@@ -146,7 +146,7 @@ class _TimingState extends State<Timing> {
                             ),
                             validator: (value) {
                               if (value == null || value == '') {
-                                return 'Campo no debe ir vacio';
+                                return 'El campo no debe ir vacío';
                               } else {
                                 return null;
                               }
@@ -183,7 +183,7 @@ class _TimingState extends State<Timing> {
                             timingCtrl.clear();
                           } else {
                             MostrarAlerta(
-                                mensaje: 'El Campo esta vacio',
+                                mensaje: 'El campo esta vacío',
                                 tipoMensaje: TipoMensaje.advertencia);
                           }
                         },
@@ -338,12 +338,12 @@ class _TimingState extends State<Timing> {
                                         Navigator.of(context).pop();
                                         MostrarAlerta(
                                             mensaje:
-                                                'El cronograma se elimino correctamente',
+                                                'El cronograma se eliminó correctamente',
                                             tipoMensaje: TipoMensaje.correcto);
                                       } else {
                                         Navigator.of(context).pop();
                                         MostrarAlerta(
-                                            mensaje: 'Ocurrio un error',
+                                            mensaje: 'Ocurrió un error',
                                             tipoMensaje: TipoMensaje.error);
                                       }
                                     }
@@ -352,7 +352,7 @@ class _TimingState extends State<Timing> {
                                     content: RichText(
                                       text: const TextSpan(
                                         text:
-                                            '¿Esta seguro de eliminar el cronograma?\n',
+                                            '¿Está seguro de eliminar el cronograma?\n',
                                         style: TextStyle(
                                           color: Colors.black,
                                           decorationStyle:
@@ -361,7 +361,7 @@ class _TimingState extends State<Timing> {
                                         children: [
                                           TextSpan(
                                             text:
-                                                '\nEl cronograma se eliminara de los eventos, al igual que sus actividades',
+                                                '\nEl cronograma se eliminará de los eventos, al igual que sus actividades',
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontStyle: FontStyle.italic,

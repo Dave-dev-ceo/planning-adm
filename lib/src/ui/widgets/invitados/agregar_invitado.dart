@@ -169,7 +169,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
 
   String validarNumAcomp(String value) {
     if (value == null || int.parse(value) < 0) {
-      return 'Número de invitados es requerido';
+      return 'El número de invitados es requerido';
     } else {
       return null;
     }
@@ -190,11 +190,11 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
     String patttern = r'(^[0-9]*$)';
     RegExp regExp = RegExp(patttern);
     if (value.isEmpty) {
-      return "El telefono es necesario";
+      return "El teléfono es necesario";
     } else if (value.length != 10) {
-      return "El numero debe tener 10 digitos";
+      return "El número debe tener 10 dígitos";
     } else if (!regExp.hasMatch(value)) {
-      return "El numero debe ser de 0-9";
+      return "El número debe ser de 0-9";
     }
     return null;
   }
@@ -206,7 +206,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
     if (value.isEmpty) {
       return "El correo es necesario";
     } else if (!regExp.hasMatch(value)) {
-      return "Correo invalido";
+      return "Correo inválido";
     } else {
       return null;
     }
@@ -233,10 +233,10 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
         numeroAcomp.text = '0';
         dropdownValue = "Hombre";
         MostrarAlerta(
-            mensaje: 'Invitado registrado.', tipoMensaje: TipoMensaje.correcto);
+            mensaje: 'Invitado registrado', tipoMensaje: TipoMensaje.correcto);
       } else {
         MostrarAlerta(
-            mensaje: 'Error: No se pudo realizar el registro.',
+            mensaje: 'Error: No se pudo realizar el registro',
             tipoMensaje: TipoMensaje.error);
       }
     }

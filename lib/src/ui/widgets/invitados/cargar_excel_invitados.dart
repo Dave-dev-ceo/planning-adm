@@ -35,9 +35,9 @@ class _CargarExcelState extends State<CargarExcel> {
     showDialog(
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(
-              title: const Text('Importación de excel'),
+              title: const Text('Importación de Excel'),
               content: const Text(
-                  'Procedera a abrir su explorador de archivos para seleccionar un archivo excel, ¿Desea continuar?'),
+                  'Procederá a abrir su explorador de archivos para seleccionar un archivo Excel. ¿Desea continuar?'),
               actions: <Widget>[
                 CupertinoDialogAction(
                   child: const Text(
@@ -97,16 +97,16 @@ class _CargarExcelState extends State<CargarExcel> {
           }
           if (bandera) {
             MostrarAlerta(
-                mensaje: 'Se importó el archivo con éxito.',
+                mensaje: 'Se importó el archivo con éxito',
                 tipoMensaje: TipoMensaje.correcto);
           } else {
             MostrarAlerta(
-                mensaje: 'Error: No se pudo realizar el registro.',
+                mensaje: 'Error: No se pudo realizar el registro',
                 tipoMensaje: TipoMensaje.error);
           }
         } else {
           MostrarAlerta(
-              mensaje: 'Estructura incorrecta.',
+              mensaje: 'Estructura incorrecta',
               tipoMensaje: TipoMensaje.error);
         }
       }
@@ -140,7 +140,7 @@ class _CargarExcelState extends State<CargarExcel> {
           builder: (BuildContext context) => CupertinoAlertDialog(
                 title: const Text('Permisos denegados'),
                 content:
-                    const Text('Por favor habilitar el acceso a contactos'),
+                    const Text('Por favor, habilitar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: const Text('OK'),
@@ -164,7 +164,7 @@ class _CargarExcelState extends State<CargarExcel> {
                   height: 50,
                 ),
                 const Text(
-                  'Estructura del excel',
+                  'Estructura del archivo Excel',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
                 ),
                 SizedBox(
@@ -196,7 +196,7 @@ class _CargarExcelState extends State<CargarExcel> {
                     _viewContact();
                     /////////////
                   },
-                  child: const CallToAction('Importar Contactos'),
+                  child: const CallToAction('Importar contactos'),
                 ),
               ],
             ),

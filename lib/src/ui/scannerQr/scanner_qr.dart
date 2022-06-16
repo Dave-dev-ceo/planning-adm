@@ -43,7 +43,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Scanner de Invitados"),
+        title: const Text("Scanner de invitados"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -101,7 +101,7 @@ class _ScannerQrInvitadoState extends State<ScannerQrInvitado> {
                               builder: (context, snapshot) {
                                 if (snapshot.data != null) {
                                   return Text(
-                                      'Cambiar a camara ${describeEnum(snapshot.data) == "back" ? "Delantera" : "Trasera"}');
+                                      'Cambiar a cámara ${describeEnum(snapshot.data) == "back" ? "Delantera" : "Trasera"}');
                                 } else {
                                   return const Text('loading');
                                 }

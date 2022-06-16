@@ -170,7 +170,7 @@ class _LoginState extends State<Login> {
           _dialogMSG('Iniciando sesión', '', 'log');
         } else if (state is MsgLogginState) {
           // Navigator.pop(_ingresando);
-          _dialogMSG('Datos invalidos', state.message, 'msg');
+          _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
           Navigator.pop(_ingresando);
@@ -292,7 +292,7 @@ class _LoginState extends State<Login> {
                   }
                 },
                 child: const Text(
-                  'Iniciar Sesión',
+                  'Iniciar sesión',
                   style: TextStyle(fontSize: 17),
                 )),
           ),
@@ -410,7 +410,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
           correoRecuperacionCtrl.clear();
 
           MostrarAlerta(
-              mensaje: 'Este correo no esta registrado',
+              mensaje: 'Este correo no está registrado',
               tipoMensaje: TipoMensaje.correcto);
         }
       },
@@ -428,7 +428,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Ingrese su correo electronico de recuperación',
+                'Ingrese su correo electrónico de recuperación',
               ),
               const SizedBox(
                 height: 10.0,
@@ -475,7 +475,7 @@ class _RecoverPasswordDialogState extends State<RecoverPasswordDialog> {
       loginBloc.add(RecoverPasswordEvent(correoRecuperacionCtrl.text));
     } else {
       MostrarAlerta(
-          mensaje: 'Ingrese un correo valido', tipoMensaje: TipoMensaje.error);
+          mensaje: 'Ingrese un correo válido', tipoMensaje: TipoMensaje.error);
     }
   }
 }

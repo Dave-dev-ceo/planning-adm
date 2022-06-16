@@ -174,7 +174,7 @@ class _DetalleListasState extends State<DetalleListas> {
                             detalleListasBloc.add(
                                 UpdateListasEvent(json, itemModeDetallaLista));
                             MostrarAlerta(
-                                mensaje: 'El elemento se agrego correctamente.',
+                                mensaje: 'El elemento se agregó correctamente.',
                                 tipoMensaje: TipoMensaje.correcto);
                           }
                         },

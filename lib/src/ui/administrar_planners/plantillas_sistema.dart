@@ -69,19 +69,19 @@ class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
             }
             if (state is ErrorInsertPlantillaState) {
               MostrarAlerta(
-                  mensaje: 'Ha ocurrio un error al insertar la plantilla',
+                  mensaje: 'Ha ocurrido un error al insertar la plantilla',
                   tipoMensaje: TipoMensaje.error);
             }
 
             if (state is SuccessEditDesPlantillaState) {
               MostrarAlerta(
-                  mensaje: 'Se han editado la descripción de la plantilla',
+                  mensaje: 'Se ha editado la descripción de la plantilla',
                   tipoMensaje: TipoMensaje.correcto);
             }
             if (state is ErrorEditDesPlantillaState) {
               MostrarAlerta(
                   mensaje:
-                      'Ha ocurrio un error al editar la descripción la plantilla',
+                      'Ha ocurrido un error al editar la descripción la plantilla',
                   tipoMensaje: TipoMensaje.error);
             }
 
@@ -374,7 +374,7 @@ class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
                             builder: (contex) => AlertDialog(
                                   title: const Text('Eliminar plantilla'),
                                   content: const Text(
-                                      '¿Estas seguro de eliminar la plantilla?'),
+                                      '¿Estás seguro de eliminar la plantilla?'),
                                   actions: [
                                     TextButton(
                                       onPressed: () {

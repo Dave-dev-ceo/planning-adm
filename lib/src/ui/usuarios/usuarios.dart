@@ -321,7 +321,7 @@ Future<bool> mostrarForm(formContext, accion, usr) async {
   if (usuario != null) {
     MostrarAlerta(
       mensaje:
-          '${usuario.result.nombreCompleto} ${accion == 0 ? 'Agregado a Usuarios' : 'editado'}',
+          '${usuario.result.nombreCompleto} ${accion == 0 ? 'Agregado usuarios' : 'editado'}',
       onVisible: () {
         usuariosBloc.add(FetchUsuariosPorPlannerEvent());
         crt = true;

@@ -19,7 +19,7 @@ class PlannersBloc extends Bloc<PlannersEvent, PlannersState> {
         if (kDebugMode) {
           print(e);
         }
-        emit(ErrorListaPlannersState('Ocurrio un error'));
+        emit(ErrorListaPlannersState('Ocurrió un error'));
       }
     });
 
@@ -32,13 +32,13 @@ class PlannersBloc extends Bloc<PlannersEvent, PlannersState> {
         if (data != null) {
           emit(DetallesPlannerState(data));
         } else {
-          emit(ErrorListaPlannersState('Ocurrio un error'));
+          emit(ErrorListaPlannersState('Ocurrió un error'));
         }
       } catch (e) {
         if (kDebugMode) {
           print(e);
         }
-        emit(ErrorListaPlannersState('Ocurrio un error'));
+        emit(ErrorListaPlannersState('Ocurrió un error'));
       }
     }));
 
@@ -55,7 +55,7 @@ class PlannersBloc extends Bloc<PlannersEvent, PlannersState> {
         if (kDebugMode) {
           print(e);
         }
-        emit(ErrorListaPlannersState('Ocurrio un error'));
+        emit(ErrorListaPlannersState('Ocurrió un error'));
       }
     }));
 

@@ -728,17 +728,17 @@ class _FullScreenDialogAgregarArchivoProvServEvent
 
                                                 if (value == null ||
                                                     value == '') {
-                                                  return 'El Campo es requerido';
+                                                  return 'El campo es requerido';
                                                 } else if (!regExp
                                                     .hasMatch(value)) {
-                                                  return 'No es un dirección web valida';
+                                                  return 'No es un dirección web válida';
                                                 } else {
                                                   return null;
                                                 }
                                               },
                                               decoration: const InputDecoration(
                                                 labelText:
-                                                    'Url o Dirección web',
+                                                    'Url o dirección web',
                                               ),
                                             ),
                                             large: 400.0,

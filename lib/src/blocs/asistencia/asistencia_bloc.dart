@@ -23,7 +23,7 @@ class AsistenciaBloc extends Bloc<AsistenciaEvent, AsistenciaState> {
         ItemModelAsistencia usuarios = await logic.fetchAsistenciaPorPlanner();
         yield MostrarAsistenciaState(usuarios);
       } on ListaAsistenciaException {
-        yield ErrorMostrarAsistenciaState("Sin Asistencias");
+        yield ErrorMostrarAsistenciaState("Sin asistencias");
       } on TokenException {
         yield ErrorTokenAsistenciaState("Error de validación de token");
       }

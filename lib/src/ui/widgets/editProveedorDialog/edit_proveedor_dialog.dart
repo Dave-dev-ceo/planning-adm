@@ -55,7 +55,7 @@ class _EditProveedorDialogState extends State<EditProveedorDialog> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Proveedor'),
+        title: const Text('Editar proveedor'),
       ),
       body: SingleChildScrollView(
         child: Container(

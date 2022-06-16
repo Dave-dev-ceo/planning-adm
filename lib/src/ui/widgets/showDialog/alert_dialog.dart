@@ -41,12 +41,12 @@ class _DialogAlertState extends State<DialogAlert> {
           if (state is QrValidAnotherState) {
             Navigator.of(context).pop();
             MostrarAlerta(
-                mensaje: 'El codigo Qr no es valido',
+                mensaje: 'El código Qr no es válido',
                 tipoMensaje: TipoMensaje.error);
           } else if (state is QrErrorState) {
             Navigator.of(context).pop();
             MostrarAlerta(
-                mensaje: 'Ocurrio un error al leer el QR',
+                mensaje: 'Ocurrió un error al leer el QR',
                 tipoMensaje: TipoMensaje.error);
           }
         },
@@ -58,7 +58,7 @@ class _DialogAlertState extends State<DialogAlert> {
               eventoDescripcion = invitado.evento;
               return AlertDialog(
                 scrollable: false,
-                title: const Center(child: Text('Datos de invitado')),
+                title: const Center(child: Text('Datos del invitado')),
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: [
@@ -110,7 +110,7 @@ class _DialogAlertState extends State<DialogAlert> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                        '$nombreInvitado estás en el evento $eventoDescripcion'),
+                        '$nombreInvitado, estás en el evento $eventoDescripcion'),
                     const Text('Gracias por asistir.'),
                   ],
                 ),

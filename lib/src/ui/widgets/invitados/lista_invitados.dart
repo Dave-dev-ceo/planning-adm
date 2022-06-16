@@ -121,11 +121,11 @@ class _ListaInvitadosState extends State<ListaInvitados>
     showDialog(
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(
-              title: const Text('Importación de excel'),
+              title: const Text('Importación de Excel'),
               content: Column(
                 children: [
                   const Text(
-                      'Procedera a abrir su explorador de archivos para seleccionar un archivo excel,¿Desea continuar?'),
+                      'Procederá a abrir su explorador de archivos para seleccionar un archivo Excel. ¿Desea continuar?'),
                   TextButton(
                     style: TextButton.styleFrom(
                         primary: Colors.blue,
@@ -195,18 +195,18 @@ class _ListaInvitadosState extends State<ListaInvitados>
           }
         } else {
           MostrarAlerta(
-              mensaje: 'Estructura del excel es incorrecta.',
+              mensaje: 'Estructura del excel incorrecta',
               tipoMensaje: TipoMensaje.error);
         }
       }
       if (bandera) {
         blocInvitados.fetchAllInvitados(context);
         MostrarAlerta(
-            mensaje: 'Se importó el archivo con éxito.',
+            mensaje: 'Se importó el archivo con éxito',
             tipoMensaje: TipoMensaje.correcto);
       } else {
         MostrarAlerta(
-            mensaje: 'Error: No se pudo realizar el registro.',
+            mensaje: 'Error: No se pudo realizar el registro',
             tipoMensaje: TipoMensaje.advertencia);
       }
     }
@@ -242,7 +242,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
                 title: const Text('Permisos denegados'),
-                content: const Text('Por favor otorgar el acceso a contactos'),
+                content: const Text('Por favor, otorgar el acceso a contactos'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: const Text('OK'),
@@ -289,7 +289,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
         foregroundColor: Colors.black,
         child: const Tooltip(
           child: Icon(Icons.table_chart_outlined),
-          message: "Importar excel",
+          message: "Importar Excel",
         ),
         backgroundColor: hexToColor("#fdf4e5"),
         //label: 'Importar excel',
@@ -672,7 +672,7 @@ class _DataSource extends DataTableSource {
         context: _cont,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: const Text('Eliminar Invitado'),
+              title: const Text('Eliminar invitado'),
               content: // RichText(
                   RichText(
                 text: const TextSpan(
@@ -681,7 +681,7 @@ class _DataSource extends DataTableSource {
                   children: <TextSpan>[
                     TextSpan(
                         text:
-                            '!Se eliminarán los acompañantes relacionados al invitado!',
+                            '¡Se eliminarán los acompañantes relacionados al invitado!',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black)),
                     // TextSpan(text: ' world!'),
@@ -838,7 +838,7 @@ class _DataSource extends DataTableSource {
           .listaInvitados(_cont);
     } else {
       MostrarAlerta(
-          mensaje: 'Error al actualizar el grupo.',
+          mensaje: 'Error al actualizar el grupo',
           tipoMensaje: TipoMensaje.error);
     }
   }

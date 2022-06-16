@@ -27,7 +27,7 @@ class ActividadestimingBloc
             await logic.fetchActividadesTimingsPorPlanner(event.idTiming);
         yield MostrarActividadesTimingsState(usuarios);
       } on ListaActividadesTimingsException {
-        yield ErrorMostrarActividadesTimingsState("Sin Actividades");
+        yield ErrorMostrarActividadesTimingsState("Sin actividades");
       } on TokenException {
         yield ErrorTokenActividadesTimingsState("Error de validación de token");
       }

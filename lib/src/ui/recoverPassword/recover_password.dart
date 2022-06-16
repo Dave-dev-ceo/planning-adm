@@ -72,7 +72,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
             } else if (state is TokenExpiradoState) {
               return const Center(
                 child: Text(
-                    'El enlace ya expiro. \nLa pagina se redireccionara al login'),
+                    'El enlace ya expiró. \nLa página se redireccionará al inicio de sesión'),
               );
             } else {
               return const Center(
@@ -137,7 +137,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                             borderSide: const BorderSide(color: Colors.black)),
                         validador: (value) {
                           if (!_validaPsw(value)) {
-                            return 'Campo requerido con una minuscula, una mayúscula, un número y un minimo de 8 caracteres.';
+                            return 'Campo requerido con una minúscula, una mayúscula, un número y un mínimo de 8 caracteres.';
                           }
                           return null;
                         },
@@ -197,7 +197,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
                       ChangeAndRecoverPassword(newPassword.text, widget.token));
                 } else {
                   MostrarAlerta(
-                      mensaje: 'Los campos no coiciden o estan vacios',
+                      mensaje: 'Los campos no coiciden o estan vacíos',
                       tipoMensaje: TipoMensaje.advertencia);
                 }
               },

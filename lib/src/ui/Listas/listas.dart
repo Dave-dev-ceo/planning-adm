@@ -193,7 +193,7 @@ class _ListaState extends State<Listas> {
               textAlign: TextAlign.center,
             ),
             content: const Text(
-                'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+                'Lo sentimos, la sesión ha caducado. Por favor inicie sesión de nuevo.'),
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
             actions: <Widget>[
@@ -266,7 +266,7 @@ class _ListaState extends State<Listas> {
     return AlertDialog(
       title: const Text('Eliminar'),
       content: const Text(
-          '¿Desea eliminar el elemento? Se eliminará los registros que contenga el elemento.'),
+          '¿Desea eliminar el elemento? Se eliminarán los registros que contenga el elemento.'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'Cancelar'),

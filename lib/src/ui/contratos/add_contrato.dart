@@ -56,17 +56,17 @@ class _AddMachoteState extends State<AddMachote> {
   _giveTitle(String clave) {
     switch (clave) {
       case 'CT':
-        return const Text('Selecciona Contratos');
+        return const Text('Selecciona contratos');
       case 'RC':
-        return const Text('Selecciona Recibos');
+        return const Text('Selecciona recibos');
       case 'PG':
-        return const Text('Selecciona Pagos');
+        return const Text('Selecciona pagos');
       case 'MT':
-        return const Text('Selecciona Minutas');
+        return const Text('Selecciona minutas');
       case 'OP':
-        return const Text('Selecciona Orden de pedido');
+        return const Text('Selecciona orden de pedido');
       default:
-        return const Text('Selecciona Autorizaciones');
+        return const Text('Selecciona autorizaciones');
     }
   }
 
@@ -199,7 +199,7 @@ class _AddMachoteState extends State<AddMachote> {
         return const Center(child: Text('Sin datos'));
       }
     } else {
-      return const Center(child: Text('No sean creado plantillas'));
+      return const Center(child: Text('No se han creado plantillas'));
     }
   }
 
@@ -207,7 +207,7 @@ class _AddMachoteState extends State<AddMachote> {
   _addContrato(int idContrato, String titulo, String archivo, String clave) {
     if (titulo.isNotEmpty) {
       MostrarAlerta(
-          mensaje: 'Contrato Agregado.', tipoMensaje: TipoMensaje.correcto);
+          mensaje: 'Contrato agregado.', tipoMensaje: TipoMensaje.correcto);
       setState(() {
         // itemModel.removeWhere((item) => item.idContrato == idContrato);
         for (var element in itemModel) {
@@ -226,7 +226,7 @@ class _AddMachoteState extends State<AddMachote> {
       }));
     } else {
       MostrarAlerta(
-          mensaje: 'Descripcion vacía.', tipoMensaje: TipoMensaje.advertencia);
+          mensaje: 'Descripción vacía.', tipoMensaje: TipoMensaje.advertencia);
     }
   }
 

@@ -162,7 +162,7 @@ class _PerfilState extends State<Perfil> {
                     ),
                     validator: (value) {
                       if (value.isEmpty && value.length < 7) {
-                        return 'Campo requerido con 8 caracteres.';
+                        return 'Campo requerido con 8 caracteres';
                       }
                       return null;
                     },
@@ -188,7 +188,7 @@ class _PerfilState extends State<Perfil> {
                     ),
                     validator: (value) {
                       if (!_validaEmail(value)) {
-                        return 'Es nesesario correo electrónico valido.';
+                        return 'Es nesesario un correo electrónico valido';
                       }
                       return null;
                     },
@@ -214,7 +214,7 @@ class _PerfilState extends State<Perfil> {
                     ),
                     validator: (value) {
                       if (!_validaPhone(value)) {
-                        return 'Es requerido un número de teléfono valido con 10 dígitos.';
+                        return 'Es requerido un número de teléfono valido con 10 dígitos';
                       }
                       return null;
                     },
@@ -285,7 +285,7 @@ class _PerfilState extends State<Perfil> {
                               if (_formKey.currentState.validate()) {
                                 // If the form is valid, display a Snackbar.
                                 MostrarAlerta(
-                                    mensaje: 'Guardando cambios.',
+                                    mensaje: 'Guardando cambios',
                                     tipoMensaje: TipoMensaje.correcto);
                                 _guardarPerfil();
                               }
@@ -307,7 +307,7 @@ class _PerfilState extends State<Perfil> {
                     child: GestureDetector(
                       onTap: changePortadaImage,
                       child: Tooltip(
-                        message: 'Cambiar Portada',
+                        message: 'Cambiar portada',
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SizedBox(
@@ -381,7 +381,7 @@ class _PerfilState extends State<Perfil> {
             tipoMensaje: TipoMensaje.correcto);
       } else {
         MostrarAlerta(
-            mensaje: 'Ocurrio un error al subir la image',
+            mensaje: 'Ocurrió un error al subir la imagen',
             tipoMensaje: TipoMensaje.error);
       }
     } else {
@@ -545,7 +545,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cambiar Contraseña'),
+        title: const Text('Cambiar contraseña'),
       ),
       body: Center(
         child: Container(
@@ -625,7 +625,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                                     const BorderSide(color: Colors.black)),
                             validador: (value) {
                               if (!_validaPsw(value)) {
-                                return 'Campo requerido con una minuscula, una mayúscula, un número y un minimo de 8 caracteres.';
+                                return 'Campo requerido con una minúscula, una mayúscula, un número y un minimo de 8 caracteres';
                               }
                               return null;
                             },
@@ -664,7 +664,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                                 MostrarAlerta(
                                     mensaje: 'La contraseña no coincide',
                                     tipoMensaje: TipoMensaje.advertencia);
-                                return 'Debe coincidir con la contraseña.';
+                                return 'Debe coincidir con la contraseña';
                               } else if (value.isEmpty) {
                                 return 'Campo requerido.';
                               }
@@ -699,7 +699,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                           Navigator.of(context).pop();
                         } else {
                           MostrarAlerta(
-                              mensaje: 'Ocurrio un error',
+                              mensaje: 'Ocurrió un error',
                               tipoMensaje: TipoMensaje.error);
                         }
                       } else {

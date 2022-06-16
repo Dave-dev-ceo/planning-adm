@@ -605,7 +605,7 @@ class NewContratoState extends State<NewContrato> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Editar Documento'),
+        title: const Text('Editar documento'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -650,7 +650,7 @@ class NewContratoState extends State<NewContrato> {
                   }
 
                   MostrarAlerta(
-                      mensaje: 'Se actulizo el nombre correctamente',
+                      mensaje: 'Se actulizó el nombre correctamente',
                       tipoMensaje: TipoMensaje.correcto);
                   contratosBloc.add(ContratosSelect());
                 } else {
@@ -856,7 +856,7 @@ class NewContratoState extends State<NewContrato> {
               width: 5.0,
             ),
             TextButton(
-              child: const Text('Seleccionar Archivo'),
+              child: const Text('Seleccionar archivo'),
               onPressed: () async {
                 _createContrato(_clave['clave'], 'file');
               },
@@ -1047,7 +1047,7 @@ class NewContratoState extends State<NewContrato> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Estás por borrar un documentos.'),
+          title: const Text('Estás por borrar un documento.'),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
@@ -1070,7 +1070,7 @@ class NewContratoState extends State<NewContrato> {
                 Navigator.of(context, rootNavigator: true).pop();
                 verContratos.add(BorrarContrato(idContrato));
                 MostrarAlerta(
-                    mensaje: 'Contrato Borrado.',
+                    mensaje: 'Contrato borrado.',
                     tipoMensaje: TipoMensaje.correcto);
               },
             ),

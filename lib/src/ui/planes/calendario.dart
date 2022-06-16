@@ -109,7 +109,7 @@ class _CalendarioPlanState extends State<CalendarioPlan> {
           return _consulta(copyItemModel, actividades);
         } else {
           return const Center(
-            child: Text('Error En Data'),
+            child: Text('Error en datos'),
           );
         }
       });

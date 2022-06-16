@@ -44,7 +44,7 @@ class MachotesBloc extends Bloc<MachotesEvent, MachotesState> {
           add(FechtMachotesEvent());
         }
       } on UpdateMachotesException {
-        yield ErrorUpdateMachotesState("No de actualizo");
+        yield ErrorUpdateMachotesState("No se actualizó");
       }
     } else if (event is UpdateNombreMachoteEvent) {
       try {

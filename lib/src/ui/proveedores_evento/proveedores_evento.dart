@@ -411,7 +411,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
       lista.add(const Center(
         child: Padding(
           padding: EdgeInsets.all(10.0),
-          child: Text('Sin datos.'),
+          child: Text('Sin datos'),
         ),
       ));
     }

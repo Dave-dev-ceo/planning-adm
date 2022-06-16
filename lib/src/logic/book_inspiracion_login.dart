@@ -88,7 +88,7 @@ class ServiceBookInspiracionLogic {
     if (response.statusCode == 200) {
       return 'Ok';
     } else {
-      return 'Ocurrio un error';
+      return 'Ocurrió un error';
     }
   }
 

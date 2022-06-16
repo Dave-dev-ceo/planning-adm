@@ -23,7 +23,7 @@ class UsuariosBloc extends Bloc<UsuariosEvent, UsuariosState> {
         ItemModelUsuarios usuarios = await logic.fetchUsuariosPorPlanner();
         yield MostrarUsuariosState(usuarios);
       } on ListaUsuariosException {
-        yield ErrorMostrarUsuariosState("Sin Usuarios");
+        yield ErrorMostrarUsuariosState("Sin usuarios");
       } on TokenException {
         yield ErrorTokenUsuariosState("Error de validación de token");
       }

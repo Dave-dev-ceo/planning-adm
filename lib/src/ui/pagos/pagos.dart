@@ -587,7 +587,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
+              index == 0 ? 'Presupuesto interno' : 'Presupuesto del evento',
               style: const TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
               maxLines: 2,
             ),
@@ -676,7 +676,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              index == 0 ? 'Presupuesto Interno' : 'Presupuesto del Evento',
+              index == 0 ? 'Presupuesto interno' : 'Presupuesto del evento',
               style: const TextStyle(fontFamily: 'Comfortaa', fontSize: 20.0),
               maxLines: 2,
             ),

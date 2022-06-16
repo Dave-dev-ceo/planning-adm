@@ -27,9 +27,9 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
         yield SelectPlanesState(
             planes['modelo'], planes['fechaEvento'], planes['fechaInicio']);
       } on ListaPlanesException {
-        yield ErrorMostrarPlanesState('Sin Planes');
+        yield ErrorMostrarPlanesState('Sin planes');
       } on TokenException {
-        yield ErrorTokenPlanesState('Sin Token');
+        yield ErrorTokenPlanesState('Sin token');
       }
     } else if (event is CreatePlanesEvent) {
       try {
@@ -39,7 +39,7 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
       } on CrearPlannerPlanesException {
         yield ErrorMostrarPlanesState('Error al crear');
       } on TokenException {
-        yield ErrorTokenPlanesState('Sin Token');
+        yield ErrorTokenPlanesState('Sin token');
       }
     } else if (event is SelectPlanesEventoEvent) {
       yield LodingPlanesState();
@@ -48,9 +48,9 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
         ItemModelPlanes planes = await logic.selectPlanesEvento(event.myQuery);
         yield SelectEventoState(planes, full);
       } on ListaPlanesException {
-        yield ErrorMostrarPlanesState('Sin Planes');
+        yield ErrorMostrarPlanesState('Sin planes');
       } on TokenException {
-        yield ErrorTokenPlanesState('Sin Token');
+        yield ErrorTokenPlanesState('Sin token');
       }
     } else if (event is UpdatePlanesEventoEvent) {
       yield LodingPlanesState();
@@ -62,9 +62,9 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
             await logic.selectPlanesEvento(event.querySelect);
         yield SelectEventoState(planes, full);
       } on ListaPlanesException {
-        yield ErrorMostrarPlanesState('No Update');
+        yield ErrorMostrarPlanesState('No update');
       } on TokenException {
-        yield ErrorTokenPlanesState('Sin Token');
+        yield ErrorTokenPlanesState('Sin token');
       }
     } else if (event is CreateUnaPlanesEvent) {
       yield LodingPlanesState();
@@ -76,9 +76,9 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
             await logic.selectPlanesEvento(event.querySelect);
         yield SelectEventoState(planes, full);
       } on ListaPlanesException {
-        yield ErrorMostrarPlanesState('No Add');
+        yield ErrorMostrarPlanesState('No add');
       } on TokenException {
-        yield ErrorTokenPlanesState('Sin Token');
+        yield ErrorTokenPlanesState('Sin token');
       }
     } else if (event is DeleteAnActividadEvent) {
       yield LodingPlanesState();
@@ -90,9 +90,9 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
             await logic.selectPlanesEvento(event.querySelect);
         yield SelectEventoState(planes, full);
       } on ListaPlanesException {
-        yield ErrorMostrarPlanesState('No Add');
+        yield ErrorMostrarPlanesState('No add');
       } on TokenException {
-        yield ErrorTokenPlanesState('Sin Token');
+        yield ErrorTokenPlanesState('Sin token');
       }
     } else if (event is GetAllPlannesEvent) {
       yield LoadingAllPlanesState();
@@ -101,7 +101,7 @@ class PlanesBloc extends Bloc<PlanesEvent, PlanesState> {
         final listPlannes = await logic.getAllPlannes();
         yield GetAllPlanesState(listPlannes);
       } on ListaPlanesException {
-        yield ErrorMostrarPlanesState('Sin Planes');
+        yield ErrorMostrarPlanesState('Sin planes');
       }
     } else if (event is GetTimingsAndActivitiesEvent) {
       yield LodingPlanesState();

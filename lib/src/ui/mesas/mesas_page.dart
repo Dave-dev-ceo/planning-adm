@@ -164,7 +164,7 @@ class _MesasPageState extends State<MesasPage> {
                 if (value == 'Ok')
                   {
                     MostrarAlerta(
-                        mensaje: 'Se subio correctamente el layout',
+                        mensaje: 'Se subió correctamente el layout',
                         tipoMensaje: TipoMensaje.correcto)
                   }
                 else
@@ -492,7 +492,7 @@ class _MesasPageState extends State<MesasPage> {
         context: context,
         builder: (context) => AlertDialog(
               title: const Text('Eliminar mesa'),
-              content: const Text('¿Estas seguro de eliminar la mesa?'),
+              content: const Text('¿Estás seguro de eliminar la mesa?'),
               actions: [
                 TextButton(
                   onPressed: () async {
@@ -513,13 +513,13 @@ class _MesasPageState extends State<MesasPage> {
                             .add(MostrarInvitadosMesasEvent());
 
                         MostrarAlerta(
-                            mensaje: 'La mesa se elimino correctamente',
+                            mensaje: 'La mesa se eliminó correctamente',
                             tipoMensaje: TipoMensaje.correcto);
                         Navigator.of(context).pop();
                       } else {
                         MostrarAlerta(
                             mensaje:
-                                'Ocurrio un error al intentar eliminar la mesa',
+                                'Ocurrió un error al intentar eliminar la mesa',
                             tipoMensaje: TipoMensaje.error);
                       }
                     },
@@ -827,13 +827,13 @@ class _MesasPageState extends State<MesasPage> {
                   }));
         } else {
           MostrarAlerta(
-              mensaje: 'Ocurrio un error al intentar eliminar al invitado',
+              mensaje: 'Ocurrió un error al intentar eliminar al invitado',
               tipoMensaje: TipoMensaje.error);
         }
       }
     } else {
       MostrarAlerta(
-          mensaje: 'Seleccione un mesa', tipoMensaje: TipoMensaje.advertencia);
+          mensaje: 'Seleccione una mesa', tipoMensaje: TipoMensaje.advertencia);
     }
   }
 
@@ -855,7 +855,7 @@ class _MesasPageState extends State<MesasPage> {
 
     if (mesaModelData == null || listToAsignarForAdd.isEmpty) {
       MostrarAlerta(
-          mensaje: 'Seleccione la mesa y los invitados ha asignar',
+          mensaje: 'Seleccione la mesa y los invitados a asignar',
           tipoMensaje: TipoMensaje.advertencia);
     } else {
       if (listToAsignarForAdd.length >
@@ -1142,7 +1142,7 @@ class _MesasPageState extends State<MesasPage> {
           });
 
           MostrarAlerta(
-              mensaje: 'Se agrego correctamente',
+              mensaje: 'Se agregó correctamente',
               tipoMensaje: TipoMensaje.correcto);
           setState(() {
             listToAsignarForAdd.clear();
@@ -1210,7 +1210,7 @@ class _MesasPageState extends State<MesasPage> {
                                             });
                                           } else {
                                             MostrarAlerta(
-                                                mensaje: 'Ocurrio un error',
+                                                mensaje: 'Ocurrió un error',
                                                 tipoMensaje: TipoMensaje.error);
                                           }
                                           Navigator.pop(context);
@@ -1319,7 +1319,7 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
                   mensaje: 'Mesa editada', tipoMensaje: TipoMensaje.correcto);
             } else {
               MostrarAlerta(
-                  mensaje: 'Ocurrio un error al interntar editar la mesa',
+                  mensaje: 'Ocurrió un error al intentar editar la mesa',
                   tipoMensaje: TipoMensaje.error);
             }
           }
@@ -1332,7 +1332,7 @@ class _EditMesaDialogState extends State<EditMesaDialog> {
               TextFormField(
                 validator: (value) => (value != null || value != '')
                     ? null
-                    : 'El Campo es requerido',
+                    : 'El campo es requerido',
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),

@@ -152,10 +152,10 @@ class _FormEditPagoState extends State<FormEditPago> {
           const SizedBox(
             height: 32.0,
           ),
-          const Text('Precio Unitario:'),
+          const Text('Precio unitario:'),
           TextFormField(
             controller: TextEditingController(text: '${itemPago['precio']}'),
-            decoration: const InputDecoration(hintText: 'Precio Unitario:'),
+            decoration: const InputDecoration(hintText: 'Precio unitario:'),
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
@@ -282,7 +282,7 @@ class _FormEditPagoState extends State<FormEditPago> {
         itemPago['descripcion'] == '' ||
         itemPago['precio'] == '') {
       MostrarAlerta(
-          mensaje: 'Todos los campos son obligatorios.',
+          mensaje: 'Todos los campos son obligatorios',
           tipoMensaje: TipoMensaje.advertencia);
     } else {
       itemPago['id_concepto'] = widget.id.toString();

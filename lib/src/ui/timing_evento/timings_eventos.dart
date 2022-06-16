@@ -183,7 +183,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
             });
           },
         ),
-        const Text('Seleccionar todo.'),
+        const Text('Seleccionar todo'),
       ],
     );
   }
@@ -282,7 +282,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                       decoration: InputDecoration(
                           labelText: 'Nombre:',
                           errorText:
-                              nombreValidador ? 'Campo obligatorio.' : null),
+                              nombreValidador ? 'Campo obligatorio' : null),
                       onChanged: (valor) {
                         _listFull[i].actividad[j].nombreActividad = valor;
                       },
@@ -298,7 +298,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                       decoration: InputDecoration(
                           labelText: 'Descripción:',
                           errorText: descripcionValidador
-                              ? 'Campo obligatorio.'
+                              ? 'Campo obligatorio'
                               : null),
                       onChanged: (valor) {
                         _listFull[i].actividad[j].describeActividad = valor;
@@ -416,7 +416,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     child: ElevatedButton(
                       child: const Tooltip(
                         child: Icon(Icons.save_sharp),
-                        message: "Agregar actividad.",
+                        message: "Agregar actividad",
                       ),
                       onPressed: () {
                         // validamos data
@@ -490,7 +490,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                 child: _listFull[i].nuevaActividad == true
                     ? const Icon(Icons.add)
                     : const Icon(Icons.remove),
-                message: "Agregar actividades.",
+                message: "Agregar actividades",
               ),
               onPressed: () {
                 setState(() {
@@ -649,7 +649,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
       foregroundColor: Colors.white,
       child: const Tooltip(
         child: Icon(Icons.calendar_today_outlined),
-        message: "Agregar a calendario.",
+        message: "Agregar al calendario",
       ),
       onPressed: () async {
         _saveActividades();
@@ -689,7 +689,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
           errorFormatText: 'Error en el formato',
           errorInvalidText: 'Error en la fecha',
           fieldHintText: 'día/mes/año',
-          fieldLabelText: 'Fecha de inicio de actividad',
+          fieldLabelText: 'Fecha de inicio de la actividad',
           firstDate: fechaInicioEvento,
           lastDate: fechaFinalEvento,
         );
@@ -853,7 +853,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     large: 500.0,
                     ancho: 80,
                     item: CheckboxListTile(
-                      title: const Text('Visible para involucradossssss:'),
+                      title: const Text('Visible para involucrados:'),
                       controlAffinity: ListTileControlAffinity.platform,
                       value: false,
                       onChanged: (valor) {},
@@ -880,7 +880,7 @@ class _TimingsEventosState extends State<TimingsEventos> {
                     child: ElevatedButton(
                       child: const Tooltip(
                         child: Icon(Icons.save_sharp),
-                        message: "Agregar actividad.",
+                        message: "Agregar actividad",
                       ),
                       onPressed: () {},
                     ),

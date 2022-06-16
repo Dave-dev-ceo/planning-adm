@@ -186,7 +186,7 @@ class _FullScreenDialogReporteState extends State<FullScreenDialogReporte> {
               automaticallyImplyLeading: true,
             ),
             body: const Center(
-              child: Text('El sistema esta en acualización'),
+              child: Text('El sistema está en actualización'),
             ),
           );
         } else {

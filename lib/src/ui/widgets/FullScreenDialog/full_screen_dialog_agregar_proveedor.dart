@@ -287,7 +287,7 @@ class _FullScreenDialogAgregarProveedorEvent
                           proveedorBloc
                               .add(CreateProveedorEvent(json, itemProveedores));
                           MostrarAlerta(
-                              mensaje: 'El proveedor se agrego correctamente.',
+                              mensaje: 'El proveedor se agregó correctamente.',
                               tipoMensaje: TipoMensaje.correcto);
                           Navigator.of(context).pop();
                         },

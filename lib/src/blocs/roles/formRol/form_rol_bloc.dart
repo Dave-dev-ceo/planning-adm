@@ -23,7 +23,7 @@ class FormRolBloc extends Bloc<GetFormRolEvent, FormRolState> {
             await logic.obtenerRolesForm(idRol: event.idRol0);
         yield MostrarFormRol(rol);
       } on ObtenerFormRolException {
-        yield ErrorMostrarFormRol("Error al crear Usuario");
+        yield ErrorMostrarFormRol("Error al crear usuario");
       } on TokenFormRolException {
         yield ErrorTokenFormRolState("Error de validación de token");
       }

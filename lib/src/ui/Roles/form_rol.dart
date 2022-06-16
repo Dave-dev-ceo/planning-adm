@@ -361,7 +361,7 @@ class _FormRolState extends State<FormRol> {
             return _listaBuild();
           } else {
             return const Center(
-              child: Text('No hay datos.'),
+              child: Text('No hay datos'),
             );
           }
         } else if (state is ErrorMostrarFormRol) {
@@ -468,7 +468,7 @@ class _FormRolState extends State<FormRol> {
         textAlign: TextAlign.center,
       ),
       content: const Text(
-          'Lo sentimos; la sesión a caducado. Inicie sesión de nuevo.'),
+          'Lo sentimos, la sesión ha caducado. Inicie sesión de nuevo.'),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[

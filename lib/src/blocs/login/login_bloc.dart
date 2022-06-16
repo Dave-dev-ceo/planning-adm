@@ -23,9 +23,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         yield LoggedState(response);
       } on LoginException {
-        yield ErrorLogginState("Correo o contraseña incorrectos.");
+        yield ErrorLogginState("Correo o contraseña incorrectos");
       } catch (e) {
-        yield ErrorLogginState('No se pudo iniciar sesión, intente mas tarde');
+        yield ErrorLogginState('No se pudo iniciar sesión, intente más tarde');
       }
     } else if (event is RecoverPasswordEvent) {
       try {
@@ -35,7 +35,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         } else if (data == 'NotFound') {
           yield CorreoNotFoundState();
         } else {
-          yield ErrorLogginState('Ocurrio un error');
+          yield ErrorLogginState('Ocurrió un error');
         }
       } catch (e) {
         if (kDebugMode) {

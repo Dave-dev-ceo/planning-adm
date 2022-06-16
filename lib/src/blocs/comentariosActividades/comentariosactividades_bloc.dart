@@ -28,7 +28,7 @@ class ComentariosactividadesBloc
       } on ListaComentarioException {
         yield ErrorMostrarComentarioState('Sin Comentarios');
       } on TokenException {
-        yield ErrorTokenComentarioState('Error Token');
+        yield ErrorTokenComentarioState('Error token');
       }
     } else if (event is CreateComentarioEvent) {
       try {
@@ -36,9 +36,9 @@ class ComentariosactividadesBloc
             event.txtComentario, event.idActividad, event.estadoComentario);
         yield CreateComentariosState(id);
       } on ListaComentarioException {
-        yield ErrorMostrarComentarioState('No se guardo el comentarios');
+        yield ErrorMostrarComentarioState('No se guardó el comentario');
       } on TokenException {
-        yield ErrorTokenComentarioState('Error Token');
+        yield ErrorTokenComentarioState('Error token');
       }
     } else if (event is UpdateComentarioEvent) {
       try {
@@ -46,9 +46,9 @@ class ComentariosactividadesBloc
             event.idComentario, event.txtComentario, event.estadoComentario);
         yield UpdateComentariosState();
       } on ListaComentarioException {
-        yield ErrorMostrarComentarioState('No se actualizo el comentarios');
+        yield ErrorMostrarComentarioState('No se actualizó el comentarios');
       } on TokenException {
-        yield ErrorTokenComentarioState('Error Token');
+        yield ErrorTokenComentarioState('Error token');
       }
     }
   }

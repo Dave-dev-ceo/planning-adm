@@ -209,7 +209,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                 Navigator.pop(context, 'Error');
                 MostrarAlerta(
                     mensaje:
-                        'Ocurrio un error al intentar actualizar al acompañante.',
+                        'Ocurrió un error al intentar actualizar al acompañante.',
                     tipoMensaje: TipoMensaje.error);
               }
             }
@@ -346,7 +346,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           tipoMensaje: TipoMensaje.correcto);
     } else {
       MostrarAlerta(
-          mensaje: 'Ocurrio un error: $data.', tipoMensaje: TipoMensaje.error);
+          mensaje: 'Ocurrió un error: $data.', tipoMensaje: TipoMensaje.error);
     }
 
     await blocInvitado.fetchAllAcompanante(idInvitado, context);
@@ -460,7 +460,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         //_mySelection = "0";
         Navigator.of(context).pop();
         MostrarAlerta(
-            mensaje: 'Grupo agregado.', tipoMensaje: TipoMensaje.correcto);
+            mensaje: 'Grupo agregado', tipoMensaje: TipoMensaje.correcto);
         _listaGrupos();
       } else {
         if (kDebugMode) {
@@ -1053,10 +1053,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
           .add(MostrarInvitadosMesasEvent());
       Navigator.of(context).pop();
       MostrarAlerta(
-          mensaje: 'Invitado actualizado.', tipoMensaje: TipoMensaje.correcto);
+          mensaje: 'Invitado actualizado', tipoMensaje: TipoMensaje.correcto);
     } else {
       MostrarAlerta(
-          mensaje: 'Error: No se pudo realizar la actualización.',
+          mensaje: 'Error: No se pudo realizar la actualización',
           tipoMensaje: TipoMensaje.correcto);
     }
   }

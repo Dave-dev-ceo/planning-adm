@@ -100,7 +100,7 @@ class _BookInspiracion extends State<BookInspiracion> {
                                     .getBookInspiracion(),
                                 MostrarAlerta(
                                     mensaje:
-                                        'La imagen se agrego correctamente.',
+                                        'La imagen se agregó correctamente.',
                                     tipoMensaje: TipoMensaje.correcto)
                               }
                           });
@@ -108,7 +108,7 @@ class _BookInspiracion extends State<BookInspiracion> {
               }),
           SpeedDialChild(
               child: const Icon(Icons.download),
-              label: 'Descargar Archivo',
+              label: 'Descargar archivo',
               onTap: () async {
                 final datosBookIns =
                     await bookInspiracionService.downloadBookInspiracion();
@@ -175,8 +175,8 @@ class _BookInspiracion extends State<BookInspiracion> {
 
   _eliminarArchivo(int idArchivo) {
     return AlertDialog(
-      title: const Text('Eliminar Imagen'),
-      content: const Text('¿Desea eliminar la imagen del Book de Inspiration?'),
+      title: const Text('Eliminar imagen'),
+      content: const Text('¿Desea eliminar la imagen del Book Inspiration?'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'Cancelar'),

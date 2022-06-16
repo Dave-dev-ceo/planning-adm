@@ -102,7 +102,7 @@ class _TableEventsExampleState extends State<TableEventsExample> {
           return _consulta(copyItemModel, actividades);
         } else {
           return const Center(
-            child: Text('Error En Data'),
+            child: Text('Error en datos'),
           );
         }
       });

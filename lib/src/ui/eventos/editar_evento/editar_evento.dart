@@ -168,7 +168,7 @@ class _EditarEventoState extends State<EditarEvento> {
             setState(() {
               getIdInvolucrado();
             });
-            return _dialogMSG('Actualizando info. de evento');
+            return _dialogMSG('Actualizando info. del evento');
           } else if (state is EditarEventosOkState) {
             Navigator.pop(_ingresando);
             MostrarAlerta(
@@ -628,7 +628,7 @@ class _EditarEventoState extends State<EditarEvento> {
                     _save();
                   } else {
                     MostrarAlerta(
-                        mensaje: 'Permisos Insuficientes.',
+                        mensaje: 'Permisos insuficientes.',
                         tipoMensaje: TipoMensaje.advertencia);
                   }
                 },

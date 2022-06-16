@@ -116,7 +116,7 @@ class _AgregarEventoState extends State<AgregarEvento> {
           } else if (state is ErrorCreateEventosState) {
             Navigator.pop(_ingresando);
             MostrarAlerta(
-                mensaje: 'Error al crear evento.',
+                mensaje: 'Error al crear evento',
                 tipoMensaje: TipoMensaje.error);
           }
         },

@@ -76,7 +76,7 @@ class _PlantillaEditPageState extends State<PlantillaEditPage> {
             } else {
               MostrarAlerta(
                   mensaje:
-                      'Ocurrio un error al intentar eliminar editar la plantilla',
+                      'Ocurrió un error al intentar editar la plantilla',
                   tipoMensaje: TipoMensaje.error);
             }
           },

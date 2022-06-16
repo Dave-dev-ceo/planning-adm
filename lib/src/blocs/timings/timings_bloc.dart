@@ -23,7 +23,7 @@ class TimingsBloc extends Bloc<TimingsEvent, TimingsState> {
             await logic.fetchTimingsPorPlanner(event.estatus);
         yield MostrarTimingsState(usuarios);
       } on ListaTimingsException {
-        yield ErrorMostrarTimingsState("Sin Timings");
+        yield ErrorMostrarTimingsState("Sin timings");
       } on TokenException {
         yield ErrorTokenTimingsState("Error de validación de token");
       }

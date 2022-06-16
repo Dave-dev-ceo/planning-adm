@@ -109,7 +109,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
 
   String validateDescripcion(String value) {
     if (value.isEmpty) {
-      return "Falta descripcion";
+      return "Falta descripción";
     } else {
       return null;
     }
@@ -125,7 +125,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
 
   String validateDescripcionEdit(String value) {
     if (value.isEmpty) {
-      return "Falta descripcion";
+      return "Falta descripción";
     } else {
       return null;
     }
@@ -254,7 +254,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     }).toList(),
                     value: _seleccion,
                     hint: const Text(
-                        'Seleccione a cuanto tiempo antes del evento'),
+                        'Seleccione a cuánto tiempo antes del evento'),
                     style: const TextStyle(
                       overflow: TextOverflow.ellipsis,
                       color: Colors.black,
@@ -717,7 +717,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                               value: widget.actividad.tiempoAntes,
                               hint: Text(widget.actividad.tiempoAntes != null
                                   ? widget.actividad.tiempoAntes.toString()
-                                  : 'Seleccione a cuanto tiempo antes del evento'),
+                                  : 'Seleccione a cuánto tiempo antes del evento'),
                               style: const TextStyle(
                                 overflow: TextOverflow.ellipsis,
                                 color: Colors.black,

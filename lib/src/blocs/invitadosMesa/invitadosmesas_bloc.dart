@@ -25,7 +25,7 @@ class InvitadosMesasBloc
         final listaInvitados = await logic.getInvitadosConfirmados();
         yield MostraListaInvitadosMesaState(listaInvitados);
       } on InvitadosMesasException {
-        yield ErrorInvitadoMesaState('Ocurrio un error');
+        yield ErrorInvitadoMesaState('Ocurrió un error');
       }
     }
   }

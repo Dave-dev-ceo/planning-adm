@@ -94,7 +94,7 @@ class _AsistenciaState extends State<Asistencia> {
             } else if (state is SavedAsistenciaState) {
               return const Center(child: Text('Cambiando asistencia'));
             } else {
-              return const Center(child: Text('no data'));
+              return const Center(child: Text('Sin datos'));
             }
           },
         ),
@@ -315,7 +315,7 @@ class _AsistenciaState extends State<Asistencia> {
               downloadFile(data, 'asistencia');
             }
           },
-          label: 'Descargar PDf',
+          label: 'Descargar PDF',
         )
       ],
     );

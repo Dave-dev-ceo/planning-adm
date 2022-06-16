@@ -477,7 +477,7 @@ class _FormUsuarioState extends State<FormUsuario> {
         textAlign: TextAlign.center,
       ),
       content: const Text(
-          'Lo sentimos la sesión a caducado, por favor inicie sesión de nuevo.'),
+          'Lo sentimos, la sesión ha caducado. Por favor inicie sesión de nuevo.'),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       actions: <Widget>[

@@ -270,7 +270,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                           onChanged: null,
                         ),
                       ),
-                      Text('${snapshot.data.pendientes.toString()} En Curso'),
+                      Text('${snapshot.data.pendientes.toString()} En curso'),
                       const Spacer(),
                       Theme(
                         data: ThemeData(disabledColor: Colors.red),
@@ -402,7 +402,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                   onChanged: null,
                 ),
               ),
-              const Text('En Curso'),
+              const Text('En curso'),
               Theme(
                 data: ThemeData(disabledColor: Colors.red),
                 child: const Checkbox(
@@ -719,7 +719,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       child: const Tooltip(
-                        message: 'Eliminar Actividad',
+                        message: 'Eliminar actividad',
                         child: Icon(Icons.delete),
                       ),
                       onTap: () async {
@@ -839,7 +839,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                           } else if (fecha.isBefore(DateTime.now())) {
                             actividad.estatus = 'Atrasada';
                           } else {
-                            actividad.estatus = 'En Curs';
+                            actividad.estatus = 'En Curso';
                           }
 
                           actividad.fechaInicioActividad = fecha;
@@ -876,7 +876,7 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                 if (claveRol != 'INVO')
                   GestureDetector(
                     child: const Tooltip(
-                      message: 'Eliminar Actividad',
+                      message: 'Eliminar actividad',
                       child: Icon(Icons.delete),
                     ),
                     onTap: () async {
@@ -1140,7 +1140,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                     tipoMensaje: TipoMensaje.correcto);
               } else {
                 MostrarAlerta(
-                    mensaje: 'Ocurrio un error',
+                    mensaje: 'Ocurrió un error',
                     tipoMensaje: TipoMensaje.error);
               }
             }
@@ -1221,7 +1221,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                           controller: fechaInicioController,
                           decoration: InputDecoration(
                               focusColor: Colors.black,
-                              labelText: 'Fecha de Inicio',
+                              labelText: 'Fecha de inicio',
                               suffixIcon: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [

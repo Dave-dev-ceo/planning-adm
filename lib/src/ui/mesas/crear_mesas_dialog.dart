@@ -191,7 +191,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     return 'El número de mesas es requerido';
                                   } else {
                                     if (int.parse(value) <= 0) {
-                                      return 'Número de mesas no es correcto';
+                                      return 'El número de mesas no es correcto';
                                     } else {
                                       return null;
                                     }
@@ -217,7 +217,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
                                     return 'El número de sillas es requerido';
                                   } else {
                                     if (int.parse(value) <= 0) {
-                                      return 'Número de sillas no es correcto';
+                                      return 'El número de sillas no es correcto';
                                     } else {
                                       return null;
                                     }

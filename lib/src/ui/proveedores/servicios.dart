@@ -188,7 +188,7 @@ class _ServiciosState extends State<Servicios> {
             Navigator.pop(context, 'Aceptar'),
             servicioBloc.add(DeleteServicioEvent(item.idServicio)),
             MostrarAlerta(
-                mensaje: 'Se elimino el servicio.',
+                mensaje: 'Se eliminó el servicio.',
                 tipoMensaje: TipoMensaje.correcto)
           },
           child: const Text('Aceptar'),

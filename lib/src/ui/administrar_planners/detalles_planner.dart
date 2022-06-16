@@ -53,7 +53,7 @@ class _DetallesPlannerState extends State<DetallesPlanner> {
 
           if (state is PlannerEditErrorState) {
             MostrarAlerta(
-              mensaje: 'Ocurrio un error al intentar editar el planner',
+              mensaje: 'Ocurrió un error al intentar editar el planner',
               tipoMensaje: TipoMensaje.error,
             );
           }
@@ -68,7 +68,7 @@ class _DetallesPlannerState extends State<DetallesPlanner> {
 
           if (state is PlannerCreatedErrorState) {
             MostrarAlerta(
-              mensaje: 'Ocurrio un error al intentar crear el planner',
+              mensaje: 'Ocurrió un error al intentar crear el planner',
               tipoMensaje: TipoMensaje.error,
             );
           }

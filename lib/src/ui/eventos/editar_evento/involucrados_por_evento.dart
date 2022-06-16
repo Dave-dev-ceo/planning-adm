@@ -200,19 +200,19 @@ class _InvolucradosPorEventoState extends State<InvolucradosPorEvento> {
           tipoMensaje: TipoMensaje.correcto);
     } else if (!validateNombre(item.nombre)) {
       MostrarAlerta(
-          mensaje: 'Inserta un nombre valido.',
+          mensaje: 'Inserta un nombre válido.',
           tipoMensaje: TipoMensaje.advertencia);
     } else if (!validateTelefono(item.telefono)) {
       MostrarAlerta(
-          mensaje: 'Inserta un telefono valido.',
+          mensaje: 'Inserta un telefono válido.',
           tipoMensaje: TipoMensaje.advertencia);
     } else if (!validateCorreo(item.email)) {
       MostrarAlerta(
-          mensaje: 'Inserta un correo electronico valido.',
+          mensaje: 'Inserta un correo electrónico válido.',
           tipoMensaje: TipoMensaje.advertencia);
     } else {
       MostrarAlerta(
-          mensaje: 'Inserta valores validos.', tipoMensaje: TipoMensaje.error);
+          mensaje: 'Inserta valores válidos.', tipoMensaje: TipoMensaje.error);
     }
   }
 }

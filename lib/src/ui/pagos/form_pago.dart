@@ -154,7 +154,7 @@ class _FormPagoState extends State<FormPago> {
             const SizedBox(
               height: 32.0,
             ),
-            const Text('Precio Unitario:'),
+            const Text('Precio unitario:'),
             TextFormField(
               initialValue: pagoPresupuesto.precioUnitario?.toString(),
               decoration: const InputDecoration(hintText: 'Precio unitario:'),

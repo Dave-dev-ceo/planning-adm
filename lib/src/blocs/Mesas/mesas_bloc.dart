@@ -23,7 +23,7 @@ class MesasBloc extends Bloc<MesasEvent, MesasState> {
       } on MesasAsignadasException {
         yield ErrorMesasState("No se encontraron mesas");
       } on TokenException {
-        yield ErrorTokenMesasState(message: 'Sesion Caducada');
+        yield ErrorTokenMesasState(message: 'Sesión caducada');
       }
     } else if (event is CreateMesasEvent) {
       try {

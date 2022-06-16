@@ -85,7 +85,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                   child: TextFormField(
                     initialValue: perfil.nombreCompleto,
                     decoration: InputDecoration(
-                      hintText: 'Nombre Completo',
+                      hintText: 'Nombre completo',
                       labelText: 'Nombre',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25.0),
@@ -246,7 +246,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
                             if (state.message == 'Ok') {
                               MostrarAlerta(
                                   mensaje:
-                                      'Los Datos se editaron correctamente',
+                                      'Los datos se editaron correctamente',
                                   tipoMensaje: TipoMensaje.correcto);
                             } else {
                               MostrarAlerta(
