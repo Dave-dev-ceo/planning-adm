@@ -316,7 +316,7 @@ class _LoginState extends State<Login> {
           const SizedBox(
             height: 10,
           ),
-          Text('Descarga la aplicación!'),
+          Text('!Descarga la aplicación!'),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: MediaQuery.of(context).size.width > 580
