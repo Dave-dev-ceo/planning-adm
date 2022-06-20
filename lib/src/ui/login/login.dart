@@ -2,6 +2,7 @@
 
 // ignore_for_file: unused_element
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/blocs/login/login_bloc.dart';
@@ -202,6 +203,8 @@ class _LoginState extends State<Login> {
         }
       },
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           const SizedBox(
             height: 10.0,
@@ -299,15 +302,11 @@ class _LoginState extends State<Login> {
                 )),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(4.0),
             child: TextButton(
               onPressed: () async {
-                final canOpen = await canLaunchUrl(
-                    Uri.parse('https://www.planning.com.mx/#testimonials'));
-                if (canOpen) {
-                  await launchUrlString(
-                      'https://www.planning.com.mx/#testimonials');
-                }
+                await launchUrlString(
+                    'https://www.planning.com.mx/#testimonials');
               },
               child: Text('Registrarse'),
             ),
@@ -316,20 +315,24 @@ class _LoginState extends State<Login> {
           const SizedBox(
             height: 10,
           ),
-          Text('!Descarga la aplicación!'),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MediaQuery.of(context).size.width > 580
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: botones,
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: botones,
-                  ),
-          )
+          if (!(defaultTargetPlatform == TargetPlatform.android ||
+              defaultTargetPlatform == TargetPlatform.iOS))
+            Text('¡Descarga la aplicación!'),
+          if (!(defaultTargetPlatform == TargetPlatform.android ||
+              defaultTargetPlatform == TargetPlatform.iOS))
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MediaQuery.of(context).size.width > 580
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: botones,
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: botones,
+                    ),
+            )
         ],
       ),
     );
@@ -339,7 +342,7 @@ class _LoginState extends State<Login> {
     Container(
       width: 150,
       margin: EdgeInsets.all(4.0),
-      child: Image.asset('badge_play.png'),
+      child: Image.asset('assets/badge_play.png'),
     ),
     GestureDetector(
       onTap: () async {
@@ -349,14 +352,14 @@ class _LoginState extends State<Login> {
       child: Container(
         margin: EdgeInsets.all(4.0),
         width: 150,
-        child: Image.asset('badge_apple.png'),
+        child: Image.asset('assets/badge_apple.png'),
       ),
     )
   ];
 
   Padding recoverPasswordButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: TextButton(
         onPressed: () {
           showDialog(
