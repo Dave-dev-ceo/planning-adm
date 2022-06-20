@@ -12,6 +12,8 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 // Padilla
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
@@ -296,14 +298,61 @@ class _LoginState extends State<Login> {
                   style: TextStyle(fontSize: 17),
                 )),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+              onPressed: () async {
+                final canOpen = await canLaunchUrl(
+                    Uri.parse('https://www.planning.com.mx/#testimonials'));
+                if (canOpen) {
+                  await launchUrlString(
+                      'https://www.planning.com.mx/#testimonials');
+                }
+              },
+              child: Text('Registrarse'),
+            ),
+          ),
           recoverPasswordButton(context),
           const SizedBox(
             height: 10,
           ),
+          Text('Descarga la aplicación!'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MediaQuery.of(context).size.width > 580
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: botones,
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: botones,
+                  ),
+          )
         ],
       ),
     );
   }
+
+  final botones = <Widget>[
+    Container(
+      width: 150,
+      margin: EdgeInsets.all(4.0),
+      child: Image.asset('badge_play.png'),
+    ),
+    GestureDetector(
+      onTap: () async {
+        await launchUrl(
+            Uri.parse('https://apps.apple.com/mx/app/planning/id1627823627'));
+      },
+      child: Container(
+        margin: EdgeInsets.all(4.0),
+        width: 150,
+        child: Image.asset('badge_apple.png'),
+      ),
+    )
+  ];
 
   Padding recoverPasswordButton(BuildContext context) {
     return Padding(

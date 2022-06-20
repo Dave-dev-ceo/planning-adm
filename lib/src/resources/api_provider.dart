@@ -618,7 +618,7 @@ class ApiProvider {
 
   Future<Map<String, dynamic>> enviarInvitacionesPorEvento() async {
     String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdEvento();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     final response = await http.post(
       Uri.parse(
