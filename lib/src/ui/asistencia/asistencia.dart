@@ -237,7 +237,7 @@ class _AsistenciaState extends State<Asistencia> {
                     children: [
                       Expanded(
                         child: Text(
-                          element.nombre,
+                          '${element.nombre}${element.acompanante != null ? " - " + element.acompanante : ""}',
                           style: _boldStyle,
                         ),
                       ),
