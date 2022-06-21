@@ -340,7 +340,7 @@ class _LoginState extends State<Login> {
 
   final botones = <Widget>[
     Container(
-      width: 150,
+      height: 50,
       margin: EdgeInsets.all(4.0),
       child: Image.asset('assets/badge_play.png'),
     ),
@@ -351,7 +351,7 @@ class _LoginState extends State<Login> {
       },
       child: Container(
         margin: EdgeInsets.all(4.0),
-        width: 150,
+        height: 50,
         child: Image.asset('assets/badge_apple.png'),
       ),
     )
