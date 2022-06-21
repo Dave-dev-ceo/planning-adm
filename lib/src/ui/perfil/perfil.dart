@@ -294,15 +294,15 @@ class _PerfilState extends State<Perfil> {
                     ],
                   ),
                 ),
-                if (_isInvolucrado) const Divider(),
-                if (_isInvolucrado)
+                if (claveRol == 'INVO') const Divider(),
+                if (claveRol == 'INVO')
                   Center(
                     child: Text(
                       'Portada',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                   ),
-                if (_isInvolucrado)
+                if (claveRol == 'INVO')
                   Center(
                     child: GestureDetector(
                       onTap: changePortadaImage,
@@ -386,8 +386,8 @@ class _PerfilState extends State<Perfil> {
       }
     } else {
       MostrarAlerta(
-          mensaje: 'No se pudo seleccionar la imagen',
-          tipoMensaje: TipoMensaje.error);
+          mensaje: 'No seleccionó una imagen',
+          tipoMensaje: TipoMensaje.advertencia);
     }
   }
 
@@ -606,6 +606,7 @@ class _CambiarContrasenaDialogState extends State<CambiarContrasenaDialog> {
                             inputStyle: const TextStyle(color: Colors.black),
                             hintStyle: const TextStyle(color: Colors.grey),
                             autoFocus: false,
+                            errorMaxLines: 3,
                             hasFloatingPlaceholder: true,
                             prefixIcon: const Icon(Icons.password),
                             suffixIcon: const Icon(

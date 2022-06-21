@@ -302,7 +302,9 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
             ],
             onSelected: (valor) async {
               if (valor == 1) {
-                Navigator.pushNamed(context, '/perfil');
+                await Navigator.pushNamed(context, '/perfil');
+                detalleEvento.portada = await _sharedPreferences.getPortada();
+                setState(() {});
               } else if (valor == 2) {
                 Navigator.of(context).pushNamed('/perfilPlanner');
               } else if (valor == 3) {
