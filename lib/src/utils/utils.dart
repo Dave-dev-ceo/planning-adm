@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,8 +43,15 @@ void downloadFile(String data, String tituloTemp,
     if (status.isGranted) {
       String path;
       if (Platform.isAndroid) {
-        path = await ExternalPath.getExternalStoragePublicDirectory(
-            ExternalPath.DIRECTORY_DOWNLOADS);
+        final deviceInfoPlugin = DeviceInfoPlugin();
+        AndroidDeviceInfo deviceInfo = await deviceInfoPlugin.deviceInfo;
+        if (deviceInfo.version.sdkInt >= 30) {
+          path =
+              await getExternalStorageDirectory().then((value) => value.path);
+        } else {
+          path = await ExternalPath.getExternalStoragePublicDirectory(
+              ExternalPath.DIRECTORY_DOWNLOADS);
+        }
       } else {
         path = await getApplicationDocumentsDirectory()
             .then((value) => value.path);
