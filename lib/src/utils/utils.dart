@@ -37,7 +37,8 @@ void downloadFile(String data, String tituloTemp,
     html.Url.revokeObjectUrl(url);
   } else {
     PermissionStatus status = await Permission.storage.request();
-    await Permission.manageExternalStorage.request();
+    //PermissionStatus statusManager =
+    //    await Permission.manageExternalStorage.request();
     if (status.isGranted) {
       String path;
       if (Platform.isAndroid) {
@@ -54,7 +55,7 @@ void downloadFile(String data, String tituloTemp,
         'error': null,
       };
       try {
-        f.writeAsBytesSync(bytes);
+        await f.writeAsBytes(bytes);
         result['filePath'] = f.path;
         NoticationsService()
             .showNotification(1, 'Se descargó el archivo', result, 2);
@@ -64,6 +65,7 @@ void downloadFile(String data, String tituloTemp,
         }
       }
     } else {
+      await openAppSettings();
       if (kDebugMode) {
         print('NO HAY PERMISO');
       }

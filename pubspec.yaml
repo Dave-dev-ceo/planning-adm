@@ -1,12 +1,12 @@
 name: planning
 description: Planificación de Eventos.
 
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -72,7 +72,7 @@ flutter_icons:
   image_path_android: "assets/icon/icon.png"
   image_path_ios: "assets/icon/icon.png"
   android: true
-  ios: true 
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -108,7 +108,7 @@ flutter:
     - family: Montserrat-Medium
       fonts:
         - asset: fonts/Montserrat-Medium.ttf
-  
+
     - family: Delberg
       fonts:
         - asset: fonts/Delberg.ttf
@@ -144,6 +144,5 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 flutter_native_splash:
-
   color: "#FFFFFF"
   image: assets/new_logo.png
