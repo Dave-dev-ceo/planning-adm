@@ -43,7 +43,7 @@ class PerfiladoLogic implements PermisosLogic {
       ItemModelPantallas pantallas =
           ItemModelPantallas.fromJson(data['pantallas']);
       return ItemModelPerfil(secciones, pantallas);
-    } else if (response.statusCode == 400) {
+    } else if (response.statusCode == 430) {
       throw PaypalSubscriptionException();
     } else if (response.statusCode == 401) {
       throw TokenPermisosException();
