@@ -67,3 +67,5 @@ class PagosTokenErrorState extends PagosState {
 
   List<Object> get props => [message];
 }
+
+class ErrorPagosState extends PagosState {}

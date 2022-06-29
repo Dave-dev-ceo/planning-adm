@@ -24,6 +24,8 @@ class _FormPagoState extends State<FormPago> {
 
   // variable clases
   bool bandera = true;
+  bool tieneProovederos = true;
+  bool tieneServicios = true;
   Map itemPago = {};
 
   @override
@@ -60,6 +62,16 @@ class _FormPagoState extends State<FormPago> {
           itemPago['precio'] = '';
           pagoPresupuesto = PagoPresupuesto();
           pagosBloc.add(SelectFormPagosEvent());
+
+          MostrarAlerta(
+              mensaje: 'Pago agregado', tipoMensaje: TipoMensaje.correcto);
+        }
+        if (state is ErrorPagosState) {
+          MostrarAlerta(
+            mensaje: 'No se pudo agregar el pago, valide información.',
+            tipoMensaje: TipoMensaje.error,
+          );
+          Navigator.of(context).pop();
         }
       },
       child: BlocBuilder<PagosBloc, PagosState>(
@@ -81,6 +93,14 @@ class _FormPagoState extends State<FormPago> {
               itemPago['precio'] = '';
               bandera = false;
             }
+            if (state.proveedor.pagos.isEmpty) {
+              tieneProovederos = false;
+            }
+
+            if (state.servicios.pagos.isEmpty) {
+              tieneServicios = false;
+            }
+
             return _formPagos(state.proveedor, state.servicios);
           } else {
             return const Center(
@@ -246,7 +266,9 @@ class _FormPagoState extends State<FormPago> {
                   Icon(Icons.add),
                 ],
               ),
-              onPressed: () => _agregarPago(),
+              onPressed: (tieneProovederos && tieneServicios)
+                  ? () => _agregarPago()
+                  : null,
             )
           ],
         ),
@@ -309,7 +331,7 @@ class _FormPagoState extends State<FormPago> {
         ),
       );
     } else {
-      return const SizedBox();
+      return const Text('Sin servicios');
     }
   }
 
@@ -366,7 +388,7 @@ class _FormPagoState extends State<FormPago> {
         ),
       );
     } else {
-      return const SizedBox();
+      return const Text('Sin proveedores');
     }
   }
 
@@ -375,8 +397,6 @@ class _FormPagoState extends State<FormPago> {
       itemPago['tipoPresupuesto'] = widget.tipoPresupuesto;
       pagoPresupuesto.tipoPresupuesto = widget.tipoPresupuesto;
       pagosBloc.add(CrearPagosEvent(pagoPresupuesto));
-      MostrarAlerta(
-          mensaje: 'Pago agregado', tipoMensaje: TipoMensaje.correcto);
     }
   }
 
