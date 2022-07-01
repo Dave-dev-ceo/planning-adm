@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/book_inspiracion_login.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -145,12 +146,25 @@ class _BookInspiracion extends State<BookInspiracion> {
           final bytes = base64Decode(layoutBookModel[index].file);
           return Stack(
             children: [
-              SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: Image.memory(
-                  bytes,
-                  fit: BoxFit.cover,
+              InkWell(
+                onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                          child: PhotoView(
+                            backgroundDecoration: BoxDecoration(
+                              color: Colors.transparent,
+                            ),
+                            tightMode: true,
+                            imageProvider: MemoryImage(bytes),
+                          ),
+                        )),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Image.memory(
+                    bytes,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Container(
