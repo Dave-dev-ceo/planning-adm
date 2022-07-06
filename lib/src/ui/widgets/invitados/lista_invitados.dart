@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
@@ -90,17 +91,21 @@ class _ListaInvitadosState extends State<ListaInvitados>
     super.initState();
   }
 
-  _checkPermisos() {
-    if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
-      tabs += 1;
-    }
+  _checkPermisos() async {
+    if (widget.permisos != null) {
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+        tabs += 1;
+      }
 
-    if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
-      tabs += 1;
-    }
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
+        tabs += 1;
+      }
 
-    if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
-      tabs += 1;
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
+        tabs += 1;
+      }
+    } else {
+      tabs = 3;
     }
     setState(() {});
   }
@@ -263,6 +268,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
   List<SpeedDialChild> armarBotonesAcciones() {
     List<SpeedDialChild> temp = [];
+
     if (WP_EVT_INV_CRT) {
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
@@ -380,16 +386,71 @@ class _ListaInvitadosState extends State<ListaInvitados>
     );
   }
 
+  List<Widget> pantallas() {
+    List<Widget> pantallas = [];
+
+    if (widget.permisos != null) {
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV'))
+        pantallas.add(listaInvitados(context));
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI'))
+        pantallas.add(const Asistencia());
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE'))
+        pantallas.add(MesasPage(nameEvento: widget.nameEvento));
+    } else {
+      pantallas = [
+        listaInvitados(context),
+        const Asistencia(),
+        MesasPage(nameEvento: widget.nameEvento)
+      ];
+    }
+
+    return pantallas;
+  }
+
+  List<Tab> buildTabs() {
+    List<Tab> tabs = [];
+    if (widget.permisos != null) {
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+        tabs.add(const Tab(
+          icon: Icon(Icons.people),
+          text: 'Lista de Invitados',
+        ));
+      }
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI')) {
+        tabs.add(const Tab(
+          icon: Icon(Icons.accessibility),
+          text: 'Asistió al evento',
+        ));
+      }
+      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE')) {
+        tabs.add(const Tab(
+          icon: Icon(Icons.contact_mail_sharp),
+          text: 'Mesas',
+        ));
+      }
+    } else {
+      tabs = [
+        const Tab(
+          icon: Icon(Icons.people),
+          text: 'Lista de Invitados',
+        ),
+        const Tab(
+          icon: Icon(Icons.accessibility),
+          text: 'Asistió al evento',
+        ),
+        const Tab(
+          icon: Icon(Icons.contact_mail_sharp),
+          text: 'Mesas',
+        )
+      ];
+    }
+
+    return tabs;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Widget> listWidget = [
-      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV'))
-        listaInvitados(context),
-      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-ASI'))
-        const Asistencia(),
-      if (widget.permisos.pantallas.hasAcceso(clavePantalla: 'WP-EVT-MDE'))
-        MesasPage(nameEvento: widget.nameEvento),
-    ];
+    final List<Widget> listWidget = pantallas();
 
     double pHz = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -401,26 +462,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
             : TabBar(
                 indicatorColor: Colors.black,
                 controller: _controller,
-                tabs: [
-                  if (widget.permisos.pantallas
-                      .hasAcceso(clavePantalla: 'WP-EVT-INV'))
-                    const Tab(
-                      icon: Icon(Icons.people),
-                      text: 'Lista de Invitados',
-                    ),
-                  if (widget.permisos.pantallas
-                      .hasAcceso(clavePantalla: 'WP-EVT-ASI'))
-                    const Tab(
-                      icon: Icon(Icons.accessibility),
-                      text: 'Asistió al evento',
-                    ),
-                  if (widget.permisos.pantallas
-                      .hasAcceso(clavePantalla: 'WP-EVT-MDE'))
-                    const Tab(
-                      icon: Icon(Icons.contact_mail_sharp),
-                      text: 'Mesas',
-                    ),
-                ],
+                tabs: buildTabs(),
               ),
       ),
 

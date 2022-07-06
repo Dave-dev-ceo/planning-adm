@@ -66,135 +66,141 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: BlocBuilder<PermisosBloc, PermisosState>(
-        builder: (context, state) {
-          if (state is PermisosInitial) {
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-              ),
-              body: const Center(child: LoadingCustom()),
-            );
-          } else if (state is ErrorTokenPermisos) {
-            return _showDialogMsg(context);
-          } else if (state is LoadingPermisos) {
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-              ),
-              body: const Center(child: LoadingCustom()),
-            );
-          } else if (state is PermisosOk) {
-            return Scaffold(
-              appBar: appBarCustom(),
-              body: gridDasboarBody(state.permisos.pantallas, state.permisos),
-            );
-          } else if (state is ErrorPermisos) {
-            return Center(
-              child: Text(state.message),
-            );
-          } else {
-            return const Center(child: Text('Sin permisos'));
-          }
-        },
-      ),
+    return Scaffold(
+      appBar: appBarCustom(),
+      body: gridDasboarBody(),
     );
+
+    //return SizedBox(
+    //  width: double.infinity,
+    //  child: BlocBuilder<PermisosBloc, PermisosState>(
+    //    builder: (context, state) {
+    //      if (state is PermisosInitial) {
+    //        return Scaffold(
+    //          appBar: AppBar(
+    //            automaticallyImplyLeading: false,
+    //          ),
+    //          body: const Center(child: LoadingCustom()),
+    //        );
+    //      } else if (state is ErrorTokenPermisos) {
+    //        return _showDialogMsg(context);
+    //      } else if (state is LoadingPermisos) {
+    //        return Scaffold(
+    //          appBar: AppBar(
+    //            automaticallyImplyLeading: false,
+    //          ),
+    //          body: const Center(child: LoadingCustom()),
+    //        );
+    //      } else if (state is PermisosOk) {
+    //        return Scaffold(
+    //          appBar: appBarCustom(),
+    //          body: gridDasboarBody(state.permisos.pantallas, state.permisos),
+    //        );
+    //      } else if (state is ErrorPermisos) {
+    //        return Scaffold(
+    //          body: SafeArea(child: Center(child: Text(state.message))),
+    //        );
+    //      } else {
+    //        return Scaffold(
+    //            body:
+    //                SafeArea(child: const Center(child: Text('Sin permisos'))));
+    //      }
+    //    },
+    //  ),
+    //);
   }
 
-  Widget gridDasboarBody(
-      ItemModelPantallas pantallas, ItemModelPerfil permisos) {
+  Widget gridDasboarBody() {
     List<Widget> gridCard = [];
 
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES')) {
-      gridCard.add(
-        _builCard(
-            'Resumen',
-            ResumenEvento(
-              detalleEvento: {
-                'idEvento': detalleEvento.idEvento,
-                'nEvento': detalleEvento.descripcion,
-                'nombre': detalleEvento.nombreCompleto,
-                'boton': false,
-                'imag': detalleEvento.img
-              },
-              WP_EVT_RES_EDT:
-                  pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
-            ),
-            const FaIcon(FontAwesomeIcons.clipboardList)),
-      );
-      // temp.add(ResumenEvento(
-      //   detalleEvento: detalleEvento,
-      //   WP_EVT_RES_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
-      // ));
-    }
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
-      gridCard.add(
-        _builCard('Actividades', const PlanesPage(),
-            const FaIcon(FontAwesomeIcons.solidCalendarCheck)),
-      );
-      // temp.add(PlanesPage());
-    }
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
-      gridCard.add(_builCard(
-        'Documentos',
-        const NewContrato(),
-        const FaIcon(FontAwesomeIcons.book),
-      ));
+    //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES')) {
+    gridCard.add(
+      _builCard(
+          'Resumen',
+          ResumenEvento(detalleEvento: {
+            'idEvento': detalleEvento.idEvento,
+            'nEvento': detalleEvento.descripcion,
+            'nombre': detalleEvento.nombreCompleto,
+            'boton': false,
+            'imag': detalleEvento.img
+          }, WP_EVT_RES_EDT: true
+              //pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
+              ),
+          const FaIcon(FontAwesomeIcons.clipboardList)),
+    );
+    // temp.add(ResumenEvento(
+    //   detalleEvento: detalleEvento,
+    //   WP_EVT_RES_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
+    // ));
+    //}
+    //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
+    gridCard.add(
+      _builCard('Actividades', const PlanesPage(),
+          const FaIcon(FontAwesomeIcons.solidCalendarCheck)),
+    );
+    // temp.add(PlanesPage());
+    //}
+    //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
+    gridCard.add(_builCard(
+      'Documentos',
+      const NewContrato(),
+      const FaIcon(FontAwesomeIcons.book),
+    ));
 
-      // temp.add(NewContrato());
-    }
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-      gridCard.add(_builCard(
-        'Presupuestos',
-        const Pagos(),
-        const FaIcon(FontAwesomeIcons.moneyBillWave),
-      ));
+    // temp.add(NewContrato());
+    //}
+    //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+    gridCard.add(_builCard(
+      'Presupuestos',
+      const Pagos(),
+      const FaIcon(FontAwesomeIcons.moneyBillWave),
+    ));
 
-      // temp.add(Pagos());
-    }
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
-      gridCard.add(_builCard(
-        'Proveedores',
-        const ProveedorEvento(),
-        const FaIcon(FontAwesomeIcons.peopleCarryBox),
-        isProveedor: true,
-      ));
-    }
+    // temp.add(Pagos());
+    //}
+    //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
+    gridCard.add(_builCard(
+      'Proveedores',
+      const ProveedorEvento(),
+      const FaIcon(FontAwesomeIcons.peopleCarryBox),
+      isProveedor: true,
+    ));
+    //}
+//
+    //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
+    gridCard.add(_builCard(
+      'Invitados',
+      ListaInvitados(
+        idEvento: detalleEvento.idEvento,
+        WP_EVT_INV_CRT:
+            true /*pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT')*/,
+        WP_EVT_INV_EDT:
+            true /*pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT')*/,
+        WP_EVT_INV_ENV:
+            true /*pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV')*/,
+        nameEvento: detalleEvento.descripcion,
+      ),
+      const FaIcon(FontAwesomeIcons.users),
+    ));
+    //}
+//
+    //if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+    gridCard.add(_builCard(
+      'Listas',
+      const Listas(),
+      const FaIcon(FontAwesomeIcons.tableList),
+    ));
 
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
-      gridCard.add(_builCard(
-        'Invitados',
-        ListaInvitados(
-          idEvento: detalleEvento.idEvento,
-          WP_EVT_INV_CRT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-          WP_EVT_INV_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-          WP_EVT_INV_ENV: pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-          nameEvento: detalleEvento.descripcion,
-          permisos: permisos,
-        ),
-        const FaIcon(FontAwesomeIcons.users),
-      ));
-    }
+    //if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
+    gridCard.add(_builCard(
+      'Book Inspiration',
+      const BookInspiracion(),
+      const FaIcon(FontAwesomeIcons.bookOpen),
+    ));
+    //}
 
-    if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
-      gridCard.add(_builCard(
-        'Listas',
-        const Listas(),
-        const FaIcon(FontAwesomeIcons.tableList),
-      ));
-
-      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
-        gridCard.add(_builCard(
-          'Book Inspiration',
-          const BookInspiracion(),
-          const FaIcon(FontAwesomeIcons.bookOpen),
-        ));
-      }
-
-      // temp.add(Listas());
-    }
+    // temp.add(Listas());
+    //}
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 6.0,
