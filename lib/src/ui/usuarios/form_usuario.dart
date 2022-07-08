@@ -267,7 +267,7 @@ class _FormUsuarioState extends State<FormUsuario> {
             'correo': correoCtrl.text,
             'telefono': telefonoCtrl.text,
             'pwd': pwdCtrl.text,
-            'admin': true,
+            'admin': false,
             'id_rol': _mySelectionG,
           };
           usuarioBloc.add(CrearUsuarioEvent(jsonUsuario));
