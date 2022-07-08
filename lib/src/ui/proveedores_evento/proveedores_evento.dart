@@ -331,9 +331,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
       List<ItemProveedor> itemServicio, int idServi, Map servicios) {
     List<Widget> lista = [];
     for (var opt in itemServicio) {
-      // print(opt.idProveedor);
-      // print(opt.nombre);
-      // print(opt.idServicio);
       if (opt.isExpanded) {
         TextEditingController textEditController = opt.observacion != null
             ? TextEditingController(text: opt.observacion)

@@ -235,7 +235,8 @@ class _ListaState extends State<Listas> {
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(fontSize: 24));
-    lista.add(titulo);
+
+    if (!isInvolucrado) lista.add(titulo);
     // Se agregar lista.
     for (var opt in item.results) {
       final tempWidget = ListTile(
