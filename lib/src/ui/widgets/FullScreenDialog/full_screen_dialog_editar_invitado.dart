@@ -62,7 +62,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   String dropdownValue = 'Hombre';
   int _currentSelection;
   String _mySelection = '';
-  String _mySelectionG = "1";
+  String _mySelectionG;
   String _mySelectionM = "0";
   final bool _lights = false;
   String seleccionEstatus;

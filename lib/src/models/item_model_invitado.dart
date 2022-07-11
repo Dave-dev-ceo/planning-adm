@@ -20,7 +20,7 @@ class ItemModelInvitado {
     _idInvitado = parsedJson['id_invitado'];
     _nombre = parsedJson['nombre'];
     _telefono = parsedJson['telefono'];
-    _grupo = parsedJson['id_grupo'];
+    _grupo = parsedJson['grupo'];
     _asistencia = parsedJson['descripcion'];
     _email = parsedJson['email'];
     _genero = parsedJson['genero'];
