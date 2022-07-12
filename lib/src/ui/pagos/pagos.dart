@@ -889,9 +889,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   child: Text(
                       '\$${f.format(element.cantidad * element.precioUnitario)}')),
               onTap: () {
-            if (!isInvolucrado) {
-              _editarPago(element.idConcepto);
-            }
+            _editarPago(element.idConcepto);
           }),
         ];
         if (tipoPage == element.tipoPresupuesto) {

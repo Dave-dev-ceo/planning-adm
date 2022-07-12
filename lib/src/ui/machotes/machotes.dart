@@ -396,7 +396,7 @@ class _MachotesState extends State<Machotes> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_outlined),
-            label: 'Orden de pedido',
+            label: 'Orden de pago',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fact_check_outlined),

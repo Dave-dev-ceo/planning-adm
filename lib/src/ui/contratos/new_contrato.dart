@@ -252,16 +252,17 @@ class NewContratoState extends State<NewContrato> {
                           color: Colors.black,
                         )),
                   ),
-                  Card(
-                    child: ExpansionTile(
-                        title: const Text('Pagos',
-                            style: TextStyle(color: Colors.black)),
-                        children: _pagosItem(),
-                        trailing: const Icon(
-                          Icons.request_page,
-                          color: Colors.black,
-                        )),
-                  ),
+                  if (!isInvolucrado)
+                    Card(
+                      child: ExpansionTile(
+                          title: const Text('Pagos',
+                              style: TextStyle(color: Colors.black)),
+                          children: _pagosItem(),
+                          trailing: const Icon(
+                            Icons.request_page,
+                            color: Colors.black,
+                          )),
+                    ),
                   Card(
                     child: ExpansionTile(
                         title: const Text('Minutas',
@@ -272,16 +273,17 @@ class NewContratoState extends State<NewContrato> {
                           color: Colors.black,
                         )),
                   ),
-                  Card(
-                    child: ExpansionTile(
-                        title: const Text('Orden de pedido',
-                            style: TextStyle(color: Colors.black)),
-                        children: _ordenPagos(),
-                        trailing: const Icon(
-                          Icons.list_alt,
-                          color: Colors.black,
-                        )),
-                  ),
+                  if (!isInvolucrado)
+                    Card(
+                      child: ExpansionTile(
+                          title: const Text('Orden de pago',
+                              style: TextStyle(color: Colors.black)),
+                          children: _ordenPagos(),
+                          trailing: const Icon(
+                            Icons.list_alt,
+                            color: Colors.black,
+                          )),
+                    ),
                   Card(
                     child: ExpansionTile(
                         title: const Text('Autorizaciones',

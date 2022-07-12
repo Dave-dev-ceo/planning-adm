@@ -258,7 +258,7 @@ class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
           Card(
             child: ExpansionTile(
               textColor: Colors.black,
-              title: const Text('Orden de pedido'),
+              title: const Text('Orden de pago'),
               trailing: const FaIcon(
                 FontAwesomeIcons.fileInvoiceDollar,
                 color: Colors.black,
