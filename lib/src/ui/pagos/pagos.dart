@@ -782,7 +782,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
       ),
       DataColumn(
         label: Text(
-          'Poveedor',
+          'Proveedor',
           style: _boldStyle,
         ),
       ),
