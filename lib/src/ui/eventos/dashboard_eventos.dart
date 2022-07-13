@@ -89,34 +89,59 @@ class _DashboardEventosState extends State<DashboardEventos> {
             color: const Color(0xFFfdf4e5),
           ),
           child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
-                  title: Text(titulo),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('Fecha evento: $fevento'),
-                      Text('Planeación de evento del: $inicio al $fin'),
-                      for (var i = 0; i < involucrados.length; i++)
-                        involucrados[0].tipoInvolucrado != 'Sin involucrado'
-                            ? Text(involucrados[i].tipoInvolucrado +
-                                ' : ' +
-                                involucrados[i].nombre)
-                            : const Text('Sin involucrados'),
-                      const Align(
-                        alignment: Alignment.centerRight,
-                      )
-                    ],
-                  ),
-                  // trailing: FaIcon(
-                  //   FontAwesomeIcons.glassCheers,
-                  //   size: 18.0,
-                  // ),
+            child: Stack(
+              children: [
+                Column(
+                  children: <Widget>[
+                    ListTile(
+                      contentPadding: const EdgeInsets.fromLTRB(15, 10, 25, 0),
+                      title: Text(titulo),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('Fecha evento: $fevento'),
+                          Text('Planeación de evento del: $inicio al $fin'),
+                          for (var i = 0; i < involucrados.length; i++)
+                            involucrados[0].tipoInvolucrado != 'Sin involucrado'
+                                ? Text(involucrados[i].tipoInvolucrado +
+                                    ' : ' +
+                                    involucrados[i].nombre)
+                                : const Text('Sin involucrados'),
+                          const Align(
+                            alignment: Alignment.centerRight,
+                          )
+                        ],
+                      ),
+                      // trailing: FaIcon(
+                      //   FontAwesomeIcons.glassCheers,
+                      //   size: 18.0,
+                      // ),
+                    ),
+                    const SizedBox(
+                      height: 8.0,
+                    )
+                  ],
                 ),
-                const SizedBox(
-                  height: 8.0,
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 7.0, top: 7.0),
+                    child: PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          height: 20.0,
+                          child: const Text(
+                            'Descargar evento',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          onTap: () {
+                            _showDialogDescargarEvento();
+                          },
+                        ),
+                      ],
+                      child: Icon(Icons.more_vert),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -134,6 +159,44 @@ class _DashboardEventosState extends State<DashboardEventos> {
             'imag': widget.data['imag']
           });
         }
+      },
+    );
+  }
+
+  _showDialogDescargarEvento() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            'Confirmar descarga',
+            textAlign: TextAlign.center,
+          ),
+          content: SizedBox(
+            width: 350.0,
+            child: const Text(
+              'Se guardará en el dispositivo la siguiente información del evento:'
+              '\n - Resumen'
+              '\n - Documentos'
+              '\n - Lista de invitados'
+              '\n\n¿Desea continuar?',
+              textAlign: TextAlign.justify,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () => Navigator.pop(context),
+            ),
+            TextButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                //Hacer algo
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
       },
     );
   }

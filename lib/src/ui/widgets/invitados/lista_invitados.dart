@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:planning/src/animations/loading_animation.dart';
-import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
+import 'package:planning/src/ui/widgets/invitados/enviar_correo_invitados.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
@@ -76,6 +76,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
   TextEditingController controllerBuscar = TextEditingController();
   String _searchResult = '';
   List<dynamic> buscador = [];
+  List<dynamic> todosLosInvitados = [];
 
   int tabs = 0;
   @override
@@ -334,19 +335,28 @@ class _ListaInvitadosState extends State<ListaInvitados>
         ),
         backgroundColor: hexToColor("#fdf4e5"),
         onTap: () async {
-          _dialogSpinner('Enviando QR...');
-          Map<String, dynamic> response =
-              await api.enviarInvitacionesPorEvento();
-          Navigator.pop(_dialogContext);
-          MostrarAlerta(
-              mensaje: response['msg'],
-              tipoMensaje: response['enviado']
-                  ? TipoMensaje.correcto
-                  : TipoMensaje.error);
+          dialogoEnvioCorreos();
+          //Función comentada que enviaba a todos los contactos
+          // _dialogSpinner('Enviando QR...');
+          // Map<String, dynamic> response =
+          //     await api.enviarInvitacionesPorEvento();
+          // Navigator.pop(_dialogContext);
+          // MostrarAlerta(
+          //     mensaje: response['msg'],
+          //     tipoMensaje: response['enviado']
+          //         ? TipoMensaje.correcto
+          //         : TipoMensaje.error);
         },
       ));
     }
     return temp;
+  }
+
+  dialogoEnvioCorreos() {
+    showDialog(
+      context: context,
+      builder: (context) => EnviarCorreoInvitados(todosLosInvitados),
+    );
   }
 
   alertaLlamada() {
@@ -512,6 +522,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
     final size = MediaQuery.of(context).size;
     final datos = snapshot.data;
 
+    todosLosInvitados = snapshot.data.results;
     if (_searchResult == '') {
       buscador = snapshot.data.results;
     }

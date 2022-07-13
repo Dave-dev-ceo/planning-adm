@@ -650,6 +650,42 @@ class ApiProvider {
     };
   }
 
+  Future<Map<String, dynamic>> enviarInvitacionesASeleccionados(
+    List<Map<String, dynamic>> invitadosSeleccionados,
+  ) async {
+    String token = await _sharedPreferences.getToken();
+    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    final response = await http.post(
+      Uri.parse(
+          '${confiC.url}${confiC.puerto}/wedding/INVITADOS/enviarInvitacionesASeleccionados'),
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+      },
+      body: {
+        'id_planner': idPlanner.toString(),
+        'id_evento': idEvento.toString(),
+        'invitados': json.encode(invitadosSeleccionados),
+      },
+    );
+    int enviados = 0;
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      for (var dato in data) {
+        if (dato['enviado']) {
+          enviados += 1;
+        }
+      }
+    } else {
+      return {'msg': 'Error al enviar invitaciones', 'enviado': false};
+    }
+    return {
+      'msg': 'Se han enviado $enviados invitaciones por correo electrónico',
+      'enviado': true,
+    };
+  }
+
   Future<int> renovarToken() async {
     String token = await _sharedPreferences.getToken();
 
