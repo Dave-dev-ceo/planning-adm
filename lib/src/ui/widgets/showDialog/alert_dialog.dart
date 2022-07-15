@@ -46,7 +46,7 @@ class _DialogAlertState extends State<DialogAlert> {
           } else if (state is QrErrorState) {
             Navigator.of(context).pop();
             MostrarAlerta(
-                mensaje: 'Ocurrió un error al leer el QR',
+                mensaje: 'Ocurrió un error al leer el QR, vuelva a escanear',
                 tipoMensaje: TipoMensaje.error);
           }
         },
@@ -66,6 +66,9 @@ class _DialogAlertState extends State<DialogAlert> {
                       texto('Invitado: ', invitado.nombre, 'Sin nombre'),
                       texto('Grupo: ', invitado.grupo, 'Sin nombre'),
                       texto('Mesa: ', invitado.mesa, 'Sin mesa'),
+                      texto('Alimentación: ', invitado.alimentacion, 'No especificada'),
+                      texto('Alergias: ', invitado.alimentacion, 'Ninguna'),
+                      texto('Asistencia especial: ', invitado.alimentacion, 'No requerida'),
                       texto('Correo: ', invitado.correo, 'Sin correo'),
                       texto('Teléfono: ', invitado.telefono, 'Sin teléfono'),
                       if (invitado.acompanantes.isNotEmpty)
@@ -76,7 +79,16 @@ class _DialogAlertState extends State<DialogAlert> {
                       for (var acompanante in invitado.acompanantes)
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Text(acompanante.nombre),
+                          child: ListBody(
+                            children: [
+                              text(acompanante.nombre),
+                              text('Mesa: ${datoNulo(acompanante.mesa, 'Sin mesa')}'),
+                              text('Alimentación: ${datoNulo(acompanante.alimentacion, 'No especificada')}'),
+                              text('Alergias: ${datoNulo(acompanante.alergias, 'Ninguna')}'),
+                              text('Asistencia especial: ${datoNulo(acompanante.asistenciaEspecial, 'No requerida')}'),
+                              const Divider(),
+                            ],
+                          ),
                         )
                     ],
                   ),
@@ -148,6 +160,20 @@ class _DialogAlertState extends State<DialogAlert> {
       ),
       padding: const EdgeInsets.all(10),
     );
+  }
+
+  Widget text(String dato) {
+    return Text(
+      dato,
+      textAlign: TextAlign.left,
+    );
+  }
+
+  String datoNulo(String dato, sinDato) {
+    if (dato != null && dato != '') {
+      return dato;
+    }
+    return sinDato;
   }
 
   _guardarAsistencia(int idInvitado, String nombre, bool asistenciaValor,

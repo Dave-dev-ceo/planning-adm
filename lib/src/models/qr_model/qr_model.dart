@@ -15,6 +15,9 @@ class QrInvitadoModel {
     this.mesa,
     this.evento,
     this.telefono,
+    this.alergias,
+    this.alimentacion,
+    this.asistenciaEspecial,
     this.acompanantes,
   });
 
@@ -25,6 +28,9 @@ class QrInvitadoModel {
   dynamic mesa;
   String evento;
   String telefono;
+  String alergias;
+  String alimentacion;
+  String asistenciaEspecial;
   List<Acompanante> acompanantes;
 
   factory QrInvitadoModel.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +42,9 @@ class QrInvitadoModel {
         mesa: json["mesa"],
         evento: json["evento"],
         telefono: json["telefono"],
+        alergias: json["alergias"],
+        alimentacion: json["alimentacion"],
+        asistenciaEspecial: json["asistencia_especial"],
         acompanantes: List<Acompanante>.from(
             json["acompanantes"].map((x) => Acompanante.fromJson(x))),
       );
@@ -55,12 +64,24 @@ class QrInvitadoModel {
 class Acompanante {
   Acompanante({
     this.nombre,
+    this.mesa,
+    this.alimentacion,
+    this.alergias,
+    this.asistenciaEspecial,
   });
 
   String nombre;
+  String mesa;
+  String alimentacion;
+  String alergias;
+  String asistenciaEspecial;
 
-  factory Acompanante.fromJson(String acompanante) => Acompanante(
-        nombre: acompanante,
+  factory Acompanante.fromJson(Map<String, dynamic> acompanante) => Acompanante(
+        nombre: acompanante["nombre"],
+        mesa: acompanante["mesa"],
+        alimentacion: acompanante["alimentacion"],
+        alergias: acompanante["acompanante"],
+        asistenciaEspecial: acompanante["asistenciaEspecial"],
       );
 
   Map<String, dynamic> toJson() => {
