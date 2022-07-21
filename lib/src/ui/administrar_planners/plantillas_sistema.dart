@@ -38,7 +38,7 @@ class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
       'clave': 'MT_T',
     },
     {
-      "nombre": "Orden de pago",
+      "nombre": "Orden de pedido",
       'clave': 'OP_T',
     },
     {
@@ -258,7 +258,7 @@ class _PlantillasSistemaPageState extends State<PlantillasSistemaPage> {
           Card(
             child: ExpansionTile(
               textColor: Colors.black,
-              title: const Text('Orden de pago'),
+              title: const Text('Orden de pedido'),
               trailing: const FaIcon(
                 FontAwesomeIcons.fileInvoiceDollar,
                 color: Colors.black,
