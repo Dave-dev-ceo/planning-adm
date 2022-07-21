@@ -192,8 +192,12 @@ class _ListaInvitadosState extends State<ListaInvitados>
           for (int row = 1; row < sheet.maxRows; row++) {
             Map<String, String> jsonExample = {
               'nombre': sheet.row(row)[0].value.toString(),
-              'email': sheet.row(row)[1].value.toString(),
-              'telefono': sheet.row(row)[2].value.toString(),
+              'email': sheet.row(row)[1] != null
+                  ? sheet.row(row)[1].value.toString()
+                  : '',
+              'telefono': sheet.row(row)[2] != null
+                  ? sheet.row(row)[2].value.toString()
+                  : '',
               'id_evento': idEvento.toString()
             };
             bool response = await api.createInvitados(jsonExample, context);
