@@ -335,33 +335,34 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
         TextEditingController textEditController = opt.observacion != null
             ? TextEditingController(text: opt.observacion)
             : TextEditingController();
-        final tempWidget = ListTile(
-            title: Row(
-              children: [
-                Expanded(child: Text(opt.nombre)),
-                Expanded(
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed('/agregarArchivo', arguments: {
-                          'id_proveedor': opt.idProveedor,
-                          'id_servicio': idServi,
-                          'nombre': opt.nombre,
-                          'type': 1,
-                          'prvEv': 2,
-                          'isEvento': true,
-                        });
-                      },
-                      icon: const Icon(Icons.file_present)),
+        final tempWidget = size.width > 900
+            ? ListTile(
+                title: Row(
+                  children: [
+                    Expanded(child: Text(opt.nombre)),
+                    Expanded(
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed('/agregarArchivo', arguments: {
+                              'id_proveedor': opt.idProveedor,
+                              'id_servicio': idServi,
+                              'nombre': opt.nombre,
+                              'type': 1,
+                              'prvEv': 2,
+                              'isEvento': true,
+                            });
+                          },
+                          icon: const Icon(Icons.file_present)),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            subtitle: Text(opt.descripcion),
-            trailing: Wrap(
-              spacing: 12,
-              children: <Widget>[
-                servicios[idServi] == opt.idProveedor
-                    ? SizedBox(
+                subtitle: Text(opt.descripcion),
+                trailing: Wrap(
+                  spacing: 12,
+                  children: <Widget>[
+                    if (servicios[idServi] == opt.idProveedor)
+                      SizedBox(
                         width: 250.0,
                         child: TextFormField(
                           controller: textEditController,
@@ -378,29 +379,95 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
                                 .add(UpdateProveedorEventosEvent(data));
                           },
                         ),
-                      )
-                    : const SizedBox(),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Seleccionar: '),
+                      ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Seleccionar: '),
+                    ),
+                    Radio(
+                      value: opt.idProveedor,
+                      groupValue: servicios[idServi],
+                      onChanged: (value) async {
+                        setState(() {
+                          opt.observacion = null;
+                          servicios[idServi] = value;
+                        });
+                        Map data = {
+                          'id_proveedor': opt.idProveedor.toString(),
+                          'id_servicio': idServi.toString()
+                        };
+                        proveedoreventosBloc
+                            .add(UpdateProveedorEventosEvent(data));
+                      },
+                    ),
+                  ],
+                ))
+            : ListTile(
+                title: Row(
+                  children: [
+                    Expanded(child: Text(opt.nombre)),
+                    Expanded(
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed('/agregarArchivo', arguments: {
+                              'id_proveedor': opt.idProveedor,
+                              'id_servicio': idServi,
+                              'nombre': opt.nombre,
+                              'type': 1,
+                              'prvEv': 2,
+                              'isEvento': true,
+                            });
+                          },
+                          icon: const Icon(Icons.file_present)),
+                    ),
+                  ],
                 ),
-                Radio(
-                  value: opt.idProveedor,
-                  groupValue: servicios[idServi],
-                  onChanged: (value) async {
-                    setState(() {
-                      opt.observacion = null;
-                      servicios[idServi] = value;
-                    });
-                    Map data = {
-                      'id_proveedor': opt.idProveedor.toString(),
-                      'id_servicio': idServi.toString()
-                    };
-                    proveedoreventosBloc.add(UpdateProveedorEventosEvent(data));
-                  },
-                ),
-              ],
-            ));
+                subtitle: Wrap(
+                  spacing: 12,
+                  children: <Widget>[
+                    Text(opt.descripcion),
+                    if (servicios[idServi] == opt.idProveedor)
+                      SizedBox(
+                        width: 250.0,
+                        child: TextFormField(
+                          controller: textEditController,
+                          decoration: const InputDecoration(
+                              hintText: 'Observaciones: '),
+                          onChanged: (value) async {
+                            opt.observacion = value;
+                            Map data = {
+                              'id_proveedor': opt.idProveedor.toString(),
+                              'id_servicio': idServi.toString(),
+                              'observacion': opt.observacion
+                            };
+                            proveedoreventosBloc
+                                .add(UpdateProveedorEventosEvent(data));
+                          },
+                        ),
+                      ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Seleccionar: '),
+                    ),
+                    Radio(
+                      value: opt.idProveedor,
+                      groupValue: servicios[idServi],
+                      onChanged: (value) async {
+                        setState(() {
+                          opt.observacion = null;
+                          servicios[idServi] = value;
+                        });
+                        Map data = {
+                          'id_proveedor': opt.idProveedor.toString(),
+                          'id_servicio': idServi.toString()
+                        };
+                        proveedoreventosBloc
+                            .add(UpdateProveedorEventosEvent(data));
+                      },
+                    ),
+                  ],
+                ));
         lista.add(tempWidget);
       }
     }

@@ -106,8 +106,7 @@ class _CargarExcelState extends State<CargarExcel> {
           }
         } else {
           MostrarAlerta(
-              mensaje: 'Estructura incorrecta',
-              tipoMensaje: TipoMensaje.error);
+              mensaje: 'Estructura incorrecta', tipoMensaje: TipoMensaje.error);
         }
       }
     }

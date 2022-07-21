@@ -27,6 +27,7 @@ import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/asistencia/asistencia.dart';
 import 'package:planning/src/ui/mesas/mesas_page.dart';
+import '../../../animations/loading_overlay.dart';
 import '../../../models/item_model_invitados.dart';
 
 import 'package:planning/src/utils/utils.dart' as utils;
@@ -78,9 +79,26 @@ class _ListaInvitadosState extends State<ListaInvitados>
   List<dynamic> buscador = [];
   List<dynamic> todosLosInvitados = [];
 
+  ProgressBar _sendingMsgProgressBar;
+
+  @override
+  void dispose() {
+    _sendingMsgProgressBar.hide();
+    super.dispose();
+  }
+
+  void showSendingProgressBar() {
+    _sendingMsgProgressBar.show(context);
+  }
+
+  void hideSendingProgressBar() {
+    _sendingMsgProgressBar.hide();
+  }
+
   int tabs = 0;
   @override
   void initState() {
+    _sendingMsgProgressBar = ProgressBar();
     _checkPermisos();
 
     _controller = TabController(length: tabs, vsync: this);
@@ -160,7 +178,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
                   child: const Text('Sí'),
                   onPressed: () async {
                     await _readExcel();
-                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -178,6 +195,9 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
     /// file might be picked
     if (pickedFile != null) {
+      Navigator.of(context).pop();
+
+      showSendingProgressBar();
       var bytes = pickedFile.files.single.bytes;
       bytes ??= File(pickedFile.files[0].path).readAsBytesSync();
 
@@ -219,6 +239,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
             mensaje: 'Error: No se pudo realizar el registro',
             tipoMensaje: TipoMensaje.advertencia);
       }
+      hideSendingProgressBar();
     }
   }
 
