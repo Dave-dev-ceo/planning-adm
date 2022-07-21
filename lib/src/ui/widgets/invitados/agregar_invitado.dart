@@ -104,7 +104,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
               ),
               keyboardType: TextInputType.emailAddress,
               maxLength: 32,
-              validator: validateEmail,
+              // validator: validateEmail,
             )),
         formItemsDesign(
             Icons.phone,
@@ -116,7 +116,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
               ),
               keyboardType: TextInputType.phone,
               maxLength: 10,
-              validator: validateTelefono,
+              //validator: validateTelefono,
             )),
         //formItemsDesign(
         //    Icons.people,
