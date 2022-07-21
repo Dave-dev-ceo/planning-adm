@@ -207,4 +207,23 @@ class SharedPreferencesT {
       await _sharedPreferences.remove(key);
     }
   }
+
+  setSinConexion() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.setBool('offline', true);
+  }
+
+  setEnLinea() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.remove('offline');
+  }
+
+  Future<bool> getModoConexion() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    bool offline = await _sharedPreferences.getBool('offline');
+    if (offline == null) {
+      return false;
+    }
+    return offline;
+  }
 }
