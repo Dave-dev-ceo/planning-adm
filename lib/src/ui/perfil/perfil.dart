@@ -349,7 +349,16 @@ class _PerfilState extends State<Perfil> {
 
     if (pickedFile != null) {
       for (var archivo in pickedFile.files) {
-        setState(() => perfil.image = base64.encode(archivo.bytes));
+        final kb = pickedFile.files.single.size / 1024;
+
+        final mb = kb / 1024;
+        if (mb < 4) {
+          setState(() => perfil.image = base64.encode(archivo.bytes));
+        } else {
+          MostrarAlerta(
+              mensaje: 'El archivo debe pesar menos de 4 megabytes',
+              tipoMensaje: TipoMensaje.advertencia);
+        }
       }
     }
   }
@@ -367,22 +376,30 @@ class _PerfilState extends State<Perfil> {
     if (pickedFile != null) {
       final file = pickedFile.files.single.bytes;
       String newPortada = base64Encode(file);
+      final kb = pickedFile.files.single.size / 1024;
 
-      setState(() {
-        portada = newPortada;
-      });
+      final mb = kb / 1024;
+      if (mb < 4) {
+        setState(() {
+          portada = newPortada;
+        });
 
-      final statusCode = await logicApi.updatePortadaEvento(newPortada);
+        final statusCode = await logicApi.updatePortadaEvento(newPortada);
 
-      if (statusCode == 200) {
-        _sharedPreferences.setPortada(newPortada);
-        MostrarAlerta(
-            mensaje: 'Se ha editado la foto de portada',
-            tipoMensaje: TipoMensaje.correcto);
+        if (statusCode == 200) {
+          _sharedPreferences.setPortada(newPortada);
+          MostrarAlerta(
+              mensaje: 'Se ha editado la foto de portada',
+              tipoMensaje: TipoMensaje.correcto);
+        } else {
+          MostrarAlerta(
+              mensaje: 'Ocurrió un error al subir la imagen',
+              tipoMensaje: TipoMensaje.error);
+        }
       } else {
         MostrarAlerta(
-            mensaje: 'Ocurrió un error al subir la imagen',
-            tipoMensaje: TipoMensaje.error);
+            mensaje: 'El archivo debe pesar menos de 4 megabytes',
+            tipoMensaje: TipoMensaje.advertencia);
       }
     } else {
       MostrarAlerta(

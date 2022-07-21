@@ -44,7 +44,7 @@ class NewContratoState extends State<NewContrato> {
     {"nombre": "Recibos", "clave": "RC", 'clave_t': 'RC_T'},
     {"nombre": "Pagos", "clave": "PG", 'clave_t': 'PG_T'},
     {"nombre": "Minutas", "clave": "MT", 'clave_t': 'MT_T'},
-    {"nombre": "Orden de pago", "clave": "OP", 'clave_t': 'OP_T'},
+    {"nombre": "Orden de pedido", "clave": "OP", 'clave_t': 'OP_T'},
     {"nombre": "Autorizaciones", "clave": "AU", 'clave_t': 'AU_T'},
   ];
 
@@ -276,7 +276,7 @@ class NewContratoState extends State<NewContrato> {
                   if (!isInvolucrado)
                     Card(
                       child: ExpansionTile(
-                          title: const Text('Orden de pago',
+                          title: const Text('Orden de pedido',
                               style: TextStyle(color: Colors.black)),
                           children: _ordenPagos(),
                           trailing: const Icon(

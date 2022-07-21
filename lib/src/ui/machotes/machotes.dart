@@ -20,7 +20,7 @@ class _MachotesState extends State<Machotes> {
     {"nombre": "Recibos", "clave": "RC"},
     {"nombre": "Pagos", "clave": "PG"},
     {"nombre": "Minutas", "clave": "MT"},
-    {"nombre": "Orden de pago", "clave": "OP"},
+    {"nombre": "Orden de pedido", "clave": "OP"},
     {"nombre": "Autorizaciones", "clave": "AU"},
   ];
   TextEditingController descripcionMachote;
@@ -396,7 +396,7 @@ class _MachotesState extends State<Machotes> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_outlined),
-            label: 'Orden de pago',
+            label: 'Orden de pedido',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fact_check_outlined),

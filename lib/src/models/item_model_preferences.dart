@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesT {
@@ -71,7 +72,14 @@ class SharedPreferencesT {
   // ini perfil
   setImagen(String json) async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.setString('imagen', json);
+    try {
+      return _sharedPreferences.setString('imagen', json);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return;
+    }
   }
 
   getImagen() async {
@@ -81,7 +89,15 @@ class SharedPreferencesT {
 
   setPortada(String json) async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.setString('portada', json);
+    try {
+      return _sharedPreferences.setString('portada', json);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+
+      return;
+    }
   }
 
   getPortada() async {

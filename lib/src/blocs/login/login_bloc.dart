@@ -12,6 +12,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({@required this.logic}) : super(LoginInitial());
 
   @override
+  void onTransition(Transition<LoginEvent, LoginState> transition) {
+    super.onTransition(transition);
+
+    print(transition);
+  }
+
+  @override
   Stream<LoginState> mapEventToState(
     LoginEvent event,
   ) async* {
@@ -25,6 +32,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } on LoginException {
         yield ErrorLogginState("Correo o contraseña incorrectos");
       } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
         yield ErrorLogginState('No se pudo iniciar sesión, intente más tarde');
       }
     } else if (event is RecoverPasswordEvent) {
