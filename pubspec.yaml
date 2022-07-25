@@ -59,6 +59,7 @@ dependencies:
   font_awesome_flutter: ^10.1.0
   passwordfield: ^0.1.0
   device_info_plus: ^3.2.4
+  hive_flutter: ^1.1.0
 
 dependency_overrides:
   flutter_colorpicker: ^0.6.0

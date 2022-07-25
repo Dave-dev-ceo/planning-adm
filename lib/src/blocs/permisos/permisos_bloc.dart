@@ -10,28 +10,58 @@ part 'permisos_state.dart';
 
 class PermisosBloc extends Bloc<PermisosEvent, PermisosState> {
   final PerfiladoLogic logic;
-  PermisosBloc({@required this.logic}) : super(PermisosInitial());
-
-  @override
-  Stream<PermisosState> mapEventToState(
-    PermisosEvent event,
-  ) async* {
-    if (event is ObtenerPermisosEvent) {
-      yield LoadingPermisos();
+  PermisosBloc({@required this.logic}) : super(PermisosInitial()) {
+    on<ObtenerPermisosEvent>((event, emit) async {
+      emit(LoadingPermisos());
 
       try {
         ItemModelPerfil permisos = await logic.obtenerPermisosUsuario();
-        yield PermisosOk(permisos);
+        emit(PermisosOk(permisos));
       } on PermisosException {
-        yield ErrorPermisos("Sin permisos");
+        emit(ErrorPermisos("Sin permisos"));
       } on TokenPermisosException {
-        yield ErrorTokenPermisos("Sesión caducada");
+        emit(ErrorTokenPermisos("Sesión caducada"));
       } on PaypalSubscriptionException {
-        yield ErrorSuscripcionPaypal(
-            "No cuentas con una suscripción activa en Paypal.");
+        emit(ErrorSuscripcionPaypal(
+            "No cuentas con una suscripción activa en Paypal."));
       }
-    }
+    });
+
+    on<PermisosSinConexion>((event, emit) {
+      ItemModelPerfil _seccionesFiltradas = event.permisos;
+
+      for (var seccion in _seccionesFiltradas.secciones.secciones) {
+        for (var s in _seccionesFiltradas.secciones.secciones) {
+          if (!(s.claveSeccion == 'WP-EVT')) {
+            s.acceso = false;
+          }
+        }
+      }
+
+      emit(PermisosOk(_seccionesFiltradas));
+    });
   }
+
+  // @override
+  // Stream<PermisosState> mapEventToState(
+  //   PermisosEvent event,
+  // ) async* {
+  //   if (event is ObtenerPermisosEvent) {
+  //     yield LoadingPermisos();
+
+  //     try {
+  //       ItemModelPerfil permisos = await logic.obtenerPermisosUsuario();
+  //       yield PermisosOk(permisos);
+  //     } on PermisosException {
+  //       yield ErrorPermisos("Sin permisos");
+  //     } on TokenPermisosException {
+  //       yield ErrorTokenPermisos("Sesión caducada");
+  //     } on PaypalSubscriptionException {
+  //       yield ErrorSuscripcionPaypal(
+  //           "No cuentas con una suscripción activa en Paypal.");
+  //     }
+  //   }
+  // }
 
   @override
   void onTransition(Transition<PermisosEvent, PermisosState> transition) {

@@ -51,6 +51,7 @@ class _Seccion {
 
   String get claveSeccion => _claveSeccion;
   bool get acceso => _acceso;
+  set acceso(bool acceso) => _acceso = acceso;
 }
 
 // ----------------------------
@@ -114,12 +115,13 @@ class _Pantalla {
 }
 
 class ItemModelPerfil {
-  final ItemModelSecciones _secciones;
-  final ItemModelPantallas _pantallas;
+  ItemModelSecciones _secciones;
+  ItemModelPantallas _pantallas;
 
   ItemModelPerfil(this._secciones, this._pantallas);
 
   ItemModelSecciones get secciones => _secciones;
 
   ItemModelPantallas get pantallas => _pantallas;
+
 }

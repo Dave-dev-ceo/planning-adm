@@ -290,8 +290,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
                     } else if (valor == 2) {
                       Navigator.of(context).pushNamed('/perfilPlanner');
                     } else if (valor == 3) {
-                      await _sharedPreferences.clear();
-                      Navigator.pushReplacementNamed(context, '/');
+                      dialogoCerrarSesion();
                     }
                   },
                 ),
@@ -312,6 +311,39 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         controller: _tabController,
       ),
     );
+  }
+
+  void dialogoCerrarSesion() async {
+    bool offline = await _sharedPreferences.getModoConexion();
+    if (!offline) {
+      await _sharedPreferences.clear();
+      Navigator.pushReplacementNamed(context, '/');
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text(
+              'Modo sin conexión detectado',
+              textAlign: TextAlign.center,
+            ),
+            content: SizedBox(
+              width: 350,
+              child: Text(
+                'Desactive el modo sin conexión para subir sus cambios antes de cerrar sesión.',
+                textAlign: TextAlign.justify,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Aceptar'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   List<TabItem> obtenerTabsPantallas(ItemModelPantallas pantallas) {

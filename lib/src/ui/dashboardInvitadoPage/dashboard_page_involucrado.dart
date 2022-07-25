@@ -312,10 +312,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
               } else if (valor == 2) {
                 Navigator.of(context).pushNamed('/perfilPlanner');
               } else if (valor == 3) {
-                await SharedPreferencesT().clear();
-                if (mounted) {
-                  Navigator.pushReplacementNamed(context, '/');
-                }
+                dialogoCerrarSesion();
               }
             },
             child: Row(
@@ -413,6 +410,41 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
         ),
       ),
     );
+  }
+
+  void dialogoCerrarSesion() async {
+    bool offline = await _sharedPreferences.getModoConexion();
+    if (!offline) {
+      await SharedPreferencesT().clear();
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/');
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text(
+              'Modo sin conexión detectado',
+              textAlign: TextAlign.center,
+            ),
+            content: SizedBox(
+              width: 350,
+              child: Text(
+                'Desactive el modo sin conexión para subir sus cambios antes de cerrar sesión.',
+                textAlign: TextAlign.justify,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Aceptar'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   _showDialogMsg(BuildContext contextT) {

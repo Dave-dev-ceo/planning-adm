@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/logic/eventos_offline_logic.dart';
 import 'package:planning/src/resources/config_conection.dart';
 
 import 'package:flutter/material.dart';
@@ -124,24 +125,45 @@ class _DashboardEventosState extends State<DashboardEventos> {
                 ),
                 Align(
                   alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 7.0, top: 7.0),
-                    child: PopupMenuButton(
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          height: 20.0,
-                          child: const Text(
-                            'Descargar evento',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          onTap: () {
-                            _showDialogDescargarEvento();
-                          },
-                        ),
-                      ],
-                      child: Icon(Icons.more_vert),
-                    ),
-                  ),
+                  child: FutureBuilder(
+                      future: FetchListaEventosOfflineLogic()
+                          .eventoDescargado(idEvento),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (snapshot.data[0] == false) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 7.0, top: 7.0),
+                              child: PopupMenuButton(
+                                onSelected: (i) {
+                                  if (i == 1) {
+                                    showDialogDescargarEvento(
+                                        context, idEvento);
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 1,
+                                    height: 20.0,
+                                    child: const Text(
+                                      'Descargar evento',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                                child: Icon(
+                                  snapshot.data[1] == true
+                                      ? Icons.download_done
+                                      : Icons.more_vert,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 7.0, top: 7.0),
+                        );
+                      }),
                 )
               ],
             ),
@@ -163,10 +185,10 @@ class _DashboardEventosState extends State<DashboardEventos> {
     );
   }
 
-  _showDialogDescargarEvento() {
+  void showDialogDescargarEvento(BuildContext currentContext, int idEvento) {
     showDialog(
-      context: context,
-      builder: (context) {
+      context: currentContext,
+      builder: (currentContext) {
         return AlertDialog(
           title: const Text(
             'Confirmar descarga',
@@ -190,9 +212,13 @@ class _DashboardEventosState extends State<DashboardEventos> {
             ),
             TextButton(
               child: const Text('Aceptar'),
-              onPressed: () {
-                //Hacer algo
+              onPressed: () async {
+                await FetchListaEventosOfflineLogic()
+                    .fetchEventosOffline(idEvento);
                 Navigator.pop(context);
+                setState(() {
+                  
+                });
               },
             ),
           ],

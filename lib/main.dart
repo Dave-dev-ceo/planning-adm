@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:planning/src/utils/notifications_service.dart';
 import 'src/app.dart';
 
@@ -17,5 +18,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
   await NoticationsService().initNotication();
+  await Hive.initFlutter(); 
   runApp(const AppState());
 }

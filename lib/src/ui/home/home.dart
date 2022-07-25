@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/permisos/permisos_bloc.dart';
+import 'package:planning/src/logic/eventos_offline_logic.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/ui/dashboard_planner/dashboard_calendar_page.dart';
@@ -44,9 +45,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
-    permisosBloc.add(ObtenerPermisosEvent());
+    esModoCOnexion();
     getClaveRol();
     super.initState();
+  }
+
+  void esModoCOnexion() async {
+    final bool desconectado = await _sharedPreferences.getModoConexion();
+
+    if (!desconectado) {
+      
+    permisosBloc.add(ObtenerPermisosEvent());
+    }
+
+
   }
 
   getClaveRol() async {
@@ -182,9 +194,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       value: 4,
                     ),
                   const PopupMenuItem(
+                    child: Text('Modo sin conexión'),
+                    value: 5,
+                  ),
+                  const PopupMenuItem(
+                    child: Divider(height: 4.0),
+                    height: 8.0,
+                    enabled: false,
+                  ),
+                  const PopupMenuItem(
                     value: 3,
                     child: Text("Cerrar sesión"),
-                  )
+                  ),
                 ],
                 onSelected: (valor) async {
                   if (valor == 1) {
@@ -192,10 +213,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   } else if (valor == 2) {
                     Navigator.of(context).pushNamed('/perfilPlanner');
                   } else if (valor == 3) {
-                    await _sharedPreferences.clear();
-                    Navigator.pushReplacementNamed(context, '/');
+                    dialogoCerrarSesion();
                   } else if (valor == 4) {
                     Navigator.of(context).pushNamed('/administrarPlanners');
+                  } else if (valor == 5) {
+                    dialogoConexion();
                   }
                 },
               ),
@@ -219,6 +241,127 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               tabs: tabs,
             )
           : null,
+    );
+  }
+
+  void dialogoCerrarSesion() async {
+    bool offline = await _sharedPreferences.getModoConexion();
+    if (!offline) {
+      await _sharedPreferences.clear();
+      Navigator.pushReplacementNamed(context, '/');
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text(
+              'Modo sin conexión detectado',
+              textAlign: TextAlign.center,
+            ),
+            content: SizedBox(
+              width: 350,
+              child: Text(
+                'Desactive el modo sin conexión para subir sus cambios antes de cerrar sesión.',
+                textAlign: TextAlign.justify,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Aceptar'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void dialogoConexion() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return FutureBuilder(
+          future: _sharedPreferences.getModoConexion(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data == true) {
+                return AlertDialog(
+                  title: const Text(
+                    'Activar conexión',
+                    textAlign: TextAlign.center,
+                  ),
+                  content: SizedBox(
+                    width: 350,
+                    child: Text(
+                      'Se reactivarán todas las funciones en línea de la aplicación, '
+                      'se subirán las asistencias registradas en los eventos y se eliminarán '
+                      'los documentos guardados en el dispositivo para liberar espacio.\n\n'
+                      '¿Desea continuar?',
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Cancelar'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    TextButton(
+                      child: const Text('Aceptar'),
+                      onPressed: () async {
+                        await FetchListaEventosOfflineLogic().subirCambiosEventos(context);
+                        _sharedPreferences.setEnLinea();
+                      permisosBloc.add(ObtenerPermisosEvent());
+
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                );
+              }
+              return AlertDialog(
+                title: const Text(
+                  'Activar modo sin conexión',
+                  textAlign: TextAlign.center,
+                ),
+                content: SizedBox(
+                  width: 350,
+                  child: Text(
+                    'Sólo estarán disponibles las siguientes funciones de los eventos descargados:\n'
+                    '\n - Resumen (ver)'
+                    '\n - Documentos (ver y descargar)'
+                    '\n - Invitados (confirmar asistencia)'
+                    '\n\n¿Desea continuar?',
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Cancelar'),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  TextButton(
+                    child: const Text('Aceptar'),
+                    onPressed: () {
+                      _sharedPreferences.setSinConexion();
+                      
+
+                      permisosBloc.add(PermisosSinConexion(permisos));
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              );
+            }
+            return AlertDialog(
+              content: SizedBox(
+                height: 150,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
