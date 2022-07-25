@@ -128,32 +128,41 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
   @override
   Future<ItemModelAddContratos> selectContratosEvento() async {
-    // variables
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
+    bool desconectado = await _sharedPreferences.getModoConexion();
 
-    // pedido al servidor
-    final response = await http.post(
-        Uri.parse(
-            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/selectContratosEvento'),
-        body: {
-          'id_planner': idPlanner.toString(),
-          "id_evento": idEvento.toString()
-        },
-        headers: {
-          HttpHeaders.authorizationHeader: token
-        });
-
-    // filtro
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      await _sharedPreferences.setToken(data['token']);
-      return ItemModelAddContratos.fromJson(data['data']);
-    } else if (response.statusCode == 401) {
-      throw TokenException();
+    if (desconectado) {
+      if (!Hive.isBoxOpen('contratos')) {
+        await Hive.openBox<dynamic>('contratos');
+      }
+      final boxContratos = Hive.box<dynamic>('contratos');
+      final listaContratos =
+          boxContratos.values.where((c) => c['id_evento'] == idEvento).toList();
+      await boxContratos.close();
+      return ItemModelAddContratos.fromJson(listaContratos);
     } else {
-      throw AutorizacionException();
+      final response = await http.post(
+          Uri.parse(
+              '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/selectContratosEvento'),
+          body: {
+            'id_planner': idPlanner.toString(),
+            "id_evento": idEvento.toString()
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: token
+          });
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        return ItemModelAddContratos.fromJson(data['data']);
+      } else if (response.statusCode == 401) {
+        throw TokenException();
+      } else {
+        throw AutorizacionException();
+      }
     }
   }
 

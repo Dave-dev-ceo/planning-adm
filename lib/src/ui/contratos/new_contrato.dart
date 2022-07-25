@@ -36,6 +36,7 @@ class NewContratoState extends State<NewContrato> {
 
   // Variable involucrado
   bool isInvolucrado = false;
+  bool desconectado = false;
 
   GlobalKey<FormState> keyForm;
 
@@ -61,6 +62,7 @@ class NewContratoState extends State<NewContrato> {
     contratosBloc.add(ContratosSelect());
     verContratos = BlocProvider.of<VerContratosBloc>(context);
     getIdInvolucrado();
+    getModoSinConexion();
   }
 
   void getIdInvolucrado() async {
@@ -71,6 +73,10 @@ class NewContratoState extends State<NewContrato> {
         isInvolucrado = true;
       });
     }
+  }
+
+  void getModoSinConexion() async {
+    desconectado = await SharedPreferencesT().getModoConexion();
   }
 
   Color hexToColor(String code) {
@@ -345,9 +351,12 @@ class NewContratoState extends State<NewContrato> {
       contentPadding: const EdgeInsets.all(20.0),
       leading: !isInvolucrado
           ? GestureDetector(
-              onTap: () {
-                _shodDialogEdit(contrato.idContrato, contrato.description);
-              },
+              onTap: desconectado
+                  ? null
+                  : () {
+                      _shodDialogEdit(
+                          contrato.idContrato, contrato.description);
+                    },
               child: const Icon(Icons.edit))
           : null,
       title: Text(contrato.description),
@@ -378,17 +387,19 @@ class NewContratoState extends State<NewContrato> {
                       TextButton.icon(
                         icon: const Icon(Icons.edit),
                         label: const Text('Editar'),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/editarContratos',
-                              arguments: {
-                                'archivo': '',
-                                'id_contrato': contrato.idContrato
-                              }).then(
-                              (value) => contratosBloc.add(ContratosSelect()));
-                          setState(() {
-                            contratosBloc.add(ContratosSelect());
-                          });
-                        },
+                        onPressed: desconectado
+                            ? null
+                            : () {
+                                Navigator.pushNamed(context, '/editarContratos',
+                                    arguments: {
+                                      'archivo': '',
+                                      'id_contrato': contrato.idContrato
+                                    }).then((value) =>
+                                    contratosBloc.add(ContratosSelect()));
+                                setState(() {
+                                  contratosBloc.add(ContratosSelect());
+                                });
+                              },
                       )
                     ],
                   ),
@@ -419,7 +430,9 @@ class NewContratoState extends State<NewContrato> {
                       TextButton.icon(
                         icon: const Icon(Icons.cloud_upload_outlined),
                         label: const Text('Subir firmado'),
-                        onPressed: () => _uploadFile(contrato.idContrato),
+                        onPressed: desconectado
+                            ? null
+                            : () => _uploadFile(contrato.idContrato),
                       )
                     ],
                   ),
@@ -464,11 +477,13 @@ class NewContratoState extends State<NewContrato> {
       ),
       trailing: !isInvolucrado
           ? GestureDetector(
-              child: const Icon(
+              child: Icon(
                 Icons.delete,
-                color: Colors.black,
+                color: desconectado ? Colors.grey : Colors.black,
               ),
-              onTap: () => _borrarContratos(contrato.idContrato),
+              onTap: desconectado
+                  ? null
+                  : () => _borrarContratos(contrato.idContrato),
             )
           : null,
     );
@@ -478,18 +493,23 @@ class NewContratoState extends State<NewContrato> {
     return ExpansionTile(
       trailing: !isInvolucrado
           ? GestureDetector(
-              child: const Icon(
+              child: Icon(
                 Icons.delete,
-                color: Colors.black,
+                color: desconectado ? Colors.grey : Colors.black,
               ),
-              onTap: () => _borrarContratos(contrato.idContrato),
+              onTap: desconectado
+                  ? null
+                  : () => _borrarContratos(contrato.idContrato),
             )
           : null,
       leading: !isInvolucrado
           ? GestureDetector(
-              onTap: () {
-                _shodDialogEdit(contrato.idContrato, contrato.description);
-              },
+              onTap: desconectado
+                  ? null
+                  : () {
+                      _shodDialogEdit(
+                          contrato.idContrato, contrato.description);
+                    },
               child: const Icon(Icons.edit))
           : null,
       title: Text(
@@ -524,17 +544,19 @@ class NewContratoState extends State<NewContrato> {
                     TextButton.icon(
                       icon: const Icon(Icons.edit),
                       label: const Text('Editar'),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/editarContratos',
-                            arguments: {
-                              'archivo': '',
-                              'id_contrato': contrato.idContrato
-                            }).then(
-                            (value) => contratosBloc.add(ContratosSelect()));
-                        setState(() {
-                          contratosBloc.add(ContratosSelect());
-                        });
-                      },
+                      onPressed: desconectado
+                          ? null
+                          : () {
+                              Navigator.pushNamed(context, '/editarContratos',
+                                  arguments: {
+                                    'archivo': '',
+                                    'id_contrato': contrato.idContrato
+                                  }).then((value) =>
+                                  contratosBloc.add(ContratosSelect()));
+                              setState(() {
+                                contratosBloc.add(ContratosSelect());
+                              });
+                            },
                     )
                   ],
                 ),

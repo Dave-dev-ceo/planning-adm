@@ -150,7 +150,6 @@ class ApiProvider {
           .where((r) => r['id_evento'] == idEvento)
           .toList()[0];
       await boxReportesInvitados.close();
-      print(infoReporteInvitados['reporte']);
       return ItemModelReporteInvitados.fromJson(
           infoReporteInvitados['reporte']);
     } else {

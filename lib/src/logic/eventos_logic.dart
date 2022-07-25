@@ -103,7 +103,6 @@ class FetchListaEventosLogic extends ListaEventosLogic {
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         await _sharedPreferences.setToken(data['token']);
-        print(data['data']['evento']);
         return ItemModelEvento.fromJsonUnit(data['data']['evento']);
       } else if (response.statusCode == 401) {
         await _sharedPreferences.clear();
