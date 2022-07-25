@@ -1,6 +1,7 @@
 // imports flutter/dart
 import 'dart:convert';
 import 'dart:io';
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import 'package:planning/src/resources/config_conection.dart';
 
@@ -380,30 +381,48 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
   @override
   Future<Map<String, dynamic>> obtenerUltimoDocumento() async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
     String token = await _sharedPreferences.getToken();
     int idEvento = await _sharedPreferences.getIdEvento();
-    const endpoint = '/wedding/ADDCONTRATOS/obtenerUltimoDocumento';
-
-    final data = {
-      'idEvento': idEvento,
-    };
-
-    final headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
-    };
-
-    final response = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + endpoint),
-      body: json.encode(data),
-      headers: headers,
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    if (desconectado) {
+      if (!Hive.isBoxOpen('contratos')) {
+        await Hive.openBox<dynamic>('contratos');
+      }
+      final boxContratos = Hive.box<dynamic>('contratos');
+      final listaContratos =
+          boxContratos.values.where((c) => c['id_evento'] == idEvento).toList();
+      if (listaContratos.isEmpty) {
+        return null;
+      }
+      listaContratos.sort((a, b) {
+        if (a['id_contrato'] > b['id_contrato']) {
+          return -1;
+        }
+        return 1;
+      });
+      final body = Map<String, dynamic>.from(listaContratos[0]);
+      print(body['documento']);
+      return body;
     } else {
-      return null;
+      const endpoint = '/wedding/ADDCONTRATOS/obtenerUltimoDocumento';
+      final data = {
+        'idEvento': idEvento,
+      };
+      final headers = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: token
+      };
+      final response = await http.post(
+        Uri.parse(confiC.url + confiC.puerto + endpoint),
+        body: json.encode(data),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return null;
+      }
     }
   }
 }

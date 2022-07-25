@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' show Client;
 import 'package:planning/src/models/Planes/planes_model.dart';
 
@@ -624,40 +625,56 @@ class ActividadesEvento {
     ConfigConection confiC = ConfigConection();
     Client client = Client();
 
+    bool desconectado = await sharedPreferences.getModoConexion();
     String token = await sharedPreferences.getToken();
     int idPlanner = await sharedPreferences.getIdPlanner();
     int idEvento = await sharedPreferences.getIdEvento();
 
-    String endpoint;
-
-    if (isInvolucrado) {
-      endpoint = '/wedding/PLANES/conteoPorEstatusActividadInvolucrado';
+    if (desconectado) {
+      if (!Hive.isBoxOpen('conteos')) {
+        await Hive.openBox<dynamic>('conteos');
+      }
+      final boxConteos = Hive.box<dynamic>('conteos');
+      final conteo = boxConteos.values
+          .where((c) => c['id_evento'] == idEvento)
+          .toList()[0];
+      await boxConteos.close();
+      final infoConteo =
+          ContadorActividadesModel.fromJson(Map<String, dynamic>.from(conteo));
+      contadorActividadSink(infoConteo);
+      return infoConteo;
     } else {
-      endpoint = '/wedding/PLANES/conteoPorEstatusActividad';
-    }
+      String endpoint;
 
-    final headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
-    };
+      if (isInvolucrado) {
+        endpoint = '/wedding/PLANES/conteoPorEstatusActividadInvolucrado';
+      } else {
+        endpoint = '/wedding/PLANES/conteoPorEstatusActividad';
+      }
 
-    final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: token
+      };
 
-    final resp = await client.post(
-      Uri.parse(confiC.url + confiC.puerto + endpoint),
-      body: json.encode(data),
-      headers: headers,
-    );
+      final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
 
-    if (resp.statusCode == 200) {
-      ContadorActividadesModel contadorActividad =
-          ContadorActividadesModel.fromJson(json.decode(resp.body));
+      final resp = await client.post(
+        Uri.parse(confiC.url + confiC.puerto + endpoint),
+        body: json.encode(data),
+        headers: headers,
+      );
 
-      contadorActividadSink(contadorActividad);
-      return contadorActividad;
-    } else {
-      return null;
+      if (resp.statusCode == 200) {
+        ContadorActividadesModel contadorActividad =
+            ContadorActividadesModel.fromJson(json.decode(resp.body));
+
+        contadorActividadSink(contadorActividad);
+        return contadorActividad;
+      } else {
+        return null;
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 // imports from flutter/dart
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import 'package:planning/src/models/historialPagos/historial_pagos_model.dart';
 import 'dart:io';
@@ -268,29 +269,38 @@ class ConsultasPagosLogic extends PagosLogic {
   Future<Map<String, dynamic>> obtenerResumenPagos() async {
     String token = await _sharedPreferences.getToken();
     int idEvento = await _sharedPreferences.getIdEvento();
-
-    const endpoint = '/wedding/PAGOS/obtenerResumenPagosPorEvento';
-
-    final headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
-    };
-
-    final data = {
-      'idEvento': idEvento,
-    };
-
-    final resp = await http.post(
-      Uri.parse(confiC.url + confiC.puerto + endpoint),
-      body: json.encode(data),
-      headers: headers,
-    );
-
-    if (resp.statusCode == 200) {
-      return jsonDecode(resp.body);
+    bool desconectado = await _sharedPreferences.getModoConexion();
+    if (desconectado) {
+      if (!Hive.isBoxOpen('resumenPagos')) {
+        await Hive.openBox<dynamic>('resumenPagos');
+      }
+      final boxResumenPagos = Hive.box<dynamic>('resumenPagos');
+      final resumenPago = boxResumenPagos.values
+          .where((r) => r['id_evento'] == idEvento)
+          .toList()[0];
+      await boxResumenPagos.close();
+      final mapResumenPago = Map<String, dynamic>.from(resumenPago);
+      return mapResumenPago;
     } else {
-      return null;
+      const endpoint = '/wedding/PAGOS/obtenerResumenPagosPorEvento';
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: token
+      };
+      final data = {
+        'idEvento': idEvento,
+      };
+      final resp = await http.post(
+        Uri.parse(confiC.url + confiC.puerto + endpoint),
+        body: json.encode(data),
+        headers: headers,
+      );
+      if (resp.statusCode == 200) {
+        return jsonDecode(resp.body);
+      } else {
+        return null;
+      }
     }
   }
 }

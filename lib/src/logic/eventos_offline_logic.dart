@@ -93,6 +93,69 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       }
       await boxInfoEventos.close();
     }
+
+    //Descarga del resumen de pagos
+    final responseResumenPagos = await http.post(
+      Uri.parse(
+          '${configC.url}${configC.puerto}/wedding/PAGOS/obtenerResumenPagosPorEvento'),
+      body: json.encode({'idEvento': idEvento}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: token,
+      },
+    );
+    if (responseResumenPagos.statusCode == 200) {
+      final resumen = jsonDecode(responseResumenPagos.body);
+      if (!Hive.isBoxOpen('resumenPagos')) {
+        await Hive.openBox<dynamic>('resumenPagos');
+      }
+      final boxResumenPagos = Hive.box<dynamic>('resumenPagos');
+      final listaResumenesPago = [...boxResumenPagos.values];
+      if (listaResumenesPago.any((r) => r['id_evento'] == idEvento)) {
+        final indexResumen =
+            listaResumenesPago.indexWhere((r) => r['id_evento'] == idEvento);
+        await boxResumenPagos.putAt(indexResumen, resumen);
+      } else {
+        await boxResumenPagos.add(resumen);
+      }
+      await boxResumenPagos.close();
+    }
+
+    //Descarga de conteo de estatus
+    final isInvolucrado = await _checkIsInvolucrado();
+    String endpoint;
+    if (isInvolucrado) {
+      endpoint = '/wedding/PLANES/conteoPorEstatusActividadInvolucrado';
+    } else {
+      endpoint = '/wedding/PLANES/conteoPorEstatusActividad';
+    }
+    final responseConteo = await http.post(
+      Uri.parse('${configC.url}${configC.puerto}$endpoint'),
+      body: json.encode({'idPlanner': idPlanner, 'idEvento': idEvento}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: token
+      },
+    );
+    if (responseConteo.statusCode == 200) {
+      final conteo = json.decode(responseConteo.body);
+      if (!Hive.isBoxOpen('conteos')) {
+        await Hive.openBox<dynamic>('conteos');
+      }
+      final boxConteos = Hive.box<dynamic>('conteos');
+      final listaConteos = [...boxConteos.values];
+      if (listaConteos.any((c) => c['id_evento'] == idEvento)) {
+        final indexConteo =
+            listaConteos.indexWhere((c) => c['id_evento'] == idEvento);
+        await boxConteos.putAt(indexConteo, conteo);
+      } else {
+        await boxConteos.add(conteo);
+      }
+      await boxConteos.close();
+    }
+
     Navigator.pop(_dialogContext);
     MostrarAlerta(
       mensaje: 'Se ha descargado el evento exitosamente',
@@ -114,7 +177,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
   @override
   Future<void> subirCambiosEventos(BuildContext context) async {
     _dialogSpinner('Subiendo cambios', context);
-    //Limpiar todos los documentos del dispositivo
+    //Limpiar todos los documentos de los eventos
     if (!Hive.isBoxOpen('contratos')) {
       await Hive.openBox<dynamic>('contratos');
     }
@@ -124,11 +187,41 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     //Remover los id's de los eventos descargados
     if (!Hive.isBoxOpen('eventosDescargados')) {
       await Hive.openBox<int>('eventosDescargados');
-      ;
     }
     final boxEventosDescargados = Hive.box<int>('eventosDescargados');
     await boxEventosDescargados.clear();
     await boxEventosDescargados.close();
+    //Remover la información de los eventos descargados
+    if (!Hive.isBoxOpen('infoEventos')) {
+      await Hive.openBox<dynamic>('infoEventos');
+    }
+    final boxInfoEventos = Hive.box<dynamic>('infoEventos');
+    await boxInfoEventos.clear();
+    await boxInfoEventos.close();
+    //Remover lista de invitados que asistieron
+    if (!Hive.isBoxOpen('asistieron')) {
+      await Hive.openBox<int>('asistieron');
+    }
+    final boxAsistieron = Hive.box<int>('asistieron');
+    /**
+     * Lógica para subir las asistencias
+     */
+    await boxAsistieron.clear();
+    await boxAsistieron.close();
+    //Remover los resúmenes de pago
+    if (!Hive.isBoxOpen('resumenPagos')) {
+      await Hive.openBox<dynamic>('resumenPagos');
+    }
+    final boxResumenPagos = Hive.box<dynamic>('resumenPagos');
+    await boxResumenPagos.clear();
+    await boxResumenPagos.close();
+    //Remover los datos de conteo
+    if (!Hive.isBoxOpen('conteos')) {
+      await Hive.openBox<dynamic>('conteos');
+    }
+    final boxConteos = Hive.box<dynamic>('conteos');
+    await boxConteos.clear();
+    await boxConteos.close();
     //Terminar proceso
     Navigator.pop(_dialogContext);
     MostrarAlerta(
@@ -168,5 +261,13 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       await boxAsistieron.add(idInvitado);
     }
     await boxAsistieron.close();
+  }
+
+  Future<bool> _checkIsInvolucrado() async {
+    int idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    if (idInvolucrado != null) {
+      return true;
+    }
+    return false;
   }
 }

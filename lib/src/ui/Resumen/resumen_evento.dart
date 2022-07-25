@@ -178,7 +178,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
                               ),
                             ),
                           ),
-                          if (documento['archivo'])
+                          if (documento['archivo'] != null)
                             Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: GestureDetector(
