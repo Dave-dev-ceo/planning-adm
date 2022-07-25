@@ -365,8 +365,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
       onTap: WP_EVT_RES_EDT
           ? () async {
               if (!isInvolucrado) {
-                await Navigator.pushNamed(context, '/editarEvento',
-                    arguments: {'evento': evtt});
+                final SharedPreferencesT _sharedPreferences =
+                    SharedPreferencesT();
+                bool desconectado = await _sharedPreferences.getModoConexion();
+                if (!desconectado) {
+                  await Navigator.pushNamed(context, '/editarEvento',
+                      arguments: {'evento': evtt});
+                }
               }
             }
           : null,
