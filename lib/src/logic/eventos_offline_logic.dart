@@ -156,6 +156,31 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       await boxConteos.close();
     }
 
+    //Descarga de reporte de invitados
+    final responseReporte = await http.get(
+      Uri.parse(
+          '${configC.url}${configC.puerto}/wedding/INVITADOS/obtenerReporteInvitados/$idEvento'),
+      headers: {HttpHeaders.authorizationHeader: token},
+    );
+    if (responseReporte.statusCode == 200) {
+      final reporte = {
+        'id_evento': idEvento,
+        'reporte': json.decode(responseReporte.body),
+      };
+      if (!Hive.isBoxOpen('reportesInvitados')) {
+        await Hive.openBox<dynamic>('reportesInvitados');
+      }
+      final boxReportesInvitados = Hive.box<dynamic>('reportesInvitados');
+      final listaReportesInvitados = [...boxReportesInvitados.values];
+      if (listaReportesInvitados.any((r) => r['id_evento'] == idEvento)) {
+        final indexReporte = listaReportesInvitados
+            .indexWhere((r) => r['id_evento'] == idEvento);
+        await boxReportesInvitados.putAt(indexReporte, reporte);
+      } else {
+        await boxReportesInvitados.add(reporte);
+      }
+      await boxReportesInvitados.close();
+    }
     Navigator.pop(_dialogContext);
     MostrarAlerta(
       mensaje: 'Se ha descargado el evento exitosamente',
@@ -215,13 +240,20 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     final boxResumenPagos = Hive.box<dynamic>('resumenPagos');
     await boxResumenPagos.clear();
     await boxResumenPagos.close();
-    //Remover los datos de conteo
+    //Remover los datos de conteos
     if (!Hive.isBoxOpen('conteos')) {
       await Hive.openBox<dynamic>('conteos');
     }
     final boxConteos = Hive.box<dynamic>('conteos');
     await boxConteos.clear();
     await boxConteos.close();
+    //Remover los datos de reportes
+    if (!Hive.isBoxOpen('reportesInvitados')) {
+      await Hive.openBox<dynamic>('reportesInvitados');
+    }
+    final boxReportesInvitados = Hive.box<dynamic>('reportesInvitados');
+    await boxReportesInvitados.clear();
+    await boxReportesInvitados.close();
     //Terminar proceso
     Navigator.pop(_dialogContext);
     MostrarAlerta(

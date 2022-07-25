@@ -4,6 +4,7 @@ import 'dart:io';
 
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:planning/src/models/item_model_acompanante.dart';
@@ -137,30 +138,46 @@ class ApiProvider {
 
   Future<ItemModelReporteInvitados> fetchReporteInvitados(
       BuildContext context) async {
-    int res = await renovarToken();
-    if (res == 0) {
-      int idEvento = await _sharedPreferences.getIdEvento();
-      String token = await _sharedPreferences.getToken();
-      final response = await http.get(
-          Uri.parse(
-              '${confiC.url}${confiC.puerto}/wedding/INVITADOS/obtenerReporteInvitados/$idEvento'),
-          headers: {HttpHeaders.authorizationHeader: token});
+    int idEvento = await _sharedPreferences.getIdEvento();
+    bool desconectado = await _sharedPreferences.getModoConexion();
 
-      if (response.statusCode == 200) {
-        // If the call to the server was successful, parse the JSON
-        return ItemModelReporteInvitados.fromJson(json.decode(response.body));
-      } else if (response.statusCode == 401) {
+    if (desconectado) {
+      if (!Hive.isBoxOpen('reportesInvitados')) {
+        await Hive.openBox<dynamic>('reportesInvitados');
+      }
+      final boxReportesInvitados = Hive.box<dynamic>('reportesInvitados');
+      final infoReporteInvitados = boxReportesInvitados.values
+          .where((r) => r['id_evento'] == idEvento)
+          .toList()[0];
+      await boxReportesInvitados.close();
+      print(infoReporteInvitados['reporte']);
+      return ItemModelReporteInvitados.fromJson(
+          infoReporteInvitados['reporte']);
+    } else {
+      int res = await renovarToken();
+      if (res == 0) {
+        String token = await _sharedPreferences.getToken();
+        final response = await http.get(
+            Uri.parse(
+                '${confiC.url}${confiC.puerto}/wedding/INVITADOS/obtenerReporteInvitados/$idEvento'),
+            headers: {HttpHeaders.authorizationHeader: token});
+
+        if (response.statusCode == 200) {
+          // If the call to the server was successful, parse the JSON
+          return ItemModelReporteInvitados.fromJson(json.decode(response.body));
+        } else if (response.statusCode == 401) {
+          _loadLogin(context);
+          return null;
+        } else {
+          throw Exception('Failed to load get');
+        }
+      } else if (res == 1) {
         _loadLogin(context);
         return null;
       } else {
-        throw Exception('Failed to load get');
+        _loadLogin(context);
+        return null;
       }
-    } else if (res == 1) {
-      _loadLogin(context);
-      return null;
-    } else {
-      _loadLogin(context);
-      return null;
     }
   }
 

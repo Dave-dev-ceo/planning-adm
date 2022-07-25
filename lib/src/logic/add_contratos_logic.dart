@@ -401,7 +401,6 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
         return 1;
       });
       final body = Map<String, dynamic>.from(listaContratos[0]);
-      print(body['documento']);
       return body;
     } else {
       const endpoint = '/wedding/ADDCONTRATOS/obtenerUltimoDocumento';

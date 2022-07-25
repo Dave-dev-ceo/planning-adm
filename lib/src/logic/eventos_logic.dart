@@ -75,26 +75,42 @@ class FetchListaEventosLogic extends ListaEventosLogic {
 
   @override
   Future<ItemModelEvento> fetchEventoPorId(String idEvento) async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
-    final response = await http.post(
-        Uri.parse(
-            '${confiC.url}${confiC.puerto}/wedding/EVENTOS/obtenerEventoPorId/'),
-        headers: {HttpHeaders.authorizationHeader: token},
-        body: {'id_planner': idPlanner.toString(), 'id_evento': idEvento});
-    // var uri = Uri.parse(
-    //     confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventoPorId/');
-    // var header = {HttpHeaders.authorizationHeader: token};
-    // final response = await http.post(uri, headers: header, body: data);
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      await _sharedPreferences.setToken(data['token']);
-      return ItemModelEvento.fromJsonUnit(data['data']['evento']);
-    } else if (response.statusCode == 401) {
-      await _sharedPreferences.clear();
-      throw TokenException();
+
+    if (desconectado) {
+      if (!Hive.isBoxOpen('infoEventos')) {
+        await Hive.openBox<dynamic>('infoEventos');
+      }
+      final boxInfoEventos = Hive.box<dynamic>('infoEventos');
+      final infoEvento = boxInfoEventos.values
+          .where((c) => c['id_evento'] == int.parse(idEvento))
+          .toList()[0];
+      await boxInfoEventos.close();
+      final mapInfoEvento = Map<String, dynamic>.from(infoEvento);
+      return ItemModelEvento.fromJsonUnit(mapInfoEvento);
     } else {
-      throw EventoPorIdException();
+      final response = await http.post(
+          Uri.parse(
+              '${confiC.url}${confiC.puerto}/wedding/EVENTOS/obtenerEventoPorId/'),
+          headers: {HttpHeaders.authorizationHeader: token},
+          body: {'id_planner': idPlanner.toString(), 'id_evento': idEvento});
+      // var uri = Uri.parse(
+      //     confiC.url + confiC.puerto + '/wedding/EVENTOS/obtenerEventoPorId/');
+      // var header = {HttpHeaders.authorizationHeader: token};
+      // final response = await http.post(uri, headers: header, body: data);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        print(data['data']['evento']);
+        return ItemModelEvento.fromJsonUnit(data['data']['evento']);
+      } else if (response.statusCode == 401) {
+        await _sharedPreferences.clear();
+        throw TokenException();
+      } else {
+        throw EventoPorIdException();
+      }
     }
   }
 
