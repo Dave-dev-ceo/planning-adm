@@ -10,7 +10,7 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import '../animations/loading_animation.dart';
 
 abstract class ListaEventosOfflineLogic {
-  Future<void> fetchEventosOffline(int idEvento);
+  Future<void> fetchEventosOffline(int idEvento, BuildContext context);
   Future<void> subirCambiosEventos(BuildContext context);
   Future<void> registrarAsistenciaOffline(int idInvitado);
   Future<List<bool>> eventoDescargado(int idEvento);
@@ -22,7 +22,8 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
   BuildContext _dialogContext;
 
   @override
-  Future<void> fetchEventosOffline(int idEvento) async {
+  Future<void> fetchEventosOffline(int idEvento, BuildContext context) async {
+    _dialogSpinner('Descargando evento', context);
     int idPlanner = await _sharedPreferences.getIdPlanner();
     String token = await _sharedPreferences.getToken();
     //Descarga de documentos
@@ -92,6 +93,11 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       }
       await boxInfoEventos.close();
     }
+    Navigator.pop(_dialogContext);
+    MostrarAlerta(
+      mensaje: 'Se ha descargado el evento exitosamente',
+      tipoMensaje: TipoMensaje.correcto,
+    );
   }
 
   @override

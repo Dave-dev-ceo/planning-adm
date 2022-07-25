@@ -214,11 +214,9 @@ class _DashboardEventosState extends State<DashboardEventos> {
               child: const Text('Aceptar'),
               onPressed: () async {
                 await FetchListaEventosOfflineLogic()
-                    .fetchEventosOffline(idEvento);
+                    .fetchEventosOffline(idEvento, context);
                 Navigator.pop(context);
-                setState(() {
-                  
-                });
+                setState(() {});
               },
             ),
           ],
