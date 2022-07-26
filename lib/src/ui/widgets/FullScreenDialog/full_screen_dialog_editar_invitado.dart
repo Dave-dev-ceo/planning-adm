@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
@@ -17,6 +18,9 @@ import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:planning/src/utils/utils.dart' as utils;
 
 class FullScreenDialogEdit extends StatefulWidget {
   final int idInvitado;
@@ -589,143 +593,144 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
         _numberGuestsController.text = invitado.numbAcomp.toString();
       }
     }
-    return Column(children: <Widget>[
-      const SizedBox(
-        width: 60,
-      ),
-      ExpansionPanelList(
-        animationDuration: const Duration(milliseconds: 1000),
-        expansionCallback: (int index, bool expaned) {
-          setState(() {
-            if (index == 0) {
-              isExpaned = !isExpaned;
-            } else if (index == 1) {
-              isExpanedT = !isExpanedT;
-            } else if (index == 2) {
-              isExpaneA = !isExpaneA;
-            }
-          });
-        },
-        children: [
-          ExpansionPanel(
-              headerBuilder: (BuildContext context, bool isExpaned) {
-                return const Center(
-                    child: Text(
-                  'Información general',
-                  style: TextStyle(fontSize: 20.0),
-                ));
-              },
-              canTapOnHeader: true,
-              isExpanded: isExpaned,
-              body: Column(
-                children: <Widget>[
-                  Wrap(children: <Widget>[
-                    formItemsDesign(
-                        Icons.person,
-                        TextFormField(
-                          controller: nombreCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'Nombre completo',
-                          ),
-                          //initialValue: invitado.nombre,
-                          validator: validateNombre,
-                        ),
-                        500.0,
-                        80.0),
-                    formItemsDesign(
-                        //MyFlutterApp.transgender,
-                        Icons.assignment,
-                        Row(
-                          children: <Widget>[
-                            const Text('Asistencia'),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            _listaEstatus(),
-                            //_dropDownEstatusInvitado(),
-                          ],
-                        ),
-                        500.0,
-                        80.0)
-                    //Container(width: 300,chilistaAld: TextFormField(initialValue: nombre,decoration: InputDecoration(labelText: 'Nombre'))),
-                  ]),
-                  Wrap(
-                    children: <Widget>[
+    return Column(
+      children: <Widget>[
+        const SizedBox(
+          width: 60,
+        ),
+        ExpansionPanelList(
+          animationDuration: const Duration(milliseconds: 1000),
+          expansionCallback: (int index, bool expaned) {
+            setState(() {
+              if (index == 0) {
+                isExpaned = !isExpaned;
+              } else if (index == 1) {
+                isExpanedT = !isExpanedT;
+              } else if (index == 2) {
+                isExpaneA = !isExpaneA;
+              }
+            });
+          },
+          children: [
+            ExpansionPanel(
+                headerBuilder: (BuildContext context, bool isExpaned) {
+                  return const Center(
+                      child: Text(
+                    'Información general',
+                    style: TextStyle(fontSize: 20.0),
+                  ));
+                },
+                canTapOnHeader: true,
+                isExpanded: isExpaned,
+                body: Column(
+                  children: <Widget>[
+                    Wrap(children: <Widget>[
                       formItemsDesign(
-                          Icons.av_timer_rounded,
-                          Row(children: <Widget>[
-                            const Text('Edad'),
-                            //SizedBox(width: 15,),
-                            Expanded(
-                              child: MaterialSegmentedControl(
-                                children: _children,
-                                selectionIndex: _currentSelection,
-                                borderColor: const Color(0xFF000000),
-                                selectedColor: const Color(0xFF000000),
-                                unselectedColor: Colors.white,
-                                borderRadius: 32.0,
-                                horizontalPadding: const EdgeInsets.all(8),
-                                onSegmentChosen: (index) {
-                                  setState(() {
-                                    _currentSelection = index;
-                                  });
-                                },
-                              ),
+                          Icons.person,
+                          TextFormField(
+                            controller: nombreCtrl,
+                            decoration: const InputDecoration(
+                              labelText: 'Nombre completo',
                             ),
-                          ]),
+                            //initialValue: invitado.nombre,
+                            validator: validateNombre,
+                          ),
                           500.0,
                           80.0),
                       formItemsDesign(
-                        Icons.email,
-                        TextFormField(
-                          controller: emailCtrl,
-                          //initialValue: invitado.email,
-                          decoration: const InputDecoration(
-                            labelText: 'Correo',
-                          ),
-                          validator: validateEmail,
-                        ),
-                        500.0,
-                        80.0,
-                      ),
-                    ],
-                  ),
-                  Wrap(
-                    children: <Widget>[
-                      formItemsDesign(
-                        Icons.phone,
-                        TextFormField(
-                          controller: telefonoCtrl,
-                          //initialValue: invitado.telefono,
-                          decoration: const InputDecoration(
-                            labelText: 'Número de teléfono',
-                          ),
-                          validator: validateTelefono,
-                        ),
-                        500.0,
-                        80.0,
-                      ),
-                      formItemsDesign(
-                          Icons.group,
+                          //MyFlutterApp.transgender,
+                          Icons.assignment,
                           Row(
                             children: <Widget>[
-                              const Text('Grupo'),
+                              const Text('Asistencia'),
                               const SizedBox(
                                 width: 15,
                               ),
-                              _listaGrupos(),
+                              _listaEstatus(),
+                              //_dropDownEstatusInvitado(),
                             ],
                           ),
                           500.0,
                           80.0)
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  ),
-                ],
-              )),
-          ExpansionPanel(
+                      //Container(width: 300,chilistaAld: TextFormField(initialValue: nombre,decoration: InputDecoration(labelText: 'Nombre'))),
+                    ]),
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                            Icons.av_timer_rounded,
+                            Row(children: <Widget>[
+                              const Text('Edad'),
+                              //SizedBox(width: 15,),
+                              Expanded(
+                                child: MaterialSegmentedControl(
+                                  children: _children,
+                                  selectionIndex: _currentSelection,
+                                  borderColor: const Color(0xFF000000),
+                                  selectedColor: const Color(0xFF000000),
+                                  unselectedColor: Colors.white,
+                                  borderRadius: 32.0,
+                                  horizontalPadding: const EdgeInsets.all(8),
+                                  onSegmentChosen: (index) {
+                                    setState(() {
+                                      _currentSelection = index;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ]),
+                            500.0,
+                            80.0),
+                        formItemsDesign(
+                          Icons.email,
+                          TextFormField(
+                            controller: emailCtrl,
+                            //initialValue: invitado.email,
+                            decoration: const InputDecoration(
+                              labelText: 'Correo',
+                            ),
+                            validator: validateEmail,
+                          ),
+                          500.0,
+                          80.0,
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        formItemsDesign(
+                          Icons.phone,
+                          TextFormField(
+                            controller: telefonoCtrl,
+                            //initialValue: invitado.telefono,
+                            decoration: const InputDecoration(
+                              labelText: 'Número de teléfono',
+                            ),
+                            validator: validateTelefono,
+                          ),
+                          500.0,
+                          80.0,
+                        ),
+                        formItemsDesign(
+                            Icons.group,
+                            Row(
+                              children: <Widget>[
+                                const Text('Grupo'),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                _listaGrupos(),
+                              ],
+                            ),
+                            500.0,
+                            80.0)
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                  ],
+                )),
+            ExpansionPanel(
               headerBuilder: (BuildContext context, bool isExpaned) {
                 return const Center(
                     child: Text(
@@ -807,170 +812,222 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                     height: 30.0,
                   ),
                 ],
-              )),
-          ExpansionPanel(
-              headerBuilder: (BuildContext context, bool isExpaned) {
-                return const Center(
-                    child: Text(
-                  'Acompañantes',
-                  style: TextStyle(fontSize: 20.0),
-                ));
-              },
-              canTapOnHeader: true,
-              isExpanded: isExpaneA,
-              body: Column(
-                children: <Widget>[
-                  Form(
-                    key: _keyFormAcomp,
-                    child: Wrap(
-                      children: <Widget>[
-                        formItemsDesign(
-                            Icons.person,
-                            Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: TextFormField(
-                                controller: nombreAcompananteCtrl,
-                                decoration: const InputDecoration(
-                                  labelText: 'Nombre completo',
-                                ),
-                                //initialValue: invitado.nombre,
-                                validator: validateNombre,
-                              ),
-                            ),
-                            500.0,
-                            100.0),
-                        formItemsDesign(
-                            Icons.av_timer_rounded,
-                            Row(children: <Widget>[
-                              const Text('Edad'),
-                              //SizedBox(width: 15,),
-                              Expanded(
-                                child: MaterialSegmentedControl(
-                                  children: _children,
-                                  selectionIndex: _mySelectionAEdad,
-                                  borderColor: const Color(0xFF000000),
-                                  selectedColor: const Color(0xFF000000),
-                                  unselectedColor: Colors.white,
-                                  borderRadius: 32.0,
-                                  horizontalPadding: const EdgeInsets.all(8),
-                                  onSegmentChosen: (index) {
-                                    setState(() {
-                                      _mySelectionAEdad = index;
-                                    });
-                                  },
+              ),
+            ),
+            ExpansionPanel(
+                headerBuilder: (BuildContext context, bool isExpaned) {
+                  return const Center(
+                      child: Text(
+                    'Acompañantes',
+                    style: TextStyle(fontSize: 20.0),
+                  ));
+                },
+                canTapOnHeader: true,
+                isExpanded: isExpaneA,
+                body: Column(
+                  children: <Widget>[
+                    Form(
+                      key: _keyFormAcomp,
+                      child: Wrap(
+                        children: <Widget>[
+                          formItemsDesign(
+                              Icons.person,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  controller: nombreAcompananteCtrl,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Nombre completo',
+                                  ),
+                                  //initialValue: invitado.nombre,
+                                  validator: validateNombre,
                                 ),
                               ),
-                            ]),
-                            500.0,
-                            100.0),
-                        formItemsDesign(
-                            Icons.restaurant_menu_sharp,
-                            Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: TextFormField(
-                                controller: alimentAcompContrl,
-                                decoration: const InputDecoration(
-                                    labelText: 'Tipo de alimentación'),
+                              500.0,
+                              100.0),
+                          formItemsDesign(
+                              Icons.av_timer_rounded,
+                              Row(children: <Widget>[
+                                const Text('Edad'),
+                                //SizedBox(width: 15,),
+                                Expanded(
+                                  child: MaterialSegmentedControl(
+                                    children: _children,
+                                    selectionIndex: _mySelectionAEdad,
+                                    borderColor: const Color(0xFF000000),
+                                    selectedColor: const Color(0xFF000000),
+                                    unselectedColor: Colors.white,
+                                    borderRadius: 32.0,
+                                    horizontalPadding: const EdgeInsets.all(8),
+                                    onSegmentChosen: (index) {
+                                      setState(() {
+                                        _mySelectionAEdad = index;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ]),
+                              500.0,
+                              100.0),
+                          formItemsDesign(
+                              Icons.restaurant_menu_sharp,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  controller: alimentAcompContrl,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Tipo de alimentación'),
+                                ),
                               ),
-                            ),
-                            500.0,
-                            100),
-                        formItemsDesign(
-                            Icons.sick_outlined,
-                            Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: TextFormField(
-                                controller: alerAcompContrl,
-                                decoration: const InputDecoration(
-                                    labelText: 'Alergias'),
+                              500.0,
+                              100),
+                          formItemsDesign(
+                              Icons.sick_outlined,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  controller: alerAcompContrl,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Alergias'),
+                                ),
                               ),
-                            ),
-                            500.0,
-                            100.0),
-                        formItemsDesign(
-                            Icons.wheelchair_pickup,
-                            Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: TextFormField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter
-                                      .singleLineFormatter
-                                ],
-                                controller: asisEspAcompContrl,
-                                decoration: const InputDecoration(
-                                    labelText: 'Asistencia especial'),
+                              500.0,
+                              100.0),
+                          formItemsDesign(
+                              Icons.wheelchair_pickup,
+                              Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: TextFormField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter
+                                        .singleLineFormatter
+                                  ],
+                                  controller: asisEspAcompContrl,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Asistencia especial'),
+                                ),
                               ),
-                            ),
-                            500.0,
-                            100.0)
-                      ],
-                    ),
-                  ),
-                  Ink(
-                      padding: const EdgeInsets.all(5),
-                      width: 100.0,
-                      // height: 100.0,
-                      decoration: const ShapeDecoration(
-                        color: Colors.black,
-                        shape: CircleBorder(),
+                              500.0,
+                              100.0)
+                        ],
                       ),
-                      child: IconButton(
-                          icon: const Icon(Icons.add),
-                          color: Colors.white,
-                          onPressed: () async {
+                    ),
+                    Ink(
+                        padding: const EdgeInsets.all(5),
+                        width: 100.0,
+                        // height: 100.0,
+                        decoration: const ShapeDecoration(
+                          color: Colors.black,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                            icon: const Icon(Icons.add),
+                            color: Colors.white,
+                            onPressed: () async {
 //
 //                                  if(_numAcomp > 0 && _numAcomp ){
-                            String edad = '';
-                            if (_mySelectionAEdad == 0) {
-                              edad = 'A';
-                            } else {
-                              edad = 'N';
-                            }
+                              String edad = '';
+                              if (_mySelectionAEdad == 0) {
+                                edad = 'A';
+                              } else {
+                                edad = 'N';
+                              }
 
 //
-                            Map<String, String> json = {
-                              "id_invitado": idInvitado.toString(),
-                              "nombre": nombreAcompananteCtrl.text,
-                              "edad": edad,
-                              "alimentacion": alimentAcompContrl.text,
-                              "alergias": alerAcompContrl.text,
-                              "asistenciaEspecial": asisEspAcompContrl.text
-                            };
+                              Map<String, String> json = {
+                                "id_invitado": idInvitado.toString(),
+                                "nombre": nombreAcompananteCtrl.text,
+                                "edad": edad,
+                                "alimentacion": alimentAcompContrl.text,
+                                "alergias": alerAcompContrl.text,
+                                "asistenciaEspecial": asisEspAcompContrl.text
+                              };
 
-                            if (_keyFormAcomp.currentState.validate()) {
-                              await api
-                                  .agregarAcompanante(json, context)
-                                  .then((value) => {
-                                        alerAcompContrl.text = '',
-                                        asisEspAcompContrl.text = '',
-                                        alimentAcompContrl.text = '',
-                                        nombreAcompananteCtrl.text = ''
-                                      });
-                              await blocInvitado.fetchAllAcompanante(
-                                  idInvitado, context);
-                            }
+                              if (_keyFormAcomp.currentState.validate()) {
+                                await api
+                                    .agregarAcompanante(json, context)
+                                    .then((value) => {
+                                          alerAcompContrl.text = '',
+                                          asisEspAcompContrl.text = '',
+                                          alimentAcompContrl.text = '',
+                                          nombreAcompananteCtrl.text = ''
+                                        });
+                                await blocInvitado.fetchAllAcompanante(
+                                    idInvitado, context);
+                              }
 // }
-                          })),
-                  const SizedBox(
-                    height: 30.0,
+                            })),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    _listaAcompanantes(),
+                    const SizedBox(
+                      height: 30.0,
+                    )
+                  ],
+                )),
+          ],
+        ),
+        SizedBox(
+          height: 200,
+          width: 350,
+          child: Card(
+            margin: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      child: const FaIcon(
+                        FontAwesomeIcons.whatsapp,
+                        color: Colors.green,
+                        textDirection: TextDirection.rtl,
+                        size: 90,
+                      ),
+                      onTap: () async {
+                        launchUrl(
+                            Uri.parse('http://wa.me/521${invitado.telefono}'));
+                      },
+                    ),
                   ),
-                  _listaAcompanantes(),
-                  const SizedBox(
-                    height: 30.0,
-                  )
-                ],
-              )),
-        ],
-      ),
-      const SizedBox(
-        height: 30.0,
-      ),
-      GestureDetector(
-          onTap: () {
-            save();
-          },
-          child: const CallToAction('Guardar'))
-    ]);
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        utils.downloadFile(
+                            _base64qr.substring(_base64qr.indexOf(',') + 1),
+                            '${invitado.nombre}-qrCode',
+                            extensionFile: 'png');
+                      },
+                      child: Image.memory(
+                        base64Decode(
+                            _base64qr.substring(_base64qr.indexOf(',') + 1)),
+                        width: 250.0,
+                        height: 250.0,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 30.0,
+        ),
+        GestureDetector(
+            onTap: () {
+              save();
+            },
+            child: const CallToAction('Guardar'))
+      ],
+    );
   }
 
   String validateGrupo(String value) {
