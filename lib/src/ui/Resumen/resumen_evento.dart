@@ -38,6 +38,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   final ActividadesEvento _planesLogic = ActividadesEvento();
 
   bool isInvolucrado = false;
+  bool desconectado = false;
   ConsultasAddContratosLogic documentosLogic = ConsultasAddContratosLogic();
   ConsultasAddContratosLogic contratosLogic = ConsultasAddContratosLogic();
   ConsultasPagosLogic pagosLogic = ConsultasPagosLogic();
@@ -49,7 +50,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
     eventosBloc.add(
         evt_bloc.FetchEventoPorIdEvent(detalleEvento['idEvento'].toString()));
     _checkIsInvolucrado();
-
+    _checkIsDesconectado();
     super.initState();
   }
 
@@ -61,6 +62,10 @@ class _ResumenEventoState extends State<ResumenEvento> {
         isInvolucrado = true;
       });
     }
+  }
+
+  _checkIsDesconectado() async {
+    desconectado = await SharedPreferencesT().getModoConexion();
   }
 
   @override
@@ -269,10 +274,12 @@ class _ResumenEventoState extends State<ResumenEvento> {
           ],
         ),
       ),
-      onTap: () {
-        Navigator.of(context)
-            .pushNamed('/reporteEvento', arguments: "asistencia");
-      },
+      onTap: desconectado
+          ? null
+          : () {
+              Navigator.of(context)
+                  .pushNamed('/reporteEvento', arguments: "asistencia");
+            },
     );
   }
 
@@ -362,17 +369,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
           ),
         ),
       ),
-      onTap: WP_EVT_RES_EDT
+      onTap: WP_EVT_RES_EDT && !desconectado && !isInvolucrado
           ? () async {
-              if (!isInvolucrado) {
-                final SharedPreferencesT _sharedPreferences =
-                    SharedPreferencesT();
-                bool desconectado = await _sharedPreferences.getModoConexion();
-                if (!desconectado) {
-                  await Navigator.pushNamed(context, '/editarEvento',
-                      arguments: {'evento': evtt});
-                }
-              }
+              await Navigator.pushNamed(
+                context,
+                '/editarEvento',
+                arguments: {'evento': evtt},
+              );
             }
           : null,
     );
