@@ -198,24 +198,36 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
   @override
   Future<String> fetchContratosPdf(Map<String, dynamic> data) async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
-    final response = await http.post(
-        Uri.parse('${confiC.url}${confiC.puerto}/wedding/PDF/createPDF'),
-        body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      await _sharedPreferences.setToken(data['token']);
-      return data['data'];
-    } else if (response.statusCode == 401) {
-      throw TokenException();
+    if (desconectado) {
+      if (!Hive.isBoxOpen('pdf')) {
+        await Hive.openBox<dynamic>('pdf');
+      }
+      final boxPDF = Hive.box<dynamic>('pdf');
+      final pdf = boxPDF.values.firstWhere(
+          (c) => c['id_contrato'].toString() == data['id_contrato'].toString());
+      await boxPDF.close();
+      String pdfB64 = pdf['pdf_generado'];
+      return pdfB64;
     } else {
-      throw AutorizacionException();
+      final response = await http.post(
+          Uri.parse('${confiC.url}${confiC.puerto}/wedding/PDF/createPDF'),
+          body: data,
+          headers: {HttpHeaders.authorizationHeader: token});
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        return data['data'];
+      } else if (response.statusCode == 401) {
+        throw TokenException();
+      } else {
+        throw AutorizacionException();
+      }
     }
   }
 
@@ -330,30 +342,44 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
   @override
   Future<String> obtenerContratoSubidoById(Map<String, dynamic> data) async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     String token = await _sharedPreferences.getToken();
-    final response = await http.post(
-        Uri.parse(
-            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/obtenerContratoById'),
-        body: {
-          'id_contrato': data['id_contrato'].toString(),
-          'id_planner': data['id_planner'].toString(),
-          'id_evento': data['id_evento'].toString()
-        },
-        headers: {
-          HttpHeaders.authorizationHeader: token
-        });
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      await _sharedPreferences.setToken(data['token']);
-      return data['data'][0]['archivo'];
-    } else if (response.statusCode == 401) {
-      throw TokenException();
+    if (desconectado) {
+      if (!Hive.isBoxOpen('contratos')) {
+        await Hive.openBox<dynamic>('contratos');
+      }
+      final boxContratos = Hive.box<dynamic>('contratos');
+      final contrato = boxContratos.values.firstWhere((c) =>
+          c['id_contrato'].toString() == data['id_contrato'].toString() &&
+          c['id_planner'].toString() == data['id_planner'].toString() &&
+          c['id_evento'].toString() == data['id_evento'].toString());
+      await boxContratos.close();
+      return contrato['archivo'];
     } else {
-      throw Exception();
+      final response = await http.post(
+          Uri.parse(
+              '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/obtenerContratoById'),
+          body: {
+            'id_contrato': data['id_contrato'].toString(),
+            'id_planner': data['id_planner'].toString(),
+            'id_evento': data['id_evento'].toString()
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: token
+          });
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        return data['data'][0]['archivo'];
+      } else if (response.statusCode == 401) {
+        throw TokenException();
+      } else {
+        throw Exception();
+      }
     }
   }
 

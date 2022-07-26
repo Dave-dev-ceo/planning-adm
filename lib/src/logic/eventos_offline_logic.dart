@@ -66,6 +66,35 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       await boxEventosDescargados.close();
     }
 
+    //Descarga de pdf's generados de evento
+    final responsePDF = await http.post(
+      Uri.parse(
+          '${configC.url}${configC.puerto}/wedding/PDF/generarPdfsEvento'),
+      body: {
+        'id_planner': idPlanner.toString(),
+        'id_evento': idEvento.toString(),
+      },
+      headers: {HttpHeaders.authorizationHeader: token},
+    );
+    if (responsePDF.statusCode == 200) {
+      final List<dynamic> dataPDF = json.decode(responsePDF.body);
+      if (!Hive.isBoxOpen('pdf')) {
+        await Hive.openBox<dynamic>('pdf');
+      }
+      final boxPDF = Hive.box<dynamic>('pdf');
+      final listaPDF = [...boxPDF.values];
+      for (var p in dataPDF) {
+        if (boxPDF.values.any((c) => c['id_contrato'] == p['id_contrato'])) {
+          final indexPDF =
+              listaPDF.indexWhere((c) => c['id_contrato'] == p['id_contrato']);
+          await boxPDF.putAt(indexPDF, p);
+        } else {
+          await boxPDF.add(p);
+        }
+      }
+      await boxPDF.close();
+    }
+
     //Descarga de información de evento
     final responseEvento = await http.post(
       Uri.parse(
@@ -202,13 +231,20 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
   @override
   Future<void> subirCambiosEventos(BuildContext context) async {
     _dialogSpinner('Subiendo cambios', context);
-    //Limpiar todos los documentos de los eventos
+    //Remover los documentos de los eventos
     if (!Hive.isBoxOpen('contratos')) {
       await Hive.openBox<dynamic>('contratos');
     }
     final boxContratos = Hive.box<dynamic>('contratos');
     await boxContratos.clear();
     await boxContratos.close();
+    //Remover los PDF generados
+    if (!Hive.isBoxOpen('pdf')) {
+      await Hive.openBox<dynamic>('pdf');
+    }
+    final boxPDF = Hive.box<dynamic>('pdf');
+    await boxPDF.clear();
+    await boxPDF.close();
     //Remover los id's de los eventos descargados
     if (!Hive.isBoxOpen('eventosDescargados')) {
       await Hive.openBox<int>('eventosDescargados');
