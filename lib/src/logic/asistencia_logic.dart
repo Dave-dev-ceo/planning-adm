@@ -7,7 +7,6 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
 
 import 'package:planning/src/models/item_model_asistencia.dart';
-import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 abstract class AsistenciaLogic {
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner();
