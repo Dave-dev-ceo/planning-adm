@@ -582,7 +582,9 @@ class NewContratoState extends State<NewContrato> {
                     TextButton.icon(
                       icon: const Icon(Icons.cloud_upload_outlined),
                       label: const Text('Subir firmado'),
-                      onPressed: () => _uploadFile(contrato.idContrato),
+                      onPressed: desconectado
+                          ? null
+                          : () => _uploadFile(contrato.idContrato),
                     )
                   ],
                 ),

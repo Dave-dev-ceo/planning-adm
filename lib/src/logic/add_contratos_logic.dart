@@ -312,31 +312,45 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
   @override
   Future<String> obtenerContratoById(Map<String, dynamic> data) async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
-    String token = await _sharedPreferences.getToken();
-
-    final response = await http.post(
-        Uri.parse(
-            '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/obtenerContratoById'),
-        body: {
-          'id_contrato': data['id_contrato'].toString(),
-          'id_planner': data['id_planner'].toString(),
-          'id_evento': data['id_evento'].toString()
-        },
-        headers: {
-          HttpHeaders.authorizationHeader: token
-        });
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      await _sharedPreferences.setToken(data['token']);
-      return data['data'][0]['original'];
-    } else if (response.statusCode == 401) {
-      throw TokenException();
+    if (desconectado) {
+      if (!Hive.isBoxOpen('contratos')) {
+        await Hive.openBox<dynamic>('contratos');
+      }
+      final boxContratos = Hive.box<dynamic>('contratos');
+      final contrato = boxContratos.values.firstWhere((c) =>
+          c['id_contrato'].toString() == data['id_contrato'].toString() &&
+          c['id_planner'].toString() == data['id_planner'].toString() &&
+          c['id_evento'].toString() == data['id_evento'].toString());
+      await boxContratos.close();
+      return contrato['original'];
     } else {
-      throw Exception();
+      String token = await _sharedPreferences.getToken();
+
+      final response = await http.post(
+          Uri.parse(
+              '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/obtenerContratoById'),
+          body: {
+            'id_contrato': data['id_contrato'].toString(),
+            'id_planner': data['id_planner'].toString(),
+            'id_evento': data['id_evento'].toString()
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: token
+          });
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        return data['data'][0]['original'];
+      } else if (response.statusCode == 401) {
+        throw TokenException();
+      } else {
+        throw Exception();
+      }
     }
   }
 
