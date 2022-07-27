@@ -638,7 +638,6 @@ class ActividadesEvento {
       final conteo = boxConteos.values
           .where((c) => c['id_evento'] == idEvento)
           .toList()[0];
-      await boxConteos.close();
       final infoConteo =
           ContadorActividadesModel.fromJson(Map<String, dynamic>.from(conteo));
       contadorActividadSink(infoConteo);

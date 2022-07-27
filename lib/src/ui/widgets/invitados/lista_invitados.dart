@@ -32,6 +32,8 @@ import '../../../models/item_model_invitados.dart';
 
 import 'package:planning/src/utils/utils.dart' as utils;
 
+import '../../../models/item_model_preferences.dart';
+
 class ListaInvitados extends StatefulWidget {
   final int idEvento;
   final String nameEvento;
@@ -73,6 +75,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
   bool dialVisible = true;
 
   BuildContext _dialogContext;
+  bool desconectado = false;
 
   TextEditingController controllerBuscar = TextEditingController();
   String _searchResult = '';
@@ -107,7 +110,12 @@ class _ListaInvitadosState extends State<ListaInvitados>
         currentIndex = _controller.index;
       });
     });
+    _checkIsDesconectado();
     super.initState();
+  }
+
+  _checkIsDesconectado() async {
+    desconectado = await SharedPreferencesT().getModoConexion();
   }
 
   _checkPermisos() async {
@@ -625,7 +633,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
             DataColumn(label: Text('Acción', style: estiloTxt)),
           ],
           source: _DataSource(buscador, context, idEvento, WP_EVT_INV_CRT,
-              WP_EVT_INV_EDT, WP_EVT_INV_ENV),
+              WP_EVT_INV_EDT, WP_EVT_INV_ENV, desconectado),
         ),
         const SizedBox(
           height: 35.0,
@@ -661,6 +669,7 @@ class _DataSource extends DataTableSource {
   final bool WP_EVT_INV_CRT;
   final bool WP_EVT_INV_EDT;
   final bool WP_EVT_INV_ENV;
+  final bool desconectado;
 
   ItemModelGrupos _grupos;
   ItemModelEstatusInvitado _estatus;
@@ -669,7 +678,7 @@ class _DataSource extends DataTableSource {
   ApiProvider api = ApiProvider();
 
   _DataSource(context, BuildContext cont, this.idEvento, this.WP_EVT_INV_CRT,
-      this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV) {
+      this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV, this.desconectado) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
       _rows.add(_Row(
@@ -698,7 +707,7 @@ class _DataSource extends DataTableSource {
               children: <Widget>[
                 Card(
                   child: ListTile(
-                    title: Text('Se llamara al número $numero'),
+                    title: Text('Se llamará al número $numero'),
                     trailing: const Icon(Icons.phone),
                     onTap: () async {
                       launch('tel://$numero');
@@ -796,7 +805,7 @@ class _DataSource extends DataTableSource {
           context: _cont,
           builder: (BuildContext context) => CupertinoAlertDialog(
                 title: Text('Llamada'),
-                content: Text('Se llamara al numero $numero'),
+                content: Text('Se llamará al numero $numero'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: Text('Cancelar',style: TextStyle(color: Colors.red),),
@@ -996,26 +1005,43 @@ class _DataSource extends DataTableSource {
         }
       },
       cells: [
-        DataCell(Text(row.valueA), onTap: () {
-          _viewShowDialogEditar(row.valueId);
-        }),
+        DataCell(
+          Text(row.valueA),
+          onTap: desconectado
+              ? null
+              : () {
+                  _viewShowDialogEditar(row.valueId);
+                },
+        ),
         DataCell(Text(row.valueB), onTap: () async {
           await _showMyDialogLlamada(row.valueB);
         }),
-        DataCell(Text(row.valueC), onTap: () {
-          _listaGruposEvento(row.valueId);
-        }),
         DataCell(
-          Text(row.valueD),
-          onTap: () {
-            _listaEstatusEvento(row.valueId);
-          },
+          Text(row.valueC),
+          onTap: desconectado
+              ? null
+              : () {
+                  _listaGruposEvento(row.valueId);
+                },
         ),
         DataCell(
-          const Icon(Icons.delete),
-          onTap: () {
-            _showMyDialogWhatsApp(row.valueE, row.valueId);
-          },
+          Text(row.valueD),
+          onTap: desconectado
+              ? null
+              : () {
+                  _listaEstatusEvento(row.valueId);
+                },
+        ),
+        DataCell(
+          Icon(
+            Icons.delete,
+            color: desconectado ? Colors.grey : Colors.black,
+          ),
+          onTap: desconectado
+              ? null
+              : () {
+                  _showMyDialogWhatsApp(row.valueE, row.valueId);
+                },
         )
         //DataCell(Icon(Icons.edit)),
         //DataCell(Icon(Icons.delete)),

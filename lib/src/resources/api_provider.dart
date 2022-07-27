@@ -149,7 +149,6 @@ class ApiProvider {
       final infoReporteInvitados = boxReportesInvitados.values
           .where((r) => r['id_evento'] == idEvento)
           .toList()[0];
-      await boxReportesInvitados.close();
       return ItemModelReporteInvitados.fromJson(
           infoReporteInvitados['reporte']);
     } else {
@@ -226,7 +225,6 @@ class ApiProvider {
       final invitadosAcompanantes = boxInvitadosAcompanantes.values
           .where((i) => i['id_evento'] == idEvento)
           .toList();
-      await boxInvitadosAcompanantes.close();
       return ItemModelInvitados.fromJson(invitadosAcompanantes);
     } else {
       String token = await _sharedPreferences.getToken();

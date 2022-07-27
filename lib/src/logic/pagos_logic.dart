@@ -278,7 +278,6 @@ class ConsultasPagosLogic extends PagosLogic {
       final resumenPago = boxResumenPagos.values
           .where((r) => r['id_evento'] == idEvento)
           .toList()[0];
-      await boxResumenPagos.close();
       final mapResumenPago = Map<String, dynamic>.from(resumenPago);
       return mapResumenPago;
     } else {
