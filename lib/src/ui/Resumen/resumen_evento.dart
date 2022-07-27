@@ -826,18 +826,20 @@ class _ResumenEventoState extends State<ResumenEvento> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: UniqueKey(),
-        child: const Icon(Icons.download),
-        onPressed: () async {
-          final data = await eventoLogic.donwloadPDFEvento();
+      floatingActionButton: desconectado
+          ? null
+          : FloatingActionButton(
+              heroTag: UniqueKey(),
+              child: const Icon(Icons.download),
+              onPressed: () async {
+                final data = await eventoLogic.donwloadPDFEvento();
 
-          if (data != null) {
-            downloadFile(data, 'Resumen_Evento');
-          }
-        },
-        tooltip: 'Descargar PDF',
-      ),
+                if (data != null) {
+                  downloadFile(data, 'Resumen_Evento');
+                }
+              },
+              tooltip: 'Descargar PDF',
+            ),
     );
   }
 }

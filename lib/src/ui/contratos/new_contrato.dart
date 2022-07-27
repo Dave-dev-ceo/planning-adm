@@ -77,6 +77,7 @@ class NewContratoState extends State<NewContrato> {
 
   void getModoSinConexion() async {
     desconectado = await SharedPreferencesT().getModoConexion();
+    setState(() {});
   }
 
   Color hexToColor(String code) {
@@ -98,7 +99,8 @@ class NewContratoState extends State<NewContrato> {
       ),
       // bottomNavigationBar: _showNavigationBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: !isInvolucrado ? _showButton() : null,
+      floatingActionButton:
+          !isInvolucrado && !desconectado ? _showButton() : null,
     );
   }
 
