@@ -7,6 +7,7 @@ import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/config_conection.dart';
 
 import 'package:planning/src/models/item_model_asistencia.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
 abstract class AsistenciaLogic {
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner();
@@ -69,20 +70,58 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
 
   @override
   Future<int> saveAsistencia(int idInvitado, bool asistencia) async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
     int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
-
-    await client.post(
-        Uri.parse(
-            '${confiC.url}${confiC.puerto}/wedding/ASISTENCIA/saveAsistenciasPorPlanner'),
-        body: {
+    if (desconectado) {
+      if (!Hive.isBoxOpen('asistencias')) {
+        await Hive.openBox<dynamic>('asistencias');
+      }
+      final boxAsistencias = Hive.box<dynamic>('asistencias');
+      final listaAsistencias = [...boxAsistencias.values];
+      final indexAsistencia =
+          listaAsistencias.indexWhere((a) => a['id_invitado'] == idInvitado);
+      listaAsistencias[indexAsistencia]['asistencia'] = asistencia;
+      await boxAsistencias.putAt(
+          indexAsistencia, listaAsistencias[indexAsistencia]);
+      await boxAsistencias.close();
+      if (!Hive.isBoxOpen('cambiosAsistencias')) {
+        await Hive.openBox<dynamic>('cambiosAsistencias');
+      }
+      final boxCambiosAsistencias = Hive.box<dynamic>('cambiosAsistencias');
+      final listaCambiosAsistencias = [...boxCambiosAsistencias.values];
+      if (listaCambiosAsistencias
+          .any((a) => a['id_invitado'].toString() == idInvitado.toString())) {
+        final indexCambio = listaCambiosAsistencias.indexWhere(
+            (a) => a['id_invitado'].toString() == idInvitado.toString());
+        print(indexCambio);
+        await boxCambiosAsistencias.putAt(indexCambio, {
           'id_invitado': idInvitado.toString(),
           'asistencia': asistencia.toString(),
           'id_planner': idPlanner.toString()
-        },
-        headers: {
-          HttpHeaders.authorizationHeader: token
         });
+      } else {
+        await boxCambiosAsistencias.add({
+          'id_invitado': idInvitado.toString(),
+          'asistencia': asistencia.toString(),
+          'id_planner': idPlanner.toString()
+        });
+      }
+      await boxCambiosAsistencias.close();
+    } else {
+      String token = await _sharedPreferences.getToken();
+
+      await client.post(
+          Uri.parse(
+              '${confiC.url}${confiC.puerto}/wedding/ASISTENCIA/saveAsistenciasPorPlanner'),
+          body: {
+            'id_invitado': idInvitado.toString(),
+            'asistencia': asistencia.toString(),
+            'id_planner': idPlanner.toString()
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: token
+          });
+    }
     return 0;
   }
 

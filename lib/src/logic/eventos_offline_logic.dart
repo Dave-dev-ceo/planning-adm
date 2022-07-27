@@ -371,6 +371,31 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     final boxAsistencias = Hive.box<dynamic>('asistencias');
     await boxAsistencias.clear();
     await boxAsistencias.close();
+    // Remover lista de cambios en asistencias
+    if (!Hive.isBoxOpen('cambiosAsistencias')) {
+      await Hive.openBox<dynamic>('cambiosAsistencias');
+    }
+    final boxCambiosAsistencias = Hive.box<dynamic>('cambiosAsistencias');
+    if (boxCambiosAsistencias.values.isNotEmpty) {
+      final listaCambios = [...boxCambiosAsistencias.values];
+      String token = await _sharedPreferences.getToken();
+      final respCambios = await http.post(
+        Uri.parse(
+            '${configC.url}${configC.puerto}/wedding/ASISTENCIA/subirCambiosAsistencias'),
+        body: json.encode(listaCambios),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          HttpHeaders.authorizationHeader: token,
+        },
+      );
+      if (respCambios.statusCode == 200) {
+        print(respCambios.body);
+      }
+    }
+    await boxCambiosAsistencias.clear();
+    await boxCambiosAsistencias.close();
+
     //Terminar proceso
     Navigator.pop(_dialogContext);
     MostrarAlerta(
