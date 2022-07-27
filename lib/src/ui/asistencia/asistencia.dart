@@ -305,7 +305,7 @@ class _AsistenciaState extends State<Asistencia> {
               final result = await Navigator.of(context).pushNamed('/lectorQr');
             },
             child: const Icon(Icons.qr_code_outlined),
-            label: 'Codigo QR'),
+            label: 'Código QR'),
         SpeedDialChild(
           child: const Icon(Icons.download),
           onTap: () async {

@@ -210,6 +210,73 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       }
       await boxReportesInvitados.close();
     }
+
+    //Descarga de información de invitados y acompañanates
+    final responseInvitadosAcompanantes = await http.post(
+      Uri.parse(
+          '${configC.url}${configC.puerto}/wedding/INVITADOS/obtenterDatosInvitados'),
+      body: json.encode({'idEvento': idEvento}),
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+    if (responseInvitadosAcompanantes.statusCode == 200) {
+      List<dynamic> datosInvitadosAcompanantes =
+          json.decode(responseInvitadosAcompanantes.body);
+      if (!Hive.isBoxOpen('invitadosAcompanantes')) {
+        await Hive.openBox<dynamic>('invitadosAcompanantes');
+      }
+      final boxInvitadosAcompanantes =
+          Hive.box<dynamic>('invitadosAcompanantes');
+      final listaInvitadosAcompanantes = [...boxInvitadosAcompanantes.values];
+      for (var i in datosInvitadosAcompanantes) {
+        if (listaInvitadosAcompanantes
+            .any((ia) => ia['id_invitado'] == i['id_invitado'])) {
+          final indexInvitadosAcompanantes = listaInvitadosAcompanantes
+              .indexWhere((ia) => ia['id_invitado'] == i['id_invitado']);
+          await boxInvitadosAcompanantes.putAt(indexInvitadosAcompanantes, i);
+        } else {
+          await boxInvitadosAcompanantes.add(i);
+        }
+      }
+      await boxInvitadosAcompanantes.close();
+    }
+
+    //Descargar información de asistentes
+    final responseAsistentes = await http.post(
+      Uri.parse(
+          '${configC.url}${configC.puerto}/wedding/ASISTENCIA/descargarAsistenciasPorPlanner'),
+      body: {
+        'id_planner': idPlanner.toString(),
+        'id_evento': idEvento.toString()
+      },
+      headers: {HttpHeaders.authorizationHeader: token},
+    );
+    if (responseAsistentes.statusCode == 200) {
+      final List<dynamic> asistentes = json.decode(responseAsistentes.body);
+      if (!Hive.isBoxOpen('asistencias')) {
+        await Hive.openBox<dynamic>('asistencias');
+      }
+      final boxAsistencias = Hive.box<dynamic>('asistencias');
+      final listaAsistencias = [...boxAsistencias.values];
+      for (var a in asistentes) {
+        if (listaAsistencias.any((as) =>
+            as['id_invitado'] == a['id_invitado'] &&
+            as['id_evento'] == a['id_evento'])) {
+          final indexAsistencia = listaAsistencias.indexWhere((as) =>
+              as['id_invitado'] == a['id_invitado'] &&
+              as['id_evento'] == a['id_evento']);
+          await boxAsistencias.putAt(indexAsistencia, a);
+        } else {
+          await boxAsistencias.add(a);
+        }
+      }
+      await boxAsistencias.close();
+    }
+
+    //Finalizar
     Navigator.pop(_dialogContext);
     MostrarAlerta(
       mensaje: 'Se ha descargado el evento exitosamente',
@@ -290,6 +357,20 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     final boxReportesInvitados = Hive.box<dynamic>('reportesInvitados');
     await boxReportesInvitados.clear();
     await boxReportesInvitados.close();
+    //Remover lista de invitados y asistentes
+    if (!Hive.isBoxOpen('invitadosAcompanantes')) {
+      await Hive.openBox<dynamic>('invitadosAcompanantes');
+    }
+    final boxInvitadosAcompanantes = Hive.box<dynamic>('invitadosAcompanantes');
+    await boxInvitadosAcompanantes.clear();
+    await boxInvitadosAcompanantes.close();
+    //Remover lista de asistencias
+    if (!Hive.isBoxOpen('asistencias')) {
+      await Hive.openBox<dynamic>('asistencias');
+    }
+    final boxAsistencias = Hive.box<dynamic>('asistencias');
+    await boxAsistencias.clear();
+    await boxAsistencias.close();
     //Terminar proceso
     Navigator.pop(_dialogContext);
     MostrarAlerta(

@@ -214,38 +214,52 @@ class ApiProvider {
   }
 
   Future<ItemModelInvitados> fetchInvitadosList(BuildContext context) async {
-    int res = await renovarToken();
-    if (res == 0) {
-      int idEvento = await _sharedPreferences.getIdEvento();
+    bool desconectado = await _sharedPreferences.getModoConexion();
+    int idEvento = await _sharedPreferences.getIdEvento();
+
+    if (desconectado) {
+      if (!Hive.isBoxOpen('invitadosAcompanantes')) {
+        await Hive.openBox<dynamic>('invitadosAcompanantes');
+      }
+      final boxInvitadosAcompanantes =
+          Hive.box<dynamic>('invitadosAcompanantes');
+      final invitadosAcompanantes = boxInvitadosAcompanantes.values
+          .where((i) => i['id_evento'] == idEvento)
+          .toList();
+      await boxInvitadosAcompanantes.close();
+      return ItemModelInvitados.fromJson(invitadosAcompanantes);
+    } else {
       String token = await _sharedPreferences.getToken();
+      int res = await renovarToken();
+      if (res == 0) {
+        final data = {'idEvento': idEvento};
 
-      final data = {'idEvento': idEvento};
+        final response = await http.post(
+            Uri.parse(
+                '${confiC.url}${confiC.puerto}/wedding/INVITADOS/obtenterDatosInvitados'),
+            body: json.encode(data),
+            headers: {
+              HttpHeaders.authorizationHeader: token,
+              'Content-type': 'application/json',
+              'Accept': 'application/json',
+            });
 
-      final response = await http.post(
-          Uri.parse(
-              '${confiC.url}${confiC.puerto}/wedding/INVITADOS/obtenterDatosInvitados'),
-          body: json.encode(data),
-          headers: {
-            HttpHeaders.authorizationHeader: token,
-            'Content-type': 'application/json',
-            'Accept': 'application/json',
-          });
-
-      if (response.statusCode == 200) {
-        // If the call to the server was successful, parse the JSON
-        return ItemModelInvitados.fromJson(json.decode(response.body));
-      } else if (response.statusCode == 401) {
+        if (response.statusCode == 200) {
+          // If the call to the server was successful, parse the JSON
+          return ItemModelInvitados.fromJson(json.decode(response.body));
+        } else if (response.statusCode == 401) {
+          _loadLogin(context);
+          return null;
+        } else {
+          throw Exception('Failed to load get');
+        }
+      } else if (res == 1) {
         _loadLogin(context);
         return null;
       } else {
-        throw Exception('Failed to load get');
+        _loadLogin(context);
+        return null;
       }
-    } else if (res == 1) {
-      _loadLogin(context);
-      return null;
-    } else {
-      _loadLogin(context);
-      return null;
     }
   }
 

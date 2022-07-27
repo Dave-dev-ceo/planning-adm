@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' show Client;
 
 import 'package:planning/src/models/item_model_preferences.dart';
@@ -25,30 +26,44 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
   @override
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner() async {
     // implement fetchAsistenciaPorPlanner
+    bool desconectado = await _sharedPreferences.getModoConexion();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
-    final response = await client.post(
-        Uri.parse(
-            '${confiC.url}${confiC.puerto}/wedding/ASISTENCIA/obtenerAsistenciasPorPlanner'),
-        body: {
-          'id_planner': idPlanner.toString(),
-          'id_evento': idEvento.toString()
-        },
-        headers: {
-          HttpHeaders.authorizationHeader: token
-        });
-
-    if (response.statusCode == 200) {
-      // If the call to the server was successful, parse the JSON
-      Map<String, dynamic> data = json.decode(response.body);
-      await _sharedPreferences.setToken(data['token']);
-      return ItemModelAsistencia.fromJson(data['data']);
-    } else if (response.statusCode == 401) {
-      return null;
+    if (desconectado) {
+      if (!Hive.isBoxOpen('asistencias')) {
+        await Hive.openBox<dynamic>('asistencias');
+      }
+      final boxAsistencias = Hive.box<dynamic>('asistencias');
+      final listaAsistencias = boxAsistencias.values
+          .where((a) =>
+              a['id_evento'] == idEvento && a['id_estatus_invitado'] == 1)
+          .toList();
+      await boxAsistencias.close();
+      return ItemModelAsistencia.fromJson(listaAsistencias);
     } else {
-      throw ListaAsistenciaException;
+      final response = await client.post(
+          Uri.parse(
+              '${confiC.url}${confiC.puerto}/wedding/ASISTENCIA/obtenerAsistenciasPorPlanner'),
+          body: {
+            'id_planner': idPlanner.toString(),
+            'id_evento': idEvento.toString()
+          },
+          headers: {
+            HttpHeaders.authorizationHeader: token
+          });
+
+      if (response.statusCode == 200) {
+        // If the call to the server was successful, parse the JSON
+        Map<String, dynamic> data = json.decode(response.body);
+        await _sharedPreferences.setToken(data['token']);
+        return ItemModelAsistencia.fromJson(data['data']);
+      } else if (response.statusCode == 401) {
+        return null;
+      } else {
+        throw ListaAsistenciaException;
+      }
     }
   }
 
