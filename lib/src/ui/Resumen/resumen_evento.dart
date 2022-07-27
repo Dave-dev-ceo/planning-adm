@@ -66,6 +66,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
 
   _checkIsDesconectado() async {
     desconectado = await SharedPreferencesT().getModoConexion();
+    setState(() {});
   }
 
   @override

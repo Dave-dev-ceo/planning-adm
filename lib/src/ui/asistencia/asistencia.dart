@@ -36,6 +36,7 @@ class _AsistenciaState extends State<Asistencia> {
 
   // Variable involucrado
   bool isInvolucrado = false;
+  bool desconectado = false;
 
   // ini
   @override
@@ -45,6 +46,12 @@ class _AsistenciaState extends State<Asistencia> {
     asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
     asistenciaBloc.add(FetchAsistenciaPorPlannerEvent());
     getIdInvolucrado();
+    _checkIsDesconectado();
+  }
+
+  _checkIsDesconectado() async {
+    desconectado = await SharedPreferencesT().getModoConexion();
+    setState(() {});
   }
 
   @override
@@ -300,12 +307,14 @@ class _AsistenciaState extends State<Asistencia> {
       icon: Icons.more_vert,
       tooltip: 'Opciones',
       children: [
-        SpeedDialChild(
+          SpeedDialChild(
             onTap: () async {
               final result = await Navigator.of(context).pushNamed('/lectorQr');
             },
             child: const Icon(Icons.qr_code_outlined),
-            label: 'Código QR'),
+            label: 'Código QR',
+          ),
+        if (!desconectado)
         SpeedDialChild(
           child: const Icon(Icons.download),
           onTap: () async {

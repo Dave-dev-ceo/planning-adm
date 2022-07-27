@@ -116,6 +116,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
   _checkIsDesconectado() async {
     desconectado = await SharedPreferencesT().getModoConexion();
+    setState(() {});
   }
 
   _checkPermisos() async {
@@ -514,7 +515,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
         children: listWidget,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: currentIndex == 0 ? buildSpeedDial(pHz) : null,
+      floatingActionButton:
+          currentIndex == 0 && !desconectado ? buildSpeedDial(pHz) : null,
       /*floatingActionButton: FloatingActionButton(
         onPressed: () async{
           //Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
