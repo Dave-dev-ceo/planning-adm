@@ -92,7 +92,6 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
           .any((a) => a['id_invitado'].toString() == idInvitado.toString())) {
         final indexCambio = listaCambiosAsistencias.indexWhere(
             (a) => a['id_invitado'].toString() == idInvitado.toString());
-        print(indexCambio);
         await boxCambiosAsistencias.putAt(indexCambio, {
           'id_invitado': idInvitado.toString(),
           'asistencia': asistencia.toString(),

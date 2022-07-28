@@ -409,7 +409,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     if (boxCambiosAsistencias.values.isNotEmpty) {
       final listaCambios = [...boxCambiosAsistencias.values];
       String token = await _sharedPreferences.getToken();
-      final respCambios = await http.post(
+      await http.post(
         Uri.parse(
             '${configC.url}${configC.puerto}/wedding/ASISTENCIA/subirCambiosAsistencias'),
         body: json.encode(listaCambios),
@@ -419,9 +419,6 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
           HttpHeaders.authorizationHeader: token,
         },
       );
-      if (respCambios.statusCode == 200) {
-        print(respCambios.body);
-      }
     }
     await boxCambiosAsistencias.clear();
     await boxCambiosAsistencias.close();
