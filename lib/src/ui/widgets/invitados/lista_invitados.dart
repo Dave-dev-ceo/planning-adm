@@ -4,7 +4,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:planning/src/animations/loading_animation.dart';
+import 'package:planning/src/blocs/qr_invitado/qr_bloc.dart';
+import 'package:planning/src/logic/qr_logic/qr_logic.dart';
 import 'package:planning/src/models/model_perfilado.dart';
+import 'package:planning/src/models/qr_model/qr_model.dart';
 import 'package:planning/src/ui/widgets/invitados/enviar_correo_invitados.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
@@ -1010,7 +1013,9 @@ class _DataSource extends DataTableSource {
         DataCell(
           Text(row.valueA),
           onTap: desconectado
-              ? null
+              ? () {
+                  _dialogoInvitadoAcompanantes(row.valueId);
+                }
               : () {
                   _viewShowDialogEditar(row.valueId);
                 },
@@ -1049,6 +1054,105 @@ class _DataSource extends DataTableSource {
         //DataCell(Icon(Icons.delete)),
       ],
     );
+  }
+
+  _dialogoInvitadoAcompanantes(int idInvitado) {
+    showDialog(
+      context: _cont,
+      builder: (_cont) {
+        return AlertDialog(
+          scrollable: false,
+          title: const Text('Datos del invitado'),
+          content: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 500, maxHeight: 500),
+            child: SingleChildScrollView(
+              child: FutureBuilder(
+                future: QrLogic().validarQr(idInvitado.toString()),
+                builder: (_cont, snapshot) {
+                  if (snapshot.hasData) {
+                    final invitado = snapshot.data as QrInvitadoModel;
+                    return SingleChildScrollView(
+                        child: _bodyInvitado(invitado));
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(_cont);
+              },
+              child: const Text('Cerrar'),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _bodyInvitado(QrInvitadoModel invitado) {
+    return ListBody(
+      children: [
+        texto('Evento: ', invitado.evento, 'Sin evento asignado'),
+        texto('Invitado: ', invitado.nombre, 'Sin nombre'),
+        texto('Grupo: ', invitado.grupo, 'Sin nombre'),
+        texto('Mesa: ', invitado.mesa, 'Sin mesa'),
+        texto('Alimentación: ', invitado.alimentacion, 'No especificada'),
+        texto('Alergias: ', invitado.alimentacion, 'Ninguna'),
+        texto('Asistencia especial: ', invitado.alimentacion, 'No requerida'),
+        texto('Correo: ', invitado.correo, 'Sin correo'),
+        texto('Teléfono: ', invitado.telefono, 'Sin teléfono'),
+        if (invitado.acompanantes.isNotEmpty)
+          const Padding(
+            padding: EdgeInsets.all(10),
+            child: Text('Acompañantes:'),
+          ),
+        for (var acompanante in invitado.acompanantes)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: ListBody(
+              children: [
+                text(acompanante.nombre),
+                text('Mesa: ${datoNulo(acompanante.mesa, 'Sin mesa')}'),
+                text(
+                    'Alimentación: ${datoNulo(acompanante.alimentacion, 'No especificada')}'),
+                text('Alergias: ${datoNulo(acompanante.alergias, 'Ninguna')}'),
+                text(
+                    'Asistencia especial: ${datoNulo(acompanante.asistenciaEspecial, 'No requerida')}'),
+                const Divider(),
+              ],
+            ),
+          )
+      ],
+    );
+  }
+
+  Widget texto(String label, String valor, String sinDatos) {
+    return Padding(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          label + (valor ?? sinDatos),
+        ),
+      ),
+      padding: const EdgeInsets.all(10),
+    );
+  }
+
+  Widget text(String dato) {
+    return Text(
+      dato,
+      textAlign: TextAlign.left,
+    );
+  }
+
+  String datoNulo(String dato, sinDato) {
+    if (dato != null && dato != '') {
+      return dato;
+    }
+    return sinDato;
   }
 
   @override
