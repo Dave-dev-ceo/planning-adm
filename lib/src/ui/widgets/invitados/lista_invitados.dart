@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:planning/src/animations/loading_animation.dart';
-import 'package:planning/src/blocs/qr_invitado/qr_bloc.dart';
 import 'package:planning/src/logic/qr_logic/qr_logic.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 import 'package:planning/src/models/qr_model/qr_model.dart';
