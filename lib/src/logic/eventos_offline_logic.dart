@@ -276,6 +276,36 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       await boxAsistencias.close();
     }
 
+    //Descargar información para escaneo de QR
+    final responseQR = await http.post(
+      Uri.parse(
+          '${configC.url}${configC.puerto}/wedding/INVITADOS/descargarDatosParaQR'),
+      body: json.encode({'idEvento': idEvento}),
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+    if (responseQR.statusCode == 200) {
+      final List<dynamic> qrs = json.decode(responseQR.body);
+      if (!Hive.isBoxOpen('QR')) {
+        await Hive.openBox<dynamic>('QR');
+      }
+      final boxQR = Hive.box<dynamic>('QR');
+      final listaQR = [...boxQR.values];
+      for (var qr in qrs) {
+        if (listaQR.any((q) => q['id_invitado'] == qr['id_invitado'])) {
+          final indexQR =
+              listaQR.indexWhere((q) => q['id_invitado'] == qr['id_invitado']);
+          await boxQR.putAt(indexQR, qr);
+        } else {
+          await boxQR.add(qr);
+        }
+      }
+      await boxQR.close();
+    }
+
     //Finalizar
     Navigator.pop(_dialogContext);
     MostrarAlerta(
@@ -395,6 +425,14 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     }
     await boxCambiosAsistencias.clear();
     await boxCambiosAsistencias.close();
+
+    // Remover lista de QR's
+    if (!Hive.isBoxOpen('QR')) {
+      await Hive.openBox<dynamic>('QR');
+    }
+    final boxQR = Hive.box<dynamic>('QR');
+    await boxQR.clear();
+    await boxQR.close();
 
     //Terminar proceso
     Navigator.pop(_dialogContext);
