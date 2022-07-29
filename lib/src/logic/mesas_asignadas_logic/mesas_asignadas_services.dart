@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:hive_flutter/adapters.dart';
 import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/mesa/layout_mesa_model.dart';
@@ -39,34 +40,51 @@ class MesasAsignadasService {
   }
 
   Future<LayoutMesaModel> getLayoutMesa() async {
+    bool desconectado = await _sharedPreferencesT.getModoConexion();
     String token = await _sharedPreferencesT.getToken();
     int idEvento = await _sharedPreferencesT.getIdEvento();
 
-    final data = {
-      'idEvento': idEvento,
-    };
-
-    const endpoint = 'wedding/MESAS/getLayoutMesa';
-
-    final headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
-    };
-
-    final response = await http.post(
-        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
-        body: json.encode(data),
-        headers: headers);
-
-    if (response.statusCode == 200) {
-      final layoutMesa = LayoutMesaModel.fromJson(json.decode(response.body));
-
-      _layoutMesa = layoutMesa;
-      layoutMesaSink(_layoutMesa);
-      return _layoutMesa;
+    if (desconectado) {
+      if (!Hive.isBoxOpen('layouts')) {
+        await Hive.openBox<dynamic>('layouts');
+      }
+      final boxLayouts = Hive.box<dynamic>('layouts');
+      final listaLayouts = [...boxLayouts.values];
+      final indexLayout =
+          listaLayouts.indexWhere((l) => l['id_evento'] == idEvento);
+      if (indexLayout != -1) {
+        final layoutMesa = Map<String, dynamic>.from(listaLayouts[indexLayout]);
+        return LayoutMesaModel.fromJson(layoutMesa);
+      } else {
+        return null;
+      }
     } else {
-      return null;
+      final data = {
+        'idEvento': idEvento,
+      };
+
+      const endpoint = 'wedding/MESAS/getLayoutMesa';
+
+      final headers = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: token
+      };
+
+      final response = await http.post(
+          Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
+          body: json.encode(data),
+          headers: headers);
+
+      if (response.statusCode == 200) {
+        final layoutMesa = LayoutMesaModel.fromJson(json.decode(response.body));
+
+        _layoutMesa = layoutMesa;
+        layoutMesaSink(_layoutMesa);
+        return _layoutMesa;
+      } else {
+        return null;
+      }
     }
   }
 
@@ -99,31 +117,46 @@ class MesasAsignadasService {
 
   Future<List<MesasAsignadasModel>> getMesasAsignadas() async {
     int idEvento = await _sharedPreferencesT.getIdEvento();
-    String token = await _sharedPreferencesT.getToken();
-    final url = confiC.url + confiC.puerto;
+    bool desconectado = await _sharedPreferencesT.getModoConexion();
+    if (desconectado) {
+      if (!Hive.isBoxOpen('mesasAsignadas')) {
+        await Hive.openBox<dynamic>('mesasAsignadas');
+      }
+      final boxMesasAsignadas = Hive.box<dynamic>('mesasAsignadas');
+      final listaMesasAsignadas =
+          boxMesasAsignadas.values.where((ma) => ma['id_evento'] == idEvento);
+      if (listaMesasAsignadas.isEmpty) {
+        return [];
+      }
+      return List<MesasAsignadasModel>.from(listaMesasAsignadas.map((data) =>
+          MesasAsignadasModel.fromJson(Map<String, dynamic>.from(data))));
+    } else {
+      String token = await _sharedPreferencesT.getToken();
+      final url = confiC.url + confiC.puerto;
 
-    final data = {'idEvento': idEvento};
+      final data = {'idEvento': idEvento};
 
-    final headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
-    };
+      final headers = {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        HttpHeaders.authorizationHeader: token
+      };
 
-    const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
+      const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
 
-    final response = await http.post(Uri.parse('$url/$endpoint'),
-        body: jsonEncode(data), headers: headers);
+      final response = await http.post(Uri.parse('$url/$endpoint'),
+          body: jsonEncode(data), headers: headers);
 
-    if (json.decode(response.body) == null) return [];
+      if (json.decode(response.body) == null) return [];
 
-    mesasAsignadas = List<MesasAsignadasModel>.from(json
-        .decode(response.body)
-        .map((data) => MesasAsignadasModel.fromJson(data)));
+      mesasAsignadas = List<MesasAsignadasModel>.from(json
+          .decode(response.body)
+          .map((data) => MesasAsignadasModel.fromJson(data)));
 
-    mesasAsignadasSink(mesasAsignadas);
+      mesasAsignadasSink(mesasAsignadas);
 
-    return mesasAsignadas;
+      return mesasAsignadas;
+    }
   }
 
   Future<String> deleteAsignadoFromMesa(

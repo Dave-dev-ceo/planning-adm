@@ -42,6 +42,7 @@ class _MesasPageState extends State<MesasPage> {
   final mesasAsignadasService = MesasAsignadasService();
   final mesasLogic = ServiceMesasLogic();
   GlobalKey previewContainer = GlobalKey();
+  bool desconectado = false;
 
   List<bool> checkedsAsignados = [];
   List<bool> checkedsInvitados = [];
@@ -78,7 +79,13 @@ class _MesasPageState extends State<MesasPage> {
     BlocProvider.of<MesasAsignadasBloc>(context).add(GetMesasAsignadasEvent());
     BlocProvider.of<InvitadosMesasBloc>(context)
         .add(MostrarInvitadosMesasEvent());
+    _checkIsDesconectado();
     super.initState();
+  }
+
+  _checkIsDesconectado() async {
+    desconectado = await SharedPreferencesT().getModoConexion();
+    setState(() {});
   }
 
   @override
@@ -112,7 +119,7 @@ class _MesasPageState extends State<MesasPage> {
           }
         },
       ),
-      floatingActionButton: buttonByPage(),
+      floatingActionButton: desconectado ? null : buttonByPage(),
     );
   }
 
@@ -407,36 +414,10 @@ class _MesasPageState extends State<MesasPage> {
                   children: [
                     Center(
                       child: ListTile(
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            PreferredSize(
-                              preferredSize: const Size.fromWidth(15),
-                              child: IconButton(
-                                onPressed: () async {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => EditMesaDialog(
-                                      mesaModel: listaMesa[index],
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.edit),
-                              ),
-                            ),
-                            PreferredSize(
-                              preferredSize: const Size.fromWidth(12),
-                              child: IconButton(
-                                onPressed: () async {
-                                  _showAlertDialogDeleteMesa(
-                                      listaMesa[index].idMesa, listaAsignados);
-                                  setState(() {});
-                                },
-                                icon: const Icon(Icons.delete),
-                              ),
-                            ),
-                          ],
-                        ),
+                        trailing: desconectado
+                            ? null
+                            : _barraOpcionesMesa(
+                                listaMesa[index], listaAsignados),
                         title: Text(listaMesa[index].descripcion),
                         // TextFormField(
                         //   enabled: editTitleMesa[index],
@@ -486,6 +467,39 @@ class _MesasPageState extends State<MesasPage> {
     );
   }
 
+  Widget _barraOpcionesMesa(
+      MesaModel mesa, Iterable<MesasAsignadasModel> listaAsignados) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        PreferredSize(
+          preferredSize: const Size.fromWidth(15),
+          child: IconButton(
+            onPressed: () async {
+              showDialog(
+                context: context,
+                builder: (context) => EditMesaDialog(
+                  mesaModel: mesa,
+                ),
+              );
+            },
+            icon: const Icon(Icons.edit),
+          ),
+        ),
+        PreferredSize(
+          preferredSize: const Size.fromWidth(12),
+          child: IconButton(
+            onPressed: () async {
+              _showAlertDialogDeleteMesa(mesa.idMesa, listaAsignados);
+              setState(() {});
+            },
+            icon: const Icon(Icons.delete),
+          ),
+        ),
+      ],
+    );
+  }
+
   void _showAlertDialogDeleteMesa(
       int idMesa, Iterable<MesasAsignadasModel> listaAsignados) async {
     await showDialog(
@@ -529,15 +543,27 @@ class _MesasPageState extends State<MesasPage> {
   }
 
   Widget asignarInvitadosMesasPage() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth > 600) {
-          return buildAsignarMesaDesktop();
-        } else {
-          return buildAsignarMesaMovil();
-        }
-      },
-    );
+    return FutureBuilder(
+        future: SharedPreferencesT().getModoConexion(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data == false) {
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth > 600) {
+                    return buildAsignarMesaDesktop();
+                  } else {
+                    return buildAsignarMesaMovil();
+                  }
+                },
+              );
+            }
+            return const Center(
+              child: Text('Función no disponible en el modo sin conexión'),
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        });
   }
 
   Widget buildAsignarMesaMovil() {
@@ -1171,59 +1197,7 @@ class _MesasPageState extends State<MesasPage> {
               return Stack(
                 children: [
                   _viewFile(snapshot.data),
-                  Positioned(
-                    top: 20.0,
-                    right: 10.0,
-                    child: Tooltip(
-                      message: 'Eliminar',
-                      child: IconButton(
-                        onPressed: () async {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: const Text('Eliminar layout'),
-                                    content: const Text(
-                                        '¿Desea eliminar el layout?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Cancelar'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          final resp =
-                                              await mesasAsignadasService
-                                                  .eliminarLayoutMesa();
-
-                                          if (resp) {
-                                            MostrarAlerta(
-                                              mensaje: 'Layout eliminado',
-                                              tipoMensaje: TipoMensaje.correcto,
-                                            );
-
-                                            setState(() {
-                                              layoutMesaFuture =
-                                                  mesasAsignadasService
-                                                      .getLayoutMesa();
-                                            });
-                                          } else {
-                                            MostrarAlerta(
-                                                mensaje: 'Ocurrió un error',
-                                                tipoMensaje: TipoMensaje.error);
-                                          }
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Aceptar'),
-                                      ),
-                                    ],
-                                  ));
-                        },
-                        icon: const Icon(Icons.delete),
-                      ),
-                    ),
-                  ),
+                  if (!desconectado) _eliminar(),
                 ],
               );
             } else {
@@ -1247,6 +1221,60 @@ class _MesasPageState extends State<MesasPage> {
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget _eliminar() {
+    return Positioned(
+      top: 20.0,
+      right: 10.0,
+      child: Tooltip(
+        message: 'Eliminar',
+        child: IconButton(
+          onPressed: () async {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Eliminar layout'),
+                content: const Text('¿Desea eliminar el layout?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final resp =
+                          await mesasAsignadasService.eliminarLayoutMesa();
+
+                      if (resp) {
+                        MostrarAlerta(
+                          mensaje: 'Layout eliminado',
+                          tipoMensaje: TipoMensaje.correcto,
+                        );
+
+                        setState(() {
+                          layoutMesaFuture =
+                              mesasAsignadasService.getLayoutMesa();
+                        });
+                      } else {
+                        MostrarAlerta(
+                            mensaje: 'Ocurrió un error',
+                            tipoMensaje: TipoMensaje.error);
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Aceptar'),
+                  ),
+                ],
+              ),
+            );
+          },
+          icon: const Icon(Icons.delete),
+        ),
       ),
     );
   }

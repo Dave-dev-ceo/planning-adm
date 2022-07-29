@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:planning/src/logic/estatus_logic.dart';
@@ -85,34 +86,46 @@ class ServiceMesasLogic extends MesasLogic {
 
   @override
   Future<List<MesaModel>> getMesas() async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
     int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
-
-    const endpoint = 'wedding/MESAS/obtenerMesas';
-
-    final data = {
-      'idEvento': idEvento,
-    };
-
-    final headers = {
-      HttpHeaders.authorizationHeader: token,
-      'Content-type': 'application/json',
-      'Accept': 'application/json'
-    };
-
-    final response = await http.post(
-        Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
-        body: json.encode(data),
-        headers: headers);
-
-    if (response.statusCode == 200) {
-      return List<MesaModel>.from(
-          json.decode(response.body).map((data) => MesaModel.fromJson(data)));
-    } else if (response.statusCode == 401) {
-      await _sharedPreferences.clear();
-      throw TokenException();
+    if (desconectado) {
+      if (!Hive.isBoxOpen('mesas')) {
+        await Hive.openBox<dynamic>('mesas');
+      }
+      final boxMesas = Hive.box<dynamic>('mesas');
+      final listaMesas =
+          boxMesas.values.where((m) => m['id_evento'] == idEvento);
+      return List<MesaModel>.from(listaMesas
+          .map((data) => MesaModel.fromJson(Map<String, dynamic>.from(data))));
     } else {
-      throw MesasException();
+      String token = await _sharedPreferences.getToken();
+
+      const endpoint = 'wedding/MESAS/obtenerMesas';
+
+      final data = {
+        'idEvento': idEvento,
+      };
+
+      final headers = {
+        HttpHeaders.authorizationHeader: token,
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      };
+
+      final response = await http.post(
+          Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'),
+          body: json.encode(data),
+          headers: headers);
+
+      if (response.statusCode == 200) {
+        return List<MesaModel>.from(
+            json.decode(response.body).map((data) => MesaModel.fromJson(data)));
+      } else if (response.statusCode == 401) {
+        await _sharedPreferences.clear();
+        throw TokenException();
+      } else {
+        throw MesasException();
+      }
     }
   }
 

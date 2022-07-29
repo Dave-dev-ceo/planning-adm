@@ -306,6 +306,92 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       await boxQR.close();
     }
 
+    //Descargar layout de mesa
+    final responseLayout = await http.post(
+      Uri.parse('${configC.url}${configC.puerto}/wedding/MESAS/getLayoutMesa'),
+      body: json.encode({'idEvento': idEvento}),
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+    if (responseLayout.statusCode == 200) {
+      final dynamic layout = json.decode(responseLayout.body);
+      if (!Hive.isBoxOpen('layouts')) {
+        await Hive.openBox<dynamic>('layouts');
+      }
+      final boxLayouts = Hive.box<dynamic>('layouts');
+      final listaLayouts = [...boxLayouts.values];
+      final indexLayout =
+          listaLayouts.indexWhere((l) => l['id_evento'] == idEvento);
+      if (indexLayout != -1) {
+        await boxLayouts.putAt(indexLayout, layout);
+      } else {
+        await boxLayouts.add(layout);
+      }
+      await boxLayouts.close();
+    }
+
+    //Descargar información de mesas
+    final responseMesas = await http.post(
+      Uri.parse('${configC.url}${configC.puerto}/wedding/MESAS/obtenerMesas'),
+      body: json.encode({'idEvento': idEvento}),
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+    if (responseMesas.statusCode == 200) {
+      final List<dynamic> mesas = json.decode(responseMesas.body);
+      if (!Hive.isBoxOpen('mesas')) {
+        await Hive.openBox<dynamic>('mesas');
+      }
+      final boxMesas = Hive.box<dynamic>('mesas');
+      final listaMesas = [...boxMesas.values];
+      for (var mesa in mesas) {
+        final indexMesa =
+            listaMesas.indexWhere((m) => m['id_mesa'] == mesa['id_mesa']);
+        if (indexMesa != -1) {
+          await boxMesas.putAt(indexMesa, mesa);
+        } else {
+          boxMesas.add(mesa);
+        }
+      }
+      await boxMesas.close();
+    }
+
+    //Descargar información de mesas asignadas
+    final responseMesasAsignadas = await http.post(
+      Uri.parse(
+          '${configC.url}${configC.puerto}/wedding/EVENTOS/getMesasAsignadas'),
+      body: json.encode({'idEvento': idEvento}),
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+    if (responseMesasAsignadas.statusCode == 200) {
+      final List<dynamic> mAsignadas = json.decode(responseMesasAsignadas.body);
+      if (!Hive.isBoxOpen('mesasAsignadas')) {
+        await Hive.openBox<dynamic>('mesasAsignadas');
+      }
+      final boxMesasAsignadas = Hive.box<dynamic>('mesasAsignadas');
+      final listaMesasAsignadas = [...boxMesasAsignadas.values];
+      for (var mesaAsignada in mAsignadas) {
+        final indexMesaAsignada = listaMesasAsignadas.indexWhere(
+            (m) => m['id_mesa_asignada'] == mesaAsignada['id_mesa_asignada']);
+        if (indexMesaAsignada != -1) {
+          await boxMesasAsignadas.putAt(indexMesaAsignada, mesaAsignada);
+        } else {
+          await boxMesasAsignadas.add(mesaAsignada);
+        }
+      }
+      await boxMesasAsignadas.close();
+    }
+
     //Finalizar
     Navigator.pop(_dialogContext);
     MostrarAlerta(
@@ -422,7 +508,6 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     }
     await boxCambiosAsistencias.clear();
     await boxCambiosAsistencias.close();
-
     // Remover lista de QR's
     if (!Hive.isBoxOpen('QR')) {
       await Hive.openBox<dynamic>('QR');
@@ -430,6 +515,27 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     final boxQR = Hive.box<dynamic>('QR');
     await boxQR.clear();
     await boxQR.close();
+    //Remover lista de layouts
+    if (!Hive.isBoxOpen('layouts')) {
+      await Hive.openBox<dynamic>('layouts');
+    }
+    final boxLayouts = Hive.box<dynamic>('layouts');
+    await boxLayouts.clear();
+    await boxLayouts.close();
+    //Remover lista de mesas
+    if (!Hive.isBoxOpen('mesas')) {
+      await Hive.openBox<dynamic>('mesas');
+    }
+    final boxMesas = Hive.box<dynamic>('mesas');
+    await boxMesas.clear();
+    await boxMesas.close();
+    //Remover lista de mesas asignadas
+    if (!Hive.isBoxOpen('mesasAsignadas')) {
+      await Hive.openBox<dynamic>('mesasAsignadas');
+    }
+    final boxMesasAsignadas = Hive.box<dynamic>('mesasAsignadas');
+    await boxMesasAsignadas.clear();
+    await boxMesasAsignadas.close();
 
     //Terminar proceso
     Navigator.pop(_dialogContext);

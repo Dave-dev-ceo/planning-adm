@@ -19,6 +19,10 @@ class ServiceInvitadosMesasLogic extends InvitadosConfirmadosLogic {
 
   @override
   Future<List<InvitadosConfirmadosModel>> getInvitadosConfirmados() async {
+    bool desconectado = await _sharedPreferences.getModoConexion();
+    if (desconectado) {
+      return null;
+    }
     int idEvento = await _sharedPreferences.getIdEvento();
     String token = await _sharedPreferences.getToken();
 
