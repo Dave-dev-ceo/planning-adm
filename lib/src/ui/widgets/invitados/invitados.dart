@@ -40,6 +40,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   bool _tapped = false;
   Size size;
   String claveRol;
+  bool desconectado = false;
 
   _InvitadosState(this.detalleEvento);
   Color hexToColor(String code) {
@@ -72,100 +73,110 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    return SizedBox(
-      width: double.infinity,
-      child: BlocBuilder<PermisosBloc, PermisosState>(
-        builder: (context, state) {
-          if (state is PermisosInitial) {
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-              ),
-              body: const Center(child: LoadingCustom()),
-            );
-          } else if (state is ErrorTokenPermisos) {
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-              ),
-              body: const Center(child: LoadingCustom()),
-            );
-          } else if (state is LoadingPermisos) {
-            return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-              ),
-              body: const Center(child: LoadingCustom()),
-            );
-          } else if (state is PermisosOk) {
-            permisoPantallas = state.permisos;
-            List<TabItem> tabs = obtenerTabsPantallas(state.permisos
-                .pantallas); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
-            List<Widget> pantallas = obtenerPantallasContent(state.permisos
-                .pantallas); /* <Widget>[Center(child: Text('Test'))]; */
-            // Navigator.pop(_dialogContext);
-
-            _tabController = TabController(length: _pages, vsync: this);
-
-            _tabController.addListener(() {
-              if (_tabController.index == 5 &&
-                  ((!_tapped && !_tabController.indexIsChanging) ||
-                      _tabController.indexIsChanging)) {
-                showDialog(
-                    context: context,
-                    builder: (context) => ListaInvitados(
-                          idEvento: detalleEvento['idEvento'],
-                          WP_EVT_INV_CRT: permisoPantallas.pantallas
-                              .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-                          WP_EVT_INV_EDT: permisoPantallas.pantallas
-                              .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-                          WP_EVT_INV_ENV: permisoPantallas.pantallas
-                              .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-                          nameEvento: widget.detalleEvento['nEvento'],
-                          permisos: state.permisos,
-                        )).then(
-                    (_) => _tabController.index = _tabController.previousIndex);
-              }
-              _tapped = false;
-            });
-
-            int bandera = 0;
-
-            for (var pantallla in state.permisos.pantallas.secciones) {
-              if ((pantallla.clavePantalla == 'WP-EVT-ASI' &&
-                      pantallla.acceso == true) ||
-                  (pantallla.clavePantalla == 'WP-EVT-INV' &&
-                      pantallla.acceso == true) ||
-                  (pantallla.clavePantalla == 'WP-EVT-MDE' &&
-                      pantallla.acceso == true)) {
-                bandera += 1;
-              }
-            }
-            if (bandera <= 3 && bandera != 0) {
-              return ListaInvitados(
-                idEvento: detalleEvento['idEvento'],
-                WP_EVT_INV_CRT: permisoPantallas.pantallas
-                    .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
-                WP_EVT_INV_EDT: permisoPantallas.pantallas
-                    .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
-                WP_EVT_INV_ENV: permisoPantallas.pantallas
-                    .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
-                nameEvento: widget.detalleEvento['nEvento'],
-                permisos: state.permisos,
-              );
-            } else {
-              return crearPantallas(context, tabs, pantallas);
-            }
-          } else if (state is ErrorPermisos) {
-            return Center(
-              child: Text(state.message),
-            );
-          } else {
-            return const Center(child: Text('Sin permisos'));
+    return FutureBuilder(
+        future: SharedPreferencesT().getModoConexion(),
+        builder: (context, snapshot) {
+          if (!(snapshot.hasData)) {
+            return const Center(child: CircularProgressIndicator());
           }
-        },
-      ),
-    );
+          desconectado = snapshot.data;
+          return SizedBox(
+            width: double.infinity,
+            child: BlocBuilder<PermisosBloc, PermisosState>(
+              builder: (context, state) {
+                if (state is PermisosInitial) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      automaticallyImplyLeading: false,
+                    ),
+                    body: const Center(child: LoadingCustom()),
+                  );
+                } else if (state is ErrorTokenPermisos) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      automaticallyImplyLeading: false,
+                    ),
+                    body: const Center(child: LoadingCustom()),
+                  );
+                } else if (state is LoadingPermisos) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      automaticallyImplyLeading: false,
+                    ),
+                    body: const Center(child: LoadingCustom()),
+                  );
+                } else if (state is PermisosOk) {
+                  permisoPantallas = state.permisos;
+                  List<TabItem> tabs = obtenerTabsPantallas(state.permisos
+                      .pantallas); /* <TabItem>[TabItem(titulo: 'test', icono: Icons.ac_unit)]; */
+                  List<Widget> pantallas = obtenerPantallasContent(state
+                      .permisos
+                      .pantallas); /* <Widget>[Center(child: Text('Test'))]; */
+                  // Navigator.pop(_dialogContext);
+
+                  _tabController = TabController(length: _pages, vsync: this);
+
+                  _tabController.addListener(() {
+                    if (((!desconectado && _tabController.index == 5) ||
+                            (desconectado && _tabController.index == 2)) &&
+                        ((!_tapped && !_tabController.indexIsChanging) ||
+                            _tabController.indexIsChanging)) {
+                      showDialog(
+                          context: context,
+                          builder: (context) => ListaInvitados(
+                                idEvento: detalleEvento['idEvento'],
+                                WP_EVT_INV_CRT: permisoPantallas.pantallas
+                                    .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+                                WP_EVT_INV_EDT: permisoPantallas.pantallas
+                                    .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+                                WP_EVT_INV_ENV: permisoPantallas.pantallas
+                                    .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+                                nameEvento: widget.detalleEvento['nEvento'],
+                                permisos: state.permisos,
+                              )).then((_) =>
+                          _tabController.index = _tabController.previousIndex);
+                    }
+                    _tapped = false;
+                  });
+
+                  int bandera = 0;
+
+                  for (var pantallla in state.permisos.pantallas.secciones) {
+                    if ((pantallla.clavePantalla == 'WP-EVT-ASI' &&
+                            pantallla.acceso == true) ||
+                        (pantallla.clavePantalla == 'WP-EVT-INV' &&
+                            pantallla.acceso == true) ||
+                        (pantallla.clavePantalla == 'WP-EVT-MDE' &&
+                            pantallla.acceso == true)) {
+                      bandera += 1;
+                    }
+                  }
+                  if (bandera <= 3 && bandera != 0) {
+                    return ListaInvitados(
+                      idEvento: detalleEvento['idEvento'],
+                      WP_EVT_INV_CRT: permisoPantallas.pantallas
+                          .hasAcceso(clavePantalla: 'WP-EVT-INV-CRT'),
+                      WP_EVT_INV_EDT: permisoPantallas.pantallas
+                          .hasAcceso(clavePantalla: 'WP-EVT-INV-EDT'),
+                      WP_EVT_INV_ENV: permisoPantallas.pantallas
+                          .hasAcceso(clavePantalla: 'WP-EVT-INV-ENV'),
+                      nameEvento: widget.detalleEvento['nEvento'],
+                      permisos: state.permisos,
+                    );
+                  } else {
+                    return crearPantallas(context, tabs, pantallas);
+                  }
+                } else if (state is ErrorPermisos) {
+                  return Center(
+                    child: Text(state.message),
+                  );
+                } else {
+                  return const Center(child: Text('Sin permisos'));
+                }
+              },
+            ),
+          );
+        });
   }
 
   Widget crearPantallas(BuildContext context, List<TabItem> pantallasTabs,
@@ -354,7 +365,7 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         tabs.add(const TabItem(titulo: 'Resumen', icono: Icons.list));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM') && !desconectado) {
         tabs.add(const TabItem(
             titulo: 'Actividades', icono: Icons.access_time_sharp));
         temp += 1;
@@ -364,12 +375,12 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
             titulo: 'Documentos', icono: Icons.description_outlined));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG') && !desconectado) {
         tabs.add(
             const TabItem(titulo: 'Presupuestos', icono: Icons.credit_card));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV') && !desconectado) {
         tabs.add(const TabItem(
             titulo: 'Proveedores', icono: Icons.support_agent_outlined));
         temp += 1;
@@ -385,23 +396,23 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         temp += 1;
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-IVT')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-IVT') && !desconectado) {
         tabs.add(const TabItem(
             titulo: 'Inventario', icono: Icons.featured_play_list_outlined));
         temp += 1;
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRS')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRS') && !desconectado) {
         tabs.add(const TabItem(
             titulo: 'Presupuesto', icono: Icons.attach_money_sharp));
         temp += 1;
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS') && !desconectado) {
         tabs.add(const TabItem(titulo: 'Listas', icono: Icons.list));
         temp += 1;
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS') && !desconectado) {
         tabs.add(const TabItem(
             titulo: 'Book Inspiration', icono: Icons.edit_road_sharp));
         temp += 1;
@@ -424,16 +435,16 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
           WP_EVT_RES_EDT: pantallas.hasAcceso(clavePantalla: 'WP-EVT-RES-EDT'),
         ));
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-TIM') && !desconectado) {
         temp.add(const PlanesPage());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-CON')) {
         temp.add(const NewContrato());
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-PLN-PAG') && !desconectado) {
         temp.add(const Pagos());
       }
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-PRV') && !desconectado) {
         temp.add(const ProveedorEvento());
       }
       if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-INV')) {
@@ -442,11 +453,11 @@ class _InvitadosState extends State<Invitados> with TickerProviderStateMixin {
         ));
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP-EVT-LTS') && !desconectado) {
         temp.add(const Listas());
       }
 
-      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS')) {
+      if (pantallas.hasAcceso(clavePantalla: 'WP_BOK_INS') && !desconectado) {
         temp.add(const BookInspiracion());
       }
 

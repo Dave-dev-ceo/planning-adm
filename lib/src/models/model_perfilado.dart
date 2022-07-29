@@ -112,6 +112,7 @@ class _Pantalla {
   int get idSeccion => _idSeccion;
   String get clavePantalla => _clavePantalla;
   bool get acceso => _acceso;
+  set acceso(bool acceso) => _acceso = acceso;
 }
 
 class ItemModelPerfil {

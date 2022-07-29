@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:planning/src/logic/permisos_logic.dart';
@@ -15,6 +13,7 @@ class PermisosBloc extends Bloc<PermisosEvent, PermisosState> {
       emit(LoadingPermisos());
 
       try {
+
         ItemModelPerfil permisos = await logic.obtenerPermisosUsuario();
         emit(PermisosOk(permisos));
       } on PermisosException {
@@ -30,11 +29,9 @@ class PermisosBloc extends Bloc<PermisosEvent, PermisosState> {
     on<PermisosSinConexion>((event, emit) {
       ItemModelPerfil _seccionesFiltradas = event.permisos;
 
-      for (var seccion in _seccionesFiltradas.secciones.secciones) {
-        for (var s in _seccionesFiltradas.secciones.secciones) {
-          if (!(s.claveSeccion == 'WP-EVT')) {
-            s.acceso = false;
-          }
+      for (var s in _seccionesFiltradas.secciones.secciones) {
+        if (!(s.claveSeccion == 'WP-EVT')) {
+          s.acceso = false;
         }
       }
 

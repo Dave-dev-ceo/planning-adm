@@ -210,20 +210,20 @@ class SharedPreferencesT {
 
   setSinConexion() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.setBool('offline', true);
+    return _sharedPreferences.setString('desconectado', 'desconectado');
   }
 
   setEnLinea() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.remove('offline');
+    return _sharedPreferences.remove('desconectado');
   }
 
   Future<bool> getModoConexion() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    bool offline = await _sharedPreferences.getBool('offline');
+    final offline = await _sharedPreferences.getString('desconectado');
     if (offline == null) {
       return false;
     }
-    return offline;
+    return true;
   }
 }

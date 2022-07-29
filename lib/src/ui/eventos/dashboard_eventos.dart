@@ -39,6 +39,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
   Size size;
   bool _lights = false;
   String valEstatus;
+  bool desconectado = false;
   _DashboardEventosState(this.WP_EVT_CRT);
 
   Color hexToColor(String code) {
@@ -50,7 +51,13 @@ class _DashboardEventosState extends State<DashboardEventos> {
     valEstatus = _lights ? 'I' : 'A';
     eventosBloc = BlocProvider.of<EventosBloc>(context);
     eventosBloc.add(FechtEventosEvent(valEstatus));
+    _checkIsDesconectado();
     super.initState();
+  }
+
+  _checkIsDesconectado() async {
+    desconectado = await SharedPreferencesT().getModoConexion();
+    setState(() {});
   }
 
   String titulo = "";
@@ -326,7 +333,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
         ),
       ),
       floatingActionButton:
-          WP_EVT_CRT ? expadibleFab() : const SizedBox.shrink(),
+          WP_EVT_CRT && !desconectado ? expadibleFab() : const SizedBox.shrink(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

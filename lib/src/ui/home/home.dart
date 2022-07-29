@@ -45,20 +45,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
-    esModoCOnexion();
+    permisosBloc.add(ObtenerPermisosEvent());
     getClaveRol();
     super.initState();
-  }
-
-  void esModoCOnexion() async {
-    final bool desconectado = await _sharedPreferences.getModoConexion();
-
-    if (!desconectado) {
-      
-    permisosBloc.add(ObtenerPermisosEvent());
-    }
-
-
   }
 
   getClaveRol() async {
@@ -309,9 +298,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     TextButton(
                       child: const Text('Aceptar'),
                       onPressed: () async {
-                        await FetchListaEventosOfflineLogic().subirCambiosEventos(context);
-                        _sharedPreferences.setEnLinea();
-                      permisosBloc.add(ObtenerPermisosEvent());
+                        await FetchListaEventosOfflineLogic()
+                            .subirCambiosEventos(context);
+                        await _sharedPreferences.setEnLinea();
+                        permisosBloc.add(ObtenerPermisosEvent());
 
                         Navigator.pop(context);
                       },
@@ -342,9 +332,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   ),
                   TextButton(
                     child: const Text('Aceptar'),
-                    onPressed: () {
-                      _sharedPreferences.setSinConexion();
-                      
+                    onPressed: () async {
+                      await _sharedPreferences.setSinConexion();
 
                       permisosBloc.add(PermisosSinConexion(permisos));
                       Navigator.pop(context);
