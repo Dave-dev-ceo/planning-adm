@@ -39,6 +39,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   String claveRol;
   int idUsuario;
   int idPlanner;
+  bool desconectado = false;
 
   ItemModelPerfil permisos;
 
@@ -47,6 +48,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     permisosBloc = BlocProvider.of<PermisosBloc>(context);
     permisosBloc.add(ObtenerPermisosEvent());
     getClaveRol();
+    _checkIsDesconectado();
     super.initState();
   }
 
@@ -54,6 +56,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     claveRol = await _sharedPreferences.getClaveRol();
     idUsuario = await _sharedPreferences.getIdUsuario();
     idPlanner = await _sharedPreferences.getIdPlanner();
+  }
+
+  _checkIsDesconectado() async {
+    desconectado = await SharedPreferencesT().getModoConexion();
+    setState(() {});
   }
 
   //_HomeState(this.idPlanner);
@@ -182,8 +189,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       child: Text('Administar'),
                       value: 4,
                     ),
-                  const PopupMenuItem(
-                    child: Text('Modo sin conexión'),
+                  PopupMenuItem(
+                    child: Text(desconectado
+                        ? 'Activar conexión'
+                        : 'Modo sin conexión'),
                     value: 5,
                   ),
                   const PopupMenuItem(
@@ -320,7 +329,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     'Sólo estarán disponibles las siguientes funciones de los eventos descargados:\n'
                     '\n - Resumen (ver)'
                     '\n - Documentos (ver y descargar)'
-                    '\n - Invitados (confirmar asistencia)'
+                    '\n - Invitados (confirmar asistencia y escanear QR)'
+                    '\n - Layout (ver)'
                     '\n\n¿Desea continuar?',
                     textAlign: TextAlign.justify,
                   ),

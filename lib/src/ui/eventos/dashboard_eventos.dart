@@ -207,7 +207,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
               'Se guardará en el dispositivo la siguiente información del evento:'
               '\n - Resumen'
               '\n - Documentos'
-              '\n - Lista de invitados'
+              '\n - Lista de invitados con sus asistencias, acompañantes y mesas asignadas'
+              '\n - Layout del evento'
               '\n\n¿Desea continuar?',
               textAlign: TextAlign.justify,
             ),
@@ -332,8 +333,9 @@ class _DashboardEventosState extends State<DashboardEventos> {
           ),
         ),
       ),
-      floatingActionButton:
-          WP_EVT_CRT && !desconectado ? expadibleFab() : const SizedBox.shrink(),
+      floatingActionButton: WP_EVT_CRT && !desconectado
+          ? expadibleFab()
+          : const SizedBox.shrink(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
