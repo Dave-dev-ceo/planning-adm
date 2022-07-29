@@ -77,34 +77,32 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
       }
       final boxAsistencias = Hive.box<dynamic>('asistencias');
       final listaAsistencias = [...boxAsistencias.values];
-      final indexAsistencia =
-          listaAsistencias.indexWhere((a) => a['id_invitado'] == idInvitado);
-      listaAsistencias[indexAsistencia]['asistencia'] = asistencia;
-      await boxAsistencias.putAt(
-          indexAsistencia, listaAsistencias[indexAsistencia]);
-      await boxAsistencias.close();
+      final asistencias =
+          listaAsistencias.where((a) => a['id_invitado'] == idInvitado);
       if (!Hive.isBoxOpen('cambiosAsistencias')) {
         await Hive.openBox<dynamic>('cambiosAsistencias');
       }
       final boxCambiosAsistencias = Hive.box<dynamic>('cambiosAsistencias');
       final listaCambiosAsistencias = [...boxCambiosAsistencias.values];
-      if (listaCambiosAsistencias
-          .any((a) => a['id_invitado'].toString() == idInvitado.toString())) {
-        final indexCambio = listaCambiosAsistencias.indexWhere(
-            (a) => a['id_invitado'].toString() == idInvitado.toString());
-        await boxCambiosAsistencias.putAt(indexCambio, {
+      for (var as in asistencias) {
+        final indexAsistencia = listaAsistencias.indexWhere((a) =>
+            as['id_evento'] == a['id_evento'] &&
+            as['id_acompanante'] == a['id_acompanante']);
+        as['asistencia'] = asistencia;
+        await boxAsistencias.putAt(indexAsistencia, as);
+        final indexCambio = listaCambiosAsistencias.indexWhere((a) =>
+            as['id_invitado'].toString() == a['id_invitado'].toString());
+        final cambio = {
           'id_invitado': idInvitado.toString(),
           'asistencia': asistencia.toString(),
-          'id_planner': idPlanner.toString()
-        });
-      } else {
-        await boxCambiosAsistencias.add({
-          'id_invitado': idInvitado.toString(),
-          'asistencia': asistencia.toString(),
-          'id_planner': idPlanner.toString()
-        });
+          'id_planner': idPlanner.toString(),
+        };
+        if (indexCambio != -1) {
+          await boxCambiosAsistencias.putAt(indexCambio, cambio);
+        } else {
+          await boxCambiosAsistencias.add(cambio);
+        }
       }
-      await boxCambiosAsistencias.close();
     } else {
       String token = await _sharedPreferences.getToken();
 
