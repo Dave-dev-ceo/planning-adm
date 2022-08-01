@@ -1072,7 +1072,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     if (value.isEmpty) {
       return "El correo es necesario";
     } else if (!regExp.hasMatch(value)) {
-      return "Correo invalido";
+      return "Correo inválido";
     } else {
       return null;
     }

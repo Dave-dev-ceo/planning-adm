@@ -107,14 +107,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   children: [
                     Text(state.message),
                     const Text(
-                        'Renueva tu suscripción en el siguiente enlace. Utiliza el mismo correo del planner.'),
+                        'Renueva tu suscripción en el siguiente enlace con tu mismo correo de Planner.'),
                     InkWell(
                       child: const Text(
                         'Haz clic aquí',
                         style: TextStyle(color: Colors.blue),
                       ),
                       onTap: () =>
-                          launch('https://www.planning.com.mx/index.html'),
+                          launch('https://www.planning.com.mx#testimonials'),
                     ),
                   ],
                 ),
