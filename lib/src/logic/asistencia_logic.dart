@@ -86,7 +86,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
       final listaCambiosAsistencias = [...boxCambiosAsistencias.values];
       for (var as in asistencias) {
         final indexAsistencia = listaAsistencias.indexWhere((a) =>
-            as['id_evento'] == a['id_evento'] &&
+            as['id_invitado'] == a['id_invitado'] &&
             as['id_acompanante'] == a['id_acompanante']);
         as['asistencia'] = asistencia;
         await boxAsistencias.putAt(indexAsistencia, as);
