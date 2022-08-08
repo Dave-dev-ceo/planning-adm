@@ -158,10 +158,7 @@ class _DetallesPlannerState extends State<DetallesPlanner> {
                       },
                       validator: (value) {
                         if (value.isNotEmpty && value != null) {
-                          if (value.length == 10) {
-                            return null;
-                          }
-                          return 'El número de teléfono debe contener 10 digitos';
+                          return null;
                         }
                         return 'El teléfono es requerido';
                       },

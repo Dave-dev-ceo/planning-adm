@@ -1057,8 +1057,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     RegExp regExp = RegExp(patttern);
     if (value.isEmpty) {
       return "El telefono es necesario";
-    } else if (value.length != 10) {
-      return "El numero debe tener 10 digitos";
     } else if (!regExp.hasMatch(value)) {
       return "El numero debe ser de 0-9";
     }
