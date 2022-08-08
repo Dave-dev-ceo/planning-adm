@@ -211,7 +211,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
         if (resp == 'Ok') {
           context.read<HistorialPagosBloc>().add(MostrarHistorialPagosEvent());
           MostrarAlerta(
-              mensaje: 'Se ha agregado el pago correctamente',
+              mensaje: 'Se ha agregado el presupuesto correctamente',
               tipoMensaje: TipoMensaje.correcto);
           Navigator.of(context, rootNavigator: true).pop(true);
         } else {
@@ -224,7 +224,7 @@ class _AgregarPagoDialogState extends State<AgregarPagoDialog> {
           context.read<HistorialPagosBloc>().add(MostrarHistorialPagosEvent());
 
           MostrarAlerta(
-              mensaje: 'Se ha editado el pago correctamente',
+              mensaje: 'Se ha editado el presupuesto correctamente',
               tipoMensaje: TipoMensaje.correcto);
           Navigator.of(context, rootNavigator: true).pop(true);
         } else {

@@ -226,7 +226,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   builder: (context) => AlertDialog(
                     title: const Text('Eliminar pago'),
                     content: Text(
-                        '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
+                        '¿Desea eliminar el presupuesto con concepto: ${pago.concepto}?'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -338,7 +338,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   builder: (context) => AlertDialog(
                     title: const Text('Eliminar pago'),
                     content: Text(
-                        '¿Desea eliminar el pago con concepto: ${pago.concepto}?'),
+                        '¿Desea eliminar el presupuesto con concepto: ${pago.concepto}?'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -503,7 +503,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                               }
                             : null,
                         child: Text(
-                          index == 0 ? 'Pago a proveedor' : 'Recibo a cliente',
+                          index == 0 ? 'Presupuesto a proveedor' : 'Recibo a cliente',
                           style: const TextStyle(color: Colors.white),
                         ),
                       )
@@ -997,7 +997,7 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   isPressed = false;
                 });
                 MostrarAlerta(
-                    mensaje: 'Pago borrado', tipoMensaje: TipoMensaje.correcto);
+                    mensaje: 'Presupuesto borrado', tipoMensaje: TipoMensaje.correcto);
               },
             ),
           ],

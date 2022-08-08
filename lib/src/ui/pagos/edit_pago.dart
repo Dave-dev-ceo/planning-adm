@@ -54,11 +54,11 @@ class _FormEditPagoState extends State<FormEditPago> {
       listener: (context, state) {
         if (state is PagosUpdateState) {
           MostrarAlerta(
-              mensaje: 'Pago actualizado', tipoMensaje: TipoMensaje.correcto);
+              mensaje: 'Presupuesto actualizado', tipoMensaje: TipoMensaje.correcto);
           pagosBloc.add(SelectIdEvent(widget.id));
         } else if (state is PagosDeleteState) {
           MostrarAlerta(
-              mensaje: 'Pago eliminado', tipoMensaje: TipoMensaje.correcto);
+              mensaje: 'Presupuesto eliminado', tipoMensaje: TipoMensaje.correcto);
           Navigator.pop(context);
           pagosBloc.add(SelectPagosEvent());
         }
