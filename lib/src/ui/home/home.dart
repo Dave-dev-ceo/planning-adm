@@ -186,7 +186,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     const PopupMenuItem(value: 2, child: Text("Planner")),
                   if (claveRol == 'SU')
                     const PopupMenuItem(
-                      child: Text('Administar'),
+                      child: Text('Administrar'),
                       value: 4,
                     ),
                   PopupMenuItem(
