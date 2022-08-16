@@ -381,7 +381,7 @@ class _FormUsuarioState extends State<FormUsuario> {
     if (value.isEmpty) {
       return 'Dato requerido';
     } else if (!regExp.hasMatch(value)) {
-      return 'La contraseña debe tener al menos 8 dígitos, una letra mayúscula, una letra minúscula y un número';
+      return 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número';
     } else {
       return null;
     }
@@ -393,7 +393,7 @@ class _FormUsuarioState extends State<FormUsuario> {
       return 'Dato requerido';
     } else {
       if (!regExp.hasMatch(value)) {
-        return 'La contraseña debe tener al menos 8 dígitos, una letra mayúscula, una letra minúscula y un número';
+        return 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número';
       } else if (pwdCtrl.text != value) {
         return 'Las contraseñas deben coincidir';
       } else {

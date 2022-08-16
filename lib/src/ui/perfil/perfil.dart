@@ -16,6 +16,7 @@ import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_perfil.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/api_provider.dart';
+import 'package:planning/src/ui/perfil/eliminar_cuenta/eliminar_cuenta.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 import 'package:responsive_grid/responsive_grid.dart';
@@ -292,6 +293,29 @@ class _PerfilState extends State<Perfil> {
                             },
                           )),
                     ],
+                  ),
+                ),
+                if (claveRol == 'PL')
+                Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red.shade400,
+                      ),
+                      child: const Text(
+                        'Eliminar cuenta',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return EliminarCuentaDialog();
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
                 if (claveRol == 'INVO') const Divider(),
