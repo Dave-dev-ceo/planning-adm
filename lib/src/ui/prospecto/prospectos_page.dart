@@ -141,32 +141,35 @@ class _ProspectosPageState extends State<ProspectosPage> {
                       fontSize: 20.0,
                     ),
                   ),
-                  trailing: PopupMenuButton(
-                      icon: Icon(
-                        Icons.more_vert_rounded,
-                        color: useWhiteForeground(Color(int.parse(etapa.color)))
-                            ? Colors.white
-                            : Colors.black,
-                      ),
-                      onSelected: (value) {
-                        if (value == 2) {
-                          deleteDialogEtapa(etapa.idEtapa);
-                        } else {
-                          _addEtapaSubmit(etapa, true);
-                        }
-                      },
-                      tooltip: null,
-                      itemBuilder: (BuildContext context) => <PopupMenuItem>[
-                            const PopupMenuItem(
-                              child: Text('Editar'),
-                              value: 1,
-                            ),
-                            if (etapa.claveEtapa == null)
-                              const PopupMenuItem(
-                                child: Text('Eliminar'),
-                                value: 2,
-                              ),
-                          ]),
+                  trailing: etapa.claveEtapa == null
+                      ? PopupMenuButton(
+                          icon: Icon(
+                            Icons.more_vert_rounded,
+                            color: useWhiteForeground(
+                                    Color(int.parse(etapa.color)))
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                          onSelected: (value) {
+                            if (value == 2) {
+                              deleteDialogEtapa(etapa.idEtapa);
+                            } else {
+                              _addEtapaSubmit(etapa, true);
+                            }
+                          },
+                          tooltip: null,
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuItem>[
+                                const PopupMenuItem(
+                                  child: Text('Editar'),
+                                  value: 1,
+                                ),
+                                const PopupMenuItem(
+                                  child: Text('Eliminar'),
+                                  value: 2,
+                                ),
+                              ])
+                      : null,
                 )),
           ),
         ],
