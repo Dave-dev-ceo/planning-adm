@@ -19,8 +19,8 @@ class ConfigConection {
       addUrl = "http://localhost:"; //Navegador
       // addUrl = "http://10.0.1.127:"; //Dispositivo real
     } else {
-      addPuerto = "9000";
-      addUrl = "https://planning.com.mx:";
+      addPuerto = "9007";
+      addUrl = "https://pruebas.grupotum.com:";
     }
   }
 }
