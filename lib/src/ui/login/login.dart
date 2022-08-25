@@ -301,16 +301,16 @@ class _LoginState extends State<Login> {
                   style: TextStyle(fontSize: 17),
                 )),
           ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: TextButton(
-              onPressed: () async {
-                await launchUrlString(
-                    'https://www.planning.com.mx/#testimonials');
-              },
-              child: Text('Registrarse'),
-            ),
-          ),
+          //Padding(
+          //  padding: const EdgeInsets.all(4.0),
+          //  child: TextButton(
+          //    onPressed: () async {
+          //      await launchUrlString(
+          //          'https://www.planning.com.mx/#testimonials');
+          //    },
+          //    child: Text('Registrarse'),
+          //  ),
+          //),
           recoverPasswordButton(context),
           const SizedBox(
             height: 10,
