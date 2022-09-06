@@ -729,7 +729,7 @@ class _DataSource extends DataTableSource {
                               color: Colors.green)),
                       trailing: const FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
-                        launch('http://wa.me/521$numero');
+                        launch('http://wa.me/$numero');
                       }),
                 )
               ],

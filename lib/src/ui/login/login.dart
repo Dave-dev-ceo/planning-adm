@@ -339,10 +339,16 @@ class _LoginState extends State<Login> {
   }
 
   final botones = <Widget>[
-    Container(
-      height: 50,
-      margin: EdgeInsets.all(4.0),
-      child: Image.asset('assets/badge_play.png'),
+    GestureDetector(
+      onTap: () async {
+        await launchUrl(Uri.parse(
+            'https://play.google.com/store/apps/details?id=mx.com.planning.planner'));
+      },
+      child: Container(
+        margin: EdgeInsets.all(4.0),
+        height: 50,
+        child: Image.asset('assets/badge_apple.png'),
+      ),
     ),
     GestureDetector(
       onTap: () async {

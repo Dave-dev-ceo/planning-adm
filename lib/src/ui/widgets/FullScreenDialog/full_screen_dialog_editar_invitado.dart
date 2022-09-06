@@ -990,7 +990,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                       ),
                       onTap: () async {
                         launchUrl(
-                            Uri.parse('http://wa.me/521${invitado.telefono}'));
+                            Uri.parse('http://wa.me/${invitado.telefono}'));
                       },
                     ),
                   ),
