@@ -792,25 +792,6 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           100.0),
                     ],
                   ),
-                  _base64qr != ''
-                      ? formItemsDesign(
-                          null,
-                          Column(children: [
-                            //Expanded(child: Text('Código QR')),
-                            Expanded(
-                                child: Image.memory(
-                              base64Decode(_base64qr
-                                  .substring(_base64qr.indexOf(',') + 1)),
-                              width: 250.0,
-                              height: 250.0,
-                            )),
-                          ]),
-                          400.0,
-                          200.0)
-                      : const SizedBox.shrink(),
-                  const SizedBox(
-                    height: 30.0,
-                  ),
                 ],
               ),
             ),

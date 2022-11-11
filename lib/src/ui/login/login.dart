@@ -331,7 +331,19 @@ class _LoginState extends State<Login> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: botones,
                     ),
-            )
+            ),
+          TextButton(
+            onPressed: () async {
+              await launchUrl(Uri.parse(
+                  'https://www.planning.com.mx/privacidad/Aviso_de_privacidad.pdf'));
+            },
+            child: Text(
+              'Aviso de privacidad',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+            ),
+          ),
         ],
       ),
     );
@@ -359,7 +371,7 @@ class _LoginState extends State<Login> {
         height: 50,
         child: Image.asset('assets/badge_apple.png'),
       ),
-    )
+    ),
   ];
 
   Padding recoverPasswordButton(BuildContext context) {
