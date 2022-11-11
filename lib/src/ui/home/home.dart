@@ -19,6 +19,7 @@ import 'package:planning/src/ui/usuarios/usuarios.dart';
 import 'package:planning/src/ui/widgets/tab/tab_item.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Home extends StatefulWidget {
   //static const routeName = '/eventos';
@@ -195,6 +196,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         : 'Modo sin conexión'),
                     value: 5,
                   ),
+                  PopupMenuItem(
+                    child: Text('Manuales'),
+                    value: 6,
+                  ),
                   const PopupMenuItem(
                     child: Divider(height: 4.0),
                     height: 8.0,
@@ -216,6 +221,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     Navigator.of(context).pushNamed('/administrarPlanners');
                   } else if (valor == 5) {
                     dialogoConexion();
+                  } else if (valor == 6) {
+                    dialogoManual();
                   }
                 },
               ),
@@ -357,6 +364,51 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 height: 150,
                 child: Center(child: CircularProgressIndicator()),
               ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void dialogoManual() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return FutureBuilder(
+          builder: (context, snapshot) {
+            return AlertDialog(
+              title: const Text(
+                'Manules',
+                textAlign: TextAlign.center,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton(
+                    onPressed: () async => await launchUrlString(
+                        'https://planning.com.mx/ManualAdmin.pdf'),
+                    child: Text(
+                      'Administrador',
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async => await launchUrlString(
+                        'https://planning.com.mx/ManualInvolucrados.docx.pdf'),
+                    child: Text(
+                      'Involucrado',
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cerrar'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
             );
           },
         );

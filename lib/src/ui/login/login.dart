@@ -14,7 +14,6 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 // Padilla
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class Login extends StatefulWidget {
   const Login({Key key}) : super(key: key);
@@ -347,7 +346,7 @@ class _LoginState extends State<Login> {
       child: Container(
         margin: EdgeInsets.all(4.0),
         height: 50,
-        child: Image.asset('assets/badge_apple.png'),
+        child: Image.asset('assets/badge_play.png'),
       ),
     ),
     GestureDetector(
