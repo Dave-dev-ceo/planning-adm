@@ -197,7 +197,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     value: 5,
                   ),
                   PopupMenuItem(
-                    child: Text('Manuales'),
+                    child: Text('Tutoriales'),
                     value: 6,
                   ),
                   const PopupMenuItem(
