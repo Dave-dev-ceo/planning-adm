@@ -58,7 +58,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
   Future<void> _createPDF(String contrato) async {
     //Create a PDF document
     PdfDocument document = PdfDocument.fromBase64String(contrato);
-    List<int> bytes = document.save();
+    List<int> bytes = await document.save();
     //Dispose the document
     document.dispose();
     //Download the output file

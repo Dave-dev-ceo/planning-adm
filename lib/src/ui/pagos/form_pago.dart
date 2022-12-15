@@ -232,7 +232,8 @@ class _FormPagoState extends State<FormPago> {
                     pagoPresupuesto.precioUnitarioAdicional?.toString(),
                 keyboardType: TextInputType.number,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'^(\d+)?\.?\d{0,2}'))
                 ],
                 decoration: const InputDecoration(hintText: 'Monto'),
                 onChanged: (valor) {
