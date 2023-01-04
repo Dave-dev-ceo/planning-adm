@@ -447,7 +447,7 @@ class _DashboardInvolucradoPageState extends State<DashboardInvolucradoPage> {
     }
   }
 
-  _showDialogMsg(BuildContext contextT) {
+  Widget _showDialogMsg(BuildContext contextT) {
     _dialogContext = contextT;
     return AlertDialog(
       title: const Text(

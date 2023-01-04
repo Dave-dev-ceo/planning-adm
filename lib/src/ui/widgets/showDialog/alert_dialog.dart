@@ -66,9 +66,12 @@ class _DialogAlertState extends State<DialogAlert> {
                       texto('Invitado: ', invitado.nombre, 'Sin nombre'),
                       texto('Grupo: ', invitado.grupo, 'Sin nombre'),
                       texto('Mesa: ', invitado.mesa, 'Sin mesa'),
-                      texto('Alimentación: ', invitado.alimentacion, 'No especificada'),
+                      texto('Alimentación: ', invitado.alimentacion,
+                          'No especificada'),
                       texto('Alergias: ', invitado.alimentacion, 'Ninguna'),
-                      texto('Asistencia especial: ', invitado.alimentacion, 'No requerida'),
+                      texto('Asistencia especial: ', invitado.alimentacion,
+                          'No requerida'),
+                      texto('Otros: ', invitado.otros, 'Sin comentarios'),
                       texto('Correo: ', invitado.correo, 'Sin correo'),
                       texto('Teléfono: ', invitado.telefono, 'Sin teléfono'),
                       if (invitado.acompanantes.isNotEmpty)
@@ -82,10 +85,14 @@ class _DialogAlertState extends State<DialogAlert> {
                           child: ListBody(
                             children: [
                               text(acompanante.nombre),
-                              text('Mesa: ${datoNulo(acompanante.mesa, 'Sin mesa')}'),
-                              text('Alimentación: ${datoNulo(acompanante.alimentacion, 'No especificada')}'),
-                              text('Alergias: ${datoNulo(acompanante.alergias, 'Ninguna')}'),
-                              text('Asistencia especial: ${datoNulo(acompanante.asistenciaEspecial, 'No requerida')}'),
+                              text(
+                                  'Mesa: ${datoNulo(acompanante.mesa, 'Sin mesa')}'),
+                              text(
+                                  'Alimentación: ${datoNulo(acompanante.alimentacion, 'No especificada')}'),
+                              text(
+                                  'Alergias: ${datoNulo(acompanante.alergias, 'Ninguna')}'),
+                              text(
+                                  'Asistencia especial: ${datoNulo(acompanante.asistenciaEspecial, 'No requerida')}'),
                               const Divider(),
                             ],
                           ),

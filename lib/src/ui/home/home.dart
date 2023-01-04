@@ -18,7 +18,6 @@ import 'package:planning/src/ui/timings/timing.dart';
 import 'package:planning/src/ui/usuarios/usuarios.dart';
 import 'package:planning/src/ui/widgets/tab/tab_item.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class Home extends StatefulWidget {
@@ -114,8 +113,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         'Haz clic aquí',
                         style: TextStyle(color: Colors.blue),
                       ),
-                      onTap: () =>
-                          launch('https://www.planning.com.mx#testimonials'),
+                      onTap: () => launchUrlString(
+                          'https://www.planning.com.mx#testimonials'),
                     ),
                   ],
                 ),

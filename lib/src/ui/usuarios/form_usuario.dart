@@ -238,8 +238,8 @@ class _FormUsuarioState extends State<FormUsuario> {
           child: Text(datos['accion'] == 0 ? 'Crear usuario' : 'Editar usuario',
               style: const TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
-            primary: hexToColor('#000000'), // background
-            onPrimary: Colors.white, // foreground
+            backgroundColor: hexToColor('#000000'), // background
+            foregroundColor: Colors.white, // foreground
             padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 25),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),

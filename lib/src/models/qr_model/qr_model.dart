@@ -19,6 +19,7 @@ class QrInvitadoModel {
     this.alimentacion,
     this.asistenciaEspecial,
     this.acompanantes,
+    this.otros,
   });
 
   int idInvitado;
@@ -31,6 +32,7 @@ class QrInvitadoModel {
   String alergias;
   String alimentacion;
   String asistenciaEspecial;
+  String otros;
   List<Acompanante> acompanantes;
 
   factory QrInvitadoModel.fromJson(Map<String, dynamic> json) =>
@@ -45,6 +47,7 @@ class QrInvitadoModel {
         alergias: json["alergias"],
         alimentacion: json["alimentacion"],
         asistenciaEspecial: json["asistencia_especial"],
+        otros: json["otros"],
         acompanantes: List<Acompanante>.from(
             json["acompanantes"].map((x) => Acompanante.fromJson(x))),
       );
@@ -58,6 +61,7 @@ class QrInvitadoModel {
         "evento": evento,
         "telefono": telefono,
         "acompanantes": List<dynamic>.from(acompanantes.map((x) => x.toJson())),
+        "otros": otros,
       };
 }
 

@@ -174,7 +174,7 @@ class _CargarExcelState extends State<CargarExcel> {
                 TextButton(
                   child: const Text('Descargar plantilla'),
                   style: TextButton.styleFrom(
-                    primary: Colors.teal,
+                    foregroundColor: Colors.teal,
                   ),
                   onPressed: () {},
                 ),

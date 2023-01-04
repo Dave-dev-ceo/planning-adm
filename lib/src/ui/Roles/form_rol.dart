@@ -191,8 +191,8 @@ class _FormRolState extends State<FormRol> {
           child: Text((datos['accion'] == 0 ? 'Crear' : 'Editar') + ' rol',
               style: const TextStyle(fontSize: 18, color: Colors.black)),
           style: ElevatedButton.styleFrom(
-            primary: hexToColor('#fdf4e5'), // background
-            onPrimary: Colors.white, // foreground
+            backgroundColor: hexToColor('#fdf4e5'), // background
+            foregroundColor: Colors.white, // foreground
             padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 25),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(5)),

@@ -19,7 +19,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:planning/src/utils/utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:planning/src/blocs/blocs.dart';
@@ -29,6 +28,7 @@ import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/asistencia/asistencia.dart';
 import 'package:planning/src/ui/mesas/mesas_page.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../../animations/loading_overlay.dart';
 import '../../../models/item_model_invitados.dart';
 
@@ -163,7 +163,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
                       'Procederá a abrir su explorador de archivos para seleccionar un archivo Excel. ¿Desea continuar?'),
                   TextButton(
                     style: TextButton.styleFrom(
-                        primary: Colors.blue,
+                        foregroundColor: Colors.blue,
                         textStyle: const TextStyle(fontSize: 13.0)),
                     onPressed: () async {
                       ByteData bytes =
@@ -714,7 +714,7 @@ class _DataSource extends DataTableSource {
                     title: Text('Se llamará al número $numero'),
                     trailing: const Icon(Icons.phone),
                     onTap: () async {
-                      launch('tel://$numero');
+                      launchUrlString('tel://$numero');
                       Navigator.of(context).pop();
                     },
                   ),
@@ -729,7 +729,7 @@ class _DataSource extends DataTableSource {
                               color: Colors.green)),
                       trailing: const FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
-                        launch('http://wa.me/$numero');
+                        launchUrlString('http://wa.me/$numero');
                       }),
                 )
               ],

@@ -12,6 +12,7 @@ class ItemModelInvitado {
   String _alimentacion;
   String _alergias;
   String _asistenciaEspecial;
+  String _otros;
   bool _estatusInvitacion;
   String _qr;
   int _numAcomp;
@@ -33,6 +34,7 @@ class ItemModelInvitado {
     _asistenciaEspecial = parsedJson['asistencia_especial'];
     _qr = parsedJson.containsKey('qr') ? parsedJson['qr'] : '';
     _numAcomp = parsedJson['numero_acompanante'];
+    _otros = parsedJson['otros'];
   }
 
   int get idInvitado => _idInvitado;
@@ -51,4 +53,5 @@ class ItemModelInvitado {
   bool get estatusInvitacion => _estatusInvitacion;
   String get codigoQr => _qr;
   int get numbAcomp => _numAcomp;
+  String get otros => _otros;
 }

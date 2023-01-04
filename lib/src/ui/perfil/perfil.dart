@@ -296,28 +296,28 @@ class _PerfilState extends State<Perfil> {
                   ),
                 ),
                 if (claveRol == 'PL')
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red.shade400,
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 60),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red.shade400,
+                        ),
+                        child: const Text(
+                          'Eliminar cuenta',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return EliminarCuentaDialog();
+                            },
+                          );
+                        },
                       ),
-                      child: const Text(
-                        'Eliminar cuenta',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return EliminarCuentaDialog();
-                          },
-                        );
-                      },
                     ),
                   ),
-                ),
                 if (claveRol == 'INVO') const Divider(),
                 if (claveRol == 'INVO')
                   Center(

@@ -133,7 +133,7 @@ class MyApp extends StatelessWidget {
         ),
         primarySwatch: createMaterialColor(const Color(0xFFfdf4e5)),
         textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(primary: Colors.black)),
+            style: TextButton.styleFrom(foregroundColor: Colors.black)),
         inputDecorationTheme: const InputDecorationTheme(
             floatingLabelStyle: TextStyle(color: Colors.black54)),
         scaffoldBackgroundColor: hexToColor('#fff9f9'),

@@ -18,6 +18,7 @@ import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
   final Map<String, dynamic> provsrv;
@@ -529,12 +530,12 @@ class _FullScreenDialogAgregarArchivoProvServEvent
   }
 
   Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(
         url,
-        forceSafariVC: false,
-        forceWebView: false,
-        headers: <String, String>{'my_header_key': 'my_header_value'},
+        webViewConfiguration: WebViewConfiguration(
+          headers: <String, String>{'my_header_key': 'my_header_value'},
+        ),
       );
     } else {
       throw 'Could not launch $url';
@@ -688,7 +689,8 @@ class _FullScreenDialogAgregarArchivoProvServEvent
                                         alignment: WrapAlignment.center,
                                         children: <Widget>[
                                           TextFormFields(
-                                            icon: FontAwesomeIcons.featherAlt,
+                                            icon:
+                                                FontAwesomeIcons.featherPointed,
                                             item: TextFormField(
                                               controller: _textcontrollerDes,
                                               onChanged: (value) {

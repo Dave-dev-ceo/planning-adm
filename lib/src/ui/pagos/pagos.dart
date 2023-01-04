@@ -488,7 +488,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                         width: 100,
                       ),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.black),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black),
                         onPressed: !isInvolucrado
                             ? () {
                                 if (canAddPay) {
@@ -503,7 +504,9 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                               }
                             : null,
                         child: Text(
-                          index == 0 ? 'Presupuesto a proveedor' : 'Recibo a cliente',
+                          index == 0
+                              ? 'Presupuesto a proveedor'
+                              : 'Recibo a cliente',
                           style: const TextStyle(color: Colors.white),
                         ),
                       )
@@ -997,7 +1000,8 @@ class _PagosState extends State<Pagos> with SingleTickerProviderStateMixin {
                   isPressed = false;
                 });
                 MostrarAlerta(
-                    mensaje: 'Presupuesto borrado', tipoMensaje: TipoMensaje.correcto);
+                    mensaje: 'Presupuesto borrado',
+                    tipoMensaje: TipoMensaje.correcto);
               },
             ),
           ],

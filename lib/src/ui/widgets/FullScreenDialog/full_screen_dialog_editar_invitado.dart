@@ -58,6 +58,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
 
   TextEditingController tipoAlimentacionCtrl = TextEditingController();
   TextEditingController asistenciaEspecialCtrl = TextEditingController();
+  TextEditingController otrosCtrl = TextEditingController();
   TextEditingController alergiasCtrl = TextEditingController();
   TextEditingController alimentAcompContrl = TextEditingController();
   TextEditingController alerAcompContrl = TextEditingController();
@@ -588,6 +589,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       alergiasCtrl.text = invitado.alergias;
       tipoAlimentacionCtrl.text = invitado.alimentacion;
       asistenciaEspecialCtrl.text = invitado.asistenciaEspecial;
+      otrosCtrl.text = invitado.otros;
       contActualizaData++;
       if (invitado.numbAcomp != null) {
         _numberGuestsController.text = invitado.numbAcomp.toString();
@@ -779,17 +781,31 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                   Wrap(
                     children: <Widget>[
                       formItemsDesign(
-                          null,
-                          TextFormField(
-                            controller: asistenciaEspecialCtrl,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 2,
-                            decoration: const InputDecoration(
-                              labelText: 'Asistencia especial',
-                            ),
+                        null,
+                        TextFormField(
+                          controller: asistenciaEspecialCtrl,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 2,
+                          decoration: const InputDecoration(
+                            labelText: 'Asistencia especial',
                           ),
-                          500.0,
-                          100.0),
+                        ),
+                        500.0,
+                        100.0,
+                      ),
+                      formItemsDesign(
+                        null,
+                        TextFormField(
+                          controller: otrosCtrl,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 2,
+                          decoration: const InputDecoration(
+                            labelText: 'Otros...',
+                          ),
+                        ),
+                        500.0,
+                        100.0,
+                      ),
                     ],
                   ),
                 ],
@@ -921,7 +937,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                 "edad": edad,
                                 "alimentacion": alimentAcompContrl.text,
                                 "alergias": alerAcompContrl.text,
-                                "asistenciaEspecial": asisEspAcompContrl.text
+                                "asistenciaEspecial": asisEspAcompContrl.text,
+                                "otros": otrosCtrl.text
                               };
 
                               if (_keyFormAcomp.currentState.validate()) {
@@ -1079,7 +1096,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       "id_mesa": _mySelectionM,
       "alimentacion": tipoAlimentacionCtrl.text,
       "alergias": alergiasCtrl.text,
-      "asistencia_especial": asistenciaEspecialCtrl.text
+      "asistencia_especial": asistenciaEspecialCtrl.text,
+      "otros": otrosCtrl.text
     };
     //json.
     bool response = await api.updateInvitado(json, context);

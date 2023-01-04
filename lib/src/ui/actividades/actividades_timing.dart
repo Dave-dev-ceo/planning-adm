@@ -320,8 +320,8 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                   _save();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: hexToColor('#fdf4e5'), // background
-                  onPrimary: Colors.white, // foreground
+                  backgroundColor: hexToColor('#fdf4e5'), // background
+                  foregroundColor: Colors.white, // foreground
                   padding:
                       const EdgeInsets.symmetric(horizontal: 68, vertical: 25),
                   shape: const RoundedRectangleBorder(
