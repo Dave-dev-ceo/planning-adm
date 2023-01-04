@@ -381,7 +381,7 @@ class NewContratoState extends State<NewContrato> {
               ],
             ),
           ),
-          !isInvolucrado && contrato.tipoDoc == 'html'
+          contrato.tipoDoc == 'html'
               ? Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
