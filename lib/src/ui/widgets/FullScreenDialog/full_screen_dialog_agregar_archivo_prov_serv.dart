@@ -17,7 +17,6 @@ import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:mime_type/mime_type.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
