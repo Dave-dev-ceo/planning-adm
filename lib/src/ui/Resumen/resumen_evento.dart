@@ -245,6 +245,13 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   miCardReportesInvitados(ItemModelReporteInvitados reporte) {
+    final numInvitados =
+        reporte.results.firstWhere((r) => r.estatus == 'Invitados').cantidad;
+    final numAcompanantes =
+        reporte.results.firstWhere((r) => r.estatus == 'Acompañantes').cantidad;
+
+    final total = int.parse(numInvitados) + int.parse(numAcompanantes);
+
     return GestureDetector(
       child: Card(
         color: const Color(0xFFfdf4e5),
@@ -265,12 +272,25 @@ class _ResumenEventoState extends State<ResumenEvento> {
                 child: ListView.builder(
                     itemCount: reporte.results.length,
                     itemBuilder: (_, int index) {
-                      return Text(reporte.results.elementAt(index).estatus +
-                          ': ' +
-                          reporte.results.elementAt(index).cantidad.toString());
+                      final result = reporte.results[index];
+                      return Text(
+                        result.estatus + ': ' + result.cantidad.toString(),
+                        style: TextStyle(
+                          fontWeight: result.estatus == 'Invitados' ||
+                                  result.estatus == 'Acompañantes'
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      );
                     }),
               ),
-              trailing: const FaIcon(FontAwesomeIcons.listCheck),
+              trailing: Column(
+                children: [
+                  Text('Total: $total'),
+                  SizedBox(height: 5.0),
+                  const FaIcon(FontAwesomeIcons.listCheck),
+                ],
+              ),
             ),
           ],
         ),

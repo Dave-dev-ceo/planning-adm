@@ -1,22 +1,22 @@
 class ItemModelReporteInvitados {
-  List<_Estatus> _results = [];
+  List<Estatus> _results = [];
 
   ItemModelReporteInvitados.fromJson(List<dynamic> parsedJson) {
-    List<_Estatus> temp = [];
+    List<Estatus> temp = [];
     for (int i = 0; i < parsedJson.length; i++) {
-      _Estatus result = _Estatus(parsedJson[i]);
+      Estatus result = Estatus(parsedJson[i]);
       temp.add(result);
     }
     _results = temp;
   }
-  List<_Estatus> get results => _results;
+  List<Estatus> get results => _results;
 }
 
-class _Estatus {
+class Estatus {
   String _estatus;
   String _cantidad;
 
-  _Estatus(datos) {
+  Estatus(datos) {
     _estatus = datos['estatus'] ?? 'Sin estatus';
     _cantidad = datos['cantidad'];
   }

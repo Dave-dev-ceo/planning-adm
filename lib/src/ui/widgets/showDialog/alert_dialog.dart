@@ -188,7 +188,10 @@ class _DialogAlertState extends State<DialogAlert> {
     // BlocProvider - cargamos el evento
     AsistenciaBloc asistenciaBloc;
     asistenciaBloc = BlocProvider.of<AsistenciaBloc>(context);
-    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
+    asistenciaBloc.add(SaveAsistenciaEvent(
+      idInvitado,
+      asistenciaValor,
+    ));
     qrBloc.add(QrInvitadoUpdateEvent());
   }
 }

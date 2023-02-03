@@ -10,7 +10,8 @@ import 'package:planning/src/models/item_model_asistencia.dart';
 
 abstract class AsistenciaLogic {
   Future<ItemModelAsistencia> fetchAsistenciaPorPlanner();
-  Future<int> saveAsistencia(int idInvitado, bool asistencia);
+  Future<int> saveAsistencia(int idInvitado, bool asistencia,
+      {int idAcompanante});
   Future<String> downloadPDFAsistencia();
 }
 
@@ -68,7 +69,8 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
   }
 
   @override
-  Future<int> saveAsistencia(int idInvitado, bool asistencia) async {
+  Future<int> saveAsistencia(int idInvitado, bool asistencia,
+      {int idAcompanante}) async {
     bool desconectado = await _sharedPreferences.getModoConexion();
     int idPlanner = await _sharedPreferences.getIdPlanner();
     if (desconectado) {
@@ -90,8 +92,8 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
             as['id_acompanante'] == a['id_acompanante']);
         as['asistencia'] = asistencia;
         await boxAsistencias.putAt(indexAsistencia, as);
-        final indexCambio = listaCambiosAsistencias.indexWhere((a) =>
-            as['id_invitado'].toString() == a['id_invitado'].toString());
+        final indexCambio = listaCambiosAsistencias.indexWhere(
+            (a) => as['id_invitado'].toString() == a['id_invitado'].toString());
         final cambio = {
           'id_invitado': idInvitado.toString(),
           'asistencia': asistencia.toString(),
@@ -111,6 +113,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
               '${confiC.url}${confiC.puerto}/wedding/ASISTENCIA/saveAsistenciasPorPlanner'),
           body: {
             'id_invitado': idInvitado.toString(),
+            'id_acompanante': idAcompanante.toString(),
             'asistencia': asistencia.toString(),
             'id_planner': idPlanner.toString()
           },

@@ -38,6 +38,7 @@ class ItemModelAsistencia {
 
 class _Result {
   int _idInvitado;
+  int _idAcompanante;
   String _nombreCompleto;
   String _nombreAcompanante;
   String _mesa;
@@ -51,6 +52,7 @@ class _Result {
     _mesa = result['mesa'];
     _grupo = result['grupo'];
     _asistencia = result['asistencia'];
+    _idAcompanante = result['id_acompanante'];
   }
 
   _Result.fromModel(dataObj) {
@@ -60,11 +62,14 @@ class _Result {
     _mesa = dataObj._mesa;
     _grupo = dataObj._grupo;
     _asistencia = dataObj._asistencia;
+    _idAcompanante = dataObj._idAcompanante;
   }
 
   int get idInvitado => _idInvitado;
 
   set idInvitado(value) => _idInvitado = value;
+  int get idAcompanante => _idAcompanante;
+  set idAcompanante(value) => _idAcompanante = value;
 
   String get nombre => _nombreCompleto;
 

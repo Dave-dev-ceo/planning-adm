@@ -30,7 +30,11 @@ class AsistenciaBloc extends Bloc<AsistenciaEvent, AsistenciaState> {
     }
     // mejorar
     else if (event is SaveAsistenciaEvent) {
-      await logic.saveAsistencia(event.idInvitado, event.asistencia);
+      await logic.saveAsistencia(
+        event.idInvitado,
+        event.asistencia,
+        idAcompanante: event.idAcompanante,
+      );
       // yield SavedAsistenciaState(response);
       ItemModelAsistencia usuarios = await logic.fetchAsistenciaPorPlanner();
       yield MostrarAsistenciaState(usuarios);

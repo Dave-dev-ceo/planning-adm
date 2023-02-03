@@ -160,7 +160,15 @@ class _AsistenciaState extends State<Asistencia> {
     );
   }
 
-  Widget _crearHeader(asistencia) {
+  Widget _crearHeader(ItemModelAsistencia asistencia) {
+    int presentes = 0;
+    final int totalInvitados = asistencia.asistencias.length;
+    for (var r in asistencia.asistencias) {
+      if (r.asistencia == true) {
+        presentes++;
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
@@ -168,11 +176,23 @@ class _AsistenciaState extends State<Asistencia> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Expanded(
+          Expanded(
               flex: 3,
-              child: Text(
-                'Asistencia',
-                style: TextStyle(fontSize: 20.0),
+              child: Row(
+                children: [
+                  Text(
+                    'Asistencia',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  const Spacer(),
+                  Text(
+                    'Total: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text('$presentes de $totalInvitados')
+                ],
               )),
           Expanded(
               flex: 5,
@@ -233,7 +253,8 @@ class _AsistenciaState extends State<Asistencia> {
                     ),
                     value: element.asistencia,
                     onChanged: (value) {
-                      _guardarAsistencia(element.idInvitado, value);
+                      _guardarAsistencia(element.idInvitado, value,
+                          idAcompanante: element.idAcompanante);
                       setState(() => element.asistencia = value);
                     },
                   )
@@ -266,9 +287,11 @@ class _AsistenciaState extends State<Asistencia> {
     return invitadosList;
   }
 
-  _guardarAsistencia(int idInvitado, bool asistenciaValor) {
+  _guardarAsistencia(int idInvitado, bool asistenciaValor,
+      {int idAcompanante}) {
     // BlocProvider - cargamos el evento
-    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor));
+    asistenciaBloc.add(SaveAsistenciaEvent(idInvitado, asistenciaValor,
+        idAcompanante: idAcompanante));
   }
 
   _buscadorInvitados(String valor, ItemModelAsistencia asistencia) {
@@ -307,25 +330,25 @@ class _AsistenciaState extends State<Asistencia> {
       icon: Icons.more_vert,
       tooltip: 'Opciones',
       children: [
-          SpeedDialChild(
-            onTap: () async {
-              final result = await Navigator.of(context).pushNamed('/lectorQr');
-            },
-            child: const Icon(Icons.qr_code_outlined),
-            label: 'Código QR',
-          ),
-        if (!desconectado)
         SpeedDialChild(
-          child: const Icon(Icons.download),
           onTap: () async {
-            final data = await asistenciaLogic.downloadPDFAsistencia();
-
-            if (data != null) {
-              downloadFile(data, 'asistencia');
-            }
+            final result = await Navigator.of(context).pushNamed('/lectorQr');
           },
-          label: 'Descargar PDF',
-        )
+          child: const Icon(Icons.qr_code_outlined),
+          label: 'Código QR',
+        ),
+        if (!desconectado)
+          SpeedDialChild(
+            child: const Icon(Icons.download),
+            onTap: () async {
+              final data = await asistenciaLogic.downloadPDFAsistencia();
+
+              if (data != null) {
+                downloadFile(data, 'asistencia');
+              }
+            },
+            label: 'Descargar PDF',
+          )
       ],
     );
   }
