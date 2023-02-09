@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,6 +73,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   final bool _lights = false;
   String seleccionEstatus;
   bool isEdtiingEstatus = false;
+
+  FlCountryCodePicker countryPicker;
+  CountryCode countryCode =
+      CountryCode(name: 'MX', code: 'México', dialCode: 'Codigo');
 
   String _base64qr;
   // Acompañante
@@ -540,6 +545,14 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     if (invitado.numbAcomp != null) {
       _numAcomp = invitado.numbAcomp;
     }
+
+    if (invitado.codigoPais != null && countryCode.dialCode == 'Codigo') {
+      countryCode = codes
+          .map((c) => CountryCode.fromMap(c))
+          .toList()
+          .firstWhere((code) => code.dialCode == invitado.codigoPais);
+    }
+
     if (!isEdtiingEstatus) {
       seleccionEstatus = invitado.asistencia.toString() == 'null'
           ? null
@@ -704,8 +717,43 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                           TextFormField(
                             controller: telefonoCtrl,
                             //initialValue: invitado.telefono,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Número de teléfono',
+                              prefix: GestureDetector(
+                                onTap: () async {
+                                  // Show the country code picker when tapped.
+                                  final code = await countryPicker.showPicker(
+                                      context: context);
+                                  // Null check
+                                  if (code != null) {
+                                    setState(() {
+                                      countryCode = code;
+                                      invitado.codigoPais = code.dialCode;
+                                    });
+                                  }
+                                },
+                                child: Tooltip(
+                                  message: 'Seleccionar',
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0, vertical: 4.0),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0),
+                                        ),
+                                        border: Border.all(
+                                          color: Colors.black,
+                                        )),
+                                    child: Text(
+                                      countryCode.dialCode,
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                             validator: validateTelefono,
                           ),
@@ -987,8 +1035,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         size: 90,
                       ),
                       onTap: () async {
-                        launchUrl(
-                            Uri.parse('http://wa.me/${invitado.telefono}'));
+                        launchUrl(Uri.parse(
+                            'http://wa.me/${invitado.codigoPais ?? ''}${invitado.telefono}'));
                       },
                     ),
                   ),
@@ -1097,7 +1145,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       "alimentacion": tipoAlimentacionCtrl.text,
       "alergias": alergiasCtrl.text,
       "asistencia_especial": asistenciaEspecialCtrl.text,
-      "otros": otrosCtrl.text
+      "otros": otrosCtrl.text,
+      "codigo_pais": countryCode.dialCode,
     };
     //json.
     bool response = await api.updateInvitado(json, context);
@@ -1122,6 +1171,17 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   @override
   void initState() {
     _numberGuestsController.text = _numAcomp.toString();
+    countryPicker = FlCountryCodePicker(
+      searchBarDecoration:
+          InputDecoration(labelText: 'País, Clave o Clave LADA'),
+      title: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text(
+          'Selecciona tu país',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
     super.initState();
   }
 

@@ -23,6 +23,7 @@ class _Result {
   String _grupo;
   String _asistencia;
   String _correo;
+  String _codigoPais;
   int _acompanantes;
 
   _Result(result) {
@@ -33,6 +34,7 @@ class _Result {
     _asistencia = result['descripcion'];
     _correo = result['correo'];
     _acompanantes = int.parse(result['acompanantes']);
+    _codigoPais = result['codigo_pais'];
   }
   int get idInvitado => _idInvitado;
   String get nombre => _nombre;
@@ -41,4 +43,5 @@ class _Result {
   String get asistencia => _asistencia;
   String get correo => _correo;
   int get acompanantes => _acompanantes;
+  String get codigoPais => _codigoPais;
 }

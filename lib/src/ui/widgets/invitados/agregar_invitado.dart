@@ -1,5 +1,6 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:planning/src/resources/api_provider.dart';
@@ -50,9 +51,25 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
     ),
   );
 }*/
+  FlCountryCodePicker countryPicker;
+  CountryCode countryCode;
+
   @override
   void initState() {
     numeroAcomp.text = '0';
+    countryCode = CountryCode(name: 'MX', code: 'México', dialCode: '+52');
+
+    countryPicker = FlCountryCodePicker(
+      searchBarDecoration:
+          InputDecoration(labelText: 'País, Clave o Clave LADA'),
+      title: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text(
+          'Selecciona tu país',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
     super.initState();
   }
 
@@ -99,6 +116,7 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
             Icons.email,
             TextFormField(
               controller: emailCtrl,
+
               decoration: const InputDecoration(
                 labelText: 'Correo',
               ),
@@ -107,17 +125,51 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
               // validator: validateEmail,
             )),
         formItemsDesign(
-            Icons.phone,
-            TextFormField(
-              controller: telefonoCtrl,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: 'Teléfono',
+          Icons.phone,
+          TextFormField(
+            controller: telefonoCtrl,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            decoration: InputDecoration(
+              labelText: 'Teléfono',
+              prefix: GestureDetector(
+                onTap: () async {
+                  // Show the country code picker when tapped.
+                  final code = await countryPicker.showPicker(context: context);
+                  // Null check
+                  if (code != null) {
+                    setState(() {
+                      countryCode = code;
+                    });
+                  }
+                },
+                child: Tooltip(
+                  message: 'Seleccionar',
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 4.0, vertical: 4.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5.0),
+                        ),
+                        border: Border.all(
+                          color: Colors.black,
+                        )),
+                    child: Text(
+                      countryCode.dialCode,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
               ),
-              keyboardType: TextInputType.phone,
-              maxLength: 10,
-              //validator: validateTelefono,
-            )),
+            ),
+            keyboardType: TextInputType.phone,
+            maxLength: 10,
+            //validator: validateTelefono,
+          ),
+        ),
         //formItemsDesign(
         //    Icons.people,
         //    ListTile(
@@ -219,7 +271,8 @@ class _AgregarInvitadosState extends State<AgregarInvitados> {
         "telefono": telefonoCtrl.text,
         "email": emailCtrl.text,
         "numeroAcomp": numeroAcomp.text,
-        "id_evento": id.toString()
+        "id_evento": id.toString(),
+        'codigo_pais': countryCode.dialCode,
       };
       //json.
       bool response = await api.createInvitados(json, context);

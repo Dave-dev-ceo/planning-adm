@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/qr_logic/qr_logic.dart';
 import 'package:planning/src/models/model_perfilado.dart';
@@ -685,10 +686,11 @@ class _DataSource extends DataTableSource {
       this.WP_EVT_INV_EDT, this.WP_EVT_INV_ENV, this.desconectado) {
     _rows = <_Row>[];
     for (int i = 0; i < context.length; i++) {
+      print(context[i]);
       _rows.add(_Row(
           context[i].idInvitado,
           context[i].nombre,
-          context[i].telefono,
+          '${context[i].codigoPais != null ? context[i].codigoPais + ' ' : ''}${context[i].telefono}',
           context[i].grupo ?? 'Sin grupo',
           context[i].asistencia ?? 'Sin estatus',
           context[i].telefono));
@@ -711,10 +713,10 @@ class _DataSource extends DataTableSource {
               children: <Widget>[
                 Card(
                   child: ListTile(
-                    title: Text('Se llamará al número $numero'),
+                    title: Text('Se llamará al número ${numero.trim()}'),
                     trailing: const Icon(Icons.phone),
                     onTap: () async {
-                      launchUrlString('tel://$numero');
+                      launchUrlString('tel://${numero.trim()}');
                       Navigator.of(context).pop();
                     },
                   ),
@@ -729,7 +731,12 @@ class _DataSource extends DataTableSource {
                               color: Colors.green)),
                       trailing: const FaIcon(FontAwesomeIcons.whatsapp),
                       onTap: () async {
-                        launchUrlString('http://wa.me/$numero');
+                        if (defaultTargetPlatform == TargetPlatform.android) {
+                          launchUrlString('whatsapp://send?phone="+$numero+');
+                        }
+                        if (defaultTargetPlatform == TargetPlatform.iOS) {
+                          launchUrlString('https://wa.me/$numero');
+                        }
                       }),
                 )
               ],

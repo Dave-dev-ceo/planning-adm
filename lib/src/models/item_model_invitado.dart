@@ -16,6 +16,7 @@ class ItemModelInvitado {
   bool _estatusInvitacion;
   String _qr;
   int _numAcomp;
+  String _codigoPais;
 
   ItemModelInvitado.fromJson(Map<dynamic, dynamic> parsedJson) {
     _idInvitado = parsedJson['id_invitado'];
@@ -35,6 +36,7 @@ class ItemModelInvitado {
     _qr = parsedJson.containsKey('qr') ? parsedJson['qr'] : '';
     _numAcomp = parsedJson['numero_acompanante'];
     _otros = parsedJson['otros'];
+    _codigoPais = parsedJson['codigo_pais'];
   }
 
   int get idInvitado => _idInvitado;
@@ -54,4 +56,6 @@ class ItemModelInvitado {
   String get codigoQr => _qr;
   int get numbAcomp => _numAcomp;
   String get otros => _otros;
+  String get codigoPais => _codigoPais;
+  set codigoPais(String v) => _codigoPais = v;
 }

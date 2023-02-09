@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fl_country_code_picker/fl_country_code_picker.dart' as flc;
 import 'package:planning/src/blocs/Mesas/mesas_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/add_contratos_bloc.dart';
@@ -114,13 +115,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       scaffoldMessengerKey: scaffoldMessegerKey,
       localizationsDelegates: const [
+        flc.CountryLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         SfGlobalLocalizations.delegate,
       ],
-      supportedLocales: const [
+      supportedLocales: [
         Locale('es'),
+        for (var s in flc.supportedLocales) Locale(s)
       ],
       locale: const Locale('es'),
       title: 'Planning',
