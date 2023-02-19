@@ -95,7 +95,7 @@ class RouteGenerator {
       case '/editPlantilla':
         return CustomPageRouter(
             child: FullScreenDialogEditPlantilla(
-          dataPlantilla: args as List<String>?,
+          dataPlantilla: args as List<String?>?,
         ));
       case '/addEvento':
         return CustomPageRouter(

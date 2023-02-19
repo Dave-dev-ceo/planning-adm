@@ -18,6 +18,7 @@ import 'package:planning/src/models/item_model_preferences.dart';
 
 import 'package:planning/src/models/item_model_reporte_grupos.dart';
 import 'package:planning/src/models/item_model_reporte_invitados.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart';
 
 class ResumenEvento extends StatefulWidget {
@@ -143,13 +144,23 @@ class _ResumenEventoState extends State<ResumenEvento> {
                             padding: const EdgeInsets.all(.0),
                             child: GestureDetector(
                               onTap: () async {
+                                final navigator = Navigator.of(context);
                                 if (documento['tipodoc'] == 'html') {
                                   String? file = await contratosLogic
                                       .fetchContratosPdf({
                                     'id_contrato':
                                         documento['iddocumento'].toString()
                                   });
-                                  Navigator.pushNamed(context, '/viewContrato',
+
+                                  if (file == null) {
+                                    MostrarAlerta(
+                                        mensaje: 'Sin documento',
+                                        tipoMensaje: TipoMensaje.advertencia);
+
+                                    return;
+                                  }
+
+                                  navigator.pushNamed('/viewContrato',
                                       arguments: {
                                         'htmlPdf': file,
                                         'tipo_mime': documento['tipomime']
@@ -159,7 +170,14 @@ class _ResumenEventoState extends State<ResumenEvento> {
                                       .obtenerContratoSubidoById({
                                     'id_contrato': documento['iddocumento']
                                   });
-                                  Navigator.pushNamed(context, '/viewContrato',
+
+                                  if (archivo == null) {
+                                    MostrarAlerta(
+                                        mensaje: 'Sin documento',
+                                        tipoMensaje: TipoMensaje.advertencia);
+                                    return;
+                                  }
+                                  navigator.pushNamed('/viewContrato',
                                       arguments: {
                                         'htmlPdf': archivo,
                                         'tipo_mime': documento['tipomime']
@@ -183,13 +201,22 @@ class _ResumenEventoState extends State<ResumenEvento> {
                               padding: const EdgeInsets.all(2.0),
                               child: GestureDetector(
                                 onTap: () async {
+                                  final navigator = Navigator.of(context);
+
                                   String? file = await contratosLogic
                                       .obtenerContratoById({
                                     'id_contrato':
                                         documento['iddocumento'].toString()
                                   });
-                                  Navigator.pushNamed(
-                                      context, '/viewContrato', arguments: {
+
+                                  if (file == null) {
+                                    MostrarAlerta(
+                                        mensaje: 'Sin documento',
+                                        tipoMensaje: TipoMensaje.advertencia);
+                                    return;
+                                  }
+                                  navigator
+                                      .pushNamed('/viewContrato', arguments: {
                                     'htmlPdf': file,
                                     'tipo_mime': documento['tipomimeoriginal']
                                   });

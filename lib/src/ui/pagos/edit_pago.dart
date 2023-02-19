@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,11 +55,13 @@ class _FormEditPagoState extends State<FormEditPago> {
       listener: (context, state) {
         if (state is PagosUpdateState) {
           MostrarAlerta(
-              mensaje: 'Presupuesto actualizado', tipoMensaje: TipoMensaje.correcto);
+              mensaje: 'Presupuesto actualizado',
+              tipoMensaje: TipoMensaje.correcto);
           pagosBloc.add(SelectIdEvent(widget.id));
         } else if (state is PagosDeleteState) {
           MostrarAlerta(
-              mensaje: 'Presupuesto eliminado', tipoMensaje: TipoMensaje.correcto);
+              mensaje: 'Presupuesto eliminado',
+              tipoMensaje: TipoMensaje.correcto);
           Navigator.pop(context);
           pagosBloc.add(SelectPagosEvent());
         }
@@ -242,10 +245,17 @@ class _FormEditPagoState extends State<FormEditPago> {
         }
       }
 
+      final value = proveedor.pagos
+          .firstWhereOrNull((prov) =>
+              prov.idProveedor?.toString() ==
+              itemPago['proveedores']?.toString())
+          ?.idProveedor
+          ?.toString();
+
       return SizedBox(
         width: double.infinity,
         child: DropdownButton<String>(
-            value: itemPago['proveedores'],
+            value: value,
             hint: const Text('Proveedores'),
             icon: const Icon(Icons.arrow_downward),
             iconSize: 24,
@@ -293,5 +303,4 @@ class _FormEditPagoState extends State<FormEditPago> {
   // _deletePago() {
   //   pagosBloc.add(DeletePagosEvent(widget.id));
   // }
-
 }

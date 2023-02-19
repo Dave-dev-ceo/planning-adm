@@ -123,7 +123,8 @@ class _FormUsuarioState extends State<FormUsuario> {
 
   _setInitialController() {
     nombreCtrl = TextEditingController(
-        text: datos!['accion'] == 1 ? datos!['data'].result.nombreCompleto : '');
+        text:
+            datos!['accion'] == 1 ? datos!['data'].result.nombreCompleto : '');
     correoCtrl = TextEditingController(
         text: datos!['accion'] == 1 ? datos!['data'].result.correo : '');
     telefonoCtrl = TextEditingController(
@@ -235,7 +236,8 @@ class _FormUsuarioState extends State<FormUsuario> {
           onPressed: () {
             _save(contextForm);
           },
-          child: Text(datos!['accion'] == 0 ? 'Crear usuario' : 'Editar usuario',
+          child: Text(
+              datos!['accion'] == 0 ? 'Crear usuario' : 'Editar usuario',
               style: const TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
             backgroundColor: hexToColor('#000000'), // background
@@ -342,57 +344,57 @@ class _FormUsuarioState extends State<FormUsuario> {
         });
   }
 
-  String? validateNombre(String value) {
+  String? validateNombre(String? value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = RegExp(pattern);
-    if (value.length < 5) {
+    if (value != null && value.length < 5) {
       return "El nombre es necesario";
-    } else if (!regExp.hasMatch(value)) {
+    } else if (value != null && !regExp.hasMatch(value)) {
       return "El nombre debe de ser a-z y A-Z";
     }
     return null;
   }
 
-  String? validateCorreo(String value) {
+  String? validateCorreo(String? value) {
     RegExp regExp = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    if (value.isEmpty) {
+    if (value != null && value.isEmpty) {
       return 'Dato requerido';
-    } else if (!regExp.hasMatch(value)) {
+    } else if (value != null && !regExp.hasMatch(value)) {
       return 'Formato de correo inválido';
     } else {
       return null;
     }
   }
 
-  String? validateTelefono(String value) {
+  String? validateTelefono(String? value) {
     RegExp regExp = RegExp(r'^(?:[+0][1-9])?[0-9]{10,12}$');
-    if (value.isEmpty) {
+    if (value != null && value.isEmpty) {
       return 'Dato requerido';
-    } else if (!regExp.hasMatch(value)) {
+    } else if (value != null && !regExp.hasMatch(value)) {
       return 'Número telefónico inválido';
     } else {
       return null;
     }
   }
 
-  String? validatePwd(String value) {
+  String? validatePwd(String? value) {
     RegExp regExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
-    if (value.isEmpty) {
+    if (value != null && value.isEmpty) {
       return 'Dato requerido';
-    } else if (!regExp.hasMatch(value)) {
+    } else if (value != null && !regExp.hasMatch(value)) {
       return 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número';
     } else {
       return null;
     }
   }
 
-  String? validateConfirmPwd(String value) {
+  String? validateConfirmPwd(String? value) {
     RegExp regExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
-    if (value.isEmpty) {
+    if (value != null && value.isEmpty) {
       return 'Dato requerido';
     } else {
-      if (!regExp.hasMatch(value)) {
+      if (!regExp.hasMatch(value!)) {
         return 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número';
       } else if (pwdCtrl!.text != value) {
         return 'Las contraseñas deben coincidir';
@@ -421,7 +423,8 @@ class _FormUsuarioState extends State<FormUsuario> {
         } else if (state is MostrarRoles) {
           _roles = state.roles;
           if (banderaSeleccion && _roles.roles != null) {
-            _rolSelect = datos!['accion'] == 1 ? datos!['data'].result.idRol : 0;
+            _rolSelect =
+                datos!['accion'] == 1 ? datos!['data'].result.idRol : 0;
             _roles.roles.any((rol) => rol.idRol == _rolSelect)
                 ? _mySelectionG = _rolSelect
                 : _mySelectionG = 0;

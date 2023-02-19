@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:planning/src/ui/machotes/editar_plantillas.dart';
 
 class FullScreenDialogEditPlantilla extends StatefulWidget {
-  final List<String>? dataPlantilla;
+  final List<String?>? dataPlantilla;
   //final String claveMachote;
-  const FullScreenDialogEditPlantilla({Key? key, this.dataPlantilla})
+  const FullScreenDialogEditPlantilla({Key? key, required this.dataPlantilla})
       : super(key: key);
   @override
   _FullScreenDialogEditPlantillaState createState() =>
@@ -15,7 +15,7 @@ class FullScreenDialogEditPlantilla extends StatefulWidget {
 
 class _FullScreenDialogEditPlantillaState
     extends State<FullScreenDialogEditPlantilla> {
-  final List<String>? dataPlantilla;
+  final List<String?>? dataPlantilla;
 
   _FullScreenDialogEditPlantillaState(this.dataPlantilla);
 

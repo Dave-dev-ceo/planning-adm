@@ -599,10 +599,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       nombreCtrl.text = invitado.nombre!;
       emailCtrl.text = invitado.email!;
       telefonoCtrl.text = invitado.telefono!;
-      alergiasCtrl.text = invitado.alergias!;
-      tipoAlimentacionCtrl.text = invitado.alimentacion!;
-      asistenciaEspecialCtrl.text = invitado.asistenciaEspecial!;
-      otrosCtrl.text = invitado.otros!;
+      alergiasCtrl.text = invitado.alergias ?? '';
+      tipoAlimentacionCtrl.text = invitado.alimentacion ?? '';
+      asistenciaEspecialCtrl.text = invitado.asistenciaEspecial ?? '';
+      otrosCtrl.text = invitado.otros ?? '';
       contActualizaData++;
       if (invitado.numbAcomp != null) {
         _numberGuestsController.text = invitado.numbAcomp.toString();

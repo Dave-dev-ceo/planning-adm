@@ -61,7 +61,6 @@ import 'package:planning/src/logic/roles_logic.dart';
 import 'package:planning/src/logic/timings_logic.dart';
 import 'package:planning/src/logic/tipos_eventos_logic.dart';
 import 'package:planning/src/resources/route_generator.dart';
-import 'package:planning/src/utils/notifications_service.dart';
 import 'blocs/paises/paises_bloc.dart';
 import 'blocs/perfil/perfil_bloc.dart';
 import 'blocs/prospecto/prospecto_bloc.dart';
@@ -111,21 +110,19 @@ class MyApp extends StatelessWidget {
     return MaterialColor(color.value, swatch as Map<int, Color>);
   }
 
-  MaterialColor getMaterialColor(Color color) {
-    final Map<int, Color> shades = {
-      50: Color.fromRGBO(136, 14, 79, .1),
-      100: Color.fromRGBO(136, 14, 79, .2),
-      200: Color.fromRGBO(136, 14, 79, .3),
-      300: Color.fromRGBO(136, 14, 79, .4),
-      400: Color.fromRGBO(136, 14, 79, .5),
-      500: Color.fromRGBO(136, 14, 79, .6),
-      600: Color.fromRGBO(136, 14, 79, .7),
-      700: Color.fromRGBO(136, 14, 79, .8),
-      800: Color.fromRGBO(136, 14, 79, .9),
-      900: Color.fromRGBO(136, 14, 79, 1),
-    };
-    return MaterialColor(color.value, shades);
-  }
+  static const MaterialColor primaryColor =
+      MaterialColor(0xFFfdf4e5, <int, Color>{
+    50: Color(0xFFfdf4e5),
+    100: Color(0xFFfdf4e5),
+    200: Color(0xFFfdf4e5),
+    300: Color(0xFFfdf4e5),
+    400: Color(0xFFfdf4e5),
+    500: Color(0xFFfdf4e5),
+    600: Color(0xFFfdf4e5),
+    700: Color(0xFFfdf4e5),
+    800: Color(0xFFfdf4e5),
+    900: Color(0xFFfdf4e5),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +148,7 @@ class MyApp extends StatelessWidget {
           cursorColor: Colors.black,
           selectionColor: Colors.grey,
         ),
-        primarySwatch: getMaterialColor(const Color(0xFFfdf4e5)),
+        primarySwatch: primaryColor,
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(foregroundColor: Colors.black)),
         inputDecorationTheme: const InputDecorationTheme(

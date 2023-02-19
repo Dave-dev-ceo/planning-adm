@@ -61,7 +61,13 @@ class _ReporteEventoState extends State<ReporteEvento> {
       padding: const EdgeInsets.all(16),
       children: [
         PaginatedDataTable(
-          header: const Text('Invitados'),
+          header: Row(
+            children: [
+              const Text('Invitados'),
+              const Spacer(),
+              Text('Total: ${snapshot.data!.results.length}'),
+            ],
+          ),
           rowsPerPage: 8,
           showCheckboxColumn: false,
           columns: [
