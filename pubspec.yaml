@@ -1,7 +1,7 @@
 name: planning
-description: A new Flutter project.
+description: Planificación de Eventos.
 publish_to: 'none'
-version: 0.1.0
+version: 2.0.1
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
