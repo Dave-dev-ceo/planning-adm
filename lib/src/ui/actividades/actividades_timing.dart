@@ -99,32 +99,32 @@ class _AgregarActividadesState extends State<AgregarActividades> {
     descripcionCtrl = TextEditingController();
   }
 
-  String? validateActividad(String value) {
-    if (value.isEmpty) {
+  String? validateActividad(String? value) {
+    if (value != null && value.isEmpty) {
       return "Falta actividad";
     } else {
       return null;
     }
   }
 
-  String? validateDescripcion(String value) {
-    if (value.isEmpty) {
+  String? validateDescripcion(String? value) {
+    if (value != null && value.isEmpty) {
       return "Falta descripción";
     } else {
       return null;
     }
   }
 
-  String? validateActividadEdit(String value) {
-    if (value.isEmpty) {
+  String? validateActividadEdit(String? value) {
+    if (value != null && value.isEmpty) {
       return "Falta actividad";
     } else {
       return null;
     }
   }
 
-  String? validateDescripcionEdit(String value) {
-    if (value.isEmpty) {
+  String? validateDescripcionEdit(String? value) {
+    if (value != null && value.isEmpty) {
       return "Falta descripción";
     } else {
       return null;
@@ -175,7 +175,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                       decoration: const InputDecoration(
                         labelText: 'Nombre',
                       ),
-                      validator: et ? validateActividad as String? Function(String?)? : validateActividadEdit as String? Function(String?)?,
+                      validator: et ? validateActividad : validateActividadEdit,
                     ),
                     large: 500.0,
                     ancho: 85.0),
@@ -187,7 +187,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                         labelText: 'Descripción',
                       ),
                       validator:
-                          et ? validateDescripcion as String? Function(String?)? : validateActividadEdit as String? Function(String?)?,
+                          et ? validateDescripcion : validateActividadEdit,
                     ),
                     large: 500.0,
                     ancho: 85.0),

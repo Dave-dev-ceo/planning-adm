@@ -1,3 +1,4 @@
 # planning_adm
 
-A new Flutter project.
+Actualización de planning a versiones posteriores de Flutter
+
