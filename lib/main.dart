@@ -14,6 +14,8 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
+// TODO: Comprobar en todas las lecturas de las preferencias de usuario
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
