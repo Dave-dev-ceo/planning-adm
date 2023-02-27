@@ -496,21 +496,22 @@ class _PerfilState extends State<Perfil> {
 
   // reset
   void _checkSession() async {
-    bool sesion = await _sharedPreferences.getSession();
-    int involucrado = await _sharedPreferences.getIdInvolucrado();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String titulo = await _sharedPreferences.getEventoNombre();
-    String image = await _sharedPreferences.getImagen();
-    String portada = await _sharedPreferences.getPortada();
-    String fechaEvento = await _sharedPreferences.getFechaEvento();
+    final navigator = Navigator.of(context);
+    bool? sesion = await _sharedPreferences.getSession();
+    int? involucrado = await _sharedPreferences.getIdInvolucrado();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? titulo = await _sharedPreferences.getEventoNombre();
+    String? image = await _sharedPreferences.getImagen();
+    String? portada = await _sharedPreferences.getPortada();
+    String? fechaEvento = await _sharedPreferences.getFechaEvento();
 
     Map data = {'name': perfil!.names, 'imag': image};
 
-    if (sesion) {
+    if (sesion == true) {
       if (involucrado == null) {
-        Navigator.pushNamed(context, '/home', arguments: data);
+        navigator.pushNamed('/home', arguments: data);
       } else {
-        Navigator.pushReplacementNamed(context, '/dashboardInvolucrado',
+        navigator.pushReplacementNamed('/dashboardInvolucrado',
             arguments: EventoResumenModel(
               idEvento: idEvento,
               descripcion: titulo,
@@ -518,7 +519,9 @@ class _PerfilState extends State<Perfil> {
               boton: false,
               img: image,
               portada: portada,
-              fechaEvento: DateTime.tryParse(fechaEvento)!.toLocal(),
+              fechaEvento: fechaEvento != null
+                  ? DateTime.tryParse(fechaEvento)!.toLocal()
+                  : null,
             ));
       }
     }
@@ -550,7 +553,7 @@ class CambiarContrasenaDialog extends StatefulWidget {
   const CambiarContrasenaDialog({Key? key}) : super(key: key);
 
   @override
-  _CambiarContrasenaDialogState createState() =>
+  State<CambiarContrasenaDialog> createState() =>
       _CambiarContrasenaDialogState();
 }
 
