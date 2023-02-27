@@ -1,7 +1,7 @@
 class ConfigConection {
   String? _url;
   String? _puerto;
-  bool desarrollo = true;
+  bool desarrollo = false;
   set addUrl(String data) {
     _url = data;
   }
@@ -15,7 +15,7 @@ class ConfigConection {
   ConfigConection() {
     if (desarrollo) {
       addPuerto = "3005";
-      addUrl = "http://localhost:"; //Local
+      addUrl = "http://192.168.130.1:"; //Local
     } else {
       addPuerto = "9000";
       addUrl = "https://planning.com.mx:"; //Producción

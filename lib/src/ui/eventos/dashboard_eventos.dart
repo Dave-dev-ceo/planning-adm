@@ -361,15 +361,15 @@ class _DashboardEventosState extends State<DashboardEventos> {
   }
 
   void _buildEventosPDF() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
     const endpoint = '/wedding/EVENTOS/descargarPDFEventos';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {
@@ -384,6 +384,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
       body: json.encode(data),
       headers: headers,
     );
+
+    print(resp.statusCode);
 
     if (resp.statusCode == 200) {
       final pdf = json.decode(resp.body)['pdf'];
