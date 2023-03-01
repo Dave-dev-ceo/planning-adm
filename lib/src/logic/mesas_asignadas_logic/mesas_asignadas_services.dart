@@ -41,8 +41,8 @@ class MesasAsignadasService {
 
   Future<LayoutMesaModel?> getLayoutMesa() async {
     bool desconectado = await _sharedPreferencesT.getModoConexion();
-    String token = await _sharedPreferencesT.getToken();
-    int idEvento = await _sharedPreferencesT.getIdEvento();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idEvento = await _sharedPreferencesT.getIdEvento();
 
     if (desconectado) {
       if (!Hive.isBoxOpen('layouts')) {
@@ -68,7 +68,7 @@ class MesasAsignadasService {
       final headers = {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: token
+        HttpHeaders.authorizationHeader: token ?? ''
       };
 
       final response = await http.post(
@@ -89,8 +89,8 @@ class MesasAsignadasService {
   }
 
   Future<bool> eliminarLayoutMesa() async {
-    String token = await _sharedPreferencesT.getToken();
-    int idEvento = await _sharedPreferencesT.getIdEvento();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idEvento = await _sharedPreferencesT.getIdEvento();
 
     final data = {
       'idEvento': idEvento,
@@ -101,7 +101,7 @@ class MesasAsignadasService {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(
@@ -116,7 +116,7 @@ class MesasAsignadasService {
   }
 
   Future<List<MesasAsignadasModel>> getMesasAsignadas() async {
-    int idEvento = await _sharedPreferencesT.getIdEvento();
+    int? idEvento = await _sharedPreferencesT.getIdEvento();
     bool desconectado = await _sharedPreferencesT.getModoConexion();
     if (desconectado) {
       if (!Hive.isBoxOpen('mesasAsignadas')) {
@@ -131,7 +131,7 @@ class MesasAsignadasService {
       return List<MesasAsignadasModel>.from(listaMesasAsignadas.map((data) =>
           MesasAsignadasModel.fromJson(Map<String, dynamic>.from(data))));
     } else {
-      String token = await _sharedPreferencesT.getToken();
+      String? token = await _sharedPreferencesT.getToken();
       final url = confiC.url! + confiC.puerto!;
 
       final data = {'idEvento': idEvento};
@@ -139,7 +139,7 @@ class MesasAsignadasService {
       final headers = {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: token
+        HttpHeaders.authorizationHeader: token ?? ''
       };
 
       const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
@@ -161,8 +161,8 @@ class MesasAsignadasService {
 
   Future<String> deleteAsignadoFromMesa(
       List<MesasAsignadasModel?> asignadosToDelete) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
     final url = confiC.url! + confiC.puerto!;
 
     final data = {
@@ -174,7 +174,7 @@ class MesasAsignadasService {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     const endpoint = 'wedding/EVENTOS/deleteAsignadosOnMesas';
@@ -191,8 +191,8 @@ class MesasAsignadasService {
 
   Future<String> asignarPersonasMesas(
       List<MesasAsignadasModel> listAsignarMesaModel) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
     final url = confiC.url! + confiC.puerto!;
 
     final data = {
@@ -203,7 +203,7 @@ class MesasAsignadasService {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     const endpoint = 'wedding/EVENTOS/createMesasAsignadas';
@@ -222,8 +222,8 @@ class MesasAsignadasService {
   }
 
   Future<String?> getLogoPlanner() async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
     final url = confiC.url! + confiC.puerto!;
 
     final data = {
@@ -233,7 +233,7 @@ class MesasAsignadasService {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     const endpoint = 'wedding/PLANNER/getLogoPlanner';
@@ -249,9 +249,9 @@ class MesasAsignadasService {
   }
 
   Future<String?> getPDFMesasAsiganadas() async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
-    int idEvento = await _sharedPreferencesT.getIdEvento();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
+    int? idEvento = await _sharedPreferencesT.getIdEvento();
     final url = confiC.url! + confiC.puerto!;
 
     final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
@@ -259,7 +259,7 @@ class MesasAsignadasService {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     const endpoint = 'wedding/INVITADOS/getPDFMesasAsiganadas';

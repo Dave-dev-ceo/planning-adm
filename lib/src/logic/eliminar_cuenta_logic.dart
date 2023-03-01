@@ -17,9 +17,9 @@ class BackendEliminarCuentaLogic implements EliminarCuentaLogic {
 
   @override
   Future<dynamic> eliminarCuenta(String password) async {
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     Map<String, dynamic> data = {
       'idPlanner': idPlanner,
@@ -32,7 +32,7 @@ class BackendEliminarCuentaLogic implements EliminarCuentaLogic {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
     };
 
     final resp = await client.post(

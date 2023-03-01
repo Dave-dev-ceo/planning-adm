@@ -28,14 +28,14 @@ class FetchListaTimingsLogic extends TimingsLogic {
 
   @override
   Future<ItemModelTimings?> fetchTimingsPorPlanner(String estatus) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/TIMINGS/obtenerTimingsPorPlanner'),
         body: {'id_planner': idPlanner.toString(), 'estatus': estatus},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -51,16 +51,16 @@ class FetchListaTimingsLogic extends TimingsLogic {
 
   @override
   Future<int> createTiming(Map<String, dynamic> dataTiming) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/TIMINGS/createTimings'),
         body: dataTiming,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -74,9 +74,10 @@ class FetchListaTimingsLogic extends TimingsLogic {
   }
 
   @override
-  Future<String> updateTiming(int? idTiming, String? name, String? estatus) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+  Future<String> updateTiming(
+      int? idTiming, String? name, String? estatus) async {
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     const endpoint = '/wedding/TIMINGS/updateTimings';
 
@@ -90,7 +91,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
     };
 
     final response = await client.post(
@@ -108,8 +109,8 @@ class FetchListaTimingsLogic extends TimingsLogic {
 
   @override
   Future<String?> downloadPDFTiming() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     const endpoint = '/wedding/TIMINGS/downloadPDFTiming';
 
@@ -120,7 +121,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
     };
     final response = await client.post(
       Uri.parse(confiC.url! + confiC.puerto! + endpoint),
@@ -138,8 +139,8 @@ class FetchListaTimingsLogic extends TimingsLogic {
 
   @override
   Future<bool> deleteTimingPlanner(int? idTipoTiming) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     const endpoint = '/wedding/TIMINGS/deleteTimingPlanner';
 
@@ -151,7 +152,7 @@ class FetchListaTimingsLogic extends TimingsLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
     };
     final response = await client.post(
       Uri.parse(confiC.url! + confiC.puerto! + endpoint),

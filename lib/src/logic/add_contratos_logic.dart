@@ -38,9 +38,9 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<ItemModelAddContratos> selectContratosFromPlanner() async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await http.post(
@@ -51,7 +51,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
           "id_evento": idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -70,8 +70,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   Future<ItemModelAddContratos> selectContratosArchivoPlaner(
       int idMachote) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await http.post(
@@ -82,7 +82,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
           'id_machote': idMachote.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -100,9 +100,9 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<bool> inserContrato(Map contrato) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     contrato['id_planner'] = idPlanner.toString();
     contrato['id_evento'] = idEvento.toString();
@@ -112,7 +112,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ADDCONTRATOS/inserContrato'),
         body: contrato,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     // filtro
     if (response.statusCode == 200) {
@@ -128,10 +128,10 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
 
   @override
   Future<ItemModelAddContratos> selectContratosEvento() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
-    bool desconectado = await _sharedPreferences.getModoConexion();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    bool? desconectado = await _sharedPreferences.getModoConexion();
 
     if (desconectado) {
       if (!Hive.isBoxOpen('contratos')) {
@@ -151,7 +151,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
             "id_evento": idEvento.toString()
           },
           headers: {
-            HttpHeaders.authorizationHeader: token
+            HttpHeaders.authorizationHeader: token ?? ''
           });
 
       if (response.statusCode == 200) {
@@ -169,8 +169,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<bool> borrarContratoEvento(int? id) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await http.post(
@@ -181,7 +181,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
           "id_contrato": id.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -199,9 +199,9 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<String?> fetchContratosPdf(Map<String, dynamic> data) async {
     bool desconectado = await _sharedPreferences.getModoConexion();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     if (desconectado) {
@@ -218,7 +218,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
       final response = await http.post(
           Uri.parse('${confiC.url}${confiC.puerto}/wedding/PDF/createPDF'),
           body: data,
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         await _sharedPreferences.setToken(data['token']);
@@ -235,8 +235,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   Future<bool> updateContratoEvento(
       int? id, String archivo, String tipoDoc, String? tipoMime) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await http.post(
@@ -250,7 +250,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
           'tipo_mime': tipoMime
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -268,29 +268,30 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   // ignore: missing_return
   Future<String?> updateValContratos(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_contrato'] = data['id_contrato'].toString();
     final response = await http.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/PDF/updateValContratos'),
         body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       return data['data'];
     } else if (response.statusCode == 401) {
       throw TokenException();
     }
+    return null;
   }
 
   @override
   // ignore: missing_return
   Future<String> fetchValContratos(String machote) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     Map<String, dynamic> json = {
       'id_planner': idPlanner.toString(),
@@ -301,7 +302,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/PDF/generarValorEtiquetasContrato'),
         body: json,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       return data['data'].toString();
@@ -312,8 +313,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<String?> obtenerContratoById(Map<String, dynamic> data) async {
     bool desconectado = await _sharedPreferences.getModoConexion();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     if (desconectado) {
@@ -328,7 +329,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
       await boxContratos.close();
       return contrato['original'];
     } else {
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
 
       final response = await http.post(
           Uri.parse(
@@ -339,7 +340,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
             'id_evento': data['id_evento'].toString()
           },
           headers: {
-            HttpHeaders.authorizationHeader: token
+            HttpHeaders.authorizationHeader: token ?? ''
           });
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -356,11 +357,11 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<String?> obtenerContratoSubidoById(Map<String, dynamic> data) async {
     bool desconectado = await _sharedPreferences.getModoConexion();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
-    String token = await _sharedPreferences.getToken();
+    String? token = await _sharedPreferences.getToken();
     if (desconectado) {
       if (!Hive.isBoxOpen('contratos')) {
         await Hive.openBox<dynamic>('contratos');
@@ -382,7 +383,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
             'id_evento': data['id_evento'].toString()
           },
           headers: {
-            HttpHeaders.authorizationHeader: token
+            HttpHeaders.authorizationHeader: token ?? ''
           });
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -399,7 +400,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<String> actualizarDescripcionDocumento(
       int? idDocumento, String? descripcion) async {
-    String token = await _sharedPreferences.getToken();
+    String? token = await _sharedPreferences.getToken();
 
     const endpoint = '/wedding/ADDCONTRATOS/actualizarDescripcionDocumento';
 
@@ -411,7 +412,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(
@@ -430,8 +431,8 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
   @override
   Future<Map<String, dynamic>?> obtenerUltimoDocumento() async {
     bool desconectado = await _sharedPreferences.getModoConexion();
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
     if (desconectado) {
       if (!Hive.isBoxOpen('contratos')) {
         await Hive.openBox<dynamic>('contratos');
@@ -458,7 +459,7 @@ class ConsultasAddContratosLogic implements AddContratosLogic {
       final headers = {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: token
+        HttpHeaders.authorizationHeader: token ?? ''
       };
       final response = await http.post(
         Uri.parse(confiC.url! + confiC.puerto! + endpoint),

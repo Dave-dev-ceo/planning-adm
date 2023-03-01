@@ -55,7 +55,7 @@ class _RolesState extends State<Roles> {
               rolesBloc.add(ObtenerRolesPlannerEvent());
               return const Center(child: LoadingCustom());
             }
-            if (filterRoles!.roles != null) {
+            if (filterRoles?.roles != null) {
               return buildList(filterRoles!);
             } else {
               return const Center(child: Text('Sin datos'));
@@ -66,7 +66,7 @@ class _RolesState extends State<Roles> {
             );
           } else {
             crt = true;
-            if (filterRoles!.roles != null) {
+            if (filterRoles?.roles != null) {
               return buildList(filterRoles!);
             } else {
               return const Center(child: Text('Sin datos'));
@@ -186,13 +186,15 @@ class _RolesState extends State<Roles> {
       case 0:
         sort[columnIndex]
             ? sortData!.roles.sort((a, b) => a.claveRol!.compareTo(b.claveRol!))
-            : sortData!.roles.sort((a, b) => b.claveRol!.compareTo(a.claveRol!));
+            : sortData!.roles
+                .sort((a, b) => b.claveRol!.compareTo(a.claveRol!));
         break;
       case 1:
         sort[columnIndex]
             ? sortData!.roles
                 .sort((a, b) => a.nombreRol!.compareTo(b.nombreRol!))
-            : sortData!.roles.sort((a, b) => b.nombreRol!.compareTo(a.nombreRol!));
+            : sortData!.roles
+                .sort((a, b) => b.nombreRol!.compareTo(a.nombreRol!));
         break;
     }
     _sortColumnIndex = columnIndex;

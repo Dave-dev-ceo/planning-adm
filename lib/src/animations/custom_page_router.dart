@@ -33,14 +33,10 @@ class CustomPageRouter extends PageRouteBuilder {
     switch (transicionRouter) {
       case TypeTransicionRouter.fadeRouterTransition:
         return fadeTransition(curvedAnimation);
-        break;
       case TypeTransicionRouter.scaleRouterTransition:
         return scaleTransition(curvedAnimation);
-        break;
       default:
         return slideTransition(curvedAnimation);
-
-        break;
     }
   }
 
@@ -72,16 +68,12 @@ class CustomPageRouter extends PageRouteBuilder {
     switch (direction) {
       case AxisDirection.up:
         return const Offset(0, 1);
-        break;
       case AxisDirection.down:
         return const Offset(0, -1);
-        break;
       case AxisDirection.right:
         return const Offset(-1, 0);
-        break;
       default:
         return const Offset(1, 0);
-        break;
     }
   }
 }

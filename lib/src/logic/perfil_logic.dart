@@ -27,10 +27,10 @@ class ConsultasPerfilLogic extends PerfilLogic {
   @override
   Future<ItemModelPerfil> selectPerfil() async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+    String? token = await _sharedPreferences.getToken();
 
     // map
     Map data = {
@@ -43,7 +43,7 @@ class ConsultasPerfilLogic extends PerfilLogic {
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PERFIL/selectPerfil'),
         body: {'id_planner': idPlanner.toString(), 'perfil': jsonEncode(data)},
         // body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     // filtro
     if (response.statusCode == 200) {
@@ -61,10 +61,10 @@ class ConsultasPerfilLogic extends PerfilLogic {
   @override
   Future<bool> insertPerfil(Object? perfil) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+    String? token = await _sharedPreferences.getToken();
 
     // map
     Map data = {
@@ -78,7 +78,7 @@ class ConsultasPerfilLogic extends PerfilLogic {
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PERFIL/insertPerfil'),
         body: {'id_planner': idPlanner.toString(), 'perfil': jsonEncode(data)},
         // body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     // filtro
     if (response.statusCode == 200) {
@@ -94,15 +94,15 @@ class ConsultasPerfilLogic extends PerfilLogic {
 
   @override
   Future<PerfilPlannerModel?> getPerfilPlanner() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     const endpoint = '/wedding/PLANNER/obtenerPerfilPlanner';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {
@@ -124,16 +124,16 @@ class ConsultasPerfilLogic extends PerfilLogic {
 
   @override
   Future<String> editPerfilPlanner(PerfilPlannerModel perfilPlanner) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
 
     const endpoint = '/wedding/PLANNER/editarPerfilPlanner';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {

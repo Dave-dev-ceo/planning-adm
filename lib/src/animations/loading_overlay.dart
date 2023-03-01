@@ -31,7 +31,7 @@ class ProgressBar {
                     height: 150.0,
                     width: 150.0,
                     child: Column(
-                      children: [
+                      children: const [
                         LoadingCustom(),
                         Text('Cargando...'),
                       ],

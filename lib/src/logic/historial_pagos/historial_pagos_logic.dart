@@ -11,8 +11,8 @@ class HistorialPagosLogic {
   ConfigConection confiC = ConfigConection();
 
   Future<List<HistorialPagosModel>> getPagosByEvent() async {
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     const endpoint = 'wedding/PAGOS/getPagosByEvento';
 
@@ -21,7 +21,7 @@ class HistorialPagosLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
@@ -33,17 +33,16 @@ class HistorialPagosLogic {
 
     if (response.statusCode == 200) {
       return List<HistorialPagosModel>.from(json
-              .decode(response.body)
-              .map((p) => HistorialPagosModel.fromJson(p))).toList() ??
-          [];
+          .decode(response.body)
+          .map((p) => HistorialPagosModel.fromJson(p))).toList();
     } else {
       throw PagosException();
     }
   }
 
   Future<String> agregarPagoEvento(HistorialPagosModel pagos) async {
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     const endpoint = 'wedding/PAGOS/agregarPagosByEvento';
 
@@ -55,7 +54,7 @@ class HistorialPagosLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
@@ -73,8 +72,8 @@ class HistorialPagosLogic {
   }
 
   Future<String> editarPagoEvento(HistorialPagosModel pagos) async {
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     const endpoint = 'wedding/PAGOS/editarHistorialPagoByEvento';
 
@@ -87,7 +86,7 @@ class HistorialPagosLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
@@ -105,8 +104,8 @@ class HistorialPagosLogic {
   }
 
   Future<String> eliminarPagoEvento(int? idPago) async {
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     const endpoint = 'wedding/PAGOS/eliminarPagoByEvento';
 
@@ -116,7 +115,7 @@ class HistorialPagosLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };

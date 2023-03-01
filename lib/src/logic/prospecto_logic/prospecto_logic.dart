@@ -11,8 +11,8 @@ class ProspectoLogic {
   final ConfigConection _configC = ConfigConection();
 
   Future<List<EtapasModel>?> getEtapasAndProspectos() async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/getProspectosAndEtapas';
 
@@ -21,7 +21,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -44,8 +44,8 @@ class ProspectoLogic {
   }
 
   Future<bool> addEtapasUpdate(ProspectoModel newProspecto) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/addProspecto';
 
@@ -56,7 +56,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -75,8 +75,8 @@ class ProspectoLogic {
   }
 
   Future<bool> updateEtapaProspecto(int? idEtapa, int? idProspecto) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/updateEtapaProspecto';
 
@@ -87,7 +87,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -106,8 +106,8 @@ class ProspectoLogic {
   }
 
   Future<bool> updateEtapa(List<UpdateEtapaModel> etapasToUpdate) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/updateEtapa';
 
@@ -117,7 +117,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -136,8 +136,8 @@ class ProspectoLogic {
   }
 
   Future<bool> addEtapa(EtapasModel newEtapa) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/addEtapa';
 
@@ -150,7 +150,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -169,8 +169,8 @@ class ProspectoLogic {
   }
 
   Future<bool> updateNameProspecto(ProspectoModel prospectoToEdit) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/editNameProspecto';
 
@@ -181,7 +181,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -200,8 +200,8 @@ class ProspectoLogic {
   }
 
   Future<bool> updatePhoneProspecto(ProspectoModel prospectoToEdit) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/updatePhoneProspecto';
 
@@ -212,7 +212,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -231,8 +231,8 @@ class ProspectoLogic {
   }
 
   Future<bool> updateCorreoProspecto(ProspectoModel prospectoToEdit) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/updateCorreoProspecto';
 
@@ -243,7 +243,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -263,8 +263,8 @@ class ProspectoLogic {
 
   Future<bool> updateDescripcionProspecto(
       ProspectoModel prospectoToEdit) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/updateDescripcionProspecto';
 
@@ -275,7 +275,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -295,8 +295,8 @@ class ProspectoLogic {
 
   Future<bool> insertActividadProspecto(
       ActividadProspectoModel newActividadProspecto) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/insertActividadProspecto';
 
@@ -307,7 +307,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -326,8 +326,8 @@ class ProspectoLogic {
   }
 
   Future<bool> editNameEtapa(EtapasModel etapaToEdit) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/editNameEtapa';
 
@@ -338,7 +338,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -357,8 +357,8 @@ class ProspectoLogic {
   }
 
   Future<bool> deleteEtapa(int? idEtapa) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/deleteEtapa';
 
@@ -368,7 +368,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -387,8 +387,8 @@ class ProspectoLogic {
   }
 
   Future<bool> deleteActividadProspecto(int? idActividad) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/deleteActividadProspecto';
 
@@ -398,7 +398,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -417,8 +417,8 @@ class ProspectoLogic {
   }
 
   Future<bool> editActividad(ActividadProspectoModel actividadToEdit) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/editActividad';
 
@@ -429,7 +429,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -448,8 +448,8 @@ class ProspectoLogic {
   }
 
   Future<bool> editDatosEtapas(EtapasModel etapaToEdit) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/editDatosEtapas';
 
@@ -462,7 +462,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -481,8 +481,8 @@ class ProspectoLogic {
   }
 
   Future<bool> editInvolucrado(ProspectoModel prospectoModel) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/editInvolucradoProspecto';
 
@@ -493,7 +493,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -512,8 +512,8 @@ class ProspectoLogic {
   }
 
   Future<bool> eventoFromProspecto(int? idProspecto) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/eventoFromProspecto';
 
@@ -523,7 +523,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };
@@ -542,8 +542,8 @@ class ProspectoLogic {
   }
 
   Future<bool> deleteProspecto(int? idProspecto) async {
-    String token = await _sharedPreferencesT.getToken();
-    int idPlanner = await _sharedPreferencesT.getIdPlanner();
+    String? token = await _sharedPreferencesT.getToken();
+    int? idPlanner = await _sharedPreferencesT.getIdPlanner();
 
     const endpoint = '/wedding/PROSPECTO/deleteProspecto';
 
@@ -553,7 +553,7 @@ class ProspectoLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'content-type': 'application/json',
       'accept': 'application/json'
     };

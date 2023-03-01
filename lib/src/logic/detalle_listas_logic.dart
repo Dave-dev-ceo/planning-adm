@@ -33,12 +33,12 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
   // ignore: missing_return
   Future<ItemModelDetalleListas> fetchDetalleListas(int? idLista) async {
     try {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      String token = await _sharedPreferences.getToken();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/LISTAS/obtenerDetallesListaPorPlanner/$idPlanner/$idLista'),
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -64,21 +64,21 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
         data['nombre'] != '' &&
         data['descripcion'] != '' &&
         data['id_lista'] != 0) {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      int idEvento = await _sharedPreferences.getIdEvento();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      int? idEvento = await _sharedPreferences.getIdEvento();
+      int? idUsuario = await _sharedPreferences.getIdUsuario();
       data['cantidad'] = data['cantidad'].toString();
       data['id_lista'] = data['id_lista'].toString();
       data['id_evento'] = idEvento.toString();
       data['id_planner'] = idPlanner.toString();
       data['creado_por'] = idUsuario.toString();
       data['modificado_por'] = idUsuario.toString();
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/LISTAS/insertDetalleLista'),
           body: data,
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         await _sharedPreferences.setToken(res['token']);
@@ -94,17 +94,17 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
 
   @override
   Future<int> deleteDetallaLista(int? idDetalleLista) async {
-    int idplanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(
             '${configC.url}${configC.puerto}/wedding/LISTAS/deleteDetalleLista'),
         body: {
           "id_detalle_lista": idDetalleLista.toString(),
-          'id_planner': idplanner.toString()
+          'id_planner': idPlanner?.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
     if (response.statusCode == 200) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -124,19 +124,19 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
         data['nombre'] != '' &&
         data['descripcion'] != '' &&
         data['id_detalle_lista'] != 0) {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      int? idUsuario = await _sharedPreferences.getIdUsuario();
       data['cantidad'] = data['cantidad'].toString();
       data['id_lista'] = data['id_lista'].toString();
       data['id_detalle_lista'] = data['id_detalle_lista'].toString();
       data['id_planner'] = idPlanner.toString();
       data['modificado_por'] = idUsuario.toString();
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.put(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/LISTAS/editarDetalleLista'),
           body: data,
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         await _sharedPreferences.setToken(res['token']);
@@ -154,19 +154,19 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
   // ignore: missing_return
   Future<int?> createLista(Map<String, dynamic> data) async {
     if (data['nombre'] != '' && data['descripcion'] != '') {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      int idEvento = await _sharedPreferences.getIdEvento();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      int? idEvento = await _sharedPreferences.getIdEvento();
+      int? idUsuario = await _sharedPreferences.getIdUsuario();
       data['id_evento'] = idEvento.toString();
       data['id_planner'] = idPlanner.toString();
       data['creado_por'] = idUsuario.toString();
       data['modificado_por'] = idUsuario.toString();
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/LISTAS/insertLista'),
           body: data,
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         await _sharedPreferences.setToken(res['token']);
@@ -177,6 +177,7 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
         throw CreateListasException();
       }
     }
+    return null;
   }
 
   @override
@@ -185,17 +186,17 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
     if (data['nombre'] != '' &&
         data['descripcion'] != '' &&
         data['id_lista'] != 0) {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      int? idUsuario = await _sharedPreferences.getIdUsuario();
       data['id_lista'] = data['id_lista'].toString();
       data['id_planner'] = idPlanner.toString();
       data['modificado_por'] = idUsuario.toString();
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.put(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/LISTAS/updateLista'),
           body: data,
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         await _sharedPreferences.setToken(res['token']);
@@ -211,16 +212,16 @@ class FetchDetalleListaLogic extends DetallesListasLogic {
 
   @override
   Future<String?> downloadPDFDetalleLista(int? idLista) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/LISTAS/downloadPDFDetalleLista';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {

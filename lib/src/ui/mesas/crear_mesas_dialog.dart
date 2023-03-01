@@ -284,7 +284,7 @@ class _CrearMesasDialogState extends State<CrearMesasDialog> {
   _crearMesas() async {
     listaMesas.clear();
 
-    int idEvento = await SharedPreferencesT().getIdEvento();
+    int? idEvento = await SharedPreferencesT().getIdEvento();
 
     setState(() {});
     if (_keyCrearMesas.currentState!.validate()) {

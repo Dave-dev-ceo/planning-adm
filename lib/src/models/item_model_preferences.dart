@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +11,7 @@ class SharedPreferencesT {
     _sharedPreferences.setString('nombre', nombre);
   }
 
-  getNombre() async {
+  Future<String?> getNombre() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('nombre');
   }
@@ -19,7 +21,7 @@ class SharedPreferencesT {
     _sharedPreferences.setInt('idPlanner', idPlanner);
   }
 
-  getIdPlanner() async {
+  Future<int?> getIdPlanner() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getInt('idPlanner');
   }
@@ -30,7 +32,7 @@ class SharedPreferencesT {
     _sharedPreferences.setInt('idInvolucrado', idInvolucrado);
   }
 
-  getIdInvolucrado() async {
+  Future<int?> getIdInvolucrado() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getInt('idInvolucrado');
   }
@@ -40,7 +42,7 @@ class SharedPreferencesT {
     return _sharedPreferences.setString('eventoNombre', json);
   }
 
-  getEventoNombre() async {
+  Future<String?> getEventoNombre() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('eventoNombre');
   }
@@ -50,7 +52,7 @@ class SharedPreferencesT {
     return _sharedPreferences.setBool('permisoBoton', json);
   }
 
-  getPermisoBoton() async {
+  Future<bool?> getPermisoBoton() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getBool('permisoBoton');
   }
@@ -63,7 +65,7 @@ class SharedPreferencesT {
     return _sharedPreferences.setString('fechaEvento', json);
   }
 
-  getFechaEvento() async {
+  Future<String?> getFechaEvento() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('fechaEvento');
   }
@@ -82,7 +84,7 @@ class SharedPreferencesT {
     }
   }
 
-  getImagen() async {
+  Future<String?> getImagen() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('imagen');
   }
@@ -100,7 +102,7 @@ class SharedPreferencesT {
     }
   }
 
-  getPortada() async {
+  Future<String?> getPortada() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('portada');
   }
@@ -111,7 +113,7 @@ class SharedPreferencesT {
     _sharedPreferences.setInt('idUsuario', idUsuario);
   }
 
-  getIdUsuario() async {
+  Future<int?> getIdUsuario() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getInt('idUsuario');
   }
@@ -121,7 +123,7 @@ class SharedPreferencesT {
     _sharedPreferences.setInt('idEvento', idEvento);
   }
 
-  getIdEvento() async {
+  Future<int?> getIdEvento() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getInt('idEvento');
   }
@@ -131,7 +133,7 @@ class SharedPreferencesT {
     return _sharedPreferences.setString('permisos', json);
   }
 
-  getPermisos() async {
+  Future<String?> getPermisos() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('permisos');
   }
@@ -141,7 +143,7 @@ class SharedPreferencesT {
     _sharedPreferences.setString('token', token);
   }
 
-  getToken() async {
+  Future<String?> getToken() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString('token');
   }
@@ -151,7 +153,7 @@ class SharedPreferencesT {
     return _sharedPreferences.setBool('session', session);
   }
 
-  getSession() async {
+  Future<bool?> getSession() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getBool('session') ?? false;
   }
@@ -161,7 +163,7 @@ class SharedPreferencesT {
     return _sharedPreferences.setBool('logic', logic);
   }
 
-  getLogic() async {
+  Future<bool?> getLogic() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getBool('logic') ?? false;
   }
@@ -171,9 +173,9 @@ class SharedPreferencesT {
     return _sharedPreferences.setStringList('dataWPlanner', json);
   }
 
-  getJsonData() async {
+  Future<List<String>> getJsonData() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return _sharedPreferences.getStringList('dataWPlanner');
+    return _sharedPreferences.getStringList('dataWPlanner') ?? [];
   }
 
   setCorreo(String correo) async {
@@ -197,7 +199,7 @@ class SharedPreferencesT {
     return sharedPreferences.getString('claveRol');
   }
 
-  clear() async {
+  Future<void> clear() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     Set<dynamic> keyPreferens = _sharedPreferences.getKeys();
 

@@ -11,7 +11,7 @@ class ArchivoActividadLogic {
 
   Future<Map<String, dynamic>?> obtenerArchivoActividad(
       int? idActividad, bool isPlanner) async {
-    String token = await _preferencesT.getToken();
+    String? token = await _preferencesT.getToken();
     String endpoint;
 
     endpoint = '/wedding/PLANES/obtenerArchivoActividad';
@@ -25,7 +25,7 @@ class ArchivoActividadLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(
@@ -43,7 +43,7 @@ class ArchivoActividadLogic {
 
   Future<String> uploadArchivoActividad(
       int idActividad, String archivo, String tipoMime) async {
-    String token = await _preferencesT.getToken();
+    String? token = await _preferencesT.getToken();
     const endpoint = '/wedding/PLANES/uploadArchivoActividad';
 
     final data = {
@@ -55,7 +55,7 @@ class ArchivoActividadLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(

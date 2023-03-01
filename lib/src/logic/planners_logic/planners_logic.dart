@@ -37,13 +37,13 @@ class PlannersLogic {
   }
 
   Future<PlannerModel?> obtenerPlannerbyID(int? idPlanner) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
     const endpoint = '/wedding/PLANNER/obtenerPlanerPorId';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
     };
 
     final body = {
@@ -63,13 +63,13 @@ class PlannersLogic {
   }
 
   Future<bool> editarPlanner(PlannerModel plannerEdit) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
     const endpoint = '/wedding/PLANNER/editPlanner';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
     };
 
     final body = {
@@ -96,13 +96,13 @@ class PlannersLogic {
   }
 
   Future<bool> agregarPlanner(PlannerModel plannerEdit) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
     const endpoint = '/wedding/PLANNER/agregarPlanner';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
     };
 
     final body = {

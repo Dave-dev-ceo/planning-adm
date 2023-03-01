@@ -24,12 +24,12 @@ class FetchListaEtiquetasLogic extends ListaEtiquetasLogic {
 
   @override
   Future<ItemModelEtiquetas> fetchEtiquetas() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.get(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ETIQUETAS/obtenerEtiquetas/$idPlanner'),
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);

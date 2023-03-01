@@ -26,12 +26,12 @@ class FetchListaInventarioAlcoholLogic extends ListaInventarioAlcoholLogic {
 
   @override
   Future<ItemModelInventarioAlcohol> fetchInventarioAlcohol() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.get(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/InventarioAlcohol/obtenerInventarioAlcohol/$idPlanner'),
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -46,16 +46,16 @@ class FetchListaInventarioAlcoholLogic extends ListaInventarioAlcoholLogic {
 
   @override
   Future<bool> updateInventarioAlcohol(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_usuario'] = idUsuario.toString();
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/InventarioAlcohol/updateInventarioAlcohol'),
         body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -70,16 +70,16 @@ class FetchListaInventarioAlcoholLogic extends ListaInventarioAlcoholLogic {
 
   @override
   Future<int> createInventarioAlcohol(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
     data['id_usuario'] = idUsuario.toString();
     data['id_planner'] = idPlanner.toString();
-    String token = await _sharedPreferences.getToken();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/InventarioAlcohol/createInventarioAlcohol'),
         body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> res = json.decode(response.body);

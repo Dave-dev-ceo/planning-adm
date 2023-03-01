@@ -49,8 +49,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   @override
   Future<ItemModelActividadesTimings?> fetchActividadesTimingsPorPlanner(
       int? idTiming) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
@@ -60,7 +60,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           'id_tipo_timing': idTiming.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -78,9 +78,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   @override
   Future<int> createActividadesTiming(
       Map<String, dynamic> dataTiming, int? idTiming) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
     dataTiming['id_tipo_timing'] = idTiming.toString();
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
@@ -88,7 +88,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createActividadesTimings'),
         body: dataTiming,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -104,9 +104,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   @override
   Future<int> deleteActividadesTiming(
       int? idActividadTiming, int? idTiming) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
 
     final response = await http.post(
         Uri.parse(
@@ -118,7 +118,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           "id_tipo_timing": idTiming.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 201) {
@@ -135,9 +135,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   @override
   Future<ItemModelActividadesTimings?>
       fetchActividadesTimingsIdPorPlanner() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
@@ -147,7 +147,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           'id_evento': idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -164,14 +164,14 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<ItemModelTimings?> fetchTimingsPorPlanner() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/TIMINGS/obtenerTimingsPorPlanner'),
         body: {'id_planner': idPlanner.toString(), 'estatus': 'A'},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -187,10 +187,10 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<int> createTiming(Map<String, dynamic> dataTiming) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
@@ -198,7 +198,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createTimings'),
         body: dataTiming,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -213,9 +213,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<ItemModelTimings?> fetchTimingsEvento() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
@@ -225,7 +225,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           'id_evento': idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -242,14 +242,14 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<ItemModelActividadesTimings?> fetchActividadesTimings() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/obtenerActividadesTimings'),
         body: {'id_planner': idPlanner.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -265,10 +265,10 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<int> createActividadesEvento(Map<String, dynamic> dataTiming) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
     dataTiming['id_planner'] = idPlanner.toString();
     dataTiming['id_usuario'] = idUsuario.toString();
     dataTiming['id_evento'] = idEvento.toString();
@@ -276,7 +276,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createActividadesEvento'),
         body: dataTiming,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -291,9 +291,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<ItemModelActividadesTimings?> fetchActividadesEvento() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
@@ -303,7 +303,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           'id_evento': idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -320,9 +320,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<ItemModelTimings?> fetchNoInEvento() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
@@ -332,7 +332,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           'id_evento': idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -349,9 +349,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
 
   @override
   Future<ItemModelActividadesTimings?> fetchNoInEventoActividades() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
@@ -361,7 +361,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           'id_evento': idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -380,8 +380,8 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   Future<int> updateEventoActividades(
       int idActividad, bool addActividad, DateTime addDate) async {
     //aqui
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
@@ -393,7 +393,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
           "fecha_actividad": addDate.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 201) {
@@ -413,10 +413,10 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     // implement creatActividadInEvent
 
     //aqui
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    int idEvent = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idEvent = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     // keep
     dataActividad['id_planner'] = idPlanner.toString();
@@ -429,7 +429,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ACTIVIDADESTIMINGS/createActividadesEnEvento'),
         body: dataActividad,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -448,9 +448,9 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
   @override
   Future<bool> updateActividadTiming(
       EventoActividadModel actividadModel, int? idTiming) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
 
     const endpoint = 'wedding/ACTIVIDADESTIMINGS/updateActividadTiming';
 
@@ -470,7 +470,7 @@ class FetchListaActividadesTimingsLogic extends ActividadesTimingsLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(

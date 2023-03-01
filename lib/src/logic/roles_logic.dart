@@ -29,14 +29,14 @@ class RolesPlannerLogic implements RolesLogic {
 
   @override
   Future<ItemModelRoles> obtenerRolesPorPlanner() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ROLES/obtenerRolesPorPlanner'),
         body: {'id_planner': idPlanner.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -53,13 +53,13 @@ class RolesPlannerLogic implements RolesLogic {
   @override
   Future<ItemModelRoles> obtenerRolesSelect() async {
     String idPlanner = (await _sharedPreferences.getIdPlanner()).toString();
-    String token = await _sharedPreferences.getToken();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ROLES/obtenerRolesSelect'),
         body: {'id_planner': idPlanner.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -100,9 +100,9 @@ class RolCrud extends RolLogic {
   Client client = Client();
   @override
   Future<ItemModelRol> crearRol(Map<String, dynamic> dataRol) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(
@@ -113,7 +113,7 @@ class RolCrud extends RolLogic {
           'rol': dataRol.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 201) {
@@ -130,9 +130,9 @@ class RolCrud extends RolLogic {
 
   @override
   Future<ItemModelRol> editarRol(Map<String, dynamic> dataRol) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(
@@ -143,7 +143,7 @@ class RolCrud extends RolLogic {
           'rol': dataRol.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 201) {
@@ -160,12 +160,12 @@ class RolCrud extends RolLogic {
 
   @override
   Future<bool?> eliminarRol(String idRol) async {
-    String token = await _sharedPreferences.getToken();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/ROLES/eliminarRol'),
         body: {'id_rol': idRol.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
@@ -197,14 +197,14 @@ class FormRolLogic implements RolFormLogic {
 
   @override
   Future<ItemModelFormRol> obtenerRolesForm({int? idRol = -1}) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/ROLES/obtenerRolesForm'),
         body: {'id_planner': idPlanner.toString(), 'id_rol': idRol.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);

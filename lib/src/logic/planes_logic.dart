@@ -49,9 +49,9 @@ class ConsultasPlanesLogic extends PlanesLogic {
   @override
   Future<Map<String, dynamic>?> selectPlanesPlanner() async {
     // variables
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
@@ -62,7 +62,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
           'id_planner': idPlanner.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -91,10 +91,10 @@ class ConsultasPlanesLogic extends PlanesLogic {
   @override
   Future<bool?> crearTareasEventoLista(List<TareaPlanner> listaPlanner) async {
     // variables
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
 
     bool? done;
 
@@ -113,7 +113,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
               'nombre': tarea.nombreTareaPlanner.toString(),
             },
             headers: {
-              HttpHeaders.authorizationHeader: token
+              HttpHeaders.authorizationHeader: token ?? ''
             });
 
         Map<String, dynamic>? data = json.decode(response.body);
@@ -139,7 +139,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
                 'fechaInicio': actividad.fechaInicio.toString(),
               },
               headers: {
-                HttpHeaders.authorizationHeader: token
+                HttpHeaders.authorizationHeader: token ?? ''
               });
         });
       } else {
@@ -166,7 +166,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
                   'fechaInicio': actividad.fechaInicio.toString(),
                 },
                 headers: {
-                  HttpHeaders.authorizationHeader: token
+                  HttpHeaders.authorizationHeader: token ?? ''
                 });
           }
         });
@@ -182,9 +182,9 @@ class ConsultasPlanesLogic extends PlanesLogic {
   @override
   Future<ItemModelPlanes?> selectPlanesEvento(String myQuery) async {
     // variables
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
@@ -196,7 +196,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
           'id_planner': idPlanner.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -225,10 +225,10 @@ class ConsultasPlanesLogic extends PlanesLogic {
   Future<int?> createActividadEvento(
       Map<String, dynamic> actividadEvento, int idTarea) async {
     // variables
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
 
     actividadEvento['id_planner'] = idPlanner.toString();
     actividadEvento['id_usuario'] = idUsuario.toString();
@@ -240,7 +240,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/PLANES/crearActividadesEventoLista'),
         body: actividadEvento,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     // filtro
     if (response.statusCode == 200) {
@@ -267,9 +267,9 @@ class ConsultasPlanesLogic extends PlanesLogic {
   @override
   Future<bool> updateActividadEvento(List<dynamic> listaPlanner) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
     // pedido al servidor - hay que ciclar
 
     try {
@@ -289,7 +289,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
                       'responsable': actividad.nombreResponsable.toString(),
                     },
                     headers: {
-                      HttpHeaders.authorizationHeader: token
+                      HttpHeaders.authorizationHeader: token ?? ''
                     })
               });
       return true;
@@ -306,8 +306,8 @@ class ConsultasPlanesLogic extends PlanesLogic {
   @override
   Future<bool?> deleteActividadEvento(int? idActividad) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     // enviamos
     final response = await client.post(
         Uri.parse(
@@ -317,7 +317,7 @@ class ConsultasPlanesLogic extends PlanesLogic {
           'id_actividad': idActividad.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -339,16 +339,16 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
   @override
   Future<String?> donwloadPDFPlanesEvento() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/PLANES/donwloadPDFPlanesEvento';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
@@ -368,16 +368,16 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
   @override
   Future<List<PlannesModel>?> getAllPlannes() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/PLANES/getAllPlanes';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
@@ -402,16 +402,16 @@ class ConsultasPlanesLogic extends PlanesLogic {
 
   @override
   Future<List<TimingModel>?> getTimingsAndActivities() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/PLANES/getPlannesAndActivities';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
@@ -436,16 +436,16 @@ class ConsultasPlanesLogic extends PlanesLogic {
   @override
   Future<bool?> updateEventoActividades(
       List<EventoActividadModel> actividades) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/PLANES/updateActividadesEvento';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {
@@ -474,17 +474,17 @@ class ConsultasPlanesLogic extends PlanesLogic {
     String? archivo,
     String? tipoMime,
   ) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
 
     const endpoint = '/wedding/PLANES/addActividadEvento';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {
@@ -518,17 +518,17 @@ class ConsultasPlanesLogic extends PlanesLogic {
   @override
   Future<bool> editActtividad(EventoActividadModel? actividadModel,
       String? archivo, String? tipoMime) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
 
     const endpoint = '/wedding/PLANES/editActividad';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {
@@ -585,16 +585,16 @@ class ActividadesEvento {
     ConfigConection confiC = ConfigConection();
     Client client = Client();
 
-    String token = await sharedPreferences.getToken();
-    int idPlanner = await sharedPreferences.getIdPlanner();
-    int idEvento = await sharedPreferences.getIdEvento();
+    String? token = await sharedPreferences.getToken();
+    int? idPlanner = await sharedPreferences.getIdPlanner();
+    int? idEvento = await sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/PLANES/getAllPlanes';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {'idPlanner': idPlanner, 'idEvento': idEvento};
@@ -626,9 +626,9 @@ class ActividadesEvento {
     Client client = Client();
 
     bool desconectado = await sharedPreferences.getModoConexion();
-    String token = await sharedPreferences.getToken();
-    int idPlanner = await sharedPreferences.getIdPlanner();
-    int idEvento = await sharedPreferences.getIdEvento();
+    String? token = await sharedPreferences.getToken();
+    int? idPlanner = await sharedPreferences.getIdPlanner();
+    int? idEvento = await sharedPreferences.getIdEvento();
 
     if (desconectado) {
       if (!Hive.isBoxOpen('conteos')) {
@@ -654,7 +654,7 @@ class ActividadesEvento {
       final headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: token
+        HttpHeaders.authorizationHeader: token ?? ''
       };
 
       final data = {'idPlanner': idPlanner, 'idEvento': idEvento};

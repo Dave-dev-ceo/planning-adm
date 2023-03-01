@@ -13,8 +13,8 @@ class DashboardLogic {
 
   Future<List<DashboardEventoModel>> getAllFechasEventos(
       DateTime startDate, DateTime endDate) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     List<DashboardEventoModel> listaFechaEventos = [];
 
     const endpoint = '/wedding/DASHBOARD/getFechasEventos';
@@ -26,7 +26,7 @@ class DashboardLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };
@@ -49,8 +49,8 @@ class DashboardLogic {
 
   Future<List<EventoActividadModel>> getAllActivitiesPlanner(
       DateTime startDate, DateTime endDate) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     List<EventoActividadModel> listaActividades = [];
 
     const endpoint = '/wedding/DASHBOARD/getAllActividadesPlanner';
@@ -62,7 +62,7 @@ class DashboardLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json',
     };

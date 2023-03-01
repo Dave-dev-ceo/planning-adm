@@ -23,15 +23,15 @@ class ServiceInvitadosMesasLogic extends InvitadosConfirmadosLogic {
     if (desconectado) {
       return null;
     }
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     final data = {'idEvento': idEvento};
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     const endpoint = 'wedding/INVITADOS/obtenerInvitadosConfirmados';

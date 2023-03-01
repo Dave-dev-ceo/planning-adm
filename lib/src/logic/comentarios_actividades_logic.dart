@@ -30,9 +30,9 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
       String? comentarioTxt, int? idActividad, bool? estadoComentario) async {
     // implement createComentarioPorId
     // variables
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
@@ -46,7 +46,7 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
           'estado_comentario': estadoComentario.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -68,9 +68,9 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
     // implement selectComentarioPorId
 
     // variables
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
@@ -81,7 +81,7 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
           'id_planner': idPlanner.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -106,9 +106,9 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
       int? idComentario, String? comentarioTxt, bool? estadoComentario) async {
     // implement updateComentarioPorId
     // variables
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
@@ -122,7 +122,7 @@ class ConsultasComentarioLogic extends ComentariosActividadesLogic {
           'estado_comentario': estadoComentario.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {

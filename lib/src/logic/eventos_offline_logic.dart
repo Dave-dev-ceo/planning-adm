@@ -24,8 +24,8 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
   @override
   Future<void> fetchEventosOffline(int? idEvento, BuildContext context) async {
     _dialogSpinner('Descargando evento', context);
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     //Descarga de documentos
     final response = await http.post(
       Uri.parse(
@@ -34,7 +34,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
         'id_planner': idPlanner.toString(),
         'id_evento': idEvento.toString(),
       },
-      headers: {HttpHeaders.authorizationHeader: token},
+      headers: {HttpHeaders.authorizationHeader: token ?? ''},
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -74,7 +74,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
         'id_planner': idPlanner.toString(),
         'id_evento': idEvento.toString(),
       },
-      headers: {HttpHeaders.authorizationHeader: token},
+      headers: {HttpHeaders.authorizationHeader: token ?? ''},
     );
     if (responsePDF.statusCode == 200) {
       final List<dynamic> dataPDF = json.decode(responsePDF.body);
@@ -103,7 +103,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
         'id_planner': idPlanner.toString(),
         'idEvento': idEvento.toString(),
       },
-      headers: {HttpHeaders.authorizationHeader: token},
+      headers: {HttpHeaders.authorizationHeader: token ?? ''},
     );
     if (responseEvento.statusCode == 200) {
       Map<String, dynamic>? dataEvento = json.decode(responseEvento.body);
@@ -131,7 +131,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
       },
     );
     if (responseResumenPagos.statusCode == 200) {
@@ -165,7 +165,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: token
+        HttpHeaders.authorizationHeader: token ?? ''
       },
     );
     if (responseConteo.statusCode == 200) {
@@ -189,7 +189,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     final responseReporte = await http.get(
       Uri.parse(
           '${configC.url}${configC.puerto}/wedding/INVITADOS/obtenerReporteInvitados/$idEvento'),
-      headers: {HttpHeaders.authorizationHeader: token},
+      headers: {HttpHeaders.authorizationHeader: token ?? ''},
     );
     if (responseReporte.statusCode == 200) {
       final reporte = {
@@ -217,7 +217,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
           '${configC.url}${configC.puerto}/wedding/INVITADOS/obtenterDatosInvitados'),
       body: json.encode({'idEvento': idEvento}),
       headers: {
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
         'Content-type': 'application/json',
         'Accept': 'application/json',
       },
@@ -252,7 +252,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
         'id_planner': idPlanner.toString(),
         'id_evento': idEvento.toString()
       },
-      headers: {HttpHeaders.authorizationHeader: token},
+      headers: {HttpHeaders.authorizationHeader: token ?? ''},
     );
     if (responseAsistentes.statusCode == 200) {
       final List<dynamic> asistentes = json.decode(responseAsistentes.body);
@@ -282,7 +282,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
           '${configC.url}${configC.puerto}/wedding/INVITADOS/descargarDatosParaQR'),
       body: json.encode({'idEvento': idEvento}),
       headers: {
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
         'Content-type': 'application/json',
         'Accept': 'application/json',
       },
@@ -311,7 +311,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       Uri.parse('${configC.url}${configC.puerto}/wedding/MESAS/getLayoutMesa'),
       body: json.encode({'idEvento': idEvento}),
       headers: {
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
         'Content-type': 'application/json',
         'Accept': 'application/json',
       },
@@ -338,7 +338,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
       Uri.parse('${configC.url}${configC.puerto}/wedding/MESAS/obtenerMesas'),
       body: json.encode({'idEvento': idEvento}),
       headers: {
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
         'Content-type': 'application/json',
         'Accept': 'application/json',
       },
@@ -368,7 +368,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
           '${configC.url}${configC.puerto}/wedding/EVENTOS/getMesasAsignadas'),
       body: json.encode({'idEvento': idEvento}),
       headers: {
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
         'Content-type': 'application/json',
         'Accept': 'application/json',
       },
@@ -494,7 +494,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
     final boxCambiosAsistencias = Hive.box<dynamic>('cambiosAsistencias');
     if (boxCambiosAsistencias.values.isNotEmpty) {
       final listaCambios = [...boxCambiosAsistencias.values];
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
       await http.post(
         Uri.parse(
             '${configC.url}${configC.puerto}/wedding/ASISTENCIA/subirCambiosAsistencias'),
@@ -502,7 +502,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          HttpHeaders.authorizationHeader: token,
+          HttpHeaders.authorizationHeader: token ?? '',
         },
       );
     }
@@ -579,7 +579,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
   }
 
   Future<bool> _checkIsInvolucrado() async {
-    int idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    int? idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
     if (idInvolucrado != null) {
       return true;
     }

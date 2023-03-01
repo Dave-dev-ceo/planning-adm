@@ -21,9 +21,9 @@ class ConsultasInvolucradosLogic extends Involucrados {
   @override
   Future<ItemModelInvolucrados> selectInvolucrado() async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
@@ -34,7 +34,7 @@ class ConsultasInvolucradosLogic extends Involucrados {
           'id_evento': idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -52,9 +52,9 @@ class ConsultasInvolucradosLogic extends Involucrados {
   @override
   Future<bool> insertInvolucrados(objectinvolucrado) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     // pedido al servidor
     final response = await client.post(
@@ -66,7 +66,7 @@ class ConsultasInvolucradosLogic extends Involucrados {
           'involucrado': jsonEncode(objectinvolucrado)
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
