@@ -150,10 +150,10 @@ class _DashboardEventosState extends State<DashboardEventos> {
                                   }
                                 },
                                 itemBuilder: (context) => [
-                                  PopupMenuItem(
+                                  const PopupMenuItem(
                                     value: 1,
                                     height: 20.0,
-                                    child: const Text(
+                                    child: Text(
                                       'Descargar evento',
                                       style: TextStyle(fontSize: 12),
                                     ),
@@ -168,8 +168,8 @@ class _DashboardEventosState extends State<DashboardEventos> {
                             );
                           }
                         }
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 7.0, top: 7.0),
+                        return const Padding(
+                          padding: EdgeInsets.only(right: 7.0, top: 7.0),
                         );
                       }),
                 )
@@ -202,9 +202,9 @@ class _DashboardEventosState extends State<DashboardEventos> {
             'Confirmar descarga',
             textAlign: TextAlign.center,
           ),
-          content: SizedBox(
+          content: const SizedBox(
             width: 350.0,
-            child: const Text(
+            child: Text(
               'Se guardará en el dispositivo la siguiente información del evento:'
               '\n - Resumen'
               '\n - Documentos'
@@ -222,9 +222,10 @@ class _DashboardEventosState extends State<DashboardEventos> {
             TextButton(
               child: const Text('Aceptar'),
               onPressed: () async {
+                final navigator = Navigator.of(context);
                 await FetchListaEventosOfflineLogic()
                     .fetchEventosOffline(idEvento, context);
-                Navigator.pop(context);
+                navigator.pop();
                 setState(() {});
               },
             ),
@@ -276,7 +277,7 @@ class _DashboardEventosState extends State<DashboardEventos> {
           // ignore: void_checks
           listener: (context, state) {
             if (state is ErrorTokenEventosState) {
-              return _showDialogMsg(context);
+              _showDialogMsg(context);
             }
           },
           child: BlocBuilder<EventosBloc, EventosState>(
@@ -384,8 +385,6 @@ class _DashboardEventosState extends State<DashboardEventos> {
       body: json.encode(data),
       headers: headers,
     );
-
-    print(resp.statusCode);
 
     if (resp.statusCode == 200) {
       final pdf = json.decode(resp.body)['pdf'];

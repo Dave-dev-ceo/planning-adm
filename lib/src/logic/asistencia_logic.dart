@@ -28,9 +28,9 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
   Future<ItemModelAsistencia?> fetchAsistenciaPorPlanner() async {
     // implement fetchAsistenciaPorPlanner
     bool desconectado = await _sharedPreferences.getModoConexion();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     if (desconectado) {
       if (!Hive.isBoxOpen('asistencias')) {
@@ -52,7 +52,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
             'id_evento': idEvento.toString()
           },
           headers: {
-            HttpHeaders.authorizationHeader: token
+            HttpHeaders.authorizationHeader: token ?? ''
           });
 
       if (response.statusCode == 200) {
@@ -72,7 +72,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
   Future<int> saveAsistencia(int? idInvitado, bool asistencia,
       {int? idAcompanante}) async {
     bool desconectado = await _sharedPreferences.getModoConexion();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
     if (desconectado) {
       if (!Hive.isBoxOpen('asistencias')) {
         await Hive.openBox<dynamic>('asistencias');
@@ -106,7 +106,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
         }
       }
     } else {
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
 
       await client.post(
           Uri.parse(
@@ -118,7 +118,7 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
             'id_planner': idPlanner.toString()
           },
           headers: {
-            HttpHeaders.authorizationHeader: token
+            HttpHeaders.authorizationHeader: token ?? ''
           });
     }
     return 0;
@@ -126,16 +126,16 @@ class FetchListaAsistenciaLogic extends AsistenciaLogic {
 
   @override
   Future<String?> downloadPDFAsistencia() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/ASISTENCIA/downloadPDFAsistencia';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {

@@ -60,7 +60,7 @@ class _ListaState extends State<Listas> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _getId(),
-        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<int?> snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
               appBar: (isInvolucrado)
@@ -209,8 +209,8 @@ class _ListaState extends State<Listas> {
         });
   }
 
-  Future<int> _getId() async {
-    int id = await _sharedPreferences.getIdPlanner();
+  Future<int?> _getId() async {
+    int? id = await _sharedPreferences.getIdPlanner();
     idPlanner = id;
     return id;
   }

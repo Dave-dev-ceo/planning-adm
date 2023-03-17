@@ -13,14 +13,14 @@ class PlantillasLogic {
   final _config = ConfigConection();
 
   Future<List<PlantillaSistemaModel>?> obtenerPlantillas() async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     const endpoint = '/wedding/PLANNER/obtenerPlantillasSistema';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(
@@ -36,14 +36,14 @@ class PlantillasLogic {
   }
 
   Future<PlantillaSistemaModel?> obtenerPantillaById(int? idPlantilla) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     const endpoint = '/wedding/PLANNER/obtenerPlantillasSistemaById';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final body = {
@@ -71,14 +71,14 @@ class PlantillasLogic {
   }
 
   Future<bool> editarPlantilla(PlantillaSistemaModel plantilla) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     const endpoint = '/wedding/PLANNER/updatePlantillaSistema';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final body = {
@@ -107,14 +107,14 @@ class PlantillasLogic {
   }
 
   Future<bool> insertPlantilla(PlantillaSistemaModel plantilla) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     const endpoint = '/wedding/PLANNER/insertPlantilla';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final body = {
@@ -143,14 +143,14 @@ class PlantillasLogic {
   }
 
   Future<bool> editDescripcionPlantilla(PlantillaSistemaModel plantilla) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     const endpoint = '/wedding/PLANNER/editDescripcionPlantilla';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final body = {
@@ -179,14 +179,14 @@ class PlantillasLogic {
   }
 
   Future<bool> deletePlantillaSistema(int? idPlantilla) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     const endpoint = '/wedding/PLANNER/deletePlantillaSistema';
 
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final body = {

@@ -12,7 +12,7 @@ class ArchivosProspectosLogic {
 
   Future<List<ArchivoProspecto>?> obtenerArchivosProspectos(
       int? idProspecto) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     final data = {
       'idProspecto': idProspecto,
@@ -23,7 +23,7 @@ class ArchivosProspectosLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final resp = await http.post(
@@ -38,7 +38,7 @@ class ArchivosProspectosLogic {
   }
 
   Future<bool> crearArchivoProspecto(ArchivoProspecto nuevoProspecto) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     final data = {
       ...nuevoProspecto.toJson(),
@@ -49,7 +49,7 @@ class ArchivosProspectosLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final resp = await http.post(
@@ -62,7 +62,7 @@ class ArchivosProspectosLogic {
   }
 
   Future<bool> eliminarArchivoProespecto(int? idArchivo) async {
-    String token = await _sharedPreferencesT.getToken();
+    String? token = await _sharedPreferencesT.getToken();
 
     final data = {'idArchivo': idArchivo};
 
@@ -71,7 +71,7 @@ class ArchivosProspectosLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final resp = await http.post(
@@ -83,8 +83,9 @@ class ArchivosProspectosLogic {
     return resp.statusCode == 200;
   }
 
-  Future<bool> editarNombredelArchivo(int? idArchivo, String? nuevoNombre) async {
-    String token = await _sharedPreferencesT.getToken();
+  Future<bool> editarNombredelArchivo(
+      int? idArchivo, String? nuevoNombre) async {
+    String? token = await _sharedPreferencesT.getToken();
 
     final data = {
       'nuevoNombre': nuevoNombre,
@@ -96,7 +97,7 @@ class ArchivosProspectosLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final resp = await http.post(

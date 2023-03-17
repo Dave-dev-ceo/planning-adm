@@ -33,9 +33,9 @@ class FetchProveedoresLogic extends LogicProveedores {
   @override
   Future<int> createProveedor(Map<void, dynamic> data) async {
     if (data['nombre'] != '' && data['descripcion'] != '') {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
-      String token = await _sharedPreferences.getToken();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      int? idUsuario = await _sharedPreferences.getIdUsuario();
+      String? token = await _sharedPreferences.getToken();
       List? listaTest = data['servicios'];
       final data2 = {
         'nombre': data['nombre'],
@@ -53,7 +53,7 @@ class FetchProveedoresLogic extends LogicProveedores {
           headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json',
-            HttpHeaders.authorizationHeader: token
+            HttpHeaders.authorizationHeader: token ?? ''
           });
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
@@ -71,12 +71,12 @@ class FetchProveedoresLogic extends LogicProveedores {
   @override
   Future<ItemModelProveedores> fetchProveedor() async {
     try {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      String token = await _sharedPreferences.getToken();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/PROVEEDORES/obtenerProveedores/$idPlanner'),
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -98,12 +98,12 @@ class FetchProveedoresLogic extends LogicProveedores {
   @override
   Future<ItemModelServicioByProv> fetchServicioByProv() async {
     try {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      String token = await _sharedPreferences.getToken();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/PROVEEDORES/obtenerServicioByProv/$idPlanner'),
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
@@ -124,8 +124,8 @@ class FetchProveedoresLogic extends LogicProveedores {
 
   @override
   Future<int> deleteServicioProv(int? idServcio, int? idProveedor) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(
             '${configC.url}${configC.puerto}/wedding/PROVEEDORES/deleteServicioProv'),
@@ -135,7 +135,7 @@ class FetchProveedoresLogic extends LogicProveedores {
           'id_proveedor': idProveedor.toString(),
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
     if (response.statusCode == 200) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -150,9 +150,9 @@ class FetchProveedoresLogic extends LogicProveedores {
 
   @override
   Future<String> updateProveedor(ItemProveedor proveedor) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
 
     if (proveedor.estatus == 'Activo') {
       proveedor.estatus = 'A';
@@ -178,7 +178,7 @@ class FetchProveedoresLogic extends LogicProveedores {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await client.post(
@@ -197,15 +197,15 @@ class FetchProveedoresLogic extends LogicProveedores {
 
   @override
   Future<String> deleteProveedor(int idProveedor) async {
-    String token = await _sharedPreferences.getToken();
-    String idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     const endpoint = '';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {'idPlanner': idPlanner, 'idProveedor': idProveedor};
@@ -225,15 +225,15 @@ class FetchProveedoresLogic extends LogicProveedores {
 
   @override
   Future<String?> downloadPDFProveedor() async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     const endpoint = '/wedding/PROVEEDORES/downloadPDFProveedor';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {
@@ -255,8 +255,8 @@ class FetchProveedoresLogic extends LogicProveedores {
 
   @override
   Future<int> insertServicioProv(int? idServcio, int? idProveedor) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(
             '${configC.url}${configC.puerto}/wedding/PROVEEDORES/insertServicioProv'),
@@ -266,7 +266,7 @@ class FetchProveedoresLogic extends LogicProveedores {
           'id_proveedor': idProveedor.toString(),
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
     if (response.statusCode == 200) {
       Map<String, dynamic> responseEvento = json.decode(response.body);

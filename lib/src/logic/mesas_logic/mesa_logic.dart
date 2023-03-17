@@ -28,10 +28,10 @@ class ServiceMesasLogic extends MesasLogic {
 
   @override
   Future<List<MesaModel>> getAsignadasMesas() async {
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    String token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
     const endpoint = 'wedding/EVENTOS/getMesasAsignadas';
     final response = await http
         .post(Uri.parse('${confiC.url}${confiC.puerto}/$endpoint'), body: {
@@ -39,7 +39,7 @@ class ServiceMesasLogic extends MesasLogic {
       'idPlanner': idPlanner.toString(),
       'idUsuario': idUsuario.toString()
     }, headers: {
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     });
 
     if (response.statusCode == 200) {
@@ -57,8 +57,8 @@ class ServiceMesasLogic extends MesasLogic {
 
   @override
   Future<String> createMesas(List<MesaModel> listaMesasToAdd) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     const endpoint = 'wedding/MESAS/createMesas';
 
@@ -73,7 +73,7 @@ class ServiceMesasLogic extends MesasLogic {
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -87,7 +87,7 @@ class ServiceMesasLogic extends MesasLogic {
   @override
   Future<List<MesaModel>> getMesas() async {
     bool desconectado = await _sharedPreferences.getModoConexion();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    int? idEvento = await _sharedPreferences.getIdEvento();
     if (desconectado) {
       if (!Hive.isBoxOpen('mesas')) {
         await Hive.openBox<dynamic>('mesas');
@@ -98,7 +98,7 @@ class ServiceMesasLogic extends MesasLogic {
       return List<MesaModel>.from(listaMesas
           .map((data) => MesaModel.fromJson(Map<String, dynamic>.from(data))));
     } else {
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
 
       const endpoint = 'wedding/MESAS/obtenerMesas';
 
@@ -107,7 +107,7 @@ class ServiceMesasLogic extends MesasLogic {
       };
 
       final headers = {
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
         'Content-type': 'application/json',
         'Accept': 'application/json'
       };
@@ -131,7 +131,7 @@ class ServiceMesasLogic extends MesasLogic {
 
   @override
   Future<bool> updateMesa(MesaModel editToMesa) async {
-    String token = await SharedPreferencesT().getToken();
+    String? token = await SharedPreferencesT().getToken();
 
     const endpoint = 'wedding/MESAS/updateMesa';
 
@@ -142,7 +142,7 @@ class ServiceMesasLogic extends MesasLogic {
     };
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
@@ -161,8 +161,8 @@ class ServiceMesasLogic extends MesasLogic {
 
   @override
   Future<String> createLayout(String fileBase64, String? extension) async {
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     final data = {
       'idEvento': idEvento,
@@ -173,7 +173,7 @@ class ServiceMesasLogic extends MesasLogic {
     const endpoint = 'wedding/MESAS/uploadLayout';
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
@@ -193,8 +193,8 @@ class ServiceMesasLogic extends MesasLogic {
 
   @override
   Future<String> deleteMesa(int? idMesa) async {
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     final data = {
       'idEvento': idEvento,
@@ -204,7 +204,7 @@ class ServiceMesasLogic extends MesasLogic {
     const endpoint = 'wedding/MESAS/deleteMesa';
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };

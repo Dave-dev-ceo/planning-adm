@@ -26,8 +26,8 @@ class ServiceBookInspiracionLogic {
   }
 
   Future<List<LayoutBookModel>?> getBookInspiracion() async {
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     final data = {
       'idEvento': idEvento,
@@ -38,7 +38,7 @@ class ServiceBookInspiracionLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(
@@ -62,8 +62,8 @@ class ServiceBookInspiracionLogic {
 
   Future<String> createBookInspiracion(
       String fileBase64, String? extension) async {
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     final data = {
       'idEvento': idEvento,
@@ -74,7 +74,7 @@ class ServiceBookInspiracionLogic {
     const endpoint = 'wedding/BOOK/uploadBookInspiracion';
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
@@ -93,9 +93,9 @@ class ServiceBookInspiracionLogic {
   }
 
   Future<String?> downloadBookInspiracion() async {
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     final data = {
       'idEvento': idEvento,
@@ -105,7 +105,7 @@ class ServiceBookInspiracionLogic {
     const endpoint = 'wedding/BOOK/downloadBookInspiracion';
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };
@@ -124,7 +124,7 @@ class ServiceBookInspiracionLogic {
   }
 
   Future<bool> deleteBookInspiracion(int? idbookInspiracion) async {
-    String token = await _sharedPreferences.getToken();
+    String? token = await _sharedPreferences.getToken();
 
     final data = {
       'idbookInspiracion': idbookInspiracion,
@@ -133,7 +133,7 @@ class ServiceBookInspiracionLogic {
     const endpoint = 'wedding/BOOK/deleteBookInspiracion';
 
     final headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token ?? '',
       'Content-type': 'application/json',
       'Accept': 'application/json'
     };

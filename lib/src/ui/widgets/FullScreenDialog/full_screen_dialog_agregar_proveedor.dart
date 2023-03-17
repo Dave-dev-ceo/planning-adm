@@ -305,7 +305,7 @@ class _FullScreenDialogAgregarProveedorEvent
   Future<Map<String, dynamic>> _jsonAgregarProveedor(
       BuildContext context) async {
     List datosServ = [];
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
     for (var element in _selectedServicios) {
       datosServ.add([element.idServicio, idPlanner]);
     }
@@ -332,12 +332,12 @@ class Territorio {
 }
 
 Future<List<Territorio>> getPaises() async {
-  String token = await _sharedPreferences.getToken();
+  String? token = await _sharedPreferences.getToken();
 
   const endpoint = '/wedding/CIUDADES/getPaises';
 
   final headers = {
-    HttpHeaders.authorizationHeader: token,
+    HttpHeaders.authorizationHeader: token ?? '',
     'content-type': 'application/json',
     'accept': 'application/json'
   };
@@ -357,14 +357,14 @@ Future<List<Territorio>> getPaises() async {
 }
 
 Future<List<Territorio>> getEstados(int? idPais) async {
-  String token = await _sharedPreferences.getToken();
+  String? token = await _sharedPreferences.getToken();
 
   const endpoint = '/wedding/CIUDADES/getEstados';
 
   final data = {'idPais': idPais};
 
   final headers = {
-    HttpHeaders.authorizationHeader: token,
+    HttpHeaders.authorizationHeader: token ?? '',
     'content-type': 'application/json',
     'accept': 'application/json'
   };
@@ -385,14 +385,14 @@ Future<List<Territorio>> getEstados(int? idPais) async {
 }
 
 Future<List<Territorio>> getCiudades(int? idEstado) async {
-  String token = await _sharedPreferences.getToken();
+  String? token = await _sharedPreferences.getToken();
 
   const endpoint = '/wedding/CIUDADES/getCiudades';
 
   final data = {'idEstado': idEstado};
 
   final headers = {
-    HttpHeaders.authorizationHeader: token,
+    HttpHeaders.authorizationHeader: token ?? '',
     'content-type': 'application/json',
     'accept': 'application/json'
   };

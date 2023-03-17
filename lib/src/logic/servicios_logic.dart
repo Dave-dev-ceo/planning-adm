@@ -30,12 +30,12 @@ class FetchServiciosLogic extends ServiciosLogic {
   @override
   Future<ItemModuleServicios> fetchServicios() async {
     try {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      String token = await _sharedPreferences.getToken();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/SERVICIOS/obtenerServicios/$idPlanner'),
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         await _sharedPreferences.setToken(data['token']);
@@ -56,17 +56,17 @@ class FetchServiciosLogic extends ServiciosLogic {
   @override
   Future<int> createServicio(Map<String, dynamic> data) async {
     if (data['nombre'] != '') {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      int? idUsuario = await _sharedPreferences.getIdUsuario();
       data['id_planner'] = idPlanner.toString();
       data['creado_por'] = idUsuario.toString();
       data['modificado_por'] = idUsuario.toString();
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.post(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/SERVICIOS/insertServicios'),
           body: data,
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         await _sharedPreferences.setToken(res['token']);
@@ -83,17 +83,17 @@ class FetchServiciosLogic extends ServiciosLogic {
   @override
   Future<int> editarServicio(Map<String, dynamic> data) async {
     if (data['nombre'] != '' && data['id_servicio'] != 0) {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      int idUsuario = await _sharedPreferences.getIdUsuario();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      int? idUsuario = await _sharedPreferences.getIdUsuario();
       data['id_servicio'] = data['id_servicio'].toString();
       data['id_planner'] = idPlanner.toString();
       data['modificado_por'] = idUsuario.toString();
-      String token = await _sharedPreferences.getToken();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.put(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/SERVICIOS/editarServicio'),
           body: data,
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         await _sharedPreferences.setToken(res['token']);
@@ -110,8 +110,8 @@ class FetchServiciosLogic extends ServiciosLogic {
 
   @override
   Future<int> deleteDetallaLista(int? idServicio) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.delete(
         Uri.parse(
             '${configC.url}${configC.puerto}/wedding/SERVICIOS/deleteServicio'),
@@ -120,7 +120,7 @@ class FetchServiciosLogic extends ServiciosLogic {
           'id_planner': idPlanner.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
     if (response.statusCode == 200) {
       Map<String, dynamic> responseEvento = json.decode(response.body);
@@ -137,12 +137,12 @@ class FetchServiciosLogic extends ServiciosLogic {
   Future<ItemModuleServicios> fetchServiciosByProoveedor(
       int? idProveedor) async {
     try {
-      int idPlanner = await _sharedPreferences.getIdPlanner();
-      String token = await _sharedPreferences.getToken();
+      int? idPlanner = await _sharedPreferences.getIdPlanner();
+      String? token = await _sharedPreferences.getToken();
       final response = await client.get(
           Uri.parse(
               '${configC.url}${configC.puerto}/wedding/SERVICIOS/obtenerServiciosByProveedor/$idPlanner/$idProveedor'),
-          headers: {HttpHeaders.authorizationHeader: token});
+          headers: {HttpHeaders.authorizationHeader: token ?? ''});
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
         await _sharedPreferences.setToken(data['token']);

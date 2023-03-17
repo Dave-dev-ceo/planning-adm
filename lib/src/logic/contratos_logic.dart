@@ -30,13 +30,13 @@ class FetchListaContratosLogic extends ListaContratosLogic {
 
   @override
   Future<ItemModelContratos> fetchContratos() async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
     final response = await client.get(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/Contratos/obtenerContratos/$idPlanner/$idEvento'),
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -60,16 +60,16 @@ class FetchListaContratosLogic extends ListaContratosLogic {
 
   @override
   Future<int> createContratos(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/MACHOTES/createContratos'),
         body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 201) {
       return 0;
@@ -82,15 +82,15 @@ class FetchListaContratosLogic extends ListaContratosLogic {
 
   @override
   Future<String?> fetchContratosPdf(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PDF/createPDF'),
         body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -105,9 +105,9 @@ class FetchListaContratosLogic extends ListaContratosLogic {
 
   @override
   Future<bool> updateFile(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
@@ -118,7 +118,7 @@ class FetchListaContratosLogic extends ListaContratosLogic {
         headers: {
           'Content-type': 'application/json',
           'Accept': 'application/json',
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     if (response.statusCode == 200) {
@@ -134,15 +134,15 @@ class FetchListaContratosLogic extends ListaContratosLogic {
 
   @override
   Future<String?> seeUploadFile(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PDF/seeUploadFile'),
         body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);
@@ -157,16 +157,16 @@ class FetchListaContratosLogic extends ListaContratosLogic {
 
   @override
   Future<String?> fetchPlantillaPdf(Map<String, dynamic> data) async {
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
     data['id_planner'] = idPlanner.toString();
     data['id_evento'] = idEvento.toString();
     final response = await client.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/PDF/generarPdfPlantilla'),
         body: data,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body);

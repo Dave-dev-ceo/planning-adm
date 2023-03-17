@@ -45,13 +45,13 @@ class PerfiladoLogic implements PermisosLogic {
       return ItemModelPerfil(secciones, pantallas);
     }
     String idUsuario = (await _sharedPreferences.getIdUsuario()).toString();
-    String token = await _sharedPreferences.getToken();
+    String? token = await _sharedPreferences.getToken();
     final response = await http.post(
         Uri.parse(confiC.url! +
             confiC.puerto! +
             '/wedding/USUARIOS/obtenerPermisosUsuario'),
         body: {'id_usuario': idUsuario.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON

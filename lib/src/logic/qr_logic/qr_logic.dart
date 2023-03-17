@@ -13,8 +13,8 @@ class QrLogic {
 
   Future<QrInvitadoModel?> validarQr(String? qrData) async {
     bool desconectado = await _sharedPreferencesT.getModoConexion();
-    int idEvento = await _sharedPreferencesT.getIdEvento();
-    int idPlanner = await _sharedPreferencesT.getIdEvento();
+    int? idEvento = await _sharedPreferencesT.getIdEvento();
+    int? idPlanner = await _sharedPreferencesT.getIdEvento();
 
     if (desconectado) {
       if (!Hive.isBoxOpen('QR')) {
@@ -25,7 +25,7 @@ class QrLogic {
           .firstWhere((qr) => qr['id_invitado'].toString() == qrData);
       return qrInvitadoModelFromJson(json.encode(qr));
     } else {
-      String token = await _sharedPreferencesT.getToken();
+      String? token = await _sharedPreferencesT.getToken();
       const endpoint = '/wedding/INVITADOS/desencryptQrData';
       final data = {
         'idPlanner': idPlanner,
@@ -34,7 +34,7 @@ class QrLogic {
       };
 
       final headers = {
-        HttpHeaders.authorizationHeader: token,
+        HttpHeaders.authorizationHeader: token ?? '',
         'content-type': 'application/json',
         'accept': 'application/json'
       };

@@ -33,10 +33,10 @@ class ConsultasPagosLogic extends PagosLogic {
   @override
   Future<bool> insertPagos(Map<String, dynamic> pago) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
 
     pago['id_planner'] = idPlanner;
     pago['id_evento'] = idEvento;
@@ -45,7 +45,7 @@ class ConsultasPagosLogic extends PagosLogic {
     final headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final response = await http.post(
@@ -69,9 +69,9 @@ class ConsultasPagosLogic extends PagosLogic {
   @override
   Future<Map<String, dynamic>> selectPagos() async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/selectPagos'),
@@ -80,7 +80,7 @@ class ConsultasPagosLogic extends PagosLogic {
           'id_evento': idEvento.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -106,15 +106,15 @@ class ConsultasPagosLogic extends PagosLogic {
   @override
   Future<bool> updatePagos(Map pago) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     pago['id_planner'] = idPlanner.toString();
 
     final response = await http.post(
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/updatePagos'),
         body: pago,
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     // filtro
     if (response.statusCode == 200) {
@@ -131,8 +131,8 @@ class ConsultasPagosLogic extends PagosLogic {
   @override
   Future<bool> deletePagos(int? id) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/deletePagos'),
@@ -141,7 +141,7 @@ class ConsultasPagosLogic extends PagosLogic {
           'id_concepto': id.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -159,14 +159,14 @@ class ConsultasPagosLogic extends PagosLogic {
   @override
   Future<ItemModelPagos> selectProveedor() async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/PAGOS/selectProveedor'),
         body: {'id_planner': idPlanner.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     // filtro
     if (response.statusCode == 200) {
@@ -183,14 +183,14 @@ class ConsultasPagosLogic extends PagosLogic {
   @override
   Future<ItemModelPagos> selectServicios() async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse(
             '${confiC.url}${confiC.puerto}/wedding/PAGOS/selectServicios'),
         body: {'id_planner': idPlanner.toString()},
-        headers: {HttpHeaders.authorizationHeader: token});
+        headers: {HttpHeaders.authorizationHeader: token ?? ''});
 
     // filtro
     if (response.statusCode == 200) {
@@ -207,8 +207,8 @@ class ConsultasPagosLogic extends PagosLogic {
   @override
   Future<ItemModelPagos> selectPagosId(int? id) async {
     // variables
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    String token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
 
     final response = await http.post(
         Uri.parse('${confiC.url}${confiC.puerto}/wedding/PAGOS/selectPagosId'),
@@ -217,7 +217,7 @@ class ConsultasPagosLogic extends PagosLogic {
           'id_concepto': id.toString()
         },
         headers: {
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: token ?? ''
         });
 
     // filtro
@@ -234,16 +234,16 @@ class ConsultasPagosLogic extends PagosLogic {
 
   @override
   Future<String?> downlooadPagosEvento(String tipoPresupuesto) async {
-    String token = await _sharedPreferences.getToken();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
 
     const endpoint = '/wedding/PAGOS/downlooadPagosEvento';
 
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final data = {
@@ -267,8 +267,8 @@ class ConsultasPagosLogic extends PagosLogic {
 
   @override
   Future<Map<String, dynamic>?> obtenerResumenPagos() async {
-    String token = await _sharedPreferences.getToken();
-    int idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    int? idEvento = await _sharedPreferences.getIdEvento();
     bool desconectado = await _sharedPreferences.getModoConexion();
     if (desconectado) {
       if (!Hive.isBoxOpen('resumenPagos')) {
@@ -285,7 +285,7 @@ class ConsultasPagosLogic extends PagosLogic {
       final headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        HttpHeaders.authorizationHeader: token
+        HttpHeaders.authorizationHeader: token ?? ''
       };
       final data = {
         'idEvento': idEvento,

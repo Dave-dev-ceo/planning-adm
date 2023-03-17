@@ -136,7 +136,7 @@ class MyApp extends StatelessWidget {
         SfGlobalLocalizations.delegate,
       ],
       supportedLocales: [
-        Locale('es'),
+        const Locale('es'),
         for (var s in flc.supportedLocales) Locale(s)
       ],
       locale: const Locale('es'),

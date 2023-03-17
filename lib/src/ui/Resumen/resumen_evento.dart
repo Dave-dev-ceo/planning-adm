@@ -56,7 +56,7 @@ class _ResumenEventoState extends State<ResumenEvento> {
   }
 
   _checkIsInvolucrado() async {
-    int idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
+    int? idInvolucrado = await SharedPreferencesT().getIdInvolucrado();
 
     if (idInvolucrado != null) {
       setState(() {

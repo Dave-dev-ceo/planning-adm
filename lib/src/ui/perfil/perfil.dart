@@ -53,7 +53,7 @@ class _PerfilState extends State<Perfil> {
   }
 
   getPortadaImage() async {
-    portada = await _sharedPreferences.getPortada();
+    portada = await _sharedPreferences.getPortada() ?? '';
     claveRol = await _sharedPreferences.getClaveRol();
     setState(() {});
   }

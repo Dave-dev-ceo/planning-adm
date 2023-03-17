@@ -90,9 +90,9 @@ class BackendLoginLogic implements LoginLogic {
 
   @override
   Future<String?> getPassword() async {
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    int idInvolucrado = await _sharedPreferences.getIdInvolucrado();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idInvolucrado = await _sharedPreferences.getIdInvolucrado();
 
     const endpoint = '/wedding/ACCESO/getPassWord';
 
@@ -110,7 +110,7 @@ class BackendLoginLogic implements LoginLogic {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final resp = await client.post(
@@ -128,9 +128,9 @@ class BackendLoginLogic implements LoginLogic {
 
   @override
   Future<String> changePassword(String newPassword) async {
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
-    int idPlanner = await _sharedPreferences.getIdPlanner();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
 
     Map<String, dynamic> data;
 
@@ -145,7 +145,7 @@ class BackendLoginLogic implements LoginLogic {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final resp = await client.post(
@@ -163,8 +163,8 @@ class BackendLoginLogic implements LoginLogic {
 
   @override
   Future<String> changePasswordInvolucrado(String newPassword) async {
-    String token = await _sharedPreferences.getToken();
-    int idUsuario = await _sharedPreferences.getIdUsuario();
+    String? token = await _sharedPreferences.getToken();
+    int? idUsuario = await _sharedPreferences.getIdUsuario();
     int? idInvolucrado = await _sharedPreferences.getIdInvolucrado();
 
     Map<String, dynamic> data;
@@ -185,7 +185,7 @@ class BackendLoginLogic implements LoginLogic {
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      HttpHeaders.authorizationHeader: token
+      HttpHeaders.authorizationHeader: token ?? ''
     };
 
     final resp = await client.post(
