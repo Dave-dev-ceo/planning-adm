@@ -24,6 +24,7 @@ class FetchListaEventosOfflineLogic extends ListaEventosOfflineLogic {
   @override
   Future<void> fetchEventosOffline(int? idEvento, BuildContext context) async {
     _dialogSpinner('Descargando evento', context);
+
     int? idPlanner = await _sharedPreferences.getIdPlanner();
     String? token = await _sharedPreferences.getToken();
     //Descarga de documentos

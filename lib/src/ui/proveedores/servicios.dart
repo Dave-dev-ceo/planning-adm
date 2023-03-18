@@ -11,7 +11,7 @@ class Servicios extends StatefulWidget {
         builder: (context) => const Servicios(),
       );
   @override
-  _ServiciosState createState() => _ServiciosState();
+  State<Servicios> createState() => _ServiciosState();
 }
 
 class _ServiciosState extends State<Servicios> {
@@ -49,6 +49,10 @@ class _ServiciosState extends State<Servicios> {
                         margin: const EdgeInsets.all(15),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 5, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: hexToColor('#fdf4e5'),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
                         child: const FittedBox(
                           child: Text(
                             "Agregar",
@@ -57,10 +61,6 @@ class _ServiciosState extends State<Servicios> {
                                 fontWeight: FontWeight.w100,
                                 color: Colors.black),
                           ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: hexToColor('#fdf4e5'),
-                          borderRadius: BorderRadius.circular(5),
                         ),
                       ),
                       onTap: () async {
@@ -115,13 +115,13 @@ class _ServiciosState extends State<Servicios> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: SizedBox(
+        width: large,
+        height: ancho,
         child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 10,
             child: ListTile(leading: Icon(icon), title: item)),
-        width: large,
-        height: ancho,
       ),
     );
   }

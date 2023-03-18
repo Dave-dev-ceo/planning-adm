@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 import 'package:planning/src/utils/utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -198,7 +199,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
   _readExcel() async {
     /// Use FilePicker to pick files in Flutter Web
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? pickedFile = await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: ['xlsx'],

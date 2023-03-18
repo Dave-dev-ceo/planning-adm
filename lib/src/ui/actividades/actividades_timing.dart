@@ -14,6 +14,8 @@ import 'package:planning/src/ui/planes/ver_archivo_dialog.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 
+import '../../utils/leer_archivos.dart';
+
 class AgregarActividades extends StatefulWidget {
   final int? idTiming;
   const AgregarActividades({Key? key, this.idTiming}) : super(key: key);
@@ -275,8 +277,7 @@ class _AgregarActividadesState extends State<AgregarActividades> {
                     child: ElevatedButton(
                       onPressed: () async {
                         const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
-                        FilePickerResult? pickedFile =
-                            await FilePicker.platform.pickFiles(
+                        FilePickerResult? pickedFile = await leerArchivos(
                           type: FileType.custom,
                           withData: true,
                           allowedExtensions: extensiones,
@@ -737,7 +738,7 @@ class _EditActividadDialogState extends State<EditActividadDialog> {
                                   'pdf'
                                 ];
                                 FilePickerResult? pickedFile =
-                                    await FilePicker.platform.pickFiles(
+                                    await leerArchivos(
                                   type: FileType.custom,
                                   withData: true,
                                   allowedExtensions: extensiones,

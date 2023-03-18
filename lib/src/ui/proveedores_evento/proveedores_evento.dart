@@ -14,7 +14,7 @@ class ProveedorEvento extends StatefulWidget {
         builder: (context) => const ProveedorEvento(),
       );
   @override
-  _ProveedorEventoState createState() => _ProveedorEventoState();
+  State<ProveedorEvento> createState() => _ProveedorEventoState();
 }
 
 class _ProveedorEventoState extends State<ProveedorEvento> {
@@ -77,7 +77,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
               child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
                   builder: (context, state) {
                 if (state is MostrarProveedorEventoState) {
-                  if (state.detlistas != null && _dataPrvEv.isEmpty) {
+                  if (_dataPrvEv.isEmpty) {
                     _dataPrvEv = _createDataListProvEvt(state.detlistas);
                   }
                   return Column(
@@ -97,7 +97,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: UniqueKey(),
-          child: const Icon(Icons.download),
           onPressed: () async {
             final data =
                 await proveedoresEventoLogic.downloadPDFProveedoresEvento();
@@ -106,6 +105,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             }
           },
           tooltip: 'Descargar PDF',
+          child: const Icon(Icons.download),
         ),
       );
     } else {
@@ -121,7 +121,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             child: BlocBuilder<ProveedoreventosBloc, ProveedoreventosState>(
                 builder: (context, state) {
               if (state is MostrarProveedorEventoState) {
-                if (state.detlistas != null && _dataPrvEv.isEmpty) {
+                if (_dataPrvEv.isEmpty) {
                   _dataPrvEv = _createDataListProvEvt(state.detlistas);
                 }
                 return Column(
@@ -140,7 +140,6 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: UniqueKey(),
-          child: const Icon(Icons.download),
           onPressed: () async {
             final data =
                 await proveedoresEventoLogic.downloadPDFProveedoresEvento();
@@ -149,6 +148,7 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             }
           },
           tooltip: 'Descargar PDF',
+          child: const Icon(Icons.download),
         ),
       );
     }
@@ -178,15 +178,15 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
   }
 
   _createDataListProvEvt(ItemModelProveedoresEvento prov) {
-    List<ItemProveedorEvento> _dataProv = [];
+    List<ItemProveedorEvento> dataProv = [];
     for (var element in prov.results) {
-      List<ItemProveedor> _provTemp = [];
+      List<ItemProveedor> provTemp = [];
 
       servicios[element.idServicio] = 0;
 
       if (element.prov!.isNotEmpty) {
         for (var element2 in element.prov!) {
-          _provTemp.add(ItemProveedor(
+          provTemp.add(ItemProveedor(
               idProveedor: element2['id_proveedor'],
               nombre: element2['nombre'],
               descripcion: element2['descripcion'],
@@ -200,16 +200,16 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
         }
       }
 
-      _dataProv.add(ItemProveedorEvento(
+      dataProv.add(ItemProveedorEvento(
           idServicio: element.idServicio,
           idPlanner: element.idPlanner,
           nombre: element.nombre,
-          prov: _provTemp,
+          prov: provTemp,
           isExpanded: false,
           seleccion: element.seleccion,
           observacion: element.observacion));
     }
-    return _dataProv;
+    return dataProv;
   }
 
   List<Widget> _listServicio(List<ItemProveedor> itemServicio, int? idServi) {
@@ -318,8 +318,8 @@ class _ProveedorEventoState extends State<ProveedorEvento> {
             );
           },
           body: Column(
-            children:
-                _listServicioInvolucrado(item.prov!, item.idServicio, servicios),
+            children: _listServicioInvolucrado(
+                item.prov!, item.idServicio, servicios),
           ),
           isExpanded: item.isExpanded,
         );

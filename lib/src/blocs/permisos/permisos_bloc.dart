@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/logic/permisos_logic.dart';
 import 'package:planning/src/models/model_perfilado.dart';
 
@@ -13,7 +13,6 @@ class PermisosBloc extends Bloc<PermisosEvent, PermisosState> {
       emit(LoadingPermisos());
 
       try {
-
         ItemModelPerfil permisos = await logic.obtenerPermisosUsuario();
         emit(PermisosOk(permisos));
       } on PermisosException {

@@ -43,6 +43,7 @@ class FetchProveedoresEventoLogic extends LogicProveedoresEvento {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> data = json.decode(response.body);
+
         await _sharedPreferences.setToken(data['token']);
         return ItemModelProveedoresEvento.fromJson(data['data']);
       } else if (response.statusCode == 401) {

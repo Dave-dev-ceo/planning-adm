@@ -84,7 +84,6 @@ class _ProveedoresState extends State<Proveedores> {
   Widget expasionFabButton() {
     return SpeedDial(
       tooltip: 'Opciones',
-      child: const Icon(Icons.more_vert),
       children: [
         SpeedDialChild(
           child: const Icon(Icons.download),
@@ -110,6 +109,7 @@ class _ProveedoresState extends State<Proveedores> {
             },
           ),
       ],
+      child: const Icon(Icons.more_vert),
     );
   }
 
@@ -131,20 +131,20 @@ class _ProveedoresState extends State<Proveedores> {
             builder: (context, state) {
           if (state is MostrarSevicioByProveedorState) {
             _data = _createDataListServ(state.detlistas);
-            if (_dataProveedores != null && _data != null) {
+            if (_dataProveedores != null) {
               for (var prov in _dataProveedores!) {
-                List<ServiciosModel> _listaServ = [];
-                List<ItemProveedor> _prove = [];
+                List<ServiciosModel> listaServ = [];
+                List<ItemProveedor> prove = [];
 
                 for (var elmProv in _data) {
                   if (elmProv.idServicio == prov.idServicio) {
-                    _listaServ.add(ServiciosModel(
+                    listaServ.add(ServiciosModel(
                       idServicio: elmProv.idServicio,
                       nombre: elmProv.nombre,
-                      proveedores: _prove,
+                      proveedores: prove,
                     ));
                   }
-                  prov.servicio = _listaServ;
+                  prov.servicio = listaServ;
                 }
               }
 
@@ -205,8 +205,8 @@ class _ProveedoresState extends State<Proveedores> {
                                   const InputDecoration(label: Text('País')),
                               items: paises
                                   .map((p) => DropdownMenuItem<int>(
-                                        child: Text(p.nombre!),
                                         value: p.id,
+                                        child: Text(p.nombre!),
                                       ))
                                   .toList(),
                             );
@@ -239,8 +239,8 @@ class _ProveedoresState extends State<Proveedores> {
                                     label: Text('Estado')),
                                 items: estados
                                     .map((e) => DropdownMenuItem(
-                                          child: Text(e.nombre!),
                                           value: e.id,
+                                          child: Text(e.nombre!),
                                         ))
                                     .toList(),
                               );
@@ -270,8 +270,8 @@ class _ProveedoresState extends State<Proveedores> {
                                     label: Text('Ciudad')),
                                 items: ciudades
                                     .map((c) => DropdownMenuItem(
-                                          child: Text(c.nombre!),
                                           value: c.id,
+                                          child: Text(c.nombre!),
                                         ))
                                     .toList(),
                               );
@@ -400,10 +400,10 @@ class _ProveedoresState extends State<Proveedores> {
   }
 
   _createDataListServ(ItemModelServicioByProv serv) {
-    List<ServiciosModel> _listaServ = [];
+    List<ServiciosModel> listaServ = [];
     List<ItemProveedor> dataProv = [];
     for (var element in serv.results) {
-      _listaServ.add(ServiciosModel(
+      listaServ.add(ServiciosModel(
         idServicio: element.idServicio,
         idProveedor: element.idProveedor,
         isExpanded: false,
@@ -411,14 +411,14 @@ class _ProveedoresState extends State<Proveedores> {
         proveedores: dataProv,
       ));
     }
-    return _listaServ;
+    return listaServ;
   }
 
   _createDataListProv(ItemModelProveedores prov) {
-    List<ItemProveedor> _dataProv = [];
+    List<ItemProveedor> dataProv = [];
     List<ServiciosModel> listaServ = [];
     for (var element in prov.results) {
-      _dataProv.add(ItemProveedor(
+      dataProv.add(ItemProveedor(
         idProveedor: element.idProveedor,
         idServicio: element.idServicio,
         nombre: element.nombre,
@@ -434,7 +434,7 @@ class _ProveedoresState extends State<Proveedores> {
         idPais: element.idPais,
       ));
     }
-    return _dataProv;
+    return dataProv;
   }
 
   _eliminarDetalleLista(ItemProveedor proveedor) {

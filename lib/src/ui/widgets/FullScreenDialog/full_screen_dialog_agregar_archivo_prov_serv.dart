@@ -17,6 +17,7 @@ import 'package:planning/src/models/item_model_proveedores.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/text_form_filed.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class FullScreenDialogAgregarArchivoProvServEvent extends StatefulWidget {
@@ -220,7 +221,7 @@ class _FullScreenDialogAgregarArchivoProvServEvent
           tipoMensaje: TipoMensaje.advertencia);
     }
     const extensiones = ['pdf', 'jpg', 'png', 'jpeg'];
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? pickedFile = await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: extensiones,

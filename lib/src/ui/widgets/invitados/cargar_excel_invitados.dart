@@ -12,6 +12,7 @@ import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_sele
 
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 
 //import 'package:path/path.dart';
 class CargarExcel extends StatefulWidget {
@@ -60,7 +61,7 @@ class _CargarExcelState extends State<CargarExcel> {
   _readExcel() async {
     /// Use FilePicker to pick files in Flutter Web
 
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? pickedFile = await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: ['xlsx'],

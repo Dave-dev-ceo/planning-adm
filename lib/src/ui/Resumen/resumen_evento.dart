@@ -27,7 +27,7 @@ class ResumenEvento extends StatefulWidget {
   const ResumenEvento({Key? key, this.detalleEvento, this.WP_EVT_RES_EDT})
       : super(key: key);
   @override
-  _ResumenEventoState createState() =>
+  State<ResumenEvento> createState() =>
       _ResumenEventoState(detalleEvento, WP_EVT_RES_EDT);
 }
 

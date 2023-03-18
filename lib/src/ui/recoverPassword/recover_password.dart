@@ -13,7 +13,7 @@ class RecoverPasswordPage extends StatefulWidget {
 
   const RecoverPasswordPage({Key? key, required this.token}) : super(key: key);
   @override
-  _RecoverPasswordState createState() => _RecoverPasswordState();
+  State<RecoverPasswordPage> createState() => _RecoverPasswordState();
 }
 
 class _RecoverPasswordState extends State<RecoverPasswordPage> {
@@ -100,7 +100,7 @@ class _RecoverPasswordState extends State<RecoverPasswordPage> {
             ),
             Text(
               'Ingrese los siguientes campos',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(
               height: 15.0,

@@ -715,6 +715,10 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                         formItemsDesign(
                           Icons.phone,
                           TextFormField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(10)
+                            ],
                             controller: telefonoCtrl,
                             //initialValue: invitado.telefono,
                             decoration: InputDecoration(
@@ -740,7 +744,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                                     margin: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
+                                        borderRadius: const BorderRadius.all(
                                           Radius.circular(5.0),
                                         ),
                                         border: Border.all(

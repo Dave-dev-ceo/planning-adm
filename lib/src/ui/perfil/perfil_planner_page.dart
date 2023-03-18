@@ -11,6 +11,7 @@ import 'package:planning/src/blocs/perfil/perfil_bloc.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/models/perfil/perfil_planner_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 
 class PerfilPlannerPage extends StatefulWidget {
   const PerfilPlannerPage({Key? key}) : super(key: key);
@@ -282,7 +283,7 @@ class _PerfilPlannerPageState extends State<PerfilPlannerPage> {
   Future<String> _addImagePlanner() async {
     const extensiones = ['jpg', 'png', 'jpeg'];
 
-    FilePickerResult pickedFile = (await FilePicker.platform.pickFiles(
+    FilePickerResult pickedFile = (await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: extensiones,

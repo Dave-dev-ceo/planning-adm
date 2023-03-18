@@ -18,6 +18,7 @@ import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/perfil/eliminar_cuenta/eliminar_cuenta.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 class Perfil extends StatefulWidget {
@@ -363,7 +364,7 @@ class _PerfilState extends State<Perfil> {
   _addImage() async {
     const extensiones = ['jpg', 'png', 'jpeg'];
 
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? pickedFile = await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: extensiones,
@@ -389,7 +390,7 @@ class _PerfilState extends State<Perfil> {
   changePortadaImage() async {
     const extensiones = ['jpg', 'png', 'jpeg'];
 
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? pickedFile = await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: extensiones,

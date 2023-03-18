@@ -12,6 +12,7 @@ import 'package:planning/src/models/Planes/planes_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/ui/planes/ver_archivo_dialog.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -233,7 +234,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     );
   }
 
-  StreamBuilder<ContadorActividadesModel> contadorActividadesWidget(Size? size) {
+  StreamBuilder<ContadorActividadesModel> contadorActividadesWidget(
+      Size? size) {
     _planesLogic.getContadorValues(claveRol == 'INVO' ? true : false);
 
     return StreamBuilder(
@@ -288,7 +290,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                         hoverColor: Colors.transparent,
                       ),
                     ),
-                    Text('${snapshot.data!.completadas.toString()} Completadas'),
+                    Text(
+                        '${snapshot.data!.completadas.toString()} Completadas'),
                     const SizedBox(
                       height: 10.0,
                     ),
@@ -330,7 +333,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: LinearProgressIndicator(
                         minHeight: 5.0,
-                        value: snapshot.data!.completadas! / snapshot.data!.total!,
+                        value:
+                            snapshot.data!.completadas! / snapshot.data!.total!,
                         semanticsLabel: 'Linear progress indicator',
                       ),
                     ),
@@ -429,7 +433,8 @@ class _PlanesPageState extends State<PlanesPage> with TickerProviderStateMixin {
     } else {
       DateTime? fechaInicio =
           listaTimings!.first.actividades!.first.fechaInicioEvento;
-      DateTime? fechaFin = listaTimings!.first.actividades!.first.fechaFinEvento;
+      DateTime? fechaFin =
+          listaTimings!.first.actividades!.first.fechaFinEvento;
       int? idTiming = listaTimings!.last.idPlanner;
 
       for (TimingModel timing in listaTimings!) {
@@ -1223,11 +1228,11 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                   IconButton(
                                     onPressed: () async {
                                       final fecha = await showDatePicker(
-                                        initialDate:
-                                            (actividad!.fechaInicioActividad !=
-                                                    null)
-                                                ? actividad!.fechaInicioActividad!
-                                                : widget.fechaInicioEvento!,
+                                        initialDate: (actividad!
+                                                    .fechaInicioActividad !=
+                                                null)
+                                            ? actividad!.fechaInicioActividad!
+                                            : widget.fechaInicioEvento!,
                                         context: context,
                                         firstDate: widget.fechaInicioEvento!,
                                         lastDate: widget.fechaFinEvento!,
@@ -1249,7 +1254,8 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                                     .minute);
                                         fechaInicioController.text =
                                             DateFormat.yMd().add_jm().format(
-                                                actividad!.fechaInicioActividad!);
+                                                actividad!
+                                                    .fechaInicioActividad!);
                                       }
                                     },
                                     icon: const Icon(
@@ -1273,8 +1279,8 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                                             DateTime(
                                                 actividad!
                                                     .fechaInicioActividad!.year,
-                                                actividad!
-                                                    .fechaInicioActividad!.month,
+                                                actividad!.fechaInicioActividad!
+                                                    .month,
                                                 actividad!
                                                     .fechaInicioActividad!.day,
                                                 time.hour,
@@ -1282,7 +1288,8 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
 
                                         fechaInicioController.text =
                                             DateFormat.yMd().add_jm().format(
-                                                actividad!.fechaInicioActividad!);
+                                                actividad!
+                                                    .fechaInicioActividad!);
                                       }
                                     },
                                     icon: const Icon(
@@ -1342,8 +1349,7 @@ class _AddNuevaActividadState extends State<AddNuevaActividad> {
                 ElevatedButton(
                   onPressed: () async {
                     const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
-                    FilePickerResult? pickedFile =
-                        await FilePicker.platform.pickFiles(
+                    FilePickerResult? pickedFile = await leerArchivos(
                       type: FileType.custom,
                       withData: true,
                       allowedExtensions: extensiones,

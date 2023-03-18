@@ -1,10 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:file_picker/file_picker.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 
-// TODO: Probar funcionamiento
-// TODO: implementarlo en todos donde se usa el FilePicker
-
-Future<FilePickerResult?> leerArchivo({
+Future<FilePickerResult?> leerArchivos({
   String? dialogTitle,
   String? initialDirectory,
   FileType type = FileType.any,
@@ -35,6 +34,7 @@ Future<FilePickerResult?> leerArchivo({
 
   for (var file in pickedFile.files) {
     final sizeMb = fileSize(file.size);
+
     final nameFile = file.name;
 
     if (sizeMb > 11) {
@@ -53,6 +53,8 @@ Future<FilePickerResult?> leerArchivo({
   return FilePickerResult(files);
 }
 
-int fileSize(int bytes) {
-  return (bytes / 1024).round();
+double fileSize(int bytes) {
+  final double mb = ((bytes / (1024 * 1024)));
+
+  return num.parse(mb.toStringAsFixed(4)).toDouble();
 }

@@ -12,6 +12,7 @@ import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/prospecto/prospecto_bloc.dart';
 import 'package:planning/src/models/prospectosModel/prospecto_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 
 import '../../logic/archivos_prospectos_logic/archivo_prospecto_dialog.dart';
 import '../../logic/archivos_prospectos_logic/archivos_prospectos_logic.dart';
@@ -607,7 +608,7 @@ class _DetailProspectoDialogState extends State<DetailProspectoDialog> {
             child: ElevatedButton(
               child: const Text('Agregar'),
               onPressed: () async {
-                final result = await FilePicker.platform.pickFiles(
+                final result = await leerArchivos(
                   withData: true,
                   allowMultiple: false,
                   type: FileType.custom,

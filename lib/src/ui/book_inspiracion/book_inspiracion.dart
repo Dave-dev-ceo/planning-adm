@@ -12,6 +12,8 @@ import 'package:planning/src/models/mesa/layout_mesa_model.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
 import 'package:planning/src/utils/utils.dart' as utils;
 
+import '../../utils/leer_archivos.dart';
+
 class BookInspiracion extends StatefulWidget {
   const BookInspiracion({Key? key}) : super(key: key);
 
@@ -81,8 +83,7 @@ class _BookInspiracion extends State<BookInspiracion> {
               child: const Icon(Icons.upload),
               label: 'Subir archivo',
               onTap: () async {
-                FilePickerResult? pickedFile =
-                    await FilePicker.platform.pickFiles(
+                FilePickerResult? pickedFile = await leerArchivos(
                   type: FileType.image,
                   withData: true,
                   allowMultiple: false,

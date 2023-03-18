@@ -56,6 +56,7 @@ dependencies:
   timezone: ^0.9.1
   universal_html: ^2.0.9
   url_launcher: ^6.1.9
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

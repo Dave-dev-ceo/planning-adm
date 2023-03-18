@@ -19,6 +19,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:planning/src/blocs/contratos/bloc/contratos_bloc.dart';
 import 'package:planning/src/blocs/contratos/bloc/ver_contratos_bloc.dart';
 
+import '../../utils/leer_archivos.dart';
+
 class NewContrato extends StatefulWidget {
   const NewContrato({Key? key}) : super(key: key);
 
@@ -982,7 +984,7 @@ class NewContratoState extends State<NewContrato> {
 
   _uploadFile(int? idContrato) async {
     const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? pickedFile = await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: extensiones,
@@ -1029,7 +1031,7 @@ class NewContratoState extends State<NewContrato> {
   _createContrato(String? clave, String tipoDoc) async {
     const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+    FilePickerResult? pickedFile = await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: extensiones,

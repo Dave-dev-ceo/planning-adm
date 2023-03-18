@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:planning/src/blocs/contratos/contratos_bloc.dart';
 // import 'package:planning/src/blocs/eventos/eventos_bloc.dart';
@@ -337,7 +338,7 @@ class _AgregarContratoState extends State<AgregarContrato> {
   _addFilesView(int? id) async {
     const extensiones = ['pdf'];
 
-    FilePickerResult pickedFile = (await FilePicker.platform.pickFiles(
+    FilePickerResult pickedFile = (await leerArchivos(
       type: FileType.custom,
       withData: true,
       allowedExtensions: extensiones,

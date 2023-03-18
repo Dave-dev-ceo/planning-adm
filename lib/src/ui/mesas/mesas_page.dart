@@ -27,6 +27,8 @@ import 'package:planning/src/models/MesasAsignadas/mesas_asignadas_model.dart';
 import 'package:planning/src/models/invitadosConfirmadosModel/invitado_mesa_model.dart';
 import 'package:planning/src/utils/utils.dart';
 
+import '../../utils/leer_archivos.dart';
+
 class MesasPage extends StatefulWidget {
   const MesasPage({Key? key, this.nameEvento}) : super(key: key);
 
@@ -151,7 +153,7 @@ class _MesasPageState extends State<MesasPage> {
       onPressed: () async {
         const extensiones = ['jpg', 'png', 'jpeg', 'pdf'];
 
-        FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+        FilePickerResult? pickedFile = await leerArchivos(
           type: FileType.custom,
           withData: true,
           allowedExtensions: extensiones,
