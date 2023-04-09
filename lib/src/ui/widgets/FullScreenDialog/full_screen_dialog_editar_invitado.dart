@@ -597,7 +597,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
     }
     if (contActualizaData <= 0) {
       nombreCtrl.text = invitado.nombre!;
-      emailCtrl.text = invitado.email!;
+      emailCtrl.text = invitado.email ?? '';
       telefonoCtrl.text = invitado.telefono!;
       alergiasCtrl.text = invitado.alergias ?? '';
       tipoAlimentacionCtrl.text = invitado.alimentacion ?? '';

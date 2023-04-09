@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/logic/qr_logic/qr_logic.dart';
 import 'package:planning/src/models/model_perfilado.dart';
@@ -32,6 +33,7 @@ import 'package:planning/src/ui/asistencia/asistencia.dart';
 import 'package:planning/src/ui/mesas/mesas_page.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../../animations/loading_overlay.dart';
+import '../../../models/invitados/invitados_model.dart';
 import '../../../models/item_model_invitados.dart';
 
 import 'package:planning/src/utils/utils.dart' as utils;
@@ -312,8 +314,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
         child: const Tooltip(
-          child: Icon(Icons.person_add),
           message: "Agregar invitado",
+          child: Icon(Icons.person_add),
         ),
         backgroundColor: hexToColor("#fdf4e5"),
         onTap: () async {
@@ -333,8 +335,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
         child: const Tooltip(
-          child: Icon(Icons.table_chart_outlined),
           message: "Importar Excel",
+          child: Icon(Icons.table_chart_outlined),
         ),
         backgroundColor: hexToColor("#fdf4e5"),
         //label: 'Importar excel',
@@ -344,8 +346,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
         child: const Tooltip(
-          child: Icon(Icons.import_contacts_rounded),
           message: "Importar contactos",
+          child: Icon(Icons.import_contacts_rounded),
         ),
         backgroundColor: hexToColor("#fdf4e5"),
         //label: 'Importar contactos',
@@ -355,8 +357,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
         child: const Tooltip(
-          child: Icon(Icons.download),
           message: "Descargar PDF",
+          child: Icon(Icons.download),
         ),
         backgroundColor: hexToColor("#fdf4e5"),
         //label: 'Importar contactos',
@@ -368,8 +370,8 @@ class _ListaInvitadosState extends State<ListaInvitados>
       temp.add(SpeedDialChild(
         foregroundColor: Colors.black,
         child: const Tooltip(
-          child: Icon(Icons.send_and_archive_sharp),
           message: "Enviar QR a invitados",
+          child: Icon(Icons.send_and_archive_sharp),
         ),
         backgroundColor: hexToColor("#fdf4e5"),
         onTap: () async {
@@ -573,8 +575,17 @@ class _ListaInvitadosState extends State<ListaInvitados>
             leading: const Icon(Icons.search),
             title: TextField(
               controller: controllerBuscar,
-              decoration: const InputDecoration(
-                  hintText: 'Buscar...', border: InputBorder.none),
+              decoration: InputDecoration(
+                  hintText: 'Buscar...',
+                  border: InputBorder.none,
+                  suffixIcon: IconButton(
+                      icon: const Icon(Icons.cancel),
+                      onPressed: () {
+                        setState(() {
+                          controllerBuscar.clear();
+                          _searchResult = '';
+                        });
+                      })),
               onChanged: (value) async {
                 setState(() {
                   _searchResult = value;
@@ -589,14 +600,12 @@ class _ListaInvitadosState extends State<ListaInvitados>
                 });
               },
             ),
-            trailing: IconButton(
-                icon: const Icon(Icons.cancel),
-                onPressed: () {
-                  setState(() {
-                    controllerBuscar.clear();
-                    _searchResult = '';
-                  });
-                }),
+            trailing: datos?.results.isNotEmpty == true
+                ? FilledButton(
+                    onPressed: () => _openEliminarInvitados(datos),
+                    child: const Text('Eliminar Multiples'),
+                  )
+                : null,
             autofocus: false,
           ),
         ),
@@ -655,6 +664,34 @@ class _ListaInvitadosState extends State<ListaInvitados>
       downloadFile(data, 'Lista-Invitados');
     }
   }
+
+  void _openEliminarInvitados(ItemModelInvitados? invitados) async {
+    if (invitados == null) return;
+
+    List<InvitadosModel> listaInvitados = [];
+    for (var result in invitados.results) {
+      listaInvitados.add(InvitadosModel(
+        acompanantes: result.acompanantes,
+        asistencia: result.asistencia,
+        codigoPais: result.codigoPais,
+        correo: result.correo,
+        grupo: result.grupo,
+        idInvitado: result.idInvitado,
+        nombre: result.nombre,
+        telefono: result.telefono,
+      ));
+    }
+
+    final result = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => VistaEliminarInvitados(invitados: listaInvitados),
+    );
+
+    if (result == true && mounted) {
+      await blocInvitados.fetchAllInvitados(context);
+    }
+  }
 }
 
 class _Row {
@@ -691,7 +728,7 @@ class _DataSource extends DataTableSource {
       _rows.add(_Row(
           context[i].idInvitado,
           context[i].nombre,
-          '${context[i].codigoPais != null ? context[i].codigoPais + ' ' : ''}${context[i].telefono}',
+          '${context[i].codigoPais != null ? context[i].codigoPais + '' : ''}${context[i].telefono}',
           context[i].grupo ?? 'Sin grupo',
           context[i].asistencia ?? 'Sin estatus',
           context[i].telefono));
@@ -1066,22 +1103,22 @@ class _DataSource extends DataTableSource {
   _dialogoInvitadoAcompanantes(int? idInvitado) {
     showDialog(
       context: _cont!,
-      builder: (_cont) {
+      builder: (cont) {
         return AlertDialog(
           scrollable: false,
           title: const Text('Datos del invitado'),
           content: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500, maxHeight: 500),
+            constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
             child: SingleChildScrollView(
               child: FutureBuilder(
                 future: QrLogic().validarQr(idInvitado.toString()),
-                builder: (_cont, snapshot) {
+                builder: (cont, snapshot) {
                   if (snapshot.hasData) {
                     final invitado = snapshot.data as QrInvitadoModel;
                     return SingleChildScrollView(
                         child: _bodyInvitado(invitado));
                   }
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 },
               ),
             ),
@@ -1089,7 +1126,7 @@ class _DataSource extends DataTableSource {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(_cont);
+                Navigator.pop(cont);
               },
               child: const Text('Cerrar'),
             )
@@ -1138,13 +1175,13 @@ class _DataSource extends DataTableSource {
 
   Widget texto(String label, String? valor, String sinDatos) {
     return Padding(
+      padding: const EdgeInsets.all(10),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
           label + (valor ?? sinDatos),
         ),
       ),
-      padding: const EdgeInsets.all(10),
     );
   }
 
@@ -1170,4 +1207,141 @@ class _DataSource extends DataTableSource {
 
   @override
   int get selectedRowCount => _selectedCount;
+}
+
+class VistaEliminarInvitados extends StatefulWidget {
+  final List<InvitadosModel> invitados;
+
+  const VistaEliminarInvitados({super.key, required this.invitados});
+
+  @override
+  State<VistaEliminarInvitados> createState() => _VistaEliminarInvitadosState();
+}
+
+class _VistaEliminarInvitadosState extends State<VistaEliminarInvitados> {
+  late List<InvitadosModel> invitados;
+
+  final controller = TextEditingController();
+
+  List<int> invitadosAEliminar = [];
+
+  @override
+  void initState() {
+    super.initState();
+    invitados = [...widget.invitados];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Eliminar multiples invitados',
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Buscar....',
+              suffixIcon: IconButton(
+                onPressed: _clearBusqueda,
+                icon: const Icon(
+                  Icons.cleaning_services,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            controller: controller,
+            onChanged: _buscarInvitados,
+          ),
+        ],
+      ),
+      content: SizedBox(
+        height: 400,
+        width: 300,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: invitados.length,
+                itemBuilder: (context, i) {
+                  final invitado = invitados[i];
+
+                  return CheckboxListTile(
+                    value: invitadosAEliminar.contains(invitado.idInvitado),
+                    onChanged: (_) {
+                      invitadosAEliminar.contains(invitado.idInvitado)
+                          ? invitadosAEliminar
+                              .removeWhere((id) => id == invitado.idInvitado)
+                          : invitadosAEliminar.add(invitado.idInvitado!);
+                      setState(() {});
+                    },
+                    title: Text(invitado.nombre ?? ''),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancelar'),
+        ),
+        FilledButton(
+          onPressed: invitadosAEliminar.isNotEmpty
+              ? eliminarInvitadosSeleccionados
+              : null,
+          child: const Text('Eliminar'),
+        )
+      ],
+    );
+  }
+
+  void _buscarInvitados(String query) {
+    if (query.trim().isNotEmpty && query.length > 2) {
+      invitados.clear();
+      for (var inv in widget.invitados) {
+        if (inv.nombre!.toLowerCase().contains(query.toLowerCase())) {
+          invitados.add(inv);
+        }
+      }
+      setState(() {});
+    } else {
+      _clearBusqueda(false);
+    }
+  }
+
+  void _clearBusqueda([bool? clear = true]) {
+    if (clear!) {
+      controller.clear();
+    }
+    setState(() {
+      invitados = [...widget.invitados];
+    });
+  }
+
+  void eliminarInvitadosSeleccionados() async {
+    final navigator = Navigator.of(context);
+    final resp =
+        await ApiProvider().eliminarMultiplesInvitados(invitadosAEliminar);
+
+    if (resp) {
+      MostrarAlerta(
+        mensaje: 'Información actualizada.',
+        tipoMensaje: TipoMensaje.correcto,
+      );
+      navigator.pop(true);
+    } else {
+      MostrarAlerta(
+        mensaje: 'No se pudo eliminar a los invitados',
+        tipoMensaje: TipoMensaje.error,
+      );
+    }
+  }
 }

@@ -928,4 +928,34 @@ class ApiProvider {
       return null;
     }
   }
+
+  Future<bool> eliminarMultiplesInvitados(List<int> idInvitados) async {
+    int? idPlanner = await _sharedPreferences.getIdPlanner();
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+
+    final data = {
+      'listIdInvitados': idInvitados,
+      'id_planner': idPlanner,
+      'id_evento': idEvento,
+    };
+
+    final resp = await http.post(
+      Uri.parse(
+          '${confiC.url}${confiC.puerto}/wedding/INVITADOS/eliminarMultiplesInvitados'),
+      body: json.encode(data),
+      headers: {
+        HttpHeaders.authorizationHeader: token ?? '',
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (resp.statusCode == 200) {
+      Map<String, dynamic> res = json.decode(resp.body);
+      await _sharedPreferences.setToken(res['token']);
+      return true;
+    }
+    return false;
+  }
 }
