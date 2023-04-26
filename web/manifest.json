@@ -1,11 +1,11 @@
 {
-    "name": "planning_adm",
-    "short_name": "planning_adm",
+    "name": "Planning",
+    "short_name": "Planning",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Planeación de eventos",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
