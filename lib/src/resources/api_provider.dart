@@ -1,11 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:planning/src/models/acompanante_model.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
@@ -20,13 +21,14 @@ import 'package:planning/src/models/item_model_reporte_genero.dart';
 import 'package:planning/src/models/item_model_reporte_grupos.dart';
 import 'package:planning/src/models/item_model_reporte_invitados.dart';
 import 'package:planning/src/resources/config_conection.dart';
-import 'dart:convert';
+
 import '../models/item_model_invitados.dart';
 //import '../models/item_model_response.dart';
 
 class ApiProvider {
   final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
   ConfigConection confiC = ConfigConection();
+
   _loadLogin(BuildContext context) async {
     await _sharedPreferences.clear();
     _showDialogMsg(context);
@@ -490,6 +492,26 @@ class ApiProvider {
       _loadLogin(context);
       return null;
     }
+  }
+
+  // * Editar nombre del grupo
+
+  Future<bool> editarGrupo(Map<String, dynamic> data) async {
+    int? idEvento = await _sharedPreferences.getIdEvento();
+    String? token = await _sharedPreferences.getToken();
+    final response = await http.post(
+        Uri.parse('${confiC.url}${confiC.puerto}/wedding/GRUPOS/editarGrupo'),
+        body: json.encode(data),
+        headers: {
+          'Content-type': 'application/json',
+          HttpHeaders.authorizationHeader: token ?? ''
+        });
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    return false;
   }
 
   Future<ItemModelGrupos?> fetchGruposList(BuildContext? context) async {

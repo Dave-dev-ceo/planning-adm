@@ -15,18 +15,23 @@ class ItemModelGrupos {
     temp.add(dat);
     _results = temp;
   }
+
   List<_Grupos> get results => _results;
 }
 
 class _Grupos {
   String? _nombreGrupo;
   int? _idGrupo;
+  bool? seleted;
 
-  _Grupos(datos) {
+  _Grupos(datos, {this.seleted = false}) {
     _nombreGrupo = datos['nombre_grupo'];
     _idGrupo = datos['id_grupo'];
   }
 
   String? get nombreGrupo => _nombreGrupo;
+
   int? get idGrupo => _idGrupo;
+
+  set nombreGrupo(String? value) => _nombreGrupo = value;
 }

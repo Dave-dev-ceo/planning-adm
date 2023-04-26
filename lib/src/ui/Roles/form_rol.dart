@@ -150,7 +150,7 @@ class _FormRolState extends State<FormRol> {
       TextInputType inputType,
       TextEditingController? controller,
       String titulo,
-      Function validator,
+      String? Function(String?)? validator,
       List<TextInputFormatter>? inputF,
       bool isEnabled,
       {bool obscureT = false,
@@ -164,7 +164,7 @@ class _FormRolState extends State<FormRol> {
           decoration: InputDecoration(
             labelText: titulo,
           ),
-          validator: validator as String? Function(String?)?,
+          validator: validator,
           inputFormatters: inputF,
           obscureText: obscureT,
           maxLength: maxL,
@@ -317,7 +317,7 @@ class _FormRolState extends State<FormRol> {
         });
   }
 
-  String? validateNombre(String value) {
+  String? validateNombre(String? value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = RegExp(pattern);
     if (value == null || value == '') {
@@ -326,7 +326,7 @@ class _FormRolState extends State<FormRol> {
     return null;
   }
 
-  String? validateClave(String value) {
+  String? validateClave(String? value) {
     String pattern = r"[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+";
     RegExp regExp = RegExp(pattern);
     if (value == null || value == '') {

@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
   TextEditingController telefonoRCtrl = TextEditingController();
   TextEditingController correoRecuperacionCtrl = TextEditingController();
   final SharedPreferencesT _sharedPreferences = SharedPreferencesT();
-  late BuildContext _ingresando;
+  BuildContext? _ingresando;
   final bool _visible = true;
   ApiProvider api = ApiProvider();
 
@@ -167,7 +167,7 @@ class _LoginState extends State<Login> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is ErrorLogginState) {
-          Navigator.pop(_ingresando);
+          if (_ingresando != null) Navigator.pop(_ingresando!);
           // Navigator.pushNamed(context, '/');
           _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LogginState) {
@@ -177,7 +177,8 @@ class _LoginState extends State<Login> {
           _dialogMSG('Datos inválidos', state.message, 'msg');
         } else if (state is LoggedState) {
           //int idPlanner = await _sharedPreferences.getIdPlanner();
-          Navigator.pop(_ingresando);
+          if (_ingresando != null) Navigator.pop(_ingresando!);
+
           if (state.response['usuario']['id_involucrado'] == 'null') {
             Map data = {
               'name': state.response['usuario']['nombre_completo'],

@@ -3,41 +3,38 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
-import 'package:planning/src/animations/loading_animation.dart';
-import 'package:planning/src/logic/qr_logic/qr_logic.dart';
-import 'package:planning/src/models/model_perfilado.dart';
-import 'package:planning/src/models/qr_model/qr_model.dart';
-import 'package:planning/src/ui/widgets/invitados/enviar_correo_invitados.dart';
-import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
-import 'package:flutter/services.dart' show ByteData, rootBundle;
-
+import 'package:collection/collection.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:planning/src/utils/leer_archivos.dart';
-import 'package:planning/src/utils/utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:permission_handler/permission_handler.dart';
+import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
+import 'package:planning/src/logic/qr_logic/qr_logic.dart';
 import 'package:planning/src/models/item_model_estatus_invitado.dart';
 import 'package:planning/src/models/item_model_grupos.dart';
+import 'package:planning/src/models/model_perfilado.dart';
+import 'package:planning/src/models/qr_model/qr_model.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/asistencia/asistencia.dart';
 import 'package:planning/src/ui/mesas/mesas_page.dart';
+import 'package:planning/src/ui/widgets/invitados/enviar_correo_invitados.dart';
+import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
+import 'package:planning/src/utils/leer_archivos.dart';
+import 'package:planning/src/utils/utils.dart';
+import 'package:planning/src/utils/utils.dart' as utils;
 import 'package:url_launcher/url_launcher_string.dart';
+
 import '../../../animations/loading_overlay.dart';
 import '../../../models/invitados/invitados_model.dart';
 import '../../../models/item_model_invitados.dart';
-
-import 'package:planning/src/utils/utils.dart' as utils;
-
 import '../../../models/item_model_preferences.dart';
 
 class ListaInvitados extends StatefulWidget {
@@ -57,9 +54,11 @@ class ListaInvitados extends StatefulWidget {
     this.nameEvento,
     this.permisos,
   }) : super(key: key);
+
   static Route<dynamic> route() => MaterialPageRoute(
         builder: (context) => const ListaInvitados(),
       );
+
   @override
   _ListaInvitadosState createState() => _ListaInvitadosState(
       idEvento, WP_EVT_INV_CRT, WP_EVT_INV_EDT, WP_EVT_INV_ENV);
@@ -105,6 +104,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
   }
 
   int tabs = 0;
+
   @override
   void initState() {
     _sendingMsgProgressBar = ProgressBar();
@@ -146,6 +146,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
 
   _ListaInvitadosState(this.idEvento, this.WP_EVT_INV_CRT, this.WP_EVT_INV_EDT,
       this.WP_EVT_INV_ENV);
+
   Color hexToColor(String code) {
     return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -216,25 +217,26 @@ class _ListaInvitadosState extends State<ListaInvitados>
       var bytes = pickedFile.files.single.bytes;
       bytes ??= File(pickedFile.files[0].path!).readAsBytesSync();
 
-      var excel = Excel.decodeBytes(bytes);
+      Excel excel = Excel.decodeBytes(bytes);
       bool bandera = false;
 
-      for (var table in excel.tables.keys) {
-        var sheet = excel[table];
-        if (sheet.row(0)[0]!.value == 'NOMBRE' &&
-            sheet.row(0)[1]!.value == 'EMAIL' &&
-            sheet.row(0)[2]!.value == 'TELÉFONO') {
+      for (final String table in excel.tables.keys) {
+        Sheet sheet = excel[table];
+        List<Data?> headerRow = excel[table].row(0);
+
+        if (headerRow[0]?.value?.toString() == 'NOMBRE' &&
+            headerRow[1]?.value?.toString() == 'EMAIL' &&
+            headerRow[2]?.value?.toString() == 'TELÉFONO') {
           for (int row = 1; row < sheet.maxRows; row++) {
+            final data = sheet.row(row);
             Map<String, String> jsonExample = {
-              'nombre': sheet.row(row)[0]!.value.toString(),
-              'email': sheet.row(row)[1] != null
-                  ? sheet.row(row)[1]!.value.toString()
-                  : '',
-              'telefono': sheet.row(row)[2] != null
-                  ? sheet.row(row)[2]!.value.toString()
-                  : '',
+              'nombre': data[0] != null ? data[0]!.value.toString() : '',
+              'email': data[1] != null ? data[1]!.value.toString() : '',
+              'telefono': data[2] != null ? data[2]!.value.toString() : '',
               'id_evento': idEvento.toString()
             };
+            print(jsonExample);
+
             bool? response = await api.createInvitados(jsonExample, context);
             bandera = response == true ? true : false;
           }
@@ -526,13 +528,13 @@ class _ListaInvitadosState extends State<ListaInvitados>
       /*floatingActionButton: FloatingActionButton(
         onPressed: () async{
           //Navigator.of(context).pushNamed('/addInvitados', arguments: idEvento);
-          final result = await Navigator.of(context).pushNamed('/addInvitados',arguments: idEvento); 
+          final result = await Navigator.of(context).pushNamed('/addInvitados',arguments: idEvento);
           if(result==null || result=="" || result == false || result == 0){
             _ListaInvitadosState(idEvento).listaInvitados(context);
           }
         },
         child: const Icon(Icons.person_add),
-        
+
         backgroundColor: hexToColor('#fdf4e5'),
       ),*/
       //floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
@@ -697,6 +699,7 @@ class _ListaInvitadosState extends State<ListaInvitados>
 class _Row {
   _Row(this.valueId, this.valueA, this.valueB, this.valueC, this.valueD,
       this.valueE);
+
   final int? valueId;
   final String? valueA;
   final String valueB;
@@ -918,47 +921,110 @@ class _DataSource extends DataTableSource {
       context: _cont!,
       //barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Seleccionar estatus', textAlign: TextAlign.center),
-          content: SizedBox(
-            height: 120,
-            child: //Column(
-                //children: [
-                CupertinoPicker(
-                    itemExtent: 32.0,
-                    onSelectedItemChanged: (value) {
-                      _grupoSelect =
-                          _grupos!.results.elementAt(value).idGrupo.toString();
-                    },
-                    children: <Widget>[
-                  //for (var i = 0; i < _grupos.results.length; i++)
-                  for (var data in _grupos!.results)
-                    if (data.nombreGrupo != "Nuevo grupo")
-                      Text(data.nombreGrupo!),
-                ]),
-            // _listaGrupos(),
-            // ],
-            //),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () => Navigator.of(context).pop(),
+        return StatefulBuilder(builder: (context, newState) {
+          return AlertDialog(
+            title:
+                const Text('Seleccionar estatus', textAlign: TextAlign.center),
+            content: SizedBox(
+              height: 120,
+              child: //Column(
+                  //children: [
+                  CupertinoPicker(
+                      itemExtent: 32.0,
+                      onSelectedItemChanged: (value) {
+                        newState(() {
+                          _grupoSelect = _grupos!.results
+                              .elementAt(value)
+                              .idGrupo
+                              .toString();
+                        });
+                      },
+                      children: <Widget>[
+                    //for (var i = 0; i < _grupos.results.length; i++)
+                    for (var data in _grupos!.results)
+                      if (data.nombreGrupo != "Nuevo grupo")
+                        Text(data.nombreGrupo!),
+                  ]),
+              // _listaGrupos(),
+              // ],
+              //),
             ),
-            const SizedBox(
-              width: 10.0,
-            ),
-            TextButton(
-              child: const Text('Confirmar'),
-              onPressed: () async {
-                await _updateGrupo(idInvitado);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancelar'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              if (_grupos?.results
+                      .firstWhereOrNull(
+                          (d) => d.idGrupo?.toString() == _grupoSelect)
+                      ?.nombreGrupo !=
+                  "Sin grupo")
+                TextButton(
+                  onPressed: () => _showDialogUpdateGrupo(context, newState),
+                  child: const Text('Editar'),
+                ),
+              const SizedBox(
+                width: 10.0,
+              ),
+              TextButton(
+                child: const Text('Confirmar'),
+                onPressed: () async {
+                  await _updateGrupo(idInvitado);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
       },
     );
+  }
+
+  void _showDialogUpdateGrupo(BuildContext context, dynamic newState) async {
+    final grupo = _grupos?.results
+        .firstWhereOrNull((d) => d.idGrupo?.toString() == _grupoSelect);
+    final name = grupo?.nombreGrupo;
+    final result = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Editar grupo'),
+        content: TextFormField(
+          initialValue: grupo?.nombreGrupo,
+          onChanged: (v) => grupo?.nombreGrupo = v,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+
+              if (grupo?.nombreGrupo == null ||
+                  grupo?.nombreGrupo?.trim() == '') {
+                return;
+              }
+
+              final resultApi = await api.editarGrupo({
+                'idGrupo': grupo?.idGrupo,
+                'nombre': grupo?.nombreGrupo,
+              });
+
+              if (resultApi == true) {
+                navigator.pop(true);
+              }
+            },
+            child: Text('Aceptar'),
+          )
+        ],
+      ),
+    );
+
+    if (result == true) {
+      _estatus = await api.fetchEstatusList(_cont);
+      newState(() {});
+    }
   }
 
   _updateGrupo(int? idInvitado) async {
