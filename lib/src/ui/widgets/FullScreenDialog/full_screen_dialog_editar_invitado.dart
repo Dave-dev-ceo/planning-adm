@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:planning/src/animations/loading_animation.dart';
 import 'package:planning/src/blocs/blocs.dart';
 import 'package:planning/src/blocs/invitadosMesa/invitadosmesas_bloc.dart';
@@ -17,16 +18,15 @@ import 'package:planning/src/models/item_model_grupos.dart';
 import 'package:planning/src/models/item_model_invitado.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/call_to_action/call_to_action.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:planning/src/utils/utils.dart' as utils;
+import 'package:url_launcher/url_launcher.dart';
 
 class FullScreenDialogEdit extends StatefulWidget {
   final int? idInvitado;
 
   const FullScreenDialogEdit({Key? key, this.idInvitado}) : super(key: key);
+
   @override
   _FullScreenDialogEditState createState() =>
       _FullScreenDialogEditState(idInvitado);
@@ -79,12 +79,14 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       CountryCode(name: 'MX', code: 'México', dialCode: 'Codigo');
 
   String? _base64qr;
+
   // Acompañante
   TextEditingController nombreAcompananteCtrl = TextEditingController();
   int _mySelectionAEdad = 0;
   int _mySelectionAEdad2 = 0;
 
   _FullScreenDialogEditState(this.idInvitado);
+
   final Map<int, Widget> _children = {
     0: const Text(
       'Adulto',
@@ -244,7 +246,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Text(
                     'Editar acompañante',
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
                 const SizedBox(
@@ -529,6 +531,7 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
   }
 
   String? edad;
+
   formItemsDesign(icon, item, double large, double ancho) {
     return SizedBox(
       child: Card(
@@ -1150,7 +1153,8 @@ class _FullScreenDialogEditState extends State<FullScreenDialogEdit> {
       "alergias": alergiasCtrl.text,
       "asistencia_especial": asistenciaEspecialCtrl.text,
       "otros": otrosCtrl.text,
-      "codigo_pais": countryCode.dialCode,
+      "codigo_pais":
+          countryCode.dialCode != 'codigo' ? countryCode.dialCode : null,
     };
     //json.
     bool response = (await api.updateInvitado(json, context))!;
