@@ -235,7 +235,6 @@ class _ListaInvitadosState extends State<ListaInvitados>
               'telefono': data[2] != null ? data[2]!.value.toString() : '',
               'id_evento': idEvento.toString()
             };
-            print(jsonExample);
 
             bool? response = await api.createInvitados(jsonExample, context);
             bandera = response == true ? true : false;

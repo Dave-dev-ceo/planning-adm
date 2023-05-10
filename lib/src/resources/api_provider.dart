@@ -445,10 +445,14 @@ class ApiProvider {
     if (res == 0) {
       String? token = await _sharedPreferences.getToken();
       final response = await http.post(
-          Uri.parse(
-              '${confiC.url}${confiC.puerto}/wedding/INVITADOS/updateInvitado'),
-          body: data,
-          headers: {HttpHeaders.authorizationHeader: token ?? ''});
+        Uri.parse(
+            '${confiC.url}${confiC.puerto}/wedding/INVITADOS/updateInvitado'),
+        body: json.encode(data),
+        headers: {
+          HttpHeaders.authorizationHeader: token ?? '',
+          'Content-type': 'application/json',
+        },
+      );
 
       if (response.statusCode == 201) {
         return true;
