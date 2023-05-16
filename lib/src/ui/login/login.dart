@@ -10,13 +10,13 @@ import 'package:planning/src/models/eventoModel/evento_resumen_model.dart';
 import 'package:planning/src/models/item_model_preferences.dart';
 import 'package:planning/src/resources/api_provider.dart';
 import 'package:planning/src/ui/widgets/snackbar_widget/snackbar_widget.dart';
-
 // Padilla
 import 'package:planning/src/ui/widgets/text_form_filed/password_wplanner.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
+
   @override
   State<Login> createState() => _LoginState();
 }
@@ -356,7 +356,7 @@ class _LoginState extends State<Login> {
     GestureDetector(
       onTap: () async {
         await launchUrl(Uri.parse(
-            'https://play.google.com/store/apps/details?id=mx.com.planning.planner'));
+            'https://play.google.com/store/apps/details?id=com.planning.planner'));
       },
       child: Container(
         margin: EdgeInsets.all(4.0),
