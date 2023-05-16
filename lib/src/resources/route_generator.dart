@@ -21,11 +21,14 @@ import 'package:planning/src/ui/planes/agregar_planes.dart';
 import 'package:planning/src/ui/planes/calendario.dart';
 import 'package:planning/src/ui/recoverPassword/recover_password.dart';
 import 'package:planning/src/ui/scannerQr/scanner_qr.dart';
+import 'package:planning/src/ui/timing_evento/table_calendar.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_actividades.dart';
+import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_archivo_prov_serv.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_contrato.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_evento.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_invitado.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_machote.dart';
+import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_proveedor.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_rol.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_usuario.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_detalle_lista.dart';
@@ -37,9 +40,6 @@ import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_repo
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_select_contacts.dart';
 import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_view_file.dart';
 import 'package:planning/src/ui/widgets/invitados/invitados.dart';
-import 'package:planning/src/ui/timing_evento/table_calendar.dart';
-import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_archivo_prov_serv.dart';
-import 'package:planning/src/ui/widgets/FullScreenDialog/full_screen_dialog_agregar_proveedor.dart';
 
 import '../models/Planes/planes_model.dart';
 import '../models/prospectosModel/prospecto_model.dart';
@@ -90,7 +90,7 @@ class RouteGenerator {
       case '/addMachote':
         return CustomPageRouter(
             child: FullScreenDialogAddMachote(
-          dataMachote: args as List<String>?,
+          dataMachote: args as List<String?>,
         ));
       case '/editPlantilla':
         return CustomPageRouter(

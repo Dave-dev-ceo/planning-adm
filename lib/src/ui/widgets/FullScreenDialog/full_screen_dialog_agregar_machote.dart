@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:planning/src/ui/machotes/agregar_machotes.dart';
 
 class FullScreenDialogAddMachote extends StatefulWidget {
-  final List<String>? dataMachote;
+  final List<String?>? dataMachote;
+
   //final String claveMachote;
   const FullScreenDialogAddMachote({Key? key, this.dataMachote})
       : super(key: key);
+
   @override
   _FullScreenDialogAddMachoteState createState() =>
       _FullScreenDialogAddMachoteState(dataMachote);
@@ -15,7 +17,7 @@ class FullScreenDialogAddMachote extends StatefulWidget {
 
 class _FullScreenDialogAddMachoteState
     extends State<FullScreenDialogAddMachote> {
-  final List<String>? dataMachote;
+  final List<String?>? dataMachote;
 
   //var claveMachote;
   //final String claveMachote;
